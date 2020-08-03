@@ -2,7 +2,7 @@
 
 ```bash
 # 克隆项目
-git clone http://192.168.11.199:9170/lhznsoft/supervision-sites-ui.git
+git clone http://192.168.11.198:9170/lhznsoft/supervision-sites-ui.git
 
 # 进入项目目录
 cd supervision-sites-ui
