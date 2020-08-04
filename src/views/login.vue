@@ -183,12 +183,15 @@ export default {
   color: #bfbfbf;
 }
 .login-code {
-  width: 33%;
+  width: 34%;
   height: 38px;
   float: right;
+  
   img {
     cursor: pointer;
     vertical-align: middle;
+    width: 100%;
+    height: 100%;
   }
 }
 .el-login-footer {
@@ -205,5 +208,6 @@ export default {
 }
 .login-code-img {
   height: 38px;
+  
 }
 </style>
