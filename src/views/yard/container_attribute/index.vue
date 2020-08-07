@@ -77,7 +77,7 @@
 
     <el-table v-loading="loading" :data="container_attributeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <!--<el-table-column label="ID" align="center" prop="id"/>-->
+     <!-- <el-table-column label="ID" align="center" prop="id" />-->
       <el-table-column label="No.ID" align="center" prop="attrId" />
       <el-table-column label="箱属" align="center" prop="boxName" />
       <el-table-column label="箱型" align="center" prop="boxType" />
@@ -85,9 +85,6 @@
       <el-table-column label="可载重量(kg)" align="center" prop="boxLoad" />
       <el-table-column label="集装箱数量" align="center" prop="boxCount" />
       <el-table-column label="押金价格(￥)" align="center" prop="pledgePrice" />
-      <el-table-column label="长(mm)" align="center" prop="length" />
-      <el-table-column label="宽(mm)" align="center" prop="width" />
-      <el-table-column label="高(mm)" align="center" prop="height" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -140,18 +137,6 @@
         <el-form-item label="押金价格(￥)" prop="pledgePrice">
           <el-input v-model="form.pledgePrice" placeholder="请输入押金价格(￥)" />
         </el-form-item>
-        <el-form-item label="长(mm)" prop="length">
-          <el-input v-model="form.length" placeholder="请输入长(mm)" />
-        </el-form-item>
-        <el-form-item label="宽(mm)" prop="width">
-          <el-input v-model="form.width" placeholder="请输入宽(mm)" />
-        </el-form-item>
-        <el-form-item label="高(mm)" prop="height">
-          <el-input v-model="form.height" placeholder="请输入高(mm)" />
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -168,7 +153,6 @@ export default {
   name: "Container_attribute",
   data() {
     return {
-	    showID: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -199,33 +183,6 @@ export default {
       rules: {
         attrId: [
           { required: true, message: "No.ID不能为空", trigger: "blur" }
-        ],
-        boxName: [
-          { required: true, message: "箱属不能为空", trigger: "blur" }
-        ],
-        boxType: [
-          { required: true, message: "箱型不能为空", trigger: "blur" }
-        ],
-        boxTare: [
-          { required: true, message: "皮重(kg)不能为空", trigger: "blur" }
-        ],
-        boxLoad: [
-          { required: true, message: "可载重量(kg)不能为空", trigger: "blur" }
-        ],
-        boxCount: [
-          { required: true, message: "集装箱数量不能为空", trigger: "blur" }
-        ],
-        pledgePrice: [
-          { required: true, message: "押金价格(￥)不能为空", trigger: "blur" }
-        ],
-        length: [
-          { required: true, message: "长(mm)不能为空", trigger: "blur" }
-        ],
-        width: [
-          { required: true, message: "宽(mm)不能为空", trigger: "blur" }
-        ],
-        height: [
-          { required: true, message: "高(mm)不能为空", trigger: "blur" }
         ],
       }
     };
@@ -259,10 +216,10 @@ export default {
         boxLoad: undefined,
         boxCount: undefined,
         pledgePrice: undefined,
+        remark: undefined,
         length: undefined,
         width: undefined,
         height: undefined,
-        remark: undefined,
         createBy: undefined,
         createTime: undefined,
         updateBy: undefined,
@@ -283,7 +240,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
+      this.single = selection.length!=1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -306,7 +263,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id !== undefined) {
+          if (this.form.id != undefined) {
             updateContainer_attribute(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
