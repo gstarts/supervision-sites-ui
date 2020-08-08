@@ -281,7 +281,7 @@
 				// 查询参数
 				queryParams: {
 					pageNum: 1,
-					pageSize: 20,
+					pageSize: 10,
 					containerNo: undefined,
 					rfidNo: undefined,
 					state: undefined,
