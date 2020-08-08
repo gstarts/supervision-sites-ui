@@ -19,24 +19,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="地址" prop="address">
-        <el-input
-          v-model="queryParams.address"
-          placeholder="请输入地址"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="所属企业" prop="company">
-        <el-input
-          v-model="queryParams.company"
-          placeholder="请输入所属企业"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="联系人" prop="contact">
         <el-input
           v-model="queryParams.contact"
@@ -94,8 +76,8 @@
     </el-row>
     
     <el-table v-loading="loading" :data="yard_infoList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <!--<el-table-column label="ID" align="center" prop="id" />-->
+      <el-table-column type="selection" width="55" align="center" fixed="left" />
+      <el-table-column label="ID" align="center" prop="id" fixed="left" />
       <el-table-column label="堆场编号" align="center" prop="yardCode" />
       <el-table-column label="名称" align="center" prop="yardName" />
       <el-table-column label="简称" align="center" prop="sortName" />
@@ -108,8 +90,9 @@
       <el-table-column label="集装箱报警(%)" align="center" prop="conainerAlarmValue" />
       <el-table-column label="散杂货容量" align="center" prop="bulkgoodsCapacity" />
       <el-table-column label="散杂货报警(%)" align="center" prop="bulkgoodsAlarmValue" />
-      <!--<el-table-column label="备注" align="center" prop="remark" />-->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="当前集装箱容量" align="center" prop="containerCount" />
+      <el-table-column label="当前散杂货容量" align="center" prop="bulkgoodsCount" />
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -179,6 +162,12 @@
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
         </el-form-item>
+        <el-form-item label="当前集装箱容量" prop="containerCount">
+          <el-input v-model="form.containerCount" placeholder="请输入当前集装箱容量" />
+        </el-form-item>
+        <el-form-item label="当前散杂货容量" prop="bulkgoodsCount">
+          <el-input v-model="form.bulkgoodsCount" placeholder="请输入当前散杂货容量" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -217,8 +206,6 @@
 					pageSize: 20,
 					yardCode: undefined,
 					yardName: undefined,
-					address: undefined,
-					company: undefined,
 					contact: undefined,
 				},
 				// 表单参数
@@ -230,21 +217,6 @@
 					],
 					yardName: [
 						{ required: true, message: "名称不能为空", trigger: "blur" }
-					],
-					address: [
-						{ required: true, message: "地址不能为空", trigger: "blur" }
-					],
-					area: [
-						{ required: true, message: "面积(㎡)不能为空", trigger: "blur" }
-					],
-					company: [
-						{ required: true, message: "所属企业不能为空", trigger: "blur" }
-					],
-					contact: [
-						{ required: true, message: "联系人不能为空", trigger: "blur" }
-					],
-					phone: [
-						{ required: true, message: "联系电话不能为空", trigger: "blur" }
 					],
 					containerCapacity: [
 						{ required: true, message: "集装箱容量不能为空", trigger: "blur" }
@@ -299,7 +271,9 @@
 					createBy: undefined,
 					createTime: undefined,
 					updateBy: undefined,
-					updateTime: undefined
+					updateTime: undefined,
+					containerCount: undefined,
+					bulkgoodsCount: undefined
 				};
 				this.resetForm("form");
 			},
