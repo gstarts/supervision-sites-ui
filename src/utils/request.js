@@ -26,7 +26,7 @@ service.interceptors.request.use(config => {
 	Promise.reject(error)
 })
 
-// 响应拦截器 todo 待测试一下，返回码貌似匹配不上，返回401时不执行下面的语句
+// 响应拦截器
 service.interceptors.response.use(res => {
 		console.log("服务器返回状态码：" + JSON.stringify(res.data.code))
 		const code = res.data.code || 200;
@@ -61,8 +61,8 @@ service.interceptors.response.use(res => {
 		}
 	},
 	error => {
-		console.log('err' + error)
-		let httpCode = error.response.data.httpCode
+		//console.log(error.response.status)
+		let httpCode = error.response.status
 		let message = error.message
 		switch (httpCode) {
 			case 400:
