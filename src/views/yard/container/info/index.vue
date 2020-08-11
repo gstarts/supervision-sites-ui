@@ -113,7 +113,7 @@
     </el-row>
     
     <el-table v-loading="loading" :data="container_infoList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
+      <!--<el-table-column type="selection" width="55" align="center"/>-->
       <el-table-column label="ID" align="center" prop="id" width="80px" />
       <el-table-column label="集装箱号" align="center" width="120px" prop="containerNo"/>
       <el-table-column label="RFID_NO" align="center" prop="rfidNo"/>
@@ -255,7 +255,7 @@
 		addContainer_info,
 		updateContainer_info
 	} from "@/api/yard/container_info";
-	import {listContainer_attribute} from '../../../api/yard/container_attribute'
+	import {listContainer_attribute} from '@/api/yard/container_attribute'
 
 	export default {
 		name: "Container_info",

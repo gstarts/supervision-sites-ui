@@ -76,7 +76,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="container_attributeList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <!--<el-table-column type="selection" width="55" align="center" />-->
      <!-- <el-table-column label="ID" align="center" prop="id" />-->
       <el-table-column label="No.ID" align="center" prop="attrId" />
       <el-table-column label="箱属" align="center" prop="boxName" />
@@ -116,8 +116,8 @@
     <!-- 添加或修改集装箱属性 对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="No.ID" prop="attrId">
-          <el-input v-model="form.attrId" placeholder="请输入No.ID" />
+        <el-form-item label="No.ID" prop="attrId" >
+          <el-input v-model="form.attrId" placeholder="请输入No.ID" :disabled="title.indexOf('修改')>-1"/>
         </el-form-item>
         <el-form-item label="箱属" prop="boxName">
           <el-input v-model="form.boxName" placeholder="请输入箱属" />

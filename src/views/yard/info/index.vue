@@ -41,7 +41,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['yard:yard_info:add']"
+          v-hasPermi="['yard:info:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -51,7 +51,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['yard:yard_info:edit']"
+          v-hasPermi="['yard:info:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -61,7 +61,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['yard:yard_info:remove']"
+          v-hasPermi="['yard:info:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -70,15 +70,21 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['yard:yard_info:export']"
+          v-hasPermi="['yard:info:export']"
         >导出</el-button>
       </el-col>
     </el-row>
     
     <el-table v-loading="loading" :data="yard_infoList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" fixed="left" />
+      <!--<el-table-column type="selection" width="55" align="center" fixed="left" />-->
       <el-table-column label="ID" align="center" prop="id" fixed="left" />
-      <el-table-column label="堆场编号" align="center" prop="yardCode" />
+      <el-table-column label="堆场编号" align="center" >
+        <template slot-scope="scope">
+          <router-link :to="'/yard/zone/' + scope.row.id" class="link-type">
+            <span>{{ scope.row.yardCode }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="名称" align="center" prop="yardName" />
       <el-table-column label="简称" align="center" prop="sortName" />
       <el-table-column label="地址" align="center" prop="address" />
@@ -99,14 +105,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['yard:yard_info:edit']"
+            v-hasPermi="['yard:info:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['yard:yard_info:remove']"
+            v-hasPermi="['yard:info:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -178,7 +184,7 @@
 </template>
 
 <script>
-	import { listYard_info, getYard_info, delYard_info, addYard_info, updateYard_info } from "@/api/yard/yard_info";
+	import { listYard_info, getYard_info, delYard_info, addYard_info, updateYard_info } from "@/api/yard/info";
 
 	export default {
 		name: "Yard_info",
@@ -336,7 +342,7 @@
 			/** 删除按钮操作 */
 			handleDelete(row) {
 				const ids = row.id || this.ids;
-				this.$confirm('是否确认删除堆场基本信息编号为"' + ids + '"的数据项?', "警告", {
+				this.$confirm('是否确认删除堆场编号为"' + row.yardCode + '"的数据项?', "警告", {
 					confirmButtonText: "确定",
 					cancelButtonText: "取消",
 					type: "warning"
@@ -349,9 +355,9 @@
 			},
 			/** 导出按钮操作 */
 			handleExport() {
-				this.download('yard/yard_info/export', {
+				this.download('yard/info/export', {
 					...this.queryParams
-				}, `yard_yard_info.xlsx`)
+				}, `yard_info.xlsx`)
 			}
 		}
 	};
