@@ -32,6 +32,14 @@ export default {
     Sidebar,
     TagsView
   },
+  data() {
+  	return {
+		  //刷新token锁
+		  refreshLock: false,
+		  //刷新token的时间
+		  refreshTime: '',
+    }
+  },
   mixins: [ResizeMixin],
   computed: {
     ...mapState({

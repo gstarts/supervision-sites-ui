@@ -29,6 +29,7 @@ service.interceptors.request.use(config => {
 // 响应拦截器
 service.interceptors.response.use(res => {
 		console.log("服务器返回状态码：" + JSON.stringify(res.data.code))
+		console.log(res.data)
 		const code = res.data.code || 200;
 		const message = errorCode[code] || res.data.msg || errorCode['default']
 		if (code === 401) {
