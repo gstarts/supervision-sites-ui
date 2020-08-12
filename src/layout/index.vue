@@ -20,6 +20,7 @@ import RightPanel from '@/components/RightPanel'
 import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
+import {getExpiresIn, getToken, setExpiresIn} from '@/utils/auth'
 
 export default {
   name: 'Layout',
@@ -49,10 +50,34 @@ export default {
       }
     }
   },
+	mounted() {
+		this.$nextTick(() => {
+			this.refreshToken()
+		})
+	},
   methods: {
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
-    }
+    },
+	  refreshToken() {
+		  this.refreshTime = setInterval(() => {
+			  if (null === getToken()) {
+				  return;
+			  }
+			  const expires_in = getExpiresIn();
+			  if (expires_in <= 1000 && !this.refreshLock) {
+				  this.refreshLock = true
+
+				  this.$store.dispatch('RefreshToken')
+					  .catch(() => {
+						  clearInterval(this.refreshTime)
+					  });
+				  this.refreshLock = false
+			  }
+			  this.$store.commit("SET_EXPIRES_IN", expires_in - 10);
+			  setExpiresIn(expires_in - 10);
+		  }, 10000);
+	  }
   }
 }
 </script>
