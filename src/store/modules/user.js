@@ -8,7 +8,8 @@ const user = {
 		name: '',
 		avatar: '',
 		roles: [],
-		permissions: []
+		permissions: [],
+		dept:[] //保存用户所在部门
 	},
 
 	mutations: {
@@ -32,7 +33,11 @@ const user = {
 		},
 		SET_PERMISSIONS: (state, permissions) => {
 			state.permissions = permissions
+		},
+		SET_DEPT: (state, dept) => {
+			state.dept = dept
 		}
+
 	},
 
 	actions: {
@@ -71,6 +76,8 @@ const user = {
 					}
 					commit('SET_NAME', user.userName)
 					commit('SET_AVATAR', avatar)
+
+					commit('SET_DEPT', user.dept)
 					resolve(res)
 				}).catch(error => {
 					reject(error)
