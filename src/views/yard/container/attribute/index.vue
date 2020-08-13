@@ -299,7 +299,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('yard/container_attribute/export', {
+      this.download('yard/container/attribute/export', {
         ...this.queryParams
       }, `yard_container_attribute.xlsx`)
     }

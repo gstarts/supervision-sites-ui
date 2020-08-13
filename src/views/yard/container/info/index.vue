@@ -505,7 +505,7 @@
 			},
 			/** 导出按钮操作 */
 			handleExport() {
-				this.download('yard/container_info/export', {
+				this.download('yard/container/info/export', {
 					...this.queryParams
 				}, `yard_container_info.xlsx`)
 			}

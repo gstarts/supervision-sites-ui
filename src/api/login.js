@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
+// client_id 配置在客户端
 const client_id = 'web'
 const client_secret = '123456'
-
 const scope = 'server'
 
 // 登录方法
