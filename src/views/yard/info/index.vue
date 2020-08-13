@@ -240,7 +240,7 @@
 			};
 		},
 		created() {
-			this.getList();
+      this.getList();
 		},
 		methods: {
 			/** 查询堆场基本信息列表 */
