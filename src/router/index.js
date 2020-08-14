@@ -117,7 +117,27 @@ export const constantRoutes = [
         meta: { title: '修改生成配置' }
       }
     ]
-  }
+  },
+    //空车路由
+    {
+      path: '/emptyCar',
+      component: Layout,
+      hidden: true,
+      children: [
+        {
+          path: 'Erredit',
+          component: () => import('@/views/manifest/rmft4404/update4404/updateIndex'),
+          name: 'errUpdate',
+          meta: { title: '空车异常信息修改'}
+        },
+        {
+          path: 'seledetails',
+          component: () => import('@/views/manifest/rmft4404/head4404/details'),
+          name: 'carUpdate',
+          meta: { title: '空车信息详情'}
+        }
+      ]
+    },
 ]
 
 export default new Router({
