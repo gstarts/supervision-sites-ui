@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { listDeclare, selectErr, listTransport } from "@/api/manifest/rmft/emptycar/Err/transport";
+import { listDeclare, selectErr, listTransport } from "@/api/manifest/rmft4404/emptycar/Err/transport";
 
 // import { listData } from "@/api/enterprise/qualification";
 export default {

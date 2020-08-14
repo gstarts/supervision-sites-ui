@@ -11,7 +11,7 @@
         >修改</el-button>
       </el-col>
     </el-row>-->
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="10" class="mb8" >
       <el-col :span="1.5">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="clearall">新增</el-button>
       </el-col>
@@ -416,14 +416,14 @@ import {
   getCoalDetail,
   updateTransport,
   updateCoal,
-} from "@/api/report/head";
+} from "@/api/manifest/rmft4406/head";
 
 export default {
   name: "Head",
   data() {
     return {
       // 遮罩层
-      loading: true,
+      loading: false,
       // 选中数组
       ids: [],
       // 非单个禁用
