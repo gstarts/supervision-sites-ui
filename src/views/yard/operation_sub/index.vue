@@ -1,6 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="作业单号" prop="operationId">
+        <el-input
+          v-model="queryParams.operationId"
+          placeholder="请输入作业单号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="堆场ID" prop="yardId">
         <el-input
           v-model="queryParams.yardId"
@@ -10,24 +19,60 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="区域编号" prop="zoneCode">
-        <el-input
-          v-model="queryParams.zoneCode"
-          placeholder="请输入区域编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="区域类型" prop="zoneType">
-        <el-select v-model="queryParams.zoneType" placeholder="请选择区域类型" clearable size="small">
+      <el-form-item label="作业类型" prop="operationType">
+        <el-select v-model="queryParams.operationType" placeholder="请选择作业类型" clearable size="small">
           <el-option
-            v-for="dict in zoneTypeOptions"
+            v-for="dict in operationTypeOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="箱号" prop="containerNo">
+        <el-input
+          v-model="queryParams.containerNo"
+          placeholder="请输入箱号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="箱原库位号" prop="containerOldStoreCode">
+        <el-input
+          v-model="queryParams.containerOldStoreCode"
+          placeholder="请输入箱原库位号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="箱新库位号" prop="containerNewStoreCode">
+        <el-input
+          v-model="queryParams.containerNewStoreCode"
+          placeholder="请输入箱新库位号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="散杂货库位号" prop="goodsStoreCode">
+        <el-input
+          v-model="queryParams.goodsStoreCode"
+          placeholder="请输入散杂货库位号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="货物批次号" prop="goodsBatchNo">
+        <el-input
+          v-model="queryParams.goodsBatchNo"
+          placeholder="请输入货物批次号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -42,7 +87,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['yard:zone:add']"
+          v-hasPermi="['yard:operation_sub:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -52,7 +97,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['yard:zone:edit']"
+          v-hasPermi="['yard:operation_sub:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -62,7 +107,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['yard:zone:remove']"
+          v-hasPermi="['yard:operation_sub:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -71,22 +116,28 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['yard:zone:export']"
+          v-hasPermi="['yard:operation_sub:export']"
         >导出</el-button>
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="zoneList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="operation_subList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
+      <el-table-column label="作业单号" align="center" prop="operationId" />
       <el-table-column label="堆场ID" align="center" prop="yardId" />
-      <el-table-column label="区域编号" align="center" prop="zoneCode" />
-      <el-table-column label="区域类型" align="center" prop="zoneType" :formatter="zoneTypeFormat" />
-      <el-table-column label="区域长" align="center" prop="zoneLength" />
-      <el-table-column label="区域宽" align="center" prop="zoneWidth" />
-      <el-table-column label="存放行数" align="center" prop="storageRows" />
-      <el-table-column label="存放列数" align="center" prop="storageColums" />
-      <el-table-column label="库位层数" align="center" prop="storeLevel" />
+      <el-table-column label="作业类型" align="center" prop="operationType" :formatter="operationTypeFormat" />
+      <el-table-column label="箱号" align="center" prop="containerNo" />
+      <el-table-column label="箱原库位号" align="center" prop="containerOldStoreCode" />
+      <el-table-column label="箱新库位号" align="center" prop="containerNewStoreCode" />
+      <el-table-column label="散杂货库位号" align="center" prop="goodsStoreCode" />
+      <el-table-column label="货物批次号" align="center" prop="goodsBatchNo" />
+      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="更新人" align="center" prop="updateBy" />
+      <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -94,14 +145,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['yard:zone:edit']"
+            v-hasPermi="['yard:operation_sub:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['yard:zone:remove']"
+            v-hasPermi="['yard:operation_sub:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -115,39 +166,42 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改区域库位管理对话框 -->
+    <!-- 添加或修改作业子单对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-form-item label="ID" prop="id">
+          <el-input v-model="form.id" placeholder="请输入ID" />
+        </el-form-item>
+        <el-form-item label="作业单号" prop="operationId">
+          <el-input v-model="form.operationId" placeholder="请输入作业单号" />
+        </el-form-item>
         <el-form-item label="堆场ID" prop="yardId">
           <el-input v-model="form.yardId" placeholder="请输入堆场ID" />
         </el-form-item>
-        <el-form-item label="区域编号" prop="zoneCode">
-          <el-input v-model="form.zoneCode" placeholder="请输入区域编号" />
-        </el-form-item>
-        <el-form-item label="区域类型">
-          <el-select v-model="form.zoneType" placeholder="请选择区域类型">
+        <el-form-item label="作业类型">
+          <el-select v-model="form.operationType" placeholder="请选择作业类型">
             <el-option
-              v-for="dict in zoneTypeOptions"
+              v-for="dict in operationTypeOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="区域长" prop="zoneLength">
-          <el-input v-model="form.zoneLength" placeholder="请输入区域长" />
+        <el-form-item label="箱号" prop="containerNo">
+          <el-input v-model="form.containerNo" placeholder="请输入箱号" />
         </el-form-item>
-        <el-form-item label="区域宽" prop="zoneWidth">
-          <el-input v-model="form.zoneWidth" placeholder="请输入区域宽" />
+        <el-form-item label="箱原库位号" prop="containerOldStoreCode">
+          <el-input v-model="form.containerOldStoreCode" placeholder="请输入箱原库位号" />
         </el-form-item>
-        <el-form-item label="存放行数" prop="storageRows">
-          <el-input v-model="form.storageRows" placeholder="请输入存放行数" />
+        <el-form-item label="箱新库位号" prop="containerNewStoreCode">
+          <el-input v-model="form.containerNewStoreCode" placeholder="请输入箱新库位号" />
         </el-form-item>
-        <el-form-item label="存放列数" prop="storageColums">
-          <el-input v-model="form.storageColums" placeholder="请输入存放列数" />
+        <el-form-item label="散杂货库位号" prop="goodsStoreCode">
+          <el-input v-model="form.goodsStoreCode" placeholder="请输入散杂货库位号" />
         </el-form-item>
-        <el-form-item label="库位层数" prop="storeLevel">
-          <el-input v-model="form.storeLevel" placeholder="请输入库位层数" />
+        <el-form-item label="货物批次号" prop="goodsBatchNo">
+          <el-input v-model="form.goodsBatchNo" placeholder="请输入货物批次号" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
@@ -162,10 +216,10 @@
 </template>
 
 <script>
-import { listZone, getZone, delZone, addZone, updateZone } from "@/api/yard/zone";
+import { listOperation_sub, getOperation_sub, delOperation_sub, addOperation_sub, updateOperation_sub } from "@/api/yard/operation_sub";
 
 export default {
-  name: "Zone",
+  name: "Operation_sub",
   data() {
     return {
       // 遮罩层
@@ -178,66 +232,53 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
-      // 区域库位管理表格数据
-      zoneList: [],
+      // 作业子单表格数据
+      operation_subList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
-      // 区域类型字典
-      zoneTypeOptions: [],
+      // 作业类型字典
+      operationTypeOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 20,
+        operationId: undefined,
         yardId: undefined,
-        zoneCode: undefined,
-        zoneType: undefined,
+        operationType: undefined,
+        containerNo: undefined,
+        containerOldStoreCode: undefined,
+        containerNewStoreCode: undefined,
+        goodsStoreCode: undefined,
+        goodsBatchNo: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        yardId: [
-          { required: true, message: "堆场ID不能为空", trigger: "blur" }
-        ],
-        zoneCode: [
-          { required: true, message: "区域编号不能为空", trigger: "blur" }
-        ],
-        zoneType: [
-          { required: true, message: "区域类型不能为空", trigger: "blur" }
-        ],
-        storageRows: [
-          { required: true, message: "存放行数不能为空", trigger: "blur" }
-        ],
-        storageColums: [
-          { required: true, message: "存放列数不能为空", trigger: "blur" }
-        ],
-        storeLevel: [
-          { required: true, message: "库位层数不能为空", trigger: "blur" }
-        ],
       }
     };
   },
   created() {
     this.getList();
-    this.getDicts("yard_zone_type").then(response => {
-      this.zoneTypeOptions = response.data;
+    this.getDicts("yard_business_type").then(response => {
+      this.operationTypeOptions = response.data;
     });
   },
   methods: {
-    /** 查询区域库位管理列表 */
+    /** 查询作业子单列表 */
     getList() {
       this.loading = true;
-      listZone(this.queryParams).then(response => {
-        this.zoneList = response.rows;
+      listOperation_sub(this.queryParams).then(response => {
+        this.operation_subList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
     },
-    // 区域类型字典翻译
-    zoneTypeFormat(row, column) {
-      return this.selectDictLabel(this.zoneTypeOptions, row.zoneType);
+    // 作业类型字典翻译
+    operationTypeFormat(row, column) {
+      return this.selectDictLabel(this.operationTypeOptions, row.operationType);
     },
     // 取消按钮
     cancel() {
@@ -248,15 +289,16 @@ export default {
     reset() {
       this.form = {
         id: undefined,
+        operationId: undefined,
         yardId: undefined,
-        zoneCode: undefined,
-        zoneType: undefined,
-        zoneLength: undefined,
-        zoneWidth: undefined,
-        storageRows: undefined,
-        storageColums: undefined,
-        storeLevel: undefined,
+        operationType: undefined,
+        containerNo: undefined,
+        containerOldStoreCode: undefined,
+        containerNewStoreCode: undefined,
+        goodsStoreCode: undefined,
+        goodsBatchNo: undefined,
         remark: undefined,
+        field2: undefined,
         createBy: undefined,
         createTime: undefined,
         updateBy: undefined,
@@ -284,16 +326,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加区域库位管理";
+      this.title = "添加作业子单";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getZone(id).then(response => {
+      getOperation_sub(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改区域库位管理";
+        this.title = "修改作业子单";
       });
     },
     /** 提交按钮 */
@@ -301,7 +343,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateZone(this.form).then(response => {
+            updateOperation_sub(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -309,7 +351,7 @@ export default {
               }
             });
           } else {
-            addZone(this.form).then(response => {
+            addOperation_sub(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -323,12 +365,12 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除区域库位管理编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除作业子单编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delZone(ids);
+          return delOperation_sub(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
@@ -336,9 +378,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('yard/zone/export', {
+      this.download('yard/operation_sub/export', {
         ...this.queryParams
-      }, `yard_zone.xlsx`)
+      }, `yard_operation_sub.xlsx`)
     }
   }
 };
