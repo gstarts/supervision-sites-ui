@@ -43,7 +43,7 @@
               placeholder="请输入运输工具代码"
               clearable
               size="mini"
-               
+              
             />
           </el-form-item>
         </el-col>
@@ -54,7 +54,7 @@
               placeholder="请输入运输工具名称"
               clearable
               size="mini"
-               
+              
             />
           </el-form-item>
         </el-col>
@@ -70,7 +70,7 @@
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="dict.dictValue"
-                 
+                
               ></el-option>
             </el-select>
           </el-form-item>
@@ -85,7 +85,7 @@
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="dict.dictValue"
-                 
+                
               ></el-option>
             </el-select>
           </el-form-item>
@@ -98,7 +98,7 @@
               placeholder="请输入承运人代码"
               clearable
               size="mini"
-               
+              
             />
           </el-form-item>
         </el-col>
@@ -110,7 +110,7 @@
               placeholder="请输入海关货物通关代码"
               clearable
               size="mini"
-               
+              
             />
           </el-form-item>
         </el-col>
@@ -121,7 +121,7 @@
               placeholder="请输入装货地代码"
               clearable
               size="mini"
-               
+              
             />
           </el-form-item>
         </el-col>
@@ -135,7 +135,7 @@
               placeholder="请输入驾驶员代码"
               clearable
               size="mini"
-               
+              
             />
           </el-form-item>
         </el-col>
@@ -146,7 +146,7 @@
               placeholder="请输入驾驶员名称"
               clearable
               size="mini"
-               
+              
             />
           </el-form-item>
         </el-col>
@@ -175,7 +175,7 @@
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="dict.dictValue"
-                 
+                
               ></el-option>
             </el-select>
           </el-form-item>
@@ -189,7 +189,7 @@
               placeholder="请输入企业代码"
               clearable
               size="mini"
-               
+              
               disabled
             />
           </el-form-item>
@@ -201,7 +201,7 @@
               placeholder="请输入确报传输人名称"
               clearable
               size="mini"
-               
+              
               disabled
             />
           </el-form-item>
@@ -215,7 +215,7 @@
               placeholder="请输入备注"
               clearable
               size="mini"
-               
+              
             />
           </el-form-item>
         </el-col>
@@ -279,7 +279,7 @@
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="dict.dictValue"
-                 
+                
               ></el-option>
             </el-select>
           </el-form-item>
@@ -402,7 +402,7 @@
 
 <script>
 import {
-  listHead,
+  //listHead,
   getInfoHead,
   getHead,
   delHead,
@@ -410,13 +410,15 @@ import {
   updateHead,
   updateDeclare,
   exportHead,
-  getTransport,
+  //getTransport,
   getCoal,
-  getTransportDetail,
-  getCoalDetail,
-  updateTransport,
+  //getTransportDetail,
+  //getCoalDetail,
+  //updateTransport,
   updateCoal,
-} from "@/api/report/head";
+} from "@/api/manifest/rmft4404/emptycar/Head/head";
+
+import {getTransport, updateTransport} from "@/api/manifest/rmft4404/emptycar/Err/transport";
 
 export default {
   name: "Head",

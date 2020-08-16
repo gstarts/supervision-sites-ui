@@ -269,7 +269,8 @@ import {
   listemptycar,
   emptycarAll,
   updateCode,
-} from "@/api/manifest/rmft/emptycar/Head/head";
+} from "@/api/manifest/rmft4404/emptycar/Head/head";
+
 
 export default {
   name: "Head",

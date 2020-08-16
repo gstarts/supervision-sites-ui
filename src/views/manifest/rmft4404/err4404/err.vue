@@ -51,7 +51,7 @@
         label="运输方式"
         align="center"
         prop="iRmft4404Bordertransportmeans.typecode"
-         :formatter="eIsEnterpriseTypeFormat" 
+         :formatter="eIsEnterpriseTypeFormat"
       />
       <el-table-column label="抵境内第一目的港时间" align="center" prop="iRmft4404Bordertransportmeans.arrivaldatetime" />
       <el-table-column label="确报状态" align="center" prop="statementdescription" />
@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { listDeclare, selectErr, listTransport } from "@/api/manifest/rmft/emptycar/Err/transport";
+import { listDeclare, selectErr, listTransport } from "@/api/manifest/rmft4404/emptycar/Err/transport";
 
 // import { listData } from "@/api/enterprise/qualification";
 export default {
@@ -190,8 +190,8 @@ export default {
     detail(row) {
       this.reset();
       this.$router.push({ path: "/emptyCar/Erredit",
-       query: 
-       { 
+       query:
+       {
          tableId: row.messageid,
          borderId:row.iRmft4404Bordertransportmeans.id,
        } });

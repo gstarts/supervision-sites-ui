@@ -262,20 +262,19 @@
 
 <script>
 import {
-  listHead,
+  //listHead,
   getHead,
   delHead,
-  addHead,
+  //addHead,
   updateHead,
   exportHead,
-  getTransport,
+ 
   getCoal,
-  getTransportDetail,
-  getCoalDetail,
-  updateTransport,
+  //getCoalDetail,
   updateCoal,
-} from "@/api/manifest/rmft/emptycar/Head/head";
+} from "@/api/manifest/rmft4404/emptycar/Head/head";
 
+import {getTransport,getTransportDetail, updateTransport} from "@/api/manifest/rmft4404/emptycar/Err/transport";
 export default {
   // name: "Head",
   data() {
