@@ -58,7 +58,9 @@
     "vue-router": "3.0.2",
     "vue-splitpane": "1.0.4",
     "vuedraggable": "2.20.0",
-    "vuex": "3.1.0"
+    "vuex": "3.1.0",
+    "font-awesome": "4.7.0",
+    "simple-keyboard": "2.29.99"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "3.5.3",
@@ -89,10 +91,8 @@
     "serve-static": "^1.13.2",
     "svg-sprite-loader": "4.1.3",
     "svgo": "1.2.0",
-    "vue-template-compiler": "2.6.10",
-    "font-awesome": "4.7.0",
-    "simple-keyboard": "2.29.99"
-  },
+    "vue-template-compiler": "2.6.10"
+    },
   "engines": {
     "node": ">=8.9",
     "npm": ">= 3.0.0"
