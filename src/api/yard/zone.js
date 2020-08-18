@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询区域库位管理列表
+// 查询堆场分区信息列表
 export function listZone(query) {
   return request({
     url: '/yard/zone/list',
@@ -9,7 +9,7 @@ export function listZone(query) {
   })
 }
 
-// 查询区域库位管理详细
+// 查询堆场分区信息详细
 export function getZone(id) {
   return request({
     url: '/yard/zone/' + id,
@@ -17,7 +17,7 @@ export function getZone(id) {
   })
 }
 
-// 新增区域库位管理
+// 新增堆场分区信息
 export function addZone(data) {
   return request({
     url: '/yard/zone',
@@ -26,7 +26,7 @@ export function addZone(data) {
   })
 }
 
-// 修改区域库位管理
+// 修改堆场分区信息
 export function updateZone(data) {
   return request({
     url: '/yard/zone',
@@ -35,7 +35,7 @@ export function updateZone(data) {
   })
 }
 
-// 删除区域库位管理
+// 删除堆场分区信息
 export function delZone(id) {
   return request({
     url: '/yard/zone/' + id,

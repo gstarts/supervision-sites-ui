@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :inline="true">
-      <el-form-item label="部门名称">
+      <el-form-item label="机构名称">
         <el-input
           v-model="queryParams.deptName"
-          placeholder="请输入部门名称"
+          placeholder="请输入机构名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -56,17 +56,17 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button 
-            size="mini" 
-            type="text" 
-            icon="el-icon-edit" 
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:dept:edit']"
           >修改</el-button>
-          <el-button 
-            size="mini" 
-            type="text" 
-            icon="el-icon-plus" 
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-plus"
             @click="handleAdd(scope.row)"
             v-hasPermi="['system:dept:add']"
           >新增</el-button>
@@ -82,7 +82,7 @@
       </el-table-column>
     </el-table>
 
-    <!-- 添加或修改部门对话框 -->
+    <!-- 添加或修改部门对话框  -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
@@ -112,18 +112,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <!-- <el-form-item label="机构类型" prop="deptType">
-              <el-select v-model="form.deptType" placeholder="请输入机构类型" maxlength="50" />
-                <el-option
-              v-for="dict in deptTypeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-            </el-form-item> -->
+
 
             <el-form-item label="机构类型">
-          <el-select v-model="form.deptType" placeholder="请输入机构类型" maxlength="50">
+          <el-select v-model="form.deptType" placeholder="请输入机构类型" maxlength="50" >
             <el-option
               v-for="dict in deptTypeOptions"
               :key="dict.dictValue"
@@ -148,7 +140,7 @@
       
            <el-col :span="24">
             <el-form-item label="散杂货重量预警值" prop="bulkGoodsWeightAlarmAalue" label-width="140px" v-if="form.deptType!=3" >
-              <el-input v-model="form.bulkGoodsWeightAlarmAalue" placeholder="请输入" maxlength="20" />
+              <el-input v-model="form.bulkGoodsWeightAlarmValue" placeholder="请输入" maxlength="20" />
             </el-form-item>
           </el-col>
          
@@ -272,13 +264,13 @@ export default {
   },
   created() {
     this.getList();
-    this.getDicts("sys_normal_disable").then(response => {
-      this.statusOptions = response.data;
-    });
 
-    this.getDicts("s_dept_type").then(response => {
+     this.getDicts("s_dept_type").then(response => {
       this.deptTypeOptions = response.data;
     });
+    this.getDicts("sys_normal_disable").then(response => {
+      this.statusOptions = response.data;
+    });  
   },
   methods: {
     /** 查询部门列表 */
@@ -303,6 +295,11 @@ export default {
     // 字典状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
+    },
+
+      // 区域类型字典翻译
+    zoneTypeFormat(form, column) {
+      return this.selectDictLabel(this.deptTypeOptions, form.deptType);
     },
     // 取消按钮
     cancel() {
@@ -344,7 +341,6 @@ export default {
       this.reset();
       getDept(row.deptId).then(response => {
         this.form = response.data;
-        console.log(this.form+"1012112")
         this.open = true;
         this.title = "修改部门";
       });
