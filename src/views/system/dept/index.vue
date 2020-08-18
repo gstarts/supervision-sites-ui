@@ -112,9 +112,27 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
-            </el-form-item>
+            <!-- <el-form-item label="机构类型" prop="deptType">
+              <el-select v-model="form.deptType" placeholder="请输入机构类型" maxlength="50" />
+                <el-option
+              v-for="dict in deptTypeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+            </el-form-item> -->
+
+            <el-form-item label="机构类型">
+          <el-select v-model="form.deptType" placeholder="请输入机构类型" maxlength="50">
+            <el-option
+              v-for="dict in deptTypeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
           </el-col>
           <el-col :span="12">
             <el-form-item label="部门状态">
@@ -127,6 +145,62 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
+      
+           <el-col :span="24">
+            <el-form-item label="散杂货重量预警值" prop="bulkGoodsWeightAlarmAalue" label-width="140px" v-if="form.deptType!=3" >
+              <el-input v-model="form.bulkGoodsWeightAlarmAalue" placeholder="请输入" maxlength="20" />
+            </el-form-item>
+          </el-col>
+         
+           <el-col :span="12">
+            <el-form-item label="散杂货当前重量" prop="bulkGoodsCurrentWeight" label-width="140px"  v-if="form.deptType!=3">
+              <el-input v-model="form.bulkGoodsCurrentWeight" placeholder="请输入" maxlength="20" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="散杂货总重" prop="bulkGoodsTotalWeight" label-width="140px"  v-if="form.deptType!=3">
+              <el-input v-model="form.bulkGoodsTotalWeight" placeholder="请输入" maxlength="20" />
+            </el-form-item>
+          </el-col>
+
+           <el-col :span="12">
+            <el-form-item label="当前散杂货容量" prop="bulkGoodsCount" label-width="140px"  v-if="form.deptType!=3">
+              <el-input v-model="form.bulkGoodsCount" placeholder="请输入" maxlength="20" />
+            </el-form-item>
+          </el-col>
+          
+            <el-col :span="12">
+            <el-form-item label="散杂货库位数量报警" prop="bulkGoodsAlarmValue" label-width="140px"  v-if="form.deptType!=3">
+              <el-input v-model="form.bulkGoodsAlarmValue" placeholder="请输入" maxlength="20" />
+            </el-form-item>
+          </el-col>
+
+          
+            <el-col :span="12">
+            <el-form-item label="散杂货库位占用量" prop="bulkGoodsCapacity" label-width="140px"  v-if="form.deptType!=3">
+              <el-input v-model="form.bulkGoodsCapacity" placeholder="请输入" maxlength="20" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="当前集装箱容量" prop="containerCurrentCount" label-width="140px"  v-if="form.deptType!=3">
+              <el-input v-model="form.containerCurrentCount" placeholder="请输入" maxlength="20" />
+            </el-form-item>
+          </el-col>
+
+           <el-col :span="12">
+            <el-form-item label="集装箱报警" prop="containerAlarmValue" label-width="140px"  v-if="form.deptType!=3">
+              <el-input v-model="form.containerAlarmValue" placeholder="请输入" maxlength="20" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="集装箱容量" prop="containerAlarmValue" label-width="140px"  v-if="form.deptType!=3">
+              <el-input v-model="form.containerCapacity" placeholder="请输入" maxlength="20" />
+            </el-form-item>
+          </el-col>
+
+
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -159,6 +233,8 @@ export default {
       open: false,
       // 状态数据字典
       statusOptions: [],
+
+      deptTypeOptions: [],
       // 查询参数
       queryParams: {
         deptName: undefined,
@@ -198,6 +274,10 @@ export default {
     this.getList();
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
+    });
+
+    this.getDicts("s_dept_type").then(response => {
+      this.deptTypeOptions = response.data;
     });
   },
   methods: {
@@ -264,6 +344,7 @@ export default {
       this.reset();
       getDept(row.deptId).then(response => {
         this.form = response.data;
+        console.log(this.form+"1012112")
         this.open = true;
         this.title = "修改部门";
       });
