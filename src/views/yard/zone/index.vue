@@ -340,9 +340,9 @@
 		created() {
 			this.wordArr = genEnglishChar()
       this.numArr = genNumChar(1,30)
-      console.log(this.wordArr)
 			let dept = this.$store.getters.dept
       
+      console.log(dept)
       // 如果部门类型是企业，则查找子类下有没有堆场，
       //如果部门类型不是企业，看，是不是堆场，如果不是堆场，则不显示内容
 			this.depts.push(dept)
