@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="出入库单号" prop="businessNo">
+      <el-form-item label="出入库单号" prop="businessNo" label-width="90px">
         <el-input
           v-model="queryParams.businessNo"
           placeholder="请输入出入库单号"
@@ -28,7 +28,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="出/入场状态" prop="ioState">
+      <el-form-item label="出/入场状态" prop="ioState" label-width="90px">
         <el-select v-model="queryParams.ioState" placeholder="请选择出/入场状态" clearable size="small">
           <el-option
             v-for="dict in ioStateOptions"
@@ -38,7 +38,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="出/入场时间" prop="ioTime">
+      <el-form-item label="出/入场时间" prop="ioTime" label-width="90px">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.ioTime"
           type="date"
@@ -46,7 +46,7 @@
           placeholder="选择出/入场时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="来源" prop="formSite">
+      <!--<el-form-item label="来源" prop="formSite">
         <el-input
           v-model="queryParams.formSite"
           placeholder="请输入来源"
@@ -54,8 +54,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="去处" prop="toSite">
+      </el-form-item>-->
+     <!-- <el-form-item label="去处" prop="toSite">
         <el-input
           v-model="queryParams.toSite"
           placeholder="请输入去处"
@@ -63,7 +63,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="司机ID" prop="driverId">
         <el-input
           v-model="queryParams.driverId"
@@ -73,7 +73,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="货运企业名称" prop="companyName">
+      <el-form-item label="货运企业名称" prop="companyName" label-width="100px">
         <el-input
           v-model="queryParams.companyName"
           placeholder="请输入货运企业名称"
@@ -206,71 +206,122 @@
     <!-- 添加或修改集装箱进出记录 对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="出入库单号" prop="businessNo">
-          <el-input v-model="form.businessNo" placeholder="请输入出入库单号" />
-        </el-form-item>
-        <el-form-item label="堆场ID" prop="yardId">
-          <el-input v-model="form.yardId" placeholder="请输入堆场ID" />
-        </el-form-item>
-        <el-form-item label="车牌号" prop="vehicleNo">
-          <el-input v-model="form.vehicleNo" placeholder="请输入车牌号" />
-        </el-form-item>
-        <el-form-item label="集装箱数量" prop="containerCount">
-          <el-input v-model="form.containerCount" placeholder="请输入集装箱数量" />
-        </el-form-item>
-        <el-form-item label="集装箱号" prop="containerNo">
-          <el-input v-model="form.containerNo" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="出/入场状态">
-          <el-select v-model="form.ioState" placeholder="请选择出/入场状态">
-            <el-option
-              v-for="dict in ioStateOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="出/入场时间" prop="ioTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.ioTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择出/入场时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="来源" prop="formSite">
-          <el-input v-model="form.formSite" placeholder="请输入来源" />
-        </el-form-item>
-        <el-form-item label="去处" prop="toSite">
-          <el-input v-model="form.toSite" placeholder="请输入去处" />
-        </el-form-item>
-        <el-form-item label="司机ID" prop="driverId">
-          <el-input v-model="form.driverId" placeholder="请输入司机ID" />
-        </el-form-item>
-        <el-form-item label="货运企业名称" prop="companyName">
-          <el-input v-model="form.companyName" placeholder="请输入货运企业名称" />
-        </el-form-item>
-        <el-form-item label="业务状态">
-          <el-select v-model="form.state" placeholder="请选择业务状态">
-            <el-option
-              v-for="dict in stateOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="单证用途">
-          <el-select v-model="form.purpose" placeholder="请选择单证用途">
-            <el-option
-              v-for="dict in purposeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="出入库单号" prop="businessNo">
+              <el-input v-model="form.businessNo" placeholder="请输入出入库单号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="堆场ID" prop="yardId">
+              <el-input v-model="form.yardId" placeholder="请输入堆场ID" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="车牌号" prop="vehicleNo">
+              <el-input v-model="form.vehicleNo" placeholder="请输入车牌号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="集装箱数量" prop="containerCount">
+              <el-input v-model="form.containerCount" placeholder="请输入集装箱数量" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <el-form-item label="集装箱号" prop="containerNo">
+              <el-input v-model="form.containerNo"  placeholder="请输入集装箱号，多个用,隔开" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="区域" prop="zoneCode">
+              <el-input v-model="form.zoneCode"  placeholder="请输入区域" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="货位号" prop="zoneCode">
+              <el-input v-model="form.storeCode"  placeholder="请输入货位" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="出/入场状态">
+              <el-select v-model="form.ioState" placeholder="请选择出/入场状态">
+                <el-option
+                  v-for="dict in ioStateOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="出/入场时间" prop="ioTime">
+              <el-date-picker clearable size="small" style="width: 200px"
+                              v-model="form.ioTime"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              placeholder="选择出/入场时间">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="来源" prop="formSite">
+              <el-input v-model="form.formSite" placeholder="请输入来源" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="去处" prop="toSite">
+              <el-input v-model="form.toSite" placeholder="请输入去处" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="司机ID" prop="driverId">
+              <el-input v-model="form.driverId" placeholder="请输入司机ID" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="货运企业名称" prop="companyName">
+              <el-input v-model="form.companyName" placeholder="请输入货运企业名称" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="业务状态">
+              <el-select v-model="form.state" placeholder="请选择业务状态">
+                <el-option
+                  v-for="dict in stateOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="单证用途">
+              <el-select v-model="form.purpose" placeholder="请选择单证用途">
+                <el-option
+                  v-for="dict in purposeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
         </el-form-item>
