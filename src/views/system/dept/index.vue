@@ -112,18 +112,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <!-- <el-form-item label="机构类型" prop="deptType">
-              <el-select v-model="form.deptType" placeholder="请输入机构类型" maxlength="50" />
-                <el-option
-              v-for="dict in deptTypeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-            </el-form-item> -->
+
 
             <el-form-item label="机构类型">
-          <el-select v-model="form.deptType" placeholder="请输入机构类型" maxlength="50">
+          <el-select v-model="form.deptType" placeholder="请输入机构类型" maxlength="50" >
             <el-option
               v-for="dict in deptTypeOptions"
               :key="dict.dictValue"
@@ -148,7 +140,7 @@
       
            <el-col :span="24">
             <el-form-item label="散杂货重量预警值" prop="bulkGoodsWeightAlarmAalue" label-width="140px" v-if="form.deptType!=3" >
-              <el-input v-model="form.bulkGoodsWeightAlarmAalue" placeholder="请输入" maxlength="20" />
+              <el-input v-model="form.bulkGoodsWeightAlarmValue" placeholder="请输入" maxlength="20" />
             </el-form-item>
           </el-col>
          
@@ -272,13 +264,13 @@ export default {
   },
   created() {
     this.getList();
-    this.getDicts("sys_normal_disable").then(response => {
-      this.statusOptions = response.data;
-    });
 
-    this.getDicts("s_dept_type").then(response => {
+     this.getDicts("s_dept_type").then(response => {
       this.deptTypeOptions = response.data;
     });
+    this.getDicts("sys_normal_disable").then(response => {
+      this.statusOptions = response.data;
+    });  
   },
   methods: {
     /** 查询部门列表 */
@@ -303,6 +295,11 @@ export default {
     // 字典状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
+    },
+
+      // 区域类型字典翻译
+    zoneTypeFormat(form, column) {
+      return this.selectDictLabel(this.deptTypeOptions, form.deptType);
     },
     // 取消按钮
     cancel() {
@@ -344,7 +341,6 @@ export default {
       this.reset();
       getDept(row.deptId).then(response => {
         this.form = response.data;
-        console.log(this.form+"1012112")
         this.open = true;
         this.title = "修改部门";
       });
