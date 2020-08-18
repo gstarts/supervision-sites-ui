@@ -150,7 +150,7 @@
       <el-table-column label="集装箱号" align="center" prop="containerNo" />
       <el-table-column label="库位容量(KG)" align="center" prop="storeCapacity" />
       <el-table-column label="空/重箱" align="center" prop="isHeavy" :formatter="isHeavyFormat" />
-      <el-table-column label="货物净重(KG) 如果多个货物，对应库位的总重" align="center" prop="netWeight" />
+      <el-table-column label="货物净重(KG)" align="center" prop="netWeight" />
       <el-table-column label="货物毛重(KG)" align="center" prop="roughWight" />
       <el-table-column label="货物批次号" align="center" prop="goodsBatchNo" />
       <el-table-column label="变更原因" align="center" prop="updateReason" :formatter="updateReasonFormat" />
