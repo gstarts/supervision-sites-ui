@@ -69,7 +69,7 @@
     </el-row>
     <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" tabindex="type" />
+      <el-table-column label="序号" type="index" />
       <el-table-column label="公司名称" align="center" prop="eName" />
       <el-table-column label="公司性质" align="center" prop="eType" :formatter="statusFormat" />
       <el-table-column label="公司地址" align="center" prop="eAddress" />

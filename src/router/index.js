@@ -126,13 +126,13 @@ export const constantRoutes = [
       children: [
         {
           path: 'Erredit',
-          component: () => import('@/views/manifest/rmft4404/update4404/updateIndex'),
+          component: () => import('@/views/manifest/rmft4404/update4404'),
           name: 'errUpdate',
           meta: { title: '空车异常信息修改'}
         },
         {
           path: 'seledetails',
-          component: () => import('@/views/manifest/rmft4404/head4404/details'),
+          component: () => import('@/views/manifest/rmft4404/details4404'),
           name: 'carUpdate',
           meta: { title: '空车信息详情'}
         }

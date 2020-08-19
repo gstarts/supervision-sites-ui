@@ -1,14 +1,16 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="堆场ID" prop="yardId">
-        <el-input
-          v-model="queryParams.yardId"
-          placeholder="请输入堆场ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="堆场" prop="yardId">
+        <el-select
+          v-model="queryParams.yardId" placeholder="请输入堆场ID" clearable size="small">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="区域类型" prop="zoneType">
         <el-select v-model="queryParams.zoneType" placeholder="请选择区域类型" clearable size="small">
@@ -141,7 +143,14 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="堆场ID" prop="yardId">
-              <el-input v-model="form.yardId" placeholder="请输入堆场ID"/>
+              <el-select v-model="form.yardId" placeholder="请输入堆场ID">
+                <el-option
+                  v-for="dept in depts"
+                  :key="dept.deptId"
+                  :label="dept.deptName"
+                  :value="dept.deptId"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -160,12 +169,28 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="区域名称" prop="zoneName">
-              <el-input v-model="form.zoneName" placeholder="请输入区域名称(A-Z)"/>
+              <!--<el-input v-model="form.zoneName" placeholder="请输入区域名称(A-Z)"/>-->
+              <el-select v-model="form.zoneName" placeholder="请输入区域名称(A-Z)">
+                <el-option
+                  v-for="item in wordArr"
+                  :key="item.char"
+                  :label="item.value"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="区域代码" prop="zoneCode">
-              <el-input v-model="form.zoneCode" placeholder="请输入区域代码"/>
+              <!--<el-input v-model="form.zoneCode" placeholder="请输入区域代码"/>-->
+              <el-select v-model="form.zoneCode" placeholder="请输入区域编号">
+                <el-option
+                  v-for="item in numArr"
+                  :key="item.key"
+                  :label="item.value"
+                  :value="item.key"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -219,7 +244,7 @@
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
-        
+      
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -231,6 +256,7 @@
 
 <script>
 	import {listZone, getZone, delZone, addZone, updateZone} from "@/api/yard/zone";
+	import {genEnglishChar, genNumChar, getUserDepts} from '@/utils/charutils'
 
 	export default {
 		name: "Zone",
@@ -238,6 +264,10 @@
 			return {
 				// 遮罩层
 				loading: true,
+				wordArr: [],
+				numArr: [],
+				//用户所在部门
+				depts: [],
 				// 选中数组
 				ids: [],
 				// 非单个禁用
@@ -291,11 +321,34 @@
 				}
 			};
 		},
+
+		watch: { //监听表单数据变化，自动计算值
+			form: {
+				deep: true,
+				handler(val, oldValue) {
+					//console.log('form:'+ val.zoneLength,val.zoneWidth)
+					val.zoneArea = val.zoneLength * val.zoneWidth
+					val.storeCount = val.storageRows * val.storageColumns * val.storeLevel
+					//console.log(val.storeCount)
+				}
+			}
+		},
+		//todo 获取用户机构，用于展示堆场或场所的列表项
+		
 		created() {
-			this.getList();
+			this.wordArr = genEnglishChar()
+			this.numArr = genNumChar(1, 30)
+   
 			this.getDicts("yard_zone_type").then(response => {
 				this.zoneTypeOptions = response.data;
 			});
+			// 0 监管场所，1保税库，2堆场，3企业
+			this.depts = getUserDepts('2')
+			if (this.depts.length > 0) {
+				this.queryParams.yardId = this.depts[0].deptId
+				this.getList();
+			}
+			
 		},
 		methods: {
 			/** 查询堆场分区信息列表 */

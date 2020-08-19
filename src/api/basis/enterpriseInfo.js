@@ -42,3 +42,5 @@ export function delInfo(id) {
     method: 'delete'
   })
 }
+
+
