@@ -1,13 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="堆场ID" prop="yardId">
+      <el-form-item label="堆场" prop="yardId">
         <el-select
-          v-model="queryParams.yardId"
-          placeholder="请输入堆场ID"
-          clearable
-          size="small"
-        >
+          v-model="queryParams.yardId" placeholder="请输入堆场ID" clearable size="small">
           <el-option
             v-for="dept in depts"
             :key="dept.deptId"
@@ -148,12 +144,12 @@
           <el-col :span="12">
             <el-form-item label="堆场ID" prop="yardId">
               <el-select v-model="form.yardId" placeholder="请输入堆场ID">
-              <el-option
-                v-for="dept in depts"
-                :key="dept.deptId"
-                :label="dept.deptName"
-                :value="dept.deptId"
-              />
+                <el-option
+                  v-for="dept in depts"
+                  :key="dept.deptId"
+                  :label="dept.deptName"
+                  :value="dept.deptId"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -229,7 +225,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="区域面积(㎡)" prop="zoneArea">
-              <el-input v-model="form.zoneArea"  placeholder="请输入区域面积(㎡)" :disabled="true"/>
+              <el-input v-model="form.zoneArea" placeholder="请输入区域面积(㎡)" :disabled="true"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -248,7 +244,7 @@
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
-        
+      
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -260,7 +256,7 @@
 
 <script>
 	import {listZone, getZone, delZone, addZone, updateZone} from "@/api/yard/zone";
-	import {genEnglishChar,genNumChar} from '@/utils/charutils'
+	import {genEnglishChar, genNumChar, getUserDepts} from '@/utils/charutils'
 
 	export default {
 		name: "Zone",
@@ -268,10 +264,10 @@
 			return {
 				// 遮罩层
 				loading: true,
-        wordArr: [],
-        numArr: [],
-        //用户所在部门
-        depts: [],
+				wordArr: [],
+				numArr: [],
+				//用户所在部门
+				depts: [],
 				// 选中数组
 				ids: [],
 				// 非单个禁用
@@ -325,39 +321,34 @@
 				}
 			};
 		},
-    
-    watch:{ //监听表单数据变化，自动计算值
-	    form:{
-	    	deep: true,
-        handler(val,oldValue){
-	    		//console.log('form:'+ val.zoneLength,val.zoneWidth)
-          val.zoneArea = val.zoneLength * val.zoneWidth
-          val.storeCount = val.storageRows * val.storageColumns * val.storeLevel
-          //console.log(val.storeCount)
-        }
-      }
-    },
+
+		watch: { //监听表单数据变化，自动计算值
+			form: {
+				deep: true,
+				handler(val, oldValue) {
+					//console.log('form:'+ val.zoneLength,val.zoneWidth)
+					val.zoneArea = val.zoneLength * val.zoneWidth
+					val.storeCount = val.storageRows * val.storageColumns * val.storeLevel
+					//console.log(val.storeCount)
+				}
+			}
+		},
+		//todo 获取用户机构，用于展示堆场或场所的列表项
+		
 		created() {
 			this.wordArr = genEnglishChar()
-      this.numArr = genNumChar(1,30)
-			let dept = this.$store.getters.dept
-      
-      console.log(dept)
-      // 如果部门类型是企业，则查找子类下有没有堆场，
-      //如果部门类型不是企业，看，是不是堆场，如果不是堆场，则不显示内容
-			this.depts.push(dept)
-      this.queryParams.yardId = dept.deptId
-      
-      /*if(dept.deptType !== '2'){
-      	this.depts.add(dept)
-      }else{
-      
-      }*/
-      //console.log(this.dept.deptId)
+			this.numArr = genNumChar(1, 30)
+   
 			this.getDicts("yard_zone_type").then(response => {
 				this.zoneTypeOptions = response.data;
 			});
-			this.getList();
+			// 0 监管场所，1保税库，2堆场，3企业
+			this.depts = getUserDepts('2')
+			if (this.depts.length > 0) {
+				this.queryParams.yardId = this.depts[0].deptId
+				this.getList();
+			}
+			
 		},
 		methods: {
 			/** 查询堆场分区信息列表 */
