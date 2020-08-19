@@ -10,9 +10,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="进出场单号" prop="businessNo">
+      <el-form-item label="进出场单号" prop="ioNo">
         <el-input
-          v-model="queryParams.businessNo"
+          v-model="queryParams.ioNo"
           placeholder="请输入进出场单号"
           clearable
           size="small"
@@ -59,6 +59,47 @@
         <el-input
           v-model="queryParams.goodsBatchNo"
           placeholder="请输入货物批次号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="报关单号" prop="declarationNo">
+        <el-input
+          v-model="queryParams.declarationNo"
+          placeholder="请输入报关单号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="业务编号" prop="businessNo">
+        <el-input
+          v-model="queryParams.businessNo"
+          placeholder="请输入业务编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="货物名称" prop="goodsName">
+        <el-input
+          v-model="queryParams.goodsName"
+          placeholder="请输入货物名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="货物种类" prop="goodsType">
+        <el-select v-model="queryParams.goodsType" placeholder="请选择货物种类" clearable size="small">
+          <el-option label="请选择字典生成" value="" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="货物标识码" prop="goodsIdentificationCode">
+        <el-input
+          v-model="queryParams.goodsIdentificationCode"
+          placeholder="请输入货物标识码"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -115,12 +156,21 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="父级进出场单号id" align="center" prop="parentId" />
-      <el-table-column label="进出场单号" align="center" prop="businessNo" />
+      <el-table-column label="进出场单号" align="center" prop="ioNo" />
       <el-table-column label="集装箱号" align="center" prop="containerNo" />
       <el-table-column label="堆场ID" align="center" prop="yardId" />
       <el-table-column label="区域编号" align="center" prop="areaCode" />
       <el-table-column label="库位号" align="center" prop="storeCode" />
       <el-table-column label="货物批次号" align="center" prop="goodsBatchNo" />
+      <el-table-column label="报关单号" align="center" prop="declarationNo" />
+      <el-table-column label="业务编号" align="center" prop="businessNo" />
+      <el-table-column label="货物名称" align="center" prop="goodsName" />
+      <el-table-column label="货物种类" align="center" prop="goodsType" />
+      <el-table-column label="件数单位" align="center" prop="countUnit" />
+      <el-table-column label="毛重(KG)" align="center" prop="roughWight" />
+      <el-table-column label="净重(KG)" align="center" prop="netWight" />
+      <el-table-column label="货物标识码" align="center" prop="goodsIdentificationCode" />
+      <el-table-column label="数量单位" align="center" prop="numUnit" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -155,8 +205,8 @@
         <el-form-item label="父级进出场单号id" prop="parentId">
           <el-input v-model="form.parentId" placeholder="请输入父级进出场单号id" />
         </el-form-item>
-        <el-form-item label="进出场单号" prop="businessNo">
-          <el-input v-model="form.businessNo" placeholder="请输入进出场单号" />
+        <el-form-item label="进出场单号" prop="ioNo">
+          <el-input v-model="form.ioNo" placeholder="请输入进出场单号" />
         </el-form-item>
         <el-form-item label="集装箱号" prop="containerNo">
           <el-input v-model="form.containerNo" placeholder="请输入集装箱号" />
@@ -172,6 +222,37 @@
         </el-form-item>
         <el-form-item label="货物批次号" prop="goodsBatchNo">
           <el-input v-model="form.goodsBatchNo" placeholder="请输入货物批次号" />
+        </el-form-item>
+        <el-form-item label="报关单号" prop="declarationNo">
+          <el-input v-model="form.declarationNo" placeholder="请输入报关单号" />
+        </el-form-item>
+        <el-form-item label="业务编号" prop="businessNo">
+          <el-input v-model="form.businessNo" placeholder="请输入业务编号" />
+        </el-form-item>
+        <el-form-item label="货物名称" prop="goodsName">
+          <el-input v-model="form.goodsName" placeholder="请输入货物名称" />
+        </el-form-item>
+        <el-form-item label="货物种类">
+          <el-select v-model="form.goodsType" placeholder="请选择货物种类">
+            <el-option label="请选择字典生成" value="" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="件数单位" prop="countUnit">
+          <el-input v-model="form.countUnit" placeholder="请输入件数单位" />
+        </el-form-item>
+        <el-form-item label="毛重(KG)" prop="roughWight">
+          <el-input v-model="form.roughWight" placeholder="请输入毛重(KG)" />
+        </el-form-item>
+        <el-form-item label="净重(KG)" prop="netWight">
+          <el-input v-model="form.netWight" placeholder="请输入净重(KG)" />
+        </el-form-item>
+        <el-form-item label="货物标识码" prop="goodsIdentificationCode">
+          <el-input v-model="form.goodsIdentificationCode" placeholder="请输入货物标识码" />
+        </el-form-item>
+        <el-form-item label="数量单位">
+          <el-select v-model="form.numUnit" placeholder="请选择数量单位">
+            <el-option label="请选择字典生成" value="" />
+          </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
@@ -213,12 +294,17 @@ export default {
         pageNum: 1,
         pageSize: 20,
         parentId: undefined,
-        businessNo: undefined,
+        ioNo: undefined,
         containerNo: undefined,
         yardId: undefined,
         areaCode: undefined,
         storeCode: undefined,
         goodsBatchNo: undefined,
+        declarationNo: undefined,
+        businessNo: undefined,
+        goodsName: undefined,
+        goodsType: undefined,
+        goodsIdentificationCode: undefined,
       },
       // 表单参数
       form: {},
@@ -265,12 +351,21 @@ export default {
       this.form = {
         id: undefined,
         parentId: undefined,
-        businessNo: undefined,
+        ioNo: undefined,
         containerNo: undefined,
         yardId: undefined,
         areaCode: undefined,
         storeCode: undefined,
         goodsBatchNo: undefined,
+        declarationNo: undefined,
+        businessNo: undefined,
+        goodsName: undefined,
+        goodsType: undefined,
+        countUnit: undefined,
+        roughWight: undefined,
+        netWight: undefined,
+        goodsIdentificationCode: undefined,
+        numUnit: undefined,
         remark: undefined,
         createBy: undefined,
         createTime: undefined,
