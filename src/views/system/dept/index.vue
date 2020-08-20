@@ -117,7 +117,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="机构类型">
+            <el-form-item label="机构类型" prop="deptType">
               <el-select v-model="form.deptType" placeholder="请输入机构类型" maxlength="50">
                 <el-option
                   v-for="dict in deptTypeOptions"
@@ -140,8 +140,8 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="集装箱总容量" prop="containerAlarmValue" label-width="100px" v-if="form.deptType!=3">
+          <el-col :span="24">
+            <el-form-item label="集装箱总容量" prop="containerCapacity" label-width="120px" v-if="form.deptType!=3">
               <el-input v-model="form.containerCapacity" placeholder="请输入"/>
             </el-form-item>
           </el-col>
@@ -150,13 +150,13 @@
               <el-input v-model="form.containerCurrentCount" placeholder="请输入" maxlength="20"/>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+        
             <el-col :span="12">
               <el-form-item label="集装箱报警阈值" prop="containerAlarmValue" label-width="120px" v-if="form.deptType!=3">
                 <el-input v-model="form.containerAlarmValue" placeholder="请输入" maxlength="20"/>
               </el-form-item>
             </el-col>
-          </el-col>
+         
           <el-col :span="12">
             <el-form-item label="散杂货库位总量" prop="bulkGoodsCapacity" label-width="120px" v-if="form.deptType!=3">
               <el-input v-model="form.bulkGoodsCapacity" placeholder="请输入" maxlength="20"/>
@@ -167,13 +167,13 @@
               <el-input v-model="form.bulkGoodsCount" placeholder="请输入" maxlength="20"/>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          
             <el-col :span="12">
-              <el-form-item label="散杂货库位报警阈值" prop="bulkGoodsAlarmValue" label-width="140px" v-if="form.deptType!=3">
+              <el-form-item label="散杂货库位报警阈值" prop="bulkGoodsAlarmValue" label-width="150px" v-if="form.deptType!=3">
                 <el-input v-model="form.bulkGoodsAlarmValue" placeholder="请输入" maxlength="20"/>
               </el-form-item>
             </el-col>
-          </el-col>
+         
           <el-col :span="12">
             <el-form-item label="散杂货总重" prop="bulkGoodsTotalWeight" label-width="140px" v-if="form.deptType!=3">
               <el-input v-model="form.bulkGoodsTotalWeight" placeholder="请输入" maxlength="20"/>
@@ -242,20 +242,65 @@
 					orderNum: [
 						{required: true, message: "菜单顺序不能为空", trigger: "blur"}
 					],
-					email: [
-						{
-							type: "email",
-							message: "'请输入正确的邮箱地址",
-							trigger: ["blur", "change"]
-						}
+					// email: [
+					// 	{
+					// 		type: "email",
+					// 		message: "'请输入正确的邮箱地址",
+					// 		trigger: ["blur", "change"]
+					// 	}
+					// ],
+					// phone: [
+					// 	{
+					// 		pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+					// 		message: "请输入正确的手机号码",
+					// 		trigger: "blur"
+					// 	}
+          // ],
+          // deptType: [
+					// 	{ required: true, message: "组织机构不能为空", trigger: "blur"}
+          // ],
+
+          deptType: [
+						{ required: true, message: "组织机构不能为空", trigger: "blur"}
 					],
-					phone: [
-						{
-							pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-							message: "请输入正确的手机号码",
-							trigger: "blur"
-						}
-					]
+          
+          containerCapacity: [
+						{ required: true, message: "集装箱总量不能为空", trigger: "blur"}
+          ],
+          
+           containerCurrentCount: [
+						{ required: true, message: "当前集装箱总量不能为空", trigger: "blur"}
+          ],
+          
+           containerAlarmValue: [
+						{ required: true, message: "集装箱报警阈值不能为空", trigger: "blur"}
+          ],
+           bulkGoodsTotalWeight: [
+						{ required: true, message: "散杂货总重不能为空", trigger: "blur"}
+          ],
+           bulkGoodsCurrentWeight: [
+						{ required: true, message: "散杂货当前重量不能为空", trigger: "blur"}
+          ],
+          
+            bulkGoodsWeightAlarmAalue: [
+						{ required: true, message: "散杂货重量预警值不能为空", trigger: "blur"}
+          ],
+          
+            bulkGoodsCapacity: [
+						{ required: true, message: "散杂货库位报警阈值不能为空", trigger: "blur"}
+          ],
+          
+            bulkGoodsCount: [
+						{ required: true, message: "当前散杂货占库量不能为空", trigger: "blur"}
+					],
+
+          bulkGoodsAlarmValue: [
+						{ required: true, message: "当前散杂货占库量不能为空", trigger: "blur"}
+					],
+
+
+
+
 				}
 			};
 		},

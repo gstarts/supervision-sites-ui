@@ -69,14 +69,14 @@
     <!-- 添加或修改通道配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="所属场站" prop="stationId">
+        <el-form-item label="监管场所" prop="stationId" >
           <el-select v-model="form.stationId" placeholder="请选择场站">
-            <el-option
-              v-for="item in stationOptions"
-              :key="item.id"
-              :label="item.stationName"
-              :value="item.id"
-            />
+          <el-option
+                  v-for="dept in depts"
+                  :key="dept.deptId"
+                  :label="dept.deptName"
+                  :value="dept.deptId"
+                />
           </el-select>
         </el-form-item>
         <el-form-item label="通道编号" prop="cChnlNo">
@@ -85,7 +85,7 @@
         <el-form-item label="通道名称" prop="cChnlName">
           <el-input v-model="form.cChnlName" placeholder="请输入通道名称" />
         </el-form-item>
-        <el-form-item label="车道类型">
+        <el-form-item label="车道类型" prop="cChnlType">
           <el-select v-model="form.cChnlType" placeholder="请选择车道类型">
             <el-option
               v-for="dict in chnlTypeOptions"
@@ -122,7 +122,7 @@ import {
   updateChnlConfig,
   exportChnlConfig
 } from "@/api/basis/chnlConfig";
-import { listInfo } from "@/api/basis/info";
+import { getUserDepts} from '@/utils/charutils'
 export default {
   data() {
     return {
@@ -148,6 +148,9 @@ export default {
       statusOptions: [],
       // 场站列表
       stationOptions: [],
+
+      //用户所在部门
+				depts: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -165,17 +168,42 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {}
+      rules: {
+ stationId: [
+          { required: true, message: "监管场所不能为空", trigger: "blur" },
+        ],
+        cChnlNo: [
+          { required: true, message: "通道编号不能为空", trigger: "blur" },
+        ],
+        cChnlName: [
+          { required: true, message: "通道名称不能为空", trigger: "blur" },
+        ],
+        cChnlType: [
+          { required: true, message: "车道类型不能为空", trigger: "blur" },
+        ],
+       
+      }
     };
   },
   created() {
     this.getList();
+	// 0 监管场所，1保税库，2堆场，3企业
+      this.depts = getUserDepts('0')
+      console.log(this.depts)
+			if (this.depts.length > 0) {
+				this.queryParams.stationId = this.depts[0].deptId
+				this.getList();
+			}
     this.getDicts("station_chnl_type").then(response => {
       this.chnlTypeOptions = response.data;
     });
+  		// this.getDicts("s_dept_type").then(response => {
+			// 	this.depts = response.data;
+			// });
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
     });
+
     // this.getStations();
   },
   methods: {

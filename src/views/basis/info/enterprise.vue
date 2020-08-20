@@ -118,7 +118,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="公司性质">
+            <el-form-item label="公司性质" prop="eType">
               <el-select v-model="form.eType" placeholder="请选择公司性质">
                 <el-option
                   v-for="dict in eEnterpriseTypeOptions"
@@ -239,6 +239,12 @@
           <el-col :span="8">
             <el-form-item label="接口协议版本号" prop="version" :rules="form.eType==2">
               <el-input v-model="version" placeholder="请输入接口协议版本号" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item label="确保传输人名称" prop="stationPersonName" :rules="form.eType==2">
+              <el-input v-model="form.stationPersonName" placeholder="请输入确保传输人名称" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -364,6 +370,10 @@ export default {
 
         version: [
           { required: true, message: "版本号ID不能为空", trigger: "blur" },
+        ],
+
+        stationPersonName: [
+          { required: true, message: "确保传输人名称不能为空", trigger: "blur" },
         ],
       },
     };
