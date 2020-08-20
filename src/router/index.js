@@ -118,6 +118,26 @@ export const constantRoutes = [
       }
     ]
   },
+  //  确报路由
+  {
+    path: '/approve',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'details',
+        component: () => import('@/views/manifest/rmft4406/head4406/details'),
+        name: 'approveDetail',
+        meta: { title: '确报信息详情' }
+      },
+      {
+        path: 'edit',
+        component: () => import('@/views/manifest/rmft4406/update4406/updateindex'),
+        name: 'approveEdit',
+        meta: { title: '确报信息修改'}
+      }
+    ]
+  },
     //空车路由
     {
       path: '/emptyCar',
