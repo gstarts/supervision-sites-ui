@@ -10,15 +10,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="区域编号" prop="zoneCode">
-        <el-input
-          v-model="queryParams.zoneCode"
-          placeholder="请输入区域编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="区域ID" prop="zoneId">
         <el-input
           v-model="queryParams.zoneId"
@@ -28,48 +19,23 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="区域类型" prop="zoneType">
-        <el-select v-model="queryParams.zoneType" placeholder="请选择区域类型" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="库位编号" prop="storeCode">
+      <el-form-item label="区域编号" prop="zoneCode">
         <el-input
-          v-model="queryParams.storeCode"
-          placeholder="请输入库位编号"
+          v-model="queryParams.zoneCode"
+          placeholder="请输入区域编号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="库位状态" prop="storeState">
-        <el-select v-model="queryParams.storeState" placeholder="请选择库位状态" clearable size="small">
-          <el-option
-            v-for="dict in storeStateOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="集装箱号" prop="containerNo">
+      <el-form-item label="库位号" prop="sotreCode">
         <el-input
-          v-model="queryParams.containerNo"
-          placeholder="请输入集装箱号"
+          v-model="queryParams.sotreCode"
+          placeholder="请输入库位号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="空/重箱" prop="isHeavy">
-        <el-select v-model="queryParams.isHeavy" placeholder="请选择空/重箱" clearable size="small">
-          <el-option
-            v-for="dict in isHeavyOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
       </el-form-item>
       <el-form-item label="货物批次号" prop="goodsBatchNo">
         <el-input
@@ -80,15 +46,88 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="变更原因" prop="updateReason">
-        <el-select v-model="queryParams.updateReason" placeholder="请选择变更原因" clearable size="small">
+      <el-form-item label="货物名称" prop="goodsName">
+        <el-input
+          v-model="queryParams.goodsName"
+          placeholder="请输入货物名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="货物种类" prop="goodsType">
+        <el-input
+          v-model="queryParams.goodsType"
+          placeholder="请输入货物种类"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="件数单位" prop="countUnit">
+        <el-select v-model="queryParams.countUnit" placeholder="请选择件数单位" clearable size="small">
           <el-option
-            v-for="dict in updateReasonOptions"
+            v-for="dict in countUnitOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="毛重(KG)" prop="roughWight">
+        <el-input
+          v-model="queryParams.roughWight"
+          placeholder="请输入毛重(KG)"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="净重(KG)" prop="netWight">
+        <el-input
+          v-model="queryParams.netWight"
+          placeholder="请输入净重(KG)"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="货物标识码" prop="goodsIdentificationCode">
+        <el-input
+          v-model="queryParams.goodsIdentificationCode"
+          placeholder="请输入货物标识码"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="数量单位" prop="numUnit">
+        <el-select v-model="queryParams.numUnit" placeholder="请选择数量单位" clearable size="small">
+          <el-option
+            v-for="dict in numUnitOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="报关单号" prop="declarationNo">
+        <el-input
+          v-model="queryParams.declarationNo"
+          placeholder="请输入报关单号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="业务编号" prop="businessNo">
+        <el-input
+          v-model="queryParams.businessNo"
+          placeholder="请输入业务编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -103,7 +142,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['yard:store:add']"
+          v-hasPermi="['yard:store_detail:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -113,7 +152,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['yard:store:edit']"
+          v-hasPermi="['yard:store_detail:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -123,7 +162,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['yard:store:remove']"
+          v-hasPermi="['yard:store_detail:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -132,28 +171,29 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['yard:store:export']"
+          v-hasPermi="['yard:store_detail:export']"
         >导出</el-button>
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="storeList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="store_detailList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="堆场ID" align="center" prop="yardId" />
-      <el-table-column label="区域编号" align="center" prop="zoneCode" />
       <el-table-column label="区域ID" align="center" prop="zoneId" />
-      <el-table-column label="区域类型" align="center" prop="zoneType" />
-      <el-table-column label="库位编号" align="center" prop="storeCode" />
-      <el-table-column label="库位层级" align="center" prop="storeLevel" />
-      <el-table-column label="库位状态" align="center" prop="storeState" :formatter="storeStateFormat" />
-      <el-table-column label="集装箱号" align="center" prop="containerNo" />
-      <el-table-column label="库位容量(KG)" align="center" prop="storeCapacity" />
-      <el-table-column label="空/重箱" align="center" prop="isHeavy" :formatter="isHeavyFormat" />
-      <el-table-column label="货物净重(KG)" align="center" prop="netWeight" />
-      <el-table-column label="货物毛重(KG)" align="center" prop="roughWight" />
+      <el-table-column label="区域编号" align="center" prop="zoneCode" />
+      <el-table-column label="库位号" align="center" prop="sotreCode" />
       <el-table-column label="货物批次号" align="center" prop="goodsBatchNo" />
-      <el-table-column label="变更原因" align="center" prop="updateReason" :formatter="updateReasonFormat" />
+      <el-table-column label="货物名称" align="center" prop="goodsName" />
+      <el-table-column label="货物种类" align="center" prop="goodsType" />
+      <el-table-column label="件数单位" align="center" prop="countUnit" :formatter="countUnitFormat" />
+      <el-table-column label="毛重(KG)" align="center" prop="roughWight" />
+      <el-table-column label="净重(KG)" align="center" prop="netWight" />
+      <el-table-column label="货物标识码" align="center" prop="goodsIdentificationCode" />
+      <el-table-column label="数量单位" align="center" prop="numUnit" :formatter="numUnitFormat" />
+      <el-table-column label="报关单号" align="center" prop="declarationNo" />
+      <el-table-column label="业务编号" align="center" prop="businessNo" />
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="更新人" align="center" prop="updateBy" />
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
         <template slot-scope="scope">
@@ -167,14 +207,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['yard:store:edit']"
+            v-hasPermi="['yard:store_detail:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['yard:store:remove']"
+            v-hasPermi="['yard:store_detail:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -194,67 +234,58 @@
         <el-form-item label="堆场ID" prop="yardId">
           <el-input v-model="form.yardId" placeholder="请输入堆场ID" />
         </el-form-item>
-        <el-form-item label="区域编号" prop="zoneCode">
-          <el-input v-model="form.zoneCode" placeholder="请输入区域编号" />
-        </el-form-item>
         <el-form-item label="区域ID" prop="zoneId">
           <el-input v-model="form.zoneId" placeholder="请输入区域ID" />
         </el-form-item>
-        <el-form-item label="区域类型">
-          <el-select v-model="form.zoneType" placeholder="请选择区域类型">
-            <el-option label="请选择字典生成" value="" />
-          </el-select>
+        <el-form-item label="区域编号" prop="zoneCode">
+          <el-input v-model="form.zoneCode" placeholder="请输入区域编号" />
         </el-form-item>
-        <el-form-item label="库位编号" prop="storeCode">
-          <el-input v-model="form.storeCode" placeholder="请输入库位编号" />
-        </el-form-item>
-        <el-form-item label="库位层级" prop="storeLevel">
-          <el-input v-model="form.storeLevel" placeholder="请输入库位层级" />
-        </el-form-item>
-        <el-form-item label="库位状态">
-          <el-select v-model="form.storeState" placeholder="请选择库位状态">
-            <el-option
-              v-for="dict in storeStateOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="集装箱号" prop="containerNo">
-          <el-input v-model="form.containerNo" placeholder="请输入集装箱号" />
-        </el-form-item>
-        <el-form-item label="库位容量(KG)" prop="storeCapacity">
-          <el-input v-model="form.storeCapacity" placeholder="请输入库位容量(KG)" />
-        </el-form-item>
-        <el-form-item label="空/重箱">
-          <el-select v-model="form.isHeavy" placeholder="请选择空/重箱">
-            <el-option
-              v-for="dict in isHeavyOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="货物净重(KG) 如果多个货物，对应库位的总重" prop="netWeight">
-          <el-input v-model="form.netWeight" placeholder="请输入货物净重(KG) 如果多个货物，对应库位的总重" />
-        </el-form-item>
-        <el-form-item label="货物毛重(KG)" prop="roughWight">
-          <el-input v-model="form.roughWight" placeholder="请输入货物毛重(KG)" />
+        <el-form-item label="库位号" prop="sotreCode">
+          <el-input v-model="form.sotreCode" placeholder="请输入库位号" />
         </el-form-item>
         <el-form-item label="货物批次号" prop="goodsBatchNo">
           <el-input v-model="form.goodsBatchNo" placeholder="请输入货物批次号" />
         </el-form-item>
-        <el-form-item label="变更原因">
-          <el-select v-model="form.updateReason" placeholder="请选择变更原因">
+        <el-form-item label="货物名称" prop="goodsName">
+          <el-input v-model="form.goodsName" placeholder="请输入货物名称" />
+        </el-form-item>
+        <el-form-item label="货物种类" prop="goodsType">
+          <el-input v-model="form.goodsType" placeholder="请输入货物种类" />
+        </el-form-item>
+        <el-form-item label="件数单位">
+          <el-select v-model="form.countUnit" placeholder="请选择件数单位">
             <el-option
-              v-for="dict in updateReasonOptions"
+              v-for="dict in countUnitOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="毛重(KG)" prop="roughWight">
+          <el-input v-model="form.roughWight" placeholder="请输入毛重(KG)" />
+        </el-form-item>
+        <el-form-item label="净重(KG)" prop="netWight">
+          <el-input v-model="form.netWight" placeholder="请输入净重(KG)" />
+        </el-form-item>
+        <el-form-item label="货物标识码" prop="goodsIdentificationCode">
+          <el-input v-model="form.goodsIdentificationCode" placeholder="请输入货物标识码" />
+        </el-form-item>
+        <el-form-item label="数量单位">
+          <el-select v-model="form.numUnit" placeholder="请选择数量单位">
+            <el-option
+              v-for="dict in numUnitOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="报关单号" prop="declarationNo">
+          <el-input v-model="form.declarationNo" placeholder="请输入报关单号" />
+        </el-form-item>
+        <el-form-item label="业务编号" prop="businessNo">
+          <el-input v-model="form.businessNo" placeholder="请输入业务编号" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
@@ -269,10 +300,10 @@
 </template>
 
 <script>
-import { listStore, getStore, delStore, addStore, updateStore } from "@/api/yard/store";
+import { listStore_detail, getStore_detail, delStore_detail, addStore_detail, updateStore_detail } from "@/api/yard/store_detail";
 
 export default {
-  name: "Store",
+  name: "Store_detail",
   data() {
     return {
       // 遮罩层
@@ -286,31 +317,33 @@ export default {
       // 总条数
       total: 0,
       // 堆场库存明细 表格数据
-      storeList: [],
+      store_detailList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
-      // 库位状态字典
-      storeStateOptions: [],
-      // 空/重箱字典
-      isHeavyOptions: [],
-      // 变更原因字典
-      updateReasonOptions: [],
+      // 件数单位字典
+      countUnitOptions: [],
+      // 数量单位字典
+      numUnitOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 20,
         yardId: undefined,
-        zoneCode: undefined,
         zoneId: undefined,
-        zoneType: undefined,
-        storeCode: undefined,
-        storeState: undefined,
-        containerNo: undefined,
-        isHeavy: undefined,
+        zoneCode: undefined,
+        sotreCode: undefined,
         goodsBatchNo: undefined,
-        updateReason: undefined,
+        goodsName: undefined,
+        goodsType: undefined,
+        countUnit: undefined,
+        roughWight: undefined,
+        netWight: undefined,
+        goodsIdentificationCode: undefined,
+        numUnit: undefined,
+        declarationNo: undefined,
+        businessNo: undefined,
       },
       // 表单参数
       form: {},
@@ -319,54 +352,35 @@ export default {
         yardId: [
           { required: true, message: "堆场ID不能为空", trigger: "blur" }
         ],
-        zoneCode: [
-          { required: true, message: "区域编号不能为空", trigger: "blur" }
-        ],
-        zoneId: [
-          { required: true, message: "区域ID不能为空", trigger: "blur" }
-        ],
-        storeCode: [
-          { required: true, message: "库位编号不能为空", trigger: "blur" }
-        ],
-        storeState: [
-          { required: true, message: "库位状态不能为空", trigger: "blur" }
-        ],
       }
     };
   },
   created() {
     this.getList();
-    this.getDicts("yard_store_state").then(response => {
-      this.storeStateOptions = response.data;
+    this.getDicts("hg_measuring_unit").then(response => {
+      this.countUnitOptions = response.data;
     });
-    this.getDicts("yard_container_heavy_state").then(response => {
-      this.isHeavyOptions = response.data;
-    });
-    this.getDicts("store_update_reason").then(response => {
-      this.updateReasonOptions = response.data;
+    this.getDicts("hg_measuring_unit").then(response => {
+      this.numUnitOptions = response.data;
     });
   },
   methods: {
     /** 查询堆场库存明细 列表 */
     getList() {
       this.loading = true;
-      listStore(this.queryParams).then(response => {
-        this.storeList = response.rows;
+      listStore_detail(this.queryParams).then(response => {
+        this.store_detailList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
     },
-    // 库位状态字典翻译
-    storeStateFormat(row, column) {
-      return this.selectDictLabel(this.storeStateOptions, row.storeState);
+    // 件数单位字典翻译
+    countUnitFormat(row, column) {
+      return this.selectDictLabel(this.countUnitOptions, row.countUnit);
     },
-    // 空/重箱字典翻译
-    isHeavyFormat(row, column) {
-      return this.selectDictLabel(this.isHeavyOptions, row.isHeavy);
-    },
-    // 变更原因字典翻译
-    updateReasonFormat(row, column) {
-      return this.selectDictLabel(this.updateReasonOptions, row.updateReason);
+    // 数量单位字典翻译
+    numUnitFormat(row, column) {
+      return this.selectDictLabel(this.numUnitOptions, row.numUnit);
     },
     // 取消按钮
     cancel() {
@@ -378,19 +392,19 @@ export default {
       this.form = {
         id: undefined,
         yardId: undefined,
-        zoneCode: undefined,
         zoneId: undefined,
-        zoneType: undefined,
-        storeCode: undefined,
-        storeLevel: undefined,
-        storeState: undefined,
-        containerNo: undefined,
-        storeCapacity: undefined,
-        isHeavy: undefined,
-        netWeight: undefined,
-        roughWight: undefined,
+        zoneCode: undefined,
+        sotreCode: undefined,
         goodsBatchNo: undefined,
-        updateReason: undefined,
+        goodsName: undefined,
+        goodsType: undefined,
+        countUnit: undefined,
+        roughWight: undefined,
+        netWight: undefined,
+        goodsIdentificationCode: undefined,
+        numUnit: undefined,
+        declarationNo: undefined,
+        businessNo: undefined,
         remark: undefined,
         createBy: undefined,
         createTime: undefined,
@@ -425,7 +439,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getStore(id).then(response => {
+      getStore_detail(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改堆场库存明细 ";
@@ -436,7 +450,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateStore(this.form).then(response => {
+            updateStore_detail(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -444,7 +458,7 @@ export default {
               }
             });
           } else {
-            addStore(this.form).then(response => {
+            addStore_detail(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -463,7 +477,7 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delStore(ids);
+          return delStore_detail(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
@@ -471,9 +485,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('yard/store/export', {
+      this.download('yard/store_detail/export', {
         ...this.queryParams
-      }, `yard_store.xlsx`)
+      }, `yard_store_detail.xlsx`)
     }
   }
 };

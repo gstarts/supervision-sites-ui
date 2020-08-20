@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="堆场" prop="yardId">
         <el-select
