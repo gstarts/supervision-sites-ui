@@ -216,7 +216,7 @@
     />
     
     <!-- 添加或修改集装箱进出记录 对话框 -->
-    <el-dialog :title="title" :visible.sync="open" append-to-body width="70%">
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="70%" :modal="true" close-on-click-modal>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row :gutter="10">
           <el-col :span="12">
@@ -226,7 +226,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="堆场" prop="yardId">
-              <el-select v-model="form.yardId" placeholder="请选择堆场">
+              <el-select v-model="form.yardId" placeholder="请选择堆场" @change="getYardZoneList">
                 <el-option
                   v-for="dept in depts"
                   :key="dept.deptId"
@@ -257,17 +257,29 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="区域" prop="zoneCode">
-              <el-input v-model="form.zoneCode" placeholder="请输入区域"/>
+              <el-select v-model="form.zoneCode" placeholder="请输入区域"  @change="getStoreList">
+                <el-option
+                  v-for="zone in zoneList"
+                  :key="zone.id"
+                  :label="zone.zoneName+(zone.zoneCode<10?'0'+zone.zoneCode:zone.zoneCode)"
+                  :value="zone.zoneName+(zone.zoneCode<10?'0'+zone.zoneCode:zone.zoneCode)"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="货位号" prop="zoneCode">
-              <el-input v-model="form.storeCode" placeholder="请输入货位"/>
+              <el-select v-model="form.storeCode" placeholder="请输入货位">
+                <el-option
+                  v-for="store in storeList"
+                  :key="store.id"
+                  :label="store.storeCode"
+                  :value="store.id"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-        
-        
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="出/入场状态">
@@ -357,6 +369,8 @@
 <script>
 	import {listIo, getIo, delIo, addIo, updateIo} from "@/api/yard/io";
 	import {getUserDepts} from '@/utils/charutils'
+	import {listZone} from '../../../api/yard/zone'
+	import {listStore} from '../../../api/yard/store'
 
 	export default {
 		name: "Io",
@@ -402,6 +416,8 @@
 					state: undefined,
 					purpose: undefined,
 				},
+        zoneList: [],
+        storeList: [],
 				// 表单参数
 				form: {},
 				// 表单校验
@@ -571,7 +587,29 @@
 				this.download('yard/io/export', {
 					...this.queryParams
 				}, `yard_io.xlsx`)
-			}
+			},
+      //获取堆场的区域列表
+      getYardZoneList(){
+				if(this.form.yardId !== ''){
+					listZone({'yardId':this.form.yardId,'zoneType':'1'}).then(response => {
+						this.zoneList = []
+						this.zoneList = response.rows
+					});
+        }else{
+					this.zoneList = []
+        }
+      },
+      getStoreList(){
+				if(this.form.zoneCode !== ''){
+					listStore({'yardId':this.form.yardId,'zoneType':'1','zoneCode':this.form.zoneCode,'storeState':'0'}).then(response => {
+						this.storeList = []
+						this.storeList = response.rows
+					})
+        }else{
+					this.storeList = []
+        }
+				
+      }
 		}
 	};
 </script>
