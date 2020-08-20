@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询堆场库存明细 列表
+// 查询库位库存列表
 export function listStore(query) {
   return request({
     url: '/yard/store/list',
@@ -9,7 +9,7 @@ export function listStore(query) {
   })
 }
 
-// 查询堆场库存明细 详细
+// 查询库位库存详细
 export function getStore(id) {
   return request({
     url: '/yard/store/' + id,
@@ -17,7 +17,7 @@ export function getStore(id) {
   })
 }
 
-// 新增堆场库存明细 
+// 新增库位库存
 export function addStore(data) {
   return request({
     url: '/yard/store',
@@ -26,7 +26,7 @@ export function addStore(data) {
   })
 }
 
-// 修改堆场库存明细 
+// 修改库位库存
 export function updateStore(data) {
   return request({
     url: '/yard/store',
@@ -35,7 +35,7 @@ export function updateStore(data) {
   })
 }
 
-// 删除堆场库存明细 
+// 删除库位库存
 export function delStore(id) {
   return request({
     url: '/yard/store/' + id,
