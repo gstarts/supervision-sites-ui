@@ -32,14 +32,14 @@
     <el-form :model="form" ref="form" :rules="headRules" label-width="190px" size="mini">
       <el-row>
         <el-col :span="6">
-          <el-form-item label="货物运输批次号" prop="id">
-            <el-input v-model="form.id" placeholder="请输入货物运输批次号" />
+          <el-form-item label="货物运输批次号" prop="declaration.declarationId">
+            <el-input v-model="form.declaration.declarationId" placeholder="请输入货物运输批次号" />
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="运输工具代码" prop="borderTransportMeans.borderId">
+          <el-form-item label="运输工具代码" prop="borderTransportMeans.borderTransportMeansId">
             <el-input
-              v-model="form.borderTransportMeans.borderId"
+              v-model="form.borderTransportMeans.borderTransportMeansId"
               placeholder="请输入运输工具代码"
               clearable
               size="mini"
@@ -78,8 +78,8 @@
       </el-row>
       <el-row>
         <el-col :span="6">
-          <el-form-item label="进出境口岸海关代码" prop="declarationOfficeId">
-            <el-select v-model="form.declarationOfficeId" placeholder="请选择进出境口岸海关">
+          <el-form-item label="进出境口岸海关代码" prop="declaration.declarationOfficeId">
+            <el-select v-model="form.declaration.declarationOfficeId" placeholder="请选择进出境口岸海关">
               <el-option
                 v-for="dict in CustomsDictionary"
                 :key="dict.dictValue"
@@ -92,9 +92,9 @@
         </el-col>
 
         <el-col :span="6">
-          <el-form-item label="承运人代码" prop="carrier">
+          <el-form-item label="承运人代码" prop="carrier.carrierId">
             <el-input
-              v-model="form.carrier"
+              v-model="form.carrier.carrierId"
               placeholder="请输入承运人代码"
               clearable
               size="mini"
@@ -104,9 +104,9 @@
         </el-col>
 
         <el-col :span="6">
-          <el-form-item label="海关货物通关代码" prop="consignment.governmentProcedure">
+          <el-form-item label="海关货物通关代码" prop="governmentprocedure.currentCode">
             <el-input
-              v-model="form.consignment.governmentProcedure"
+              v-model="form.governmentprocedure.currentCode"
               placeholder="请输入海关货物通关代码"
               clearable
               size="mini"
@@ -115,9 +115,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="装货地代码" prop="loadingLocation">
+          <el-form-item label="装货地代码" prop="loadinglocation.loadinglocationId">
             <el-input
-              v-model="form.loadingLocation"
+              v-model="form.loadinglocation.loadinglocationId"
               placeholder="请输入装货地代码"
               clearable
               size="mini"
@@ -129,9 +129,9 @@
 
       <el-row>
         <el-col :span="6">
-          <el-form-item label="驾驶员代码" prop="borderTransportMeans.masterId">
+          <el-form-item label="驾驶员代码" prop="master.masterId">
             <el-input
-              v-model="form.borderTransportMeans.masterId"
+              v-model="form.master.masterId"
               placeholder="请输入驾驶员代码"
               clearable
               size="mini"
@@ -140,9 +140,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="驾驶员名称" prop="borderTransportMeans.masterName">
+          <el-form-item label="驾驶员名称" prop="master.name">
             <el-input
-              v-model="form.borderTransportMeans.masterName"
+              v-model="form.master.name"
               placeholder="请输入驾驶员名称"
               clearable
               size="mini"
@@ -209,9 +209,9 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="备注" prop="additionalInformation">
+          <el-form-item label="备注" prop="additionalinformation.content">
             <el-input
-              v-model="form.additionalInformation"
+              v-model="form.additionalinformation.content"
               placeholder="请输入备注"
               clearable
               size="mini"
@@ -251,7 +251,7 @@
     <el-table v-loading="loading" :data="headList" height="180px">
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="序号" align="center" type="index" />
-      <el-table-column label="托架/拖挂车编号" align="center" prop="transportId" />
+      <el-table-column label="托架/拖挂车编号" align="center" prop="equipmentId" />
       <el-table-column label="托架/拖挂车类型" align="center" prop="typeCode" :formatter="Trailerformat" />
       <el-table-column label="托架/拖挂车自重(kg)" align="center" prop="tareWeight" />
     </el-table>
@@ -267,8 +267,8 @@
     <el-form :model="Tform" ref="Tform" :rules="bodyRules" :inline="true" label-width="180px">
       <el-row>
         <el-col :span="8">
-          <el-form-item label="托架/拖挂车编号" prop="transportId">
-            <el-input v-model="Tform.transportId" placeholder="请输入托架/拖挂车编号" size="mini" />
+          <el-form-item label="托架/拖挂车编号" prop="equipmentId">
+            <el-input v-model="Tform.equipmentId" placeholder="请输入托架/拖挂车编号" size="mini" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -319,7 +319,7 @@
     <el-table v-loading="loading" :data="coalList" height="180px">
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="序号" align="center" type="index" />
-      <el-table-column label="集装箱(器)编号" align="center" prop="transportEquipmentId" />
+      <el-table-column label="集装箱(器)编号" align="center" prop="equipmentId" />
       <el-table-column
         label="集装箱(器)尺寸类型"
         align="center"
@@ -344,8 +344,8 @@
     <el-form :model="Cform" ref="Cform" :rules="coalRules" :inline="true" label-width="180px">
       <el-row>
         <el-col :span="6">
-          <el-form-item label="集装箱(器)编号" prop="transportEquipmentId">
-            <el-input v-model="Cform.transportEquipmentId" placeholder="请输入集装箱(器)编号" size="mini" />
+          <el-form-item label="集装箱(器)编号" prop="equipmentId">
+            <el-input v-model="Cform.equipmentId" placeholder="请输入集装箱(器)编号" size="mini" />
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -467,77 +467,99 @@ export default {
         feedback: undefined,
         feedbackMsg: undefined,
         pid: undefined,
-        // borderTransportMeans:{
-        //   borderId: undefined,
-        //   name: undefined,
-        //   typeCode: undefined,
-        //   masterId:undefined,
-        //   masterName:undefined,
-        //   arrivalDateTime:undefined
-        // },
-        // consignment:{
-        //   governmentProcedure: undefined
-        // }
       },
       // 表单参数
       form: {
-        // contractorCodeScc: undefined,
-        // customsMaster :undefined,
-        // arrivalDateTime: undefined,
-        borderTransportMeans: {
-          borderId: undefined,
-          name: undefined,
-          typeCode: undefined,
+        head:{},
+        declaration:{
+          declarationId: undefined,
+          declarationOfficeId: undefined
+        },
+        governmentprocedure:{
+          currentCode: undefined
+        },
+        carrier:{
+          carrierId: undefined
+        },
+        loadinglocation:{
+          loadinglocationId: undefined
+        },
+        master:{
           masterId: undefined,
-          masterName: undefined,
-          arrivalDateTime: undefined,
+          name: undefined
         },
-        consignment: {
-          governmentProcedure: undefined,
+        additionalinformation:{
+          content: undefined
         },
+        borderTransportMeans: {
+          borderTransportMeansId: undefined,
+          name: undefined,
+          typeCode: "4",
+          arrivalDateTime:undefined
+        },
+        // consignment: {
+        //   governmentProcedure: undefined,
+        // },
       },
       // 挂车表单参数
       Tform: {
-        transportId: undefined,
+        pageNum: 1,
+        pageSize: 10,
+        equipmentId: undefined,
+        characteristicCode: undefined,
+        fullnessCode: undefined,
+        manifestDeclarationId: undefined,
+        supplierPartyTypeCode: undefined,
+        equipmentType: undefined,
         typeCode: undefined,
-        tareWeight: undefined,
+        tareWeight: undefined
       },
       // 集装箱表单参数
-      Cform: {},
+      Cform: {
+        equipmentId: undefined,
+        characteristicCode: undefined,
+        fullnessCode: undefined,
+        manifestDeclarationId: undefined,
+        supplierPartyTypeCode: undefined,
+        equipmentType: undefined,
+        typeCode: undefined,
+        tareWeight: undefined
+      },
       CID: undefined,
       TID: undefined,
       // 表单校验
       rules: {},
       headRules: {
-        id: [
+        "declaration.declarationId": [
           { required: true, message: "请输入货物运输批次号", trigger: "blur" },
         ],
-        declarationOfficeId: [
+        
+        "declaration.declarationOfficeId": [
           {
             required: true,
             message: "请输入进出境口岸海关代码",
             trigger: "blur",
           },
         ],
-        carrier: [
+        "carrier.carrierId": [
           { required: true, message: "请输入承运人代码", trigger: "blur" },
         ],
-        loadingLocation: [
+        "loadinglocation.loadinglocationId": [
           { required: true, message: "请输入装货地代码", trigger: "blur" },
         ],
         // additionalInformation: [
         //   { required: true, message: "请输入备注信息", trigger: "blur" },
         // ],
-        "borderTransportMeans.borderId": [
+        "borderTransportMeans.borderTransportMeansId": [
           { required: true, message: "请输入运输工具代码", trigger: "blur" },
         ],
         "borderTransportMeans.name": [
           { required: true, message: "请输入运输工具名称", trigger: "blur" },
         ],
-        "borderTransportMeans.masterId": [
+        "master.masterId": [
           { required: true, message: "请输入驾驶员代码", trigger: "blur" },
         ],
-        "borderTransportMeans.masterName": [
+        "master.name": [
           { required: true, message: "请输入驾驶员名称", trigger: "blur" },
         ],
         "borderTransportMeans.arrivalDateTime": [
@@ -547,7 +569,7 @@ export default {
             trigger: "blur",
           },
         ],
-        "consignment.governmentProcedure": [
+        "governmentprocedure.currentCode": [
           {
             required: true,
             message: "请输入海关货物通关代码",
@@ -556,7 +578,7 @@ export default {
         ],
       },
       bodyRules: {
-        transportId: [
+        equipmentId: [
           { required: true, message: "请输入托架/拖挂车编号", trigger: "blur" },
         ],
         typeCode: [
@@ -567,7 +589,7 @@ export default {
         ],
       },
       coalRules: {
-        transportEquipmentId: [
+        equipmentId: [
           { required: true, message: "请输入集装箱(器)编号", trigger: "blur" },
         ],
         characteristicCode: [
@@ -602,7 +624,7 @@ export default {
     };
   },
   created() {
-    this.getList();
+    // this.getList();
     /** 运输方式字典 */
     this.getDicts("station_transport_fashion").then((response) => {
       this.TransportDictionary = response.data;
@@ -644,7 +666,7 @@ export default {
     /** 新增后表单查询 */
     getHeadList() {
       this.loading = true;
-      getHead(this.form.messageId).then((response) => {
+      getHead(this.form.head.id).then((response) => {
         this.form = response.data;
         this.total = response.total;
         this.loading = false;
@@ -652,20 +674,17 @@ export default {
     },
     /** 查询挂车信息*/
     getListsmt() {
-      this.loading = true;
-      getTransport(this.TID).then((response) => {
+      getTransport(this.Tform).then((response) => {
         this.headList = response.rows;
         this.total = response.total;
-        this.loading = false;
+    
       });
     },
     /**查询集装箱信息 */
     getListCoal() {
-      this.loading = true;
-      getCoal(this.CID).then((response) => {
-        this.coalList = response.data;
+      getCoal(this.Cform).then((response) => {
+        this.coalList = response.rows;
         this.total = response.total;
-        this.loading = false;
       });
     },
     // /** 挂车行点击按钮 */
@@ -732,28 +751,38 @@ export default {
       this.clearBody();
       this.clearCoalBody();
       this.clearHead();
-      this.getList();
+      // this.getList();
     },
 
     // 清空表头信息
     clearHead() {
       this.form = {
-        id: undefined,
-        declarationOfficeId: undefined,
-        carrier: undefined,
-        loadingLocation: undefined,
-        customsMaster: undefined,
-        additionalInformation: undefined,
-        borderTransportMeans: {
-          borderId: undefined,
-          name: undefined,
-          typeCode: undefined,
-          masterId: undefined,
-          masterName: undefined,
-          arrivalDateTime: undefined,
+        head:{},
+        declaration:{
+          declarationId: undefined,
+          declarationOfficeId: undefined
         },
-        consignment: {
-          governmentProcedure: undefined,
+        governmentprocedure:{
+          currentCode: undefined
+        },
+        carrier:{
+          carrierId: undefined
+        },
+        loadinglocation:{
+          loadinglocationId: undefined
+        },
+        master:{
+          masterId: undefined,
+          name: undefined
+        },
+        additionalinformation:{
+          content: undefined
+        },
+        borderTransportMeans: {
+          borderTransportMeansId: undefined,
+          name: undefined,
+          typeCode: "4",
+          arrivalDateTime:undefined
         },
       };
     },
@@ -761,7 +790,7 @@ export default {
     // 清空挂车信息
     clearBody() {
       this.Tform = {
-        transportId: undefined,
+        equipmentId: undefined,
         typeCode: undefined,
         tareWeight: undefined,
       };
@@ -770,7 +799,7 @@ export default {
     // 清空集装箱信息
     clearCoalBody() {
       this.Cform = {
-        transportEquipmentId: undefined,
+        equipmentId: undefined,
         characteristicCode: undefined,
         supplierPartyTypeCode: undefined,
         tareWeight: undefined,
@@ -839,7 +868,7 @@ export default {
             updateHead(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
-                this.getHeadList();
+                // this.getHeadList();
               } else {
                 this.msgError(response.msg);
               }
@@ -848,10 +877,10 @@ export default {
             addHead(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess(response.msg);
-                this.TID = response.data.Bid;
-                this.CID = response.data.Cid;
-                this.form.messageId = response.data.Mid;
-                this.getHeadList();
+                this.TID = response.data.Tid;
+                // this.CID = response.data.Cid;
+                this.form.head.id = response.data.Hid;
+                // this.getHeadList();
               } else {
                 this.msgError(response.msg);
               }
@@ -863,7 +892,8 @@ export default {
     /** 挂车表体提交按钮 */
     submitBodyForm: function () {
       this.$refs["Tform"].validate((valid) => {
-        this.Tform.borderTransportMeansId = this.TID;
+        this.Tform.manifestDeclarationId = this.TID;
+        this.Tform.equipmentType = "2";
         if (valid) {
           updateTransport(this.Tform).then((response) => {
             if (response.code == 200) {
@@ -881,9 +911,10 @@ export default {
     /** 集装箱表体提交按钮 */
     coalBodyForm: function () {
       this.$refs["Cform"].validate((valid) => {
-        this.Cform.consignmentId = this.CID;
+        this.Cform.manifestDeclarationId = this.TID;
+        this.Cform.equipmentType = "1";
         if (valid) {
-          updateCoal(this.Cform).then((response) => {
+          updateTransport(this.Cform).then((response) => {
             if (response.code === 200) {
               this.msgSuccess("新增成功");
               this.getListCoal();

@@ -357,6 +357,10 @@ export default {
       },
       // 表单参数
       form: {},
+      // headform
+      headForm:{},
+      // 
+      
       // 挂车表单参数
       Tform: {},
       // 集装箱表单参数
