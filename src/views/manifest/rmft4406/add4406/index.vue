@@ -183,7 +183,7 @@
       </el-row>
       <el-row>
         <el-col :span="6">
-          <el-form-item label="企业代码" prop="contractorCodeScc">
+          <!-- <el-form-item label="企业代码" prop="contractorCodeScc">
             <el-input
               v-model="form.contractorCodeScc "
               placeholder="请输入企业代码"
@@ -192,7 +192,20 @@
                
               disabled
             />
+          </el-form-item> -->
+
+          <el-form-item label="企业代码" prop="contractorcodescc">
+            <el-select v-model="form.contractorcodescc" placeholder="请选择请输入企业代码"  @change="change">
+            <el-option
+              v-for="item in enterpriseOptions"
+              :key="item.contractorCodeScc"
+              :label="item.contractorCodeScc"
+              :value="item.contractorCodeScc"
+            >
+           </el-option>
+          </el-select>
           </el-form-item>
+
         </el-col>
         <el-col :span="18">
           <el-form-item label="确报传输人名称" prop="stationPersonName">
@@ -417,6 +430,7 @@ import {
   updateTransport,
   updateCoal,
 } from "@/api/manifest/rmft4406/head";
+import {listInfo} from "@/api/basis/enterpriseInfo";
 
 export default {
   name: "Head",
@@ -443,6 +457,8 @@ export default {
       TrailerType: [],
       // 集装箱(器)来源字典
       ContainerSource: [],
+      // 企业信息列表
+      enterpriseOptions:[],
       // 集装箱(器)尺寸类型字典
       ContainerSize: [],
       // 集装箱（器）重箱或者空箱标识
@@ -685,6 +701,12 @@ export default {
       getCoal(this.Cform).then((response) => {
         this.coalList = response.rows;
         this.total = response.total;
+      });
+    },
+    // 企业申报信息列表
+    enterpriseInfo(){
+       listInfo(this.queryParams).then((response) => {
+        this.enterpriseOptions = response.rows;
       });
     },
     // /** 挂车行点击按钮 */
@@ -988,6 +1010,15 @@ export default {
           this.download(response.msg);
         })
         .catch(function () {});
+    },
+    /** 选中值发生变化时触发 */
+    change(event){
+        this.enterpriseOptions.forEach(element => {
+          if(element.contractorCodeScc===event){
+            // 将得到的企业属性赋值到应用的对象中
+            this.form.stationPersonName=element.customsMaster
+          }
+        });
     },
     // /**页面初始化数据 */
     // initialization() {
