@@ -3,6 +3,7 @@
     
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="堆场" prop="yardId">
+<<<<<<< HEAD
         <el-select v-model="yardId" placeholder="请选择堆场" size="small">
           <el-option
             v-for="yard in yard_infoList"
@@ -20,6 +21,37 @@
         @keyup.enter.native="handleQuery"
       />-->
       
+=======
+        <el-select
+          v-model="queryParams.yardId" placeholder="请输入堆场ID" clearable size="small">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="区域类型" prop="zoneType">
+        <el-select v-model="queryParams.zoneType" placeholder="请选择区域类型" clearable size="small">
+          <el-option
+            v-for="dict in zoneTypeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="区域名称" prop="zoneName">
+        <el-input
+          v-model="queryParams.zoneName"
+          placeholder="请输入区域名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
       <el-form-item label="区域代码" prop="zoneCode">
         <el-input
           v-model="queryParams.zoneCode"
@@ -29,6 +61,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+<<<<<<< HEAD
       <el-form-item label="区域类型" prop="zoneType">
         <el-select v-model="queryParams.zoneType" placeholder="请选择区域类型" clearable size="small">
           <el-option
@@ -57,6 +90,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+=======
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -74,7 +109,7 @@
         >新增
         </el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!--<el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -84,7 +119,11 @@
           v-hasPermi="['yard:zone:edit']"
         >修改
         </el-button>
+<<<<<<< HEAD
       </el-col>
+=======
+      </el-col>-->
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -96,7 +135,7 @@
         >删除
         </el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!--<el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -105,6 +144,7 @@
           v-hasPermi="['yard:zone:export']"
         >导出
         </el-button>
+<<<<<<< HEAD
       </el-col>
     </el-row>
     
@@ -116,17 +156,41 @@
       <el-table-column label="库位名称" align="center" prop="storeName"/>
       <el-table-column label="库位编号" align="center" prop="storeCode"/>
       <el-table-column label="库位层数" align="center" prop="storeLevel"/>
+=======
+      </el-col>-->
+    </el-row>
+    
+    <el-table v-loading="loading" :data="zoneList" @selection-change="handleSelectionChange">
+      <!--<el-table-column type="selection" width="55" align="center"/>-->
+      <el-table-column label="ID" align="center" prop="id"/>
+      <el-table-column label="堆场ID" align="center" prop="yardId"/>
+      <el-table-column label="区域类型" align="center" prop="zoneType" :formatter="zoneTypeFormat"/>
+      <el-table-column label="区域名称" align="center" prop="zoneName"/>
+      <el-table-column label="区域代码" align="center" prop="zoneCode"/>
+      <el-table-column label="区域长" align="center" prop="zoneLength"/>
+      <el-table-column label="区域宽" align="center" prop="zoneWidth"/>
+      <el-table-column label="区域面积(㎡)" align="center" prop="zoneArea"/>
+      <el-table-column label="存放行数" align="center" prop="storageRows"/>
+      <el-table-column label="存放列数" align="center" prop="storageColumns"/>
+      <el-table-column label="货位层数" align="center" prop="storeLevel"/>
+      <el-table-column label="货位数量" align="center" prop="storeCount"/>
+      <el-table-column label="货位容量(KG)" align="center" prop="storeCapacity"/>
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
       <el-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
-          <el-button
+          <!--<el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['yard:zone:edit']"
           >修改
+<<<<<<< HEAD
           </el-button>
+=======
+          </el-button>-->
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
           <el-button
             size="mini"
             type="text"
@@ -147,6 +211,7 @@
       @pagination="getList"
     />
     
+<<<<<<< HEAD
     <!-- 添加或修改堆场库位信息 对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
@@ -175,9 +240,116 @@
         <el-form-item label="库位层数" prop="storeLevel">
           <el-input v-model="form.storeLevel" placeholder="请输入库位层数"/>
         </el-form-item>
+=======
+    <!-- 添加或修改堆场分区信息对话框 -->
+    <el-dialog :title="title" :visible.sync="open" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="堆场ID" prop="yardId">
+              <el-select v-model="form.yardId" placeholder="请输入堆场ID">
+                <el-option
+                  v-for="dept in depts"
+                  :key="dept.deptId"
+                  :label="dept.deptName"
+                  :value="dept.deptId"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="区域类型" prop="zoneType">
+              <el-select v-model="form.zoneType" placeholder="请选择区域类型">
+                <el-option
+                  v-for="dict in zoneTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="区域名称" prop="zoneName">
+              <!--<el-input v-model="form.zoneName" placeholder="请输入区域名称(A-Z)"/>-->
+              <el-select v-model="form.zoneName" placeholder="请输入区域名称(A-Z)">
+                <el-option
+                  v-for="item in wordArr"
+                  :key="item.char"
+                  :label="item.value"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="区域代码" prop="zoneCode">
+              <!--<el-input v-model="form.zoneCode" placeholder="请输入区域代码"/>-->
+              <el-select v-model="form.zoneCode" placeholder="请输入区域编号">
+                <el-option
+                  v-for="item in numArr"
+                  :key="item.key"
+                  :label="item.value"
+                  :value="item.key"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <el-form-item label="存放行数" prop="storageRows">
+              <el-input v-model="form.storageRows" placeholder="请输入存放行数"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="存放列数" prop="storageColumns">
+              <el-input v-model="form.storageColumns" placeholder="请输入存放列数"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="货位层数" prop="storeLevel">
+              <el-input v-model="form.storeLevel" placeholder="请输入货位层数"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <el-form-item label="区域长" prop="zoneLength">
+              <el-input v-model="form.zoneLength" placeholder="请输入区域长"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="区域宽" prop="zoneWidth">
+              <el-input v-model="form.zoneWidth" placeholder="请输入区域宽"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="区域面积(㎡)" prop="zoneArea">
+              <el-input v-model="form.zoneArea" placeholder="请输入区域面积(㎡)" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="货位数量" prop="storeCount">
+              <el-input v-model="form.storeCount" placeholder="请输入货位数量"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="货位容量(KG)" prop="storeCapacity">
+              <el-input v-model="form.storeCapacity" placeholder="请输入货位容量(KG)"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
+      
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -189,7 +361,11 @@
 
 <script>
 	import {listZone, getZone, delZone, addZone, updateZone} from "@/api/yard/zone";
+<<<<<<< HEAD
 	import {listYard_info} from '@/api/yard/info'
+=======
+	import {genEnglishChar, genNumChar, getUserDepts} from '@/utils/charutils'
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
 
 	export default {
 		name: "Zone",
@@ -197,6 +373,13 @@
 			return {
 				// 遮罩层
 				loading: true,
+<<<<<<< HEAD
+=======
+				wordArr: [],
+				numArr: [],
+				//用户所在部门
+				depts: [],
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
 				// 选中数组
 				ids: [],
 				// 非单个禁用
@@ -205,12 +388,17 @@
 				multiple: true,
 				// 总条数
 				total: 0,
+<<<<<<< HEAD
 				// 堆场库位信息 表格数据
 				zoneList: [],
 				//当前选中的yardId
 				yardId: '',
 				//堆场列表
 				yard_infoList: [],
+=======
+				// 堆场分区信息表格数据
+				zoneList: [],
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
 				// 弹出层标题
 				title: "",
 				// 是否显示弹出层
@@ -222,10 +410,16 @@
 					pageNum: 1,
 					pageSize: 20,
 					yardId: undefined,
+<<<<<<< HEAD
 					zoneCode: undefined,
 					zoneType: undefined,
 					storeCode: undefined,
 					storeLevel: undefined,
+=======
+					zoneType: undefined,
+					zoneName: undefined,
+					zoneCode: undefined,
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
 				},
 				// 表单参数
 				form: {},
@@ -234,6 +428,7 @@
 					yardId: [
 						{required: true, message: "堆场ID不能为空", trigger: "blur"}
 					],
+<<<<<<< HEAD
 					zoneCode: [
 						{required: true, message: "区域代码不能为空", trigger: "blur"}
 					],
@@ -245,10 +440,30 @@
 					],
 					storeLevel: [
 						{required: true, message: "库位层数不能为空", trigger: "blur"}
+=======
+					zoneType: [
+						{required: true, message: "区域类型不能为空", trigger: "change"}
+					],
+					zoneName: [
+						{required: true, message: "区域名称不能为空", trigger: "blur"}
+					],
+					zoneCode: [
+						{required: true, message: "区域代码不能为空", trigger: "blur"}
+					],
+					storageRows: [
+						{required: true, message: "存放行数不能为空", trigger: "blur"}
+					],
+					storageColumns: [
+						{required: true, message: "存放列数不能为空", trigger: "blur"}
+					],
+					storeLevel: [
+						{required: true, message: "货位层数不能为空", trigger: "blur"}
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
 					],
 				}
 			};
 		},
+<<<<<<< HEAD
 		created() {
 			//接收参数
 			this.yardId = this.$route.params && this.$route.params.yardId;
@@ -279,6 +494,39 @@
 		},
 		methods: {
 			/** 查询堆场库位信息 列表 */
+=======
+
+		watch: { //监听表单数据变化，自动计算值
+			form: {
+				deep: true,
+				handler(val, oldValue) {
+					//console.log('form:'+ val.zoneLength,val.zoneWidth)
+					val.zoneArea = val.zoneLength * val.zoneWidth
+					val.storeCount = val.storageRows * val.storageColumns * val.storeLevel
+					//console.log(val.storeCount)
+				}
+			}
+		},
+		//todo 获取用户机构，用于展示堆场或场所的列表项
+		
+		created() {
+			this.wordArr = genEnglishChar()
+			this.numArr = genNumChar(1, 30)
+   
+			this.getDicts("yard_zone_type").then(response => {
+				this.zoneTypeOptions = response.data;
+			});
+			// 0 监管场所，1保税库，2堆场，3企业
+			this.depts = getUserDepts('2')
+			if (this.depts.length > 0) {
+				this.queryParams.yardId = this.depts[0].deptId
+				this.getList();
+			}
+			
+		},
+		methods: {
+			/** 查询堆场分区信息列表 */
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
 			getList() {
 				this.loading = true;
 				listZone(this.queryParams).then(response => {
@@ -301,11 +549,25 @@
 				this.form = {
 					id: undefined,
 					yardId: undefined,
+<<<<<<< HEAD
 					zoneCode: undefined,
 					zoneType: undefined,
 					storeName: undefined,
 					storeCode: undefined,
 					storeLevel: undefined,
+=======
+					zoneType: undefined,
+					zoneName: undefined,
+					zoneCode: undefined,
+					zoneLength: undefined,
+					zoneWidth: undefined,
+					zoneArea: undefined,
+					storageRows: undefined,
+					storageColumns: undefined,
+					storeLevel: undefined,
+					storeCount: undefined,
+					storeCapacity: undefined,
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
 					remark: undefined,
 					createBy: undefined,
 					createTime: undefined,
@@ -334,8 +596,12 @@
 			handleAdd() {
 				this.reset();
 				this.open = true;
+<<<<<<< HEAD
 				this.form.yardId = this.yardId
 				this.title = "添加堆场库位信息 ";
+=======
+				this.title = "添加堆场分区信息";
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
 			},
 			/** 修改按钮操作 */
 			handleUpdate(row) {
@@ -344,7 +610,11 @@
 				getZone(id).then(response => {
 					this.form = response.data;
 					this.open = true;
+<<<<<<< HEAD
 					this.title = "修改堆场库位信息 ";
+=======
+					this.title = "修改堆场分区信息";
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
 				});
 			},
 			/** 提交按钮 */
@@ -374,7 +644,11 @@
 			/** 删除按钮操作 */
 			handleDelete(row) {
 				const ids = row.id || this.ids;
+<<<<<<< HEAD
 				this.$confirm('是否确认删除堆场库位信息 编号为"' + ids + '"的数据项?', "警告", {
+=======
+				this.$confirm('是否确认删除堆场分区信息编号为"' + ids + '"的数据项?', "警告", {
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
 					confirmButtonText: "确定",
 					cancelButtonText: "取消",
 					type: "warning"

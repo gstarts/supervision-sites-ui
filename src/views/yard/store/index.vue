@@ -111,8 +111,24 @@
       <el-table-column label="库位编号" align="center" prop="storeCode" />
       <el-table-column label="库位层级" align="center" prop="storeLevel" />
       <el-table-column label="库位状态" align="center" prop="storeState" :formatter="storeStateFormat" />
+<<<<<<< HEAD
       <el-table-column label="集装箱(货)号" align="center" prop="businessCode" />
       <el-table-column label="重量(KG)" align="center" prop="storeWeight" />
+=======
+      <el-table-column label="集装箱号" align="center" prop="containerNo" />
+      <el-table-column label="库位容量(KG)" align="center" prop="storeCapacity" />
+      <el-table-column label="空/重箱" align="center" prop="isHeavy" :formatter="isHeavyFormat" />
+      <el-table-column label="货物净重(KG)" align="center" prop="netWeight" />
+      <el-table-column label="货物毛重(KG)" align="center" prop="roughWight" />
+      <el-table-column label="货物批次号" align="center" prop="goodsBatchNo" />
+      <el-table-column label="变更原因" align="center" prop="updateReason" :formatter="updateReasonFormat" />
+      <el-table-column label="更新人" align="center" prop="updateBy" />
+      <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+>>>>>>> 56cd18f4605da2c3602d9868db08979e394997b5
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
