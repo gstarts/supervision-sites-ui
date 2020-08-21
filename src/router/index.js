@@ -5,6 +5,15 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+// 原始舱单
+import originalManifest from './moudles/originalManifest'
+// 理货报告
+import tallyingReport from './moudles/tallyingReport'
+// 运抵报告
+import shipToReport from './moudles/shipToReport'
+// 车辆进出境确报告
+import carReport from './moudles/carReport'
+
 
 /**
  * Note: 路由配置项
@@ -158,6 +167,10 @@ export const constantRoutes = [
         }
       ]
     },
+    originalManifest,
+    tallyingReport,
+    shipToReport,
+    carReport
 ]
 
 export default new Router({
