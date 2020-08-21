@@ -519,6 +519,7 @@ export default {
       },
       // 挂车表单参数
       Tform: {
+        id :undefined,
         pageNum: 1,
         pageSize: 10,
         equipmentId: undefined,
