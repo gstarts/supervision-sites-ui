@@ -70,10 +70,10 @@ export function exportHead(query) {
 }
 
 //空载新增表头信息
-export function addemptyCar(data) {
+export function addbody(data) {
   return request({
-    url: '/newemptycar/head/insertemptyCar',
-    method: 'put',
+    url: '/manifest/rmft/addbody',
+    method: 'post',
     data: data
   })
 }
