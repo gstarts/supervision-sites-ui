@@ -32,9 +32,18 @@
     <el-form :model="form" ref="form" :rules="headRules" label-width="190px" size="mini">
       <el-row>
         <el-col :span="6">
-          <el-form-item label="货物运输批次号" prop="declaration.declarationId">
-            <el-input v-model="form.declaration.declarationId" placeholder="请输入货物运输批次号" />
+          <el-form-item label="企业代码" prop="contractorcodescc">
+            <el-select v-model="form.contractorcodescc" placeholder="请选择企业代码"  @change="change">
+            <el-option
+              v-for="item in enterpriseOptions"
+              :key="item.contractorCodeScc"
+              :label="item.contractorCodeScc"
+              :value="item.contractorCodeScc"
+            >
+           </el-option>
+          </el-select>
           </el-form-item>
+          
         </el-col>
         <el-col :span="6">
           <el-form-item label="运输工具代码" prop="borderTransportMeans.borderTransportMeansId">
@@ -194,23 +203,15 @@
             />
           </el-form-item> -->
 
-          <el-form-item label="企业代码" prop="contractorcodescc">
-            <el-select v-model="form.contractorcodescc" placeholder="请选择请输入企业代码"  @change="change">
-            <el-option
-              v-for="item in enterpriseOptions"
-              :key="item.contractorCodeScc"
-              :label="item.contractorCodeScc"
-              :value="item.contractorCodeScc"
-            >
-           </el-option>
-          </el-select>
+          <el-form-item label="货物运输批次号" prop="declaration.declarationId">
+            <el-input v-model="form.declaration.declarationId" placeholder="请输入货物运输批次号" />
           </el-form-item>
 
         </el-col>
         <el-col :span="18">
           <el-form-item label="确报传输人名称" prop="stationPersonName">
             <el-input
-              v-model="form.stationPersonName"
+              v-model="form.representativeperson.stationPersonName"
               placeholder="请输入确报传输人名称"
               clearable
               size="mini"
@@ -486,7 +487,10 @@ export default {
       },
       // 表单参数
       form: {
-        head:{},
+        head:{
+          contractorcodescc: undefined,
+          customsMaster: undefined 
+        },
         declaration:{
           declarationId: undefined,
           declarationOfficeId: undefined
@@ -513,12 +517,16 @@ export default {
           typeCode: "4",
           arrivalDateTime:undefined
         },
+        representativeperson: {
+          stationPersonName: undefined
+        },
         // consignment: {
         //   governmentProcedure: undefined,
         // },
       },
       // 挂车表单参数
       Tform: {
+        id :undefined,
         pageNum: 1,
         pageSize: 10,
         equipmentId: undefined,
@@ -556,6 +564,9 @@ export default {
             message: "请输入进出境口岸海关代码",
             trigger: "blur",
           },
+        ],
+        contractorcodescc: [
+          { required: true, message: "请选择企业代码", trigger: "blur" },
         ],
         "carrier.carrierId": [
           { required: true, message: "请输入承运人代码", trigger: "blur" },
@@ -641,6 +652,8 @@ export default {
   },
   created() {
     // this.getList();
+    // 获取企业信息列表
+     this.enterpriseInfo();
     /** 运输方式字典 */
     this.getDicts("station_transport_fashion").then((response) => {
       this.TransportDictionary = response.data;
@@ -671,9 +684,6 @@ export default {
     getList() {
       this.loading = true;
       getInfoHead().then((response) => {
-        this.form.stationPersonName = response.data.stationPersonName;
-        this.form.customsMaster = response.data.customsMaster;
-        this.form.contractorCodeScc = response.data.contractorCodeScc;
         this.form.borderTransportMeans.typeCode = "4";
         this.total = response.total;
         this.loading = false;
@@ -902,6 +912,7 @@ export default {
                 this.TID = response.data.Tid;
                 // this.CID = response.data.Cid;
                 this.form.head.id = response.data.Hid;
+                this.form.head.messageId = response.data.Mid;
                 // this.getHeadList();
               } else {
                 this.msgError(response.msg);
@@ -1014,9 +1025,11 @@ export default {
     /** 选中值发生变化时触发 */
     change(event){
         this.enterpriseOptions.forEach(element => {
+          console.log(element)
           if(element.contractorCodeScc===event){
             // 将得到的企业属性赋值到应用的对象中
-            this.form.stationPersonName=element.customsMaster
+            this.form.representativeperson.stationPersonName=element.stationPersonName;
+            this.form.customsMaster = element.customsMaster;
           }
         });
     },
