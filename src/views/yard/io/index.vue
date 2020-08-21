@@ -257,7 +257,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="区域" prop="zoneCode">
-              <el-select v-model="form.zoneCode" placeholder="请输入区域"  @change="getStoreList">
+              <el-select v-model="form.zoneCode" placeholder="请输入区域"  @change="listStore">
                 <el-option
                   v-for="zone in zoneList"
                   :key="zone.id"
@@ -370,7 +370,7 @@
 	import {listIo, getIo, delIo, addIo, updateIo} from "@/api/yard/io";
 	import {getUserDepts} from '@/utils/charutils'
 	import {listZone} from '../../../api/yard/zone'
-	import {listStore} from '../../../api/yard/store'
+	import {listStoreCanUse} from '@/api/yard/store'
 
 	export default {
 		name: "Io",
@@ -599,16 +599,15 @@
 					this.zoneList = []
         }
       },
-      getStoreList(){
+			listStore(){
 				if(this.form.zoneCode !== ''){
-					listStore({'yardId':this.form.yardId,'zoneType':'1','zoneCode':this.form.zoneCode,'storeState':'0'}).then(response => {
+					listStoreCanUse({'yardId':this.form.yardId,'zoneType':'1','zoneCode':this.form.zoneCode,'storeState':'0'}).then(response => {
 						this.storeList = []
 						this.storeList = response.rows
 					})
         }else{
 					this.storeList = []
         }
-				
       }
 		}
 	};
