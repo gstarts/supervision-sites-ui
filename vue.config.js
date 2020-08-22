@@ -40,6 +40,13 @@ module.exports = {
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
+      },
+      [process.env.TEST_API]: {
+	      target: `https://nmapp.singlewindow.cn`,
+        changeOrigin: true,
+        pathRewrite: {
+          ['^' + process.env.TEST_API]: ''
+        }
       }
     },
     disableHostCheck: true
