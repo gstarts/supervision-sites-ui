@@ -238,50 +238,12 @@
           </el-col>
         </el-row>
         <el-row :gutter="10">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="车牌号" prop="vehicleNo">
               <el-input v-model="form.vehicleNo" placeholder="请输入车牌号"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="集装箱数量" prop="containerCount">
-              <el-input-number :disabled="true" :min="0" v-model="form.containerCount" placeholder="请输入集装箱数量" controls-position="right"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="10">
           <el-col :span="8">
-            <el-form-item label="集装箱号" prop="containerNo">
-              <el-input v-model="form.containerNo" placeholder="请输入集装箱号"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="区域" prop="zoneCode">
-              <el-select v-model="form.zoneCode" placeholder="请输入区域"  @change="listStore">
-                <el-option
-                  v-for="zone in zoneList"
-                  :key="zone.id"
-                  :label="zone.zoneName+(zone.zoneCode<10?'0'+zone.zoneCode:zone.zoneCode)"
-                  :value="zone.zoneName+(zone.zoneCode<10?'0'+zone.zoneCode:zone.zoneCode)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="货位号" prop="zoneCode">
-              <el-select v-model="form.storeCode" placeholder="请输入货位">
-                <el-option
-                  v-for="store in storeList"
-                  :key="store.id"
-                  :label="store.storeCode"
-                  :value="store.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="10">
-          <el-col :span="12">
             <el-form-item label="出/入场状态">
               <el-select v-model="form.ioState" placeholder="请选择出/入场状态">
                 <el-option
@@ -293,6 +255,57 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="8">
+            <el-form-item label="集装箱数量" prop="containerCount">
+              <el-input-number :disabled="true" :min="0" v-model="form.containerCount" placeholder="请输入集装箱数量" controls-position="right"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="6">
+            <el-form-item label="集装箱号" prop="containerNo">
+              <el-input v-model="form.containerNo" placeholder="请输入集装箱号"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="空/重状态" prop="heavyState">
+              <el-select v-model="form.heavyState" placeholder="空重状态">
+                <el-option
+                  v-for="store in storeList"
+                  :key="store.id"
+                  :label="store.storeCode"
+                  :value="store.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="区域" prop="zoneCode">
+              <el-select v-model="form.zoneCode" placeholder="请输入区域"  @change="listStore">
+                <el-option
+                  v-for="zone in zoneList"
+                  :key="zone.id"
+                  :label="zone.zoneName+(zone.zoneCode<10?'0'+zone.zoneCode:zone.zoneCode)"
+                  :value="zone.zoneName+(zone.zoneCode<10?'0'+zone.zoneCode:zone.zoneCode)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="货位号" prop="zoneCode">
+              <el-select v-model="form.storeCode" placeholder="请输入货位">
+                <el-option
+                  v-for="store in storeList"
+                  :key="store.id"
+                  :label="store.storeCode"
+                  :value="store.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+         
+        </el-row>
+        <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="出/入场时间" prop="ioTime">
               <el-date-picker clearable size="small" style="width: 200px"
@@ -385,7 +398,7 @@
 				// 非单个禁用
 				single: true,
 				// 非多个禁用
-				multiple: true,
+				multiple: false,
 				// 总条数
 				total: 0,
 				// 集装箱进出记录 表格数据
@@ -400,6 +413,7 @@
 				stateOptions: [],
 				// 单证用途字典
 				purposeOptions: [],
+        containerList: [],
 				// 查询参数
 				queryParams: {
 					pageNum: 1,
@@ -556,7 +570,7 @@
 								}
 							});
 						} else {
-							addIo(this.form).then(response => {
+							addIo({'io':this.form,'containerList': this.containerList}).then(response => {
 								if (response.code === 200) {
 									this.msgSuccess("新增成功");
 									this.open = false;

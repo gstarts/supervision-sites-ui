@@ -35,6 +35,9 @@ export function getUserDepts(deptType){
             }
         }
     }
-
     return depts;
+}
+
+export function cloneObject(obj){ // 对象复制
+    return JSON.parse(JSON.stringify(obj))
 }

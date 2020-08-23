@@ -430,7 +430,7 @@ export default {
     // });
     // this.initialization();
     //
-    this.test()
+    //this.test()
   },
   methods: {
     //托架/拖挂车类型 翻译
