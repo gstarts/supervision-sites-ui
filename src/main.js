@@ -32,6 +32,11 @@ Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
+Vue.prototype.$saveStore = (...data)=>window.sessionStorage.setItem(data[0],data[1])
+Vue.prototype.$getStore = data=>window.sessionStorage.getItem(data)
+Vue.prototype.$delStore = data=>window.sessionStorage.removeItem(data)
+
+
 
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({ showClose: true, message: msg, type: "success" });

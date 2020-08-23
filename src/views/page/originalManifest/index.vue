@@ -203,7 +203,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="变更原因" prop="postCode" >
-              <el-button type="primary" size="mini">详细</el-button>
+              <el-button type="primary" size="mini" @click="detailVisible = true">详细</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -566,6 +566,83 @@
 
     <depParaList :tableVisible='dialogTableVisible' @choose="choose" @close='close'></depParaList>
     <depParaList2 :tableVisible='dialogTableVisible2' @choose="choose2" @close='close2'></depParaList2>
+    <el-dialog title="通知人信息" :visible.sync="detailVisible">
+      <el-form :model="queryParams" class="mb20" ref="queryForm" label-width="160px">
+        <el-row type="flex">
+          <el-col :span="12">
+            <el-form-item label="通知人代码" prop="postCode" >
+              <el-input
+                v-model="queryParams.postCode"
+                placeholder="通知人代码"
+                clearable
+                size="small"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="通知人名称" prop="postCode" >
+              <el-input
+                v-model="queryParams.postCode"
+                placeholder="通知人名称"
+                clearable
+                size="small"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row type="flex">
+          <el-col :span="24">
+            <el-form-item label="通知人地址(街道,邮箱)" prop="postCode" >
+              <el-input
+                v-model="queryParams.postCode"
+                placeholder="通知人地址(街道,邮箱)"
+                clearable
+                size="small"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row type="flex">
+          <el-col :span="12">
+            <el-form-item label="联系号码" prop="postCode" >
+              <el-input
+                v-model="queryParams.postCode"
+                placeholder="联系号码"
+                clearable
+                size="small"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="通讯方式类别代码" prop="postCode" >
+              <el-input
+                v-model="queryParams.postCode"
+                placeholder="通讯方式类别代码"
+                clearable
+                size="small"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row type="flex">
+          <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn" @click="handleAdd">新增</el-button>
+          <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable.saveBtn" @click="handleSave">保存</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn" @click="handleDelete">删除</el-button>
+        </el-row>
+      </el-form>
+      <el-table
+        class="mb20"
+        ref="multipleTable"
+        :data="data"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @selection-change="handleSelectionChange">
+        <el-table-column type="selection" min-width="55"/>
+        <el-table-column prop="num" label="序号" min-width="120"/>
+        <el-table-column prop="num" label="联系号码" min-width="120"/>
+        <el-table-column prop="num" label="海关货物通关代码" min-width="150" />
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -576,6 +653,7 @@ export default {
   components:{depParaList,depParaList2},
   data(){
     return{
+      detailVisible:false,
       gridData: [],
       page:{
         num:1,
@@ -613,7 +691,10 @@ export default {
     // 新增
     handleAdd(){},
     // 暂存
-    handleSave(){},
+    handleSave(){
+      console.log('保存');
+      this.$saveStore("a","123")
+    },
     // 删除
     handleDelete(){},
     // 申报
