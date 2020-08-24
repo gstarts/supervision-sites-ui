@@ -5,6 +5,15 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+// 原始舱单
+import originalManifest from './moudles/originalManifest'
+// 理货报告
+import tallyingReport from './moudles/tallyingReport'
+// 运抵报告
+import shipToReport from './moudles/shipToReport'
+// 车辆进出境确报告
+import carReport from './moudles/carReport'
+
 
 /**
  * Note: 路由配置项
@@ -118,6 +127,26 @@ export const constantRoutes = [
       }
     ]
   },
+  //  确报路由
+  {
+    path: '/approve',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'details',
+        component: () => import('@/views/manifest/rmft4406/head4406/details'),
+        name: 'approveDetail',
+        meta: { title: '确报信息详情' }
+      },
+      {
+        path: 'edit',
+        component: () => import('@/views/manifest/rmft4406/update4406/updateindex'),
+        name: 'approveEdit',
+        meta: { title: '确报信息修改'}
+      }
+    ]
+  },
     //空车路由
     {
       path: '/emptyCar',
@@ -138,6 +167,10 @@ export const constantRoutes = [
         }
       ]
     },
+    originalManifest,
+    tallyingReport,
+    shipToReport,
+    carReport
 ]
 
 export default new Router({

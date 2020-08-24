@@ -23,17 +23,18 @@
         >申报</el-button>
       </el-col>
     </el-row>
-    <el-form :model="form" ref="form" label-width="190px" size="mini" :rules="headRules">
+    <!-- :rules="headRules" -->
+    <el-form :model="form" ref="form" label-width="190px" size="mini" >
       <el-row>
         <el-col :span="6">
-          <el-form-item label="货物运输批次号" prop="id" required>
-            <el-input v-model="form.id" placeholder="请输入货物运输批次号" />
+          <el-form-item label="货物运输批次号" prop="declarationId" >
+            <el-input v-model="form.declaration.declarationId" placeholder="请输入货物运输批次号" />
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="运输工具代码" prop="iRmft4404Bordertransportmeans.borderId">
+          <el-form-item label="运输工具代码" prop="borderTransportMeans.borderTransportMeansId">
             <el-input
-              v-model="form.iRmft4404Bordertransportmeans.borderId"
+              v-model="form.borderTransportMeans.borderTransportMeansId"
               placeholder="请输入运输工具代码"
               clearable
               size="mini"
@@ -42,9 +43,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="运输工具名称" prop="iRmft4404Bordertransportmeans.name">
+          <el-form-item label="运输工具名称" prop="borderTransportMeans.name">
             <el-input
-              v-model="form.iRmft4404Bordertransportmeans.name"
+              v-model="form.borderTransportMeans.name"
               placeholder="请输入运输工具名称"
               clearable
               size="mini"
@@ -53,9 +54,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="运输方式代码" prop="iRmft4404Bordertransportmeans.typecode">
+          <el-form-item label="运输方式代码" prop="borderTransportMeans.typeCode">
             <el-select
-              v-model="form.iRmft4404Bordertransportmeans.typecode"
+              v-model="form.borderTransportMeans.typeCode"
               disabled
               placeholder="系统反填"
               style="width:100%"
@@ -73,9 +74,9 @@
       </el-row>
       <el-row>
         <el-col :span="6">
-          <el-form-item label="进出境口岸海关代码" prop="declarationofficeid">
+          <el-form-item label="进出境口岸海关代码" prop="declaration.declarationOfficeId">
             <el-select
-              v-model="form.declarationofficeid"
+              v-model="form.declaration.declarationOfficeId"
               placeholder="请选择进出境口岸海关代码"
               style="width:100%"
             >
@@ -89,9 +90,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="承运人代码" prop="carrier">
+          <el-form-item label="承运人代码" prop="carrier.carrierId">
             <el-input
-              v-model="form.carrier"
+              v-model="form.carrier.carrierId"
               placeholder="请输入承运人代码"
               size="mini"
               @keyup.enter.native="handleQuery"
@@ -99,9 +100,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="海关货物通关代码" prop="iRmft4404Consignment.governmentprocedure">
+          <el-form-item label="海关货物通关代码" prop="governmentprocedure.currentCode">
             <el-input
-              v-model="form.iRmft4404Consignment.governmentprocedure"
+              v-model="form.governmentprocedure.currentCode"
               placeholder="请输入海关货物通关代码"
               clearable
               size="mini"
@@ -110,9 +111,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="装货地代码" prop="loadinglocation">
+          <el-form-item label="装货地代码" prop="loadinglocation.loadinglocationId">
             <el-input
-              v-model="form.loadinglocation"
+              v-model="form.loadinglocation.loadinglocationId"
               placeholder="请输入装货地代码"
               clearable
               size="mini"
@@ -123,9 +124,9 @@
       </el-row>
       <el-row>
         <el-col :span="6">
-          <el-form-item label="驾驶员代码" prop="iRmft4404Bordertransportmeans.masterId">
+          <el-form-item label="驾驶员代码" prop="master.masterId">
             <el-input
-              v-model="form.iRmft4404Bordertransportmeans.masterId"
+              v-model="form.master.masterId"
               placeholder="请输入驾驶员代码"
               clearable
               size="mini"
@@ -134,9 +135,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="驾驶员名称" prop="iRmft4404Bordertransportmeans.masterName">
+          <el-form-item label="驾驶员名称" prop="master.name">
             <el-input
-              v-model="form.iRmft4404Bordertransportmeans.masterName"
+              v-model="form.master.name"
               placeholder="请输入驾驶员名称"
               clearable
               size="mini"
@@ -145,9 +146,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="抵境内第一目的港时间" prop="iRmft4404Bordertransportmeans.arrivaldatetime">
+          <el-form-item label="抵境内第一目的港时间" prop="borderTransportMeans.arrivaldatetime">
             <el-date-picker
-              v-model="form.iRmft4404Bordertransportmeans.arrivaldatetime"
+              v-model="form.borderTransportMeans.arrivaldatetime"
               style="width:100%"
               type="datetime"
               value-format="yyyy-MM-dd HH:mm:ss"
@@ -155,7 +156,7 @@
             ></el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <!-- <el-col :span="6">
           <el-form-item label="传输企业备案关区" prop="customsmaster">
             <el-input
               v-model="form.customsmaster"
@@ -193,11 +194,11 @@
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
-        </el-col>
+        </el-col> -->
         <el-col :span="24">
-          <el-form-item label="备注" prop="additionalinformation">
+          <el-form-item label="备注" prop="additionalinformation.content">
             <el-input
-              v-model="form.additionalinformation"
+              v-model="form.additionalinformation.content"
               placeholder="请输入备注"
               clearable
               size="mini"
@@ -227,8 +228,8 @@
       <el-table-column label="托架/拖挂车类型" align="center" prop="typecode" :formatter="Trailerformat" />
       <el-table-column label="托架/拖挂车自重(kg)" align="center" prop="tareweight" />
     </el-table>
-
-    <el-form :model="Tform" ref="Tform" :inline="true" label-width="180px" :rules="headRuless">
+<!-- :rules="headRuless" -->
+    <el-form :model="Tform" ref="Tform" :inline="true" label-width="180px" >
       <el-row>
         <el-col :span="8">
           <el-form-item label="托架/拖挂车编号" prop="transportId">
@@ -265,11 +266,12 @@ import {
   addHead,
   updateHead,
   exportHead,
-  addemptyCar,
+  addbody,
   init,
   listemptycar,
   emptycarAll,
   updateCode,
+  test
 } from "@/api/manifest/rmft4404/emptycar/Head/head";
 
 import {listInfo} from "@/api/basis/enterpriseInfo";
@@ -277,82 +279,82 @@ export default {
   name: "Head",
   data() {
     return {
-      //空载挂车表单效验
-      headRuless: {
-        transportId: [
-          {
-            required: true,
-            message: "托架/拖挂车编号 不能为空",
-            trigger: "blur",
-          },
-        ],
-        typecode: [
-          {
-            required: true,
-            message: "托架/拖挂车类型不能为空",
-            trigger: "blur",
-          },
-        ],
-        tareweight: [
-          {
-            required: true,
-            message: "托架/拖挂车自重(kg) 不能为空",
-            trigger: "blur",
-          },
-        ],
-      },
-      //表头表单效验
-      headRules: {
-        id: [
-          {
-            required: true,
-            message: "货物运输批次号 不能为空",
-            trigger: "blur",
-          },
-        ],
-        "iRmft4404Bordertransportmeans.borderId": [
-          { required: true, message: "运输工具代码 不能为空", trigger: "blur" },
-        ],
-        "iRmft4404Bordertransportmeans.name": [
-          { required: true, message: "运输工具名称 不能为空", trigger: "blur" },
-        ],
-        // "iRmft4404Bordertransportmeans.typecode": [
-        //   { required: true, message: "运输方式代码 不能为空", trigger: "blur" },
-        // ],
-        declarationofficeid: [
-          {
-            required: true,
-            message: "进出境口岸海关代码 不能为空",
-            trigger: "blur",
-          },
-        ],
-        carrier: [
-          { required: true, message: "承运人代码 不能为空", trigger: "blur" },
-        ],
-        "iRmft4404Consignment.governmentprocedure": [
-          {
-            required: true,
-            message: "海关货物通关代码 不能为空",
-            trigger: "blur",
-          },
-        ],
-        "iRmft4404Bordertransportmeans.masterId": [
-          { required: true, message: "驾驶员代码 不能为空", trigger: "blur" },
-        ],
-        "iRmft4404Bordertransportmeans.masterName": [
-          { required: true, message: "驾驶员名称 不能为空", trigger: "blur" },
-        ],
-        "iRmft4404Bordertransportmeans.arrivaldatetime": [
-          {
-            required: true,
-            message: "抵境内第一目的港时间 不能为空",
-            trigger: "blur",
-          },
-        ],
-        loadinglocation: [
-          { required: true, message: "装货地代码 不能为空", trigger: "blur" },
-        ],
-      },
+      // //空载挂车表单效验
+      // headRuless: {
+      //   transportId: [
+      //     {
+      //       required: true,
+      //       message: "托架/拖挂车编号 不能为空",
+      //       trigger: "blur",
+      //     },
+      //   ],
+      //   typecode: [
+      //     {
+      //       required: true,
+      //       message: "托架/拖挂车类型不能为空",
+      //       trigger: "blur",
+      //     },
+      //   ],
+      //   tareweight: [
+      //     {
+      //       required: true,
+      //       message: "托架/拖挂车自重(kg) 不能为空",
+      //       trigger: "blur",
+      //     },
+      //   ],
+      // },
+      // //表头表单效验
+      // headRules: {
+      //   id: [
+      //     {
+      //       required: true,
+      //       message: "货物运输批次号 不能为空",
+      //       trigger: "blur",
+      //     },
+      //   ],
+      //   "borderTransportMeans.borderId": [
+      //     { required: true, message: "运输工具代码 不能为空", trigger: "blur" },
+      //   ],
+      //   "borderTransportMeans.name": [
+      //     { required: true, message: "运输工具名称 不能为空", trigger: "blur" },
+      //   ],
+      //   // "borderTransportMeans.typecode": [
+      //   //   { required: true, message: "运输方式代码 不能为空", trigger: "blur" },
+      //   // ],
+      //   declarationofficeid: [
+      //     {
+      //       required: true,
+      //       message: "进出境口岸海关代码 不能为空",
+      //       trigger: "blur",
+      //     },
+      //   ],
+      //   carrier: [
+      //     { required: true, message: "承运人代码 不能为空", trigger: "blur" },
+      //   ],
+      //   "iRmft4404Consignment.governmentprocedure": [
+      //     {
+      //       required: true,
+      //       message: "海关货物通关代码 不能为空",
+      //       trigger: "blur",
+      //     },
+      //   ],
+      //   "borderTransportMeans.masterId": [
+      //     { required: true, message: "驾驶员代码 不能为空", trigger: "blur" },
+      //   ],
+      //   "borderTransportMeans.masterName": [
+      //     { required: true, message: "驾驶员名称 不能为空", trigger: "blur" },
+      //   ],
+      //   "borderTransportMeans.arrivaldatetime": [
+      //     {
+      //       required: true,
+      //       message: "抵境内第一目的港时间 不能为空",
+      //       trigger: "blur",
+      //     },
+      //   ],
+      //   loadinglocation: [
+      //     { required: true, message: "装货地代码 不能为空", trigger: "blur" },
+      //   ],
+      // },
       // 遮罩层
       loading: false,
       //关联挂车表 id
@@ -391,15 +393,21 @@ export default {
         contractorcodescc: undefined,
         stationPersonName: undefined,
         customsmaster: undefined,
-        iRmft4404Bordertransportmeans: {},
-        iRmft4404Consignment: {},
+        borderTransportMeans: {},
+        declaration:{},
+        // transportcontractdocument:{},
+        governmentprocedure:{},
+        carrier:{},
+        loadinglocation:{},
+        master:{},
+        additionalinformation:{},
       },
       // 表单校验
       Tform: {
         transportId: undefined,
         tareweight: undefined,
         typecode: undefined,
-        bordertransportmeansId: undefined,
+        borderTransportMeansId: undefined,
       },
       rules: {},
       headList: [],
@@ -407,20 +415,22 @@ export default {
   },
   created() {
      // 获取企业信息列表
-     this.enterpriseInfo();
-    //挂车类型字典翻译
-    this.getDicts("hg_trailer_type").then((response) => {
-      this.TrailertypeOptions = response.data;
-    });
-    //运输方式代码翻译
-    this.getDicts("station_transport_fashion").then((response) => {
-      this.businessTypeOptions = response.data;
-    });
-    //进出境口岸海关代码
-    this.getDicts("hg_customs_code").then((response) => {
-      this.customsCodeTypeOptions = response.data;
-    });
+    //  this.enterpriseInfo();
+    // //挂车类型字典翻译
+    // this.getDicts("hg_trailer_type").then((response) => {
+    //   this.TrailertypeOptions = response.data;
+    // });
+    // //运输方式代码翻译
+    // this.getDicts("station_transport_fashion").then((response) => {
+    //   this.businessTypeOptions = response.data;
+    // });
+    // //进出境口岸海关代码
+    // this.getDicts("hg_customs_code").then((response) => {
+    //   this.customsCodeTypeOptions = response.data;
+    // });
     // this.initialization();
+    //
+    this.test()
   },
   methods: {
     //托架/拖挂车类型 翻译
@@ -433,6 +443,14 @@ export default {
         this.enterpriseOptions = response.rows;
       });
     },
+    // 测试前后台调用
+      test(){
+       test(this.queryParams).then((response) => {
+       console.log("测试方法"+response)
+      });
+    },
+
+
     //查询空载挂车新增
     selectempty() {
       listemptycar(this.Lid).then((response) => {
@@ -446,18 +464,24 @@ export default {
         this.form.contractorcodescc = response.data.contractorcodescc;
         this.form.stationPersonName = response.data.stationPersonName;
         this.form.customsmaster = response.data.customsmaster;
-        this.form.iRmft4404Bordertransportmeans.typecode = "4";
+        this.form.borderTransportMeans.typecode = "4";
         this.loading = false;
       });
     },
     // 表单重置
     reset() {
       this.form = {
-        customsmaster: undefined,
         contractorcodescc: undefined,
         stationPersonName: undefined,
-        iRmft4404Bordertransportmeans: {},
-        iRmft4404Consignment: {},
+        customsmaster: undefined,
+        borderTransportMeans: {},
+        declaration:{},
+        // transportcontractdocument:{},
+        governmentprocedure:{},
+        carrier:{},
+        loadinglocation:{},
+        master:{},
+        additionalinformation:{},
       };
       this.resetForm("form");
     },
@@ -492,7 +516,7 @@ export default {
     submitForm: function () {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          addemptyCar(this.form).then((response) => {
+          addbody(this.form).then((response) => {
             if (response.code === 200) {
               this.msgSuccess("新增成功");
               //关联ID
@@ -511,7 +535,7 @@ export default {
       this.loading = true;
       this.$refs["Tform"].validate((valid) => {
         if (valid) {
-          this.Tform.bordertransportmeansId = this.Lid;
+          this.Tform.borderTransportMeansId = this.Lid;
           emptycarAll(this.Tform).then((response) => {
             if (response.code === 200) {
               this.msgSuccess("新增成功");
@@ -581,7 +605,10 @@ export default {
             this.form.stationPersonName=element.customsMaster
           }
         });
+
     }
+
+    
   },
 };
 </script>
