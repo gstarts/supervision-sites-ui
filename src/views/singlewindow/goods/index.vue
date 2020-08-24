@@ -607,7 +607,7 @@ export default {
   },
   mounted(){
     // 初始化
-    this.init()
+    //this.init()
   },
   methods:{
     async init(){
