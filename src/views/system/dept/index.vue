@@ -158,18 +158,18 @@
             </el-col>
          
           <el-col :span="12">
-            <el-form-item label="散杂货库位总量" prop="bulkGoodsCapacity" label-width="120px" v-if="form.deptType!=3">
+            <el-form-item label="散杂货库位占用量" prop="bulkGoodsCapacity" label-width="150px" v-if="form.deptType!=3">
               <el-input v-model="form.bulkGoodsCapacity" placeholder="请输入" maxlength="20"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="当前散杂货占库量" prop="bulkGoodsCount" label-width="140px" v-if="form.deptType!=3">
+            <el-form-item label="当前散杂货容量" prop="bulkGoodsCount" label-width="140px" v-if="form.deptType!=3">
               <el-input v-model="form.bulkGoodsCount" placeholder="请输入" maxlength="20"/>
             </el-form-item>
           </el-col>
           
             <el-col :span="12">
-              <el-form-item label="散杂货库位报警阈值" prop="bulkGoodsAlarmValue" label-width="150px" v-if="form.deptType!=3">
+              <el-form-item label="散杂货库位数量报警" prop="bulkGoodsAlarmValue" label-width="150px" v-if="form.deptType!=3">
                 <el-input v-model="form.bulkGoodsAlarmValue" placeholder="请输入" maxlength="20"/>
               </el-form-item>
             </el-col>
@@ -185,7 +185,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="散杂货重量预警值" prop="bulkGoodsWeightAlarmAalue" label-width="140px" v-if="form.deptType!=3">
+            <el-form-item label="散杂货重量预警值" prop="bulkGoodsWeightAlarmValue" label-width="140px" v-if="form.deptType!=3">
               <el-input v-model="form.bulkGoodsWeightAlarmValue" placeholder="请输入" maxlength="20"/>
             </el-form-item>
           </el-col>
@@ -242,60 +242,65 @@
 					orderNum: [
 						{required: true, message: "菜单顺序不能为空", trigger: "blur"}
 					],
-					// email: [
-					// 	{
-					// 		type: "email",
-					// 		message: "'请输入正确的邮箱地址",
-					// 		trigger: ["blur", "change"]
-					// 	}
-					// ],
-					// phone: [
-					// 	{
-					// 		pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-					// 		message: "请输入正确的手机号码",
-					// 		trigger: "blur"
-					// 	}
-          // ],
-          // deptType: [
-					// 	{ required: true, message: "组织机构不能为空", trigger: "blur"}
-          // ],
-
+					email: [
+						{
+							type: "email",
+							message: "'请输入正确的邮箱地址",
+							trigger: ["blur", "change"]
+						}
+					],
+					phone: [
+						{
+							pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+							message: "请输入正确的手机号码",
+							trigger: "blur"
+						}
+          ],
           deptType: [
 						{ required: true, message: "组织机构不能为空", trigger: "blur"}
 					],
           
           containerCapacity: [
-						{ required: true, message: "集装箱总量不能为空", trigger: "blur"}
+            { required: true, message: "集装箱总量不能为空", trigger: "blur"},
+            {type : "number", message: "请输入数字"}
           ],
           
            containerCurrentCount: [
-						{ required: true, message: "当前集装箱总量不能为空", trigger: "blur"}
+            { required: true, message: "当前集装箱总量不能为空", trigger: "blur"},
+             {type : "number", message: "请输入数字"}
           ],
           
            containerAlarmValue: [
-						{ required: true, message: "集装箱报警阈值不能为空", trigger: "blur"}
+            { required: true, message: "集装箱报警阈值不能为空", trigger: "blur"},
+             {type : "number", message: "请输入数字"}
           ],
            bulkGoodsTotalWeight: [
-						{ required: true, message: "散杂货总重不能为空", trigger: "blur"}
+            { required: true, message: "散杂货总重不能为空", trigger: "blur"},
+             {type : "number", message: "请输入数字"}
           ],
            bulkGoodsCurrentWeight: [
-						{ required: true, message: "散杂货当前重量不能为空", trigger: "blur"}
+            { required: true, message: "散杂货当前重量不能为空", trigger: "blur"},
+             {type : "number", message: "请输入数字"}
           ],
           
-            bulkGoodsWeightAlarmAalue: [
-						{ required: true, message: "散杂货重量预警值不能为空", trigger: "blur"}
+           bulkGoodsWeightAlarmValue: [
+            { required: true, message: "散杂货重量预警值不能为空", trigger: "blur"},
+             {type : "number", message: "请输入数字"}
           ],
           
             bulkGoodsCapacity: [
-						{ required: true, message: "散杂货库位报警阈值不能为空", trigger: "blur"}
+            { required: true, message: "散杂货库位占用量不能为空", trigger: "blur"},
+             {type : "number", message: "请输入数字"}
           ],
           
             bulkGoodsCount: [
-						{ required: true, message: "当前散杂货占库量不能为空", trigger: "blur"}
+            { required: true, message: "当前散杂货容量不能为空", trigger: "blur"},
+             {type : "number", message: "请输入数字"}
 					],
 
           bulkGoodsAlarmValue: [
-						{ required: true, message: "当前散杂货占库量不能为空", trigger: "blur"}
+            { required: true, message: "散杂货库位数量报警不能为空", trigger: "blur"},
+             {type : "number", message: "请输入数字"}
 					],
 
 
