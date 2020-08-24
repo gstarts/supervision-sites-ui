@@ -135,13 +135,13 @@ export const constantRoutes = [
     children: [
       {
         path: 'details',
-        component: () => import('@/views/manifest/rmft4406/head4406/details'),
+        component: () => import('@/views/declare/manifest/rmft4406/head4406/details'),
         name: 'approveDetail',
         meta: { title: '确报信息详情' }
       },
       {
         path: 'edit',
-        component: () => import('@/views/manifest/rmft4406/update4406/updateindex'),
+        component: () => import('@/views/declare/manifest/rmft4406/update4406/updateindex'),
         name: 'approveEdit',
         meta: { title: '确报信息修改'}
       }
@@ -155,13 +155,13 @@ export const constantRoutes = [
       children: [
         {
           path: 'Erredit',
-          component: () => import('@/views/manifest/rmft4404/update4404'),
+          component: () => import('@/views/declare/manifest/rmft4404/update4404'),
           name: 'errUpdate',
           meta: { title: '空车异常信息修改'}
         },
         {
           path: 'seledetails',
-          component: () => import('@/views/manifest/rmft4404/details4404'),
+          component: () => import('@/views/declare/manifest/rmft4404/details4404'),
           name: 'carUpdate',
           meta: { title: '空车信息详情'}
         }

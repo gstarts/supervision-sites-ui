@@ -571,9 +571,9 @@
 </template>
 
 <script>
-import depParaList from './../components/depParaList';
-import depParaList2 from './../components/depParaList2';
-import noticeInfo from './noticeInfo.vue';
+// import depParaList from './../components/depParaList';
+// import depParaList2 from './../components/depParaList2';
+// import noticeInfo from './noticeInfo.vue';
 export default {
   components:{depParaList,depParaList2,noticeInfo},
   data(){

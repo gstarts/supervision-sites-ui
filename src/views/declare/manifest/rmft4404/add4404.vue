@@ -156,10 +156,10 @@
             ></el-date-picker>
           </el-form-item>
         </el-col>
-        <!-- <el-col :span="6">
-          <el-form-item label="传输企业备案关区" prop="customsmaster">
+        <el-col :span="6">
+          <el-form-item label="传输企业备案关区" prop="head.customsmaster">
             <el-input
-              v-model="form.customsmaster"
+              v-model="form.head.customsmaster"
               :disabled="true"
               placeholder="系统反填"
               clearable
@@ -171,8 +171,8 @@
       </el-row>
       <el-row>
         <el-col :span="6">
-          <el-form-item label="企业代码" prop="contractorcodescc">
-            <el-select v-model="form.contractorcodescc" placeholder="请选择"  @change="change">
+          <el-form-item label="企业代码" prop="head.contractorcodescc">
+            <el-select v-model="form.head.contractorcodescc" placeholder="请选择"  @change="change">
             <el-option
               v-for="item in enterpriseOptions"
               :key="item.contractorCodeScc"
@@ -194,7 +194,7 @@
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
-        </el-col> -->
+        </el-col>
         <el-col :span="24">
           <el-form-item label="备注" prop="additionalinformation.content">
             <el-input
@@ -225,8 +225,8 @@
     <el-table :data="headList" height="300px" v-loading="loading">
       <el-table-column label="序号" align="center" type="index" />
       <el-table-column label="托架/拖挂车编号" align="center" prop="transportId" />
-      <el-table-column label="托架/拖挂车类型" align="center" prop="typecode" :formatter="Trailerformat" />
-      <el-table-column label="托架/拖挂车自重(kg)" align="center" prop="tareweight" />
+      <el-table-column label="托架/拖挂车类型" align="center" prop="typeCode" :formatter="Trailerformat" />
+      <el-table-column label="托架/拖挂车自重(kg)" align="center" prop="tareWeight" />
     </el-table>
 <!-- :rules="headRuless" -->
     <el-form :model="Tform" ref="Tform" :inline="true" label-width="180px" >
@@ -237,8 +237,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="托架/拖挂车类型" prop="typecode">
-            <el-select v-model="Tform.typecode" placeholder="请输入托架/拖挂车类型">
+          <el-form-item label="托架/拖挂车类型" prop="typeCode">
+            <el-select v-model="Tform.typeCode" placeholder="请输入托架/拖挂车类型">
               <el-option
                 v-for="dict in TrailertypeOptions"
                 :key="dict.dictValue"
@@ -249,8 +249,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="托架/拖挂车自重(kg)" prop="tareweight">
-            <el-input v-model="Tform.tareweight" placeholder="请输入托架/拖挂车自重" size="mini" />
+          <el-form-item label="托架/拖挂车自重(kg)" prop="tareWeight">
+            <el-input v-model="Tform.tareWeight" placeholder="请输入托架/拖挂车自重" size="mini" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -267,11 +267,11 @@ import {
   updateHead,
   exportHead,
   addbody,
+  edit,
   init,
   listemptycar,
   emptycarAll,
-  updateCode,
-  test
+  updateCode
 } from "@/api/manifest/rmft4404/emptycar/Head/head";
 
 import {listInfo} from "@/api/basis/enterpriseInfo";
@@ -288,14 +288,14 @@ export default {
       //       trigger: "blur",
       //     },
       //   ],
-      //   typecode: [
+      //   typeCode: [
       //     {
       //       required: true,
       //       message: "托架/拖挂车类型不能为空",
       //       trigger: "blur",
       //     },
       //   ],
-      //   tareweight: [
+      //   tareWeight: [
       //     {
       //       required: true,
       //       message: "托架/拖挂车自重(kg) 不能为空",
@@ -318,7 +318,7 @@ export default {
       //   "borderTransportMeans.name": [
       //     { required: true, message: "运输工具名称 不能为空", trigger: "blur" },
       //   ],
-      //   // "borderTransportMeans.typecode": [
+      //   // "borderTransportMeans.typeCode": [
       //   //   { required: true, message: "运输方式代码 不能为空", trigger: "blur" },
       //   // ],
       //   declarationofficeid: [
@@ -358,7 +358,7 @@ export default {
       // 遮罩层
       loading: false,
       //关联挂车表 id
-      Lid: undefined,
+      Did: undefined,
       //Head 唯一messageid
       Aid: undefined,
       // 选中数组
@@ -390,10 +390,17 @@ export default {
       },
       // 表单参数
       form: {
-        contractorcodescc: undefined,
-        stationPersonName: undefined,
-        customsmaster: undefined,
-        borderTransportMeans: {},
+        head:{
+          customsmaster:undefined,
+          contractorcodescc:undefined,
+          stationPersonName:undefined,
+        },
+        // contractorcodescc: undefined,
+        // stationPersonName: undefined,
+        // customsmaster: undefined,
+        borderTransportMeans: {
+          typeCode: "4",
+        },
         declaration:{},
         // transportcontractdocument:{},
         governmentprocedure:{},
@@ -405,37 +412,35 @@ export default {
       // 表单校验
       Tform: {
         transportId: undefined,
-        tareweight: undefined,
-        typecode: undefined,
-        borderTransportMeansId: undefined,
+        tareWeight: undefined,
+        typeCode: undefined,
+        manifestDeclarationId:undefined,
+        equipmentType:2,
       },
       rules: {},
       headList: [],
     };
   },
   created() {
-     // 获取企业信息列表
-    //  this.enterpriseInfo();
-    // //挂车类型字典翻译
-    // this.getDicts("hg_trailer_type").then((response) => {
-    //   this.TrailertypeOptions = response.data;
-    // });
-    // //运输方式代码翻译
-    // this.getDicts("station_transport_fashion").then((response) => {
-    //   this.businessTypeOptions = response.data;
-    // });
-    // //进出境口岸海关代码
-    // this.getDicts("hg_customs_code").then((response) => {
-    //   this.customsCodeTypeOptions = response.data;
-    // });
-    // this.initialization();
-    //
-    this.test()
+    // 获取企业信息列表
+     this.enterpriseInfo();
+    //挂车类型字典翻译
+    this.getDicts("hg_trailer_type").then((response) => {
+      this.TrailertypeOptions = response.data;
+    });
+    //运输方式代码翻译
+    this.getDicts("station_transport_fashion").then((response) => {
+      this.businessTypeOptions = response.data;
+    });
+    //进出境口岸海关代码
+    this.getDicts("hg_customs_code").then((response) => {
+      this.customsCodeTypeOptions = response.data;
+    });
   },
   methods: {
     //托架/拖挂车类型 翻译
     Trailerformat(row, column) {
-      return this.selectDictLabel(this.TrailertypeOptions, row.typecode);
+      return this.selectDictLabel(this.TrailertypeOptions, row.typeCode);
     },
     // 企业申报信息列表
     enterpriseInfo(){
@@ -443,14 +448,6 @@ export default {
         this.enterpriseOptions = response.rows;
       });
     },
-    // 测试前后台调用
-      test(){
-       test(this.queryParams).then((response) => {
-       console.log("测试方法"+response)
-      });
-    },
-
-
     //查询空载挂车新增
     selectempty() {
       listemptycar(this.Lid).then((response) => {
@@ -464,16 +461,21 @@ export default {
         this.form.contractorcodescc = response.data.contractorcodescc;
         this.form.stationPersonName = response.data.stationPersonName;
         this.form.customsmaster = response.data.customsmaster;
-        this.form.borderTransportMeans.typecode = "4";
+        this.form.borderTransportMeans.typeCode = "4";
         this.loading = false;
       });
     },
     // 表单重置
     reset() {
       this.form = {
-        contractorcodescc: undefined,
-        stationPersonName: undefined,
-        customsmaster: undefined,
+        head:{
+          customsmaster:undefined,
+          contractorcodescc:undefined,
+          stationPersonName:undefined,
+        },
+        // contractorcodescc: undefined,
+        // stationPersonName: undefined,
+        // customsmaster: undefined,
         borderTransportMeans: {},
         declaration:{},
         // transportcontractdocument:{},
@@ -491,7 +493,7 @@ export default {
     //重置表头按钮
     emptyall() {
       this.reset();
-      this.initialization();
+      // this.initialization();
     },
     //重置空载按钮
     delectempty() {
@@ -520,9 +522,8 @@ export default {
             if (response.code === 200) {
               this.msgSuccess("新增成功");
               //关联ID
-              this.Lid = response.data.id;
-              //Head表 唯一messageid
-              this.Aid = response.data.messageid;
+              this.Did = response.data.Did;
+              console.log(this.Did);
             } else {
               this.msgError(response.msg);
             }
@@ -535,11 +536,11 @@ export default {
       this.loading = true;
       this.$refs["Tform"].validate((valid) => {
         if (valid) {
-          this.Tform.borderTransportMeansId = this.Lid;
-          emptycarAll(this.Tform).then((response) => {
+          this.Tform.manifestDeclarationId = this.Did;
+          edit(this.Tform).then((response) => {
             if (response.code === 200) {
               this.msgSuccess("新增成功");
-              this.selectempty();
+              // this.selectempty();
             } else {
               this.msgError(response.msg);
             }
@@ -599,10 +600,15 @@ export default {
     // },
     /** 选中值发生变化时触发 */
     change(event){
-        this.enterpriseOptions.forEach(element => {
+      this.enterpriseOptions.forEach(element => {
+      console.log(element);
           if(element.contractorCodeScc===event){
             // 将得到的企业属性赋值到应用的对象中
-            this.form.stationPersonName=element.customsMaster
+            this.form.head.contractorCodeScc=element.contractorCodeScc;
+            this.form.head.customsMaster=element.customsMaster;
+            this.form.head.receiverId=element.receiverId;
+            this.form.head.version=element.version;
+            this.form.head.senderId=element.contractorCode+"_"+element.senderId;
           }
         });
 
