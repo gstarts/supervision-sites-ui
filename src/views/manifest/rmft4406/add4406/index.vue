@@ -32,8 +32,8 @@
     <el-form :model="form" ref="form" :rules="headRules" label-width="190px" size="mini">
       <el-row>
         <el-col :span="6">
-          <el-form-item label="企业代码" prop="contractorcodescc">
-            <el-select v-model="form.contractorcodescc" placeholder="请选择企业代码"  @change="change">
+          <el-form-item label="企业代码" prop="head.contractorCodeScc">
+            <el-select v-model="form.head.contractorCodeScc" placeholder="请选择企业代码"  @change="change">
             <el-option
               v-for="item in enterpriseOptions"
               :key="item.contractorCodeScc"
@@ -174,7 +174,7 @@
         <el-col :span="6">
           <el-form-item label="传输企业备案关区" prop="customsMaster">
             <el-select
-              v-model="form.customsMaster"
+              v-model="form.head.customsMaster"
               :disabled="true"
               placeholder="请选择传输企业备案关区"
               size="mini"
@@ -192,26 +192,15 @@
       </el-row>
       <el-row>
         <el-col :span="6">
-          <!-- <el-form-item label="企业代码" prop="contractorCodeScc">
-            <el-input
-              v-model="form.contractorCodeScc "
-              placeholder="请输入企业代码"
-              clearable
-              size="mini"
-               
-              disabled
-            />
-          </el-form-item> -->
-
           <el-form-item label="货物运输批次号" prop="declaration.declarationId">
             <el-input v-model="form.declaration.declarationId" placeholder="请输入货物运输批次号" />
           </el-form-item>
 
         </el-col>
         <el-col :span="18">
-          <el-form-item label="确报传输人名称" prop="stationPersonName">
+          <el-form-item label="确报传输人名称" prop="name">
             <el-input
-              v-model="form.representativeperson.stationPersonName"
+              v-model="form.representativeperson.name"
               placeholder="请输入确报传输人名称"
               clearable
               size="mini"
@@ -488,7 +477,7 @@ export default {
       // 表单参数
       form: {
         head:{
-          contractorcodescc: undefined,
+          contractorCodeScc: undefined,
           customsMaster: undefined 
         },
         declaration:{
@@ -518,7 +507,7 @@ export default {
           arrivalDateTime:undefined
         },
         representativeperson: {
-          stationPersonName: undefined
+          name: undefined
         },
         // consignment: {
         //   governmentProcedure: undefined,
@@ -526,7 +515,6 @@ export default {
       },
       // 挂车表单参数
       Tform: {
-        id :undefined,
         pageNum: 1,
         pageSize: 10,
         equipmentId: undefined,
@@ -565,7 +553,7 @@ export default {
             trigger: "blur",
           },
         ],
-        contractorcodescc: [
+        "head.contractorCodeScc": [
           { required: true, message: "请选择企业代码", trigger: "blur" },
         ],
         "carrier.carrierId": [
@@ -1028,8 +1016,11 @@ export default {
           console.log(element)
           if(element.contractorCodeScc===event){
             // 将得到的企业属性赋值到应用的对象中
-            this.form.representativeperson.stationPersonName=element.stationPersonName;
-            this.form.customsMaster = element.customsMaster;
+            this.form.representativeperson.name=element.stationPersonName;
+            this.form.head.customsMaster = element.customsMaster;
+            this.form.head.receiverId = element.receiverId;
+            this.form.head.version = element.version;
+            this.form.head.senderId = element.contractorCode + "_" + element.senderId;
           }
         });
     },
