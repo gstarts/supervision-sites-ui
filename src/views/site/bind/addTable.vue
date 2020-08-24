@@ -22,7 +22,22 @@
       </el-col>
     </el-row>
     <!-- 提运单表头 -->
-    <el-form ref="form" :model="form" :rules="headRules" label-width="150px" size="mini">
+    <el-form ref="form" :model="form" :rules="headRules" label-width="150px" size="mini" >
+      <el-row v-if="show==true">
+        <el-col :span="6">
+         <el-form-item label="报关企业"  >
+            <el-select  placeholder="请选择报关企业信息" @change="change" >
+              <el-option
+                v-for="dict in enterpriseOptions"
+                :key="dict.contractorCodeScc"
+                :label="dict.eName"
+                :value="dict.contractorCodeScc"
+              />
+            </el-select>
+         </el-form-item>
+        </el-col>
+      </el-row>
+      <span v-show="show==false" >
       <el-row>
         <el-col :span="6">
           <el-form-item label="数据中心同一编号" prop="dataId">
@@ -74,7 +89,6 @@
           </el-form-item>
         </el-col>
       </el-row>
-
       <el-row>
         <el-col :span="6">
           <el-form-item label="绑定介质类型" prop="bindkeytype">
@@ -170,6 +184,7 @@
           </el-form-item>
         </el-col>
       </el-row>
+      </span>
     </el-form>
     <!-- 提运单body列表 -->
     <el-row :gutter="10" class="mb8">
@@ -372,7 +387,7 @@ import {
   check
 } from "@/api/site/declare";
 
-
+import {listInfo} from "@/api/basis/enterpriseInfo";
 export default {
    name: "BindEdit",
   data() {
@@ -437,6 +452,8 @@ export default {
     return {
       // 遮罩层
       visible: false,
+      // 显示
+      show:true,
       // 选中数组值
       tables: [],
       // 总条数
@@ -469,6 +486,8 @@ export default {
       depotNameOptions:[],
       // 状态码
       feedbackOptions: [],
+      // 企业信息列表
+      enterpriseOptions:[],
       // 表头id
       headId: undefined,
       // 表单参数
@@ -499,7 +518,12 @@ export default {
         tableName: undefined,
         tableComment: undefined
       },
-
+      //报关企业查询参数
+     enterpriseParams:{
+        pageNum: 1,
+        pageSize: 10,
+        eType:"1"
+     },
       headRules: {
         bindkeytype: [{ required: true, message: "请选择", trigger: "blur" }],
         bindkeyinfo: [{ required: true, message: "请选择", trigger: "blur" },{ validator: validateBindkeyinfo, trigger: "blur" }],
@@ -532,6 +556,8 @@ export default {
   },
 
   created() {
+    // 报关企业
+    this.enterpriseInfo()
     this.getDicts("station_medium_type").then(response => {
       this.mediumTypeOptions = response.data;
     });
@@ -590,6 +616,12 @@ export default {
         this.depotNameOptions= response.rows;
         this.bodyform.warehouseId=this.depotNameOptions[0].id
       })
+    },
+    /** 企业申报信息列表*/ 
+    enterpriseInfo(){
+       listInfo(this.enterpriseParams).then((response) => {
+        this.enterpriseOptions = response.rows;
+      });
     },
     /**多选框操作 */
 
@@ -756,6 +788,23 @@ export default {
         this.headId = this.form.id;
         this.form.bayonetrdcode = "02";
       });
+    },
+     /** 选中值发生变化时触发 */
+    change(event){
+        this.enterpriseOptions.forEach(element => {
+          console.log(element)
+          if(element.contractorCodeScc===event){
+            // 将得到的企业属性赋值到应用的对象中
+            // 将当前选择框隐藏 
+            this.show=false;
+            this.form.stationPersonName=element.customsMaster
+            this.form.contractorcodescc=element.contractorCodeScc
+            this.form.customsmaster=element.customsMaster
+            this.form.contractorcode=element.contractorCode
+            this.form.opuserid=element.opUserId
+          }
+        });
+
     }
   }
 };
@@ -763,5 +812,8 @@ export default {
 <style lang="css" scoped>
 .el-select {
   width: 100%;
+}
+.el-form{
+ height: 250px;
 }
 </style>
