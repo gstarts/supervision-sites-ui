@@ -231,6 +231,11 @@
               />
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="变更原因" prop="postCode" >
+              <el-button type="primary" size="mini" @click="changeReason=true">详细</el-button>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
     </el-card>
@@ -271,7 +276,7 @@
       />
       <el-form :model="queryParams" ref="queryForm" label-width="160px">
         <el-row type="flex">
-          <el-col :span="12">
+          <el-col :span="6">
             <el-form-item label="集装箱(器)编号" prop="postCode" >
               <el-input
                 v-model="queryParams.postCode"
@@ -291,9 +296,53 @@
               />
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="变更原因" prop="postCode" >
+              <el-button type="primary" size="mini" @click="changeReason=true">详细</el-button>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
     </el-card>
+    <el-dialog title="变更原因详细信息" :visible.sync="changeReason">
+      <el-form :model="queryParams" class="mb20" ref="queryForm" label-width="160px">
+        <el-row type="flex">
+          <el-col :span="12">
+            <el-form-item label="变更申请联系人姓名" prop="postCode" >
+              <el-input
+                v-model="queryParams.postCode"
+                placeholder="变更申请联系人姓名"
+                clearable
+                size="small"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="变更申请联系人电话" prop="postCode" >
+              <el-input
+                v-model="queryParams.postCode"
+                placeholder="变更申请联系人电话"
+                clearable
+                size="small"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row type="flex">
+          <el-col :span="24">
+            <el-form-item label="变更原因描述" prop="postCode" >
+              <el-input
+                type="textarea"
+                v-model="queryParams.postCode"
+                placeholder="变更原因描述"
+                clearable
+                size="small"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -302,6 +351,7 @@ import depParaListJson from '@/mock/depParaList2.json';
 export default {
   data(){
     return{
+      changeReason:false,
       depParaVal:'',
       depParaListJson,
       gridData: [],
