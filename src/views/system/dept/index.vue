@@ -186,7 +186,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="散杂货重量预警值" prop="bulkGoodsWeightAlarmValue" label-width="140px" v-if="form.deptType!=3">
-              <el-input v-model="form.bulkGoodsWeightAlarmValue" placeholder="请输入" maxlength="20"/>
+              <el-input v-model.number="form.bulkGoodsWeightAlarmValue" placeholder="请输入" maxlength="20"/>
             </el-form-item>
           </el-col>
         
@@ -282,8 +282,9 @@
 						{ required: true, message: "散杂货当前重量不能为空", trigger: "blur"}
           ],
           
-            bulkGoodsWeightAlarmValue: [
-						{ required: true, message: "散杂货重量预警值不能为空", trigger: "blur"}
+           bulkGoodsWeightAlarmValue: [
+            { required: true, message: "散杂货重量预警值不能为空", trigger: "blur"},
+             {type : "number", message: "请输入数字"}
           ],
           
             bulkGoodsCapacity: [
@@ -297,7 +298,10 @@
           bulkGoodsAlarmValue: [
 						{ required: true, message: "当前散杂货占库量不能为空", trigger: "blur"}
 					],
-     
+
+
+
+
 				}
 			};
 		},

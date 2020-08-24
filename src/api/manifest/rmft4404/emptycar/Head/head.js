@@ -78,6 +78,14 @@ export function addbody(data) {
   })
 }
 
+//空载挂车新增
+export function edit(data) {
+  return request({
+    url: '/manifest/rmft/addtrailer',
+    method: 'put',
+    data: data
+  })
+}
 export function updateCode(data){
   return request({
     url:'/newemptycar/head/updateCode',
