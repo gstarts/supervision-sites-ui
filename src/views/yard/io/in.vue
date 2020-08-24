@@ -432,6 +432,7 @@
 				}
 
 				//this.subList.push(cloneObject(this.ioSub))
+        this.ioSub.yardId = this.form.yardId
         this.subList.push({...this.ioSub})
 				//this.form.containerCount = this.subList.length
 				this.ioSub.containerNo = ''//清空集装箱号
@@ -442,7 +443,6 @@
 
 				console.log(this.subList)
 				console.log(this.form.containerCount)
-
 			},
 			/** 查询集装箱进出记录 列表 */
 			/*getList() {

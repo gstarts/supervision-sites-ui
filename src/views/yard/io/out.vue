@@ -21,7 +21,8 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="进/出场状态">
-            <el-select v-model="form.ioState" placeholder="请选择进/出场状态" @change="setPurpose(form.ioState)" :disabled="true">
+            <el-select v-model="form.ioState" placeholder="请选择进/出场状态" @change="setPurpose(form.ioState)"
+                       :disabled="true">
               <el-option
                 v-for="dict in ioStateOptions"
                 :key="dict.dictValue"
@@ -104,12 +105,12 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['yard:io_sub:add']"
+          v-hasPermi="['yard:io:reduce']"
         >添加集装箱信息
         </el-button>
       </el-col>
       <el-col :span="6" :offset="12">
-        <el-button type="primary" @click="submitForm" size="mini">提 交</el-button>
+        <el-button type="primary" @click="submitForm" size="mini"  v-hasPermi="['yard:io:reduce']">提 交</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="reset">重置</el-button>
       </el-col>
     </el-row>
@@ -161,7 +162,7 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="集装箱号" prop="containerNo">
-              <el-input v-model="ioSub.containerNo" placeholder="请输入集装箱号"/>
+              <el-input v-model="ioSub.containerNo" placeholder="请输入集装箱号" @keyup.enter.native="getContainerFromStore"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -192,7 +193,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="货位号" prop="zoneCode">
-              <el-select v-model="ioSub.storeCode" placeholder="请输入货位" @change="getStoreGoods">
+              <el-select v-model="ioSub.storeCode" placeholder="请选择货位" @change="getStoreGoods">
                 <el-option
                   v-for="store in storeList"
                   :key="store.id"
@@ -205,14 +206,14 @@
         </el-row>
         <div style="display:none">
           <el-form-item label="父级进出场单号id" prop="parentId">
-            <el-input v-model="ioSub.parentId" placeholder="请输入父级进出场单号id" />
+            <el-input v-model="ioSub.parentId" placeholder="请输入父级进出场单号id"/>
           </el-form-item>
           <el-form-item label="进出场单号" prop="ioNo">
-            <el-input v-model="ioSub.ioNo" placeholder="请输入进出场单号" />
+            <el-input v-model="ioSub.ioNo" placeholder="请输入进出场单号"/>
           </el-form-item>
           
           <el-form-item label="堆场ID" prop="yardId">
-            <el-input v-model="ioSub.yardId" placeholder="请输入堆场ID" />
+            <el-input v-model="ioSub.yardId" placeholder="请输入堆场ID"/>
           </el-form-item>
         </div>
         <el-row v-show="ioSub.isHeavy==='1'">
@@ -296,11 +297,12 @@
 </template>
 
 <script>
-	import {getIo, delIo, addIo, updateIo} from "@/api/yard/io";
+	import {getIo, reduceIo} from "@/api/yard/io";
 	import {getUserDepts} from '@/utils/charutils'
 	import {listZone} from '@/api/yard/zone'
 	import {listStoreCanUse} from '@/api/yard/store'
-	import {getStore_detail_byStoreCode} from '../../../api/yard/store_detail'
+	import {getStore_detail_byStoreCode} from '@/api/yard/store_detail'
+	import {listStore_detail} from '@/api/yard/store_detail'
 
 	export default {
 		name: "IoOut",
@@ -320,7 +322,10 @@
 				total: 0,
 				// 集装箱进出记录 表格数据
 				subList: [],
-				ioSub: {},
+				ioSub: {
+					containerNo: '',
+					isHeavy: ''
+				},
 				heavyOptions: [],
 				// 弹出层标题
 				title: "",
@@ -420,7 +425,7 @@
 				if (this.subList.findIndex((v) => {
 					return v.storeCode === this.ioSub.storeCode
 				}) !== -1) {
-					this.$message.warning("库货已被其它箱选中")
+					this.$message.warning("此货位已添加进列表")
 					return
 				}
 
@@ -428,7 +433,7 @@
 					return v.containerNo === this.ioSub.containerNo
 				}) !== -1
 				) {
-					this.$message.warning("集装箱号已添加")
+					this.$message.warning("此集装箱已在列表中")
 					return
 				}
 
@@ -469,6 +474,7 @@
 			// 取消按钮
 			cancel() {
 				this.open = false;
+				this.ioSub = {}
 			},
 			// 表单重置
 			reset() {
@@ -533,9 +539,9 @@
 			submitForm: function () {
 				this.$refs["form"].validate(valid => {
 					if (valid) {
-						addIo({'io': this.form, 'subList': this.subList}).then(response => {
+						reduceIo({'io': this.form, 'subList': this.subList}).then(response => {
 							if (response.code === 200) {
-								this.msgSuccess("新增成功");
+								this.msgSuccess("操作成功");
 								this.open = false;
 								this.getList();
 							}
@@ -569,7 +575,7 @@
 					this.zoneList = []
 				}
 			},
-      //列出库位列表
+			//列出库位列表
 			listStore() {
 				if (this.ioSub.zoneCode !== '') {
 					listStoreCanUse({
@@ -585,14 +591,32 @@
 					this.storeList = []
 				}
 			},
-      //根据库位号，查询库位详细
-			getStoreGoods:function(){
-				getStore_detail_byStoreCode(this.form.yardId,this.ioSub.storeCode)
-          .then(response => {
-          	console.log(response)
-          	//this.ioSub = response
-          })
-      }
+			//根据库位号，查询库位详细
+			getStoreGoods: function () {
+				getStore_detail_byStoreCode(this.form.yardId, this.ioSub.storeCode)
+					.then(response => {
+						console.log(response.data)
+						//debugger
+						this.ioSub.containerNo = response.data.containerNo
+						this.ioSub.isHeavy = response.data.isHeavy
+						this.ioSub.yardId = response.data.yardId
+						console.log(this.ioSub)
+					})
+			},
+			getContainerFromStore() {
+				listStore_detail({'containerNo': this.ioSub.containerNo})
+					.then(response => {
+						console.log(response)
+            if(response.total === 0){
+	            this.$message.warning('集装箱不在此库存中')
+            }else{
+            	console.log(response.rows[0])
+              this.ioSub = { ...response.rows[0]}
+            }
+            
+					})
+
+			}
 		}
 	}
 	;

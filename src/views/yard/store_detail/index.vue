@@ -28,9 +28,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="库位号" prop="sotreCode">
+      <el-form-item label="库位号" prop="storeCode">
         <el-input
-          v-model="queryParams.sotreCode"
+          v-model="queryParams.storeCode"
           placeholder="请输入库位号"
           clearable
           size="small"
@@ -182,7 +182,7 @@
       <el-table-column label="堆场ID" align="center" prop="yardId" />
       <el-table-column label="区域ID" align="center" prop="zoneId" />
       <el-table-column label="区域编号" align="center" prop="zoneCode" />
-      <el-table-column label="库位号" align="center" prop="sotreCode" />
+      <el-table-column label="库位号" align="center" prop="storeCode" />
       <el-table-column label="货物批次号" align="center" prop="goodsBatchNo" />
       <el-table-column label="货物名称" align="center" prop="goodsName" />
       <el-table-column label="货物种类" align="center" prop="goodsType" />
@@ -240,8 +240,8 @@
         <el-form-item label="区域编号" prop="zoneCode">
           <el-input v-model="form.zoneCode" placeholder="请输入区域编号" />
         </el-form-item>
-        <el-form-item label="库位号" prop="sotreCode">
-          <el-input v-model="form.sotreCode" placeholder="请输入库位号" />
+        <el-form-item label="库位号" prop="storeCode">
+          <el-input v-model="form.storeCode" placeholder="请输入库位号" />
         </el-form-item>
         <el-form-item label="货物批次号" prop="goodsBatchNo">
           <el-input v-model="form.goodsBatchNo" placeholder="请输入货物批次号" />
@@ -333,7 +333,7 @@ export default {
         yardId: undefined,
         zoneId: undefined,
         zoneCode: undefined,
-        sotreCode: undefined,
+        storeCode: undefined,
         goodsBatchNo: undefined,
         goodsName: undefined,
         goodsType: undefined,
@@ -394,7 +394,7 @@ export default {
         yardId: undefined,
         zoneId: undefined,
         zoneCode: undefined,
-        sotreCode: undefined,
+        storeCode: undefined,
         goodsBatchNo: undefined,
         goodsName: undefined,
         goodsType: undefined,
