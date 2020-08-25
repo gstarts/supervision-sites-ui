@@ -61,7 +61,7 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="理货开始时间" prop="postCode" >
+            <el-form-item label="到达卸货地日期" prop="postCode" >
               <el-date-picker
                 class="datePicker"
                 v-model="dateTimeVal"
@@ -69,50 +69,14 @@
                 placeholder="选择日期时间" />
             </el-form-item>
           </el-col>
-        <el-col :span="6">
-            <el-form-item label="理货结束时间" prop="postCode" >
-              <el-date-picker
-                class="datePicker"
-                v-model="dateTimeVal"
-                type="datetime"
-                placeholder="选择日期时间"
-              />
-            </el-form-item>
-          </el-col>
           <el-col :span="6">
-            <el-form-item label="理货公司代码" prop="postCode" >
+            <el-form-item label="传输企业备案关区	" prop="postCode" >
               <el-input
                 v-model="queryParams.postCode"
-                placeholder="理货公司代码"
+                placeholder="传输企业备案关区"
                 clearable
                 size="small"
               />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="理货责任人名称" prop="postCode" >
-              <el-input
-                v-model="queryParams.postCode"
-                placeholder="理货责任人名称"
-                clearable
-                size="small"
-              >
-                <template slot="append" style="cursor: pointer;">联系方式</template>
-              </el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row type="flex">
-          <el-col :span="6">
-            <el-form-item label="传输企业备案关区" prop="postCode" >
-              <el-select v-model="depParaVal" filterable placeholder="传输企业备案关区">
-                <el-option
-                  v-for="item in depParaListJson"
-                  :key="item.codeValue"
-                  :label="item.codeName"
-                  :value="item.codeValue">
-                </el-option>
-              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -125,7 +89,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="6">
             <el-form-item label="备注" prop="postCode" >
               <el-input
                 v-model="queryParams.postCode"
@@ -200,20 +164,20 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="货物总件数" prop="postCode" >
+            <el-form-item label="包装种类" prop="postCode" >
               <el-input
                 v-model="queryParams.postCode"
-                placeholder="货物总件数"
+                placeholder="包装种类"
                 clearable
                 size="small"
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="包装种类" prop="postCode" >
+            <el-form-item label="货物总件数" prop="postCode" >
               <el-input
                 v-model="queryParams.postCode"
-                placeholder="包装种类"
+                placeholder="货物总件数"
                 clearable
                 size="small"
               />
@@ -229,6 +193,11 @@
                 clearable
                 size="small"
               />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="变更原因" prop="postCode" >
+              <el-button type="primary" size="mini" @click="changeReason=true">详细</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -271,7 +240,7 @@
       />
       <el-form :model="queryParams" ref="queryForm" label-width="160px">
         <el-row type="flex">
-          <el-col :span="12">
+          <el-col :span="18">
             <el-form-item label="集装箱(器)编号" prop="postCode" >
               <el-input
                 v-model="queryParams.postCode"
@@ -281,11 +250,45 @@
               />
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="变更原因" prop="postCode" >
+              <el-button type="primary" size="mini" @click="changeReason=true">详细</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-card>
+    <el-dialog title="变更原因详细信息" :visible.sync="changeReason">
+      <el-form :model="queryParams" class="mb20" ref="queryForm" label-width="160px">
+        <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="集装箱(器)残损说明" prop="postCode" >
+            <el-form-item label="变更申请联系人姓名" prop="postCode" >
               <el-input
                 v-model="queryParams.postCode"
-                placeholder="集装箱(器)残损说明"
+                placeholder="变更申请联系人姓名"
+                clearable
+                size="small"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="变更申请联系人电话" prop="postCode" >
+              <el-input
+                v-model="queryParams.postCode"
+                placeholder="变更申请联系人电话"
+                clearable
+                size="small"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row type="flex">
+          <el-col :span="24">
+            <el-form-item label="变更原因描述" prop="postCode" >
+              <el-input
+                type="textarea"
+                v-model="queryParams.postCode"
+                placeholder="变更原因描述"
                 clearable
                 size="small"
               />
@@ -293,7 +296,7 @@
           </el-col>
         </el-row>
       </el-form>
-    </el-card>
+    </el-dialog>
   </div>
 </template>
 
@@ -302,6 +305,7 @@ import depParaListJson from '@/mock/depParaList2.json';
 export default {
   data(){
     return{
+      changeReason:false,
       depParaVal:'',
       depParaListJson,
       gridData: [],

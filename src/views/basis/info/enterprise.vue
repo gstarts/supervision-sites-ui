@@ -131,7 +131,19 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="16">
+        <el-col :span="8">
+          <el-form-item label="监管场所" prop="deptId"  >
+          <el-select v-model="form.deptId" placeholder="请选择场站">
+          <el-option
+                  v-for="dept in depts"
+                  :key="dept.deptId"
+                  :label="dept.deptName"
+                  :value="dept.deptId"
+                />
+          </el-select>
+        </el-form-item>
+         </el-col>
+          <el-col :span="8">
             <el-form-item label="公司英文名称" prop="eEname">
               <el-input v-model="form.eEname" placeholder="请输入公司英文名称" />
             </el-form-item>
@@ -268,6 +280,7 @@ import {
   addInfo,
   updateInfo,
 } from "@/api/basis/enterpriseInfo";
+import { getUserDepts} from '@/utils/charutils'
 
 export default {
   name: "Info",
@@ -287,6 +300,9 @@ export default {
       version: "1.0",
       // 企业信息备案表格数据
       infoList: [],
+
+      //企业所在部门
+				depts: [],
 
       eEnterpriseTypeOptions: [],
       // 弹出层标题
@@ -316,6 +332,7 @@ export default {
         senderId: undefined,
         receiverId: undefined,
         version: undefined,
+        deptId:undefined,
       },
       // 表单参数
       form: {
@@ -329,6 +346,10 @@ export default {
         eType: [
           { required: true, message: "公司性质不能为空", trigger: "blur" },
         ],
+         deptId: [
+          { required: true, message: "监管场所不能为空", trigger: "blur" },
+        ],
+
         eEname: [
           { required: true, message: "公司英文名称不能为空", trigger: "blur" },
         ],
@@ -379,6 +400,14 @@ export default {
     };
   },
   created() {
+
+    	// 0 监管场所，1保税库，2堆场，3企业
+      this.depts = getUserDepts('0')
+      console.log(this.depts)
+			if (this.depts.length > 0) {
+				this.queryParams.deptId = this.depts[0].deptId
+				this.getList();
+			}
     /**获取企业类型 */
     this.getDicts("station_enterprise_type").then((response) => {
       this.eEnterpriseTypeOptions = response.data;
