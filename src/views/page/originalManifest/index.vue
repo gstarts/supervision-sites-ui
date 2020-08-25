@@ -106,13 +106,14 @@
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="传输企业备案关区" prop="postCode" >
-              <el-input
-                @focus="dialogTableVisible = true"
-                v-model="queryParams.postCode"
-                placeholder="传输企业备案关区"
-                clearable
-                size="small"
-              />
+              <el-select v-model="depParaVal" filterable placeholder="传输企业备案关区">
+                <el-option
+                  v-for="item in depParaListJson"
+                  :key="item.codeValue"
+                  :label="item.codeName"
+                  :value="item.codeValue">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -203,7 +204,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="变更原因" prop="postCode" >
-              <el-button type="primary" size="mini">详细</el-button>
+              <el-button type="primary" size="mini" @click="changeReason=true">详细</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -324,17 +325,17 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="途径国家或地区" prop="postCode" >
-              <el-button type="primary" size="mini">详细</el-button>
+              <el-button type="primary" size="mini" @click="regionInfo = true">详细</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="收货人信息" prop="postCode" >
-              <el-button type="primary" size="mini">详细</el-button>
+              <el-button type="primary" size="mini" @click="receivingInfo = true">详细</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="发货人信息" prop="postCode" >
-              <el-button type="primary" size="mini">详细</el-button>
+              <el-button type="primary" size="mini" @click="consignorInfo = true">详细</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -346,7 +347,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="危险品联系人信息" prop="postCode" >
-              <el-button type="primary" size="mini">详细</el-button>
+              <el-button type="primary" size="mini" @click="dangerousInfo = true">详细</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -563,22 +564,60 @@
         </el-row>
       </el-form>
     </el-card>
-
-    <depParaList :tableVisible='dialogTableVisible' @choose="choose" @close='close'></depParaList>
-    <depParaList2 :tableVisible='dialogTableVisible2' @choose="choose2" @close='close2'></depParaList2>
+    <!-- 字典1 -->
+    <depParaList :tableVisible='dialogTableVisible' @choose="choose" @close='dialogTableVisible = false'></depParaList>
+    <!-- 字典2 -->
+    <depParaList2 :tableVisible='dialogTableVisible2' @choose="choose2" @close='dialogTableVisible2 = false'></depParaList2>
+    <!-- 通知人信息 -->
     <noticeInfo :detailVisible='detailVisible' @close='detailVisible = false'></noticeInfo>
+    <!-- 变更原因 -->
+    <changeReason :detailVisible='changeReason' @close='changeReason = false'></changeReason>
+    <!-- 途径国家地区信息 -->
+    <regionInfo :detailVisible='regionInfo' @close='regionInfo = false'></regionInfo>
+    <!-- 危险品联系人信息 -->
+    <dangerousInfo :detailVisible='dangerousInfo' @close='dangerousInfo = false'></dangerousInfo>
+    <!-- 发货人信息 -->
+    <consignorInfo :detailVisible='consignorInfo' @close='consignorInfo = false'></consignorInfo>
+    <!-- 收货人信息 -->
+    <receivingInfo :detailVisible='receivingInfo' @close='receivingInfo = false'></receivingInfo>
+
+    
   </div>
 </template>
 
 <script>
+import depParaListJson from '@/mock/depParaList2.json';
 import depParaList from './../components/depParaList';
 import depParaList2 from './../components/depParaList2';
+// 通知人信息
 import noticeInfo from './noticeInfo.vue';
+// 变更原因
+import changeReason from './changeReason.vue';
+// 途径国家地区信息
+import regionInfo from './regionInfo.vue';
+// 危险品联系人信息
+import dangerousInfo from './dangerousInfo.vue';
+// 发货人信息
+import consignorInfo from './consignorInfo.vue';
+// 收货人信息
+import receivingInfo from './receivingInfo.vue';
+
+
+
+
 export default {
-  components:{depParaList,depParaList2,noticeInfo},
+  components:{depParaList,depParaList2,noticeInfo,changeReason,regionInfo,dangerousInfo,consignorInfo,receivingInfo},
   data(){
     return{
+      
+      depParaVal:'',
+      depParaListJson,
       detailVisible:false,
+      changeReason:false,
+      regionInfo:false,
+      dangerousInfo:false,
+      consignorInfo:false,
+      receivingInfo:false,
       gridData: [],
       page:{
         num:1,
@@ -618,7 +657,9 @@ export default {
     // 暂存
     handleSave(){
       console.log('保存');
-      this.$saveStore("a","123")
+      // this.$saveStore("a","123")
+      // this.$getStore('a')
+      // this.$delStore("a")
     },
     // 删除
     handleDelete(){},

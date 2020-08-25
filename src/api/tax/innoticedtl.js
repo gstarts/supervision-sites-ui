@@ -53,9 +53,9 @@ export function delTax_innoticedtl(inNoticeDtlId) {
 }
 
 // 获取库位
-export function listStores() {
+export function listByDept(deptId) {
   return request({
-    url: '/tax/store/listNotUse',
+    url: '/tax/store/listByDept/'+deptId,
     method: 'get'
   })
 }
