@@ -180,9 +180,11 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="堆场ID" align="center" prop="yardId" />
-      <el-table-column label="区域ID" align="center" prop="zoneId" />
+      <!--<el-table-column label="区域ID" align="center" prop="zoneId" />-->
       <el-table-column label="区域编号" align="center" prop="zoneCode" />
       <el-table-column label="库位号" align="center" prop="storeCode" />
+      <el-table-column label="集装箱号" align="center" prop="containerNo" />
+      <el-table-column label="空/重状态" align="center" prop="isHeavy" />
       <el-table-column label="货物批次号" align="center" prop="goodsBatchNo" />
       <el-table-column label="货物名称" align="center" prop="goodsName" />
       <el-table-column label="货物种类" align="center" prop="goodsType" />
