@@ -1,6 +1,21 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="保税库" prop="deptId">
+        <el-select
+          v-model="queryParams.deptId"
+          placeholder="请输入保税库ID"
+          clearable
+          size="small"
+          @change="handleQuery">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="出库单号" prop="outDocNo">
         <el-input
           v-model="queryParams.outDocNo"
@@ -116,6 +131,18 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row>
+          <el-col :span="8">
+            <el-form-item label="保税库" prop="deptId">
+              <el-select v-model="form.deptId" placeholder="请选择保税库">
+                <el-option
+                  v-for="dept in depts"
+                  :key="dept.deptId"
+                  :label="dept.deptName"
+                  :value="dept.deptId"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="8">
             <el-form-item label="出库单号" prop="outDocNo">
               <el-input v-model="form.outDocNo" placeholder="请输入出库单号" />
@@ -268,6 +295,7 @@ import {
   updateOutdoc,
   changeDocStatus,
 } from "@/api/tax/outdoc";
+import {getUserDepts} from "@/utils/charutils";
 
 export default {
   name: "Outdoc",
@@ -285,6 +313,10 @@ export default {
       total: 0,
       // 出库单表格数据
       outdocList: [],
+      //保税库列表
+      depts: [],
+      //第一个
+      deptId: 0,
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -328,7 +360,17 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        deptId: [
+          {required: true, message: "请选择保税库", trigger: "blur"},
+        ],
+        outDocNo: [
+          {required: true, message: "请输入出库单单号", trigger: "blur"},
+        ],
+        outNoticeDocNo: [
+          {required: true, message: "请输入出库通知单单号", trigger: "blur"},
+        ],
+      },
       // 装货方式字典
       packOptions: [],
       // 操作方式字典
@@ -338,7 +380,14 @@ export default {
     };
   },
   created() {
-    this.getList();
+    // 0 监管场所，1保税库，2堆场，3企业
+    this.depts = getUserDepts('1')
+    if (this.depts.length > 0) {
+      //默认选中第一个
+      this.queryParams.deptId = this.depts[0].deptId;
+      this.deptId = this.depts[0].deptId;
+      this.getList()
+    }
        //加载装货方式字典
     this.getDicts("tax_pack_type").then((response) => {
       this.packOptions = response.data;
@@ -392,6 +441,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.form.deptId = this.deptId;
       this.open = true;
       this.title = "添加出库单";
     },
@@ -403,6 +453,7 @@ export default {
         this.form = response.data;
         this.form.loadingMethod = String(response.data.loadingMethod);
         this.form.operationMode = String(response.data.operationMode);
+        this.form.deptId = response.data.deptId;
         this.open = true;
         this.title = "修改出库单";
       });
@@ -485,7 +536,7 @@ export default {
       if (row.status == "0") {
         return "录入";
       } else {
-        return "已审核";
+        return "已确认";
       }
     },
     /** 导出按钮操作 */

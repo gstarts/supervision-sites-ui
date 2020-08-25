@@ -1,8 +1,22 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      
-      
+      <el-form-item label="保税库" prop="deptId">
+        <el-select
+          v-model="queryParams.deptId"
+          placeholder="请输入保税库ID"
+          clearable
+          size="small"
+          @change="handleQuery">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="唛头" prop="shippingMarks">
         <el-input
           v-model="queryParams.shippingMarks"
@@ -37,35 +51,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['tax:goods:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['tax:goods:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['tax:goods:remove']"
-        >删除</el-button>
-      </el-col>
+
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -79,51 +65,31 @@
 
     <el-table v-loading="loading" :data="goodsList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="商品ID" align="center" prop="goodsId" />
-      <el-table-column label="入库细单id" align="center" prop="inDtlId" />
-      <el-table-column label="货物大类" align="center" prop="cargoCategory" />
+      <el-table-column label="货物大类" align="center" prop="cargoCategory" :formatter="classFormat" />
       <el-table-column label="CPO&PO" align="center" prop="cpoPo" />
       <el-table-column label="快捷码" align="center" prop="shortcutCode" />
       <el-table-column label="货号" align="center" prop="articleNumber" />
       <el-table-column label="品名" align="center" prop="productName" />
-      <el-table-column label="件数单位" align="center" prop="packagesUnit" />
+      <el-table-column label="件数单位" align="center" prop="packagesUnit" :formatter="unitFormat"/>
       <el-table-column label="件数" align="center" prop="packages" />
       <el-table-column label="毛重(KGS)" align="center" prop="grossWeight" />
       <el-table-column label="唛头" align="center" prop="shippingMarks" />
       <el-table-column label="SRN号" align="center" prop="srnNo" />
       <el-table-column label="批次" align="center" prop="batch" />
       <el-table-column label="Bag NO" align="center" prop="bagNo" />
-      <el-table-column label="数量单位" align="center" prop="countUnit" />
+      <el-table-column label="数量单位" align="center" prop="countUnit" :formatter="unitFormat"/>
       <el-table-column label="基准数量" align="center" prop="baseQuantity" />
       <el-table-column label="净重(KGS)" align="center" prop="netWeight" />
       <el-table-column label="皮重(KGS)" align="center" prop="tareWeight" />
       <el-table-column label="计费面积" align="center" prop="billingArea" />
-      <el-table-column label="调度单位" align="center" prop="dispatchingUnit" />
+      <el-table-column label="调度库位" align="center" prop="storeId" :formatter="storeFormat"/>
       <el-table-column label="仓管小组" align="center" prop="warehouseManagementTeam" />
       <el-table-column label="进报关单号" align="center" prop="customsDeclarationNo" />
       <el-table-column label="业务编号" align="center" prop="businessNo" />
       <el-table-column label="品质" align="center" prop="quality" />
       <el-table-column label="备注" align="center" prop="remarks" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['tax:goods:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['tax:goods:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -131,93 +97,12 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
-    <!-- 添加或修改货品对话框 -->
-    <el-dialog :title="title" :visible.sync="open"  append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="入库细单id" prop="inDtlId">
-          <el-input v-model="form.inDtlId" placeholder="请输入入库细单id" />
-        </el-form-item>
-        <el-form-item label="货物大类" prop="cargoCategory">
-          <el-input v-model="form.cargoCategory" placeholder="请输入货物大类" />
-        </el-form-item>
-        <el-form-item label="CPO&PO" prop="cpoPo">
-          <el-input v-model="form.cpoPo" placeholder="请输入CPO&PO" />
-        </el-form-item>
-        <el-form-item label="快捷码" prop="shortcutCode">
-          <el-input v-model="form.shortcutCode" placeholder="请输入快捷码" />
-        </el-form-item>
-        <el-form-item label="货号" prop="articleNumber">
-          <el-input v-model="form.articleNumber" placeholder="请输入货号" />
-        </el-form-item>
-        <el-form-item label="品名" prop="productName">
-          <el-input v-model="form.productName" placeholder="请输入品名" />
-        </el-form-item>
-        <el-form-item label="件数单位" prop="packagesUnit">
-          <el-input v-model="form.packagesUnit" placeholder="请输入件数单位" />
-        </el-form-item>
-        <el-form-item label="件数" prop="packages">
-          <el-input v-model="form.packages" placeholder="请输入件数" />
-        </el-form-item>
-        <el-form-item label="毛重(KGS)" prop="grossWeight">
-          <el-input v-model="form.grossWeight" placeholder="请输入毛重(KGS)" />
-        </el-form-item>
-        <el-form-item label="唛头" prop="shippingMarks">
-          <el-input v-model="form.shippingMarks" placeholder="请输入唛头" />
-        </el-form-item>
-        <el-form-item label="SRN号" prop="srnNo">
-          <el-input v-model="form.srnNo" placeholder="请输入SRN号" />
-        </el-form-item>
-        <el-form-item label="批次" prop="batch">
-          <el-input v-model="form.batch" placeholder="请输入批次" />
-        </el-form-item>
-        <el-form-item label="Bag NO" prop="bagNo">
-          <el-input v-model="form.bagNo" placeholder="请输入Bag NO" />
-        </el-form-item>
-        <el-form-item label="数量单位" prop="countUnit">
-          <el-input v-model="form.countUnit" placeholder="请输入数量单位" />
-        </el-form-item>
-        <el-form-item label="基准数量" prop="baseQuantity">
-          <el-input v-model="form.baseQuantity" placeholder="请输入基准数量" />
-        </el-form-item>
-        <el-form-item label="净重(KGS)" prop="netWeight">
-          <el-input v-model="form.netWeight" placeholder="请输入净重(KGS)" />
-        </el-form-item>
-        <el-form-item label="皮重(KGS)" prop="tareWeight">
-          <el-input v-model="form.tareWeight" placeholder="请输入皮重(KGS)" />
-        </el-form-item>
-        <el-form-item label="计费面积" prop="billingArea">
-          <el-input v-model="form.billingArea" placeholder="请输入计费面积" />
-        </el-form-item>
-        <el-form-item label="调度单位" prop="dispatchingUnit">
-          <el-input v-model="form.dispatchingUnit" placeholder="请输入调度单位" />
-        </el-form-item>
-        <el-form-item label="仓管小组" prop="warehouseManagementTeam">
-          <el-input v-model="form.warehouseManagementTeam" placeholder="请输入仓管小组" />
-        </el-form-item>
-        <el-form-item label="进报关单号" prop="customsDeclarationNo">
-          <el-input v-model="form.customsDeclarationNo" placeholder="请输入进报关单号" />
-        </el-form-item>
-        <el-form-item label="业务编号" prop="businessNo">
-          <el-input v-model="form.businessNo" placeholder="请输入业务编号" />
-        </el-form-item>
-        <el-form-item label="品质" prop="quality">
-          <el-input v-model="form.quality" placeholder="请输入品质" />
-        </el-form-item>
-        <el-form-item label="备注" prop="remarks">
-          <el-input v-model="form.remarks" placeholder="请输入备注" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listGoods, getGoods, delGoods, addGoods, updateGoods } from "@/api/tax/goods";
+import { listGoods, getGoods, delGoods, addGoods, updateGoods ,listStores} from "@/api/tax/goods";
+import {getUserDepts} from '@/utils/charutils'
 
 export default {
   name: "Goods",
@@ -235,6 +120,8 @@ export default {
       total: 0,
       // 货品表格数据
       goodsList: [],
+      // 库位表格数据
+      storeList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -268,6 +155,12 @@ export default {
         quality: undefined,
         remarks: undefined
       },
+      // 装货物大类字典
+      classOptions: [],
+      // 单位字典
+      unitOptions: [],
+      // 库位
+      storeOptions: [],
       // 表单参数
       form: {},
       // 表单校验
@@ -276,7 +169,24 @@ export default {
     };
   },
   created() {
-    this.getList();
+    // 0 监管场所，1保税库，2堆场，3企业
+    this.depts = getUserDepts('1')
+    if (this.depts.length > 0) {
+      //默认选中第一个
+      this.queryParams.deptId = this.depts[0].deptId;
+      this.deptId = this.depts[0].deptId;
+      this.getList()
+    }
+    //货品大类字典
+    this.getDicts("tax_goods_class").then((response) => {
+      this.classOptions = response.data;
+    });
+    //货品单位字典
+    this.getDicts("tax_goods_unit").then((response) => {
+      this.unitOptions = response.data;
+    });
+    //获取库位
+    this.getStores();
   },
   methods: {
     /** 查询货品列表 */
@@ -286,6 +196,12 @@ export default {
         this.goodsList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    /** 查询库位 */
+    getStores() {
+      listStores().then((response) => {
+        this.storeOptions = response.rows;
       });
     },
     // 取消按钮
@@ -356,6 +272,34 @@ export default {
         this.title = "修改货品";
       });
     },
+
+    //单位字典翻译
+    unitFormat(row, column) {
+      return this.selectDictLabel(this.unitOptions, row.countUnit);
+    },
+
+    //单位字典翻译
+    dunitFormat(row, column) {
+      return this.selectDictLabel(this.unitOptions, row.dispatchingUnit);
+    },
+
+    //货物大类字典翻译
+    classFormat(row, column) {
+      return this.selectDictLabel(this.classOptions, row.cargoCategory);
+    },
+
+    //库位翻译
+    storeFormat(row, column) {
+      var storeName='';
+      this.storeOptions.some(function(v){
+        if(v.storeId == row.storeId) {
+          storeName=v.storeNo;
+          return true;
+        }
+      });
+      return storeName;
+    },
+
     /** 提交按钮 */
     submitForm: function() {
       this.$refs["form"].validate(valid => {

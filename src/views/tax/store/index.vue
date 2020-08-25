@@ -1,6 +1,21 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="保税库" prop="deptId">
+        <el-select
+          v-model="queryParams.deptId"
+          placeholder="请输入保税库ID"
+          clearable
+          size="small"
+          @change="handleQuery">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="库位编号" prop="storeNo">
         <el-input
           v-model="queryParams.storeNo"
@@ -9,11 +24,6 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="库位状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择库位状态" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -64,9 +74,10 @@
 
     <el-table v-loading="loading" :data="storeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="库位id" align="center" prop="storeId" />
       <el-table-column label="库位编号" align="center" prop="storeNo" />
-      <el-table-column label="库位状态" align="center" prop="status" />
+      <el-table-column label="区域编号" align="center" prop="zoneCode" />
+      <el-table-column label="保税库" align="center" prop="deptId" />
+      <el-table-column label="库位状态" align="center" prop="status" :formatter="statusFormat"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -86,7 +97,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -98,13 +109,31 @@
     <!-- 添加或修改库位对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-form-item label="保税库" prop="deptId">
+          <el-select v-model="form.deptId" placeholder="请选择保税库">
+            <el-option
+              v-for="dept in depts"
+              :key="dept.deptId"
+              :label="dept.deptName"
+              :value="dept.deptId"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="库位编号" prop="storeNo">
           <el-input v-model="form.storeNo" placeholder="请输入库位编号" />
         </el-form-item>
+        <el-form-item label="区域编号" prop="zoneCode">
+          <el-input v-model="form.zoneCode" placeholder="请输入区域编号" />
+        </el-form-item>
         <el-form-item label="库位状态">
-          <el-radio-group v-model="form.status">
-            <el-radio label="1">请选择字典生成</el-radio>
-          </el-radio-group>
+            <el-select v-model="form.status">
+              <el-option
+                v-for="item in statusOptions"
+                :key="item.value"
+                :value="item.value"
+                :label="item.label"
+              ></el-option>
+            </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -117,6 +146,7 @@
 
 <script>
 import { listStore, getStore, delStore, addStore, updateStore } from "@/api/tax/store";
+import {getUserDepts} from '@/utils/charutils'
 
 export default {
   name: "Store",
@@ -134,6 +164,12 @@ export default {
       total: 0,
       // 库位表格数据
       storeList: [],
+      //保税库列表
+      depts: [],
+      // 状态字典
+      statusOptions: [{value: "0", label: "未使用"},{value: "1", label: "已使用"}],
+      //第一个
+      deptId: 0,
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -149,11 +185,27 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        deptId: [
+          {required: true, message: "请选择保税库", trigger: "blur"},
+        ],
+        storeNo: [
+          {required: true, message: "请输入库位编码", trigger: "blur"},
+        ],
+        zoneCode: [
+          {required: true, message: "请输入区域编码", trigger: "blur"},
+        ],
       }
     };
   },
   created() {
-    this.getList();
+    // 0 监管场所，1保税库，2堆场，3企业
+    this.depts = getUserDepts('1')
+    if (this.depts.length > 0) {
+      //默认选中第一个
+      this.queryParams.deptId = this.depts[0].deptId;
+      this.deptId = this.depts[0].deptId;
+      this.getList()
+    }
   },
   methods: {
     /** 查询库位列表 */
@@ -198,6 +250,8 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.form.status='0';
+      this.form.deptId = this.deptId;
       this.open = true;
       this.title = "添加库位";
     },
@@ -207,6 +261,8 @@ export default {
       const storeId = row.storeId || this.ids
       getStore(storeId).then(response => {
         this.form = response.data;
+        this.form.status = String(response.data.status);
+        this.form.deptId = response.data.deptId;
         this.open = true;
         this.title = "修改库位";
       });
@@ -248,6 +304,15 @@ export default {
           this.getList();
           this.msgSuccess("删除成功");
         }).catch(function() {});
+    },
+
+    //状态处理
+    statusFormat(row, column) {
+      if (row.status == "0") {
+        return "未使用";
+      } else {
+        return "已使用";
+      }
     },
     /** 导出按钮操作 */
     handleExport() {

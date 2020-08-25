@@ -428,8 +428,8 @@ import {
   addTax_innoticedtl,
   updateTax_innoticedtl,
   listTax_innoticedtlbydocid,
-  listStores,
-} from "@/api/tax/tax_innoticedtl";
+  listByDept,
+} from "@/api/tax/innoticedtl";
 
 export default {
   name: "Tax_innoticedtl",
@@ -501,6 +501,8 @@ export default {
       inNoticeDocId: this.$route.query.docId,
       //总单状态
       inNoticeDocStutus: this.$route.query.inNoticestatus,
+      //总单部门ID
+      deptId: this.$route.query.docDeptId,
       // 装货物大类字典
       classOptions: [],
       // 单位字典
@@ -544,7 +546,7 @@ export default {
 
      /** 查询库位 */
     getStores() {
-      listStores().then((response) => {
+       listByDept(this.deptId).then((response) => {
         this.storeOptions = response.rows;
       });
     },

@@ -42,3 +42,11 @@ export function delGoods(goodsId) {
     method: 'delete'
   })
 }
+
+// 获取库位
+export function listStores() {
+  return request({
+    url: '/tax/store/list',
+    method: 'get'
+  })
+}
