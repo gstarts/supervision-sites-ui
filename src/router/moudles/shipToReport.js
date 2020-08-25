@@ -17,7 +17,7 @@ const router = {
     {
       path: 'shipToReportDelete',
       name: 'shipToReportDelete',
-      component: (resolve) => require(['@/views/index'], resolve),
+      component: (resolve) => require(['@/views/page/shipToReport/shipToReportDelete'], resolve),
       meta: { title: '出口运抵报告删除申请', icon: 'dashboard', noCache: true}
     }
   ]

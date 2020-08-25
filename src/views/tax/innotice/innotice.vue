@@ -1,6 +1,21 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="保税库" prop="deptId">
+        <el-select
+          v-model="queryParams.deptId"
+          placeholder="请输入保税库ID"
+          clearable
+          size="small"
+          @change="handleQuery">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="入库通知单号:" label-width="150px" prop="inNoticeDocNo">
         <el-input
           v-model="queryParams.inNoticeDocNo"
@@ -36,7 +51,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['tax:innotice:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -46,7 +62,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['tax:innotice:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <!-- <el-col :span="1.5">
         <el-button
@@ -65,18 +82,19 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['tax:innotice:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
     </el-row>
     <el-table v-loading="loading" :data="innoticeList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="入库通知单号" align="center" prop="inNoticeDocNo" />
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="入库通知单号" align="center" prop="inNoticeDocNo"/>
       <el-table-column label="预计进仓日期" align="center" prop="estimateInDate" width="180"></el-table-column>
-      <el-table-column label="寄舱客户名称" align="center" prop="sendCustomerName" />
-      <el-table-column label="结算客户名称" align="center" prop="settlementCustomerName" />
-      <el-table-column label="录入人姓名" align="center" prop="inputUserName" />
-      <el-table-column label="细目笔数" align="center" prop="detailedCount" />
-      <el-table-column label="状态" align="center" :formatter="statusFormat" />
+      <el-table-column label="寄舱客户名称" align="center" prop="sendCustomerName"/>
+      <el-table-column label="结算客户名称" align="center" prop="settlementCustomerName"/>
+      <el-table-column label="录入人姓名" align="center" prop="inputUserName"/>
+      <el-table-column label="细目笔数" align="center" prop="detailedCount"/>
+      <el-table-column label="状态" align="center" :formatter="statusFormat"/>
 
       <!-- <el-table-column label="状态" align="center" prop="status">
          <div v-if="type === 'A'">
@@ -107,14 +125,16 @@
             type="text"
             icon="el-icon-document"
             @click="handleDtl(scope.row)"
-          >明细管理</el-button>
+          >明细管理
+          </el-button>
           <el-button
             v-if="scope.row.status !== 1"
             size="mini"
             type="text"
             icon="el-icon-plus"
             @click="handleStatusChange(scope.row)"
-          >审核</el-button>
+          >审核
+          </el-button>
           <el-button
             v-if="scope.row.status !== 1"
             size="mini"
@@ -122,7 +142,8 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['tax:innotice:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             v-if="scope.row.status !== 1"
             size="mini"
@@ -130,7 +151,8 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['tax:innotice:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -148,8 +170,20 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row>
           <el-col :span="8">
+            <el-form-item label="保税库" prop="deptId">
+              <el-select v-model="form.deptId" placeholder="请选择保税库">
+                <el-option
+                  v-for="dept in depts"
+                  :key="dept.deptId"
+                  :label="dept.deptName"
+                  :value="dept.deptId"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="入库通知单号" prop="inNoticeDocNo">
-              <el-input v-model="form.inNoticeDocNo" placeholder="请输入入库通知单号" />
+              <el-input v-model="form.inNoticeDocNo" placeholder="请输入入库通知单号"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -164,21 +198,22 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
-            <el-form-item label="操作员">
-              <el-input v-model="form.inputUserName" placeholder />
-            </el-form-item>
-          </el-col>
+
         </el-row>
         <el-row>
-          <el-col :span="10">
-            <el-form-item label="寄舱客户名称" prop="sendCustomerName">
-              <el-input v-model="form.sendCustomerName" placeholder="请输入寄舱客户名称" />
+          <el-col :span="8">
+            <el-form-item label="操作员">
+              <el-input v-model="form.inputUserName" readonly/>
             </el-form-item>
           </el-col>
-          <el-col :span="10">
+          <el-col :span="8">
+            <el-form-item label="寄舱客户名称" prop="sendCustomerName">
+              <el-input v-model="form.sendCustomerName" placeholder="请输入寄舱客户名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="结算客户名称" prop="settlementCustomerName">
-              <el-input v-model="form.settlementCustomerName" placeholder="请输入结算客户名称" />
+              <el-input v-model="form.settlementCustomerName" placeholder="请输入结算客户名称"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -224,7 +259,7 @@
         <el-row>
           <el-col :span="8">
             <el-form-item label="业务编号" prop="businessNumber">
-              <el-input v-model="form.businessNumber" placeholder="请输入业务编号" />
+              <el-input v-model="form.businessNumber" placeholder="请输入业务编号"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -234,7 +269,8 @@
                   v-for="dict in isOptions"
                   :key="dict.value"
                   :label="dict.value"
-                >{{dict.label}}</el-radio>
+                >{{ dict.label }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -260,18 +296,19 @@
                   v-for="dict in isOptions"
                   :key="dict.value"
                   :label="dict.value"
-                >{{dict.label}}</el-radio>
+                >{{ dict.label }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="货源地" prop="goodsSource">
-              <el-input v-model="form.goodsSource" placeholder="请输入货源地" />
+              <el-input v-model="form.goodsSource" placeholder="请输入货源地"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="总计费吨" prop="totalChargeTons">
-              <el-input v-model="form.totalChargeTons" placeholder="请输入总计费吨" />
+              <el-input v-model="form.totalChargeTons" placeholder="请输入总计费吨"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -304,16 +341,17 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="磅房ID" prop="poundRoom">
-              <el-input v-model="form.poundRoom" placeholder="请输入磅房ID" />
+              <el-input v-model="form.poundRoom" placeholder="请输入磅房ID"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="8">
             <el-form-item label="OT序号" prop="otSerialNo">
-              <el-input v-model="form.otSerialNo" placeholder="请输入OT序号" />
+              <el-input v-model="form.otSerialNo" placeholder="请输入OT序号"/>
             </el-form-item>
           </el-col>
+          <el-col :span="8">
           <el-form-item label="车牌号" prop="carNo">
             <el-autocomplete
               popper-class="my-autocomplete"
@@ -327,16 +365,15 @@
               </template>
             </el-autocomplete>
           </el-form-item>
+          </el-col>
           <el-col :span="8">
             <el-form-item label="业务单号" prop="businessOrderNo">
-              <el-input v-model="form.businessOrderNo" placeholder="请输入业务单号" />
+              <el-input v-model="form.businessOrderNo" placeholder="请输入业务单号"/>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="12">
             <el-form-item label="备注" prop="remarks">
-              <el-input v-model="form.remarks" placeholder="请输入备注" />
+              <el-input v-model="form.remarks" placeholder="请输入备注"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -359,6 +396,7 @@ import {
   changeDocStatus,
   getCarList,
 } from "@/api/tax/innotice";
+import {getUserDepts} from '@/utils/charutils'
 
 export default {
   name: "Innotice",
@@ -378,15 +416,19 @@ export default {
       total: 0,
       // 入库通知单表格数据
       innoticeList: [],
+      //保税库列表
+      depts: [],
+      //第一个
+      deptId: 0,
       // 是否
       isOptions: [
-        { value: "0", label: "是" },
-        { value: "1", label: "否" },
+        {value: "0", label: "是"},
+        {value: "1", label: "否"},
       ],
       // 车牌号
       carList: [],
       // 状态字典
-      statusOptions: [{ value: "0", label: "录入" }],
+      statusOptions: [{value: "0", label: "录入"}],
       // 装货方式字典
       packOptions: [],
       // 操作方式字典
@@ -409,17 +451,35 @@ export default {
       dateRange: [],
       // 表单校验
       rules: {
+        deptId: [
+          {required: true, message: "请选择保税库", trigger: "blur"},
+        ],
         inNoticeDocNo: [
-          { required: true, message: "入库通知单号不能为空", trigger: "blur" },
+          {required: true, message: "入库通知单号不能为空", trigger: "blur"},
         ],
         sendCustomerName: [
-          { required: true, message: "寄舱客户名不能为空", trigger: "blur" },
+          {required: true, message: "寄舱客户名不能为空", trigger: "blur"},
         ],
+        carNo: [
+          {required: true, message: "车牌号不能为空", trigger: "blur"},
+        ],
+        settlementCustomerName:[
+          {required: true, message: "结算客户不能为空", trigger: "blur"},
+        ],
+
       },
     };
   },
   created() {
-    this.getList();
+    // 0 监管场所，1保税库，2堆场，3企业
+    this.depts = getUserDepts('1')
+
+    if (this.depts.length > 0) {
+      //默认选中第一个
+      this.queryParams.deptId = this.depts[0].deptId;
+      this.deptId = this.depts[0].deptId;
+      this.getList()
+    }
     //加载装货方式字典
     this.getDicts("tax_pack_type").then((response) => {
       this.packOptions = response.data;
@@ -466,8 +526,7 @@ export default {
     loadCar() {
       getCarList().then((response) => {
         for (var i = 0; i < response.rows.length; i++) {
-          console.info("test=" + response.rows[i].carNo);
-          this.carList.push({ value: response.rows[i].carNo });
+          this.carList.push({value: response.rows[i].carNo});
         }
       });
     },
@@ -510,6 +569,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.form.deptId = this.deptId;
       this.open = true;
       this.title = "添加入库通知单";
     },
@@ -519,8 +579,8 @@ export default {
       const inNoticeDocId = row.inNoticeDocId;
       const inNoticeDocStauts = row.status;
       this.$router.push({
-        path: "tax_innoticedtl/",
-        query: { docId: inNoticeDocId, inNoticestatus: inNoticeDocStauts },
+        path: "innoticedtl/",
+        query: {docId: inNoticeDocId, inNoticestatus: inNoticeDocStauts ,docDeptId:this.deptId},
       });
     },
     /** 修改按钮操作 */
@@ -534,6 +594,7 @@ export default {
         this.form.superviseMethod = String(response.data.superviseMethod);
         this.form.packingMethod = String(response.data.packingMethod);
         this.form.taxReimbursement = String(response.data.taxReimbursement);
+        this.form.deptId = response.data.deptId;
         this.open = true;
         this.title = "修改入库通知单";
       });
@@ -581,7 +642,8 @@ export default {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function () {});
+        .catch(function () {
+        });
     },
     /** 导出按钮操作 */
     handleExport() {

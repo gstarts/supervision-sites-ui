@@ -1,6 +1,21 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="保税库" prop="deptId">
+        <el-select
+          v-model="queryParams.deptId"
+          placeholder="请输入保税库ID"
+          clearable
+          size="small"
+          @change="handleQuery">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="客户名称" prop="customerName">
         <el-input
           v-model="queryParams.customerName"
@@ -117,6 +132,17 @@
     <!-- 添加或修改移库单对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+
+          <el-form-item label="保税库" prop="deptId">
+            <el-select v-model="form.deptId" placeholder="请选择保税库">
+              <el-option
+                v-for="dept in depts"
+                :key="dept.deptId"
+                :label="dept.deptName"
+                :value="dept.deptId"
+              />
+            </el-select>
+          </el-form-item>
         <el-form-item label="客户名称" prop="customerName">
           <el-input v-model="form.customerName" placeholder="请输入客户名称" />
         </el-form-item>
@@ -150,9 +176,9 @@
           <el-input v-model="form.machineNo" placeholder="请输入机械号" />
         </el-form-item>
             <el-form-item label="录入人">
-                <el-input v-model="form.inputUserName" placeholder />
+                <el-input v-model="form.inputUserName" readonly />
             </el-form-item>
- 
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -171,6 +197,7 @@ import {
   updateMovedoc,
   changeDocStatus,
 } from "@/api/tax/movedoc";
+import {getUserDepts} from "@/utils/charutils";
 
 export default {
   name: "Movedoc",
@@ -188,6 +215,10 @@ export default {
       total: 0,
       // 移库单表格数据
       movedocList: [],
+      //保税库列表
+      depts: [],
+      //第一个
+      deptId: 0,
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -214,11 +245,22 @@ export default {
       // 日期范围
       dateRange: [],
       // 表单校验
-      rules: {},
+      rules: {
+        deptId: [
+          {required: true, message: "请选择保税库", trigger: "blur"},
+        ],
+      },
     };
   },
   created() {
-    this.getList();
+    // 0 监管场所，1保税库，2堆场，3企业
+    this.depts = getUserDepts('1')
+    if (this.depts.length > 0) {
+      //默认选中第一个
+      this.queryParams.deptId = this.depts[0].deptId;
+      this.deptId = this.depts[0].deptId;
+      this.getList()
+    }
   },
   methods: {
     /** 查询移库单列表 */
@@ -264,6 +306,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.form.deptId = this.deptId;
       this.open = true;
       this.title = "添加移库单";
     },
@@ -273,6 +316,7 @@ export default {
       const moveDocId = row.moveDocId || this.ids;
       getMovedoc(moveDocId).then((response) => {
         this.form = response.data;
+        this.form.deptId = response.data.deptId;
         this.open = true;
         this.title = "修改移库单";
       });

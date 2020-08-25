@@ -394,7 +394,7 @@ import {
   addIndtl,
   updateIndtl,
   listIndtlbydocid,
-  listStores,
+  listByDept,
 } from "@/api/tax/indtl";
 
 export default {
@@ -432,6 +432,8 @@ export default {
       inDocNo: this.$route.query.docNo,
       //总单状态
       inDocStatus: this.$route.query.docStatus,
+      //总单部门ID
+      deptId: this.$route.query.docDeptId,
       // 装货物大类字典
       classOptions: [],
       // 单位字典
@@ -453,7 +455,7 @@ export default {
         storeId: [
           { required: true, message: "请选择货位", trigger: "blur" },
         ],
-        
+
       },
       // 表单校验
       updateFormRules: {
@@ -503,7 +505,7 @@ export default {
     },
      /** 查询库位 */
     getStores() {
-      listStores().then((response) => {
+       listByDept(this.deptId).then((response) => {
         this.storeOptions = response.rows;
       });
     },
@@ -602,6 +604,7 @@ export default {
                 this.msgSuccess("新增成功");
                 this.open = false;
                 this.getDtlData(this.inDocId);
+                this.resetForm("addform");
               }
             });
           }
