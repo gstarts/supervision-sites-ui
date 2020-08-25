@@ -88,6 +88,16 @@
       <el-table-column label="业务编号" align="center" prop="businessNo" />
       <el-table-column label="品质" align="center" prop="quality" />
       <el-table-column label="备注" align="center" prop="remarks" />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        fixed="right"
+      >
+        <template slot-scope="scope">
+          <el-button size="mini" type="text" icon="el-icon-document" @click="handleDtl(scope.row)">查看明细</el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -270,6 +280,15 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改货品";
+      });
+    },
+
+    /** 查看明细操作 */
+    handleDtl(row) {
+      const goodsId = row.goodsId;
+      this.$router.push({
+        path: "goodslst/",
+        query: {goodsId: goodsId},
       });
     },
 

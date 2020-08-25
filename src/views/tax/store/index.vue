@@ -76,10 +76,10 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="库位编号" align="center" prop="storeNo" />
       <el-table-column label="区域编号" align="center" prop="zoneCode" />
-      <el-table-column label="保税库" align="center" prop="deptId" />
       <el-table-column label="库位状态" align="center" prop="status" :formatter="statusFormat"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
+          <el-button size="mini" type="text" icon="el-icon-document" @click="handleDtl(scope.row)">查看明细</el-button>
           <el-button
             size="mini"
             type="text"
@@ -265,6 +265,14 @@ export default {
         this.form.deptId = response.data.deptId;
         this.open = true;
         this.title = "修改库位";
+      });
+    },
+    /** 查看明细操作 */
+    handleDtl(row) {
+      const storeId = row.storeId;
+      this.$router.push({
+        path: "storelst/",
+        query: {storeId: storeId},
       });
     },
     /** 提交按钮 */
