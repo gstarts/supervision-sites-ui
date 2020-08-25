@@ -113,7 +113,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-    
+
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -158,7 +158,7 @@
         </el-button>
       </el-col>
     </el-row>
-    
+
     <el-table v-loading="loading" :data="ioList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="ID" align="center" prop="id"/>
@@ -206,7 +206,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -214,7 +214,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    
+
     <!-- 添加或修改集装箱进出记录 对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="70%" :modal="true" close-on-click-modal>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
