@@ -110,7 +110,7 @@
         </el-button>
       </el-col>
       <el-col :span="6" :offset="12">
-        <el-button type="primary" @click="submitForm" size="mini"  v-hasPermi="['yard:io:reduce']">提 交</el-button>
+        <el-button type="primary" @click="submitForm" size="mini" v-hasPermi="['yard:io:reduce']">提 交</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="reset">重置</el-button>
       </el-col>
     </el-row>
@@ -577,6 +577,11 @@
 			},
 			//列出库位列表
 			listStore() {
+				this.ioSub.storeCode = ''
+				this.ioSub.containerNo = ''
+        this.ioSub.isHeavy = ''
+        this.ioSub.remark = ''
+				this.storeList = []
 				if (this.ioSub.zoneCode !== '') {
 					listStoreCanUse({
 						'yardId': this.form.yardId,
@@ -584,8 +589,12 @@
 						'zoneCode': this.ioSub.zoneCode,
 						'storeState': '1' //先择占用的库位
 					}).then(response => {
-						this.storeList = []
-						this.storeList = response.rows
+						if (response.total === 0) {
+							this.$message.warning("此区域无可用的货位")
+       
+						} else {
+							this.storeList = response.rows
+						}
 					})
 				} else {
 					this.storeList = []
@@ -600,23 +609,20 @@
 						this.ioSub.containerNo = response.data.containerNo
 						this.ioSub.isHeavy = response.data.isHeavy
 						this.ioSub.yardId = response.data.yardId
-						console.log(this.ioSub)
 					})
 			},
 			getContainerFromStore() {
-				listStore_detail({'containerNo': this.ioSub.containerNo})
+				listStore_detail({'containerNo': this.ioSub.containerNo,'yardId':this.form.yardId})
 					.then(response => {
 						console.log(response)
-            if(response.total === 0){
-	            this.$message.warning('集装箱不在此库存中')
-            }else{
-            	console.log(response.rows[0])
-              this.ioSub = { ...response.rows[0]}
-            }
-            
+						if (response.total === 0) {
+							this.$message.warning('集装箱不在此库存中')
+						} else {
+							console.log(response.rows[0])
+							this.ioSub = {...response.rows[0]}
+						}
 					})
-
-			}
+			},
 		}
 	}
 	;

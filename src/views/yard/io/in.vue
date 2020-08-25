@@ -21,7 +21,8 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="进/出场状态">
-            <el-select v-model="form.ioState" placeholder="请选择进/出场状态" @change="setPurpose(form.ioState)" :disabled="true">
+            <el-select v-model="form.ioState" placeholder="请选择进/出场状态" @change="setPurpose(form.ioState)"
+                       :disabled="true">
               <el-option
                 v-for="dict in ioStateOptions"
                 :key="dict.dictValue"
@@ -204,16 +205,16 @@
           </el-col>
         </el-row>
         <div style="display:none">
-        <el-form-item label="父级进出场单号id" prop="parentId">
-          <el-input v-model="ioSub.parentId" placeholder="请输入父级进出场单号id" />
-        </el-form-item>
-        <el-form-item label="进出场单号" prop="ioNo">
-          <el-input v-model="ioSub.ioNo" placeholder="请输入进出场单号" />
-        </el-form-item>
-        
-        <el-form-item label="堆场ID" prop="yardId">
-          <el-input v-model="ioSub.yardId" placeholder="请输入堆场ID" />
-        </el-form-item>
+          <el-form-item label="父级进出场单号id" prop="parentId">
+            <el-input v-model="ioSub.parentId" placeholder="请输入父级进出场单号id"/>
+          </el-form-item>
+          <el-form-item label="进出场单号" prop="ioNo">
+            <el-input v-model="ioSub.ioNo" placeholder="请输入进出场单号"/>
+          </el-form-item>
+          
+          <el-form-item label="堆场ID" prop="yardId">
+            <el-input v-model="ioSub.yardId" placeholder="请输入堆场ID"/>
+          </el-form-item>
         </div>
         <el-row v-show="ioSub.isHeavy==='1'">
           
@@ -391,17 +392,17 @@
 			});
 			//初始业务状态就只有执行
 			this.form.state = '3'
-      this.form.ioState = '1' //进场
-      this.form.purpose = '1'
+			this.form.ioState = '1' //进场
+			this.form.purpose = '1'
 			//初始集装箱数量0
 			this.form.containerCount = 0
-   
+
 			// 0 监管场所，1保税库，2堆场，3企业
 			this.depts = getUserDepts('2')
 			if (this.depts.length > 0) {
 				this.queryParams.yardId = this.depts[0].deptId
-        this.form.yardId = this.depts[0].deptId
-        this.getYardZoneList()
+				this.form.yardId = this.depts[0].deptId
+				this.getYardZoneList()
 			}
 		},
 		watch: { //监听list长度，设置集装箱数量
@@ -432,8 +433,8 @@
 				}
 
 				//this.subList.push(cloneObject(this.ioSub))
-        this.ioSub.yardId = this.form.yardId
-        this.subList.push({...this.ioSub})
+				this.ioSub.yardId = this.form.yardId
+				this.subList.push({...this.ioSub})
 				//this.form.containerCount = this.subList.length
 				this.ioSub.containerNo = ''//清空集装箱号
 				this.ioSub.zoneCode = ''
@@ -569,6 +570,9 @@
 				}
 			},
 			listStore() {
+				 //清除库位号
+				this.ioSub.storeCode = ''
+				this.storeList = []
 				if (this.ioSub.zoneCode !== '') {
 					listStoreCanUse({
 						'yardId': this.form.yardId,
@@ -576,8 +580,11 @@
 						'zoneCode': this.ioSub.zoneCode,
 						'storeState': '0' //先择空
 					}).then(response => {
-						this.storeList = []
-						this.storeList = response.rows
+						if (response.total === 0) {
+							this.$message.warning("此区域无可用货位")
+						} else {
+							this.storeList = response.rows
+						}
 					})
 				} else {
 					this.storeList = []

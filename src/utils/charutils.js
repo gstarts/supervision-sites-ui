@@ -22,6 +22,8 @@ export function genNumChar(start,end){
 export function getUserDepts(deptType){
     let depts = []
     let dept = store.getters.dept
+    console.log(dept)
+
     // 0 监管场所，1保税库，2堆场，3企业
     //如果所属部门是堆场，加入列表
     if(dept.deptType == deptType){
@@ -41,3 +43,4 @@ export function getUserDepts(deptType){
 export function cloneObject(obj){ // 对象复制
     return JSON.parse(JSON.stringify(obj))
 }
+
