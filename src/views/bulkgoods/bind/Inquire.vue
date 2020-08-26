@@ -10,6 +10,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+
       <el-form-item label="车次确认号" prop="sureid">
         <el-input
           v-model="queryParams.sureid"
@@ -44,6 +45,7 @@
           :default-time="['00:00:00']"
         ></el-date-picker>
       </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -51,13 +53,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8"></el-row>
-
-    <el-table
-      v-loading="loading"
-      :data="declareList"
-      :row-class-name="tableRowClassName"
-      @selection-change="handleSelectionChange"
-    >
+    <el-table v-loading="loading" :data="declareList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="绑定介质信息" align="center" prop="bindkeyinfo" />
       <el-table-column label="申报时间" align="center" prop="optime" />
@@ -81,25 +77,31 @@
             v-hasPermi="['waybill:declare:query']"
           >详情</el-button>
           <el-button
-            v-if="scope.row.feedback=='10' || scope.row.feedback=='20'|| scope.row.feedback=='0'|| scope.row.feedback=='FF'|| scope.row.feedback=='3' "
+            v-if="scope.row.feedback=='10' || scope.row.feedback=='20'|| scope.row.feedback=='0' | scope.row.feedback=='FF' "
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['waybill:declare:query']"
+            v-hasPermi="['waybill:declare:edit']"
           >修改</el-button>
           <el-button
             v-if="scope.row.feedback!='2'"
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['waybill:declare:remove']"
           >删除</el-button>
+          <el-button
+            v-if="scope.row.feedback!='40'&& scope.row.feedback!='43'&& scope.row.feedback!='50'"
+            size="mini"
+            type="text"
+            @click="handleArtificial(scope.row)"
+            v-hasPermi="['waybill:declare:artificial']"
+          >人工办结</el-button>
         </template>
       </el-table-column>
     </el-table>
-
     <pagination
       v-show="total>0"
       :total="total"
@@ -115,7 +117,7 @@
 
 <script>
 import {
-  wayListByuserId,
+  listDeclare,
   getDeclare,
   delDeclare,
   addHead,
@@ -124,9 +126,9 @@ import {
   updateHead,
   updateBody,
   exportDeclare,
+  artificial,
   del
-} from "@/api/site/declare";
-
+} from "@/api/bulkgoods/declare";
 export default {
   data() {
     return {
@@ -175,7 +177,7 @@ export default {
   },
   created() {
     this.getList();
-    
+  
     this.getDicts("station_transport_fashion").then(response => {
       this.shipTypeOptions = response.data;
     });
@@ -190,22 +192,15 @@ export default {
     });
   },
   methods: {
-    /** 查询提运单列表 */
+    /** 查询提运单申报列表 */
     getList() {
-      wayListByuserId(this.addDateRange(this.queryParams, this.dateRange)).then(
+      listDeclare(this.addDateRange(this.queryParams, this.dateRange)).then(
         response => {
           this.declareList = response.rows;
           this.total = response.total;
           this.loading = false;
         }
       );
-    },
-    // 改变驳回数据颜色
-    tableRowClassName({ row, rowIndex }) {
-      if (row.feedback == "ZZ") {
-        return "warning-row";
-      }
-      return "";
     },
     // 运输方式翻译
     shipTypeFormat(row, column) {
@@ -320,6 +315,23 @@ export default {
         })
         .catch(function() {});
     },
+    /**人工办结 */
+    handleArtificial(row) {
+      const ids = row.id || this.ids;
+      this.$confirm("是否确认人工办结?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
+          return artificial(ids);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("办结成功");
+        })
+        .catch(function() {});
+    },
     /** 打开新增弹窗 */
     openAddDialog() {
       this.$refs.import.show();
@@ -335,8 +347,3 @@ export default {
   }
 };
 </script>
-<style>
-.el-table .warning-row {
-  background: red;
-}
-</style>

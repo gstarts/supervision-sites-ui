@@ -346,7 +346,7 @@ import {
   addWaybill,
   autoAllocation,
   subReject
-} from "@/api/site/declare";
+} from "@/api/bulkgoods/declare";
 
 
 export default {
