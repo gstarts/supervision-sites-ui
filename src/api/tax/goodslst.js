@@ -42,3 +42,13 @@ export function delGoodslst(goodsLstId) {
     method: 'delete'
   })
 }
+
+// 查询入库细单列表
+export function listByGoodsid(goodsId) {
+  return request({
+    url: '/tax/goodslst/goodsId/'+goodsId,
+    method: 'get'
+  })
+}
+
+

@@ -153,7 +153,7 @@
       <el-table-column label="货物净重(KG)" align="center" prop="netWeight" />
       <el-table-column label="货物毛重(KG)" align="center" prop="roughWight" />
       <el-table-column label="货物批次号" align="center" prop="goodsBatchNo" />
-      <el-table-column label="变更原因" align="center" prop="updateReason" :formatter="updateReasonFormat" />
+      <el-table-column label="变更原因" align="center" prop="updateReason" />
       <el-table-column label="更新人" align="center" prop="updateBy" />
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
         <template slot-scope="scope">

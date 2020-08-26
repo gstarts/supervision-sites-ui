@@ -1,14 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="堆场ID" prop="yardId">
-        <el-input
-          v-model="queryParams.yardId"
-          placeholder="请输入堆场ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="堆场" prop="yardId">
+        <el-select v-model="queryParams.yardId" placeholder="请选择堆场">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="操作类型" prop="opertaionType">
         <el-select v-model="queryParams.opertaionType" placeholder="请选择操作类型" clearable size="small">
@@ -176,6 +177,7 @@
 
 <script>
 import { listOperation, getOperation, delOperation, addOperation, updateOperation } from "@/api/yard/operation";
+import {getUserDepts} from '@/utils/charutils'
 
 export default {
   name: "Operation",
@@ -185,6 +187,8 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      //部门
+      depts: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -217,7 +221,12 @@ export default {
     };
   },
   created() {
-    this.getList();
+	  this.depts = getUserDepts('2')
+	  if (this.depts.length > 0) {
+		  this.queryParams.yardId = this.depts[0].deptId
+		  this.form.yardId = this.depts[0].deptId
+		  this.getList()
+	  }
     this.getDicts("yard_business_type").then(response => {
       this.opertaionTypeOptions = response.data;
     });

@@ -1,6 +1,21 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+      <el-form-item label="保税库" prop="deptId">
+        <el-select
+          v-model="queryParams.deptId"
+          placeholder="请输入保税库ID"
+          clearable
+          size="small"
+          @change="handleQuery">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="出库通知单号" prop="outNoticeDocNo">
         <el-input
           v-model="queryParams.outNoticeDocNo"
@@ -120,6 +135,18 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row>
+          <el-col :span="8">
+            <el-form-item label="保税库" prop="deptId">
+              <el-select v-model="form.deptId" placeholder="请选择保税库">
+                <el-option
+                  v-for="dept in depts"
+                  :key="dept.deptId"
+                  :label="dept.deptName"
+                  :value="dept.deptId"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="8">
             <el-form-item label="出库通知单号" prop="outNoticeDocNo">
               <el-input v-model="form.outNoticeDocNo" placeholder="请输入出库通知单号" />
@@ -303,6 +330,7 @@ import {
   updateOutnoticedoc,
   changeDocStatus,
 } from "@/api/tax/outnoticedoc";
+import {getUserDepts} from "@/utils/charutils";
 
 export default {
   name: "Outnoticedoc",
@@ -373,6 +401,10 @@ export default {
       handleOptions: [],
       // 监管方式字典
       superviseOptions: [],
+      //保税库列表
+      depts: [],
+      //第一个
+      deptId: 0,
        // 是否
       isOptions: [
         { value: "0", label: "是" },
@@ -380,6 +412,9 @@ export default {
       ],
       // 表单校验
       rules: {
+        deptId: [
+          {required: true, message: "请选择保税库", trigger: "blur"},
+        ],
         outNoticeDocNo: [
           { required: true, message: "出库通知单号不能为空", trigger: "blur" },
         ],
@@ -387,7 +422,14 @@ export default {
     };
   },
   created() {
-    this.getList();
+    // 0 监管场所，1保税库，2堆场，3企业
+    this.depts = getUserDepts('1')
+    if (this.depts.length > 0) {
+      //默认选中第一个
+      this.queryParams.deptId = this.depts[0].deptId;
+      this.deptId = this.depts[0].deptId;
+      this.getList()
+    }
      //加载装货方式字典
     this.getDicts("tax_pack_type").then((response) => {
       this.packOptions = response.data;
@@ -451,6 +493,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.form.deptId = this.deptId;
       this.open = true;
       this.title = "添加出库通知单";
     },
@@ -466,6 +509,7 @@ export default {
         this.form.superviseMethod = String(response.data.superviseMethod);
         this.form.packingMethod = String(response.data.packingMethod);
         this.form.taxReimbursement = String(response.data.taxReimbursement);
+        this.form.deptId = response.data.deptId;
         this.open = true;
         this.title = "修改出库通知单";
       });
