@@ -31,7 +31,7 @@
                 v-for="dict in enterpriseOptions"
                 :key="dict.contractorCodeScc"
                 :label="dict.eName"
-                :value="dict.contractorCodeScc"
+                :value="dict.id"
               />
             </el-select>
          </el-form-item>
@@ -351,14 +351,26 @@
             <el-input v-model="bodyform.goodsName" placeholder="请输入商品名称" />
           </el-form-item>
         </el-col>
+       <el-col :span="6">
+         <el-form-item label="企业信息"  >
+            <el-select  v-model="bodyform.deptId" disabled >
+              <el-option
+                v-for="dict in enterpriseOptions"
+                :key="dict.id"
+                :label="dict.eName"
+                :value="dict.id"
+              />
+            </el-select>
+         </el-form-item>
+        </el-col>
         <el-col :span="6">
-        <el-form-item label="所属仓库" prop="warehouseId">
-        <el-select v-model="bodyform.warehouseId" placeholder="请选择货物所属仓库" clearable size="small">
+        <el-form-item label="库位信息" prop="warehouseId">
+        <el-select v-model="bodyform.warehouseId" placeholder="请选择货物所属库位信息" clearable size="small">
           <el-option
             v-for="item in depotNameOptions"
-            :key="item.id"
-            :label="item.wName"
-            :value="item.id"
+            :key="item.storeCode"
+            :label="item.storeCode"
+            :value="item.storeCode"
           />
         </el-select>
       </el-form-item>
@@ -381,13 +393,15 @@ import {
   addHead,
   addBody,
   updateBody,
-  getWaybillBody,
+  getsiteBody,
   delBody,
   init,
   check
-} from "@/api/site/declare";
+} from "@/api/bulkgoods/waybill/declare";
 
 import {listInfo} from "@/api/basis/enterpriseInfo";
+
+import {listStore} from "@/api/yard/store"
 export default {
    name: "BindEdit",
   data() {
@@ -490,6 +504,8 @@ export default {
       enterpriseOptions:[],
       // 表头id
       headId: undefined,
+      // 机构信息
+      deptId:undefined,
       // 表单参数
       form: {
         bayonetrdcode: "02",
@@ -713,7 +729,7 @@ export default {
         contaid2: undefined,
         esealid1: undefined,
         esealid2: undefined,
-        warehouseId:this.depotNameOptions[0].id,
+        deptId:this.deptId,
         remark: undefined
       };
     },
@@ -747,7 +763,7 @@ export default {
     /** 行点击按钮 */
     doubleClick(row, column, cell, event) {
       if (row.id != undefined) {
-        getWaybillBody(row.id).then(res => {
+        getsiteBody(row.id).then(res => {
           if (res.code === 200) {
             this.bodyform = res.data;
           }
@@ -792,10 +808,18 @@ export default {
      /** 选中值发生变化时触发 */
     change(event){
         this.enterpriseOptions.forEach(element => {
-          console.log(element)
-          if(element.contractorCodeScc===event){
+          console.log("企业id"+event)
+          if(element.id===event){
             // 将得到的企业属性赋值到应用的对象中
-            // 将当前选择框隐藏 
+            this.bodyform.deptId=event
+            this.deptId=event
+            // 根据 企业id 获取仓库信息
+            var store={
+              yard_id:event
+            } 
+            listStore(store).then(res=>{
+              this.depotNameOptions=res.rows
+            });
             this.show=false;
             this.form.stationPersonName=element.customsMaster
             this.form.contractorcodescc=element.contractorCodeScc
