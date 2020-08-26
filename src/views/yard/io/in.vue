@@ -3,13 +3,17 @@
     <el-form ref="form" :model="form" :rules="rules" label-width="120px">
       <el-row :gutter="10">
         <el-col :span="6">
-          <el-form-item label="入库单号" prop="businessNo" :disabled="true">
-            <el-input v-model="form.businessNo" placeholder="请入入库单号"/>
+          <el-form-item label="入库单号" prop="ioNo">
+            <el-input v-model="form.ioNo" placeholder="请输入入库单号" :disabled="formLock">
+              <template slot="append">
+                <el-button type="primary" icon="el-icon-magic-stick" @click="generateId"></el-button>
+              </template>
+            </el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="堆场" prop="yardId">
-            <el-select v-model="form.yardId" placeholder="请选择堆场" @change="getYardZoneList">
+            <el-select v-model="form.yardId" placeholder="请选择堆场" :disabled="formLock">
               <el-option
                 v-for="dept in depts"
                 :key="dept.deptId"
@@ -20,7 +24,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="进/出场状态">
+          <el-form-item label="进/出场状态" prop="ioState">
             <el-select v-model="form.ioState" placeholder="请选择进/出场状态" @change="setPurpose(form.ioState)"
                        :disabled="true">
               <el-option
@@ -48,7 +52,7 @@
       <el-row :gutter="10">
         <el-col :span="6">
           <el-form-item label="车牌号" prop="vehicleNo">
-            <el-input v-model="form.vehicleNo" placeholder="请输入车牌号"/>
+            <el-input v-model="form.vehicleNo" placeholder="请输入车牌号" :disabled="formLock"/>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -64,7 +68,7 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="货运企业名称" prop="companyName">
-            <el-input v-model="form.companyName" placeholder="请输入货运企业名称"/>
+            <el-input v-model="form.companyName" placeholder="请输入货运企业名称" :disabled="formLock"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -115,14 +119,22 @@
       </el-col>
     </el-row>
     
-    <el-table v-loading="loading" :data="subList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
+    <el-table v-loading="loading" :data="subList">
+      <!--<el-table-column type="selection" width="55" align="center"/>-->
       <el-table-column type="index" label="ID" align="center" prop="id"/>
-      <el-table-column label="父级进出场单号id" align="center" prop="parentId"/>
-      <el-table-column label="进出场单号" align="center" prop="ioNo"/>
-      <el-table-column label="集装箱号" align="center" prop="containerNo"/>
-      <el-table-column label="空/重箱" align="center" prop="isHeavy"/>
-      <el-table-column label="堆场ID" align="center" prop="yardId"/>
+      <!--<el-table-column label="父级进出场单号id" align="center" prop="parentId"/>-->
+      <el-table-column label="堆场" align="center" prop="yardId">
+        <template slot-scope="scope">
+          <span>{{depts.find(item=>item.deptId === scope.row.yardId).deptName}}</span>
+        </template>
+      </el-table-column>
+      <!--<el-table-column label="进出场单号" align="center" prop="ioNo"/>-->
+      <el-table-column label="集装箱号" align="center" prop="containerNo" width="120px"/>
+      <el-table-column label="空/重箱" align="center" prop="isHeavy">
+        <template slot-scope="scope">
+          {{heavyOptions.find(item=>item.dictValue === scope.row.isHeavy).dictLabel}}
+        </template>
+      </el-table-column>
       <el-table-column label="区域编号" align="center" prop="zoneCode"/>
       <el-table-column label="库位号" align="center" prop="storeCode"/>
       <el-table-column label="货物批次号" align="center" prop="goodsBatchNo"/>
@@ -137,14 +149,6 @@
       <el-table-column label="数量单位" align="center" prop="numUnit"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
-          <!--<el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['yard:io_sub:edit']"
-          >修改
-          </el-button>-->
           <el-button
             size="mini"
             type="text"
@@ -157,8 +161,11 @@
     </el-table>
     
     <!-- 添加或修改集装箱进出场子单 对话框 -->
-    <el-dialog :title="title" :visible.sync="open" append-to-body>
-      <el-form ref="form" :model="ioSub" :rules="rules" label-width="120px">
+    <el-drawer
+    :title="title"
+    :visible.sync="open"
+    direction="rtl">
+      <el-form ref="form2" :model="ioSub" :rules="rulesSub" label-width="120px" style="padding-right:40px">
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="集装箱号" prop="containerNo">
@@ -166,7 +173,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="空/重状态" prop="heavyState">
+            <el-form-item label="空/重状态" prop="isHeavy">
               <el-select v-model="ioSub.isHeavy" placeholder="空重状态">
                 <el-option
                   v-for="dict in heavyOptions"
@@ -192,7 +199,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="货位号" prop="zoneCode">
+            <el-form-item label="货位号" prop="storeCode">
               <el-select v-model="ioSub.storeCode" placeholder="请输入货位">
                 <el-option
                   v-for="store in storeList"
@@ -205,19 +212,17 @@
           </el-col>
         </el-row>
         <div style="display:none">
-          <el-form-item label="父级进出场单号id" prop="parentId">
+          <!--<el-form-item label="父级进出场单号id" prop="parentId">
             <el-input v-model="ioSub.parentId" placeholder="请输入父级进出场单号id"/>
-          </el-form-item>
+          </el-form-item>-->
           <el-form-item label="进出场单号" prop="ioNo">
             <el-input v-model="ioSub.ioNo" placeholder="请输入进出场单号"/>
           </el-form-item>
-          
           <el-form-item label="堆场ID" prop="yardId">
             <el-input v-model="ioSub.yardId" placeholder="请输入堆场ID"/>
           </el-form-item>
         </div>
         <el-row v-show="ioSub.isHeavy==='1'">
-          
           <el-row :gutter="10">
             <el-col :span="12">
               <el-form-item label="报关单号" prop="declarationNo">
@@ -286,13 +291,156 @@
         <el-form-item label="备注" prop="remark">
           <el-input v-model="ioSub.remark" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
-      
+      <el-row style="margin: 0 auto">
+        <el-col :span="8" :offset="16">
+          <el-button type="primary" @click="addSub">添 加</el-button>
+          <el-button @click="cancel">关 闭</el-button>
+        </el-col>
+        
+      </el-row>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="addSub">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+      
+    <!--</el-dialog>-->
+    </el-drawer>
+  
+    <!--
+    <el-dialog :title="title" :visible.sync="open" append-to-body>
+    <el-form ref="form" :model="ioSub" :rules="rules" label-width="120px">
+      <el-row :gutter="10">
+        <el-col :span="12">
+          <el-form-item label="集装箱号" prop="containerNo">
+            <el-input v-model="ioSub.containerNo" placeholder="请输入集装箱号"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="空/重状态" prop="heavyState">
+            <el-select v-model="ioSub.isHeavy" placeholder="空重状态">
+              <el-option
+                v-for="dict in heavyOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="10">
+        <el-col :span="12">
+          <el-form-item label="区域" prop="zoneCode">
+            <el-select v-model="ioSub.zoneCode" placeholder="请输入区域" @change="listStore">
+              <el-option
+                v-for="zone in zoneList"
+                :key="zone.id"
+                :label="zone.zoneName+(zone.zoneCode<10?'0'+zone.zoneCode:zone.zoneCode)"
+                :value="zone.zoneName+(zone.zoneCode<10?'0'+zone.zoneCode:zone.zoneCode)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="货位号" prop="zoneCode">
+            <el-select v-model="ioSub.storeCode" placeholder="请输入货位">
+              <el-option
+                v-for="store in storeList"
+                :key="store.id"
+                :label="store.storeCode"
+                :value="store.storeCode"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <div style="display:none">
+        <el-form-item label="父级进出场单号id" prop="parentId">
+          <el-input v-model="ioSub.parentId" placeholder="请输入父级进出场单号id"/>
+        </el-form-item>
+        <el-form-item label="进出场单号" prop="ioNo">
+          <el-input v-model="ioSub.ioNo" placeholder="请输入进出场单号"/>
+        </el-form-item>
+      
+        <el-form-item label="堆场ID" prop="yardId">
+          <el-input v-model="ioSub.yardId" placeholder="请输入堆场ID"/>
+        </el-form-item>
       </div>
+      <el-row v-show="ioSub.isHeavy==='1'">
+      
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="报关单号" prop="declarationNo">
+              <el-input v-model="ioSub.declarationNo" placeholder="请输入报关单号"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="货物批次号" prop="goodsBatchNo">
+              <el-input v-model="ioSub.goodsBatchNo" placeholder="请输入货物批次号"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="货物名称" prop="goodsName">
+              <el-input v-model="ioSub.goodsName" placeholder="请输入货物名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="货物种类">
+              <el-select v-model="ioSub.goodsType" placeholder="请选择货物种类">
+                <el-option label="请选择字典生成" value=""/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="毛重(KG)" prop="roughWight">
+              <el-input v-model="ioSub.roughWight" placeholder="请输入毛重(KG)"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="净重(KG)" prop="netWight">
+              <el-input v-model="ioSub.netWight" placeholder="请输入净重(KG)"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="业务编号" prop="businessNo">
+              <el-input v-model="ioSub.businessNo" placeholder="请输入业务编号"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="货物标识码" prop="goodsIdentificationCode">
+              <el-input v-model="ioSub.goodsIdentificationCode" placeholder="请输入货物标识码"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="件数单位" prop="countUnit">
+              <el-input v-model="ioSub.countUnit" placeholder="请输入件数单位"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="数量单位">
+              <el-select v-model="ioSub.numUnit" placeholder="请选择数量单位">
+                <el-option label="请选择字典生成" value=""/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-row>
+      <el-form-item label="备注" prop="remark">
+        <el-input v-model="ioSub.remark" type="textarea" placeholder="请输入内容"/>
+      </el-form-item>
+  
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="addSub">确 定</el-button>
+      <el-button @click="cancel">取 消</el-button>
+    </div>
     </el-dialog>
+    -->
   </div>
 </template>
 
@@ -301,6 +449,8 @@
 	import {getUserDepts} from '@/utils/charutils'
 	import {listZone} from '@/api/yard/zone'
 	import {listStoreCanUse} from '@/api/yard/store'
+	import {genTimeCode} from '@/utils/common'
+	import {addContainer_attribute, updateContainer_attribute} from '@/api/yard/container_attribute'
 
 	export default {
 		name: "IoIn",
@@ -310,6 +460,7 @@
 				loading: false,
 				// 选中数组
 				ids: [],
+        formLock: false,//锁定表单,添加集装箱信息后，不得再修改表头
 				//场所列表
 				depts: [],
 				// 非单个禁用
@@ -353,14 +504,15 @@
 				//库位列表
 				storeList: [],
 				// containerIo的属性
-				form: {
-					containerCount: 0
-				},
+				form: {},
 				containerIo: [],
 				// 表单校验
 				rules: {
-					/*yardId: [
-						{required: true, message: "堆场ID不能为空", trigger: "blur"}
+					ioNo: [
+						{required: true, message: "入库单号不能为空", trigger: "blur"}
+          ],
+					yardId: [
+						{required: true, message: "堆场不能为空", trigger: "change"}
 					],
 					vehicleNo: [
 						{required: true, message: "车牌号不能为空", trigger: "blur"}
@@ -372,8 +524,25 @@
 						{required: true, message: "集装箱号不能为空", trigger: "blur"}
 					],
 					ioState: [
-						{required: true, message: "出/入场状态不能为空", trigger: "blur"}
-					],*/
+						{required: true, message: "出/入场状态不能为空", trigger: "change"}
+					],
+					companyName: [
+						{required: true, message: "货运企业名称不能为空", trigger: "blur"}
+          ]
+				},
+				rulesSub: {
+					containerNo: [
+						{required: true, message: "集装箱号不能为空", trigger: "blur"},
+					],
+					isHeavy: [
+						{required: true, message: "空重状态不能为空", trigger: "change"}
+					],
+					zoneCode: [
+						{required: true, message: "区域不能为空", trigger: "change"}
+					],
+					storeCode: [
+						{required: true, message: "货位号不能为空", trigger: "change"}
+					],
 				}
 			};
 		},
@@ -415,35 +584,41 @@
 		methods: {
 			//添加集装箱到列表
 			addSub() {
+
+				this.$refs["form2"].validate(valid => {
+					if (valid) {
+						if (this.subList.findIndex((v) => {
+							return v.storeCode === this.ioSub.storeCode
+						}) !== -1) {
+							this.$message.warning("库货已被其它箱选中")
+							return
+						}
+
+						if (this.subList.findIndex((v) => {
+							return v.containerNo === this.ioSub.containerNo
+						}) !== -1
+						) {
+							this.$message.warning("集装箱号已添加")
+							return
+						}
+
+						//this.subList.push(cloneObject(this.ioSub))
+						this.ioSub.yardId = this.form.yardId
+						this.subList.push({...this.ioSub})
+						//this.form.containerCount = this.subList.length
+						this.ioSub.containerNo = ''//清空集装箱号
+						this.ioSub.zoneCode = ''
+						this.ioSub.storeCode = '' //清空货位号
+						this.ioSub.isHeavy = ''
+						this.ioSub.remark = ''
+
+						console.log(this.subList)
+						console.log(this.form.containerCount)
+					}
+				});
 				//if (this.subList.length > 1) { //必须里面有超过1个值的时候，才判断
 				//加入后还得判断是否有重复的库位,集装箱号是否重复，返回-1是不重复
-				if (this.subList.findIndex((v) => {
-					return v.storeCode === this.ioSub.storeCode
-				}) !== -1) {
-					this.$message.warning("库货已被其它箱选中")
-					return
-				}
-
-				if (this.subList.findIndex((v) => {
-					return v.containerNo === this.ioSub.containerNo
-				}) !== -1
-				) {
-					this.$message.warning("集装箱号已添加")
-					return
-				}
-
-				//this.subList.push(cloneObject(this.ioSub))
-				this.ioSub.yardId = this.form.yardId
-				this.subList.push({...this.ioSub})
-				//this.form.containerCount = this.subList.length
-				this.ioSub.containerNo = ''//清空集装箱号
-				this.ioSub.zoneCode = ''
-				this.ioSub.storeCode = '' //清空货位号
-				this.ioSub.isHeavy = ''
-				this.ioSub.remark = ''
-
-				console.log(this.subList)
-				console.log(this.form.containerCount)
+				
 			},
 			/** 查询集装箱进出记录 列表 */
 			/*getList() {
@@ -513,7 +688,7 @@
 			handleAdd() {
 				//this.reset();
 				this.open = true;
-				this.title = "添加集装箱进出记录 ";
+				this.title = "添加集装箱信息";
 			},
 			/** 修改按钮操作 */
 			handleUpdate(row) {
@@ -522,7 +697,7 @@
 				getIo(id).then(response => {
 					this.form = response.data;
 					this.open = true;
-					this.title = "修改集装箱进出记录 ";
+					this.title = "修改集装箱信息";
 				});
 			},
 			//自动设置单证用途
@@ -545,18 +720,10 @@
 			},
 			/** 删除集装箱列表按钮操作 */
 			handleDelete(index, row) {
-				console.log(index)
-				console.log(row)
 				this.subList.splice(index, 1)
 				//this.form.containerCount = this.subList.length
 				console.log(this.subList)
 
-			},
-			/** 导出按钮操作 */
-			handleExport() {
-				this.download('yard/io/export', {
-					...this.queryParams
-				}, `yard_io.xlsx`)
 			},
 			//获取堆场的区域列表
 			getYardZoneList() {
@@ -589,8 +756,11 @@
 				} else {
 					this.storeList = []
 				}
+			},
+			generateId() {
+				this.form.ioNo = this.form.yardId + '-' + this.form.ioState + "-" + genTimeCode(new Date())
+				this.$forceUpdate() //强刷
 			}
 		}
 	}
-	;
 </script>

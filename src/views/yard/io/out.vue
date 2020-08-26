@@ -3,8 +3,12 @@
     <el-form ref="form" :model="form" :rules="rules" label-width="120px">
       <el-row :gutter="10">
         <el-col :span="6">
-          <el-form-item label="出库单号" prop="businessNo" :disabled="true">
-            <el-input v-model="form.businessNo" placeholder="请输入出库单号"/>
+          <el-form-item label="入库单号" prop="ioNo">
+            <el-input v-model="form.ioNo" placeholder="请输入入库单号">
+              <template slot="append">
+                <el-button type="primary" icon="el-icon-magic-stick" @click="generateId"></el-button>
+              </template>
+            </el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -303,6 +307,7 @@
 	import {listStoreCanUse} from '@/api/yard/store'
 	import {getStore_detail_byStoreCode} from '@/api/yard/store_detail'
 	import {listStore_detail} from '@/api/yard/store_detail'
+	import {genTimeCode} from '@/utils/common'
 
 	export default {
 		name: "IoOut",
@@ -622,6 +627,10 @@
 							this.ioSub = {...response.rows[0]}
 						}
 					})
+			},
+			generateId() {
+				this.form.ioNo = this.form.yardId + '-' + this.form.ioState + "-" + genTimeCode(new Date())
+				console.log(this.form.ioNo)
 			},
 		}
 	}
