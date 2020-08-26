@@ -397,7 +397,7 @@ import {
   delBody,
   init,
   check
-} from "@/api/bulkgoods/declare";
+} from "@/api/bulkgoods/waybill/declare";
 
 import {listInfo} from "@/api/basis/enterpriseInfo";
 

@@ -128,7 +128,7 @@ import {
   exportDeclare,
   artificial,
   del
-} from "@/api/bulkgoods/declare";
+} from "@/api/bulkgoods/waybill/declare";
 export default {
   data() {
     return {

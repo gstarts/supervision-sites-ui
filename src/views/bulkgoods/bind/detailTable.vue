@@ -346,7 +346,7 @@ import {
   addWaybill,
   autoAllocation,
   subReject
-} from "@/api/bulkgoods/declare";
+} from "@/api/bulkgoods/waybill/declare";
 
 
 export default {

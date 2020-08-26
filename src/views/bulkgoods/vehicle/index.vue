@@ -159,7 +159,7 @@ import {
   updateVehicle,
   exportVehicle,
   importTemplate
-} from "@/api/bulkgoods/vehicle";
+} from "@/api/bulkgoods/waybill/vehicle";
 import {listInfo} from "@/api/basis/enterpriseInfo";
 import { getToken } from "@/utils/auth";
 export default {

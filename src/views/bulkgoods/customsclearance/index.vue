@@ -161,7 +161,7 @@ import {
   updateCustoms,
   exportCustoms,
   importTemplate
-} from "@/api/bulkgoods/customs";
+} from "@/api/bulkgoods/waybill/customs";
 
 import {listInfo} from "@/api/basis/enterpriseInfo";
 

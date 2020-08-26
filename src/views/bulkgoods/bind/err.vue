@@ -110,7 +110,7 @@ import {
   updateBody,
   del,
   exportDeclare
-} from "@/api/bulkgoods/declare";
+} from "@/api/bulkgoods/waybill/declare";
 export default {
   data() {
     return {
