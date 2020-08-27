@@ -17,7 +17,7 @@ const router = {
     {
       path: 'tallyingReportChange',
       name: 'tallyingReportChange',
-      component: (resolve) => require(['@/views/index'], resolve),
+      component: (resolve) => require(['@/views/page/tallyingReport/tallyingReportChange'], resolve),
       meta: { title: '进口理货删除申请', icon: 'dashboard', noCache: true }
     },
     {

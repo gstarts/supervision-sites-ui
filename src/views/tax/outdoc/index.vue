@@ -1,6 +1,21 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="保税库" prop="deptId">
+        <el-select
+          v-model="queryParams.deptId"
+          placeholder="请输入保税库ID"
+          clearable
+          size="small"
+          @change="handleQuery">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="出库单号" prop="outDocNo">
         <el-input
           v-model="queryParams.outDocNo"
@@ -76,16 +91,40 @@
         fixed="right"
       >
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-document" @click="handleDtl(scope.row)">查看明细</el-button>
+          <el-button size="mini" type="text" icon="el-icon-document" @click="handleDtl(scope.row)">明细管理</el-button>
           <el-button
-            v-if="scope.row.status !== 1"
+            size="mini"
+            type="text"
+            icon="el-icon-document"
+            @click="handleInfo(scope.row)"
+          >查看
+          </el-button>
+          <el-button
+            v-if="scope.row.status == 0"
             size="mini"
             type="text"
             icon="el-icon-plus"
-            @click="handleStatusChange(scope.row)"
-          >确认</el-button>
+            @click="handleStatusChangeTj(scope.row)"
+          >提交
+          </el-button>
           <el-button
-            v-if="scope.row.status !== 1"
+            v-if="scope.row.status == 1"
+            size="mini"
+            type="text"
+            icon="el-icon-plus"
+            @click="handleStatusChangeShtg(scope.row)"
+          >确认通过
+          </el-button>
+          <el-button
+            v-if="scope.row.status == 1"
+            size="mini"
+            type="text"
+            icon="el-icon-plus"
+            @click="handleStatusChangeShbtg(scope.row)"
+          >确认不通过
+          </el-button>
+          <el-button
+            v-if="scope.row.status == 0"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -93,7 +132,7 @@
             v-hasPermi="['tax:outdoc:edit']"
           >修改</el-button>
           <el-button
-            v-if="scope.row.status !== 1"
+            v-if="scope.row.status == 0"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -112,27 +151,159 @@
       @pagination="getList"
     />
 
+    <!-- 出库单详细 -->
+    <el-dialog :title="infotitle" :visible.sync="infoopen" append-to-body>
+      <el-form ref="infoform" :model="infoform"  label-width="120px">
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="保税库" prop="deptId">
+              <el-input v-model="info.deptNo" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="出库单号" prop="outDocNo">
+              <el-input v-model="info.outDocNo" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="出库通知单号" prop="outNoticeDocNoDocNo">
+              <el-input v-model="info.outNoticeDocNo" readonly/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="寄舱客户名称" prop="sendCustomerName">
+              <el-input v-model="info.sendCustomerName" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="结算客户名称" prop="settlementCustomerName">
+              <el-input v-model="info.settlementCustomerName" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="装货方式" prop="loadingMethod">
+              <el-input v-model="info.loadingMethod" readonly/>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="操作员" prop="operationUser">
+              <el-input v-model="info.operationUser" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="仓管员" prop="storekeeper">
+              <el-input v-model="info.storekeeper" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="出仓日期" prop="warehousingDate">
+              <el-input v-model="info.warehousingDate" readonly/>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="进境时间" prop="entryTime">
+              <el-input v-model="info.entryTime" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="计费日期" prop="billingDate">
+              <el-input v-model="info.billingDate" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="操作方式" prop="operationMode">
+              <el-input v-model="info.operationMode" readonly/>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="业务编号" prop="businessNo">
+              <el-input v-model="info.businessNo" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="总计费吨" prop="totalChargeTons">
+              <el-input v-model="info.totalChargeTons" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="OT序号" prop="otSerialNo">
+              <el-input v-model="info.otSerialNo" readonly/>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="业务归属" prop="businessOwnership">
+              <el-input v-model="info.businessOwnership" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="录入人" prop="inputUserName">
+              <el-input v-model="info.inputUserName" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="备注" prop="remarks">
+              <el-input v-model="info.remarks" readonly/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-dialog>
+
     <!-- 添加或修改出库单对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row>
+          <el-col :span="8">
+            <el-form-item label="保税库" prop="deptId">
+              <el-select v-model="form.deptId" placeholder="请选择保税库">
+                <el-option
+                  v-for="dept in depts"
+                  :key="dept.deptId"
+                  :label="dept.deptName"
+                  :value="dept.deptId"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="8">
             <el-form-item label="出库单号" prop="outDocNo">
               <el-input v-model="form.outDocNo" placeholder="请输入出库单号" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="出库通知单号" prop="outNoticeDocNo">
-              <el-input v-model="form.outNoticeDocNo" placeholder="请输入出库通知单号" />
+            <el-form-item label="出库通知单号" prop="outNoticeDocId">
+              <el-select v-model="form.outNoticeDocId" placeholder="请选择出库通知单"  @change="chooseNoticeDocId($event)">
+                <el-option
+                  v-for="doc in outNoticeList"
+                  :key="doc.outNoticeDocId"
+                  :label="doc.outNoticeDocNo"
+                  :value="doc.outNoticeDocId"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
+
+        </el-row>
+        <el-row>
           <el-col :span="8">
             <el-form-item label="寄舱客户名称" prop="sendCustomerName">
               <el-input v-model="form.sendCustomerName" placeholder="请输入寄舱客户名称" />
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="8">
             <el-form-item label="结算客户名称" prop="settlementCustomerName">
               <el-input v-model="form.settlementCustomerName" placeholder="请输入结算客户名称" />
@@ -150,13 +321,14 @@
               </el-select>
             </el-form-item>
           </el-col>
+
+        </el-row>
+        <el-row>
           <el-col :span="8">
             <el-form-item label="操作员" prop="operationUser">
               <el-input v-model="form.operationUser" placeholder="请输入操作员" />
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="8">
             <el-form-item label="仓管员" prop="storekeeper">
               <el-input v-model="form.storekeeper" placeholder="请输入仓管员" />
@@ -175,6 +347,9 @@
               ></el-date-picker>
             </el-form-item>
           </el-col>
+
+        </el-row>
+        <el-row>
           <el-col :span="8">
             <el-form-item label="进境时间" prop="entryTime">
               <el-date-picker
@@ -188,8 +363,6 @@
               ></el-date-picker>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="8">
             <el-form-item label="计费日期" prop="billingDate">
               <el-date-picker
@@ -215,13 +388,14 @@
               </el-select>
             </el-form-item>
           </el-col>
+
+        </el-row>
+        <el-row>
           <el-col :span="8">
             <el-form-item label="业务编号" prop="businessNo">
               <el-input v-model="form.businessNo" placeholder="请输入业务编号" />
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="8">
             <el-form-item label="总计费吨" prop="totalChargeTons">
               <el-input v-model="form.totalChargeTons" placeholder="请输入总计费吨" />
@@ -232,13 +406,14 @@
               <el-input v-model="form.otSerialNo" placeholder="请输入OT序号" />
             </el-form-item>
           </el-col>
+
+        </el-row>
+        <el-row>
           <el-col :span="8">
             <el-form-item label="业务归属" prop="businessOwnership">
               <el-input v-model="form.businessOwnership" placeholder="请输入业务归属" />
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="8">
             <el-form-item label="录入人">
                 <el-input v-model="form.inputUserName" placeholder />
@@ -267,7 +442,10 @@ import {
   addOutdoc,
   updateOutdoc,
   changeDocStatus,
+  getOutNoticeList,
+  changeDocStatusOnly
 } from "@/api/tax/outdoc";
+import {getUserDepts} from "@/utils/charutils";
 
 export default {
   name: "Outdoc",
@@ -285,10 +463,18 @@ export default {
       total: 0,
       // 出库单表格数据
       outdocList: [],
+      //保税库列表
+      depts: [],
+      //第一个
+      deptId: 0,
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      // 弹出层标题
+      infotitle: "",
+      // 是否显示弹出层
+      infoopen: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -327,18 +513,40 @@ export default {
       },
       // 表单参数
       form: {},
+      // 表单参数
+      infoform: {},
+      info: {},
       // 表单校验
-      rules: {},
+      rules: {
+        deptId: [
+          {required: true, message: "请选择保税库", trigger: "blur"},
+        ],
+        outDocNo: [
+          {required: true, message: "请输入出库单单号", trigger: "blur"},
+        ],
+        outNoticeDocNo: [
+          {required: true, message: "请输入出库通知单单号", trigger: "blur"},
+        ],
+      },
       // 装货方式字典
       packOptions: [],
       // 操作方式字典
       handleOptions: [],
       // 日期范围
       dateRange: [],
+      //出库通知单列表
+      outNoticeList: [],
     };
   },
   created() {
-    this.getList();
+    // 0 监管场所，1保税库，2堆场，3企业
+    this.depts = getUserDepts('1')
+    if (this.depts.length > 0) {
+      //默认选中第一个
+      this.queryParams.deptId = this.depts[0].deptId;
+      this.deptId = this.depts[0].deptId;
+      this.getList()
+    }
        //加载装货方式字典
     this.getDicts("tax_pack_type").then((response) => {
       this.packOptions = response.data;
@@ -347,6 +555,7 @@ export default {
     this.getDicts("tax_handle_type").then((response) => {
       this.handleOptions = response.data;
     });
+    this.getNoticeList();
   },
   methods: {
     /** 查询出库单列表 */
@@ -392,6 +601,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.form.deptId = this.deptId;
       this.open = true;
       this.title = "添加出库单";
     },
@@ -403,8 +613,22 @@ export default {
         this.form = response.data;
         this.form.loadingMethod = String(response.data.loadingMethod);
         this.form.operationMode = String(response.data.operationMode);
+        this.form.deptId = response.data.deptId;
         this.open = true;
         this.title = "修改出库单";
+      });
+    },
+    /** 查看按钮操作 */
+    handleInfo(row) {
+      const outDocId = row.outDocId;
+      getOutdoc(outDocId).then((response) => {
+        this.info = response.data;
+        this.info.deptNo=this.getDeptName(row.deptId);
+        this.info.status=this.statusFormat(response.data.status);
+        this.info.loadingMethod=this.selectDictLabel(this.packOptions, String(response.data.loadingMethod));
+        this.info.operationMode=this.selectDictLabel(this.handleOptions, String(response.data.operationMode));
+        this.infoopen = true;
+        this.infotitle = "查看出库单";
       });
     },
     /** 提交按钮 */
@@ -464,9 +688,50 @@ export default {
       });
     },
 
+    //查询未出库库的通知单
+    getNoticeList(){
+      getOutNoticeList().then((response) => {
+        this.outNoticeList=response.rows;
+      });
+    },
+
+    //查询未入库的通知单
+    chooseNoticeDocId(noticeDocId){
+      this.outNoticeList.some((item,i)=>{
+        if(item.outNoticeDocId==noticeDocId){
+          this.form.sendCustomerName= item.sendCustomerName;
+          this.form.settlementCustomerName= item.sendCustomerName;
+          this.form.loadingMethod=String(item.loadingMethod);
+          this.form.operationMode=String(item.operationMode);
+          this.form.businessNo= item.businessNumber;
+          this.form.totalChargeTons= item.totalChargeTons;
+          this.form.otSerialNo= item.otSerialNo;
+          this.form.carNo= item.carNo;
+          this.form.remarks= item.remarks;
+          return true
+        }
+      });
+    },
+
+
     //状态修改
-    handleStatusChange(row) {
-      this.$confirm("确认要确认入库单吗?", "提示", {
+    handleStatusChangeTj(row) {
+      this.$confirm("确认要提交出库单吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
+          return changeDocStatusOnly(row.outDocId,1);
+        })
+        .then(() => {
+          this.msgSuccess("提交成功");
+          this.getList();
+        });
+    },
+    //确认修改
+    handleStatusChangeShtg(row) {
+      this.$confirm("确认要确认通过出库单吗?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -479,14 +744,44 @@ export default {
           this.getList();
         });
     },
-
+    //确认不通过修改
+    handleStatusChangeShbtg(row) {
+      this.$confirm("确认要确认不通过出库单吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
+          return changeDocStatusOnly(row.outDocId,0);
+        })
+        .then(() => {
+          this.msgSuccess("操作成功");
+          this.getList();
+        });
+    },
     //状态处理
     statusFormat(row, column) {
       if (row.status == "0") {
         return "录入";
-      } else {
-        return "已审核";
       }
+      else if(row.status == "1")
+      {
+        return "已提交";
+      }
+      else if(row.status == "2"){
+        return "已确认";
+      }
+    },
+    //查询未入库的通知单
+    getDeptName(deptId){
+      var deptName="";
+      this.depts.some((item,i)=>{
+        if(item.deptId==deptId){
+          deptName= item.deptName;
+          return true
+        }
+      });
+      return deptName;
     },
     /** 导出按钮操作 */
     handleExport() {

@@ -44,9 +44,23 @@ export function delMovedoc(moveDocId) {
 }
 
 // 状态修改
+export function changeDocStatusOnly(moveDocId, status) {
+  const data = {
+    moveDocId,
+    status
+  }
+  return request({
+    url: '/tax/movedoc',
+    method: 'put',
+    data: data
+  })
+}
+
+// 确认修改
 export function changeDocStatus(moveDocId) {
   return request({
     url: '/tax/movedoc/changeStatus/'+moveDocId,
     method: 'post'
   })
 }
+

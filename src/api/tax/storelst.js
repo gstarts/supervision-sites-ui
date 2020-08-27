@@ -42,3 +42,12 @@ export function delStorelst(storeLstId) {
     method: 'delete'
   })
 }
+
+// 查询入库细单列表
+export function listByStoreid(storeId) {
+  return request({
+    url: '/tax/storelst/storeId/'+storeId,
+    method: 'get'
+  })
+}
+

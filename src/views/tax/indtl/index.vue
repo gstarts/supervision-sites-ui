@@ -1,166 +1,176 @@
 <template>
   <div class="app-container">
-    <el-form ref="addform" :model="addform" :rules="addfromRules" label-width="120px" v-if="this.inDocStatus!== 1 && this.inDocStatus!== '1'">
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="货物大类" prop="cargoCategory">
-            <el-select v-model="addform.cargoCategory">
-              <el-option
-                v-for="dict in classOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="CPO&PO" prop="cpoPo">
-            <el-input v-model="addform.cpoPo" placeholder="请输入CPO&PO" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="快捷码" prop="shortcutCode">
-            <el-input v-model="addform.shortcutCode" placeholder="请输入快捷码" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="货号" prop="articleNumber">
-            <el-input v-model="addform.articleNumber" placeholder="请输入货号" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="品名" prop="productName">
-            <el-input v-model="addform.productName" placeholder="请输入品名" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="件数单位" prop="packagesUnit">
-            <el-select v-model="addform.packagesUnit">
-              <el-option
-                v-for="dict in unitOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="件数" prop="packages">
-            <el-input v-model="addform.packages" placeholder="请输入件数" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="毛重(KGS)" prop="grossWeight">
-            <el-input v-model="addform.grossWeight" placeholder="请输入毛重(KGS)" oninput="value=value.replace(/[^\d.]/g,'')"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="唛头" prop="shippingMarks">
-            <el-input v-model="addform.shippingMarks" placeholder="请输入唛头" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="SRN号" prop="srnNo">
-            <el-input v-model="addform.srnNo" placeholder="请输入SRN号" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="批次" prop="batch">
-            <el-input v-model="addform.batch" placeholder="请输入批次" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="Bag NO" prop="bagNo">
-            <el-input v-model="addform.bagNo" placeholder="请输入Bag NO" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="数量单位" prop="countUnit">
-            <el-select v-model="addform.countUnit">
-              <el-option
-                v-for="dict in unitOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="基准数量" prop="baseQuantity">
-            <el-input v-model="addform.baseQuantity" placeholder="请输入基准数量" oninput="value=value.replace(/[^\d.]/g,'')"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="净重(KGS)" prop="netWeight">
-            <el-input v-model="addform.netWeight" placeholder="请输入净重(KGS)" oninput="value=value.replace(/[^\d.]/g,'')"/>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="皮重(KGS)" prop="tareWeight">
-            <el-input v-model="addform.tareWeight" placeholder="请输入皮重(KGS)" oninput="value=value.replace(/[^\d.]/g,'')"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="计费面积" prop="billingArea">
-            <el-input v-model="addform.billingArea" placeholder="请输入计费面积" oninput="value=value.replace(/[^\d.]/g,'')"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="调度库位" prop="storeId">
-            <el-select v-model="addform.storeId">
-              <el-option
-                v-for="dict in storeOptions"
-                :key="dict.storeId"
-                :label="dict.storeNo"
-                :value="dict.storeId"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="仓管小组" prop="warehouseManagementTeam">
-            <el-input v-model="addform.warehouseManagementTeam" placeholder="请输入仓管小组" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="进报关单号" prop="customsDeclarationNo">
-            <el-input v-model="addform.customsDeclarationNo" placeholder="请输入进报关单号" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="业务编号" prop="businessNo">
-            <el-input v-model="addform.businessNo" placeholder="请输入业务编号" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="品质" prop="quality">
-            <el-input v-model="addform.quality" placeholder="请输入品质" />
-          </el-form-item>
-        </el-col>
+<!--    <el-form ref="addform" :model="addform" :rules="addfromRules" label-width="120px" v-if="this.inDocStatus!== 1 && this.inDocStatus!== '1'">-->
+<!--      <el-row>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="货物大类" prop="cargoCategory">-->
+<!--            <el-select v-model="addform.cargoCategory">-->
+<!--              <el-option-->
+<!--                v-for="dict in classOptions"-->
+<!--                :key="dict.dictValue"-->
+<!--                :label="dict.dictLabel"-->
+<!--                :value="dict.dictValue"-->
+<!--              ></el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="CPO&PO" prop="cpoPo">-->
+<!--            <el-input v-model="addform.cpoPo" placeholder="请输入CPO&PO" />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="快捷码" prop="shortcutCode">-->
+<!--            <el-input v-model="addform.shortcutCode" placeholder="请输入快捷码" />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--      </el-row>-->
+<!--      <el-row>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="货号" prop="articleNumber">-->
+<!--            <el-input v-model="addform.articleNumber" placeholder="请输入货号" />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="品名" prop="productName">-->
+<!--            <el-input v-model="addform.productName" placeholder="请输入品名" />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="件数单位" prop="packagesUnit">-->
+<!--            <el-select v-model="addform.packagesUnit">-->
+<!--              <el-option-->
+<!--                v-for="dict in unitOptions"-->
+<!--                :key="dict.dictValue"-->
+<!--                :label="dict.dictLabel"-->
+<!--                :value="dict.dictValue"-->
+<!--              ></el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--      </el-row>-->
+<!--      <el-row>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="件数" prop="packages">-->
+<!--            <el-input v-model="addform.packages" placeholder="请输入件数" />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="毛重(KGS)" prop="grossWeight">-->
+<!--            <el-input v-model="addform.grossWeight" placeholder="请输入毛重(KGS)" oninput="value=value.replace(/[^\d.]/g,'')"/>-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="唛头" prop="shippingMarks">-->
+<!--            <el-input v-model="addform.shippingMarks" placeholder="请输入唛头" />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--      </el-row>-->
+<!--      <el-row>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="SRN号" prop="srnNo">-->
+<!--            <el-input v-model="addform.srnNo" placeholder="请输入SRN号" />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="批次" prop="batch">-->
+<!--            <el-input v-model="addform.batch" placeholder="请输入批次" />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="Bag NO" prop="bagNo">-->
+<!--            <el-input v-model="addform.bagNo" placeholder="请输入Bag NO" />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--      </el-row>-->
+<!--      <el-row>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="数量单位" prop="countUnit">-->
+<!--            <el-select v-model="addform.countUnit">-->
+<!--              <el-option-->
+<!--                v-for="dict in unitOptions"-->
+<!--                :key="dict.dictValue"-->
+<!--                :label="dict.dictLabel"-->
+<!--                :value="dict.dictValue"-->
+<!--              ></el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="基准数量" prop="baseQuantity">-->
+<!--            <el-input v-model="addform.baseQuantity" placeholder="请输入基准数量" oninput="value=value.replace(/[^\d.]/g,'')"/>-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="净重(KGS)" prop="netWeight">-->
+<!--            <el-input v-model="addform.netWeight" placeholder="请输入净重(KGS)" oninput="value=value.replace(/[^\d.]/g,'')"/>-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--      </el-row>-->
+<!--      <el-row>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="皮重(KGS)" prop="tareWeight">-->
+<!--            <el-input v-model="addform.tareWeight" placeholder="请输入皮重(KGS)" oninput="value=value.replace(/[^\d.]/g,'')"/>-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="计费面积" prop="billingArea">-->
+<!--            <el-input v-model="addform.billingArea" placeholder="请输入计费面积" oninput="value=value.replace(/[^\d.]/g,'')"/>-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="调度库位" prop="storeId">-->
+<!--            <el-select v-model="addform.storeId">-->
+<!--              <el-option-->
+<!--                v-for="dict in storeOptions"-->
+<!--                :key="dict.storeId"-->
+<!--                :label="dict.storeNo"-->
+<!--                :value="dict.storeId"-->
+<!--              ></el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--      </el-row>-->
+<!--      <el-row>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="仓管小组" prop="warehouseManagementTeam">-->
+<!--            <el-input v-model="addform.warehouseManagementTeam" placeholder="请输入仓管小组" />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="进报关单号" prop="customsDeclarationNo">-->
+<!--            <el-input v-model="addform.customsDeclarationNo" placeholder="请输入进报关单号" />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="业务编号" prop="businessNo">-->
+<!--            <el-input v-model="addform.businessNo" placeholder="请输入业务编号" />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--      </el-row>-->
+<!--      <el-row>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="品质" prop="quality">-->
+<!--            <el-input v-model="addform.quality" placeholder="请输入品质" />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
 
-        <el-col :span="4">
-          <el-button type="primary" @click="submitAddForm">确 定</el-button>
-        </el-col>
-      </el-row>
-    </el-form>
-
+<!--        <el-col :span="4">-->
+<!--          <el-button type="primary" @click="submitAddForm">确 定</el-button>-->
+<!--        </el-col>-->
+<!--      </el-row>-->
+<!--    </el-form>-->
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['tax:indocdtl:export']"
+        >导出</el-button>
+      </el-col>
+    </el-row>
     <el-table v-loading="loading" :data="indtlList" @selection-change="handleSelectionChange">
       <el-table-column label="入库单号" align="center">{{ inDocNo }}</el-table-column>
       <el-table-column label="货物大类" align="center" prop="cargoCategory" :formatter="classFormat" />
@@ -186,30 +196,30 @@
       <el-table-column label="业务编号" align="center" prop="businessNo" />
       <el-table-column label="品质" align="center" prop="quality" />
       <el-table-column label="备注" align="center" prop="remarks" />
-      <el-table-column
-        v-if="this.inDocStatus!== 1 && this.inDocStatus!== '1'"
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-        fixed="right"
-      >
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['tax:indtl:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['tax:indtl:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        v-if="this.inDocStatus!== 1 && this.inDocStatus!== '1'"-->
+<!--        label="操作"-->
+<!--        align="center"-->
+<!--        class-name="small-padding fixed-width"-->
+<!--        fixed="right"-->
+<!--      >-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['tax:indtl:edit']"-->
+<!--          >修改</el-button>-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['tax:indtl:remove']"-->
+<!--          >删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -394,7 +404,7 @@ import {
   addIndtl,
   updateIndtl,
   listIndtlbydocid,
-  listStores,
+  listByDept,
 } from "@/api/tax/indtl";
 
 export default {
@@ -432,6 +442,8 @@ export default {
       inDocNo: this.$route.query.docNo,
       //总单状态
       inDocStatus: this.$route.query.docStatus,
+      //总单部门ID
+      deptId: this.$route.query.docDeptId,
       // 装货物大类字典
       classOptions: [],
       // 单位字典
@@ -453,7 +465,7 @@ export default {
         storeId: [
           { required: true, message: "请选择货位", trigger: "blur" },
         ],
-        
+
       },
       // 表单校验
       updateFormRules: {
@@ -503,7 +515,7 @@ export default {
     },
      /** 查询库位 */
     getStores() {
-      listStores().then((response) => {
+       listByDept(this.deptId).then((response) => {
         this.storeOptions = response.rows;
       });
     },
@@ -602,6 +614,7 @@ export default {
                 this.msgSuccess("新增成功");
                 this.open = false;
                 this.getDtlData(this.inDocId);
+                this.resetForm("addform");
               }
             });
           }

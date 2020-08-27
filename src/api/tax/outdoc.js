@@ -44,9 +44,30 @@ export function delOutdoc(outDocId) {
 }
 
 // 状态修改
+export function changeDocStatusOnly(outDocId, status) {
+  const data = {
+    outDocId,
+    status
+  }
+  return request({
+    url: '/tax/outdoc',
+    method: 'put',
+    data: data
+  })
+}
+
+// 确认
 export function changeDocStatus(outDocId) {
   return request({
     url: '/tax/outdoc/changeStatus/'+outDocId,
     method: 'post'
+  })
+}
+
+// 查询未入库的
+export function getOutNoticeList() {
+  return request({
+    url: '/tax/outnoticedoc/notOutList/',
+    method: 'get'
   })
 }

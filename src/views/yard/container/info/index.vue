@@ -205,74 +205,69 @@
     <!-- 添加或修改集装箱基本信息对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="集装箱号" prop="containerNo">
-          <el-input v-model="form.containerNo" placeholder="请输入集装箱号" />
-        </el-form-item>
-        <el-form-item label="RFID_NO" prop="rfidNo">
-          <el-input v-model="form.rfidNo" placeholder="请输入RFID_NO" />
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="form.state" placeholder="请选择状态">
-            <el-option
-              v-for="dict in stateOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="parseInt(dict.dictValue)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="是否可用">
-          <el-select v-model="form.enabled" placeholder="请选择是否可用">
-            <el-option
-              v-for="dict in enabledOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="parseInt(dict.dictValue)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="是否在用">
-          <el-select v-model="form.used" placeholder="请选择是否在用">
-            <el-option
-              v-for="dict in usedOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="parseInt(dict.dictValue)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="箱属" prop="attrId">
-          <el-select v-model="form.attrId" placeholder="请选择属性">
-            <el-option
-              v-for="item in container_attributeList"
-              :key="item.attrId"
-              :label="item.boxName+'-'+item.boxType"
-              :value="item.attrId" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="空重箱状态">
-          <el-select v-model="form.heavy" placeholder="请选择空重箱状态">
-            <el-option
-              v-for="dict in heavyOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="parseInt(dict.dictValue)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="在场状态">
-          <el-select v-model="form.insite" placeholder="请选择在场状态">
-            <el-option
-              v-for="dict in insiteOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="parseInt(dict.dictValue)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="场所ID" prop="siteId">
-          <el-input v-model="form.siteId" placeholder="请输入场所ID" />
-        </el-form-item>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="集装箱号" prop="containerNo">
+              <el-input v-model="form.containerNo" placeholder="请输入集装箱号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="RFID_NO" prop="rfidNo">
+              <el-input v-model="form.rfidNo" placeholder="请输入RFID_NO" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="状态" prop="state">
+              <el-select v-model="form.state" placeholder="请选择状态">
+                <el-option
+                  v-for="dict in stateOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="是否可用" prop="enabled">
+              <el-select v-model="form.enabled" placeholder="请选择是否可用">
+                <el-option
+                  v-for="dict in enabledOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="是否在用" prop="used">
+              <el-select v-model="form.used" placeholder="请选择是否在用">
+                <el-option
+                  v-for="dict in usedOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="箱属" prop="attrId">
+              <el-select v-model="form.attrId" placeholder="请选择属性">
+                <el-option
+                  v-for="item in container_attributeList"
+                  :key="item.attrId"
+                  :label="item.boxName+'-'+item.boxType"
+                  :value="item.attrId" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
         </el-form-item>
@@ -340,6 +335,18 @@
 				rules: {
 					containerNo: [
 						{ required: true, message: "集装箱号不能为空", trigger: "blur" }
+					],
+          state: [
+	          { required: true, message: "状态不能为空", trigger: "change" }
+          ],
+					used: [
+						{ required: true, message: "是否在用不能为空", trigger: "change" }
+					],
+					enabled: [
+						{ required: true, message: "是否可用不能为空", trigger: "change" }
+					],
+					attrId: [
+						{ required: true, message: "箱属不能为空", trigger: "change" }
 					],
 				}
 			};
