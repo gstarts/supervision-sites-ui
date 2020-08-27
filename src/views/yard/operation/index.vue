@@ -231,7 +231,7 @@
         </el-row>
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="原区域" prop="odlZoneCode">
+            <el-form-item label="原区域" prop="oldZoneCode">
               <el-select v-model="form.oldZoneCode" placeholder="请输入区域" @change="listStore">
                 <el-option
                   v-for="zone in zoneList"

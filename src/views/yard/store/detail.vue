@@ -136,7 +136,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-
+    
     <el-row :gutter="10" class="mb8">
       <!--<el-col :span="1.5">
         <el-button
@@ -174,35 +174,36 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['yard:store_detail:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
     </el-row>
-
+    
     <el-table v-loading="loading" :data="store_detailList">
       <!--<el-table-column type="selection" width="55" align="center" />-->
       <!--<el-table-column label="ID" align="center" prop="id" />-->
-      <el-table-column label="堆场" align="center" prop="yardId"  :fixed="true">
+      <el-table-column label="堆场" align="center" prop="yardId" :fixed="true">
         <template slot-scope="scope">
           {{depts.find(item=>item.deptId === scope.row.yardId).deptName}}
         </template>
       </el-table-column>
       <!--<el-table-column label="区域ID" align="center" prop="zoneId" />-->
-      <el-table-column label="区域编号" align="center" prop="zoneCode" />
-      <el-table-column label="库位号" align="center" prop="storeCode" width="100px" />
-      <el-table-column label="报关单号" align="center" prop="declarationNo" />
-      <el-table-column label="集装箱号" align="center" prop="containerNo" width="100px" />
-      <el-table-column label="空/重状态" align="center" prop="isHeavy" />
-      <el-table-column label="货物批次号" align="center" prop="goodsBatchNo" width="100px" />
-      <el-table-column label="货物名称" align="center" prop="goodsName" />
-      <el-table-column label="货物种类" align="center" prop="goodsType" />
-      <el-table-column label="件数单位" align="center" prop="countUnit" />
-      <el-table-column label="毛重(KG)" align="center" prop="roughWight" />
-      <el-table-column label="净重(KG)" align="center" prop="netWight" />
+      <el-table-column label="区域编号" align="center" prop="zoneCode"/>
+      <el-table-column label="库位号" align="center" prop="storeCode" width="100px"/>
+      <el-table-column label="报关单号" align="center" prop="declarationNo"/>
+      <el-table-column label="集装箱号" align="center" prop="containerNo" width="100px"/>
+      <el-table-column label="空/重状态" align="center" prop="isHeavy" :formatter="heavyStateFormat"/>
+      <el-table-column label="货物批次号" align="center" prop="goodsBatchNo" width="100px"/>
+      <el-table-column label="货物名称" align="center" prop="goodsName"/>
+      <el-table-column label="货物种类" align="center" prop="goodsType"/>
+      <el-table-column label="件数单位" align="center" prop="countUnit"/>
+      <el-table-column label="毛重(KG)" align="center" prop="roughWight"/>
+      <el-table-column label="净重(KG)" align="center" prop="netWight"/>
       <el-table-column label="货物标识码" align="center" prop="goodsIdentificationCode" width="100px"/>
-      <el-table-column label="数量单位" align="center" prop="numUnit" />
-      <el-table-column label="业务编号" align="center" prop="businessNo" />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="更新人" align="center" prop="updateBy" />
+      <el-table-column label="数量单位" align="center" prop="numUnit"/>
+      <el-table-column label="业务编号" align="center" prop="businessNo"/>
+      <el-table-column label="备注" align="center" prop="remark"/>
+      <el-table-column label="更新人" align="center" prop="updateBy"/>
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
@@ -239,97 +240,112 @@
 </template>
 
 <script>
-import { listStore_detail} from "@/api/yard/store_detail";
-import {getUserDepts} from '@/utils/charutils'
+	import {listStore_detail} from "@/api/yard/store_detail";
+	import {getUserDepts} from '@/utils/charutils'
 
-export default {
-  name: "Store_detail",
-  data() {
-    return {
-      // 遮罩层
-      loading: false,
-      // 选中数组
-      ids: [],
-      depts: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
-      // 总条数
-      total: 0,
-	    storeStateOptions:[],
-      // 堆场库存明细 表格数据
-      store_detailList: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
-      // 件数单位字典
-      countUnitOptions: [],
-      // 数量单位字典
-      numUnitOptions: [],
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 20,
-        yardId: undefined,
-        zoneCode: undefined,
-        storeCode: undefined,
-        storeState: undefined,
-        goodsBatchNo: undefined,
-        goodsName: undefined,
-        goodsIdentificationCode: undefined,
-        declarationNo: undefined,
-        businessNo: undefined,
-      },
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-        yardId: [
-          { required: true, message: "堆场ID不能为空", trigger: "blur" }
-        ],
-      }
-    };
-  },
-  created() {
-	  this.getDicts("yard_store_state").then(response => {
-		  this.storeStateOptions = response.data;
-	  })
-	  this.depts = getUserDepts('2')
-	  if (this.depts.length > 0) {
-		  this.queryParams.yardId = this.depts[0].deptId
-		  this.getList();
-	  }
-  },
-  methods: {
-    /** 查询堆场库存明细 列表 */
-    getList() {
-      this.loading = true;
-      listStore_detail(this.queryParams).then(response => {
-        this.store_detailList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
-    },
+	export default {
+		name: "Store_detail",
+		data() {
+			return {
+				// 遮罩层
+				loading: false,
+				// 选中数组
+				ids: [],
+				depts: [],
+				// 非单个禁用
+				single: true,
+				// 非多个禁用
+				multiple: true,
+				// 总条数
+				total: 0,
+				storeStateOptions: [],
+				// 堆场库存明细 表格数据
+				store_detailList: [],
+				// 弹出层标题
+				title: "",
+				heavyOptions: [],
+				// 是否显示弹出层
+				open: false,
+				// 件数单位字典
+				countUnitOptions: [],
+				// 数量单位字典
+				numUnitOptions: [],
+				// 查询参数
+				queryParams: {
+					pageNum: 1,
+					pageSize: 20,
+					yardId: undefined,
+					zoneCode: undefined,
+					storeCode: undefined,
+					storeState: undefined,
+					goodsBatchNo: undefined,
+					goodsName: undefined,
+					goodsIdentificationCode: undefined,
+					declarationNo: undefined,
+					businessNo: undefined,
+				},
+			};
+		},
+		created() {
+			//接收参数
+			let queryYardId = this.$route.query.yardId
+			let queryStoreCode = this.$route.query.storeCode
    
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
-    },
-    
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('yard/store_detail/export', {
-        ...this.queryParams
-      }, `yard_store_detail.xlsx`)
-    }
-  }
-};
+			this.getDicts("yard_store_state").then(response => {
+				this.storeStateOptions = response.data;
+			})
+			this.getDicts("yard_container_heavy_state").then(response => {
+				this.heavyOptions = response.data
+			});
+			this.depts = getUserDepts('2')
+			if (this.depts.length > 0) {
+				this.queryParams.yardId = this.depts[0].deptId
+				// 参数不为空，并非参数在用户权限范围内
+				if (typeof (queryYardId) != 'undefined' && this.depts.findIndex((v) => {
+					return v.deptId === queryYardId
+				}) !== -1) {
+					this.queryParams.yardId = queryYardId
+				}
+				if (typeof (queryStoreCode) != 'undefined') {
+					this.queryParams.storeCode = queryStoreCode
+				}
+
+				this.getList();
+			}
+		},
+		methods: {
+			heavyStateFormat(row, column) {
+				return this.selectDictLabel(this.heavyOptions, row.isHeavy);
+			},
+			/** 查询堆场库存明细 列表 */
+			getList() {
+				this.loading = true;
+				listStore_detail(this.queryParams).then(response => {
+					this.store_detailList = response.rows;
+					this.total = response.total;
+					this.loading = false;
+				});
+			},
+
+			/** 搜索按钮操作 */
+			handleQuery() {
+				this.queryParams.pageNum = 1;
+				this.getList();
+			},
+			/** 重置按钮操作 */
+			resetQuery() {
+				this.resetForm("queryForm");
+				this.queryParams.yardId = this.depts[0].deptId
+        this.queryParams.storeCode = ''
+				this.handleQuery();
+			},
+
+			/** 导出按钮操作 */
+			handleExport() {
+				this.download('yard/store_detail/export', {
+					...this.queryParams
+				}, `yard_store_detail.xlsx`)
+			}
+		}
+	};
 </script>

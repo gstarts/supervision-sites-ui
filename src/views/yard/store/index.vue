@@ -142,6 +142,23 @@
           <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="详情" align="center" >
+        <!--<template slot-scope="scope">
+          <router-link :to="'/yard/store/detail?yardId=' + scope.row.yardId+'&storeCode='+scope.row.storeCode" class="link-type">
+            <span>查看详情</span>
+          </router-link>
+        </template>-->
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="gotoDetail(scope.row)"
+            v-hasPermi="['yard:store_sub:list']"
+          >查看详情
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
     
     <pagination
@@ -223,10 +240,19 @@ export default {
     storeStateFormat(row, column) {
       return this.selectDictLabel(this.storeStateOptions, row.storeState);
     },
-    // 变更原因字典翻译
+    /*// 变更原因字典翻译
     updateReasonFormat(row, column) {
       return this.selectDictLabel(this.updateReasonOptions, row.updateReason);
-    },
+    },*/
+	  gotoDetail(row) {
+		  this.$router.push({
+			  path: '/yard/store/detail',
+			  query: {
+				  'yardId': row.yardId,
+				  'storeCode': row.storeCode
+			  }
+		  })
+	  },
     
     /** 搜索按钮操作 */
     handleQuery() {

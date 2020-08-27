@@ -109,7 +109,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['yard:io_sub:add']"
+          v-hasPermi="['yard:io:add']"
         >添加集装箱信息
         </el-button>
       </el-col>
@@ -200,13 +200,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="货位号" prop="storeCode">
-              <el-select v-model="ioSub.storeCode" placeholder="请输入货位">
+              <el-select v-model="ioSub.storeCode" placeholder="请选择货位" @change="refresh">
                 <el-option
                   v-for="store in storeList"
                   :key="store.id"
                   :label="store.storeCode"
-                  :value="store.storeCode"
-                />
+                  :value="store.storeCode"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -218,8 +217,8 @@
           <el-form-item label="进出场单号" prop="ioNo">
             <el-input v-model="ioSub.ioNo" placeholder="请输入进出场单号"/>
           </el-form-item>
-          <el-form-item label="堆场ID" prop="yardId">
-            <el-input v-model="ioSub.yardId" placeholder="请输入堆场ID"/>
+          <el-form-item label="堆场" prop="yardId">
+            <el-input v-model="ioSub.yardId" placeholder="请输入堆场"/>
           </el-form-item>
         </div>
         <el-row v-show="ioSub.isHeavy==='1'">
@@ -296,7 +295,6 @@
           <el-button type="primary" @click="addSub">添 加</el-button>
           <el-button @click="cancel">关 闭</el-button>
         </el-col>
-        
       </el-row>
       </el-form>
       
@@ -450,7 +448,6 @@
 	import {listZone} from '@/api/yard/zone'
 	import {listStoreCanUse} from '@/api/yard/store'
 	import {genTimeCode} from '@/utils/common'
-	import {addContainer_attribute, updateContainer_attribute} from '@/api/yard/container_attribute'
 
 	export default {
 		name: "IoIn",
@@ -708,11 +705,14 @@
 			submitForm: function () {
 				this.$refs["form"].validate(valid => {
 					if (valid) {
+						if(this.subList.length === 0){
+							this.$message.error("没有添加集装箱信息")
+              return
+            }
 						addIo({'io': this.form, 'subList': this.subList}).then(response => {
 							if (response.code === 200) {
 								this.msgSuccess("新增成功");
 								this.open = false;
-								this.getList();
 							}
 						});
 					}
@@ -760,7 +760,10 @@
 			generateId() {
 				this.form.ioNo = this.form.yardId + '-' + this.form.ioState + "-" + genTimeCode(new Date())
 				this.$forceUpdate() //强刷
-			}
+			},
+			refresh(){
+				this.$forceUpdate()
+      }
 		}
 	}
 </script>

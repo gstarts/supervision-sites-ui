@@ -238,10 +238,24 @@
 			};
 		},
 		created() {
+
+			let queryYardId = this.$route.query.yardId
+			let ioNo = this.$route.query.ioNo
+			
 			// 0 监管场所，1保税库，2堆场，3企业
 			this.depts = getUserDepts('2')
 			if (this.depts.length > 0) {
 				this.queryParams.yardId = this.depts[0].deptId
+
+				// 参数不为空，并非参数在用户权限范围内
+				if (typeof (queryYardId) != 'undefined' && this.depts.findIndex((v) => {
+					return v.deptId === queryYardId
+				}) !== -1) {
+					this.queryParams.yardId = queryYardId
+				}
+				if (typeof (ioNo) != 'undefined') {
+					this.queryParams.ioNo = ioNo
+				}
 				this.getList()
 			}
 		},
@@ -265,6 +279,8 @@
 			/** 重置按钮操作 */
 			resetQuery() {
 				this.resetForm("queryForm");
+				this.queryParams.ioNo = ''
+        this.queryParams.deptId = this.depts[0].deptId
 				this.handleQuery();
 			},
 			handleExport() {
