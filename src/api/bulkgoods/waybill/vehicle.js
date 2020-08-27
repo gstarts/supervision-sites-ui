@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询申报车辆列表
 export function listVehicle(query) {
   return request({
-    url: '/site/vehicle/list',
+    url: '/Portlogistics/vehicle/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listVehicle(query) {
 // 查询申报车辆详细
 export function getVehicle(id) {
   return request({
-    url: '/site/vehicle/' + id,
+    url: '/Portlogistics/vehicle/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getVehicle(id) {
 // 新增申报车辆
 export function addVehicle(data) {
   return request({
-    url: '/site/vehicle',
+    url: '/Portlogistics/vehicle',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addVehicle(data) {
 // 修改申报车辆
 export function updateVehicle(data) {
   return request({
-    url: '/site/vehicle',
+    url: '/Portlogistics/vehicle',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateVehicle(data) {
 // 删除申报车辆
 export function delVehicle(id) {
   return request({
-    url: '/site/vehicle/' + id,
+    url: '/Portlogistics/vehicle/' + id,
     method: 'delete'
   })
 }
@@ -46,7 +46,7 @@ export function delVehicle(id) {
 // 导出申报车辆
 export function exportVehicle(query) {
   return request({
-    url: '/site/vehicle/export',
+    url: '/Portlogistics/vehicle/export',
     method: 'get',
     params: query
   })
@@ -55,7 +55,7 @@ export function exportVehicle(query) {
   // 下载导入模板
   export function importTemplate() {
     return request({
-      url: '/site/vehicle/importTemplate',
+      url: '/Portlogistics/vehicle/importTemplate',
       method: 'get'
     })
   }

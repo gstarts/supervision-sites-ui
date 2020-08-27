@@ -7,6 +7,8 @@ Vue.use(Router)
 import Layout from '@/layout'
 // 原始舱单
 import originalManifest from './moudles/originalManifest'
+// 预配舱单
+import preplan from './moudles/preplan'
 // 理货报告
 import tallyingReport from './moudles/tallyingReport'
 // 运抵报告
@@ -170,7 +172,8 @@ export const constantRoutes = [
     originalManifest,
     tallyingReport,
     shipToReport,
-    carReport
+    carReport,
+    preplan
 ]
 
 export default new Router({

@@ -95,20 +95,6 @@
       <el-table-column label="录入人姓名" align="center" prop="inputUserName"/>
       <el-table-column label="细目笔数" align="center" prop="detailedCount"/>
       <el-table-column label="状态" align="center" :formatter="statusFormat"/>
-
-      <!-- <el-table-column label="状态" align="center" prop="status">
-         <div v-if="type === 'A'">
-          A
-        </div>
-            <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.status"
-                active-value="0"
-                inactive-value="1"
-                @change="handleStatusChange(scope.row)"
-              ></el-switch>
-            </template>
-      </el-table-column>-->
       <el-table-column
         label="操作"
         width="150"
@@ -117,9 +103,13 @@
         fixed="right"
       >
         <template slot-scope="scope">
-          <!-- <router-link size="mini" :to="{path:'tax_innoticedtl/', query:{docId:1}}" class="link-type">
-            <span>查看明细</span>
-          </router-link>-->
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-document"
+            @click="handleInfo(scope.row)"
+          >查看
+          </el-button>
           <el-button
             size="mini"
             type="text"
@@ -128,15 +118,31 @@
           >明细管理
           </el-button>
           <el-button
-            v-if="scope.row.status !== 1"
+            v-if="scope.row.status == 0"
             size="mini"
             type="text"
             icon="el-icon-plus"
-            @click="handleStatusChange(scope.row)"
-          >审核
+            @click="handleStatusChangeTj(scope.row)"
+          >提交
           </el-button>
           <el-button
-            v-if="scope.row.status !== 1"
+            v-if="scope.row.status == 1"
+            size="mini"
+            type="text"
+            icon="el-icon-plus"
+            @click="handleStatusChangeShtg(scope.row)"
+          >审核通过
+          </el-button>
+          <el-button
+            v-if="scope.row.status == 1"
+            size="mini"
+            type="text"
+            icon="el-icon-plus"
+            @click="handleStatusChangeShbtg(scope.row)"
+          >审核不通过
+          </el-button>
+          <el-button
+            v-if="scope.row.status == 0"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -145,7 +151,7 @@
           >修改
           </el-button>
           <el-button
-            v-if="scope.row.status !== 1"
+            v-if="scope.row.status == 0"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -164,6 +170,137 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+
+    <!-- 查看入库通知单对话框 -->
+      <el-dialog :title="infotitle" :visible.sync="infoopen" append-to-body>
+        <el-form ref="infoform" :model="info"  label-width="120px">
+          <el-row>
+          <el-col :span="8">
+            <el-form-item label="保税库" prop="deptNo">
+              <el-input v-model="info.deptNo" readonly/>
+
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="入库通知单号" prop="inNoticeDocNo">
+              <el-input v-model="info.inNoticeDocNo" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="状态"  prop="status">
+              <el-input v-model="info.status" :formatter="statusFormat" readonly/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="操作员">
+              <el-input v-model="info.inputUserName" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="寄舱客户名称" prop="sendCustomerName">
+              <el-input v-model="info.sendCustomerName" placeholder="请输入寄舱客户名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="结算客户名称" prop="settlementCustomerName">
+              <el-input v-model="info.settlementCustomerName" placeholder="请输入结算客户名称"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="预计进仓日期" prop="estimateInDate">
+              <el-input v-model="info.estimateInDate" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="装货方式" prop="loadingMethod">
+              <el-input v-model="info.loadingMethod" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="操作方式" prop="operationMode">
+              <el-input v-model="info.operationMode" readonly/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="业务编号" prop="businessNumber">
+              <el-input v-model="info.businessNumber" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="木质包装" prop="packingMethod">
+              <el-input v-model="info.packingMethod" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="监管方式" prop="superviseMethod">
+              <el-input v-model="info.superviseMethod" readonly/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="退税" prop="taxReimbursement">
+              <el-input v-model="info.taxReimbursement" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="货源地" prop="goodsSource">
+              <el-input v-model="info.goodsSource" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="总计费吨" prop="totalChargeTons">
+              <el-input v-model="info.totalChargeTons" readonly/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="到货时间" prop="arrivalDate">
+              <el-input v-model="info.arrivalDate" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="卸货时间" prop="unloadingTime">
+              <el-input v-model="info.unloadingTime" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="磅房ID" prop="poundRoom">
+              <el-input v-model="info.poundRoom" readonly/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="OT序号" prop="otSerialNo">
+              <el-input v-model="info.otSerialNo" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+          <el-form-item label="车牌号" prop="carNo">
+            <el-input v-model="info.carNo" readonly/>
+          </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="业务单号" prop="businessOrderNo">
+              <el-input v-model="info.businessOrderNo"readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="备注" prop="remarks">
+              <el-input v-model="info.remarks" readonly/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        </el-form>
+    </el-dialog>
 
     <!-- 添加或修改入库通知单对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
@@ -439,6 +576,10 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 弹出层标题
+      infotitle: "",
+      // 是否显示弹出层
+      infoopen: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -447,6 +588,8 @@ export default {
       },
       // 表单参数
       form: {},
+
+      info: {},
       // 日期范围
       dateRange: [],
       // 表单校验
@@ -461,7 +604,7 @@ export default {
           {required: true, message: "寄舱客户名不能为空", trigger: "blur"},
         ],
         carNo: [
-          {required: true, message: "车牌号不能为空", trigger: "blur"},
+          {required: true, message: "车牌号不能为空", trigger: "change,blur"},
         ],
         settlementCustomerName:[
           {required: true, message: "结算客户不能为空", trigger: "blur"},
@@ -583,6 +726,8 @@ export default {
         query: {docId: inNoticeDocId, inNoticestatus: inNoticeDocStauts ,docDeptId:this.deptId},
       });
     },
+
+
     /** 修改按钮操作 */
     handleUpdate(row) {
       const inNoticeDocId = row.inNoticeDocId || this.ids;
@@ -599,6 +744,25 @@ export default {
         this.title = "修改入库通知单";
       });
     },
+
+    /** 查看按钮操作 */
+    handleInfo(row) {
+
+      const inNoticeDocId = row.inNoticeDocId;
+      getInnotice(inNoticeDocId).then((response) => {
+        this.info = response.data;
+        this.info.deptNo=this.getDeptName(row.deptId);
+        this.info.status=this.statusFormat(response.data.status);
+        this.info.packingMethod=this.isFormat(response.data.packingMethod);
+        this.info.taxReimbursement=this.isFormat(response.data.taxReimbursement);
+        this.info.loadingMethod=this.selectDictLabel(this.packOptions, String(response.data.loadingMethod));
+        this.info.operationMode=this.selectDictLabel(this.handleOptions, String(response.data.operationMode));
+        this.info.superviseMethod=this.selectDictLabel(this.superviseOptions, String(response.data.superviseMethod));
+        this.infoopen = true;
+        this.infotitle = "查看入库通知单";
+      });
+    },
+
     /** 提交按钮 */
     submitForm: function () {
       this.$refs["form"].validate((valid) => {
@@ -655,9 +819,9 @@ export default {
         `tax_innotice.xlsx`
       );
     },
-    // 审核状态修改
-    handleStatusChange(row) {
-      this.$confirm("确认要审核通过入库通知单吗?", "警告", {
+    // 提交
+    handleStatusChangeTj(row) {
+      this.$confirm("确认要提交入库通知单吗?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -666,7 +830,39 @@ export default {
           return changeDocStatus(row.inNoticeDocId, 1);
         })
         .then(() => {
+          this.msgSuccess("提交成功");
+          this.getList();
+        });
+    },
+
+    // 审核
+    handleStatusChangeShtg(row) {
+      this.$confirm("确认要审核通过入库通知单吗?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
+          return changeDocStatus(row.inNoticeDocId, 2);
+        })
+        .then(() => {
           this.msgSuccess("审核成功");
+          this.getList();
+        });
+    },
+
+    // 审核不通过
+    handleStatusChangeShbtg(row) {
+      this.$confirm("确认要审核不通过入库通知单吗?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
+          return changeDocStatus(row.inNoticeDocId, 0);
+        })
+        .then(() => {
+          this.msgSuccess("操作成功");
           this.getList();
         });
     },
@@ -675,9 +871,33 @@ export default {
     statusFormat(row, column) {
       if (row.status == "0") {
         return "录入";
-      } else {
+      }
+      else if(row.status == "1")
+      {
+        return "已提交";
+      }
+      else if(row.status == "2"){
         return "已审核";
       }
+    },
+
+    isFormat(isvalue) {
+      if (isvalue == "0") {
+        return "是";
+      } else {
+        return "否";
+      }
+    },
+    //查询未入库的通知单
+    getDeptName(deptId){
+      var deptName="";
+      this.depts.some((item,i)=>{
+        if(item.deptId==deptId){
+          deptName= item.deptName;
+          return true
+        }
+      });
+      return deptName;
     },
   },
 };

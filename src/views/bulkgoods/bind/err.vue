@@ -10,15 +10,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="车次确认号" prop="sureid">
-        <el-input
-          v-model="queryParams.sureid"
-          placeholder="请输入对应车次确认号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
 
       <el-form-item label="提运单状态" prop="feedback">
         <el-select v-model="queryParams.feedback" placeholder="请选择状态">
@@ -27,6 +18,7 @@
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
+             :disabled="dict.dictValue !='FF' && dict.dictValue !='20' "
           ></el-option>
         </el-select>
       </el-form-item>
@@ -44,20 +36,14 @@
           :default-time="['00:00:00']"
         ></el-date-picker>
       </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8"></el-row>
-
-    <el-table
-      v-loading="loading"
-      :data="declareList"
-      :row-class-name="tableRowClassName"
-      @selection-change="handleSelectionChange"
-    >
+    <el-table v-loading="loading" :data="declareList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="绑定介质信息" align="center" prop="bindkeyinfo" />
       <el-table-column label="申报时间" align="center" prop="optime" />
@@ -81,18 +67,17 @@
             v-hasPermi="['waybill:declare:query']"
           >详情</el-button>
           <el-button
-            v-if="scope.row.feedback=='10' || scope.row.feedback=='20'|| scope.row.feedback=='0'|| scope.row.feedback=='FF'|| scope.row.feedback=='3' "
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['waybill:declare:query']"
+            v-hasPermi="['waybill:head:edit']"
           >修改</el-button>
           <el-button
             v-if="scope.row.feedback!='2'"
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['waybill:declare:remove']"
           >删除</el-button>
@@ -115,7 +100,7 @@
 
 <script>
 import {
-  wayListByuserId,
+  listDeclare,
   getDeclare,
   delDeclare,
   addHead,
@@ -123,10 +108,9 @@ import {
   updateDeclare,
   updateHead,
   updateBody,
-  exportDeclare,
-  del
-} from "@/api/site/declare";
-
+  del,
+  exportDeclare
+} from "@/api/bulkgoods/waybill/declare";
 export default {
   data() {
     return {
@@ -154,17 +138,16 @@ export default {
       inOutMarkOptions: [],
       //过卡车辆类型
       viaOptions: [],
-      // 提运单状态
       feedbackOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        BindKeyInfo: undefined,
-        sureid: undefined
+        bindkeyinfo: undefined,
+        //审批退单
+        feedback: undefined,
       },
-      // 公司名称列表
-      companyNameOptions: [],
+      
       // 表头id
       headId: "",
       // 表单参数
@@ -175,7 +158,6 @@ export default {
   },
   created() {
     this.getList();
-    
     this.getDicts("station_transport_fashion").then(response => {
       this.shipTypeOptions = response.data;
     });
@@ -190,23 +172,27 @@ export default {
     });
   },
   methods: {
-    /** 查询提运单列表 */
+    /** 查询提运单申报异常列表 */
     getList() {
-      wayListByuserId(this.addDateRange(this.queryParams, this.dateRange)).then(
+      this.loading=true
+       if(this.queryParams.feedback==undefined){
+           this.queryParams.feedback="E"
+      }
+      listDeclare(
+        this.addDateRange(this.queryParams, this.dateRange)).then(
         response => {
+          if(this.queryParams.feedback=="E"){
+           this.queryParams.feedback=undefined
+      }
           this.declareList = response.rows;
           this.total = response.total;
           this.loading = false;
         }
+        
       );
+      
     },
-    // 改变驳回数据颜色
-    tableRowClassName({ row, rowIndex }) {
-      if (row.feedback == "ZZ") {
-        return "warning-row";
-      }
-      return "";
-    },
+    
     // 运输方式翻译
     shipTypeFormat(row, column) {
       return this.selectDictLabel(this.shipTypeOptions, row.decltrafmode);
@@ -219,7 +205,7 @@ export default {
     viaVehicleFormat(row, column) {
       return this.selectDictLabel(this.viaOptions, row.bayonetrdcode);
     },
-    // 提运单状态
+    //提运单状态
     waybillFormat(row, column) {
       return this.selectDictLabel(this.feedbackOptions, row.feedback);
     },
@@ -278,14 +264,17 @@ export default {
       this.open = true;
       this.title = "添加提运单申报";
     },
-    /** 修改按钮操作 */
+    /** 详情按钮操作 */
+    detail(row) {
+      const id = row.id || this.ids;
+      this.$router.push({ path: "/bind/details", query: { tableId: id } });
+    },
+    /**修改按钮 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      // this.$refs.import.showedit(id);
       this.$router.push({ path: "/bind/edit", query: { tableId: id } });
     },
-
     /** 申报按钮操作 */
     declare(row) {
       const ids = row.id || this.ids;
@@ -319,24 +308,7 @@ export default {
           this.msgSuccess("删除成功");
         })
         .catch(function() {});
-    },
-    /** 打开新增弹窗 */
-    openAddDialog() {
-      this.$refs.import.show();
-    },
-    /** 自动分配 */
-    allocation() {},
-    /**详情按钮 */
-    detail(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      this.$router.push({ path: "/bind/details", query: { tableId: id } });
     }
   }
 };
 </script>
-<style>
-.el-table .warning-row {
-  background: red;
-}
-</style>
