@@ -602,11 +602,12 @@ export default {
       this.feedbackOptions = response.data;
     });
     // this.getdepotList();
-    const {tableId}  = this.$route.query;
+    const {tableId,show}  = this.$route.query;
     console.log("tableId"+tableId)
     if (tableId) {
       //将表头id 保存
       this.headId = tableId;
+      this.show=show
       // 获取表详细信息
       getDeclare(this.headId).then(res => {
         this.form = res.data.info;

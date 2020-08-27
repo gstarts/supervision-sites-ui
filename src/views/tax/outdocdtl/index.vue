@@ -1,38 +1,38 @@
 <template>
   <div class="app-container">
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          v-if="this.outDocStutus!== 1 && this.outDocStutus!== '1'"
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleIn"
-          v-hasPermi="['tax:outdocdtl:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-if="this.outDocStutus!== 1 && this.outDocStutus!== '1'"
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['tax:outdocdtl:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-if="this.outDocStutus!== 1 && this.outDocStutus!== '1'"
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['tax:outdocdtl:remove']"
-        >删除</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          v-if="this.outDocStutus!== 1 && this.outDocStutus!== '1'"-->
+<!--          type="primary"-->
+<!--          icon="el-icon-plus"-->
+<!--          size="mini"-->
+<!--          @click="handleIn"-->
+<!--          v-hasPermi="['tax:outdocdtl:add']"-->
+<!--        >新增</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          v-if="this.outDocStutus!== 1 && this.outDocStutus!== '1'"-->
+<!--          type="success"-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['tax:outdocdtl:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          v-if="this.outDocStutus!== 1 && this.outDocStutus!== '1'"-->
+<!--          type="danger"-->
+<!--          icon="el-icon-delete"-->
+<!--          size="mini"-->
+<!--          :disabled="multiple"-->
+<!--          @click="handleDelete"-->
+<!--          v-hasPermi="['tax:outdocdtl:remove']"-->
+<!--        >删除</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -77,30 +77,30 @@
       <el-table-column label="业务编号" align="center" prop="businessNo" />
       <el-table-column label="品质" align="center" prop="quality" />
       <el-table-column label="备注" align="center" prop="remarks" />
-      <el-table-column
-        v-if="this.outDocStutus!== 1 && this.outDocStutus!== '1'"
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-        fixed="right"
-      >
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['tax:outdocdtl:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['tax:outdocdtl:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        v-if="this.outDocStutus!== 1 && this.outDocStutus!== '1'"-->
+<!--        label="操作"-->
+<!--        align="center"-->
+<!--        class-name="small-padding fixed-width"-->
+<!--        fixed="right"-->
+<!--      >-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['tax:outdocdtl:edit']"-->
+<!--          >修改</el-button>-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['tax:outdocdtl:remove']"-->
+<!--          >删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination

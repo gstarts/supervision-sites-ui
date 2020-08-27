@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询提运单申报列表
 export function listDeclare(query) {
   return request({
-    url: '/site/declare/head/list',
+    url: '/Portlogistics/declare/head/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listDeclare(query) {
 // 查询提运单申报详细
 export function getDeclare(id) {
   return request({
-    url: '/site/declare/head/' + id,
+    url: '/Portlogistics/declare/head/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getDeclare(id) {
 // 新增提运单表头
 export function addHead(data) {
   return request({
-    url: '/site/declare/head',
+    url: '/Portlogistics/declare/head',
     method: 'post',
     data: data
   })
@@ -29,16 +29,16 @@ export function addHead(data) {
 // 修改提运单表头信息
 export function updateHead(data) {
   return request({
-    url: '/site/declare/head',
+    url: '/Portlogistics/declare/head',
     method: 'put',
     data: data
   })
 }
 
 // 提运单申报
-export function declaresite(id) {
+export function declareWaybill(id) {
   return request({
-    url: '/site/declare/head/' + id,
+    url: '/Portlogistics/declare/head/' + id,
     method: 'delete'
   })
 }
@@ -46,7 +46,7 @@ export function declaresite(id) {
 // 导出提运单申报
 export function exportDeclare(query) {
   return request({
-    url: '/site/declare/export',
+    url: '/Portlogistics/declare/export',
     method: 'get',
     params: query
   })
@@ -55,7 +55,7 @@ export function exportDeclare(query) {
 // 新增提运单表头
 export function addBody(data) {
   return request({
-    url: '/site/declare/body',
+    url: '/Portlogistics/declare/body',
     method: 'post',
     data: data
   })
@@ -64,7 +64,7 @@ export function addBody(data) {
 // 修改提运单表体信息
 export function updateBody(data) {
   return request({
-    url: '/site/declare/body',
+    url: '/Portlogistics/declare/body',
     method: 'put',
     data: data
   })
@@ -73,7 +73,7 @@ export function updateBody(data) {
 // 查询提运单表体列表
 export function listbodyTable(query) {
   return request({
-    url: '/site/declare/body/list',
+    url: '/Portlogistics/declare/body/list',
     method: 'get',
     params: query
   })
@@ -81,14 +81,14 @@ export function listbodyTable(query) {
 // 查询提运单申报详细
 export function getsiteBody(id) {
   return request({
-    url: '/site/declare/body/' + id,
+    url: '/Portlogistics/declare/body/' + id,
     method: 'get'
   })
 }
 // 删除提运单体
 export function delBody(id) {
   return request({
-    url: '/site/declare/body/' + id,
+    url: '/Portlogistics/declare/body/' + id,
     method: 'delete'
   })
 }
@@ -96,7 +96,7 @@ export function delBody(id) {
 export function addsite(head, body) {
 
   return request({
-    url: '/site/declare/all',
+    url: '/Portlogistics/declare/all',
     method: 'post',
     data: { head, body }
   })
@@ -104,7 +104,7 @@ export function addsite(head, body) {
 // 自动分配
 export function autoAllocation(data){
   return request({
-    url: '/site/declare/allocation',
+    url: '/Portlogistics/declare/allocation',
     method: 'post',
     data: data
   })
@@ -113,14 +113,14 @@ export function autoAllocation(data){
 // 上传申报删除数据
 export function del(id){
   return request({
-    url: '/site/declare/del/' +id,
+    url: '/Portlogistics/declare/del/' +id,
     method: 'delete',
   })
 }
 // 初始化页面方法
 export function init(){
   return request({
-    url: '/site/declare/init' ,
+    url: '/Portlogistics/declare/init' ,
     method: 'get',
   })
 }
@@ -128,7 +128,7 @@ export function init(){
 // 初始化页面方法
 export function wayListByuserId(query){
   return request({
-    url: '/site/declare/siteList' ,
+    url: '/Portlogistics/declare/siteList' ,
     method: 'get',
     params: query
   })
@@ -137,7 +137,7 @@ export function wayListByuserId(query){
 // 车辆信息校验
 export function check(vehicleNo,headId ){
   return request({
-    url: '/site/declare/check/'+ vehicleNo+"/"+headId ,
+    url: '/Portlogistics/declare/check/'+ vehicleNo+"/"+headId ,
     method: 'get'
   })
 }
@@ -145,14 +145,14 @@ export function check(vehicleNo,headId ){
 // 驳回按钮
 export function subReject(id,message){
   return request({
-    url: '/site/declare/reject/'+ id+"/"+message ,
+    url: '/Portlogistics/declare/reject/'+ id+"/"+message ,
     method: 'get'
   })
 }
 // 人工办结
 export function artificial (id){
   return request({
-    url: '/site/declare/artificial/'+ id ,
+    url: '/Portlogistics/declare/artificial/'+ id ,
     method: 'get'
   })
 
