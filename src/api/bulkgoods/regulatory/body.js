@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询动物体列表
 export function listBody(query) {
   return request({
-    url: '/site/animals/body/list',
+    url: '/Portlogistics/animals/body/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listBody(query) {
 // 查询动物体详细
 export function getBody(id) {
   return request({
-    url: '/site/animals/body/' + id,
+    url: '/Portlogistics/animals/body/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getBody(id) {
 // 新增动物体
 export function addBody(data) {
   return request({
-    url: '/site/animals/body',
+    url: '/Portlogistics/animals/body',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addBody(data) {
 // 修改动物体
 export function updateBody(data) {
   return request({
-    url: '/site/animals/body',
+    url: '/Portlogistics/animals/body',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateBody(data) {
 // 删除动物体
 export function delBody(id) {
   return request({
-    url: '/site/animals/body/' + id,
+    url: '/Portlogistics/animals/body/' + id,
     method: 'delete'
   })
 }
@@ -46,7 +46,7 @@ export function delBody(id) {
 // 导出动物体
 export function exportBody(query) {
   return request({
-    url: '/site/animals/body/export',
+    url: '/Portlogistics/animals/body/export',
     method: 'get',
     params: query
   })
@@ -55,7 +55,7 @@ export function exportBody(query) {
 // 下载导入模板
 export function importTemplate() {
   return request({
-    url: '/site/animals/importTemplate',
+    url: '/Portlogistics/animals/importTemplate',
     method: 'get'
   })
 }

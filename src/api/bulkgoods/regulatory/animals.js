@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询动植物申报列表
 export function listAnimals(query) {
   return request({
-    url: '/site/animals/head/list',
+    url: '/Portlogistics/animals/head/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listAnimals(query) {
 // 查询动植物申报详细
 export function getAnimals(id) {
   return request({
-    url: '/site/animals/head/' + id,
+    url: '/Portlogistics/animals/head/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getAnimals(id) {
 // 新增动植物申报
 export function addAnimals(data) {
   return request({
-    url: '/site/animals/head',
+    url: '/Portlogistics/animals/head',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addAnimals(data) {
 // 修改动植物申报
 export function updateAnimals(data) {
   return request({
-    url: '/site/animals/head',
+    url: '/Portlogistics/animals/head',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateAnimals(data) {
 // 动植物申报
 export function declareAnimals(id) {
   return request({
-    url: '/site/animals/head/' +id,
+    url: '/Portlogistics/animals/head/' +id,
     method: 'delete',
   })
 }
@@ -46,7 +46,7 @@ export function declareAnimals(id) {
 // 导出动植物申报
 export function exportAnimals(query) {
   return request({
-    url: '/site/animals/head/export',
+    url: '/Portlogistics/animals/head/export',
     method: 'get',
     params: query
   })
@@ -55,7 +55,7 @@ export function exportAnimals(query) {
 // 初始化页面方法
 export function init(){
   return request({
-    url: '/site/animals/init' ,
+    url: '/Portlogistics/animals/init' ,
     method: 'get',
   })
 }

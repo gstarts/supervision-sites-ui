@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询集装箱体列表
 export function listBody(query) {
   return request({
-    url: 'site/container/info/body/list',
+    url: 'Portlogistics/container/info/body/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listBody(query) {
 // 查询集装箱体详细
 export function getBody(id) {
   return request({
-    url: 'site/container/info/body/' + id,
+    url: 'Portlogistics/container/info/body/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getBody(id) {
 // 新增集装箱体
 export function addBody(data) {
   return request({
-    url: 'site/container/info/body',
+    url: 'Portlogistics/container/info/body',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addBody(data) {
 // 修改集装箱体
 export function updateBody(data) {
   return request({
-    url: 'site/container/info/body',
+    url: 'Portlogistics/container/info/body',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateBody(data) {
 // 删除集装箱体
 export function delBody(id) {
   return request({
-    url: 'site/container/info/body/' + id,
+    url: 'Portlogistics/container/info/body/' + id,
     method: 'delete'
   })
 }
@@ -46,7 +46,7 @@ export function delBody(id) {
 // 导出集装箱体
 export function exportBody(query) {
   return request({
-    url: 'site/container/info/body/export',
+    url: 'Portlogistics/container/info/body/export',
     method: 'get',
     params: query
   })
@@ -55,7 +55,7 @@ export function exportBody(query) {
 // 初始化页面方法
 export function init(){
   return request({
-    url: 'site/container/info/init' ,
+    url: 'Portlogistics/container/info/init' ,
     method: 'get',
   })
 }
@@ -63,7 +63,7 @@ export function init(){
 // 下载导入模板
 export function importTemplate() {
   return request({
-    url: 'site/container/info/body/importTemplate',
+    url: 'Portlogistics/container/info/body/importTemplate',
     method: 'get'
   })
 }
