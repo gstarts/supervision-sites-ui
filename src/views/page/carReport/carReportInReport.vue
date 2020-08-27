@@ -200,7 +200,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="途径国家或地区" prop="postCode" >
-              <el-button type="primary" size="mini" @click="changeReason=true">详细</el-button>
+              <el-button type="primary" size="mini" @click="regionInfo=true">详细</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -237,7 +237,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="关锁信息" prop="postCode" >
-              <el-button type="primary" size="mini" @click="changeReason=true">详细</el-button>
+              <el-button type="primary" size="mini" @click="detailVisible=true">详细</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -410,7 +410,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="集装箱封志信息" prop="postCode" >
-              <el-button type="primary" size="mini" @click="changeReason=true">详细</el-button>
+              <el-button type="primary" size="mini" @click="dangerousInfo=true">详细</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -420,13 +420,13 @@
     <depParaList :tableVisible='dialogTableVisible' @choose="choose" @close='dialogTableVisible = false'></depParaList>
     <!-- 字典2 -->
     <depParaList2 :tableVisible='dialogTableVisible2' @choose="choose2" @close='dialogTableVisible2 = false'></depParaList2>
-    <!-- 通知人信息 -->
+    <!-- 关锁信息 -->
     <noticeInfo :detailVisible='detailVisible' @close='detailVisible = false'></noticeInfo>
     <!-- 变更原因 -->
     <changeReason :detailVisible='changeReason' @close='changeReason = false'></changeReason>
     <!-- 途径国家地区信息 -->
     <regionInfo :detailVisible='regionInfo' @close='regionInfo = false'></regionInfo>
-    <!-- 危险品联系人信息 -->
+    <!-- 集装箱(器)封志信息 -->
     <dangerousInfo :detailVisible='dangerousInfo' @close='dangerousInfo = false'></dangerousInfo>
     <!-- 发货人信息 -->
     <consignorInfo :detailVisible='consignorInfo' @close='consignorInfo = false'></consignorInfo>
@@ -441,13 +441,13 @@
 import depParaListJson from '@/mock/depParaList2.json';
 import depParaList from './../components/depParaList';
 import depParaList2 from './../components/depParaList2';
-// 通知人信息
+// 关锁信息
 import noticeInfo from './noticeInfo.vue';
 // 变更原因
 import changeReason from './changeReason.vue';
 // 途径国家地区信息
 import regionInfo from './regionInfo.vue';
-// 危险品联系人信息
+// 集装箱(器)封志信息
 import dangerousInfo from './dangerousInfo.vue';
 // 发货人信息
 import consignorInfo from './consignorInfo.vue';

@@ -8,14 +8,24 @@
 -->
 <template>
   <div>
-      <el-dialog title="危险品联系人信息" :visible.sync="detailVisible" :before-close="close">
+      <el-dialog title="集装箱(器)封志信息" :visible.sync="detailVisible" :before-close="close">
       <el-form :model="queryParams" class="mb20" ref="queryForm" label-width="160px">
         <el-row type="flex">
-          <el-col :span="24">
-            <el-form-item label="危险品联系人名称" prop="postCode" >
+          <el-col :span="12">
+            <el-form-item label="类型/封志号码" prop="postCode" >
               <el-input
                 v-model="queryParams.postCode"
-                placeholder="危险品联系人名称"
+                placeholder="类型/封志号码"
+                clearable
+                size="small"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="施加封志人" prop="postCode" >
+              <el-input
+                v-model="queryParams.postCode"
+                placeholder="施加封志人"
                 clearable
                 size="small"
               />
@@ -23,26 +33,7 @@
           </el-col>
         </el-row>
         <el-row type="flex">
-          <el-col :span="12">
-            <el-form-item label="联系号码" prop="postCode" >
-              <el-input
-                v-model="queryParams.postCode"
-                placeholder="联系号码"
-                clearable
-                size="small"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="通讯方式类别代码" prop="postCode" >
-              <el-input
-                v-model="queryParams.postCode"
-                placeholder="通讯方式类别代码"
-                clearable
-                size="small"
-              />
-            </el-form-item>
-          </el-col>
+          <el-col :span="24"><div class="mb20">注意事项：以上字段跨境快速通关时必填,格式为M（机械封志）或E（电子封志）+"/" +封志号码，特种重箱填写“0000”</div></el-col>
         </el-row>
         <el-row type="flex">
           <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn" @click="handleAdd">新增</el-button>
@@ -59,8 +50,7 @@
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" min-width="55"/>
         <el-table-column prop="num" label="序号" min-width="120"/>
-        <el-table-column prop="num" label="联系号码" min-width="120"/>
-        <el-table-column prop="num" label="通讯方式类别代码" min-width="160"/>
+        <el-table-column prop="num" label="类型/封志号码" min-width="120"/>
       </el-table>
     </el-dialog>
   </div>

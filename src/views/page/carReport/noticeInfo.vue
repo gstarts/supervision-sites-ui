@@ -8,24 +8,24 @@
 -->
 <template>
   <div>
-      <el-dialog title="通知人信息" :visible.sync="detailVisible" :before-close="close">
+      <el-dialog title="关锁信息" :visible.sync="detailVisible" :before-close="close">
       <el-form :model="queryParams" class="mb20" ref="queryForm" label-width="160px">
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="通知人代码" prop="postCode" >
+            <el-form-item label="海关关锁类型" prop="postCode" >
               <el-input
                 v-model="queryParams.postCode"
-                placeholder="通知人代码"
+                placeholder="海关关锁类型"
                 clearable
                 size="small"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="通知人名称" prop="postCode" >
+            <el-form-item label="海关关锁号" prop="postCode" >
               <el-input
                 v-model="queryParams.postCode"
-                placeholder="通知人名称"
+                placeholder="海关关锁号"
                 clearable
                 size="small"
               />
@@ -33,38 +33,7 @@
           </el-col>
         </el-row>
         <el-row type="flex">
-          <el-col :span="24">
-            <el-form-item label="通知人地址(街道,邮箱)" prop="postCode" >
-              <el-input
-                v-model="queryParams.postCode"
-                placeholder="通知人地址(街道,邮箱)"
-                clearable
-                size="small"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row type="flex">
-          <el-col :span="12">
-            <el-form-item label="联系号码" prop="postCode" >
-              <el-input
-                v-model="queryParams.postCode"
-                placeholder="联系号码"
-                clearable
-                size="small"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="通讯方式类别代码" prop="postCode" >
-              <el-input
-                v-model="queryParams.postCode"
-                placeholder="通讯方式类别代码"
-                clearable
-                size="small"
-              />
-            </el-form-item>
-          </el-col>
+          <el-col :span="24"><div class="mb20">注意事项：关锁类型为物理关锁时，关锁号格式为1位大写字母+5位数字</div></el-col>
         </el-row>
         <el-row type="flex">
           <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn" @click="handleAdd">新增</el-button>
@@ -81,8 +50,7 @@
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" min-width="55"/>
         <el-table-column prop="num" label="序号" min-width="120"/>
-        <el-table-column prop="num" label="联系号码" min-width="120"/>
-        <el-table-column prop="num" label="海关货物通关代码" min-width="150" />
+        <el-table-column prop="num" label="海关关锁信息" min-width="120"/>
       </el-table>
     </el-dialog>
   </div>
