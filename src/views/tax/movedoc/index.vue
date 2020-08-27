@@ -95,14 +95,31 @@
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-document" @click="handleDtl(scope.row)">查看明细</el-button>
           <el-button
-            v-if="scope.row.status !== 1"
+            v-if="scope.row.status == 0"
             size="mini"
             type="text"
             icon="el-icon-plus"
-            @click="handleStatusChange(scope.row)"
-          >审核</el-button>
+            @click="handleStatusChangeTj(scope.row)"
+          >提交
+          </el-button>
           <el-button
-            v-if="scope.row.status !== 1"
+            v-if="scope.row.status == 1"
+            size="mini"
+            type="text"
+            icon="el-icon-plus"
+            @click="handleStatusChangeShtg(scope.row)"
+          >确认通过
+          </el-button>
+          <el-button
+            v-if="scope.row.status == 1"
+            size="mini"
+            type="text"
+            icon="el-icon-plus"
+            @click="handleStatusChangeShbtg(scope.row)"
+          >确认不通过
+          </el-button>
+          <el-button
+            v-if="scope.row.status == 0"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -110,7 +127,7 @@
             v-hasPermi="['tax:movedoc:edit']"
           >修改</el-button>
           <el-button
-            v-if="scope.row.status !== 1"
+            v-if="scope.row.status == 0"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -196,6 +213,7 @@ import {
   addMovedoc,
   updateMovedoc,
   changeDocStatus,
+  changeDocStatusOnly,
 } from "@/api/tax/movedoc";
 import {getUserDepts} from "@/utils/charutils";
 
@@ -378,8 +396,23 @@ export default {
     },
 
     //状态修改
-    handleStatusChange(row) {
-      this.$confirm("确认要确认移库单吗?", "提示", {
+    handleStatusChangeTj(row) {
+      this.$confirm("确认要提交移库单吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
+          return changeDocStatusOnly(row.moveDocId,1);
+        })
+        .then(() => {
+          this.msgSuccess("提交成功");
+          this.getList();
+        });
+    },
+    //确认修改
+    handleStatusChangeShtg(row) {
+      this.$confirm("确认要确认通过移库单吗?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -392,12 +425,32 @@ export default {
           this.getList();
         });
     },
+    //确认不通过修改
+    handleStatusChangeShbtg(row) {
+      this.$confirm("确认要确认不通过移库单吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
+          return changeDocStatusOnly(row.moveDocId,0);
+        })
+        .then(() => {
+          this.msgSuccess("操作成功");
+          this.getList();
+        });
+    },
     //状态处理
     statusFormat(row, column) {
       if (row.status == "0") {
         return "录入";
-      } else {
-        return "已审核";
+      }
+      else if(row.status == "1")
+      {
+        return "已提交";
+      }
+      else if(row.status == "2"){
+        return "已确认";
       }
     },
     /** 导出按钮操作 */

@@ -45,12 +45,26 @@ export function delIndoc(inDocId) {
 
 
 // 状态修改
+export function changeDocStatusOnly(inDocId, status) {
+  const data = {
+    inDocId,
+    status
+  }
+  return request({
+    url: '/tax/indoc',
+    method: 'put',
+    data: data
+  })
+}
+
+// 确认
 export function changeDocStatus(inDocId) {
   return request({
     url: '/tax/indoc/changeStatus/'+inDocId,
     method: 'post'
   })
 }
+
 
 // 查询车辆
 export function getCarList(carNo) {
@@ -59,3 +73,13 @@ export function getCarList(carNo) {
     method: 'get'
   })
 }
+
+// 查询未入库的
+export function getInNoticeList() {
+  return request({
+    url: '/tax/innotice/notInList/',
+    method: 'get'
+  })
+}
+
+

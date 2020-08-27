@@ -43,15 +43,13 @@ export function delInnotice(inNoticeDocId) {
   })
 }
 
-// 审核状态修改
+// 状态修改
 export function changeDocStatus(inNoticeDocId, status) {
-  console.info("ok");
   const data = {
     inNoticeDocId,
     status
   }
   return request({
-
     url: '/tax/innotice/changeStatus',
     method: 'put',
     data: data

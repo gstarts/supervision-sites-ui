@@ -646,6 +646,7 @@ export default {
         this.updateform.cargoCategory = String(response.data.cargoCategory);
         this.updateform.packagesUnit = String(response.data.packagesUnit);
         this.updateform.countUnit = String(response.data.countUnit);
+
         this.updateopen = true;
         this.updatetitle = "修改入库通知单明细管理";
       });
