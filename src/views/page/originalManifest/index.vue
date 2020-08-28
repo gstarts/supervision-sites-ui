@@ -43,13 +43,14 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="进出境口岸海关代码" prop="customsCodeName" >
-              <el-input
-                @focus="dialogTableVisible = true"
-                v-model="queryParams.customsCodeName"
-                placeholder="进出境口岸海关代码"
-                clearable
-                size="small"
-              />
+              <el-select v-model="queryParams.customsCodeName" filterable placeholder="进出境口岸海关代码">
+                <el-option
+                  v-for="item in CustomsDictionary"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -108,10 +109,10 @@
             <el-form-item label="传输企业备案关区" prop="customMasterName" >
               <el-select v-model="queryParams.customMasterName" filterable placeholder="传输企业备案关区">
                 <el-option
-                  v-for="item in depParaListJson"
-                  :key="item.codeValue"
-                  :label="item.codeName"
-                  :value="item.codeValue">
+                  v-for="item in CustomsDictionary"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -691,7 +692,9 @@ export default {
       },
       statusOptions:[],
       dateTimeVal:'',
-      data:[]
+      data:[],
+      // 进出境口岸关区代码字典
+      CustomsDictionary:[]
     }
   },
   mounted(){
@@ -701,6 +704,7 @@ export default {
   methods:{
     async init(){
       // await this.depParaList()
+      this.hgCustomsCode()
     },
     // 新增
     handleAdd(){},
@@ -750,6 +754,12 @@ export default {
           resolve(data);
         })
       })
+    },
+    hgCustomsCode(){
+      /** 进出境口岸关区代码字典 */
+      this.getDicts("hg_customs_code").then((response) => {
+        this.CustomsDictionary = response.data;
+      });
     }
   }
 

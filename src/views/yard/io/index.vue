@@ -167,7 +167,7 @@
           <span>{{depts.find(item=>item.deptId === scope.row.yardId).deptName}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="出入库单号" align="center" prop="businessNo"/>
+      <el-table-column label="出入库单号" align="center" prop="ioNo"/>
       <el-table-column label="车牌号" align="center" prop="vehicleNo"/>
       <el-table-column label="集装箱数量" align="center" prop="containerCount"/>
       <!--<el-table-column label="集装箱号" align="center" prop="containerNo"/>-->
@@ -299,7 +299,13 @@
 				return this.selectDictLabel(this.purposeOptions, row.purpose);
 			},
 			gotoSub(row) {
-				alert(row.id)
+				this.$router.push({
+          path: '/yard/io/detail',
+          query: {
+          	'yardId': row.yardId,
+            'ioNo': row.ioNo
+          }
+        })
 			},
 
 			/** 搜索按钮操作 */
