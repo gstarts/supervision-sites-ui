@@ -427,7 +427,7 @@
           </el-col>
           <el-col :span="8" style="margin-left:-50px">
             <el-form-item label="业务事项">
-              <el-select v-model="value1" multiple placeholder="请选择">
+              <el-select v-model="value1" multiple placeholder="请选择" >
                 <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -1239,6 +1239,7 @@
               type="date"
               value-format="yyyy-MM-dd"
               placeholder="选择日期"
+              style="width:100%"
             ></el-date-picker>
             </el-form-item>
           </el-col>
@@ -1280,12 +1281,13 @@
           </el-row>
            <el-row>
           <el-col :span="18">
-            <el-form-item label="生产批次" prop="specification8">
+            <el-form-item label="生产日期" prop="specification8">
             <el-date-picker
               v-model="specificationForm.specification8"
               type="date"
               value-format="yyyy-MM-dd"
               placeholder="选择日期"
+              style="width:100%"
             ></el-date-picker>
             </el-form-item>
           </el-col>
@@ -1828,4 +1830,8 @@ export default {
 .datePicker {
   width: auto !important;
 }
+.el-select{
+  width: 100%;
+}
+
 </style>
