@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询集装箱管理Head列表
 export function listContainer(query) {
   return request({
-    url: 'Portlogistics/container/list',
+    url: 'portlogistics/container/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listContainer(query) {
 // 查询集装箱管理Head详细
 export function getContainer(id) {
   return request({
-    url: 'Portlogistics/container/' + id,
+    url: 'portlogistics/container/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getContainer(id) {
 // 新增集装箱管理Head
 export function addContainer(data) {
   return request({
-    url: 'Portlogistics/container/',
+    url: 'portlogistics/container/',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addContainer(data) {
 // 修改集装箱管理Head
 export function updateContainer(data) {
   return request({
-    url: 'Portlogistics/container',
+    url: 'portlogistics/container',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateContainer(data) {
 // 删除集装箱管理Head
 export function delContainer(id) {
   return request({
-    url: 'Portlogistics/container/' + id,
+    url: 'portlogistics/container/' + id,
     method: 'delete'
   })
 }
@@ -46,7 +46,7 @@ export function delContainer(id) {
 // 导出集装箱管理Head
 export function exportContainer(query) {
   return request({
-    url: 'Portlogistics/container/export',
+    url: 'portlogistics/container/export',
     method: 'get',
     params: query
   })
