@@ -540,7 +540,7 @@
 
     <el-card class="mb20">
       <div slot="header" class="clearfix">
-        <span>商品项信息</span>
+        <span>进口/出口报关单表体</span>
       </div>
       <el-row type="flex" class="mb20">
         <el-col>
@@ -549,7 +549,7 @@
             icon="el-icon-plus"
             size="mini"
             :disabled="btnDisable.addBtn"
-            @click="handleAdd"
+            @click="CommodityItemAdd"
           >新增</el-button>
           <el-button
             type="success"
@@ -563,7 +563,7 @@
             icon="el-icon-delete"
             size="mini"
             :disabled="btnDisable.delBtn"
-            @click="handleDelete"
+            @click="CommodityItemdelete"
           >删除</el-button>
           <el-button
             type="danger"
@@ -584,34 +584,35 @@
             icon="el-icon-refresh"
             size="mini"
             :disabled="btnDisable.refBtn"
-            @click="handleRefresh"
+            @click="CommodityItemRefresh"
           >刷新</el-button>
         </el-col>
       </el-row>
       <el-table
         class="mb20"
         ref="multipleTable"
-        :data="data"
+        :data="CommodityItemList"
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column prop="num" label="项号" min-width="120" />
-        <el-table-column prop="num" label="备案序号" min-width="120" />
-        <el-table-column prop="num" label="商品编号" min-width="150" />
-        <el-table-column prop="num" label="检验检疫名称" min-width="120" />
-        <el-table-column prop="num" label="商品名称" min-width="120" />
-        <el-table-column prop="num" label="商品规格、型号" min-width="120" />
-        <el-table-column prop="num" label="成交数量" min-width="120" />
-        <el-table-column prop="num" label="成交单位" min-width="120" />
-        <el-table-column prop="num" label="单价" min-width="150" />
-        <el-table-column prop="num" label="总价" min-width="120" />
-        <el-table-column prop="num" label="币制" min-width="120" />
-        <el-table-column prop="num" label="原产国(地区)" min-width="120" />
-        <el-table-column prop="num" label="最终目的国" min-width="120" />
-        <el-table-column prop="num" label="征免方式" min-width="120" />
-        <el-table-column prop="num" label="监管要求" min-width="120" />
+        <el-table-column prop="gNo" label="项号" min-width="120" />
+        <el-table-column label="序号" align="center" type="index" />
+        <el-table-column prop="ContrItem" label="备案序号" min-width="120" />
+        <el-table-column prop="CodeTS" label="商品编号" min-width="150" />
+        <el-table-column prop="CiqName" label="检验检疫名称" min-width="120" />
+        <el-table-column prop="GName" label="商品名称" min-width="120" />
+        <el-table-column prop="GModel" label="商品规格、型号" min-width="120" />
+        <el-table-column prop="GQty" label="成交数量" min-width="120" />
+        <el-table-column prop="GUnit" label="成交单位" min-width="120" />
+        <el-table-column prop="DeclPrice" label="成交单价" min-width="150" />
+        <el-table-column prop="DeclTotal" label="成交总价" min-width="120" />
+        <el-table-column prop="TradeCurr" label="成交币制" min-width="120" />
+        <el-table-column prop="OriginCountry" label="原产国(地区)" min-width="120" />
+        <el-table-column prop="DestinationCountry" label="最终目的国" min-width="120" />
+        <el-table-column prop="DutyMode" label="征免方式" min-width="120" />
+        <el-table-column prop="GoodsSpec" label="检验检疫货物规格" min-width="120" />
       </el-table>
       <el-pagination
         class="right mb20"
@@ -689,9 +690,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="成交单价" prop="DeclTotal">
+            <el-form-item label="成交单价" prop="DeclPrice">
               <el-input
-                v-model="commodityForm.DeclTotal"
+                v-model="commodityForm.DeclPrice"
                 placeholder="成交单价"
                 clearable
                 size="small"
@@ -857,7 +858,7 @@
             <el-button icon="el-icon-more-outline" type="info" circle></el-button>
           </el-col>
           <el-col :span="4" style="margin-left:100px">
-            <el-button type="primary" size="medium">业 务 事 项</el-button>
+            <el-button type="primary" size="medium">产 品 资 质</el-button>
           </el-col>
         </el-row>
 
@@ -1246,6 +1247,8 @@ export default {
       },
       //使用人List
       UserList: [],
+      //商品项信息List
+      CommodityItemList:[],
       //前端字段
       temporaryForm: {
         //其他事项确认
@@ -1504,16 +1507,25 @@ export default {
     },
     //使用人弹出框保存
     userAdd() {
-      console.log(this.userForm);
       this.UserList.push(this.userForm);
+      this.userForm={};
     },
+      //使用人弹框
+      user() {
+        this.userPopup = true;
+      },
     //其他事项确认弹窗
     matter() {
       this.MatterconFirmation = true;
     },
-    //使用人弹框
-    user() {
-      this.userPopup = true;
+    //进口/出口报关单表体清空
+    CommodityItemRefresh(){
+      this.commodityForm={};
+    },
+    //进口/出口报关单表体保存
+    CommodityItemAdd(){
+      this.CommodityItemList.push(this.commodityForm);
+      this.commodityForm={};
     },
     //表头隐藏显示切换
     hide() {
