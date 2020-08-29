@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询库存历史记录 列表
+// 查询堆场库存明细历史 列表
 export function listHistory(query) {
   return request({
     url: '/yard/history/list',
@@ -9,7 +9,7 @@ export function listHistory(query) {
   })
 }
 
-// 查询库存历史记录 详细
+// 查询堆场库存明细历史 详细
 export function getHistory(id) {
   return request({
     url: '/yard/history/' + id,
@@ -17,7 +17,7 @@ export function getHistory(id) {
   })
 }
 
-// 新增库存历史记录 
+// 新增堆场库存明细历史 
 export function addHistory(data) {
   return request({
     url: '/yard/history',
@@ -26,7 +26,7 @@ export function addHistory(data) {
   })
 }
 
-// 修改库存历史记录 
+// 修改堆场库存明细历史 
 export function updateHistory(data) {
   return request({
     url: '/yard/history',
@@ -35,7 +35,7 @@ export function updateHistory(data) {
   })
 }
 
-// 删除库存历史记录 
+// 删除堆场库存明细历史 
 export function delHistory(id) {
   return request({
     url: '/yard/history/' + id,

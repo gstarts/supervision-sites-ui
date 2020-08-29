@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询通关单列表
 export function listCustoms(query) {
   return request({
-    url: '/site/customs/list',
+    url: '/portlogistics/customs/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listCustoms(query) {
 // 查询通关单详细
 export function getCustoms(id) {
   return request({
-    url: '/site/customs/' + id,
+    url: '/portlogistics/customs/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getCustoms(id) {
 // 新增通关单
 export function addCustoms(data) {
   return request({
-    url: '/site/customs',
+    url: '/portlogistics/customs',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addCustoms(data) {
 // 修改通关单
 export function updateCustoms(data) {
   return request({
-    url: '/site/customs',
+    url: '/portlogistics/customs',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateCustoms(data) {
 // 删除通关单
 export function delCustoms(id) {
   return request({
-    url: '/site/customs/' + id,
+    url: '/portlogistics/customs/' + id,
     method: 'delete'
   })
 }
@@ -46,7 +46,7 @@ export function delCustoms(id) {
 // 导出通关单
 export function exportCustoms(query) {
   return request({
-    url: '/site/customs/export',
+    url: '/portlogistics/customs/export',
     method: 'get',
     params: query
   })
@@ -55,7 +55,7 @@ export function exportCustoms(query) {
   // 下载导入模板
   export function importTemplate() {
     return request({
-      url: '/site/customs/importTemplate',
+      url: '/portlogistics/customs/importTemplate',
       method: 'get'
     })
   }

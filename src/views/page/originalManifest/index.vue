@@ -17,10 +17,10 @@
       <el-form :model="queryParams" ref="queryForm" label-width="160px">
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="货物运输批次号" prop="postCode" >
+            <el-form-item label="货物运输批次号" prop="voyageNo" >
               <el-input
-                v-model="queryParams.postCode"
-                placeholder="请输入岗位编码"
+                v-model="queryParams.voyageNo"
+                placeholder="货物运输批次号"
                 clearable
                 size="small"
               >
@@ -31,10 +31,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运输方式代码" prop="postCode" >
+            <el-form-item label="运输方式代码" prop="trafMode" >
               <el-input
               @focus="$store.dispatch('originalManifest/changeStatus')"
-                v-model="queryParams.postCode"
+                v-model="queryParams.trafMode"
                 placeholder="运输方式代码"
                 clearable
                 size="small"
@@ -42,20 +42,21 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="进出境口岸海关代码" prop="postCode" >
-              <el-input
-                @focus="dialogTableVisible = true"
-                v-model="queryParams.postCode"
-                placeholder="进出境口岸海关代码"
-                clearable
-                size="small"
-              />
+            <el-form-item label="进出境口岸海关代码" prop="customsCodeName" >
+              <el-select v-model="queryParams.customsCodeName" filterable placeholder="进出境口岸海关代码">
+                <el-option
+                  v-for="item in CustomsDictionary"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="承运人代码" prop="postCode" >
+            <el-form-item label="承运人代码" prop="carrierCode" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="queryParams.carrierCode"
                 placeholder="承运人代码"
                 clearable
                 size="small"
@@ -65,9 +66,9 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="运输工具代理企业代码" prop="postCode" >
+            <el-form-item label="运输工具代理企业代码" prop="transAgentCode" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="queryParams.transAgentCode"
                 placeholder="运输工具代理企业代码"
                 clearable
                 size="small"
@@ -75,18 +76,18 @@
             </el-form-item>
           </el-col>
         <el-col :span="6">
-            <el-form-item label="货物装载时间" prop="postCode" >
+            <el-form-item label="货物装载时间" prop="loadingDate" >
               <el-date-picker
                 class="datePicker"
-                v-model="dateTimeVal"
+                v-model="queryParams.loadingDate"
                 type="datetime"
                 placeholder="选择日期时间" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="卸货地代码" prop="postCode" >
+            <el-form-item label="卸货地代码" prop="loadingLocationCode" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="queryParams.loadingLocationCode"
                 placeholder="卸货地代码"
                 clearable
                 size="small"
@@ -94,10 +95,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="到达卸货地日期" prop="postCode" >
+            <el-form-item label="到达卸货地日期" prop="arrivalDate" >
               <el-date-picker
                 class="datePicker"
-                v-model="dateTimeVal"
+                v-model="queryParams.arrivalDate"
                 type="datetime"
                 placeholder="选择日期时间" />
             </el-form-item>
@@ -105,21 +106,21 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="传输企业备案关区" prop="postCode" >
-              <el-select v-model="depParaVal" filterable placeholder="传输企业备案关区">
+            <el-form-item label="传输企业备案关区" prop="customMasterName" >
+              <el-select v-model="queryParams.customMasterName" filterable placeholder="传输企业备案关区">
                 <el-option
-                  v-for="item in depParaListJson"
-                  :key="item.codeValue"
-                  :label="item.codeName"
-                  :value="item.codeValue">
+                  v-for="item in CustomsDictionary"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue">
                 </el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="企业代码" prop="postCode" >
+            <el-form-item label="企业代码" prop="unitCode" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="queryParams.unitCode"
                 placeholder="企业代码"
                 clearable
                 size="small"
@@ -127,9 +128,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="舱单传输人名称" prop="postCode" >
+            <el-form-item label="舱单传输人名称" prop="msgRepName" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="queryParams.msgRepName"
                 placeholder="舱单传输人名称"
                 clearable
                 size="small"
@@ -137,9 +138,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="备注" prop="postCode" >
+            <el-form-item label="备注" prop="additionalInformation" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="queryParams.additionalInformation"
                 placeholder="备注"
                 clearable
                 size="small"
@@ -173,13 +174,13 @@
         style="width: 100%"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" min-width="55"/>
-        <el-table-column prop="num" label="序号" min-width="120"/>
-        <el-table-column prop="num" label="提(运)单号" min-width="120"/>
-        <el-table-column prop="num" label="海关货物通关代码" min-width="150" />
-        <el-table-column prop="num" label="货物总件数" min-width="120"/>
-        <el-table-column prop="num" label="货物总毛重(kg)" min-width="120"/>
-        <el-table-column prop="num" label="货物价值" min-width="120"/>
-        <el-table-column prop="num" label="收货人名称" min-width="120"/>
+        <el-table-column prop="index" label="序号" min-width="120"/>
+        <el-table-column prop="billNo" label="提(运)单号" min-width="120"/>
+        <el-table-column prop="goodsCustomsStat" label="海关货物通关代码" min-width="150" />
+        <el-table-column prop="packNum" label="货物总件数" min-width="120"/>
+        <el-table-column prop="grossWt" label="货物总毛重(kg)" min-width="120"/>
+        <el-table-column prop="goodsValue" label="货物价值" min-width="120"/>
+        <el-table-column prop="consigneeName" label="收货人名称" min-width="120"/>
       </el-table>
       <el-pagination
         class="right mb20"
@@ -190,12 +191,12 @@
         :page-size="page.size"
         @current-change="currentChange"
       />
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="waybill" ref="waybill" label-width="160px">
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="提（运）单号" prop="postCode" >
+            <el-form-item label="提（运）单号" prop="billNo" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="waybill.billNo"
                 placeholder="提（运）单号"
                 clearable
                 size="small"
@@ -203,14 +204,14 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="变更原因" prop="postCode" >
+            <el-form-item label="变更原因" prop="chgCodeAddBtn" >
               <el-button type="primary" size="mini" @click="changeReason=true">详细</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运输条款" prop="postCode" >
+            <el-form-item label="运输条款" prop="conditionCodeName" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="waybill.conditionCodeName"
                 placeholder="运输条款"
                 clearable
                 size="small"
@@ -218,9 +219,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运费支付方法" prop="postCode" >
+            <el-form-item label="运费支付方法" prop="paymentType" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="waybill.paymentType"
                 placeholder="运费支付方法"
                 clearable
                 size="small"
@@ -230,10 +231,10 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="海关货物通关代码" prop="postCode" >
+            <el-form-item label="海关货物通关代码" prop="goodsCustomsStat" >
               <el-input
                 @focus="dialogTableVisible2 = true"
-                v-model="queryParams.postCode"
+                v-model="waybill.goodsCustomsStat"
                 placeholder="海关货物通关代码"
                 clearable
                 size="small"
@@ -241,18 +242,19 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="跨境指运地" prop="postCode" >
-              <el-date-picker
-                class="datePicker"
-                v-model="dateTimeVal"
-                type="datetime"
-                placeholder="选择日期时间" />
+            <el-form-item label="跨境指运地" prop="transLocationId" >
+              <el-input
+                v-model="waybill.transLocationId"
+                placeholder="跨境指运地"
+                clearable
+                size="small"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="货物总件数" prop="postCode" >
+            <el-form-item label="货物总件数" prop="packNum" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="waybill.packNum"
                 placeholder="货物总件数"
                 clearable
                 size="small"
@@ -260,9 +262,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="包装种类" prop="postCode" >
+            <el-form-item label="包装种类" prop="packType" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="waybill.packType"
                 placeholder="包装种类"
                 clearable
                 size="small"
@@ -272,9 +274,9 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="货物体积(M3)" prop="postCode" >
+            <el-form-item label="货物体积(M3)" prop="cube" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="waybill.cube"
                 placeholder="货物体积(M3)"
                 clearable
                 size="small"
@@ -282,9 +284,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="货物总毛重(KG)	" prop="postCode" >
+            <el-form-item label="货物总毛重(KG)	" prop="grossWt" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="waybill.grossWt"
                 placeholder="货物总毛重(KG)	"
                 clearable
                 size="small"
@@ -292,9 +294,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="货物价值" prop="postCode" >
+            <el-form-item label="货物价值" prop="goodsValue" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="waybill.goodsValue"
                 placeholder="货物价值"
                 clearable
                 size="small"
@@ -302,9 +304,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="金额类型	" prop="postCode" >
+            <el-form-item label="金额类型	" prop="currencyType" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="waybill.currencyType"
                 placeholder="金额类型	"
                 clearable
                 size="small"
@@ -314,9 +316,9 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="拆箱人代码" prop="postCode" >
+            <el-form-item label="拆箱人代码" prop="consolidatorId" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="waybill.consolidatorId"
                 placeholder="拆箱人代码"
                 clearable
                 size="small"
@@ -324,29 +326,29 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="途径国家或地区" prop="postCode" >
+            <el-form-item label="途径国家或地区" prop="countryInfoAddBtn" >
               <el-button type="primary" size="mini" @click="regionInfo = true">详细</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="收货人信息" prop="postCode" >
+            <el-form-item label="收货人信息" prop="consigneeInfo" >
               <el-button type="primary" size="mini" @click="receivingInfo = true">详细</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="发货人信息" prop="postCode" >
+            <el-form-item label="发货人信息" prop="consigorInfo" >
               <el-button type="primary" size="mini" @click="consignorInfo = true">详细</el-button>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="通知人信息" prop="postCode" >
+            <el-form-item label="通知人信息" prop="notifyInfo" >
               <el-button type="primary" size="mini" @click='detailVisible = true'>详细</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="危险品联系人信息" prop="postCode" >
+            <el-form-item label="危险品联系人信息" prop="undgInfo" >
               <el-button type="primary" size="mini" @click="dangerousInfo = true">详细</el-button>
             </el-form-item>
           </el-col>
@@ -376,13 +378,11 @@
         style="width: 100%"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" min-width="55"/>
-        <el-table-column prop="num" label="序号" min-width="120"/>
-        <el-table-column prop="num" label="提(运)单号" min-width="120"/>
-        <el-table-column prop="num" label="海关货物通关代码" min-width="150" />
-        <el-table-column prop="num" label="货物总件数" min-width="120"/>
-        <el-table-column prop="num" label="货物总毛重(kg)" min-width="120"/>
-        <el-table-column prop="num" label="货物价值" min-width="120"/>
-        <el-table-column prop="num" label="收货人名称" min-width="120"/>
+        <el-table-column prop="index" label="序号" min-width="120"/>
+        <el-table-column prop="goodsSeqNo" label="商品项序号" min-width="120"/>
+        <el-table-column prop="goodsPackNum" label="商品项件数" min-width="150" />
+        <el-table-column prop="goodsBriefDesc" label="商品项简要描述" min-width="120"/>
+        <el-table-column prop="goodsGrossWt" label="商品项毛重(kg)" min-width="120"/>
       </el-table>
       <el-pagination
         class="right mb20"
@@ -393,43 +393,43 @@
         :page-size="page.size"
         @current-change="currentChange"
       />
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="shopInfo" ref="queryForm" label-width="160px">
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="提（运）单号" prop="postCode" >
+            <el-form-item label="商品项序号" prop="goodsSeqNo" >
               <el-input
-                v-model="queryParams.postCode"
-                placeholder="提（运）单号"
+                v-model="shopInfo.goodsSeqNo"
+                placeholder="商品项序号"
                 clearable
                 size="small"
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="变更原因" prop="postCode" >
+            <el-form-item label="商品项件数" prop="goodsPackNum" >
               <el-input
-                v-model="queryParams.postCode"
-                placeholder="变更原因"
+                v-model="shopInfo.goodsPackNum"
+                placeholder="商品项件数"
                 clearable
                 size="small"
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运输条款" prop="postCode" >
+            <el-form-item label="包装种类" prop="goodsPackTypeCode" >
               <el-input
-                v-model="queryParams.postCode"
-                placeholder="运输条款"
+                v-model="shopInfo.goodsPackTypeCode"
+                placeholder="包装种类"
                 clearable
                 size="small"
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运费支付方法" prop="postCode" >
+            <el-form-item label="商品项毛重(KG)" prop="goodsGrossWt" >
               <el-input
-                v-model="queryParams.postCode"
-                placeholder="运费支付方法"
+                v-model="shopInfo.goodsGrossWt"
+                placeholder="商品项毛重(KG)"
                 clearable
                 size="small"
               />
@@ -438,20 +438,20 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="海关货物通关代码" prop="postCode" >
+            <el-form-item label="商品项简要描述" prop="goodsBriefDesc" >
               <el-input
                 @focus="dialogTableVisible2 = true"
-                v-model="queryParams.postCode"
-                placeholder="海关货物通关代码"
+                v-model="shopInfo.goodsBriefDesc"
+                placeholder="商品项简要描述"
                 clearable
                 size="small"
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="危险品编号" prop="postCode" >
+            <el-form-item label="危险品编号" prop="undgNoName" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="shopInfo.undgNoName"
                 placeholder="危险品编号"
                 clearable
                 size="small"
@@ -459,9 +459,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="商品HS编码" prop="postCode" >
+            <el-form-item label="商品HS编码" prop="HSCode" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="shopInfo.HSCode"
                 placeholder="商品HS编码"
                 clearable
                 size="small"
@@ -469,9 +469,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="商品项描述补充信息" prop="postCode" >
+            <el-form-item label="商品项描述补充信息" prop="goodsDetailDesc" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="shopInfo.goodsDetailDesc"
                 placeholder="商品项描述补充信息"
                 clearable
                 size="small"
@@ -504,11 +504,11 @@
         style="width: 100%"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" min-width="55"/>
-        <el-table-column prop="num" label="序号" min-width="120"/>
-        <el-table-column prop="num" label="集装箱（器）编号" min-width="120"/>
-        <el-table-column prop="num" label="尺寸和类型" min-width="150" />
-        <el-table-column prop="num" label="来源代码" min-width="120"/>
-        <el-table-column prop="num" label="重箱或空箱标识" min-width="120"/>
+        <el-table-column prop="index" label="序号" min-width="120"/>
+        <el-table-column prop="contaId" label="集装箱（器）编号" min-width="120"/>
+        <el-table-column prop="contaSizeType" label="尺寸和类型" min-width="150" />
+        <el-table-column prop="contaSuppId" label="来源代码" min-width="120"/>
+        <el-table-column prop="contaLoadedType" label="重箱或空箱标识" min-width="120"/>
       </el-table>
       <el-pagination
         class="right mb20"
@@ -519,12 +519,12 @@
         :page-size="page.size"
         @current-change="currentChange"
       />
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="containerInfo" ref="containerInfo" label-width="160px">
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="集装箱（器）编号" prop="postCode" >
+            <el-form-item label="集装箱（器）编号" prop="contaId" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="containerInfo.contaId"
                 placeholder="集装箱（器）编号"
                 clearable
                 size="small"
@@ -532,9 +532,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="尺寸和类型" prop="postCode" >
+            <el-form-item label="尺寸和类型" prop="contaSizeType" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="containerInfo.contaSizeType"
                 placeholder="尺寸和类型"
                 clearable
                 size="small"
@@ -542,9 +542,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="来源代码" prop="postCode" >
+            <el-form-item label="来源代码" prop="contaSuppId" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="containerInfo.contaSuppId"
                 placeholder="来源代码"
                 clearable
                 size="small"
@@ -552,9 +552,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="重箱或空箱标识" prop="postCode" >
+            <el-form-item label="重箱或空箱标识" prop="contaLoadedType" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="containerInfo.contaLoadedType"
                 placeholder="重箱或空箱标识"
                 clearable
                 size="small"
@@ -637,11 +637,64 @@ export default {
       },
       // 查询参数
       queryParams: {
+        voyageNo:'',//货物运输批次号
+        trafMode:'',//运输方式代码
+        customsCodeName:'',//进出境口岸海关代码
+        carrierCode:'',//承运人代码
+        transAgentCode:'',//运输工具代理企业代码
+        loadingDate:'',//货物装载时间
+        loadingLocationCode:'',//卸货地代码
+        arrivalDate:'',//到达卸货地日期
+        customMasterName:'',//传输企业备案关区
+        unitCode:'',//企业代码
+        msgRepName:'',//舱单传输人名称
+        additionalInformation:'',//备注
         postCode: undefined
+      },
+      // 提运单信息
+      waybill:{
+        billNo:'',//提（运）单号
+        chgCodeAddBtn:'',//变更原因
+        conditionCodeName:'',//运输条款
+        paymentType:'',//运费支付方法
+        goodsCustomsStat:'',//海关货物通关代码
+        transLocationId:'',//跨境指运地
+        packNum:'',//货物总件数
+        packType:'',//包装种类
+        cube:'',//货物体积(M3)
+        grossWt:'',//货物总毛重(KG)
+        goodsValue:'',//货物价值
+        currencyType:'',//金额类型
+        consolidatorId:'',//拆箱人代码
+        countryInfoAddBtn:'',//途径国家或地区
+        consigneeInfo:'',//收货人信息
+        consigorInfo:'',//发货人信息
+        notifyInfo:'',//通知人信息
+        undgInfo:'',//危险品联系人信息
+      },
+      // 商品项信息
+      shopInfo:{
+        goodsSeqNo:'',//商品项序号
+        goodsPackNum:'',//商品项件数
+        goodsPackTypeCode:'',//包装种类
+        goodsGrossWt:'',//商品项毛重(KG)
+        goodsBriefDesc:'',//商品项简要描述
+        undgNoName:'',//危险品编号
+        HSCode:'',//商品HS编码
+        goodsDetailDesc:'',//商品项描述补充信息
+      },
+      // 集装箱信息
+      containerInfo:{
+        contaId:'',//集装箱（器）编号
+        contaSizeType:'',//尺寸和类型
+        contaSuppId:'',//来源代码
+        contaLoadedType:'',//重箱或空箱标识
       },
       statusOptions:[],
       dateTimeVal:'',
-      data:[]
+      data:[],
+      // 进出境口岸关区代码字典
+      CustomsDictionary:[]
     }
   },
   mounted(){
@@ -651,6 +704,7 @@ export default {
   methods:{
     async init(){
       // await this.depParaList()
+      this.hgCustomsCode()
     },
     // 新增
     handleAdd(){},
@@ -700,6 +754,12 @@ export default {
           resolve(data);
         })
       })
+    },
+    hgCustomsCode(){
+      /** 进出境口岸关区代码字典 */
+      this.getDicts("hg_customs_code").then((response) => {
+        this.CustomsDictionary = response.data;
+      });
     }
   }
 
