@@ -119,13 +119,8 @@
           <span> {{yardZoneTypeOptions.find(item=>item.dictValue === scope.row.zoneType).dictLabel}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="区域编号" align="center" prop="zoneCode" >
-        <template slot-scope="scope">
-          <span> {{depts.find(item=>item.deptId === scope.row.yardId).deptName}}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="区域编号" align="center" prop="zoneCode" />
       <!--<el-table-column label="区域ID" align="center" prop="zoneId" />-->
-      
       <el-table-column label="库位编号" align="center" prop="storeCode" />
       <!--<el-table-column label="库位层级" align="center" prop="storeLevel" />-->
       <el-table-column label="库位状态" align="center" prop="storeState" :formatter="storeStateFormat" />
