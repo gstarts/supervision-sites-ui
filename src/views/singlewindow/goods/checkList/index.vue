@@ -7,9 +7,10 @@
         icon="el-icon-plus"
         size="mini"
         :disabled="btnDisable.addBtn"
-        @click="handleAdd"
+        @click="SingleAll"
       >新增</el-button>
-      <el-button
+      <el-button @click="Test">测试</el-button>
+      <!-- <el-button
         type="success"
         icon="el-icon-edit"
         size="mini"
@@ -36,7 +37,7 @@
         size="mini"
         :disabled="btnDisable.copyBtn"
         @click="handleCopy"
-      >复制</el-button>
+      >复制</el-button> -->
       <el-button
         type="primary"
         icon="el-icon-refresh"
@@ -147,12 +148,12 @@
           </el-col>
           <el-col :span="3">
             <el-form-item prop="DomesticConsigneeEname" style="margin-left:-120px">
-              <el-input v-model="form.DomesticConsigneeEname" placeholder="10位检验检疫编码" />
+              <el-input v-model="form.TradeCiqCode" placeholder="10位检验检疫编码" />
             </el-form-item>
           </el-col>
           <el-col :span="9">
             <el-form-item prop="postCode" style="margin-left:-120px">
-              <el-input v-model="form.postCode" placeholder="企业名称(中文)" />
+              <el-input v-model="form.DomesticConsigneeEname" placeholder="企业名称(中文)" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -172,23 +173,23 @@
 
         <el-row>
           <el-col :span="9">
-            <el-form-item label="消费使用单位" prop="ownerName">
-              <el-input v-model="form.ownerName" placeholder="18位社会信用代码" />
+            <el-form-item label="消费使用单位" prop="OwnerCodeScc">
+              <el-input v-model="form.OwnerCodeScc" placeholder="18位社会信用代码" />
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item prop="postCode" style="margin-left:-120px">
-              <el-input v-model="form.postCode" placeholder="10位海关代码" />
+            <el-form-item prop="OwnerCode" style="margin-left:-120px">
+              <el-input v-model="form.OwnerCode" placeholder="10位海关代码" />
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item prop="postCode" style="margin-left:-120px">
-              <el-input v-model="form.postCode" placeholder="10位检验检疫编码" />
+            <el-form-item prop="OwnerCiqCode" style="margin-left:-120px">
+              <el-input v-model="form.OwnerCiqCode" placeholder="10位检验检疫编码" />
             </el-form-item>
           </el-col>
           <el-col :span="9">
-            <el-form-item prop="postCode" style="margin-left:-120px">
-              <el-input v-model="form.postCode" placeholder="企业名称" />
+            <el-form-item prop="OwnerName" style="margin-left:-120px">
+              <el-input v-model="form.OwnerName" placeholder="企业名称" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -370,13 +371,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="集装箱数" prop="postCode">
-              <el-input v-model="form.postCode" placeholder="集装箱数" />
+            <el-form-item label="集装箱数" prop="postCode" >
+              <el-input v-model="form.postCode" placeholder="集装箱数" :disabled="true"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="随附单证" prop="postCode">
-              <el-input v-model="form.postCode" placeholder="随附单证" />
+              <el-input v-model="form.postCode" placeholder="随附单证" :disabled="true"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -426,7 +427,7 @@
           </el-col>
           <el-col :span="8" style="margin-left:-50px">
             <el-form-item label="业务事项">
-              <el-select v-model="value1" multiple placeholder="请选择">
+              <el-select v-model="value1" multiple placeholder="请选择" >
                 <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -445,23 +446,23 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item label="企业资质" prop="entQualifTypeCodeS">
-              <el-input v-model="form.entQualifTypeCodeS" />
+            <el-form-item label="企业资质" prop="CopCode">
+              <el-input v-model="form.CopCode" :disabled="true"/>
             </el-form-item>
           </el-col>
           <el-col :span="6" style="margin-left:-150px">
-            <el-form-item prop="entQualifTypeCodeSName">
-              <el-input v-model="form.entQualifTypeCodeSName" />
+            <el-form-item prop="CopName">
+              <el-input v-model="form.CopName" :disabled="true"/>
             </el-form-item>
           </el-col>
           <el-col :span="3" style="margin-left:10px">
-            <el-button icon="el-icon-arrow-left" type="info" circle></el-button>
+            <el-button icon="el-icon-arrow-left" type="info" @click="left" circle></el-button>
           </el-col>
           <el-col :span="3" style="margin-left:-160px">
-            <el-button icon="el-icon-arrow-right" type="info" circle></el-button>
+            <el-button icon="el-icon-arrow-right" type="info" @click="right" circle></el-button>
           </el-col>
           <el-col :span="3" style="margin-left:-160px">
-            <el-button icon="el-icon-more-outline" type="info" circle></el-button>
+            <el-button icon="el-icon-more-outline" type="info" @click="CopList" circle></el-button>
           </el-col>
         </el-row>
 
@@ -540,7 +541,7 @@
 
     <el-card class="mb20">
       <div slot="header" class="clearfix">
-        <span>商品项信息</span>
+        <span>进口/出口报关单表体</span>
       </div>
       <el-row type="flex" class="mb20">
         <el-col>
@@ -549,9 +550,9 @@
             icon="el-icon-plus"
             size="mini"
             :disabled="btnDisable.addBtn"
-            @click="handleAdd"
+            @click="CommodityItemAdd"
           >新增</el-button>
-          <el-button
+          <!-- <el-button
             type="success"
             icon="el-icon-edit"
             size="mini"
@@ -563,7 +564,7 @@
             icon="el-icon-delete"
             size="mini"
             :disabled="btnDisable.delBtn"
-            @click="handleDelete"
+            @click="CommodityItemdelete"
           >删除</el-button>
           <el-button
             type="danger"
@@ -578,40 +579,41 @@
             size="mini"
             :disabled="btnDisable.copyBtn"
             @click="handleCopy"
-          >复制</el-button>
+          >复制</el-button> -->
           <el-button
             type="primary"
             icon="el-icon-refresh"
             size="mini"
             :disabled="btnDisable.refBtn"
-            @click="handleRefresh"
+            @click="CommodityItemRefresh"
           >刷新</el-button>
         </el-col>
       </el-row>
       <el-table
         class="mb20"
         ref="multipleTable"
-        :data="data"
+        :data="CommodityItemList"
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column prop="num" label="项号" min-width="120" />
-        <el-table-column prop="num" label="备案序号" min-width="120" />
-        <el-table-column prop="num" label="商品编号" min-width="150" />
-        <el-table-column prop="num" label="检验检疫名称" min-width="120" />
-        <el-table-column prop="num" label="商品名称" min-width="120" />
-        <el-table-column prop="num" label="商品规格、型号" min-width="120" />
-        <el-table-column prop="num" label="成交数量" min-width="120" />
-        <el-table-column prop="num" label="成交单位" min-width="120" />
-        <el-table-column prop="num" label="单价" min-width="150" />
-        <el-table-column prop="num" label="总价" min-width="120" />
-        <el-table-column prop="num" label="币制" min-width="120" />
-        <el-table-column prop="num" label="原产国(地区)" min-width="120" />
-        <el-table-column prop="num" label="最终目的国" min-width="120" />
-        <el-table-column prop="num" label="征免方式" min-width="120" />
-        <el-table-column prop="num" label="监管要求" min-width="120" />
+        <el-table-column prop="gNo" label="项号" min-width="120" />
+        <el-table-column label="序号" align="center" type="index" />
+        <el-table-column prop="ContrItem" label="备案序号" min-width="120" />
+        <el-table-column prop="CodeTS" label="商品编号" min-width="150" />
+        <el-table-column prop="CiqName" label="检验检疫名称" min-width="120" />
+        <el-table-column prop="GName" label="商品名称" min-width="120" />
+        <el-table-column prop="GModel" label="商品规格、型号" min-width="120" />
+        <el-table-column prop="GQty" label="成交数量" min-width="120" />
+        <el-table-column prop="GUnit" label="成交单位" min-width="120" />
+        <el-table-column prop="DeclPrice" label="成交单价" min-width="150" />
+        <el-table-column prop="DeclTotal" label="成交总价" min-width="120" />
+        <el-table-column prop="TradeCurr" label="成交币制" min-width="120" />
+        <el-table-column prop="OriginCountry" label="原产国(地区)" min-width="120" />
+        <el-table-column prop="DestinationCountry" label="最终目的国" min-width="120" />
+        <el-table-column prop="DutyMode" label="征免方式" min-width="120" />
+        <el-table-column prop="GoodsSpec" label="检验检疫货物规格" min-width="120" />
       </el-table>
       <el-pagination
         class="right mb20"
@@ -689,9 +691,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="成交单价" prop="DeclTotal">
+            <el-form-item label="成交单价" prop="DeclPrice">
               <el-input
-                v-model="commodityForm.DeclTotal"
+                v-model="commodityForm.DeclPrice"
                 placeholder="成交单价"
                 clearable
                 size="small"
@@ -854,22 +856,24 @@
             </el-form-item>
           </el-col>
           <el-col :span="1">
-            <el-button icon="el-icon-more-outline" type="info" circle></el-button>
+            <el-button icon="el-icon-more-outline" type="info" @click="specification" circle></el-button>
           </el-col>
           <el-col :span="4" style="margin-left:100px">
-            <el-button type="primary" size="medium">业 务 事 项</el-button>
+            <el-button type="primary" size="medium">产 品 资 质</el-button>
           </el-col>
         </el-row>
 
         <el-row type="flex" :style="{display:List1Hide}">
           <el-col :span="9">
-            <el-form-item label="货物属性" prop="GoodsAttr">
-              <el-input
-                v-model="commodityForm.GoodsAttr"
-                placeholder="货物属性"
-                clearable
-                size="small"
-              />
+              <el-form-item label="货物属性">
+              <el-select v-model="commodityForm.GoodsAttr" multiple placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <!-- <el-col :span="1">
@@ -898,9 +902,9 @@
             icon="el-icon-plus"
             size="mini"
             :disabled="btnDisable.addBtn"
-            @click="handleAdd"
+            @click="containerAdd"
           >新增</el-button>
-          <el-button
+          <!-- <el-button
             type="success"
             icon="el-icon-edit"
             size="mini"
@@ -927,28 +931,28 @@
             size="mini"
             :disabled="btnDisable.copyBtn"
             @click="handleCopy"
-          >复制</el-button>
+          >复制</el-button> -->
           <el-button
             type="primary"
             icon="el-icon-refresh"
             size="mini"
             :disabled="btnDisable.refBtn"
-            @click="handleRefresh"
+            @click="containerRefresh"
           >刷新</el-button>
         </el-col>
       </el-row>
       <el-table
         class="mb20"
         ref="multipleTable"
-        :data="data"
+        :data="containerList"
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column prop="num" label="集装箱号" min-width="200" />
-        <el-table-column prop="num" label="集装箱规格" min-width="150" />
-        <el-table-column prop="num" label="拼箱标识" min-width="120" />
+        <el-table-column prop="ContainerId" label="集装箱号" min-width="200" />
+        <el-table-column prop="ContainerMd" label="集装箱规格" min-width="150" />
+        <el-table-column prop="LclFlag" label="拼箱标识" min-width="120" />
       </el-table>
       <el-pagination
         class="right mb20"
@@ -1016,10 +1020,10 @@
       </el-form>
     </el-card>
 
-    <!-- 集装箱信息 -->
+    <!-- 随附单证 -->
     <el-card class="mb20">
       <div slot="header" class="clearfix">
-        <span>集装箱信息</span>
+        <span>随附单证</span>
       </div>
       <el-row type="flex" class="mb20">
         <el-col>
@@ -1028,9 +1032,9 @@
             icon="el-icon-plus"
             size="mini"
             :disabled="btnDisable.addBtn"
-            @click="handleAdd"
+            @click="DocumentsAdd"
           >新增</el-button>
-          <el-button
+          <!-- <el-button
             type="success"
             icon="el-icon-edit"
             size="mini"
@@ -1057,27 +1061,27 @@
             size="mini"
             :disabled="btnDisable.copyBtn"
             @click="handleCopy"
-          >复制</el-button>
+          >复制</el-button> -->
           <el-button
             type="primary"
             icon="el-icon-refresh"
             size="mini"
             :disabled="btnDisable.refBtn"
-            @click="handleRefresh"
+            @click="DocumentsRefresh"
           >刷新</el-button>
         </el-col>
       </el-row>
       <el-table
         class="mb20"
         ref="multipleTable"
-        :data="data"
+        :data="DocumentsList"
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column prop="num" label="单证代码" min-width="200" />
-        <el-table-column prop="num" label="单证编号" min-width="150" />
+        <el-table-column prop="DocuCode" label="单证代码" min-width="200" />
+        <el-table-column prop="CertCode" label="单证编号" min-width="150" />
       </el-table>
       <el-pagination
         class="right mb20"
@@ -1088,16 +1092,16 @@
         :page-size="page.size"
         @current-change="currentChange"
       />
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="DocumentsForm" ref="DocumentsForm" label-width="160px">
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="随附单证代码" prop="DocuCode">
-              <el-input v-model="queryParams.DocuCode" placeholder="随附单证代码" clearable size="small" />
+              <el-input v-model="DocumentsForm.DocuCode" placeholder="随附单证代码" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="随附单证编号" prop="CertCode">
-              <el-input v-model="queryParams.CertCode" placeholder="随附单证编号" clearable size="small" />
+              <el-input v-model="DocumentsForm.CertCode" placeholder="随附单证编号" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -1105,16 +1109,16 @@
     </el-card>
 
     <el-card class="mb20">
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="CustomsDeclarationForm" ref="CustomsDeclarationForm" label-width="160px">
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="关联报关单" prop="RelId">
-              <el-input v-model="queryParams.RelId" placeholder="关联报关单" clearable size="small" />
+              <el-input v-model="CustomsDeclarationForm.RelId" placeholder="关联报关单" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="关联备案" prop="RelManNo">
-              <el-input v-model="queryParams.RelManNo" placeholder="关联备案" clearable size="small" />
+              <el-input v-model="CustomsDeclarationForm.RelManNo" placeholder="关联备案" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -1122,12 +1126,12 @@
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="保税/监管场地" prop="BonNo">
-              <el-input v-model="queryParams.BonNo" placeholder="保税/监管场地" clearable size="small" />
+              <el-input v-model="CustomsDeclarationForm.BonNo" placeholder="保税/监管场地" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="货场代码" prop="CusFie">
-              <el-input v-model="queryParams.CusFie" placeholder="货场代码" clearable size="small" />
+              <el-input v-model="CustomsDeclarationForm.CusFie" placeholder="货场代码" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -1177,7 +1181,13 @@
       <el-form :model="userForm" class="mb20" ref="userForm" label-width="130px">
         <el-row :gutter="10">
           <el-col :span="1.5">
-            <el-button type="primary" plain size="mini" icon="el-icon-refresh-left" @click="userRefresh">刷新</el-button>
+            <el-button
+              type="primary"
+              plain
+              size="mini"
+              icon="el-icon-refresh-left"
+              @click="userRefresh"
+            >刷新</el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button type="primary" plain size="mini" icon="el-icon-edit" @click="userAdd">保存</el-button>
@@ -1196,7 +1206,128 @@
           </el-col>
         </el-row>
         <!-- 使用人编辑信息List -->
-        <el-table class="mb20" ref="multipleTable" :data="UserList" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table
+          class="mb20"
+          ref="multipleTable"
+          :data="UserList"
+          tooltip-effect="dark"
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+        >
+          <el-table-column type="selection" min-width="55" />
+          <el-table-column label="序号" align="center" type="index" min-width="200" />
+          <el-table-column prop="user1" label="使用单位联系人" min-width="200" />
+          <el-table-column prop="user2" label="使用单位联系电话" min-width="150" />
+        </el-table>
+      </el-form>
+    </el-dialog>
+
+    <el-dialog title="编辑检验检疫货物规格" :visible.sync="specificationPopup">
+      <el-form :model="specificationForm" class="mb20" ref="specificationForm" label-width="130px">
+        <el-row>
+          <el-col :span="18">
+            <el-form-item label="成分/原料/组分" prop="specification1">
+              <el-input v-model="specificationForm.specification1" placeholder="成分/原料/组分" clearable size="small" />
+            </el-form-item>
+          </el-col>
+          </el-row>
+          <el-row>
+          <el-col :span="18">
+            <el-form-item label="产品有效期" prop="specification2">
+            <el-date-picker
+              v-model="specificationForm.specification2"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="选择日期"
+              style="width:100%"
+            ></el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+         <el-row>
+          <el-col :span="18">
+            <el-form-item label="产品保质期(天)" prop="specification3">
+              <el-input v-model="specificationForm.specification3" placeholder="产品保质期(天)" clearable size="small" />
+            </el-form-item>
+          </el-col>
+          </el-row>
+           <el-row>
+          <el-col :span="18">
+            <el-form-item label="境外生产企业" prop="specification4">
+              <el-input v-model="specificationForm.specification4" placeholder="境外生产企业" clearable size="small" />
+            </el-form-item>
+          </el-col>
+          </el-row>
+           <el-row>
+          <el-col :span="18">
+            <el-form-item label="货物规格" prop="specification5">
+              <el-input v-model="specificationForm.specification5" placeholder="货物规格" clearable size="small" />
+            </el-form-item>
+          </el-col>
+          </el-row>
+           <el-row>
+          <el-col :span="18">
+            <el-form-item label="货物型号" prop="specification6">
+              <el-input v-model="specificationForm.specification6" placeholder="货物型号" clearable size="small" />
+            </el-form-item>
+          </el-col>
+          </el-row>
+           <el-row>
+          <el-col :span="18">
+            <el-form-item label="货物品牌" prop="specification7">
+              <el-input v-model="specificationForm.specification7" placeholder="货物品牌" clearable size="small" />
+            </el-form-item>
+          </el-col>
+          </el-row>
+           <el-row>
+          <el-col :span="18">
+            <el-form-item label="生产日期" prop="specification8">
+            <el-date-picker
+              v-model="specificationForm.specification8"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="选择日期"
+              style="width:100%"
+            ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          </el-row>
+           <el-row>
+          <el-col :span="18">
+            <el-form-item label="生产批次" prop="specification9">
+              <el-input v-model="specificationForm.specification9" placeholder="生产批次" clearable size="small" />
+            </el-form-item>
+          </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="2">
+              <el-button type="primary" plain size="mini" icon="el-icon-edit" @click="specificationAdd">确定</el-button>
+            </el-col>
+          </el-row>
+      </el-form>
+    </el-dialog>
+    <el-dialog title="编辑企业资质信息" :visible.sync="CopPopup">
+      <el-form :model="specificationForm" class="mb20" ref="specificationForm" label-width="130px">
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="生产批次" prop="specification9">
+              <el-input v-model="specificationForm.specification9" placeholder="生产批次" clearable size="small" />
+            </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="生产批次" prop="specification9">
+              <el-input v-model="specificationForm.specification9" placeholder="生产批次" clearable size="small" />
+            </el-form-item>
+        </el-col>
+      </el-row>
+      <el-table
+          class="mb20"
+          ref="multipleTable"
+          :data="UserList"
+          tooltip-effect="dark"
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+        >
           <el-table-column type="selection" min-width="55" />
           <el-table-column label="序号" align="center" type="index" min-width="200" />
           <el-table-column prop="user1" label="使用单位联系人" min-width="200" />
@@ -1222,6 +1353,10 @@ export default {
       MatterconFirmation: false,
       //编辑使用人信息
       userPopup: false,
+      //编辑检验检疫货物规格
+      specificationPopup: false,
+      //编辑企业资质信息弹出框
+      CopPopup:false,
       gridData: [],
       page: {
         num: 1,
@@ -1239,30 +1374,47 @@ export default {
         copyBtn: false,
         refBtn: false,
       },
-      //使用人弹出框前端字段
-      userForm: {
-        user1: undefined,
-        user2: undefined,
-      },
-      //使用人List
-      UserList: [],
       //前端字段
       temporaryForm: {
         //其他事项确认
         temporary1: undefined,
         temporary2: undefined,
         temporary3: undefined,
-        //集装箱数
-        // contaCount: undefined,
-        //随附单证
-        // attaDocuCdstr: undefined,
+        
       },
+      //使用人弹出框前端字段
+      userForm: {
+        user1: undefined,
+        user2: undefined,
+      },
+      //编辑检验检疫货物规格
+      specificationForm: {
+        specification1: "",
+        specification2: "",
+        specification3: "",
+        specification4: "",
+        specification5: "",
+        specification6: "",
+        specification7: "",
+        specification8: "",
+        specification9: "",
+      },
+      //使用人List
+      UserList: [],
+      //商品项信息List
+      CommodityItemList: [],
+      //集装箱号List
+      containerList:[],
+      //随附单证List
+      DocumentsList:[],
       // 查询参数
       queryParams: {
         postCode: undefined,
       },
       //进口/出口报关单表头 DecHead
       form: {
+        //其他业务事项确认
+        PromiseItmes:undefined,
         //申报地海关
         CustomMaster: undefined,
         //申报状态 不填写
@@ -1295,13 +1447,13 @@ export default {
         //境外收发货人企业名称(中文)
         OverseasConsignorEname: undefined,
         //消费使用单位
-        OwnerName: undefined,
+        OwnerCodeScc: undefined,
         //消费使用单位10位海关代码
-        ownerCode: undefined,
+        OwnerCode: undefined,
         //消费使用单位10位检验检疫编码
         OwnerCiqCode: undefined,
         //消费使用单位企业名称
-        ownerName: undefined,
+        OwnerName: undefined,
         //申报单位
         AgentCodeScc: undefined,
         //申报单位10位海关代码
@@ -1374,10 +1526,10 @@ export default {
         MarkNo: undefined,
         //检验检疫受理机关
         OrgCode: undefined,
-        //企业资质
-        entQualifTypeCodeS: undefined,
-        //企业资质2
-        entQualifTypeCodeSName: undefined,
+        //录入单位代码
+        CopCode: undefined,
+        //录入单位名称
+        CopName: undefined,
         //领证机关
         VsaOrgCode: undefined,
         //口岸检验检疫机关
@@ -1484,11 +1636,24 @@ export default {
         //货场代码
         CusFie: undefined,
       },
+      //整体表单
+      AllForm:{
+        form:{},
+        CustomsDeclarationForm:{},
+        CommodityItemList:[],
+        containerList:[],
+        DocumentsList:[],
+        UserList:[],
+      },
       statusOptions: [],
       dateTimeVal: "",
       data: [],
     };
   },
+  // 集装箱数
+  // contaCount: undefined,
+  // 随附单证
+  // attaDocuCdstr: undefined,
   mounted() {
     // 初始化
     this.init();
@@ -1498,22 +1663,87 @@ export default {
     this.List1Hide = "none";
   },
   methods: {
+    //整体新增
+    SingleAll(){
+      this.form.PromiseItmes=this.temporaryForm.temporary1+this.temporaryForm.temporary2+this.temporaryForm.temporary3;
+      this.AllForm.form=this.form;
+      this.AllForm.CustomsDeclarationForm=this.CustomsDeclarationForm;
+      this.AllForm.containerList=this.containerList;
+      this.AllForm.DocumentsList=this.DocumentsList;
+      this.AllForm.UserList=this.UserList;
+      this.AllForm.CommodityItemList=this.CommodityItemList;
+      // console.log(JSON.stringify(this.form));
+      console.log(JSON.stringify(this.AllForm));
+      // console.log(this.AllForm);
+      // console.log(this.AllForm.CommodityItemList);
+    },
     //使用人清空
     userRefresh() {
       this.userForm = {};
     },
     //使用人弹出框保存
     userAdd() {
-      console.log(this.userForm);
       this.UserList.push(this.userForm);
+      this.userForm = {};
+    },
+    //使用人弹框
+    user() {
+      this.userPopup = true;
     },
     //其他事项确认弹窗
     matter() {
       this.MatterconFirmation = true;
     },
-    //使用人弹框
-    user() {
-      this.userPopup = true;
+    //编辑检验检疫货物规格弹窗
+    specification() {
+      this.specificationPopup = true;
+    },
+    //编辑检验检疫货物规格弹窗确定按钮
+    specificationAdd(){
+      console.log("进入检验检疫货物规格弹窗");
+      this.commodityForm.GoodsSpec=this.specificationForm.specification1+";"+
+      this.specificationForm.specification2+";"+
+      this.specificationForm.specification3+";"+
+      this.specificationForm.specification4+";"+
+      this.specificationForm.specification5+";"+
+      this.specificationForm.specification6+";"+
+      this.specificationForm.specification7+";"+
+      this.specificationForm.specification8+";"+
+      this.specificationForm.specification9
+      this.specificationPopup = false;
+      console.log(this.commodityForm.GoodsSpec);
+    },
+    //进口/出口报关单表体清空
+    CommodityItemRefresh() {
+      this.CommodityItemList = [];
+    },
+    //进口/出口报关单表体保存
+    CommodityItemAdd() {
+      this.CommodityItemList.push(this.commodityForm);
+      this.commodityForm = {};
+    },
+    //集装箱保存按钮
+    containerAdd(){
+      this.containerList.push(this.containerForm);
+      this.containerForm={};
+      console.log(this.containerList);
+    },
+    //集装箱List清空按钮
+    containerRefresh(){
+      this.containerList=[];
+    },
+    //随附单证保存按钮
+    DocumentsAdd(){
+      this.DocumentsList.push(this.DocumentsForm);
+      this.DocumentsForm={};
+      console.log(this.DocumentsList);
+    },
+    DocumentsRefresh(){
+      this.DocumentsList=[];
+    },
+    //企业资质弹出框
+    CopList(){
+      this.CopPopup=true;
     },
     //表头隐藏显示切换
     hide() {
@@ -1573,6 +1803,9 @@ export default {
     numFun() {
       console.log(123);
     },
+    Test(){
+      console.log(this.CustomsDeclarationForm);
+    },
     // 请求接口
     // depParaList() {
     //   return new Promise((resolve) => {
@@ -1597,4 +1830,8 @@ export default {
 .datePicker {
   width: auto !important;
 }
+.el-select{
+  width: 100%;
+}
+
 </style>

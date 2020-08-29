@@ -15,6 +15,12 @@ const actions = {
   depParaList( {dispatch , commit} , data){
     return  req.depParaList(data)
   },
+  saveList( {dispatch , commit} , data){
+    return  req.saveList(data)
+  },
+  getVoyageNo( {dispatch , commit} , data){
+    return  req.getVoyageNo(data)
+  },
   changeStatus({dispatch , commit} , data){
     console.log(123);
     commit('changeStatus',new Date().getTime())
