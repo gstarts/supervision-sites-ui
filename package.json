@@ -54,6 +54,7 @@
     "screenfull": "4.2.0",
     "simple-keyboard": "2.29.99",
     "sortablejs": "1.8.4",
+    "v-charts": "^1.19.0",
     "vue": "2.6.10",
     "vue-count-to": "1.0.13",
     "vue-cropper": "0.4.9",
