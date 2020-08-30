@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="堆场" prop="yardId">
-        <el-select v-model="queryParams.yardId" placeholder="请选择堆场">
+      <el-form-item label="场所" prop="placeId">
+        <el-select v-model="queryParams.placeId" placeholder="请选择场所">
           <el-option
             v-for="dept in depts"
             :key="dept.deptId"
@@ -95,15 +95,15 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['yard:history:export']"
+          v-hasPermi="['place:history:export']"
         >导出</el-button>
       </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="historyList">
-      <el-table-column label="堆场" align="center" prop="yardId" >
+      <el-table-column label="场所" align="center" prop="placeId" >
         <template slot-scope="scope">
-          <span>{{depts.find(item=>item.deptId === scope.row.yardId).deptName}}</span>
+          <span>{{depts.find(item=>item.deptId === scope.row.placeId).deptName}}</span>
         </template>
       </el-table-column>
       <el-table-column label="区域编号" align="center" prop="zoneCode" />
@@ -126,11 +126,10 @@
       <el-table-column label="更新人" align="center" prop="updateBy" />
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime)}}</span>
+          <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
       </el-table-column>
     </el-table>
-    
     <pagination
       v-show="total>0"
       :total="total"
@@ -142,7 +141,7 @@
 </template>
 
 <script>
-import { listHistory} from "@/api/yard/history";
+import { listHistory} from "@/api/place/history";
 import {getUserDepts} from '@/utils/charutils'
 
 export default {
@@ -156,7 +155,7 @@ export default {
       depts: [],
       // 总条数
       total: 0,
-      // 堆场库存明细历史 表格数据
+      // 场所库存明细历史 表格数据
       historyList: [],
       // 是否显示弹出层
       open: false,
@@ -164,7 +163,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 20,
-        yardId: undefined,
+        placeId: undefined,
         zoneCode: undefined,
         storeCode: undefined,
         storeState: undefined,
@@ -186,15 +185,15 @@ export default {
     };
   },
   created() {
-	  // 0 监管场所，1保税库，2堆场，3企业
-	  this.depts = getUserDepts('2')
+	  // 0 监管场所，1保税库，2场所，3企业
+	  this.depts = getUserDepts('0')
 	  if (this.depts.length > 0) {
-		  this.queryParams.yardId = this.depts[0].deptId
+		  this.queryParams.placeId = this.depts[0].deptId
 		  this.getList();
 	  }
   },
   methods: {
-    /** 查询堆场库存明细历史 列表 */
+    /** 查询场所库存明细历史 列表 */
     getList() {
       this.loading = true;
       listHistory(this.queryParams).then(response => {
@@ -216,9 +215,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('yard/history/export', {
+      this.download('place/history/export', {
         ...this.queryParams
-      }, `yard_history.xlsx`)
+      }, `place_history.xlsx`)
     }
   }
 };

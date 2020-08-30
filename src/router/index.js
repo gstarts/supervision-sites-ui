@@ -5,16 +5,16 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-// 原始舱单
-import originalManifest from './moudles/originalManifest'
-// 预配舱单
-import preplan from './moudles/preplan'
-// 理货报告
-import tallyingReport from './moudles/tallyingReport'
-// 运抵报告
-import shipToReport from './moudles/shipToReport'
-// 车辆进出境确报告
-import carReport from './moudles/carReport'
+// // 原始舱单
+// import originalManifest from './moudles/originalManifest'
+// // 预配舱单
+// import preplan from './moudles/preplan'
+// // 理货报告
+// import tallyingReport from './moudles/tallyingReport'
+// // 运抵报告
+// import shipToReport from './moudles/shipToReport'
+// // 车辆进出境确报告
+// import carReport from './moudles/carReport'
 
 
 /**
@@ -169,11 +169,11 @@ export const constantRoutes = [
         }
       ]
     },
-    originalManifest,
-    tallyingReport,
-    shipToReport,
-    carReport,
-    preplan
+    // originalManifest,
+    // tallyingReport,
+    // shipToReport,
+    // carReport,
+    // preplan
 ]
 
 export default new Router({

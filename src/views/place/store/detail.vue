@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="堆场" prop="yardId">
-        <el-select v-model="queryParams.yardId" placeholder="请选择堆场">
+      <el-form-item label="场所" prop="placeId">
+        <el-select v-model="queryParams.placeId" placeholder="请选择场所">
           <el-option
             v-for="dept in depts"
             :key="dept.deptId"
@@ -144,7 +144,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['yard:store_detail:add']"
+          v-hasPermi="['place:store_detail:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -154,7 +154,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['yard:store_detail:edit']"
+          v-hasPermi="['place:store_detail:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -164,7 +164,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['yard:store_detail:remove']"
+          v-hasPermi="['place:store_detail:remove']"
         >删除</el-button>
       </el-col>-->
       <el-col :span="1.5">
@@ -173,7 +173,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['yard:store_detail:export']"
+          v-hasPermi="['place:store_detail:export']"
         >导出
         </el-button>
       </el-col>
@@ -182,9 +182,9 @@
     <el-table v-loading="loading" :data="store_detailList">
       <!--<el-table-column type="selection" width="55" align="center" />-->
       <!--<el-table-column label="ID" align="center" prop="id" />-->
-      <el-table-column label="堆场" align="center" prop="yardId" :fixed="true">
+      <el-table-column label="场所" align="center" prop="placeId" :fixed="true">
         <template slot-scope="scope">
-          {{depts.find(item=>item.deptId === scope.row.yardId).deptName}}
+          {{depts.find(item=>item.deptId === scope.row.placeId).deptName}}
         </template>
       </el-table-column>
       <!--<el-table-column label="区域ID" align="center" prop="zoneId" />-->
@@ -216,14 +216,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['yard:store_detail:edit']"
+            v-hasPermi="['place:store_detail:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['yard:store_detail:remove']"
+            v-hasPermi="['place:store_detail:remove']"
           >删除</el-button>
         </template>
       </el-table-column>-->
@@ -240,7 +240,7 @@
 </template>
 
 <script>
-	import {listStore_detail} from "@/api/yard/store_detail";
+	import {listStore_detail} from "@/api/place/store_detail";
 	import {getUserDepts} from '@/utils/charutils'
 
 	export default {
@@ -259,7 +259,7 @@
 				// 总条数
 				total: 0,
 				storeStateOptions: [],
-				// 堆场库存明细 表格数据
+				// 场所库存明细 表格数据
 				store_detailList: [],
 				// 弹出层标题
 				title: "",
@@ -274,7 +274,7 @@
 				queryParams: {
 					pageNum: 1,
 					pageSize: 20,
-					yardId: undefined,
+					placeId: undefined,
 					zoneCode: undefined,
 					storeCode: undefined,
 					storeState: undefined,
@@ -288,7 +288,7 @@
 		},
 		created() {
 			//接收参数
-			let queryYardId = this.$route.query.yardId
+			let queryPlaceId = this.$route.query.placeId
 			let queryStoreCode = this.$route.query.storeCode
    
 			this.getDicts("yard_store_state").then(response => {
@@ -297,19 +297,18 @@
 			this.getDicts("yard_container_heavy_state").then(response => {
 				this.heavyOptions = response.data
 			});
-			this.depts = getUserDepts('2')
+			this.depts = getUserDepts('0')
 			if (this.depts.length > 0) {
-				this.queryParams.yardId = this.depts[0].deptId
+				this.queryParams.placeId = this.depts[0].deptId
 				// 参数不为空，并非参数在用户权限范围内
-				if (typeof (queryYardId) != 'undefined' && this.depts.findIndex((v) => {
-					return v.deptId === queryYardId
+				if (typeof (queryPlaceId) != 'undefined' && this.depts.findIndex((v) => {
+					return v.deptId === queryPlaceId
 				}) !== -1) {
-					this.queryParams.yardId = queryYardId
+					this.queryParams.placeId = queryPlaceId
 				}
 				if (typeof (queryStoreCode) != 'undefined') {
 					this.queryParams.storeCode = queryStoreCode
 				}
-
 				this.getList();
 			}
 		},
@@ -317,7 +316,7 @@
 			heavyStateFormat(row, column) {
 				return this.selectDictLabel(this.heavyOptions, row.isHeavy);
 			},
-			/** 查询堆场库存明细 列表 */
+			/** 查询场所库存明细 列表 */
 			getList() {
 				this.loading = true;
 				listStore_detail(this.queryParams).then(response => {
@@ -335,16 +334,16 @@
 			/** 重置按钮操作 */
 			resetQuery() {
 				this.resetForm("queryForm");
-				this.queryParams.yardId = this.depts[0].deptId
+				this.queryParams.placeId = this.depts[0].deptId
         this.queryParams.storeCode = ''
 				this.handleQuery();
 			},
 
 			/** 导出按钮操作 */
 			handleExport() {
-				this.download('yard/store_detail/export', {
+				this.download('place/store_detail/export', {
 					...this.queryParams
-				}, `yard_store_detail.xlsx`)
+				}, `place_store_detail.xlsx`)
 			}
 		}
 	};

@@ -18,3 +18,22 @@ export function depParaList(query) {
     params: query
   })
 }
+
+
+// 保存当前页面数据
+export function saveList(data) {
+  return pubReq({
+    url:`/manifest/head/addMt1401`,
+    method: 'post',
+    data
+  })
+}
+
+// 生成货物运输批次号
+export function getVoyageNo(params) {
+  return pubReq({
+    url:`/manifest/head/getVoyageNo`,
+    method: 'get',
+    params
+  })
+}
