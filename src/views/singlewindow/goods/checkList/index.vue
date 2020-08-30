@@ -9,7 +9,6 @@
         :disabled="btnDisable.addBtn"
         @click="SingleAll"
       >新增</el-button>
-      <el-button @click="Test">测试</el-button>
       <!-- <el-button
         type="success"
         icon="el-icon-edit"
@@ -427,12 +426,12 @@
           </el-col>
           <el-col :span="8" style="margin-left:-50px">
             <el-form-item label="业务事项">
-              <el-select v-model="value1" multiple placeholder="请选择" >
+              <el-select v-model="commodityForm.GoodsAttr" multiple placeholder="请选择" >
                 <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
                 />
               </el-select>
             </el-form-item>
@@ -455,12 +454,12 @@
               <el-input v-model="form.CopName" :disabled="true"/>
             </el-form-item>
           </el-col>
-          <el-col :span="3" style="margin-left:10px">
+          <!-- <el-col :span="3" style="margin-left:10px">
             <el-button icon="el-icon-arrow-left" type="info" @click="left" circle></el-button>
           </el-col>
           <el-col :span="3" style="margin-left:-160px">
             <el-button icon="el-icon-arrow-right" type="info" @click="right" circle></el-button>
-          </el-col>
+          </el-col> -->
           <el-col :span="3" style="margin-left:-160px">
             <el-button icon="el-icon-more-outline" type="info" @click="CopList" circle></el-button>
           </el-col>
@@ -614,6 +613,11 @@
         <el-table-column prop="DestinationCountry" label="最终目的国" min-width="120" />
         <el-table-column prop="DutyMode" label="征免方式" min-width="120" />
         <el-table-column prop="GoodsSpec" label="检验检疫货物规格" min-width="120" />
+          <el-table-column  label="操作" min-width="100" fixed="right">
+        <template slot-scope="scope">
+            <el-button  size="mini" type="text" icon="el-icon-delete" @click="commodityDelete(scope.$index,scope.row)">删除</el-button>
+        </template>
+          </el-table-column>
       </el-table>
       <el-pagination
         class="right mb20"
@@ -868,10 +872,10 @@
               <el-form-item label="货物属性">
               <el-select v-model="commodityForm.GoodsAttr" multiple placeholder="请选择">
                 <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
                 />
               </el-select>
             </el-form-item>
@@ -953,6 +957,11 @@
         <el-table-column prop="ContainerId" label="集装箱号" min-width="200" />
         <el-table-column prop="ContainerMd" label="集装箱规格" min-width="150" />
         <el-table-column prop="LclFlag" label="拼箱标识" min-width="120" />
+        <el-table-column label="操作" min-width="100" fixed="right">
+          <template slot-scope="scope">
+            <el-button size="mini" type="text" icon="el-icon-delete" @click="containerDelete(scope.$index,scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         class="right mb20"
@@ -1082,6 +1091,11 @@
         <el-table-column type="selection" min-width="55" />
         <el-table-column prop="DocuCode" label="单证代码" min-width="200" />
         <el-table-column prop="CertCode" label="单证编号" min-width="150" />
+        <el-table-column label="操作" min-width="100" fixed="right">
+          <template slot-scope="scope">
+            <el-button size="mini" type="text" icon="el-icon-delete" @click="DocumentsDelete(scope.$index,scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         class="right mb20"
@@ -1645,6 +1659,8 @@ export default {
         DocumentsList:[],
         UserList:[],
       },
+      //货物属性 临时字典
+      TestOptions:[],
       statusOptions: [],
       dateTimeVal: "",
       data: [],
@@ -1654,6 +1670,11 @@ export default {
   // contaCount: undefined,
   // 随附单证
   // attaDocuCdstr: undefined,
+  created(){
+    this.getDicts("sys_user_sex").then((response) => {
+      this.TestOptions = response.data;
+    });
+  },
   mounted() {
     // 初始化
     this.init();
@@ -1672,10 +1693,7 @@ export default {
       this.AllForm.DocumentsList=this.DocumentsList;
       this.AllForm.UserList=this.UserList;
       this.AllForm.CommodityItemList=this.CommodityItemList;
-      // console.log(JSON.stringify(this.form));
-      console.log(JSON.stringify(this.AllForm));
-      // console.log(this.AllForm);
-      // console.log(this.AllForm.CommodityItemList);
+      // console.log(JSON.stringify(this.AllForm));
     },
     //使用人清空
     userRefresh() {
@@ -1700,18 +1718,11 @@ export default {
     },
     //编辑检验检疫货物规格弹窗确定按钮
     specificationAdd(){
-      console.log("进入检验检疫货物规格弹窗");
-      this.commodityForm.GoodsSpec=this.specificationForm.specification1+";"+
-      this.specificationForm.specification2+";"+
-      this.specificationForm.specification3+";"+
-      this.specificationForm.specification4+";"+
-      this.specificationForm.specification5+";"+
-      this.specificationForm.specification6+";"+
-      this.specificationForm.specification7+";"+
-      this.specificationForm.specification8+";"+
-      this.specificationForm.specification9
+      this.commodityForm.GoodsSpec=[this.specificationForm.specification1,this.specificationForm.specification2,
+     this.specificationForm.specification3,this.specificationForm.specification4,
+     this.specificationForm.specification5,this.specificationForm.specification6,
+     this.specificationForm.specification7,this.specificationForm.specification8,this.specificationForm.specification9].join();
       this.specificationPopup = false;
-      console.log(this.commodityForm.GoodsSpec);
     },
     //进口/出口报关单表体清空
     CommodityItemRefresh() {
@@ -1719,14 +1730,27 @@ export default {
     },
     //进口/出口报关单表体保存
     CommodityItemAdd() {
+      //下拉多选 数组转换为字符串
+      this.commodityForm.GoodsAttr=this.commodityForm.GoodsAttr.join(",");
       this.CommodityItemList.push(this.commodityForm);
       this.commodityForm = {};
+    },
+    //进口/出口报关单表体 List删除
+    commodityDelete(index, row){
+      this.CommodityItemList.splice(index, 1);
+    },
+    //集装箱信息 List删除
+    containerDelete(index, row){
+      this.containerList.splice(index, 1);
+    },
+    //随单附证
+    DocumentsDelete(index, row){
+      this.DocumentsList.splice(index,1);
     },
     //集装箱保存按钮
     containerAdd(){
       this.containerList.push(this.containerForm);
       this.containerForm={};
-      console.log(this.containerList);
     },
     //集装箱List清空按钮
     containerRefresh(){
@@ -1736,7 +1760,6 @@ export default {
     DocumentsAdd(){
       this.DocumentsList.push(this.DocumentsForm);
       this.DocumentsForm={};
-      console.log(this.DocumentsList);
     },
     DocumentsRefresh(){
       this.DocumentsList=[];
@@ -1768,7 +1791,6 @@ export default {
     handleAdd() {},
     // 暂存
     handleSave() {
-      console.log("保存");
       this.$saveStore("a", "123");
     },
     // 删除
@@ -1781,7 +1803,6 @@ export default {
     handleRefresh() {},
     // 翻页
     currentChange(page) {
-      console.log(page);
     },
     // 组件选择
     choose(row) {
@@ -1801,11 +1822,8 @@ export default {
     },
     handleSelectionChange() {},
     numFun() {
-      console.log(123);
     },
-    Test(){
-      console.log(this.CustomsDeclarationForm);
-    },
+
     // 请求接口
     // depParaList() {
     //   return new Promise((resolve) => {
