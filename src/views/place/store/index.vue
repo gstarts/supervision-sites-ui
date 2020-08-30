@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="堆场" prop="yardId">
-        <el-select v-model="queryParams.yardId" placeholder="请选择堆场">
+      <el-form-item label="场所" prop="placeId">
+        <el-select v-model="queryParams.placeId" placeholder="请选择场所">
           <el-option
             v-for="dept in depts"
             :key="dept.deptId"
@@ -109,9 +109,9 @@
     <el-table v-loading="loading" :data="storeList">
      <!-- <el-table-column type="selection" width="55" align="center" />-->
       <!--<el-table-column label="ID" align="center" prop="id" />-->
-      <el-table-column label="堆场" align="center" prop="yardId" :fixed="true">
+      <el-table-column label="场所" align="center" prop="placeId" :fixed="true">
         <template slot-scope="scope">
-          <span> {{depts.find(item=>item.deptId === scope.row.yardId).deptName}}</span>
+          <span> {{depts.find(item=>item.deptId === scope.row.placeId).deptName}}</span>
         </template>
       </el-table-column>
       <el-table-column label="区域类型" align="center" prop="zoneType" >
@@ -149,7 +149,7 @@
             type="text"
             icon="el-icon-edit"
             @click="gotoDetail(scope.row)"
-            v-hasPermi="['yard:store_sub:list']"
+            v-hasPermi="['place:store_sub:list']"
           >查看详情
           </el-button>
         </template>
@@ -168,7 +168,7 @@
 </template>
 
 <script>
-import { listStore, getStore, delStore, addStore, updateStore } from "@/api/yard/store";
+import { listStore} from "@/api/place/store";
 import {getUserDepts} from '@/utils/charutils'
 
 export default {
@@ -190,7 +190,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 20,
-        yardId: undefined,
+        placeId: undefined,
         zoneCode: undefined,
         zoneId: undefined,
         zoneType: undefined,
@@ -198,10 +198,6 @@ export default {
         storeState: undefined,
         goodsBatchNo: undefined,
       },
-      // 表单参数
-      form: {},
-      // 表单校验
-      
     };
   },
   created() {
@@ -214,12 +210,11 @@ export default {
       this.yardZoneTypeOptions = response.data;
     });
 
-	  this.depts = getUserDepts('2')
+	  this.depts = getUserDepts('0')
 	  if (this.depts.length > 0) {
-		  this.queryParams.yardId = this.depts[0].deptId
+		  this.queryParams.placeId = this.depts[0].deptId
 		  this.getList();
 	  }
-   
   },
   methods: {
     /** 查询堆场库存明细 列表 */
@@ -241,9 +236,9 @@ export default {
     },*/
 	  gotoDetail(row) {
 		  this.$router.push({
-			  path: '/yard/store/detail',
+			  path: '/place/store/detail',
 			  query: {
-				  'yardId': row.yardId,
+				  'placeId': row.placeId,
 				  'storeCode': row.storeCode
 			  }
 		  })
@@ -261,9 +256,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('yard/store/export', {
+      this.download('place/store/export', {
         ...this.queryParams
-      }, `yard_store.xlsx`)
+      }, `place_store.xlsx`)
     }
   }
 };
