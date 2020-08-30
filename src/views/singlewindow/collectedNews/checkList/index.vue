@@ -663,8 +663,9 @@
 <script>
 import depParaList from "./../components/depParaList";
 import depParaList2 from "./../components/depParaList2";
+import { add } from "@/api/collectedNews/head";
 export default {
-  components: { depParaList, depParaList2 },
+  components: { depParaList, depParaList2,add },
   data() {
     return {
       detailVisible: false,
@@ -880,16 +881,16 @@ export default {
       this.form.head = this.head;
       this.form.goodsList = this.goodsList;
       this.form.contas = this.contas;
-      this.form.docs = this.docs;
-      console.log(JSON.stringify(this.form));
+      this.form.docs = this.docs;      
+      add(this.form).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("新增成功");
+          console.log(JSON.stringify(this.form));
+        } else {
+          this.msgError(response.msg);
+        }
+      });
       this.reset();
-      // updateDeclare(this.form).then((response) => {
-      //   if (response.code === 200) {
-      //     this.msgSuccess("申报成功");
-      //   } else {
-      //     this.msgError(response.msg);
-      //   }
-      // });
     },
 
     /** 删除商品项列表按钮操作 */
@@ -910,6 +911,7 @@ export default {
       this.commodityForm = {};
       this.containerForm = {};
       this.documentsForm = {};
+      this.backfillForm = {};
       this.goodsList = [];
       this.contas = [];
       this.docs = [];
