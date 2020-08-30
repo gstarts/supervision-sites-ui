@@ -11,23 +11,13 @@
           />
         </el-select>
       </el-form-item>
-      <!--<el-form-item label="作业单号" prop="operationId">
-        <el-input
-          v-model="queryParams.operationId"
-          placeholder="请输入作业单号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>-->
       <el-form-item label="作业类型" prop="operationType">
         <el-select v-model="queryParams.operationType" placeholder="请选择作业类型" clearable size="small">
           <el-option
             v-for="dict in operationTypeOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
+            :value="dict.dictValue"/>
         </el-select>
       </el-form-item>
       <el-form-item label="箱号" prop="containerNo">
@@ -39,18 +29,18 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!--<el-form-item label="箱原库位号" prop="containerOldStoreCode">
+      <!--<el-form-item label="箱原库位号" prop="goodsOldStoreCode">
         <el-input
-          v-model="queryParams.containerOldStoreCode"
+          v-model="queryParams.goodsOldStoreCode"
           placeholder="请输入箱原库位号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="箱新库位号" prop="containerNewStoreCode">
+      <el-form-item label="箱新库位号" prop="goodsNewStoreCode">
         <el-input
-          v-model="queryParams.containerNewStoreCode"
+          v-model="queryParams.goodsNewStoreCode"
           placeholder="请输入箱新库位号"
           clearable
           size="small"
@@ -136,15 +126,15 @@
       </el-table-column>
       <el-table-column label="作业类型" align="center" prop="operationType" :formatter="operationTypeFormat"/>
       <el-table-column label="箱号" align="center" prop="containerNo"/>
-      <el-table-column label="原库位号" align="center" prop="containerOldStoreCode"/>
-      <el-table-column label="新库位号" align="center" prop="containerNewStoreCode"/>
+      <el-table-column label="原库位号" align="center" prop="goodsOldStoreCode"/>
+      <el-table-column label="新库位号" align="center" prop="goodsNewStoreCode"/>
       <!--<el-table-column label="散杂货库位号" align="center" prop="goodsStoreCode"/>-->
       <el-table-column label="货物批次号" align="center" prop="goodsBatchNo"/>
       <el-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="更新人" align="center" prop="updateBy"/>
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+          <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
       </el-table-column>
       <!--<el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
@@ -179,31 +169,46 @@
     
     <!-- 添加或修改作业子单对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+      <el-form ref="form" :model="form" :rules="rulesIf" label-width="120px">
         <!--<el-form-item label="ID" prop="id">
           <el-input v-model="form.id" placeholder="请输入ID"/>
         </el-form-item>-->
-        <el-form-item label="作业单号" prop="operationId">
-          <el-input v-model="form.operationId" placeholder="请输入作业单号">
-            <template slot="append">
-              <el-button type="primary" icon="el-icon-magic-stick" @click="generateId"></el-button>
-            </template>
-          </el-input>
-        </el-form-item>
-        
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="场所" prop="placeId">
-              <el-select v-model="form.placeId" placeholder="请选择场所" :disabled="true">
+            <el-form-item label="作业单号" prop="operationId">
+              <el-input v-model="form.operationId" placeholder="请输入作业单号">
+                <template slot="append">
+                  <el-button type="primary" icon="el-icon-magic-stick" @click="generateId"></el-button>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+              <el-form-item label="场所" prop="placeId">
+                <el-select v-model="form.placeId" placeholder="请选择场所" :disabled="true">
+                  <el-option
+                    v-for="dept in depts"
+                    :key="dept.deptId"
+                    :label="dept.deptName"
+                    :value="dept.deptId"/>
+                </el-select>
+              </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="作业区域" prop="zoneType">
+              <el-select v-model="form.zoneType" placeholder="请选择作业区域" clearable size="small" @change="getPlaceZoneList">
                 <el-option
-                  v-for="dept in depts"
-                  :key="dept.deptId"
-                  :label="dept.deptName"
-                  :value="dept.deptId"
+                  v-for="dict in zoneTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
                 />
               </el-select>
             </el-form-item>
           </el-col>
+          
           <el-col :span="12">
             <el-form-item label="作业类型" prop="operationType">
               <el-select v-model="form.operationType" placeholder="请选择作业类型" :disabled="true">
@@ -243,8 +248,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="原货位号" prop="containerOldStoreCode">
-              <el-select v-model="form.containerOldStoreCode" placeholder="请输入货位" @change="getStoreGoods">
+            <el-form-item label="原货位号" prop="goodsOldStoreCode">
+              <el-select v-model="form.goodsOldStoreCode" placeholder="请输入货位" @change="getStoreGoods">
                 <el-option
                   v-for="store in storeList"
                   :key="store.id"
@@ -269,8 +274,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="新货位号" prop="containerNewStoreCode">
-              <el-select v-model="form.containerNewStoreCode" placeholder="请输入货位" @change="compareStoreCode">
+            <el-form-item label="新货位号" prop="goodsNewStoreCode">
+              <el-select v-model="form.goodsNewStoreCode" placeholder="请输入货位" @change="compareStoreCode">
                 <el-option
                   v-for="store in storeList2"
                   :key="store.id"
@@ -330,9 +335,11 @@
 				open: false,
 				// 作业类型字典
 				operationTypeOptions: [],
+				zoneTypeOptions: [],
 				zoneList: [],
 				storeList: [],
 				storeList2: [],
+				rulesIf: '',
 				// 查询参数
 				queryParams: {
 					pageNum: 1,
@@ -341,15 +348,15 @@
 					placeId: undefined,
 					operationType: undefined,
 					containerNo: undefined,
-					//containerOldStoreCode: undefined,
-					//containerNewStoreCode: undefined,
+					//goodsOldStoreCode: undefined,
+					//goodsNewStoreCode: undefined,
 					//goodsStoreCode: undefined,
 					goodsBatchNo: undefined
 				},
 				// 表单参数
 				form: {},
 				// 表单校验
-				rules: {
+				rulesContainer: {
 					operationId: [
 						{required: true, message: "作业单号不能为空", trigger: "blur"}
 					],
@@ -360,24 +367,53 @@
 						{required: true, message: "作业不能为空", trigger: "change"}
 					],
 					zoneType: [
-						{required: true, message: "区域类型不能为空", trigger: "change"}
+						{required: true, message: "作业区域不能为空", trigger: "change"}
 					],
 					containerNo: [
-						{required: true, message: "区域名称不能为空", trigger: "blur"}
+						{required: true, message: "集装箱号不能为空", trigger: "blur"}
 					],
 					oldZoneCode: [
 						{required: true, message: "原区域不能为空", trigger: "change"}
 					],
-					containerOldStoreCode: [
+					goodsOldStoreCode: [
 						{required: true, message: "原货位号不能为空", trigger: "change"}
 					],
 					newZoneCode: [
 						{required: true, message: "新区域不能为空", trigger: "change"}
 					],
-					containerNewStoreCode: [
+					goodsNewStoreCode: [
 						{required: true, message: "新货位号不能为空", trigger: "change"}
 					],
-				}
+				},
+        rulesGoods: {
+	        operationId: [
+		        {required: true, message: "作业单号不能为空", trigger: "blur"}
+	        ],
+	        placeId: [
+		        {required: true, message: "场所不能为空", trigger: "change"}
+	        ],
+	        operationType: [
+		        {required: true, message: "作业不能为空", trigger: "change"}
+	        ],
+	        zoneType: [
+		        {required: true, message: "作业区域不能为空", trigger: "change"}
+	        ],
+	        goodsBatchNo: [
+		        {required: true, message: "货物批次号不能为空", trigger: "blur"}
+          ],
+	        oldZoneCode: [
+		        {required: true, message: "原区域不能为空", trigger: "change"}
+	        ],
+	        goodsOldStoreCode: [
+		        {required: true, message: "原货位号不能为空", trigger: "change"}
+	        ],
+	        newZoneCode: [
+		        {required: true, message: "新区域不能为空", trigger: "change"}
+	        ],
+	        goodsNewStoreCode: [
+		        {required: true, message: "新货位号不能为空", trigger: "change"}
+	        ],
+        }
 			};
 		},
 		created() {
@@ -387,11 +423,15 @@
 				this.queryParams.placeId = this.depts[0].deptId
 				this.form.placeId = this.depts[0].deptId
 				this.getList()
-				this.getYardZoneList()
+				//this.getPlaceZoneList()
 			}
 			this.getDicts("site_operation_type").then(response => {
 				this.operationTypeOptions = response.data;
-			});
+			})
+			this.getDicts("yard_zone_type").then(response => {
+				this.zoneTypeOptions = response.data;
+			})
+			this.rulesIf = this.rulesContainer;
 		},
 		methods: {
 			/** 查询作业子单列表 */
@@ -420,8 +460,8 @@
 					placeId: undefined,
 					operationType: undefined,
 					containerNo: undefined,
-					containerOldStoreCode: undefined,
-					containerNewStoreCode: undefined,
+					goodsOldStoreCode: undefined,
+					goodsNewStoreCode: undefined,
 					//goodsStoreCode: undefined,
 					goodsBatchNo: undefined,
 					oldZoneCode: undefined,
@@ -505,25 +545,30 @@
 				}, `yard_operation_sub.xlsx`)
 			},
 			//获取场所的区域列表
-			getYardZoneList() {
+			getPlaceZoneList() {
 				if (this.queryParams.placeId !== '') {
-					listZone({'placeId': this.queryParams.placeId, 'zoneType': '1'}).then(response => {
+					listZone({'placeId': this.queryParams.placeId, 'zoneType': this.form.zoneType}).then(response => {
 						this.zoneList = []
 						this.zoneList = response.rows
 					});
 				} else {
 					this.zoneList = []
 				}
+				if(this.form.zoneType !== '1'){
+					this.rulesIf = this.rulesGoods
+        }else{
+					this.rulesIf = this.rulesContainer
+        }
 			},
 			listStore() {//查询所有已占用的库位
-				this.form.containerOldStoreCode = ''
+				this.form.goodsOldStoreCode = ''
 				this.form.containerNo = ''
 				this.form.goodsBatchNo = ''
 				this.storeList = []
 				if (this.form.oldZoneCode !== '') {
 					listStoreCanUse({
 						'placeId': this.form.placeId,
-						'zoneType': '1',
+						'zoneType': this.form.zoneType,
 						'zoneCode': this.form.oldZoneCode,
 						'storeState': '1' //先择占用
 					}).then(response => {
@@ -538,14 +583,14 @@
 				}
 			},
 			listStore2() {//查询所有未占用的库位
-				this.form.containerNewStoreCode = ''
+				this.form.goodsNewStoreCode = ''
 				this.storeList2 = []
 				if (this.form.newZoneCode !== '') {
 					listStoreCanUse({
 						'placeId': this.form.placeId,
-						'zoneType': '1',
+						'zoneType': this.form.zoneType,
 						'zoneCode': this.form.newZoneCode,
-						'storeState': '0' //先择占用
+						'storeState': '0' //先择未占用
 					}).then(response => {
 						if (response.total === 0) {
 							this.$message.warning("此区域无可移货位")
@@ -559,7 +604,7 @@
 			},
 			//根据库位号，查询库位详细
 			getStoreGoods: function () {
-				getStore_detail_byStoreCode(this.form.placeId, this.form.containerOldStoreCode)
+				getStore_detail_byStoreCode(this.form.placeId, this.form.goodsOldStoreCode)
 					.then(response => {
 						console.log(response.data)
 						//debugger
@@ -579,16 +624,16 @@
 							this.form.containerNo = response.rows[0].containerNo
 							this.form.goodsBatchNo = response.rows[0].goodsBatchNo
 							this.form.oldZoneCode = response.rows[0].zoneCode
-							this.form.containerOldStoreCode = response.rows[0].storeCode
+							this.form.goodsOldStoreCode = response.rows[0].storeCode
 						}
 					})
 			},
 			//比较货位号
 			compareStoreCode() {
 				//如果是同一个库位的不同层级
-				if (this.form.containerOldStoreCode.substring(0, 7) === this.form.containerNewStoreCode.substring(0, 7)) {
+				if (this.form.goodsOldStoreCode.substring(0, 7) === this.form.goodsNewStoreCode.substring(0, 7)) {
 					this.$message.warning('无法移动到相同货位')
-					this.form.containerNewStoreCode = ''
+					this.form.goodsNewStoreCode = ''
 				}
 			},
 			generateId() {
