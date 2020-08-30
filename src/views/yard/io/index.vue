@@ -174,7 +174,7 @@
       <el-table-column label="出/入场状态" align="center" prop="ioState" :formatter="ioStateFormat"/>
       <el-table-column label="出/入场时间" align="center" prop="ioTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.ioTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+          <span>{{ parseTime(scope.row.ioTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="来源" align="center" prop="formSite"/>
@@ -186,7 +186,7 @@
       <el-table-column label="更新人" align="center" prop="updateBy"/>
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+          <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
