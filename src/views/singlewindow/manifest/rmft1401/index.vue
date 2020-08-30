@@ -119,13 +119,21 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="企业代码" prop="unitCode" >
-              <el-input
+              <el-select v-model="queryParams.unitCode" filterable placeholder="企业代码">
+                <el-option
+                  v-for="(item,index) in listInfo"
+                  :key="index"
+                  :label="item.eName"
+                  :value="item.deptId">
+                </el-option>
+              </el-select>
+              <!-- <el-input
                 v-model="queryParams.unitCode"
                 placeholder="企业代码"
                 clearable
                 size="small"
                 disabled
-              />
+              /> -->
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -556,8 +564,6 @@
     <consignorInfo :detailVisible='consignorInfo' @close='consignorInfo = false'></consignorInfo>
     <!-- 收货人信息 -->
     <receivingInfo :detailVisible='receivingInfo' @close='receivingInfo = false'></receivingInfo>
-
-    
   </div>
 </template>
 
@@ -578,6 +584,7 @@ import consignorInfo from './consignorInfo.vue';
 // 收货人信息
 import receivingInfo from './receivingInfo.vue';
 
+import {listInfo} from "@/api/basis/enterpriseInfo";
 
 
 
@@ -671,7 +678,7 @@ export default {
         countryInfoAddBtn:'',//途径国家或地区
         consigneeInfo:'',//收货人信息
         consigorInfo:'',//发货人信息
-        notifyInfo:'',//通知人信息
+        notifyInfo:{},//通知人信息
         undgInfo:'',//危险品联系人信息
       },
       // 商品项信息
@@ -700,7 +707,6 @@ export default {
         // contaSizeType:'',//尺寸和类型
         // contaSuppId:'',//来源代码
         // contaLoadedType:'',//重箱或空箱标识
-
         equipmentId:"", // 集装箱（器）编号
         characteristicCode:"", // 尺寸和类型
         supplierPartyTypeCode:"", // 来源代码
@@ -714,7 +720,15 @@ export default {
       // 海关货物通关代码
       currentCode:[],
       // 包装种类
-      PaymentMethodCode:[]
+      PaymentMethodCode:[],
+      // 企业代码
+      listInfo:[],
+      // 当前操作提运单数据
+      waybillIndex:-1,
+      // 当前操作商品项数据
+      shopInfoIndex:-1,
+      // 当前操作集装箱数据
+      containerInfoIndex:-1
     }
   },
   mounted(){
@@ -732,6 +746,11 @@ export default {
     async init(){
       // await this.depParaList()
       this.hgCustomsCode()
+      //  企业代码
+      listInfo().then(data=>{
+        this.listInfo = data.rows
+        console.log(data);
+      })
     },
     // 新增
     handleAdd(){},
@@ -778,6 +797,7 @@ export default {
     // 点击某一条提运单
     waybillClick(row, column, event){
       console.log(row);
+      this.waybillIndex = JSON.parse(JSON.stringify(row)).rowIndex
       this.waybill = JSON.parse(JSON.stringify(row))
     },
     waybillSelectionChange(data){
@@ -787,6 +807,7 @@ export default {
     // 点击某一条商品项信息
     shopInfoClick(row, column, event){
       console.log(row);
+      this.shopInfoIndex = JSON.parse(JSON.stringify(row)).rowIndex
       this.shopInfo = JSON.parse(JSON.stringify(row))
     },
     shopInfoSelectionChange(data){
@@ -795,7 +816,9 @@ export default {
     // 点击某一条集装箱信息
     containerInfoClick(row, column, event){
       console.log(row);
+      this.containerInfoIndex = JSON.parse(JSON.stringify(row)).rowIndex
       this.containerInfo = JSON.parse(JSON.stringify(row))
+
     },
     containerInfoSelectionChange(data){
       console.log(data);
@@ -815,7 +838,26 @@ export default {
         this.dataEmpty(name)
     },
     // 表格修改
-    handleChange(){},
+    handleChange(e,name){
+      if (name === 'waybill') {
+        if(this.waybillIndex ===-1) return
+        this.waybillList[this.waybillIndex] = JSON.parse(JSON.stringify(this.waybill))
+        this.waybillList = JSON.parse(JSON.stringify(this.waybillList))
+        this.waybillIndex =-1
+      }
+      if (name === 'shopInfo') {
+        if(this.shopInfoIndex ===-1) return
+        this.shopInfoList[this.shopInfoIndex] = JSON.parse(JSON.stringify(this.shopInfo))
+        this.shopInfoList = JSON.parse(JSON.stringify(this.shopInfoList))
+        this.shopInfoIndex =-1
+      }
+      if (name === 'containerInfo') {
+        if(this.containerInfoIndex ===-1) return
+        this.containerInfoList[this.containerInfoIndex] = JSON.parse(JSON.stringify(this.containerInfo))
+        this.containerInfoList = JSON.parse(JSON.stringify(this.containerInfoList))
+        this.containerInfoIndex =-1
+      }
+    },
     // 表格清空
     dataEmpty(name){
       if (name === 'waybill') {
@@ -902,8 +944,8 @@ export default {
       const subData = {
         queryParams,
         // waybillList,
-        // shopInfoList,
-        // containerInfoList
+        consignmentitemsList:shopInfoList,
+        transportequipmentList:containerInfoList
       }
       this.$store.dispatch('originalManifest/saveList',subData).then(data=>{
         console.log(data);
