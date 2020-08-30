@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="堆场" prop="yardId">
+      <el-form-item label="场所" prop="placeId">
         <el-select
-          v-model="queryParams.yardId"
-          placeholder="请选择堆场"
+          v-model="queryParams.placeId"
+          placeholder="请选择场所"
           clearable
           size="small"
           @change="handleQuery">
@@ -121,7 +121,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['yard:io:add']"
+          v-hasPermi="['place:io:add']"
         >新增
         </el-button>
       </el-col>
@@ -132,7 +132,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['yard:io:edit']"
+          v-hasPermi="['place:io:edit']"
         >修改
         </el-button>
       </el-col>
@@ -143,7 +143,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['yard:io:remove']"
+          v-hasPermi="['place:io:remove']"
         >删除
         </el-button>
       </el-col>-->
@@ -153,7 +153,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['yard:io:export']"
+          v-hasPermi="['place:io:export']"
         >导出
         </el-button>
       </el-col>
@@ -162,19 +162,20 @@
     <el-table v-loading="loading" :data="ioList">
       <!--<el-table-column type="selection" width="55" align="center"/>-->
       <!--<el-table-column label="ID" align="center" prop="id"/>-->
-      <el-table-column label="堆场" align="center" prop="yardId">
+      <el-table-column label="场所" align="center" prop="placeId">
         <template slot-scope="scope">
-          <span>{{depts.find(item=>item.deptId === scope.row.yardId).deptName}}</span>
+          <span>{{depts.find(item=>item.deptId === scope.row.placeId).deptName}}</span>
         </template>
       </el-table-column>
       <el-table-column label="出入库单号" align="center" prop="ioNo"/>
       <el-table-column label="车牌号" align="center" prop="vehicleNo"/>
-      <el-table-column label="集装箱数量" align="center" prop="containerCount"/>
+      <el-table-column label="区域" align="center" prop="zoneType"/>
+      <el-table-column label="占货位数" align="center" prop="containerCount"/>
       <!--<el-table-column label="集装箱号" align="center" prop="containerNo"/>-->
       <el-table-column label="出/入场状态" align="center" prop="ioState" :formatter="ioStateFormat"/>
       <el-table-column label="出/入场时间" align="center" prop="ioTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.ioTime) }}</span>
+          <span>{{ parseTime(scope.row.ioTime)}}</span>
         </template>
       </el-table-column>
       <el-table-column label="来源" align="center" prop="formSite"/>
@@ -196,7 +197,7 @@
             type="text"
             icon="el-icon-edit"
             @click="gotoSub(scope.row)"
-            v-hasPermi="['yard:io_sub:list']"
+            v-hasPermi="['place:io_sub:list']"
           >查看详情
           </el-button>
         </template>
@@ -214,7 +215,7 @@
 </template>
 
 <script>
-	import {listIo} from "@/api/yard/io";
+	import {listIo} from "@/api/place/io";
 	import {getUserDepts} from '@/utils/charutils'
 
 	export default {
@@ -246,7 +247,7 @@
 					pageNum: 1,
 					pageSize: 20,
 					businessNo: undefined,
-					yardId: undefined,
+					placeId: undefined,
 					vehicleNo: undefined,
 					ioState: undefined,
 					ioTime: undefined,
@@ -265,14 +266,14 @@
 			this.getDicts("yard_business_state").then(response => {
 				this.stateOptions = response.data;
 			});
-			this.getDicts("yard_business_type").then(response => {
+			this.getDicts("site_document_purpose").then(response => {
 				this.purposeOptions = response.data;
 			});
 
-			// 0 监管场所，1保税库，2堆场，3企业
-			this.depts = getUserDepts('2')
+			// 0 监管场所，1保税库，2场所，3企业
+			this.depts = getUserDepts('0')
 			if (this.depts.length > 0) {
-				this.queryParams.yardId = this.depts[0].deptId
+				this.queryParams.placeId = this.depts[0].deptId
 				this.getList()
 			}
 		},
@@ -300,9 +301,9 @@
 			},
 			gotoSub(row) {
 				this.$router.push({
-          path: '/yard/io/detail',
+          path: '/place/io/detail',
           query: {
-          	'yardId': row.yardId,
+          	'placeId': row.placeId,
             'ioNo': row.ioNo
           }
         })
@@ -320,11 +321,10 @@
 			},
 			/** 导出按钮操作 */
 			handleExport() {
-				this.download('yard/io/export', {
+				this.download('place/io/export', {
 					...this.queryParams
-				}, `yard_io.xlsx`)
+				}, `place_io.xlsx`)
 			},
 		}
 	}
-	;
 </script>
