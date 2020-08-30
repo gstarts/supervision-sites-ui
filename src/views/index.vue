@@ -1,9 +1,7 @@
 <template class="max">
   <div class="welcome" :style="'width:'+width+';height:'+height">
-  <div style="margin:80px auto ;text-align:center">
     欢迎光临
-  </div>
-    <!-- <dicleav class="all"> -->
+    <!-- <div class="all"> -->
 
     <!-- 场站是否显示 MARK为下方定义的场站显示标示 -->
     <!-- <div v-if="MARK === 'B'"> -->
@@ -312,11 +310,11 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.height = document.body.clientHeight - 84 + "px";
-      this.width = document.body.clientWidth- 200 + "px";
+      this.width = document.body.clientWidth + "px";
 
       window.onresize = () => {
         this.height = document.body.clientHeight - 84 + "px";
-        this.width = document.body.clientWidth-200 + "px";
+        this.width = document.body.clientWidth + "px";
       };
     });
   },
