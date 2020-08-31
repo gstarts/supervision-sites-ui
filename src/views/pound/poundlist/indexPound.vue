@@ -74,9 +74,22 @@
         </el-row>
 
         <el-row type="flex">
-          <el-col :span="24">
+          <el-col :span="12">
             <el-form-item label="箱号" prop="containerNum">
               <el-input v-model="form.containerNum" placeholder="请输入箱号" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="流向" prop="flowDirection">
+              <!-- <el-input v-model="form.flowDirection" placeholder="请输入流向" clearable></el-input> -->
+              <el-select v-model="form.flowDirection" placeholder="请选择流向">
+                <el-option
+                  v-for="dict in flowDirectionOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+            </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -87,6 +100,7 @@
               <el-input v-model="form.coalBillNum" placeholder="请输入提煤单号" clearable></el-input>
             </el-form-item>
           </el-col>
+
         </el-row>
 
         <el-row type="flex">
@@ -139,6 +153,9 @@ export default {
       total: 0,
       // 终端表格数据
       clientList: [],
+      // 流向字典
+      flowDirectionOptions:[],
+
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -162,7 +179,12 @@ export default {
       rules: {},
     };
   },
-  created() {},
+  created() {
+      /**流向  目前没有字典 */
+    this.getDicts("station_IO_flag").then((response) => {
+      this.flowDirectionOptions = response.data;
+    });
+  },
   methods: {
     // 取消按钮
     cancel() {},

@@ -181,9 +181,9 @@ export default {
   },
   created() {
 
-     /**流向  目前没有字典 */
-    this.getDicts("station").then((response) => {
-      this.supvModecdOptions = response.data;
+     /**流向  */
+    this.getDicts("station_IO_flag").then((response) => {
+      this.flowDirectionOptions = response.data;
     });
 
    
