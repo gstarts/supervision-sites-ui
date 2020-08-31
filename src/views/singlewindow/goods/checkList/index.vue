@@ -9,7 +9,6 @@
         :disabled="btnDisable.addBtn"
         @click="SingleAll"
       >新增</el-button>
-      <el-button @click="Test">测试</el-button>
       <!-- <el-button
         type="success"
         icon="el-icon-edit"
@@ -51,17 +50,18 @@
       <div slot="header" class="clearfix">
         <span>基本信息</span>
       </div>
-      <el-form :model="form" ref="form" label-width="160px">
+      <el-form :model="dechead" ref="dechead" label-width="160px">
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="申报地海关" prop="CustomMaster">
-              <el-input
-                @focus="dialogTableVisible = true"
-                v-model="form.CustomMaster"
-                placeholder="请输申报地海关"
-                clearable
-                size="small"
-              />
+             <el-form-item label="申报地海关" prop="custoMmaster">
+              <el-select v-model="dechead.custoMmaster" clearable placeholder="请选择申报地海关" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -73,59 +73,71 @@
 
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="统一编号" prop="SeqNo">
+            <el-form-item label="统一编号" prop="seqNo">
               <el-input
                 @focus="dialogTableVisible = true"
-                v-model="form.SeqNo"
+                v-model="dechead.seqNo"
                 placeholder="请输入统一编号"
                 clearable
                 size="small"
+                :disabled="true"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="预录入编号" prop="PreEntryId">
-              <el-input v-model="form.PreEntryId" placeholder="请输入预录入编号" clearable size="small" />
+            <el-form-item label="预录入编号" prop="preEntryId">
+              <el-input v-model="dechead.preEntryId" placeholder="请输入预录入编号" clearable size="small" :disabled="true"/>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="海关编号" prop="EntryId">
+            <el-form-item label="海关编号" prop="entryId">
               <el-input
                 @focus="dialogTableVisible = true"
-                v-model="form.EntryId"
+                v-model="dechead.entryId"
                 placeholder="请输入海关编号"
                 clearable
                 size="small"
+                :disabled="true"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="进境关别" prop="IEPort">
-              <el-input v-model="form.IEPort" placeholder="请输入进境关别" />
+            <!-- <el-form-item label="进境关别" prop="iePort">
+              <el-input v-model="dechead.iePort" placeholder="请输入进境关别" />
+            </el-form-item> -->
+            <el-form-item label="进境关别" prop="iePort">
+              <el-select v-model="dechead.iePort" clearable placeholder="请选择进境关别" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="备案号" prop="ManualNo">
-              <el-input v-model="form.ManualNo" placeholder="请输入备案号" clearable size="small" />
+            <el-form-item label="备案号" prop="manualno">
+              <el-input v-model="dechead.manualno" placeholder="请输入备案号" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="合同协议号" prop="ContrNo">
-              <el-input v-model="form.ContrNo" placeholder="请输入合同协议号" clearable size="small" />
+            <el-form-item label="合同协议号" prop="contrNo">
+              <el-input v-model="dechead.contrNo" placeholder="请输入合同协议号" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="进口日期" prop="IEDate">
-              <el-input v-model="form.IEDate" placeholder="请输入进口日期" clearable size="small" />
+            <el-form-item label="进口日期" prop="ieDate">
+              <el-input v-model="dechead.ieDate" placeholder="请输入进口日期" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -137,101 +149,101 @@
 
         <el-row>
           <el-col :span="9">
-            <el-form-item label="境内收发货人" prop="TradeCoScc">
-              <el-input v-model="form.TradeCoScc" placeholder="18位社会信用代码" />
+            <el-form-item label="境内收发货人" prop="tradeCoScc">
+              <el-input v-model="dechead.tradeCoScc" placeholder="18位社会信用代码" />
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item prop="TradeCode" style="margin-left:-120px">
-              <el-input v-model="form.TradeCode" placeholder="10位海关代码" />
+            <el-form-item prop="tradeCode" style="margin-left:-120px">
+              <el-input v-model="dechead.tradeCode" placeholder="10位海关代码" />
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item prop="DomesticConsigneeEname" style="margin-left:-120px">
-              <el-input v-model="form.TradeCiqCode" placeholder="10位检验检疫编码" />
+            <el-form-item prop="tradeCiqCode" style="margin-left:-120px">
+              <el-input v-model="dechead.tradeCiqCode" placeholder="10位检验检疫编码" />
             </el-form-item>
           </el-col>
           <el-col :span="9">
-            <el-form-item prop="postCode" style="margin-left:-120px">
-              <el-input v-model="form.DomesticConsigneeEname" placeholder="企业名称(中文)" />
+            <el-form-item prop="domesticConsigneeEname" style="margin-left:-120px">
+              <el-input v-model="dechead.domesticConsigneeEname" placeholder="企业名称(中文)" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row>
           <el-col :span="15">
-            <el-form-item label="境外收发货人" prop="OverseasConsignorCode">
-              <el-input v-model="form.OverseasConsignorCode" placeholder="境外收发货人代码" />
+            <el-form-item label="境外收发货人" prop="overseasConsignorCode">
+              <el-input v-model="dechead.overseasConsignorCode" placeholder="境外收发货人代码" />
             </el-form-item>
           </el-col>
           <el-col :span="9">
-            <el-form-item prop="OverseasConsignorEname" style="margin-left:-120px">
-              <el-input v-model="form.OverseasConsignorEname" placeholder="企业名称(外文)" />
+            <el-form-item prop="overseasConsignorEname" style="margin-left:-120px">
+              <el-input v-model="dechead.overseasConsignorEname" placeholder="企业名称(外文)" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row>
           <el-col :span="9">
-            <el-form-item label="消费使用单位" prop="OwnerCodeScc">
-              <el-input v-model="form.OwnerCodeScc" placeholder="18位社会信用代码" />
+            <el-form-item label="消费使用单位" prop="ownerCodeScc">
+              <el-input v-model="dechead.ownerCodeScc" placeholder="18位社会信用代码" />
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item prop="OwnerCode" style="margin-left:-120px">
-              <el-input v-model="form.OwnerCode" placeholder="10位海关代码" />
+            <el-form-item prop="ownerCode" style="margin-left:-120px">
+              <el-input v-model="dechead.ownerCode" placeholder="10位海关代码" />
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item prop="OwnerCiqCode" style="margin-left:-120px">
-              <el-input v-model="form.OwnerCiqCode" placeholder="10位检验检疫编码" />
+            <el-form-item prop="ownerCiqCode" style="margin-left:-120px">
+              <el-input v-model="dechead.ownerCiqCode" placeholder="10位检验检疫编码" />
             </el-form-item>
           </el-col>
           <el-col :span="9">
-            <el-form-item prop="OwnerName" style="margin-left:-120px">
-              <el-input v-model="form.OwnerName" placeholder="企业名称" />
+            <el-form-item prop="ownerName" style="margin-left:-120px">
+              <el-input v-model="dechead.ownerName" placeholder="企业名称" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row>
           <el-col :span="9">
-            <el-form-item label="申报单位" prop="AgentCodeScc">
-              <el-input v-model="form.AgentCodeScc" placeholder="18位社会信用代码" />
+            <el-form-item label="申报单位" prop="agentCodeScc">
+              <el-input v-model="dechead.agentCodeScc" placeholder="18位社会信用代码" />
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item prop="AgentCode" style="margin-left:-120px">
-              <el-input v-model="form.AgentCode" placeholder="10位海关代码" />
+            <el-form-item prop="agentCode" style="margin-left:-120px">
+              <el-input v-model="dechead.agentCode" placeholder="10位海关代码" />
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item prop="DeclCiqCode" style="margin-left:-120px">
-              <el-input v-model="form.DeclCiqCode" placeholder="10位检验检疫编码" />
+            <el-form-item prop="declCiqCode" style="margin-left:-120px">
+              <el-input v-model="dechead.declCiqCode" placeholder="10位检验检疫编码" />
             </el-form-item>
           </el-col>
           <el-col :span="9">
-            <el-form-item prop="AgentName" style="margin-left:-120px">
-              <el-input v-model="form.AgentName" placeholder="企业名称" />
+            <el-form-item prop="agentName" style="margin-left:-120px">
+              <el-input v-model="dechead.agentName" placeholder="企业名称" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="运输方式" prop="TrafMode">
-              <el-input v-model="form.TrafMode" placeholder="请输入运输方式" clearable size="small" />
+            <el-form-item label="运输方式" prop="trafMode">
+              <el-input v-model="dechead.trafMode" placeholder="请输入运输方式" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运输工具名称" prop="TrafName">
-              <el-input v-model="form.TrafName" placeholder="运输工具名称" />
+            <el-form-item label="运输工具名称" prop="trafName">
+              <el-input v-model="dechead.trafName" placeholder="运输工具名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="航次号" prop="DecFreeTxt.VoyNo">
+            <el-form-item label="航次号" prop="decfreetxt.voyNo">
               <el-input
-                v-model="form.DecFreeTxt.VoyNo"
+                v-model="decfreetxt.voyNo"
                 placeholder="请输入航次号"
                 clearable
                 size="small"
@@ -242,173 +254,333 @@
 
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="提运单号" prop="BillNo">
-              <el-input v-model="form.BillNo" placeholder="请输入提运单号" clearable size="small" />
+            <el-form-item label="提运单号" prop="billNo">
+              <el-input v-model="dechead.billNo" placeholder="请输入提运单号" clearable size="small" />
             </el-form-item>
           </el-col>
           <!-- <el-col :span="2">
             <el-button icon="el-icon-more-outline" size="medium"></el-button>
           </el-col>-->
           <el-col :span="6">
-            <el-form-item label="监管方式" prop="TradeMode">
-              <el-input v-model="form.TradeMode" placeholder="请输入监管方式" clearable size="small" />
+            <!-- <el-form-item label="监管方式" prop="tradeMode">
+              <el-input v-model="dechead.tradeMode" placeholder="请输入监管方式" clearable size="small" />
+            </el-form-item> -->
+            <el-form-item label="监管方式" prop="tradeMode">
+              <el-select v-model="dechead.tradeMode" clearable placeholder="请选择监管方式" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="征免性质" prop="CutMode">
-              <el-input v-model="form.CutMode" placeholder="征免性质" />
+            <!-- <el-form-item label="征免性质" prop="cutMode">
+              <el-input v-model="dechead.cutMode" placeholder="征免性质" />
+            </el-form-item> -->
+            <el-form-item label="征免性质" prop="cutMode">
+              <el-select v-model="dechead.cutMode" clearable placeholder="请选择征免性质" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="许可证编号" prop="LicenseNo">
-              <el-input v-model="form.LicenseNo" placeholder="请输入许可证编号" clearable size="small" />
+            <el-form-item label="许可证编号" prop="licenseNo">
+              <el-input v-model="dechead.licenseNo" placeholder="请输入许可证编号" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="启运国(地区)" prop="TradeCountry">
-              <el-input v-model="form.TradeCountry" placeholder="启运国(地区)" />
+            <!-- <el-form-item label="启运国(地区)" prop="tradeCountry">
+              <el-input v-model="dechead.tradeCountry" placeholder="启运国(地区)" />
+            </el-form-item> -->
+             <el-form-item label="启运国(地区)" prop="tradeCountry">
+              <el-select v-model="dechead.tradeCountry" clearable placeholder="请选择启运国(地区)" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="经停港" prop="DistinatePort">
-              <el-input v-model="form.DistinatePort" placeholder="请输入经停港" clearable size="small" />
+            <!-- <el-form-item label="经停港" prop="distinatePort">
+              <el-input v-model="dechead.distinatePort" placeholder="请输入经停港" clearable size="small" />
+            </el-form-item> -->
+            <el-form-item label="经停港" prop="distinatePort">
+              <el-select v-model="dechead.distinatePort" clearable placeholder="请选择经停港" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="成交方式" prop="TransMode">
-              <el-input v-model="form.TransMode" placeholder="成交方式" />
+            <!-- <el-form-item label="成交方式" prop="transMode">
+              <el-input v-model="dechead.transMode" placeholder="成交方式" />
+            </el-form-item> -->
+            <el-form-item label="成交方式" prop="transMode">
+              <el-select v-model="dechead.transMode" clearable placeholder="请选择成交方式" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex">
           <el-col :span="4">
-            <el-form-item label="运费标记" prop="FeeMark">
-              <el-input v-model="form.FeeMark" clearable size="small" />
+            <!-- <el-form-item label="运费标记" prop="feeMark">
+              <el-input v-model="dechead.feeMark" clearable size="small" />
+            </el-form-item> -->
+          <el-form-item label="运费标记" prop="feeMark">
+              <el-select v-model="dechead.feeMark" clearable placeholder="" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item prop="FeeRate" style="margin-left:-120px">
-              <el-input v-model="form.FeeRate" />
+            <el-form-item prop="feeRate" style="margin-left:-120px">
+              <el-input v-model="dechead.feeRate" />
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item prop="FeeCurr" style="margin-left:-120px">
-              <el-input v-model="form.FeeCurr" clearable size="small" />
+            <!-- <el-form-item prop="feeCurr" style="margin-left:-120px">
+              <el-input v-model="dechead.feeCurr" clearable size="small" />
+            </el-form-item> -->
+             <el-form-item label="" prop="feeCurr" style="margin-left:-120px">
+              <el-select v-model="dechead.feeCurr" clearable placeholder="" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item label="保险费标记" prop="InsurMark">
-              <el-input v-model="form.InsurMark" clearable size="small" />
+            <!-- <el-form-item label="保险费标记" prop="insurMark">
+              <el-input v-model="dechead.insurMark" clearable size="small" />
+            </el-form-item> -->
+            <el-form-item label="保险费标记" prop="insurMark">
+              <el-select v-model="dechead.insurMark" clearable placeholder="" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item prop="InsurRate" style="margin-left:-120px">
-              <el-input v-model="form.InsurRate" />
+            <el-form-item prop="insurRate" style="margin-left:-120px">
+              <el-input v-model="dechead.insurRate" />
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item prop="InsurCurr" style="margin-left:-120px">
-              <el-input v-model="form.InsurCurr" clearable size="small" />
+            <!-- <el-form-item prop="insurCurr" style="margin-left:-120px">
+              <el-input v-model="dechead.insurCurr" clearable size="small" />
+            </el-form-item> -->
+             <el-form-item label="" prop="insurCurr" style="margin-left:-120px">
+              <el-select v-model="dechead.insurCurr" clearable placeholder="" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex">
           <el-col :span="4">
-            <el-form-item label="杂费标记" prop="OtherMark">
-              <el-input v-model="form.OtherMark" clearable size="small" />
+            <!-- <el-form-item label="杂费标记" prop="otherMark">
+              <el-input v-model="dechead.otherMark" clearable size="small" />
+            </el-form-item> -->
+            <el-form-item label="杂费标记" prop="otherMark">
+              <el-select v-model="dechead.otherMark" clearable placeholder="" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item prop="OtherRate" style="margin-left:-120px">
-              <el-input v-model="form.OtherRate" />
+            <el-form-item prop="otherRate" style="margin-left:-120px">
+              <el-input v-model="dechead.otherRate" />
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item prop="OtherCurr" style="margin-left:-120px">
-              <el-input v-model="form.OtherCurr" clearable size="small" />
+            <!-- <el-form-item prop="otherCurr" style="margin-left:-120px">
+              <el-input v-model="dechead.otherCurr" clearable size="small" />
+            </el-form-item> -->
+            <el-form-item label="" prop="otherCurr" style="margin-left:-120px">
+              <el-select v-model="dechead.otherCurr" clearable placeholder="" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="PackNo" label="件数">
-              <el-input v-model="form.PackNo" />
+            <el-form-item prop="packNo" label="件数">
+              <el-input v-model="dechead.packNo" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item prop="WrapType" label="包装种类">
-              <el-input v-model="form.WrapType" />
+            <!-- <el-form-item prop="wrapType" label="包装种类">
+              <el-input v-model="dechead.wrapType" />
+            </el-form-item> -->
+            <el-form-item label="包装种类" prop="wrapType">
+              <el-select v-model="dechead.wrapType" clearable placeholder="请选择包装种类" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
 
           <el-col :span="6">
-            <el-form-item label="毛重(KG)" prop="GrossWet">
-              <el-input v-model="form.GrossWet" placeholder="请输入毛重(KG)" clearable size="small" />
+            <el-form-item label="毛重(KG)" prop="grossWet">
+              <el-input v-model="dechead.grossWet" placeholder="请输入毛重(KG)" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="净重(KG)" prop="NetWt">
-              <el-input v-model="form.NetWt" placeholder="净重(KG)" />
+            <el-form-item label="净重(KG)" prop="netWt">
+              <el-input v-model="dechead.netWt" placeholder="净重(KG)" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="贸易国别(地区)" prop="TradeAreaCode">
+            <!-- <el-form-item label="贸易国别(地区)" prop="tradeAreaCode">
               <el-input
-                v-model="form.TradeAreaCode"
+                v-model="dechead.tradeAreaCode"
                 placeholder="请输入贸易国别(地区)"
                 clearable
                 size="small"
               />
+            </el-form-item> -->
+            <el-form-item label="贸易国别(地区)" prop="tradeAreaCode">
+              <el-select v-model="dechead.tradeAreaCode" clearable placeholder="请选择贸易国别(地区)" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="集装箱数" prop="postCode" >
-              <el-input v-model="form.postCode" placeholder="集装箱数" :disabled="true"/>
+              <el-input v-model="dechead.postCode" placeholder="集装箱数" :disabled="true"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="随附单证" prop="postCode">
-              <el-input v-model="form.postCode" placeholder="随附单证" :disabled="true"/>
+              <el-input v-model="dechead.postCode" placeholder="随附单证" :disabled="true"/>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="入境口岸" prop="EntyPortCode">
-              <el-input v-model="form.EntyPortCode" placeholder="入境口岸" />
+            <!-- <el-form-item label="入境口岸" prop="entyPortCode">
+              <el-input v-model="dechead.entyPortCode" placeholder="入境口岸" />
+            </el-form-item> -->
+            <el-form-item label="入境口岸" prop="entyPortCode">
+              <el-select v-model="dechead.entyPortCode" clearable placeholder="请选择入境口岸" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="货物存放地点" prop="GoodsPlace">
-              <el-input v-model="form.GoodsPlace" placeholder="货物存放地点" />
+            <el-form-item label="货物存放地点" prop="goodsPlace">
+              <el-input v-model="dechead.goodsPlace" placeholder="货物存放地点" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="启运港" prop="DespPortCode">
-              <el-input v-model="form.DespPortCode" placeholder="启运港" />
+            <!-- <el-form-item label="启运港" prop="desPportCode">
+              <el-input v-model="dechead.desPportCode" placeholder="启运港" />
+            </el-form-item> -->
+            <el-form-item label="启运港" prop="desPportCode">
+              <el-select v-model="dechead.desPportCode" clearable placeholder="请选择启运港" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row :gutter="20" type="flex">
           <el-col :span="7">
-            <el-form-item label="报关单类型" prop="EntryType">
-              <el-input v-model="form.EntryType" placeholder="报关单类型" />
+            <!-- <el-form-item label="报关单类型" prop="entryType">
+              <el-input v-model="dechead.entryType" placeholder="报关单类型" />
+            </el-form-item> -->
+            <el-form-item label="报关单类型" prop="entryType">
+              <el-select v-model="dechead.entryType" clearable placeholder="请选择报关单类型" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="19" style="margin-left:40px">
-            <el-form-item label="备注" prop="NoteS">
-              <el-input v-model="form.NoteS" placeholder="备注" />
+            <el-form-item label="备注" prop="noteS">
+              <el-input v-model="dechead.noteS" placeholder="备注" />
             </el-form-item>
           </el-col>
           <el-col :span="5" style="margin-left:0px">
@@ -421,18 +593,18 @@
             <el-button type="info" icon="el-icon-sort" @click="hide" circle></el-button>
           </el-col>
           <el-col :span="8" style="margin-left:-50px">
-            <el-form-item label="标记唛码" prop="MarkNo">
-              <el-input v-model="form.MarkNo" placeholder="标记唛码" />
+            <el-form-item label="标记唛码" prop="markNo">
+              <el-input v-model="dechead.markNo" placeholder="标记唛码" />
             </el-form-item>
           </el-col>
           <el-col :span="8" style="margin-left:-50px">
             <el-form-item label="业务事项">
-              <el-select v-model="value1" multiple placeholder="请选择" >
+              <el-select v-model="commodityForm.goodsAttr" multiple placeholder="请选择" >
                 <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
                 />
               </el-select>
             </el-form-item>
@@ -441,26 +613,36 @@
 
         <el-row type="flex" :style="{display:bodyHide}">
           <el-col :span="12">
-            <el-form-item label="检验检疫受理机关" prop="OrgCode">
-              <el-input v-model="form.OrgCode" placeholder="检验检疫受理机关" />
+            <!-- <el-form-item label="检验检疫受理机关" prop="orgCode">
+              <el-input v-model="dechead.orgCode" placeholder="检验检疫受理机关" />
+            </el-form-item> -->
+            <el-form-item label="检验检疫受理机关" prop="orgCode">
+              <el-select v-model="dechead.orgCode" clearable placeholder="请选择检验检疫受理机关" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="4">
             <el-form-item label="企业资质" prop="CopCode">
-              <el-input v-model="form.CopCode" :disabled="true"/>
+              <el-input v-model="dechead.CopCode" :disabled="true"/>
             </el-form-item>
           </el-col>
           <el-col :span="6" style="margin-left:-150px">
             <el-form-item prop="CopName">
-              <el-input v-model="form.CopName" :disabled="true"/>
+              <el-input v-model="dechead.CopName" :disabled="true"/>
             </el-form-item>
           </el-col>
-          <el-col :span="3" style="margin-left:10px">
+          <!-- <el-col :span="3" style="margin-left:10px">
             <el-button icon="el-icon-arrow-left" type="info" @click="left" circle></el-button>
           </el-col>
           <el-col :span="3" style="margin-left:-160px">
             <el-button icon="el-icon-arrow-right" type="info" @click="right" circle></el-button>
-          </el-col>
+          </el-col> -->
           <el-col :span="3" style="margin-left:-160px">
             <el-button icon="el-icon-more-outline" type="info" @click="CopList" circle></el-button>
           </el-col>
@@ -468,47 +650,87 @@
 
         <el-row type="flex" :style="{display:bodyHide}">
           <el-col :span="6">
-            <el-form-item label="领证机关" prop="VsaOrgCode">
-              <el-input v-model="form.VsaOrgCode" placeholder="请输入领证机关" clearable size="small" />
+            <!-- <el-form-item label="领证机关" prop="vsaOrgCode">
+              <el-input v-model="dechead.vsaOrgCode" placeholder="请输入领证机关" clearable size="small" />
+            </el-form-item> -->
+            <el-form-item label="领证机关" prop="vsaOrgCode">
+              <el-select v-model="dechead.vsaOrgCode" clearable placeholder="请选择领证机关" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="口岸检验检疫机关" prop="InspOrgCode">
-              <el-input v-model="form.InspOrgCode" placeholder="口岸检验检疫机关" />
+            <!-- <el-form-item label="口岸检验检疫机关" prop="inspOrgCode">
+              <el-input v-model="dechead.inspOrgCode" placeholder="口岸检验检疫机关" />
+            </el-form-item> -->
+            <el-form-item label="口岸检验检疫机关" prop="inspOrgCode">
+              <el-select v-model="dechead.inspOrgCode" clearable placeholder="请选择口岸检验检疫机关" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="启运日期" prop="DespDate">
+            <el-form-item label="启运日期" prop="despDate">
               <el-date-picker
                 width="100%"
                 class="datePicker"
-                v-model="form.DespDate"
+                v-model="dechead.despDate"
                 type="datetime"
                 placeholder="选择日期时间"
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="B/L号" prop="BLNo">
-              <el-input v-model="form.BLNo" placeholder="B/L号" />
+            <el-form-item label="B/L号" prop="blNo">
+              <el-input v-model="dechead.blNo" placeholder="B/L号" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex" :style="{display:bodyHide}">
           <el-col :span="12">
-            <el-form-item label="目的地检验检疫机关" prop="PurpOrgCode">
-              <el-input v-model="form.PurpOrgCode" clearable size="small" />
+            <!-- <el-form-item label="目的地检验检疫机关" prop="purpOrgCode">
+              <el-input v-model="dechead.purpOrgCode" clearable size="small" />
+            </el-form-item> -->
+            <el-form-item label="目的地检验检疫机关" prop="purpOrgCode">
+              <el-select v-model="dechead.purpOrgCode" clearable placeholder="请选择目的地检验检疫机关" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="13" style="margin-left:20px">
-            <el-form-item label="关联号码及理由" prop="CorrelationNo">
-              <el-input v-model="form.CorrelationNo" placeholder="关联号码及理由" />
+            <el-form-item label="关联号码及理由" prop="correlationNo">
+              <el-input v-model="dechead.correlationNo" placeholder="关联号码及理由" />
             </el-form-item>
           </el-col>
           <el-col :span="12" style="margin-left:-140px">
-            <el-form-item label prop="CorrelationReasonFlag">
-              <el-input v-model="form.CorrelationReasonFlag" placeholder="关联理由" />
+            <!-- <el-form-item label prop="correlationReasonFlag">
+              <el-input v-model="dechead.correlationReasonFlag" placeholder="关联理由" />
+            </el-form-item> -->
+            <el-form-item label="" prop="correlationReasonFlag">
+              <el-select v-model="dechead.correlationReasonFlag" clearable placeholder="关联理由" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6" style="margin-left:50px">
@@ -518,18 +740,38 @@
 
         <el-row type="flex" :gutter="10" :style="{display:bodyHide}">
           <el-col :span="12">
-            <el-form-item label="原箱运输" prop="OrigBoxFlag">
-              <el-input v-model="form.OrigBoxFlag" clearable size="small" />
+            <!-- <el-form-item label="原箱运输" prop="origBoxFlag">
+              <el-input v-model="dechead.origBoxFlag" clearable size="small" />
+            </el-form-item> -->
+            <el-form-item label="原箱运输" prop="origBoxFlag">
+              <el-select v-model="dechead.origBoxFlag" clearable placeholder="请选择原箱运输" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12" style="margin-left:0px">
-            <el-form-item label="特种业务标识" prop="SpecDeclFlag">
-              <el-input v-model="form.SpecDeclFlag" placeholder="特种业务标识" />
+            <!-- <el-form-item label="特种业务标识" prop="specDeclFlag">
+              <el-input v-model="dechead.specDeclFlag" placeholder="特种业务标识" />
+            </el-form-item> -->
+            <el-form-item label="特种业务标识" prop="specDeclFlag">
+              <el-select v-model="commodityForm.specDeclFlag" multiple placeholder="请选择特种业务标识">
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12" style="margin-left:-90px">
             <el-form-item label="所属单证" prop="postCode">
-              <el-input v-model="form.postCode" placeholder="所属单证" :disabled="true" />
+              <el-input v-model="dechead.postCode" placeholder="所属单证" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="6" style="margin-left:0px">
@@ -592,7 +834,7 @@
       <el-table
         class="mb20"
         ref="multipleTable"
-        :data="CommodityItemList"
+        :data="declist"
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange"
@@ -600,20 +842,25 @@
         <el-table-column type="selection" min-width="55" />
         <el-table-column prop="gNo" label="项号" min-width="120" />
         <el-table-column label="序号" align="center" type="index" />
-        <el-table-column prop="ContrItem" label="备案序号" min-width="120" />
-        <el-table-column prop="CodeTS" label="商品编号" min-width="150" />
-        <el-table-column prop="CiqName" label="检验检疫名称" min-width="120" />
-        <el-table-column prop="GName" label="商品名称" min-width="120" />
-        <el-table-column prop="GModel" label="商品规格、型号" min-width="120" />
-        <el-table-column prop="GQty" label="成交数量" min-width="120" />
-        <el-table-column prop="GUnit" label="成交单位" min-width="120" />
-        <el-table-column prop="DeclPrice" label="成交单价" min-width="150" />
-        <el-table-column prop="DeclTotal" label="成交总价" min-width="120" />
-        <el-table-column prop="TradeCurr" label="成交币制" min-width="120" />
-        <el-table-column prop="OriginCountry" label="原产国(地区)" min-width="120" />
-        <el-table-column prop="DestinationCountry" label="最终目的国" min-width="120" />
-        <el-table-column prop="DutyMode" label="征免方式" min-width="120" />
-        <el-table-column prop="GoodsSpec" label="检验检疫货物规格" min-width="120" />
+        <el-table-column prop="contrItem" label="备案序号" min-width="120" />
+        <el-table-column prop="codeTs" label="商品编号" min-width="150" />
+        <el-table-column prop="ciqName" label="检验检疫名称" min-width="120" />
+        <el-table-column prop="gName" label="商品名称" min-width="120" />
+        <el-table-column prop="gModel" label="商品规格、型号" min-width="120" />
+        <el-table-column prop="gQty" label="成交数量" min-width="120" />
+        <el-table-column prop="gUnit" label="成交单位" min-width="120" />
+        <el-table-column prop="declPrice" label="成交单价" min-width="150" />
+        <el-table-column prop="declTotal" label="成交总价" min-width="120" />
+        <el-table-column prop="tradeCurr" label="成交币制" min-width="120" />
+        <el-table-column prop="originCountry" label="原产国(地区)" min-width="120" />
+        <el-table-column prop="destinationCountry" label="最终目的国" min-width="120" />
+        <el-table-column prop="dutyMode" label="征免方式" min-width="120" />
+        <el-table-column prop="goodsSpec" label="检验检疫货物规格" min-width="120" />
+          <el-table-column  label="操作" min-width="100" fixed="right">
+        <template slot-scope="scope">
+            <el-button  size="mini" type="text" icon="el-icon-delete" @click="commodityDelete(scope.$index,scope.row)">删除</el-button>
+        </template>
+          </el-table-column>
       </el-table>
       <el-pagination
         class="right mb20"
@@ -628,31 +875,33 @@
         <el-row :gutter="10">
           <el-col :span="5">
             <el-form-item label="项号" prop="gNo">
-              <el-input v-model="commodityForm.gNo" placeholder="项号" clearable size="small" />
+              <el-input v-model="commodityForm.gNo" placeholder="项号" clearable size="small" :disabled="true"/>
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="备案序号" prop="ContrItem">
+            <el-form-item label="备案序号" prop="contrItem">
               <el-input
-                v-model="commodityForm.ContrItem"
+                v-model="commodityForm.contrItem"
                 placeholder="备案序号"
                 clearable
                 size="small"
+                :disabled="true"
               />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="商品编号" prop="CodeTS">
-              <el-input v-model="commodityForm.CodeTS" placeholder="商品编号" clearable size="small" />
+            <el-form-item label="商品编号" prop="codeTs">
+              <el-input v-model="commodityForm.codeTs" placeholder="商品编号" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="检验检疫名称" prop="CiqName">
+            <el-form-item label="检验检疫名称" prop="ciqName">
               <el-input
-                v-model="commodityForm.CiqName"
+                v-model="commodityForm.ciqName"
                 placeholder="检验检疫名称"
                 clearable
                 size="small"
+                :disabled="true"
               />
             </el-form-item>
           </el-col>
@@ -663,17 +912,18 @@
 
         <el-row :gutter="10">
           <el-col :span="10">
-            <el-form-item label="商品名称" prop="GName">
-              <el-input v-model="commodityForm.GName" placeholder clearable size="small" />
+            <el-form-item label="商品名称" prop="gName">
+              <el-input v-model="commodityForm.gName" placeholder clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="商品规格、型号" prop="GModel">
+            <el-form-item label="商品规格、型号" prop="gModel">
               <el-input
-                v-model="commodityForm.GModel"
+                v-model="commodityForm.gModel"
                 placeholder="商品规格、型号"
                 clearable
                 size="small"
+                :disabled="true"
               />
             </el-form-item>
           </el-col>
@@ -681,19 +931,29 @@
 
         <el-row type="flex" :gutter="10">
           <el-col :span="5">
-            <el-form-item label="成交数量" prop="GQty">
-              <el-input v-model="commodityForm.GQty" placeholder="成交数量" clearable size="small" />
+            <el-form-item label="成交数量" prop="gQty">
+              <el-input v-model="commodityForm.gQty" placeholder="成交数量" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="成交计量单位" prop="GUnit">
-              <el-input v-model="commodityForm.GUnit" placeholder="成交计量单位" clearable size="small" />
+            <!-- <el-form-item label="成交计量单位" prop="gUnit">
+              <el-input v-model="commodityForm.gUnit" placeholder="成交计量单位" clearable size="small" />
+            </el-form-item> -->
+            <el-form-item label="成交计量单位" prop="gUnit">
+              <el-select v-model="dechead.gUnit" clearable placeholder="请选择" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="成交单价" prop="DeclPrice">
+            <el-form-item label="成交单价" prop="declPrice">
               <el-input
-                v-model="commodityForm.DeclPrice"
+                v-model="commodityForm.declPrice"
                 placeholder="成交单价"
                 clearable
                 size="small"
@@ -701,9 +961,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="5" style="margin-left:-90px">
-            <el-form-item label="成交总价" prop="DeclTotal">
+            <el-form-item label="成交总价" prop="declTotal">
               <el-input
-                v-model="commodityForm.DeclTotal"
+                v-model="commodityForm.declTotal"
                 placeholder="成交总价"
                 clearable
                 size="small"
@@ -711,22 +971,32 @@
             </el-form-item>
           </el-col>
           <el-col :span="4" style="margin-left:-40px">
-            <el-form-item label="成交币制" prop="TradeCurr">
+            <!-- <el-form-item label="成交币制" prop="tradeCurr">
               <el-input
-                v-model="commodityForm.TradeCurr"
+                v-model="commodityForm.tradeCurr"
                 placeholder="成交币制"
                 clearable
                 size="small"
               />
+            </el-form-item> -->
+            <el-form-item label="成交币制" prop="tradeCurr">
+              <el-select v-model="dechead.tradeCurr" clearable placeholder="请选择" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex" :gutter="10">
           <el-col :span="5">
-            <el-form-item label="法定第一数量" prop="FirstQty">
+            <el-form-item label="法定第一数量" prop="firstQty">
               <el-input
-                v-model="commodityForm.FirstQty"
+                v-model="commodityForm.firstQty"
                 placeholder="法定第一数量"
                 clearable
                 size="small"
@@ -734,19 +1004,20 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="法定第一计量单位" prop="FirstUnit">
+            <el-form-item label="法定第一计量单位" prop="firstUnit">
               <el-input
-                v-model="commodityForm.FirstUnit"
+                v-model="commodityForm.firstUnit"
                 placeholder="法定第一计量单位"
                 clearable
                 size="small"
+                :disabled="true"
               />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="加工成品单耗版本号" prop="ExgVersion">
+            <el-form-item label="加工成品单耗版本号" prop="exgVersion">
               <el-input
-                v-model="commodityForm.ExgVersion"
+                v-model="commodityForm.exgVersion"
                 placeholder="加工成品单耗版本号"
                 clearable
                 size="small"
@@ -754,14 +1025,14 @@
             </el-form-item>
           </el-col>
           <el-col :span="5" style="margin-left:-90px">
-            <el-form-item label="货号" prop="ExgNo">
-              <el-input v-model="commodityForm.ExgNo" placeholder="货号" clearable size="small" />
+            <el-form-item label="货号" prop="exgNo">
+              <el-input v-model="commodityForm.exgNo" placeholder="货号" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="4" style="margin-left:-40px">
-            <el-form-item label="最终目的国(地区)" prop="DestinationCountry">
+            <el-form-item label="最终目的国(地区)" prop="destinationCountry">
               <el-input
-                v-model="commodityForm.DestinationCountry"
+                v-model="commodityForm.destinationCountry"
                 placeholder="最终目的国(地区)"
                 clearable
                 size="small"
@@ -772,43 +1043,65 @@
 
         <el-row type="flex" :gutter="10">
           <el-col :span="5">
-            <el-form-item label="法定第二数量" prop="SecondQty">
+            <el-form-item label="法定第二数量" prop="secondQty">
               <el-input
-                v-model="commodityForm.SecondQty"
+                v-model="commodityForm.secondQty"
                 placeholder="法定第二数量"
                 clearable
                 size="small"
+                :disabled="true"
               />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="法定第二计量单位" prop="SecondUnit">
+            <el-form-item label="法定第二计量单位" prop="secondUnit">
               <el-input
-                v-model="commodityForm.SecondUnit"
+                v-model="commodityForm.secondUnit"
                 placeholder="法定第二计量单位"
                 clearable
                 size="small"
+                :disabled="true"
               />
             </el-form-item>
           </el-col>
           <el-col :span="9">
-            <el-form-item label="原产国(地区)" prop="OriginCountry">
+            <!-- <el-form-item label="原产国(地区)" prop="originCountry">
               <el-input
-                v-model="commodityForm.OriginCountry"
+                v-model="commodityForm.originCountry"
                 placeholder="原产国(地区)"
                 clearable
                 size="small"
               />
+            </el-form-item> -->
+            <el-form-item label="原产国(地区)" prop="originCountry">
+              <el-select v-model="dechead.originCountry" clearable placeholder="请选择原产国(地区)" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="4" style="margin-left:-60px">
-            <el-form-item label="原产地区" prop="OrigPlaceCode">
+            <!-- <el-form-item label="原产地区" prop="origPlaceCode">
               <el-input
-                v-model="commodityForm.OrigPlaceCode"
+                v-model="commodityForm.origPlaceCode"
                 placeholder="原产地区"
                 clearable
                 size="small"
               />
+            </el-form-item> -->
+            <el-form-item label="原产地区" prop="origPlaceCode">
+              <el-select v-model="dechead.origPlaceCode" clearable placeholder="请选择" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -818,37 +1111,67 @@
             <el-button type="info" icon="el-icon-sort" @click="List1" circle></el-button>
           </el-col>
           <el-col :span="8" style="margin-left:40px">
-            <el-form-item label="境内目的地" prop="DistrictCode">
+            <!-- <el-form-item label="境内目的地" prop="districtCode">
               <el-input
-                v-model="commodityForm.DistrictCode"
+                v-model="commodityForm.districtCode"
                 placeholder="境内目的地代码"
                 clearable
                 size="small"
               />
+            </el-form-item> -->
+            <el-form-item label="境内目的地" prop="districtCode">
+              <el-select v-model="dechead.districtCode" clearable placeholder="请选择境内目的地" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8" style="margin-left:-160px">
-            <el-form-item label prop="DestCode">
+            <!-- <el-form-item label prop="destCode">
               <el-input
-                v-model="commodityForm.DestCode"
+                v-model="commodityForm.destCode"
                 placeholder="目的地代码"
                 clearable
                 size="small"
               />
+            </el-form-item> -->
+            <el-form-item label="" prop="destCode">
+              <el-select v-model="dechead.destCode" clearable placeholder="目的地代码" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="4" style="margin-left:-30px">
-            <el-form-item label="征免方式" prop="DutyMode">
-              <el-input v-model="commodityForm.DutyMode" placeholder="征免方式" clearable size="small" />
+            <!-- <el-form-item label="征免方式" prop="dutyMode">
+              <el-input v-model="commodityForm.dutyMode" placeholder="征免方式" clearable size="small" />
+            </el-form-item> -->
+            <el-form-item label="征免方式" prop="dutyMode">
+              <el-select v-model="dechead.dutyMode" clearable placeholder="请选择" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex" :gutter="10" :style="{display:List1Hide}">
           <el-col :span="18">
-            <el-form-item label="检验检疫货物规格" prop="GoodsSpec">
+            <el-form-item label="检验检疫货物规格" prop="goodsSpec">
               <el-input
-                v-model="commodityForm.GoodsSpec"
+                v-model="commodityForm.goodsSpec"
                 placeholder="检验检疫货物规格"
                 clearable
                 size="small"
@@ -866,12 +1189,12 @@
         <el-row type="flex" :style="{display:List1Hide}">
           <el-col :span="9">
               <el-form-item label="货物属性">
-              <el-select v-model="commodityForm.GoodsAttr" multiple placeholder="请选择">
+              <el-select v-model="commodityForm.goodsAttr" multiple placeholder="请选择">
                 <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
                 />
               </el-select>
             </el-form-item>
@@ -880,8 +1203,8 @@
             <el-button icon="el-icon-more-outline" type="info" circle></el-button>
           </el-col>-->
           <el-col :span="9">
-            <el-form-item label="用途" prop="UseTo">
-              <el-input v-model="commodityForm.UseTo" placeholder="用途" clearable size="small" />
+            <el-form-item label="用途" prop="useTo">
+              <el-input v-model="commodityForm.useTo" placeholder="用途" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="4" style="margin-left:135px">
@@ -944,15 +1267,20 @@
       <el-table
         class="mb20"
         ref="multipleTable"
-        :data="containerList"
+        :data="deccontainers"
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column prop="ContainerId" label="集装箱号" min-width="200" />
-        <el-table-column prop="ContainerMd" label="集装箱规格" min-width="150" />
-        <el-table-column prop="LclFlag" label="拼箱标识" min-width="120" />
+        <el-table-column prop="containerId" label="集装箱号" min-width="200" />
+        <el-table-column prop="containerMd" label="集装箱规格" min-width="150" />
+        <el-table-column prop="lclFlag" label="拼箱标识" min-width="120" />
+        <el-table-column label="操作" min-width="100" fixed="right">
+          <template slot-scope="scope">
+            <el-button size="mini" type="text" icon="el-icon-delete" @click="containerDelete(scope.$index,scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         class="right mb20"
@@ -966,9 +1294,9 @@
       <el-form :model="containerForm" ref="containerForm" label-width="160px">
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="集装箱号" prop="ContainerId">
+            <el-form-item label="集装箱号" prop="containerId">
               <el-input
-                v-model="containerForm.ContainerId"
+                v-model="containerForm.containerId"
                 placeholder="集装箱号"
                 clearable
                 size="small"
@@ -976,19 +1304,29 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="集装箱规格" prop="ContainerMd">
+            <!-- <el-form-item label="集装箱规格" prop="containerMd">
               <el-input
-                v-model="containerForm.ContainerMd"
+                v-model="containerForm.containerMd"
                 placeholder="集装箱规格"
                 clearable
                 size="small"
               />
+            </el-form-item> -->
+            <el-form-item label="集装箱规格" prop="containerMd">
+              <el-select v-model="dechead.containerMd" clearable placeholder="集装箱规格" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="自重(KG)" prop="ContainerWt">
+            <el-form-item label="自重(KG)" prop="containerWt">
               <el-input
-                v-model="containerForm.ContainerWt"
+                v-model="containerForm.containerWt"
                 placeholder="自重(KG)"
                 clearable
                 size="small"
@@ -996,17 +1334,27 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="拼箱标识" prop="LclFlag">
-              <el-input v-model="containerForm.LclFlag" placeholder="拼箱标识" clearable size="small" />
+            <!-- <el-form-item label="拼箱标识" prop="lclFlag">
+              <el-input v-model="containerForm.lclFlag" placeholder="拼箱标识" clearable size="small" />
+            </el-form-item> -->
+            <el-form-item label="拼箱标识" prop="lclFlag">
+              <el-select v-model="dechead.lclFlag" clearable placeholder="请选择拼箱标识" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex">
           <el-col :span="23">
-            <el-form-item label="商品项号关系" prop="GoodsNo">
+            <el-form-item label="商品项号关系" prop="goodsNo">
               <el-input
-                v-model="containerForm.GoodsNo"
+                v-model="containerForm.goodsNo"
                 placeholder="商品项号关系"
                 clearable
                 size="small"
@@ -1074,14 +1422,19 @@
       <el-table
         class="mb20"
         ref="multipleTable"
-        :data="DocumentsList"
+        :data="declicensedocus"
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column prop="DocuCode" label="单证代码" min-width="200" />
-        <el-table-column prop="CertCode" label="单证编号" min-width="150" />
+        <el-table-column prop="docuCode" label="单证代码" min-width="200" />
+        <el-table-column prop="certCode" label="单证编号" min-width="150" />
+        <el-table-column label="操作" min-width="100" fixed="right">
+          <template slot-scope="scope">
+            <el-button size="mini" type="text" icon="el-icon-delete" @click="DocumentsDelete(scope.$index,scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         class="right mb20"
@@ -1095,13 +1448,23 @@
       <el-form :model="DocumentsForm" ref="DocumentsForm" label-width="160px">
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="随附单证代码" prop="DocuCode">
-              <el-input v-model="DocumentsForm.DocuCode" placeholder="随附单证代码" clearable size="small" />
+            <!-- <el-form-item label="随附单证代码" prop="docuCode">
+              <el-input v-model="DocumentsForm.docuCode" placeholder="随附单证代码" clearable size="small" />
+            </el-form-item> -->
+            <el-form-item label="随附单证代码" prop="docuCode">
+              <el-select v-model="dechead.docuCode" clearable placeholder="请选择随附单证代码" >
+                <el-option
+                  v-for="item in TestOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="随附单证编号" prop="CertCode">
-              <el-input v-model="DocumentsForm.CertCode" placeholder="随附单证编号" clearable size="small" />
+            <el-form-item label="随附单证编号" prop="certCode">
+              <el-input v-model="DocumentsForm.certCode" placeholder="随附单证编号" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -1109,29 +1472,29 @@
     </el-card>
 
     <el-card class="mb20">
-      <el-form :model="CustomsDeclarationForm" ref="CustomsDeclarationForm" label-width="160px">
+      <el-form :model="decfreetxt" ref="decfreetxt" label-width="160px">
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="关联报关单" prop="RelId">
-              <el-input v-model="CustomsDeclarationForm.RelId" placeholder="关联报关单" clearable size="small" />
+            <el-form-item label="关联报关单" prop="relId">
+              <el-input v-model="decfreetxt.relId" placeholder="关联报关单" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="关联备案" prop="RelManNo">
-              <el-input v-model="CustomsDeclarationForm.RelManNo" placeholder="关联备案" clearable size="small" />
+            <el-form-item label="关联备案" prop="relManNo">
+              <el-input v-model="decfreetxt.relManNo" placeholder="关联备案" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="保税/监管场地" prop="BonNo">
-              <el-input v-model="CustomsDeclarationForm.BonNo" placeholder="保税/监管场地" clearable size="small" />
+            <el-form-item label="保税/监管场地" prop="bonNo">
+              <el-input v-model="decfreetxt.bonNo" placeholder="保税/监管场地" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="货场代码" prop="CusFie">
-              <el-input v-model="CustomsDeclarationForm.CusFie" placeholder="货场代码" clearable size="small" />
+            <el-form-item label="货场代码" prop="cusFie">
+              <el-input v-model="decfreetxt.cusFie" placeholder="货场代码" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -1195,13 +1558,13 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="使用单位联系人" prop="user1">
-              <el-input v-model="userForm.user1" placeholder="使用单位联系人" clearable size="small" />
+            <el-form-item label="使用单位联系人" prop="useOrgPersonCode">
+              <el-input v-model="userForm.useOrgPersonCode" placeholder="使用单位联系人" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="使用单位联系电话" prop="user2">
-              <el-input v-model="userForm.user2" placeholder="使用单位联系电话" clearable size="small" />
+            <el-form-item label="使用单位联系电话" prop="useOrgPersonTel">
+              <el-input v-model="userForm.useOrgPersonTel" placeholder="使用单位联系电话" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -1209,15 +1572,15 @@
         <el-table
           class="mb20"
           ref="multipleTable"
-          :data="UserList"
+          :data="decuser"
           tooltip-effect="dark"
           style="width: 100%"
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" min-width="55" />
           <el-table-column label="序号" align="center" type="index" min-width="200" />
-          <el-table-column prop="user1" label="使用单位联系人" min-width="200" />
-          <el-table-column prop="user2" label="使用单位联系电话" min-width="150" />
+          <el-table-column prop="useOrgPersonCode" label="使用单位联系人" min-width="200" />
+          <el-table-column prop="useOrgPersonTel" label="使用单位联系电话" min-width="150" />
         </el-table>
       </el-form>
     </el-dialog>
@@ -1323,15 +1686,15 @@
       <el-table
           class="mb20"
           ref="multipleTable"
-          :data="UserList"
+          :data="decuser"
           tooltip-effect="dark"
           style="width: 100%"
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" min-width="55" />
           <el-table-column label="序号" align="center" type="index" min-width="200" />
-          <el-table-column prop="user1" label="使用单位联系人" min-width="200" />
-          <el-table-column prop="user2" label="使用单位联系电话" min-width="150" />
+          <el-table-column prop="useOrgPersonCode" label="使用单位联系人" min-width="200" />
+          <el-table-column prop="useOrgPersonTel" label="使用单位联系电话" min-width="150" />
         </el-table>
       </el-form>
     </el-dialog>
@@ -1341,6 +1704,9 @@
 <script>
 // import depParaList from "./../components/depParaList";
 // import depParaList2 from "./../components/depParaList2";
+import {
+  add
+  } from "@/api/declare/declare";
 export default {
   // components: { depParaList, depParaList2 },
   data() {
@@ -1384,8 +1750,8 @@ export default {
       },
       //使用人弹出框前端字段
       userForm: {
-        user1: undefined,
-        user2: undefined,
+        useOrgPersonCode: undefined,
+        useOrgPersonTel: undefined,
       },
       //编辑检验检疫货物规格
       specificationForm: {
@@ -1400,154 +1766,150 @@ export default {
         specification9: "",
       },
       //使用人List
-      UserList: [],
+      decuser: [],
       //商品项信息List
-      CommodityItemList: [],
+      declist: [],
       //集装箱号List
-      containerList:[],
+      deccontainers:[],
       //随附单证List
-      DocumentsList:[],
+      declicensedocus:[],
       // 查询参数
       queryParams: {
         postCode: undefined,
       },
       //进口/出口报关单表头 DecHead
-      form: {
+      dechead: {
         //其他业务事项确认
-        PromiseItmes:undefined,
+        promiseItmes:undefined,
         //申报地海关
-        CustomMaster: undefined,
+        custoMmaster: undefined,
         //申报状态 不填写
         //统一编号
-        SeqNo: undefined,
+        seqNo: undefined,
         //预录入编号
-        PreEntryId: undefined,
+        preEntryId: undefined,
         //海关编号
-        EntryId: undefined,
+        entryId: undefined,
         //进境关别
-        IEPort: undefined,
+        iePort: undefined,
         //备案号
-        ManualNo: undefined,
+        manualno: undefined,
         //合同协议号
-        ContrNo: undefined,
+        contrNo: undefined,
         //进口日期
-        IEDate: undefined,
+        ieDate: undefined,
         //申报日期 不填写
         dDate: undefined,
         //境内收发货人
-        TradeCoScc: undefined,
+        tradeCoScc: undefined,
         //境内收发货人10位海关代码
-        TradeCode: undefined,
+        tradeCode: undefined,
         //境内收发货人10位检验检疫编码
-        TradeCiqCode: undefined,
+        tradeCiqCode: undefined,
         //境内收发货人企业名称(中文)
         DomesticConsigneeEname: undefined,
         //境外收发货人
-        OverseasConsignorCode: undefined,
+        overseasConsignorCode: undefined,
         //境外收发货人企业名称(中文)
-        OverseasConsignorEname: undefined,
+        overseasConsignorEname: undefined,
         //消费使用单位
-        OwnerCodeScc: undefined,
+        ownerCodeScc: undefined,
         //消费使用单位10位海关代码
-        OwnerCode: undefined,
+        ownerCode: undefined,
         //消费使用单位10位检验检疫编码
-        OwnerCiqCode: undefined,
+        ownerCiqCode: undefined,
         //消费使用单位企业名称
-        OwnerName: undefined,
+        ownerName: undefined,
         //申报单位
-        AgentCodeScc: undefined,
+        agentCodeScc: undefined,
         //申报单位10位海关代码
-        AgentCode: undefined,
+        agentCode: undefined,
         //申报单位10位检验检疫编码
-        DeclCiqCode: undefined,
+        declCiqCode: undefined,
         //申报单位企业名称
-        AgentName: undefined,
+        agentName: undefined,
         //运输方式
-        TrafMode: undefined,
+        trafMode: undefined,
         //运输工具名称
-        TrafName: undefined,
-        //航次号
-        DecFreeTxt: {
-          VoyNo: undefined,
-        },
+        trafName: undefined,
         //提运单号
-        BillNo: undefined,
+        billNo: undefined,
         //监管方式
-        TradeMode: undefined,
+        tradeMode: undefined,
         //征免性质
-        CutMode: undefined,
+        cutMode: undefined,
         //许可证编号
-        LicenseNo: undefined,
+        licenseNo: undefined,
         //启运国(地区)
-        TradeCountry: undefined,
+        tradeCountry: undefined,
         //经停港
-        DistinatePort: undefined,
+        distinatePort: undefined,
         //成交方式
-        TransMode: undefined,
+        transMode: undefined,
         //运费标记
-        FeeMark: undefined,
+        feeMark: undefined,
         //运费率
-        FeeRate: undefined,
+        feeRate: undefined,
         //运费币制
-        FeeCurr: undefined,
+        feeCurr: undefined,
         //保险费标记
-        InsurMark: undefined,
+        insurMark: undefined,
         //保险费率
-        InsurRate: undefined,
+        insurRate: undefined,
         //保险费币制
-        InsurCurr: undefined,
+        insurCurr: undefined,
         //杂费标记
-        OtherMark: undefined,
+        otherMark: undefined,
         //杂费率
-        OtherRate: undefined,
+        otherRate: undefined,
         //杂费币制
-        OtherCurr: undefined,
+        otherCurr: undefined,
         //件数
-        PackNo: undefined,
+        packNo: undefined,
         //包装种类
-        WrapType: undefined,
+        wrapType: undefined,
         //毛重(KG)
-        GrossWet: undefined,
+        grossWet: undefined,
         //净重(KG)
-        NetWt: undefined,
+        netWt: undefined,
         //贸易国别(地区)
-        TradeAreaCode: undefined,
+        tradeAreaCode: undefined,
         //入境口岸
-        EntyPortCode: undefined,
+        entyPortCode: undefined,
         //存放地点
-        GoodsPlace: undefined,
+        goodsPlace: undefined,
         //启运港
-        DespPortCode: undefined,
+        desPportCode: undefined,
         //报关单类型
-        EntryType: undefined,
+        entryType: undefined,
         //备注
-        NoteS: undefined,
+        noteS: undefined,
         //标记唛码
-        MarkNo: undefined,
+        markNo: undefined,
         //检验检疫受理机关
-        OrgCode: undefined,
+        orgCode: undefined,
         //录入单位代码
         CopCode: undefined,
         //录入单位名称
         CopName: undefined,
         //领证机关
-        VsaOrgCode: undefined,
+        vsaOrgCode: undefined,
         //口岸检验检疫机关
-        InspOrgCode: undefined,
+        inspOrgCode: undefined,
         //启运日期
-        DespDate: undefined,
+        despDate: undefined,
         //B/L号
-        BLNo: undefined,
+        blNo: undefined,
         //目的地检验检疫机关
-        PurpOrgCode: undefined,
+        purpOrgCode: undefined,
         //关联号码
-        CorrelationNo: undefined,
+        correlationNo: undefined,
         //关联理由
-        CorrelationReasonFlag: undefined,
+        correlationReasonFlag: undefined,
         //原箱运输
-        OrigBoxFlag: undefined,
+        origBoxFlag: undefined,
         //特种业务标识
-        SpecDeclFlag: undefined,
+        specDeclFlag: undefined,
         //所属单证  不填写
       },
       //进口/出口报关单表体 DecList
@@ -1555,96 +1917,100 @@ export default {
         //项号
         gNo: undefined,
         //备案序号
-        ContrItem: undefined,
+        contrItem: undefined,
         //商品编号
-        CodeTS: undefined,
+        codeTs: undefined,
         //检验检疫名称
-        CiqName: undefined,
+        ciqName: undefined,
         //商品名称
-        GName: undefined,
+        gName: undefined,
         //商品规格、型号
-        GModel: undefined,
+        gModel: undefined,
         //成交数量
-        GQty: undefined,
+        gQty: undefined,
         //成交计量单位
-        GUnit: undefined,
+        gUnit: undefined,
         //成交单价
-        DeclPrice: undefined,
+        declPrice: undefined,
         //成交总价
-        DeclTotal: undefined,
+        declTotal: undefined,
         //成交币制
-        TradeCurr: undefined,
+        tradeCurr: undefined,
         //法定第一数量
-        FirstQty: undefined,
+        firstQty: undefined,
         //第一计量单位
-        FirstUnit: undefined,
+        firstUnit: undefined,
         //加工成品单耗版本号 (版本号)
-        ExgVersion: undefined,
+        exgVersion: undefined,
         //货号
-        ExgNo: undefined,
+        exgNo: undefined,
         //最终目的国(地区)
-        DestinationCountry: undefined,
+        destinationCountry: undefined,
         //法定第二数量
-        SecondQty: undefined,
+        secondQty: undefined,
         //法定第二计量单位
-        SecondUnit: undefined,
+        secondUnit: undefined,
         //原产国(地区)
-        OriginCountry: undefined,
+        originCountry: undefined,
         //原产地区代码
-        OrigPlaceCode: undefined,
+        origPlaceCode: undefined,
         //境内目的地
-        DistrictCode: undefined,
+        districtCode: undefined,
         //目的地代码
-        DestCode: undefined,
+        destCode: undefined,
         //征免方式
-        DutyMode: undefined,
+        dutyMode: undefined,
         //检验检疫货物规格
-        GoodsSpec: undefined,
+        goodsSpec: undefined,
         //货物属性(代码)
-        GoodsAttr: undefined,
+        goodsAttr: undefined,
         //用途//生产厂家
-        UseTo: undefined,
+        useTo: undefined,
       },
       //报关单集装箱 DecContainer
       containerForm: {
         //集装箱号
-        ContainerId: undefined,
+        containerId: undefined,
         //集装箱规格
-        ContainerMd: undefined,
+        containerMd: undefined,
         //自重(KG)
-        ContainerWt: undefined,
+        containerWt: undefined,
         //拼箱标识
-        LclFlag: undefined,
+        lclFlag: undefined,
         //商品项号
-        GoodsNo: undefined,
+        goodsNo: undefined,
       },
       //随附单证 DecLicenseDocus
       DocumentsForm: {
         //随附单证代码
-        DocuCode: undefined,
+        docuCode: undefined,
         //随附单证编号
-        CertCode: undefined,
+        certCode: undefined,
       },
       //报关单自由文本信息 DecFreeTxt
-      CustomsDeclarationForm: {
+      decfreetxt: {
         //关联报关单号
-        RelId: undefined,
+        relId: undefined,
         //关联备案号
-        RelManNo: undefined,
+        relManNo: undefined,
         //保税/监管场地
-        BonNo: undefined,
+        bonNo: undefined,
         //货场代码
-        CusFie: undefined,
+        cusFie: undefined,
+        //航次号
+        voyNo:undefined,
       },
       //整体表单
       AllForm:{
-        form:{},
-        CustomsDeclarationForm:{},
-        CommodityItemList:[],
-        containerList:[],
-        DocumentsList:[],
-        UserList:[],
+        dechead:{},
+        decfreetxt:{},
+        declist:[],
+        deccontainers:[],
+        declicensedocus:[],
+        decuser:[],
       },
+      //货物属性 临时字典
+      TestOptions:[],
       statusOptions: [],
       dateTimeVal: "",
       data: [],
@@ -1654,6 +2020,11 @@ export default {
   // contaCount: undefined,
   // 随附单证
   // attaDocuCdstr: undefined,
+  created(){
+    this.getDicts("sys_user_sex").then((response) => {
+      this.TestOptions = response.data;
+    });
+  },
   mounted() {
     // 初始化
     this.init();
@@ -1665,17 +2036,22 @@ export default {
   methods: {
     //整体新增
     SingleAll(){
-      this.form.PromiseItmes=this.temporaryForm.temporary1+this.temporaryForm.temporary2+this.temporaryForm.temporary3;
-      this.AllForm.form=this.form;
-      this.AllForm.CustomsDeclarationForm=this.CustomsDeclarationForm;
-      this.AllForm.containerList=this.containerList;
-      this.AllForm.DocumentsList=this.DocumentsList;
-      this.AllForm.UserList=this.UserList;
-      this.AllForm.CommodityItemList=this.CommodityItemList;
-      // console.log(JSON.stringify(this.form));
+      this.dechead.promiseItmes=this.temporaryForm.temporary1+this.temporaryForm.temporary2+this.temporaryForm.temporary3;
+      this.AllForm.dechead=this.dechead;
+      this.AllForm.decfreetxt=this.decfreetxt;
+      this.AllForm.deccontainers=this.deccontainers;
+      this.AllForm.declicensedocus=this.declicensedocus;
+      this.AllForm.decuser=this.decuser;
+      this.AllForm.declist=this.declist;
       console.log(JSON.stringify(this.AllForm));
-      // console.log(this.AllForm);
-      // console.log(this.AllForm.CommodityItemList);
+      add(this.AllForm).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("新增成功");
+          console.log(JSON.stringify(this.AllForm));
+        } else {
+          this.msgError(response.msg);
+        }
+      });
     },
     //使用人清空
     userRefresh() {
@@ -1683,7 +2059,7 @@ export default {
     },
     //使用人弹出框保存
     userAdd() {
-      this.UserList.push(this.userForm);
+      this.decuser.push(this.userForm);
       this.userForm = {};
     },
     //使用人弹框
@@ -1700,46 +2076,51 @@ export default {
     },
     //编辑检验检疫货物规格弹窗确定按钮
     specificationAdd(){
-      console.log("进入检验检疫货物规格弹窗");
-      this.commodityForm.GoodsSpec=this.specificationForm.specification1+";"+
-      this.specificationForm.specification2+";"+
-      this.specificationForm.specification3+";"+
-      this.specificationForm.specification4+";"+
-      this.specificationForm.specification5+";"+
-      this.specificationForm.specification6+";"+
-      this.specificationForm.specification7+";"+
-      this.specificationForm.specification8+";"+
-      this.specificationForm.specification9
+      this.commodityForm.goodsSpec=[this.specificationForm.specification1,this.specificationForm.specification2,
+     this.specificationForm.specification3,this.specificationForm.specification4,
+     this.specificationForm.specification5,this.specificationForm.specification6,
+     this.specificationForm.specification7,this.specificationForm.specification8,this.specificationForm.specification9].join();
       this.specificationPopup = false;
-      console.log(this.commodityForm.GoodsSpec);
     },
     //进口/出口报关单表体清空
     CommodityItemRefresh() {
-      this.CommodityItemList = [];
+      this.declist = [];
     },
     //进口/出口报关单表体保存
     CommodityItemAdd() {
-      this.CommodityItemList.push(this.commodityForm);
+      //下拉多选 数组转换为字符串
+      this.commodityForm.goodsAttr=this.commodityForm.goodsAttr.join(",");
+      this.declist.push(this.commodityForm);
       this.commodityForm = {};
+    },
+    //进口/出口报关单表体 List删除
+    commodityDelete(index, row){
+      this.declist.splice(index, 1);
+    },
+    //集装箱信息 List删除
+    containerDelete(index, row){
+      this.deccontainers.splice(index, 1);
+    },
+    //随单附证
+    DocumentsDelete(index, row){
+      this.declicensedocus.splice(index,1);
     },
     //集装箱保存按钮
     containerAdd(){
-      this.containerList.push(this.containerForm);
+      this.deccontainers.push(this.containerForm);
       this.containerForm={};
-      console.log(this.containerList);
     },
     //集装箱List清空按钮
     containerRefresh(){
-      this.containerList=[];
+      this.deccontainers=[];
     },
     //随附单证保存按钮
     DocumentsAdd(){
-      this.DocumentsList.push(this.DocumentsForm);
+      this.declicensedocus.push(this.DocumentsForm);
       this.DocumentsForm={};
-      console.log(this.DocumentsList);
     },
     DocumentsRefresh(){
-      this.DocumentsList=[];
+      this.declicensedocus=[];
     },
     //企业资质弹出框
     CopList(){
@@ -1768,7 +2149,6 @@ export default {
     handleAdd() {},
     // 暂存
     handleSave() {
-      console.log("保存");
       this.$saveStore("a", "123");
     },
     // 删除
@@ -1781,7 +2161,6 @@ export default {
     handleRefresh() {},
     // 翻页
     currentChange(page) {
-      console.log(page);
     },
     // 组件选择
     choose(row) {
@@ -1801,11 +2180,8 @@ export default {
     },
     handleSelectionChange() {},
     numFun() {
-      console.log(123);
     },
-    Test(){
-      console.log(this.CustomsDeclarationForm);
-    },
+
     // 请求接口
     // depParaList() {
     //   return new Promise((resolve) => {
