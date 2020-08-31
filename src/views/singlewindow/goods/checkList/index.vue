@@ -1187,6 +1187,7 @@
                 placeholder="检验检疫货物规格"
                 clearable
                 size="small"
+                :disabled="true"
               />
             </el-form-item>
           </el-col>
