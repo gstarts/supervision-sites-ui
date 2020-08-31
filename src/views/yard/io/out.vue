@@ -50,10 +50,16 @@
         </el-col>
       </el-row>
       <el-row :gutter="10">
-        <el-col :span="6">
+        <el-col :span="5">
           <el-form-item label="车牌号" prop="vehicleNo">
             <el-input v-model="form.vehicleNo" placeholder="请输入车牌号"/>
           </el-form-item>
+        </el-col>
+        <el-col :span="1">
+          <el-popover placement="right" width="500" trigger="click">
+            <SimpleKeyboard @onChange="mengwenInput" :input="form.vehicleNo" />
+            <el-button slot="reference" class="fa fa-keyboard-o" size="mini"></el-button>
+          </el-popover>
         </el-col>
         <el-col :span="6">
           <el-form-item label="集装箱数量" prop="containerCount">
@@ -311,9 +317,13 @@
 	import {getStore_detail_byStoreCode} from '@/api/yard/store_detail'
 	import {listStore_detail} from '@/api/yard/store_detail'
 	import {genTimeCode} from '@/utils/common'
+	import SimpleKeyboard from "@/components/SimpleKeyboard/SimpleKeyboard"
 
 	export default {
 		name: "IoOut",
+    components: {
+	    SimpleKeyboard
+    },
 		data() {
 			return {
 				// 遮罩层
@@ -371,7 +381,18 @@
 				storeList: [],
 				// containerIo的属性
 				form: {
-					containerCount: 0
+					ioNo: undefined,
+					yardId: undefined,
+					ioState: undefined,
+					state: undefined,
+					vehicleNo: undefined,
+					containerCount: 0,
+					driverId: undefined,
+					companyName: undefined,
+					purpose: undefined,
+					formSite: undefined,
+					toSite: undefined,
+					remark: undefined,
 				},
 				containerIo: [],
 				// 表单校验
@@ -654,7 +675,10 @@
 			},
 			refresh(){
 				this.$forceUpdate()
-			}
+			},
+			mengwenInput(input) {
+				this.form.vehicleNo = input;
+			},
 		}
 	}
 </script>

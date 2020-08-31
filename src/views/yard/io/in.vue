@@ -50,10 +50,17 @@
         </el-col>
       </el-row>
       <el-row :gutter="10">
-        <el-col :span="6">
+        <el-col :span="5">
           <el-form-item label="车牌号" prop="vehicleNo">
-            <el-input v-model="form.vehicleNo" placeholder="请输入车牌号" :disabled="formLock"/>
+            <el-input v-model="form.vehicleNo" placeholder="请输入车牌号"/>
           </el-form-item>
+        </el-col>
+        <!-- 蒙文键盘 -->
+        <el-col :span="1">
+          <el-popover placement="right" width="500" trigger="click">
+            <SimpleKeyboard @onChange="mengwenInput" :input="form.vehicleNo" />
+            <el-button slot="reference" class="fa fa-keyboard-o" size="mini"></el-button>
+          </el-popover>
         </el-col>
         <el-col :span="6">
           <el-form-item label="集装箱数量" prop="containerCount">
@@ -448,9 +455,13 @@
 	import {listZone} from '@/api/yard/zone'
 	import {listStoreCanUse} from '@/api/yard/store'
 	import {genTimeCode} from '@/utils/common'
+	import SimpleKeyboard from "@/components/SimpleKeyboard/SimpleKeyboard"
 
 	export default {
 		name: "IoIn",
+		components: {
+			SimpleKeyboard
+    },
 		data() {
 			return {
 				// 遮罩层
@@ -501,7 +512,20 @@
 				//库位列表
 				storeList: [],
 				// containerIo的属性
-				form: {},
+				form: {
+					ioNo: undefined,
+					yardId: undefined,
+					ioState: undefined,
+					state: undefined,
+					vehicleNo: undefined,
+					containerCount: undefined,
+					driverId: undefined,
+					companyName: undefined,
+					purpose: undefined,
+					formSite: undefined,
+					toSite: undefined,
+					remark: undefined,
+        },
 				containerIo: [],
 				// 表单校验
 				rules: {
@@ -581,7 +605,6 @@
 		methods: {
 			//添加集装箱到列表
 			addSub() {
-
 				this.$refs["form2"].validate(valid => {
 					if (valid) {
 						if (this.subList.findIndex((v) => {
@@ -590,7 +613,6 @@
 							this.$message.warning("库货已被其它箱选中")
 							return
 						}
-
 						if (this.subList.findIndex((v) => {
 							return v.containerNo === this.ioSub.containerNo
 						}) !== -1
@@ -669,7 +691,6 @@
 			},
 			/** 重置按钮操作 */
 			resetQuery() {
-
 				this.reset()
 				this.subList = []
 				//this.resetForm("queryForm");
@@ -703,6 +724,7 @@
 			},
 			/** 提交按钮 */
 			submitForm: function () {
+				this.$forceUpdate()
 				this.$refs["form"].validate(valid => {
 					if (valid) {
 						if(this.subList.length === 0){
@@ -763,7 +785,10 @@
 			},
 			refresh(){
 				this.$forceUpdate()
-      }
+      },
+			mengwenInput(input) {
+				this.form.vehicleNo = input;
+			},
 		}
 	}
 </script>
