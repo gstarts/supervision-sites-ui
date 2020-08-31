@@ -56,7 +56,7 @@
              <el-form-item label="申报地海关" prop="custoMmaster">
               <el-select v-model="dechead.custoMmaster" clearable placeholder="请选择申报地海关" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in customsOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -111,7 +111,7 @@
             <el-form-item label="进境关别" prop="iePort">
               <el-select v-model="dechead.iePort" clearable placeholder="请选择进境关别" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in customsOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -231,8 +231,18 @@
 
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="运输方式" prop="trafMode">
+            <!-- <el-form-item label="运输方式" prop="trafMode">
               <el-input v-model="dechead.trafMode" placeholder="请输入运输方式" clearable size="small" />
+            </el-form-item> -->
+            <el-form-item label="运输方式" prop="trafMode">
+              <el-select v-model="dechead.trafMode" clearable placeholder="请选择运输方式" >
+                <el-option
+                  v-for="item in transportOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -268,7 +278,7 @@
             <el-form-item label="监管方式" prop="tradeMode">
               <el-select v-model="dechead.tradeMode" clearable placeholder="请选择监管方式" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in regulateOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -283,7 +293,7 @@
             <el-form-item label="征免性质" prop="cutMode">
               <el-select v-model="dechead.cutMode" clearable placeholder="请选择征免性质" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in exemptionOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -336,7 +346,7 @@
             <el-form-item label="成交方式" prop="transMode">
               <el-select v-model="dechead.transMode" clearable placeholder="请选择成交方式" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in methodOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -354,7 +364,7 @@
           <el-form-item label="运费标记" prop="feeMark">
               <el-select v-model="dechead.feeMark" clearable placeholder="" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in rateOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -374,7 +384,7 @@
              <el-form-item label="" prop="feeCurr" style="margin-left:-120px">
               <el-select v-model="dechead.feeCurr" clearable placeholder="" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in currencySystemOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -389,7 +399,7 @@
             <el-form-item label="保险费标记" prop="insurMark">
               <el-select v-model="dechead.insurMark" clearable placeholder="" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in rateOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -409,7 +419,7 @@
              <el-form-item label="" prop="insurCurr" style="margin-left:-120px">
               <el-select v-model="dechead.insurCurr" clearable placeholder="" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in currencySystemOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -427,7 +437,7 @@
             <el-form-item label="杂费标记" prop="otherMark">
               <el-select v-model="dechead.otherMark" clearable placeholder="" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in rateOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -447,7 +457,7 @@
             <el-form-item label="" prop="otherCurr" style="margin-left:-120px">
               <el-select v-model="dechead.otherCurr" clearable placeholder="" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in currencySystemOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -470,7 +480,7 @@
             <el-form-item label="包装种类" prop="wrapType">
               <el-select v-model="dechead.wrapType" clearable placeholder="请选择包装种类" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in PaymentMethodCodeOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -532,7 +542,7 @@
             <el-form-item label="入境口岸" prop="entyPortCode">
               <el-select v-model="dechead.entyPortCode" clearable placeholder="请选择入境口岸" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in codeOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -570,7 +580,7 @@
             <el-form-item label="报关单类型" prop="entryType">
               <el-select v-model="dechead.entryType" clearable placeholder="请选择报关单类型" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in declarationTypeOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -942,7 +952,7 @@
             <el-form-item label="成交计量单位" prop="gUnit">
               <el-select v-model="dechead.gUnit" clearable placeholder="请选择" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in transactionUnitOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -982,7 +992,7 @@
             <el-form-item label="成交币制" prop="tradeCurr">
               <el-select v-model="dechead.tradeCurr" clearable placeholder="请选择" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in currencySystemOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -1030,13 +1040,15 @@
             </el-form-item>
           </el-col>
           <el-col :span="4" style="margin-left:-40px">
-            <el-form-item label="最终目的国(地区)" prop="destinationCountry">
-              <el-input
-                v-model="commodityForm.destinationCountry"
-                placeholder="最终目的国(地区)"
-                clearable
-                size="small"
-              />
+            <el-form-item label="最终目的国(地区)" prop="transMode">
+              <el-select v-model="dechead.custoMmaster" clearable placeholder="最终目的国(地区)" >
+                <el-option
+                  v-for="item in areaCodesOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -1076,7 +1088,7 @@
             <el-form-item label="原产国(地区)" prop="originCountry">
               <el-select v-model="dechead.originCountry" clearable placeholder="请选择原产国(地区)" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in areaCodesOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -1096,7 +1108,7 @@
             <el-form-item label="原产地区" prop="origPlaceCode">
               <el-select v-model="dechead.origPlaceCode" clearable placeholder="请选择" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in originOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -1157,7 +1169,7 @@
             <el-form-item label="征免方式" prop="dutyMode">
               <el-select v-model="dechead.dutyMode" clearable placeholder="请选择" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in exemptionMethodOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -1315,7 +1327,7 @@
             <el-form-item label="集装箱规格" prop="containerMd">
               <el-select v-model="dechead.containerMd" clearable placeholder="集装箱规格" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in specificationOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -1340,7 +1352,7 @@
             <el-form-item label="拼箱标识" prop="lclFlag">
               <el-select v-model="dechead.lclFlag" clearable placeholder="请选择拼箱标识" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in LCLlogoOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -1454,7 +1466,7 @@
             <el-form-item label="随附单证代码" prop="docuCode">
               <el-select v-model="dechead.docuCode" clearable placeholder="请选择随附单证代码" >
                 <el-option
-                  v-for="item in TestOptions"
+                  v-for="item in documentCodeOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="item.dictValue"
@@ -2011,6 +2023,41 @@ export default {
       },
       //货物属性 临时字典
       TestOptions:[],
+      //申报地海关/进境关别/入境口岸字典值
+      customsOptions:[],
+      //监管方式字典值
+      regulateOptions:[],
+      //运输方式 字典值
+      transportOptions:[],
+      //征免性质字典值
+exemptionOptions:[],
+      //成交方式 字典值
+methodOptions:[],
+      //运费/保险费/杂费 率 字典值
+rateOptions:[],
+      //币制/运费率标记/保险费标记/杂费标记  字典值
+  currencySystemOptions:[],
+      //包装种类字典值
+PaymentMethodCodeOptions:[],
+      //入境口岸字典值
+codeOptions:[],
+      //报关单类型字典值
+declarationTypeOptions:[],
+      //成交计量单位字典值
+transactionUnitOptions:[],
+      //最终目的国(地区)/原产国(地区)字典值
+areaCodesOptions:[],
+      //原产地区字典值
+originOptions:[],
+      //征免方式字典值
+exemptionMethodOptions:[],
+      //集装箱规格字典值
+specificationOptions:[],
+      //拼箱标识字典值
+LCLlogoOptions:[],
+      //随附单证代码字典值
+documentCodeOptions:[],
+
       statusOptions: [],
       dateTimeVal: "",
       data: [],
@@ -2021,9 +2068,80 @@ export default {
   // 随附单证
   // attaDocuCdstr: undefined,
   created(){
+    //货物属性字典翻译
     this.getDicts("sys_user_sex").then((response) => {
       this.TestOptions = response.data;
     });
+    //申报地海关/进境关别/入境口岸字典翻译
+    this.getDicts("hg_customs_code").then((response) =>{
+      this.customsOptions=response.data;
+    });
+    //监管方式字典翻译
+    this.getDicts("tax_regulate_type").then((response) =>{
+      this.regulateOptions=response.data;
+    });
+     //运输方式 字典翻译
+      this.getDicts("dy_mode_of_transport").then((response) =>{
+      this.transportOptions=response.data;
+    });
+      //征免性质字典翻译
+       this.getDicts("dy_nature_of_exemption").then((response) =>{
+      this.exemptionOptions=response.data;
+    });
+      //成交方式 字典翻译
+      this.getDicts("dy_transaction_method").then((response) =>{
+      this.methodOptions=response.data;
+    });
+
+      //运费/保险费/杂费 率 字典翻译
+       this.getDicts("dy_rate").then((response) =>{
+      this.rateOptions=response.data;
+    });
+      //币制/运费率标记/保险费标记/杂费标记  字典翻译
+        this.getDicts("dy_currency_system").then((response) =>{
+      this.currencySystemOptions=response.data;
+    });
+      //包装种类 字典翻译
+         this.getDicts("PaymentMethodCode").then((response) =>{
+      this.PaymentMethodCodeOptions=response.data;
+    });
+      //入境口岸 字典翻译
+         this.getDicts("hg_customs_code").then((response) =>{
+      this.codeOptions=response.data;
+    });
+      //报关单类型 字典翻译
+         this.getDicts("dy_customs_declaration_type").then((response) =>{
+      this.declarationTypeOptions=response.data;
+    });
+      //成交计量单位 字典翻译
+         this.getDicts("dy_transaction_unit").then((response) =>{
+      this.transactionUnitOptions=response.data;
+    });
+      //最终目的国(地区)/原产国(地区) 字典翻译
+         this.getDicts("dy_area_codes").then((response) =>{
+      this.areaCodesOptions=response.data;
+    });
+      //原产地区 字典翻译
+         this.getDicts("dy_origin").then((response) =>{
+      this.originOptions=response.data;
+    });
+      //征免方式 字典翻译
+         this.getDicts("dy_nature_of_exemption").then((response) =>{
+      this.exemptionMethodOptions=response.data;
+    });
+      //集装箱规格 字典翻译
+         this.getDicts("dy_container_specification").then((response) =>{
+      this.specificationOptions=response.data;
+    });
+      //拼箱标识 字典翻译
+         this.getDicts("dy_LCL_logo").then((response) =>{
+      this.LCLlogoOptions=response.data;
+    });
+      //随附单证代码 字典翻译
+         this.getDicts("dy_attached_document_code").then((response) =>{
+      this.documentCodeOptions=response.data;
+    });
+
   },
   mounted() {
     // 初始化
