@@ -7,7 +7,7 @@
     </div>
 
     <el-card class="mb20">
-      <el-form :model="form" ref="form" label-width="160px">
+      <el-form :model="form" ref="form" :rules="rules" label-width="160px">
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="日期:" prop="time">
@@ -29,7 +29,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="毛重" prop="grossWeight">
-              <el-input v-model="form.grossWeight" placeholder="请输入毛重" clearable></el-input>
+              <el-input v-model.number="form.grossWeight" placeholder="请输入毛重" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -42,7 +42,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="皮重" prop="tare">
-              <el-input v-model="form.tare" placeholder="请输入皮重" clearable></el-input>
+              <el-input v-model.number="form.tare" placeholder="请输入皮重" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -55,7 +55,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="箱皮重" prop="tareWeight">
-              <el-input v-model="form.tareWeight" placeholder="请输入箱皮重" clearable></el-input>
+              <el-input v-model.number="form.tareWeight" placeholder="请输入箱皮重" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -68,15 +68,28 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="净重" prop="netWeight">
-              <el-input v-model="form.netWeight" placeholder="请输入净重" clearable></el-input>
+              <el-input v-model.number="form.netWeight" placeholder="请输入净重" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex">
-          <el-col :span="24">
+          <el-col :span="12">
             <el-form-item label="箱号" prop="containerNum">
               <el-input v-model="form.containerNum" placeholder="请输入箱号" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="流向" prop="flowDirection">
+              <!-- <el-input v-model="form.flowDirection" placeholder="请输入流向" clearable></el-input> -->
+              <el-select v-model="form.flowDirection" placeholder="请选择流向">
+                <el-option
+                  v-for="dict in flowDirectionOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+            </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -87,12 +100,13 @@
               <el-input v-model="form.coalBillNum" placeholder="请输入提煤单号" clearable></el-input>
             </el-form-item>
           </el-col>
+
         </el-row>
 
         <el-row type="flex">
           <el-col :span="24">
-            <el-form-item label="备注" prop="rmk">
-              <el-input v-model="form.rmk" placeholder="请输入备注" clearable></el-input>
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" placeholder="请输入备注" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -139,6 +153,9 @@ export default {
       total: 0,
       // 终端表格数据
       clientList: [],
+      // 流向字典
+      flowDirectionOptions:[],
+
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -156,13 +173,33 @@ export default {
         time: undefined,
         stringTime: undefined,
         finalInspectionTime: undefined,
-        rmk: undefined,
       },
       // 表单校验
-      rules: {},
+      rules: {
+         grossWeight: [
+          { type: "number", message: "请输入数字" }
+        ],
+
+        tare: [
+          { type: "number", message: "请输入数字" }
+        ],
+         netWeight: [
+          { type: "number", message: "请输入数字" }
+        ],
+
+        tareWeight: [
+          { type: "number", message: "请输入数字" }
+        ],
+       
+      },
     };
   },
-  created() {},
+  created() {
+      /**流向  目前没有字典 */
+    this.getDicts("station_IO_flag").then((response) => {
+      this.flowDirectionOptions = response.data;
+    });
+  },
   methods: {
     // 取消按钮
     cancel() {},

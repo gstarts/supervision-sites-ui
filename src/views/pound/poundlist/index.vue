@@ -17,7 +17,7 @@
     </div>
     
     <el-card class="mb20">
-      <el-form :model="form" ref="form" label-width="160px">
+      <el-form :model="form" ref="form"  :rules="rules" label-width="160px">
 
         <el-row type="flex">
           <el-col :span="12">
@@ -54,7 +54,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="毛重" prop="grossWeight">
-              <el-input v-model="form.grossWeight" placeholder="请输入毛重" clearable></el-input>
+              <el-input v-model.number="form.grossWeight" placeholder="请输入毛重" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -67,7 +67,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="皮重" prop="tare">
-              <el-input v-model="form.tare" placeholder="请输入皮重" clearable></el-input>
+              <el-input v-model.number="form.tare" placeholder="请输入皮重" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -80,15 +80,15 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="净重" prop="netWeight">
-              <el-input v-model="form.netWeight" placeholder="请输入净重" clearable></el-input>
+              <el-input v-model.number="form.netWeight" placeholder="请输入净重" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="备注" prop="rmk">
-              <el-input v-model="form.rmk" placeholder="请输入备注" clearable></el-input>
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" placeholder="请输入备注" clearable></el-input>
             </el-form-item>
           </el-col>
 
@@ -171,19 +171,30 @@ export default {
         finalInspectionTime:undefined,
         time:undefined,
         stringTime:undefined,
-        rmk:undefined,
 
 
       },
       // 表单校验
-      rules: {},
+      rules: {
+         grossWeight: [
+          { type: "number", message: "请输入数字" }
+        ],
+
+        tare: [
+          { type: "number", message: "请输入数字" }
+        ],
+         netWeight: [
+          { type: "number", message: "请输入数字" }
+        ],
+        
+      },
     };
   },
   created() {
 
-     /**流向  目前没有字典 */
-    this.getDicts("station").then((response) => {
-      this.supvModecdOptions = response.data;
+     /**流向  */
+    this.getDicts("station_IO_flag").then((response) => {
+      this.flowDirectionOptions = response.data;
     });
 
    
