@@ -425,7 +425,7 @@
                 clearable
                 size="mini"
               /> -->
-              <el-select v-model="nemsInvtHeadType.genDecFlag" placeholder="请选择是否系统生成报关单">
+              <el-select v-model="nemsInvtHeadType.genDecFlag" placeholder="请选择是否系统生成报关单" size="mini">
                 <el-option
                   v-for="dict in genDecFlagOptions"
                   :key="dict.dictValue"
@@ -1154,7 +1154,7 @@
         </template>
       </el-table-column>
         </el-table>
-        <el-pagination
+        <!-- <el-pagination
           class="right mb20"
           background
           layout="prev, pager, next"
@@ -1162,9 +1162,9 @@
           :total="page.total"
           :page-size="page.size"
           @current-change="currentChange"
-        />
+        /> -->
 
-        <el-card class="mb20">
+        <!-- <el-card class="mb20">
           <span>报关单草稿</span>
           <span
             style="color: red; font-size:13px;"
@@ -1227,9 +1227,9 @@
             :page-size="page.size"
             @current-change="currentChange"
           />
-        </el-card>
+        </el-card> -->
 
-        <el-card class="mb20">
+        <!-- <el-card class="mb20">
           <span>报关单表头其他字段提单号</span>
 
           <el-form :model="nemsInvtDecHeadType" ref="nemsInvtDecHeadType" label-width="160px">
@@ -1624,7 +1624,7 @@
               </el-col>
             </el-row>
           </el-form>
-        </el-card>
+        </el-card> -->
 
         <el-card class="mb20">
           <span>随附单据</span>
