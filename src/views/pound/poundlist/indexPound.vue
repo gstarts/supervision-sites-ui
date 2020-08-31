@@ -7,7 +7,7 @@
     </div>
 
     <el-card class="mb20">
-      <el-form :model="form" ref="form" label-width="160px">
+      <el-form :model="form" ref="form" :rules="rules" label-width="160px">
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="日期:" prop="time">
