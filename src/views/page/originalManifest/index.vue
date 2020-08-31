@@ -79,7 +79,7 @@
             <el-form-item label="货物装载时间" prop="loadingDate" >
               <el-date-picker
                 class="datePicker"
-                v-model="queryParams.loadingLocation.loadingDateTime"
+                v-model="queryParams.loadinglocation.loadingDateTime"
                 type="datetime"
                 placeholder="选择日期时间" />
             </el-form-item>
@@ -119,21 +119,13 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="企业代码" prop="unitCode" >
-              <el-select v-model="queryParams.unitCode" filterable placeholder="企业代码">
-                <el-option
-                  v-for="(item,index) in listInfo"
-                  :key="index"
-                  :label="item.eName"
-                  :value="item.deptId">
-                </el-option>
-              </el-select>
-              <!-- <el-input
+              <el-input
                 v-model="queryParams.unitCode"
                 placeholder="企业代码"
                 clearable
                 size="small"
                 disabled
-              /> -->
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -168,7 +160,7 @@
         <el-col>
           <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn" @click="handleAdd($event,'waybill')">新增</el-button>
           <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable.saveBtn" @click="handleChange($event,'waybill')">修改</el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn" @click="handleDelete($event,'waybill')">删除</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn" @click="handleDelete">删除</el-button>
           <span>&nbsp;&nbsp;注：对选中数据修改完成之后请点击左侧“保存”按钮</span>
         </el-col>
       </el-row>
@@ -184,19 +176,19 @@
         @selection-change="waybillSelectionChange">
         <el-table-column type="selection" min-width="55"/>
         <el-table-column type="index" label="序号" min-width="120"/>
-        <el-table-column prop="transportcontrantionId" label="提(运)单号" min-width="120"/>
-        <el-table-column prop="currentCode" label="海关货物通关代码" min-width="150" />
-        <el-table-column prop="totalPackageQuantity" label="货物总件数" min-width="120"/>
-        <el-table-column prop="grossMassMeasure" label="货物总毛重(kg)" min-width="120"/>
-        <el-table-column prop="valueAmount" label="货物价值" min-width="120"/>
+        <el-table-column prop="billNo" label="提(运)单号" min-width="120"/>
+        <el-table-column prop="goodsCustomsStat" label="海关货物通关代码" min-width="150" />
+        <el-table-column prop="packNum" label="货物总件数" min-width="120"/>
+        <el-table-column prop="grossWt" label="货物总毛重(kg)" min-width="120"/>
+        <el-table-column prop="goodsValue" label="货物价值" min-width="120"/>
         <el-table-column prop="consigneeName" label="收货人名称" min-width="120"/>
       </el-table>
       <el-form :model="waybill" ref="waybill" label-width="160px">
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="提（运）单号" prop="transportcontrantionId" >
+            <el-form-item label="提（运）单号" prop="billNo" >
               <el-input
-                v-model="waybill.transportcontrantionId"
+                v-model="waybill.billNo"
                 placeholder="提（运）单号"
                 clearable
                 size="small"
@@ -209,9 +201,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运输条款" prop="conditionCode" >
+            <el-form-item label="运输条款" prop="conditionCodeName" >
               <el-input
-                v-model="waybill.conditionCode"
+                v-model="waybill.conditionCodeName"
                 placeholder="运输条款"
                 clearable
                 size="small"
@@ -219,9 +211,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运费支付方法" prop="paymentMethodCode" >
+            <el-form-item label="运费支付方法" prop="paymentType" >
               <el-input
-                v-model="waybill.paymentMethodCode"
+                v-model="waybill.paymentType"
                 placeholder="运费支付方法"
                 clearable
                 size="small"
@@ -231,8 +223,8 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="海关货物通关代码" prop="currentCode" >
-              <el-select v-model="waybill.currentCode" filterable placeholder="海关货物通关代码">
+            <el-form-item label="海关货物通关代码" prop="goodsCustomsStat" >
+              <el-select v-model="waybill.goodsCustomsStat" filterable placeholder="海关货物通关代码">
                 <el-option
                   v-for="item in currentCode"
                   :key="item.dictValue"
@@ -243,9 +235,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="跨境指运地" prop="transitdestinationId" >
+            <el-form-item label="跨境指运地" prop="transLocationId" >
               <el-input
-                v-model="waybill.transitdestinationId"
+                v-model="waybill.transLocationId"
                 placeholder="跨境指运地"
                 clearable
                 size="small"
@@ -253,9 +245,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="货物总件数" prop="totalPackageQuantity" >
+            <el-form-item label="货物总件数" prop="packNum" >
               <el-input
-                v-model="waybill.totalPackageQuantity"
+                v-model="waybill.packNum"
                 placeholder="货物总件数"
                 clearable
                 size="small"
@@ -275,9 +267,9 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="货物体积(M3)" prop="grossVolumeMeasure" >
+            <el-form-item label="货物体积(M3)" prop="cube" >
               <el-input
-                v-model="waybill.grossVolumeMeasure"
+                v-model="waybill.cube"
                 placeholder="货物体积(M3)"
                 clearable
                 size="small"
@@ -285,9 +277,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="货物总毛重(KG)	" prop="grossMassMeasure" >
+            <el-form-item label="货物总毛重(KG)	" prop="grossWt" >
               <el-input
-                v-model="waybill.grossMassMeasure"
+                v-model="waybill.grossWt"
                 placeholder="货物总毛重(KG)	"
                 clearable
                 size="small"
@@ -295,9 +287,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="货物价值" prop="valueAmount" >
+            <el-form-item label="货物价值" prop="goodsValue" >
               <el-input
-                v-model="waybill.valueAmount"
+                v-model="waybill.goodsValue"
                 placeholder="货物价值"
                 clearable
                 size="small"
@@ -317,9 +309,9 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="拆箱人代码" prop="deconsolidatorId" >
+            <el-form-item label="拆箱人代码" prop="consolidatorId" >
               <el-input
-                v-model="waybill.deconsolidatorId"
+                v-model="waybill.consolidatorId"
                 placeholder="拆箱人代码"
                 clearable
                 size="small"
@@ -327,25 +319,17 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="途径国家或地区" prop="routingCountryCode" >
-              <!-- <el-button type="primary" size="mini" @click="regionInfo = true">详细</el-button> -->
-              <el-select v-model="waybill.routingCountryCode" filterable multiple collapse-tags placeholder="途径国家或地区">
-                <el-option
-                  v-for="item in routingContry"
-                  :key="item.dictValue"
-                  :label="item.dictLabel"
-                  :value="item.dictValue">
-                </el-option>
-              </el-select>
+            <el-form-item label="途径国家或地区" prop="countryInfoAddBtn" >
+              <el-button type="primary" size="mini" @click="regionInfo = true">详细</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="收货人信息" prop="consignee" >
+            <el-form-item label="收货人信息" prop="consigneeInfo" >
               <el-button type="primary" size="mini" @click="receivingInfo = true">详细</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="发货人信息" prop="consignor" >
+            <el-form-item label="发货人信息" prop="consigorInfo" >
               <el-button type="primary" size="mini" @click="consignorInfo = true">详细</el-button>
             </el-form-item>
           </el-col>
@@ -373,7 +357,7 @@
         <el-col>
           <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn" @click="handleAdd($event,'shopInfo')">新增</el-button>
           <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable.saveBtn" @click="handleChange($event,'shopInfo')">修改</el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn" @click="handleDelete($event,'shopInfo')">删除</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn" @click="handleDelete">删除</el-button>
         </el-col>
       </el-row>
       <el-table
@@ -491,7 +475,7 @@
         <el-col>
           <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn" @click="handleAdd($event,'containerInfo')">新增</el-button>
           <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable.saveBtn" @click="handleChange($event,'containerInfo')">修改</el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn" @click="handleDelete($event,'containerInfo')">删除</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn" @click="handleDelete">删除</el-button>
         </el-col>
       </el-row>
       <el-table
@@ -561,17 +545,19 @@
     <!-- 字典2 -->
     <depParaList2 :tableVisible='dialogTableVisible2' @choose="choose2" @close='dialogTableVisible2 = false'></depParaList2>
     <!-- 通知人信息 -->
-    <noticeInfo :detailVisible='detailVisible' @close='noticeInfoClose'></noticeInfo>
+    <noticeInfo :detailVisible='detailVisible' @close='detailVisible = false'></noticeInfo>
     <!-- 变更原因 -->
-    <changeReason :detailVisible='changeReason' @close='changeReasonClose'></changeReason>
+    <changeReason :detailVisible='changeReason' @close='changeReason = false'></changeReason>
     <!-- 途径国家地区信息 -->
-    <regionInfo :detailVisible='regionInfo' @close='regionInfoClose'></regionInfo>
+    <regionInfo :detailVisible='regionInfo' @close='regionInfo = false'></regionInfo>
     <!-- 危险品联系人信息 -->
-    <dangerousInfo :detailVisible='dangerousInfo' @close='dangerousInfoClose'></dangerousInfo>
+    <dangerousInfo :detailVisible='dangerousInfo' @close='dangerousInfo = false'></dangerousInfo>
     <!-- 发货人信息 -->
-    <consignorInfo :detailVisible='consignorInfo' @close='consignorInfoClose'></consignorInfo>
+    <consignorInfo :detailVisible='consignorInfo' @close='consignorInfo = false'></consignorInfo>
     <!-- 收货人信息 -->
-    <receivingInfo :detailVisible='receivingInfo' @close='receivingInfoClose'></receivingInfo>
+    <receivingInfo :detailVisible='receivingInfo' @close='receivingInfo = false'></receivingInfo>
+
+    
   </div>
 </template>
 
@@ -592,7 +578,6 @@ import consignorInfo from './consignorInfo.vue';
 // 收货人信息
 import receivingInfo from './receivingInfo.vue';
 
-import {listInfo} from "@/api/basis/enterpriseInfo";
 
 
 
@@ -652,7 +637,7 @@ export default {
         agent:{
           agentId:''//运输工具代理企业代码
         },
-        loadingLocation:{
+        loadinglocation:{
           // loadinglocationId:'', // 装货地代码
           loadingDateTime:'' // 货物装载时间
         },
@@ -670,43 +655,24 @@ export default {
       // 提运单信息
       waybillList :[],
       waybill:{
-        // billNo:'',//提（运）单号
-        // chgCodeAddBtn:'',//变更原因
-        // conditionCodeName:'',//运输条款
-        // goodsCustomsStat:'',//海关货物通关代码
-        // transLocationId:'',//跨境指运地
-        // packNum:'',//货物总件数
-        // cube:'',//货物体积(M3)
-        // grossWt:'',//货物总毛重(KG)
-        // goodsValue:'',//货物价值
-        // consolidatorId:'',//拆箱人代码
-        // countryInfoAddBtn:'',//途径国家或地区
-        // consigneeInfo:'',//收货人信息
-        // consigorInfo:'',//发货人信息
-        // notifyInfo:{},//通知人信息
-        // undgInfo:'',//危险品联系人信息
-        packType:'',//包装种类
+        billNo:'',//提（运）单号
+        chgCodeAddBtn:'',//变更原因
+        conditionCodeName:'',//运输条款
         paymentType:'',//运费支付方法
+        goodsCustomsStat:'',//海关货物通关代码
+        transLocationId:'',//跨境指运地
+        packNum:'',//货物总件数
+        packType:'',//包装种类
+        cube:'',//货物体积(M3)
+        grossWt:'',//货物总毛重(KG)
+        goodsValue:'',//货物价值
         currencyType:'',//金额类型
-        chgCodeAddBtn:[],//变更原因
-        notifyInfo:[],//通知人信息
-        undgInfo:[],//危险品联系人信息
-
-        consigneeName:'',//收货人名称
-        transportcontrantionId:'',//提（运）单号
-        conditionCode:'',//运输条款
-        paymentMethodCode:'',//运费支付方法
-        currentCode:'',//海关货物通关代码
-        transitdestinationId:'',//跨境指运地
-        totalPackageQuantity:'',//货物总件数
-        grossVolumeMeasure:'',//货物体积(M3)
-        grossMassMeasure:'',//货物总毛重(KG)
-        valueAmount:'',//货物价值
-        deconsolidatorId:'',//拆箱人代码
-        routingCountryCode:[],//途径国家或地区
-        consignee:[],//收货人信息
-        consignor:[],//发货人信息
-
+        consolidatorId:'',//拆箱人代码
+        countryInfoAddBtn:'',//途径国家或地区
+        consigneeInfo:'',//收货人信息
+        consigorInfo:'',//发货人信息
+        notifyInfo:'',//通知人信息
+        undgInfo:'',//危险品联系人信息
       },
       // 商品项信息
       shopInfoList:[],
@@ -734,6 +700,7 @@ export default {
         // contaSizeType:'',//尺寸和类型
         // contaSuppId:'',//来源代码
         // contaLoadedType:'',//重箱或空箱标识
+
         equipmentId:"", // 集装箱（器）编号
         characteristicCode:"", // 尺寸和类型
         supplierPartyTypeCode:"", // 来源代码
@@ -747,21 +714,7 @@ export default {
       // 海关货物通关代码
       currentCode:[],
       // 包装种类
-      PaymentMethodCode:[],
-      // 途径国家
-      routingContry:[],
-      // 企业代码
-      listInfo:[],
-      // 当前操作提运单数据
-      waybillIndex:-1,
-      // 当前操作商品项数据
-      shopInfoIndex:-1,
-      // 当前操作集装箱数据
-      containerInfoIndex:-1,
-      // 已选择数据
-      selectwaybill:[],
-      selectshopInfo:[],
-      selectcontainerInfo:[],
+      PaymentMethodCode:[]
     }
   },
   mounted(){
@@ -779,11 +732,6 @@ export default {
     async init(){
       // await this.depParaList()
       this.hgCustomsCode()
-      //  企业代码
-      listInfo().then(data=>{
-        this.listInfo = data.rows
-        console.log(data);
-      })
     },
     // 新增
     handleAdd(){},
@@ -791,13 +739,22 @@ export default {
     handleSave(){
       console.log('保存');
       this.saveList()
+      // this.$saveStore("a","123")
+      // this.$getStore('a')
+      // this.$delStore("a")
     },
+    // 删除
+    handleDelete(){},
     // 申报
     handleReport(){},
     // 复制
     handleCopy(){},
     // 刷新
     handleRefresh(){},
+    // 翻页
+    currentChange(page){
+      console.log(page);
+    },
     // 组件选择
     choose(row){
       this.queryParams.postCode = row.codeName
@@ -821,52 +778,28 @@ export default {
     // 点击某一条提运单
     waybillClick(row, column, event){
       console.log(row);
-      this.waybillIndex = JSON.parse(JSON.stringify(row)).rowIndex
       this.waybill = JSON.parse(JSON.stringify(row))
-      // 通知人信息弹窗赋值
-      this.$store.dispatch('originalManifest/noticeInfo',this.waybill.notifyInfo)
-      this.$store.dispatch('originalManifest/changeReason',this.waybill.chgCodeAddBtn)
-      this.$store.dispatch('originalManifest/dangerousInfo',this.waybill.undgInfo)
-      this.$store.dispatch('originalManifest/consignorInfo',this.waybill.consignor)
-      this.$store.dispatch('originalManifest/receivingInfo',this.waybill.consignee)
     },
     waybillSelectionChange(data){
       console.log(data);
-      this.selectwaybill = data
+
     },
     // 点击某一条商品项信息
     shopInfoClick(row, column, event){
       console.log(row);
-      this.shopInfoIndex = JSON.parse(JSON.stringify(row)).rowIndex
       this.shopInfo = JSON.parse(JSON.stringify(row))
     },
     shopInfoSelectionChange(data){
       console.log(data);
-      this.selectshopInfo = data
     },
     // 点击某一条集装箱信息
     containerInfoClick(row, column, event){
       console.log(row);
-      this.containerInfoIndex = JSON.parse(JSON.stringify(row)).rowIndex
       this.containerInfo = JSON.parse(JSON.stringify(row))
-
     },
     containerInfoSelectionChange(data){
       console.log(data);
-      this.selectcontainerInfo = data
-    },
-    // 表格删除
-    handleDelete(e,name){
-      if(name ==='waybill'){
-        this.waybillList=this.waybillList.filter(el=>!this.selectwaybill.includes(el))
-      }
-      if(name ==='shopInfo'){
-        this.shopInfoList=this.shopInfoList.filter(el=>!this.selectshopInfo.includes(el))
-      }
-      if(name ==='containerInfo'){
-        this.containerInfoList=this.containerInfoList.filter(el=>!this.selectcontainerInfo.includes(el))
-      }
-      this.dataEmpty(name)
+
     },
     // 表格添加
     handleAdd(e,name){
@@ -882,66 +815,41 @@ export default {
         this.dataEmpty(name)
     },
     // 表格修改
-    handleChange(e,name){
-      if (name === 'waybill') {
-        if(this.waybillIndex ===-1) return
-        this.waybillList[this.waybillIndex] = JSON.parse(JSON.stringify(this.waybill))
-        this.waybillList = JSON.parse(JSON.stringify(this.waybillList))
-        this.waybillIndex =-1
-      }
-      if (name === 'shopInfo') {
-        if(this.shopInfoIndex ===-1) return
-        this.shopInfoList[this.shopInfoIndex] = JSON.parse(JSON.stringify(this.shopInfo))
-        this.shopInfoList = JSON.parse(JSON.stringify(this.shopInfoList))
-        this.shopInfoIndex =-1
-      }
-      if (name === 'containerInfo') {
-        if(this.containerInfoIndex ===-1) return
-        this.containerInfoList[this.containerInfoIndex] = JSON.parse(JSON.stringify(this.containerInfo))
-        this.containerInfoList = JSON.parse(JSON.stringify(this.containerInfoList))
-        this.containerInfoIndex =-1
-      }
-    },
+    handleChange(){},
     // 表格清空
     dataEmpty(name){
       if (name === 'waybill') {
-        // 保存成功后重置弹窗内数据
-        this.$store.dispatch('originalManifest/noticeInfo',[])
-        this.$store.dispatch('originalManifest/changeReason',{list:[]})
-        this.$store.dispatch('originalManifest/dangerousInfo',[])
-        this.$store.dispatch('originalManifest/consignorInfo',[])
-        this.$store.dispatch('originalManifest/receivingInfo',{consigneeList:[],manifestContactList:[]})
         this.waybill={
-          packType:'',//包装种类
+          billNo:'',//提（运）单号
+          chgCodeAddBtn:'',//变更原因
+          conditionCodeName:'',//运输条款
           paymentType:'',//运费支付方法
+          goodsCustomsStat:'',//海关货物通关代码
+          transLocationId:'',//跨境指运地
+          packNum:'',//货物总件数
+          packType:'',//包装种类
+          cube:'',//货物体积(M3)
+          grossWt:'',//货物总毛重(KG)
+          goodsValue:'',//货物价值
           currencyType:'',//金额类型
-          chgCodeAddBtn:[],//变更原因
-          notifyInfo:[],//通知人信息
-          undgInfo:[],//危险品联系人信息
-
-          transportcontrantionId:'',//提（运）单号
-          conditionCode:'',//运输条款
-          paymentMethodCode:'',//运费支付方法
-          currentCode:'',//海关货物通关代码
-          transitdestinationId:'',//跨境指运地
-          totalPackageQuantity:'',//货物总件数
-          grossVolumeMeasure:'',//货物体积(M3)
-          grossMassMeasure:'',//货物总毛重(KG)
-          valueAmount:'',//货物价值
-          deconsolidatorId:'',//拆箱人代码
-          routingCountryCode:[],//途径国家或地区
-          consignee:[],//收货人信息
-          consignor:[],//发货人信息
+          consolidatorId:'',//拆箱人代码
+          countryInfoAddBtn:'',//途径国家或地区
+          consigneeInfo:'',//收货人信息
+          consigorInfo:'',//发货人信息
+          notifyInfo:'',//通知人信息
+          undgInfo:'',//危险品联系人信息
         }
       }
       if (name === 'shopInfo') {
         this.shopInfo={
-          sequenceNumeric:"", // 商品项序号
-          quantityQuantity: "", //  商品项件数
-          goodsMeasure:"", // 商品项毛重(KG)
-          cargoDescription:"", // 商品项简要描述
-          description:"", // 商品项描述补充信息
-          classificationId:"" //  危险品编号
+          goodsSeqNo:'',//商品项序号
+          goodsPackNum:'',//商品项件数
+          goodsPackTypeCode:'',//包装种类
+          goodsGrossWt:'',//商品项毛重(KG)
+          goodsBriefDesc:'',//商品项简要描述
+          undgNoName:'',//危险品编号
+          HSCode:'',//商品HS编码
+          goodsDetailDesc:'',//商品项描述补充信息
         }
       }
       if (name === 'containerInfo') {
@@ -980,41 +888,6 @@ export default {
       this.getDicts("PaymentMethodCode").then((response) => {
         this.PaymentMethodCode = response.data;
       });
-      /** 途经国家 */
-      this.getDicts("routingContry").then((response) => {
-        this.routingContry = response.data;
-      });
-    },
-    // 通知人信息关闭
-    noticeInfoClose(){
-      this.waybill.notifyInfo = this.$store.state.originalManifest.noticeInfo
-      this.detailVisible = false
-    },
-    // 变更原因
-    changeReasonClose(){
-      this.waybill.chgCodeAddBtn = this.$store.state.originalManifest.changeReason
-      this.changeReason = false
-    },
-    // 途径国家地区信息
-    regionInfoClose(){
-      this.waybill.routingCountryCode = this.$store.state.originalManifest.regionInfo
-      this.regionInfo = false
-    },
-    // 危险品联系人信息
-    dangerousInfoClose(){
-      this.waybill.undgInfo = this.$store.state.originalManifest.dangerousInfo
-      this.dangerousInfo = false
-    },
-    // 发货人信息
-    consignorInfoClose(){
-      this.waybill.consignor = this.$store.state.originalManifest.consignorInfo
-      this.consignorInfo = false
-    },
-    // 收货人信息
-    receivingInfoClose(){
-      this.waybill.consignee = this.$store.state.originalManifest.receivingInfo
-      this.waybill.consigneeName = this.$store.state.originalManifest.receivingInfo.name
-      this.receivingInfo = false
     },
     getVoyageNo(){
       this.$store.dispatch('originalManifest/getVoyageNo').then(data=>{
@@ -1026,13 +899,11 @@ export default {
     },
     saveList(){
       const {queryParams,waybillList,shopInfoList,containerInfoList} = this
-      // 隐藏企业代码数据
-      queryParams.head = this.listInfo.find(el=>el.deptId ===queryParams.unitCode)
       const subData = {
         queryParams,
-        waybillList,
-        consignmentitemsList:shopInfoList,
-        transportequipmentList:containerInfoList
+        // waybillList,
+        // shopInfoList,
+        // containerInfoList
       }
       this.$store.dispatch('originalManifest/saveList',subData).then(data=>{
         console.log(data);

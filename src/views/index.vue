@@ -1,41 +1,44 @@
 <template class="max">
-  <div class="welcome" >
-    <div class="all">
+  <div class="welcome" :style="'width:'+width+';height:'+height">
+    <div style="margin:80px auto ;text-align:center">
+    欢迎光临
+    </div>
+    <!-- <div class="all"> -->
 
     <!-- 场站是否显示 MARK为下方定义的场站显示标示 -->
-    <div v-if="MARK === 'B'">
+    <!-- <div v-if="MARK === 'B'"> -->
     <!-- 第一排 -->
-    <el-row :gutter="10">
+    <!-- <el-row :gutter="10">
           <el-col :span="5">
             <div class="L1-1">
               <ve-ring :data="demo03" :settings="demo003"></ve-ring>
             </div>
           </el-col>
           <el-col :span="14">
-    <el-row :gutter="10">
+    <el-row :gutter="10">-->
     <!-- 场内车辆 -->
-    <el-col :span="6">
+    <!-- <el-col :span="6">
                 <div class="L1-2">
                   场内车辆:
                   <span>36</span>
                 </div>
-    </el-col>
+    </el-col>-->
     <!-- 场内货物 -->
-    <el-col :span="8">
+    <!-- <el-col :span="8">
                 <div class="L1-2">
                   场内货物:
                   <span>17686(吨)</span>
                 </div>
-    </el-col>
+    </el-col>-->
     <!-- 单据 -->
-    <el-col :span="5">
+    <!-- <el-col :span="5">
                 <div class="L1-2">
                   单据:
                   <span>43</span>
                 </div>
-    </el-col>
+    </el-col>-->
     <!-- 合作企业 -->
-    <el-col :span="5">
+    <!-- <el-col :span="5">
                 <div class="L1-2">
                   合作企业:
                   <span>26</span>
@@ -49,9 +52,9 @@
               <ve-pie :data="demo08" :settings="demo008"></ve-pie>
             </div>
           </el-col>
-    </el-row>
+    </el-row>-->
     <!-- 第二排 -->
-    <el-row :gutter="10">
+    <!-- <el-row :gutter="10">
           <el-col :span="5">
             <div class="L2-1">
               <div class="FontSize">货物细节</div>
@@ -72,21 +75,21 @@
                 :toolbox="toolbox"
               ></ve-line>
             </div>
-    </el-col>
-    <el-col :span="5">
-    <div class="L2-3">
-    <div class="FontSize">场内车辆</div>
+    </el-col>-->
+    <!-- <el-col :span="5"> -->
+    <!-- <div class="L2-3"> -->
+    <!-- <div class="FontSize">场内车辆</div>
               <div class="FontStyle">
                 <el-row>
                   <el-col :span="8">车号</el-col>
                   <el-col :span="8">单号</el-col>
                   <el-col :span="8">入场时间</el-col>
                 </el-row>
-    </div>
-    <el-carousel :interval="6000" height="190px" direction="vertical">
-    <el-carousel-item v-for="item in 3" :key="item">
+    </div>-->
+    <!-- <el-carousel :interval="6000" height="190px" direction="vertical"> -->
+    <!-- <el-carousel-item v-for="item in 3" :key="item"> -->
     <!-- 测试数据 -->
-    <div>
+    <!-- <div>
                   <ul class="UlStyle">
                     <li>辽A65S52</li>
                     <li>010101010125</li>
@@ -117,14 +120,14 @@
                     <li>010567925742</li>
                     <li>13.26分</li>
                   </ul>
-    </div>
-    </el-carousel-item>
-    </el-carousel>
+    </div>-->
+    <!-- </el-carousel-item> -->
+    <!-- </el-carousel> -->
   </div>
-  </el-col>
-  </el-row>
+  <!-- </el-col> -->
+  <!-- </el-row> -->
   <!-- 第三排 -->
-  <el-row :gutter="10">
+  <!-- <el-row :gutter="10">
           <el-col :span="5">
             <div class="L3-1">
               <ve-bar :data="demo05" height="280px" :colors="color01"></ve-bar>
@@ -140,23 +143,23 @@
               <ve-bar :data="demo06" height="400px" :colors="color03"></ve-bar>
             </div>
           </el-col>
-  </el-row>
+  </el-row>-->
   <!-- 第四排 -->
-  <el-row :gutter="10">
+  <!-- <el-row :gutter="10">
           <el-col :span="5">
             <div class="L4-1">
               <ve-bar :data="demo04" :settings="demo004" height="240px"></ve-bar>
             </div>
           </el-col>
-  </el-row>
-  </div>
-  </div>
-  </div>
+  </el-row>-->
+  <!-- </div> -->
+  <!-- </div> -->
+  <!-- </div> -->
 </template>
 
 <script>
-// import {} from "@/api/waybill/declare"; 
-export default { 
+// import {} from "@/api/waybill/declare";
+export default {
   name: "Index",
   data() {
     this.demo002 = {
@@ -307,15 +310,15 @@ export default {
     };
   },
   mounted() {
-    // this.$nextTick(() => {
-    //   this.height = document.body.clientHeight - 84 + "px";
-    //   this.width = document.body.clientWidth + "px";
+    this.$nextTick(() => {
+      this.height = document.body.clientHeight - 84 + "px";
+      this.width = document.body.clientWidth -200+ "px";
 
-    //   window.onresize = () => {
-    //     this.height = document.body.clientHeight - 84 + "px";
-    //     this.width = document.body.clientWidth + "px";
-    //   };
-    // });
+      window.onresize = () => {
+        this.height = document.body.clientHeight - 84 + "px";
+        this.width = document.body.clientWidth -200+ "px";
+      };
+    });
   },
 };
 </script>
@@ -334,15 +337,27 @@ export default {
   font-weight: bold;
 }
 .welcome {
-background:rgb(197, 197, 197);
+  //首页背景渐变色
+  background: #7f7fd5; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to top,
+    #91eae4,
+    #86a8e7,
+    #7f7fd5
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to top,
+    #91eae4,
+    #86a8e7,
+    #7f7fd5
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 //首页字体
   color: #304352;
   margin: 0 auto;
   text-align: center;
   font-size: 70px;
-  padding-top: 1%;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-top: 17%;
 }
 .FontStyle {
   text-align: center;
@@ -364,7 +379,7 @@ background:rgb(197, 197, 197);
   color: rgb(136, 136, 136);
   font-size: 100px;
   text-align: center;
-//   padding-top: 15%;
+  padding-top: 15%;
 }
 .L1-1 {
   border-radius: 10px;
@@ -395,7 +410,7 @@ background:rgb(197, 197, 197);
   background: rgb(247, 247, 247);
   width: 100%;
   height: 260px;
-//   padding-top: -200px;
+  padding-top: 20px;
 }
 .L2-1 {
   overflow: auto;
