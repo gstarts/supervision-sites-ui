@@ -627,18 +627,6 @@ export default {
       },
       // 查询参数
       queryParams: {
-        // voyageNo:'',//货物运输批次号
-        // trafMode:'',//运输方式代码
-        // customsCodeName:'',//进出境口岸海关代码
-        // carrierCode:'',//承运人代码
-        // transAgentCode:'',//运输工具代理企业代码
-        // loadingDate:'',//货物装载时间
-        // loadingLocationCode:'',//卸货地代码
-        // arrivalDate:'',//到达卸货地日期
-        // customMasterName:'',//传输企业备案关区
-        // unitCode:'',//企业代码
-        // msgRepName:'',//舱单传输人名称
-        // additionalInformation:'',//备注
         declaration:{
           declarationOfficeId:'',// 进出境口岸海关代码
           declarationId:'',//货物运输批次号
@@ -670,21 +658,6 @@ export default {
       // 提运单信息
       waybillList :[],
       waybill:{
-        // billNo:'',//提（运）单号
-        // chgCodeAddBtn:'',//变更原因
-        // conditionCodeName:'',//运输条款
-        // goodsCustomsStat:'',//海关货物通关代码
-        // transLocationId:'',//跨境指运地
-        // packNum:'',//货物总件数
-        // cube:'',//货物体积(M3)
-        // grossWt:'',//货物总毛重(KG)
-        // goodsValue:'',//货物价值
-        // consolidatorId:'',//拆箱人代码
-        // countryInfoAddBtn:'',//途径国家或地区
-        // consigneeInfo:'',//收货人信息
-        // consigorInfo:'',//发货人信息
-        // notifyInfo:{},//通知人信息
-        // undgInfo:'',//危险品联系人信息
         packType:'',//包装种类
         paymentType:'',//运费支付方法
         currencyType:'',//金额类型
@@ -711,14 +684,7 @@ export default {
       // 商品项信息
       shopInfoList:[],
       shopInfo:{
-        // goodsSeqNo:'',//商品项序号
-        // goodsPackNum:'',//商品项件数
-        // goodsPackTypeCode:'',//包装种类
-        // goodsGrossWt:'',//商品项毛重(KG)
-        // goodsBriefDesc:'',//商品项简要描述
-        // undgNoName:'',//危险品编号
-        // HSCode:'',//商品HS编码
-        // goodsDetailDesc:'',//商品项描述补充信息
+
         sequenceNumeric:"", // 商品项序号
         quantityQuantity: "", //  商品项件数
         goodsMeasure:"", // 商品项毛重(KG)
@@ -730,10 +696,7 @@ export default {
       // 集装箱信息
       containerInfoList:[],
       containerInfo:{
-        // contaId:'',//集装箱（器）编号
-        // contaSizeType:'',//尺寸和类型
-        // contaSuppId:'',//来源代码
-        // contaLoadedType:'',//重箱或空箱标识
+
         equipmentId:"", // 集装箱（器）编号
         characteristicCode:"", // 尺寸和类型
         supplierPartyTypeCode:"", // 来源代码
@@ -1016,6 +979,7 @@ export default {
       this.waybill.consigneeName = this.$store.state.originalManifest.receivingInfo.name
       this.receivingInfo = false
     },
+    // 获取货物运输批次号
     getVoyageNo(){
       this.$store.dispatch('originalManifest/getVoyageNo').then(data=>{
         console.log(data);
