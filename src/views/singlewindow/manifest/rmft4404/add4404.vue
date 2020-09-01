@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="10" class="mb20">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -13,15 +13,7 @@
       <el-col :span="1.5">
         <el-button type="warning" icon="el-icon-edit" size="mini" @click="emptyall">清 空</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-thumb"
-          size="mini"
-          @click="updateStatementCode"
-          v-hasPermi="['waybill:declare:declare']"
-        >申报</el-button>
-      </el-col>
+        <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode" v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报</el-button>
     </el-row>
     <!-- :rules="headRules" -->
     <el-form :model="form" ref="form" label-width="190px" size="mini" >
