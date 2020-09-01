@@ -394,7 +394,6 @@
                 placeholder="备案序号"
                 clearable
                 size="mini"
-                :disabled="true"
               />
             </el-form-item>
           </el-col>
