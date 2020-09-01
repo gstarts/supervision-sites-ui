@@ -85,6 +85,8 @@ export default {
       total: 0,
       // 计量单表格数据
       sheetList: [],
+      //
+      dateRange:[],
       // 磅单状态
       poundStatusOptions:[],
       // 弹出层标题
@@ -128,16 +130,16 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询计量单列表 */
+    /** 查询计量单审批列表 */
     getList() {
       this.loading = true;
-      listSheet(this.queryParams).then(response => {
+      listSheet(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.sheetList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
     },
-  
+
     // 取消按钮
     cancel() {
       this.open = false;
@@ -193,7 +195,7 @@ export default {
       this.single = selection.length!=1
       this.multiple = !selection.length
     },
- 
+
      /** 驳回 */
     turndown(row) {
       const ids = row.id || this.ids;
@@ -207,7 +209,7 @@ export default {
                 this.getList();
               }
             });
-      
+
     },
     /** 同意 */
     agree(row) {
@@ -223,7 +225,7 @@ export default {
                 this.getList();
               }
             });
-      
+
     },
     /** 导出按钮操作 */
     handleExport() {
