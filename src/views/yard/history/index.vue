@@ -126,7 +126,7 @@
       <el-table-column label="更新人" align="center" prop="updateBy" />
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime)}}</span>
+          <span>{{parseTime(scope.row.updateTime)}}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -146,7 +146,7 @@ import { listHistory} from "@/api/yard/history";
 import {getUserDepts} from '@/utils/charutils'
 
 export default {
-  name: "History",
+  name: "Container_History",
   data() {
     return {
       // 遮罩层
@@ -216,7 +216,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('yard/history/export', {
+      this.download('yard/container/history/export', {
         ...this.queryParams
       }, `yard_history.xlsx`)
     }
