@@ -20,34 +20,14 @@
       </el-form-item>
     </el-form>
 
-    <el-table   v-loading="loading" :data="sheetList" @selection-change="handleSelectionChange ">
+    <el-table  v-loading="loading" :data="analysisList" @selection-change="handleSelectionChange ">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="过磅时间" align="center" prop="finalInspectionTime" />
-      <el-table-column label="车牌号" align="center" prop="plateNum" />
       <el-table-column label="货物名称" align="center" prop="goodsName" />
-      <el-table-column label="规格" align="center" prop="specification" />
-      <el-table-column label="毛重" align="center" prop="grossWeight" />
-      <el-table-column label="皮重" align="center" prop="tare" />
-      <el-table-column label="箱皮重" align="center" prop="tareWeight" />
-      <el-table-column label="净重" align="center" prop="netWeight" />
       <el-table-column label="供货单位" align="center" prop="deliveryUnit" />
       <el-table-column label="收货单位" align="center" prop="receivingUnit" />
-      <el-table-column label="磅单状态 " align="center" prop="status" :formatter="poundStatusFormat" />
-      <el-table-column label="箱号" align="center" prop="containerNum" />
-      <el-table-column label="保管员" align="center" prop="keeper" />
-      <el-table-column label="计量员" align="center" prop="measurer" />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
-        <template slot-scope="scope">
-        <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="abolition(scope.row)"
-            v-hasPermi="['pound:sheet:edit']"
-          >作废申请</el-button>
-        </template>
-      </el-table-column>
+      <el-table-column label="进场净重" align="center" prop="netWeight" />
+      <el-table-column label="出场净重" align="center" prop="netWeightE" />
     </el-table>
     <pagination
       v-show="total>0"
@@ -70,8 +50,6 @@ export default {
       loading: false,
       // 选中数组
       ids: [],
-      // 显示隐藏
-      show:true,
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -125,7 +103,7 @@ export default {
        this.getDicts("pound_measurement_status").then(response => {
       this.poundStatusOptions = response.data;
     });
-    this.getList();
+    this.analysis();
   },
   methods: {
     /** 查询计量单列表 */
@@ -183,9 +161,8 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.show=true
       this.queryParams.pageNum = 1;
-      this.getList();
+      this.analysis();
     },
     /** 重置按钮操作 */
     resetQuery() {

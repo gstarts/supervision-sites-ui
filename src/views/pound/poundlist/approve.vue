@@ -1,21 +1,22 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-    
-     
-      <el-form-item label="时间" prop="measurer">
-        <el-input
-          v-model="queryParams.measurer"
-          placeholder="请输入计量员"
+    <el-form-item label="过磅时间" prop="keeper">
+      <el-date-picker
           clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          size="mini"
+          style="width: 350px"
+          v-model="dateRange"
+          type="datetimerange"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :default-time="['00:00:00']"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-         <el-button icon="el-icon-refresh" size="mini" @click="analysis">统计分析</el-button>
       </el-form-item>
     </el-form>
 
@@ -136,12 +137,7 @@ export default {
         this.loading = false;
       });
     },
-    /**统计分析 */
-    analysis(){
-        analysis(this.form).then(response=>{
-          console.log(response.rows)
-        })
-  },
+  
     // 取消按钮
     cancel() {
       this.open = false;

@@ -998,9 +998,12 @@ export default {
         consignmentitemsList:shopInfoList,
         transportequipmentList:containerInfoList
       }
-      this.$store.dispatch('originalManifest/saveList',subData).then(data=>{
+      // 
+      this.$store.dispatch('7',subData).then(data=>{
         console.log(data);
-        if(data.code ===200){}
+        if(data.code ===200){
+
+        }
       })
     }
   }

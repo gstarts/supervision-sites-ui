@@ -18,21 +18,6 @@
     
     <el-card class="mb20">
       <el-form :model="form" ref="form"  :rules="rules" label-width="160px">
-
-        <el-row type="flex">
-          <el-col :span="12">
-            <el-form-item label="日期:" prop="time">
-              <el-input v-model="form.time" placeholder="请输入日期" clearable></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            
-            <el-form-item label="时间:" prop="stringTime">
-              <el-input v-model="form.stringTime" placeholder="请输入时间" clearable></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="发货单位" prop="deliveryUnit">
@@ -135,6 +120,7 @@
 import {
   addSheet,updateSheet
 } from "@/api/pound/poundlist";
+import{genTimeCode} from "@/utils/common"
 
 export default {
   name: "Client",
@@ -207,7 +193,7 @@ export default {
 
      /** 提交按钮 */
     handleAdd: function () {
-      this.form.finalInspectionTime = this.form.time + this.form.stringTime
+     this.form.finalInspectionTime= genTimeCode(new Date(),'YYYY-MM-DD HH:mm:ss')
       this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
