@@ -24,12 +24,12 @@
       <div slot="header" class="clearfix">
         <span>基本信息</span>
       </div>
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="basicParams" ref="queryForm" label-width="160px">
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="货物运输批次号" prop="voyageNo">
               <el-input
-                v-model="queryParams.declaration.declarationId"
+                v-model="basicParams.declaration.declarationId"
                 placeholder="货物运输批次号"
                 clearable
                 size="small"
@@ -44,7 +44,7 @@
             <el-form-item label="运输方式代码" prop="trafMode">
               <el-input
                 @focus="$store.dispatch('originalManifest/changeStatus')"
-                v-model="queryParams.borderTransportMeans.typeCode"
+                v-model="basicParams.borderTransportMeans.typeCode"
                 placeholder="运输方式代码"
                 clearable
                 size="small"
@@ -53,7 +53,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="进出境口岸海关代码" prop="customsCodeName">
-              <el-select v-model="queryParams.declaration.declarationOfficeId" filterable placeholder="进出境口岸海关代码">
+              <el-select v-model="basicParams.declaration.declarationOfficeId" filterable placeholder="进出境口岸海关代码">
                 <el-option
                   v-for="item in hg_customs_code"
                   :key="item.dictValue"
@@ -66,7 +66,7 @@
           <el-col :span="6">
             <el-form-item label="承运人代码" prop="carrierCode">
               <el-input
-                v-model="queryParams.carrierIdentification.manifestDeclarationId"
+                v-model="basicParams.carrierIdentification.manifestDeclarationId"
                 placeholder="承运人代码"
                 clearable
                 size="small"
@@ -78,7 +78,7 @@
           <el-col :span="6">
             <el-form-item label="运输工具代理企业代码" prop="transAgentCode">
               <el-input
-                v-model="queryParams.agent.agentId"
+                v-model="basicParams.agent.agentId"
                 placeholder="运输工具代理企业代码"
                 clearable
                 size="small"
@@ -89,7 +89,7 @@
             <el-form-item label="货物装载时间" prop="loadingDate">
               <el-date-picker
                 class="datePicker"
-                v-model="queryParams.loadingLocation.loadingDateTime"
+                v-model="basicParams.loadingLocation.loadingDateTime"
                 type="datetime"
                 placeholder="选择日期时间"/>
             </el-form-item>
@@ -97,7 +97,7 @@
           <el-col :span="6">
             <el-form-item label="卸货地代码" prop="loadingLocationCode">
               <el-input
-                v-model="queryParams.unloadingLocation.unloadinglocationId"
+                v-model="basicParams.unloadingLocation.unloadinglocationId"
                 placeholder="卸货地代码"
                 clearable
                 size="small"
@@ -108,7 +108,7 @@
             <el-form-item label="到达卸货地日期" prop="arrivalDate">
               <el-date-picker
                 class="datePicker"
-                v-model="queryParams.unloadingLocation.arrivalDateTime"
+                v-model="basicParams.unloadingLocation.arrivalDateTime"
                 type="date"
                 placeholder="选择日期"/>
             </el-form-item>
@@ -117,7 +117,7 @@
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="传输企业备案关区" prop="customMasterName">
-              <el-select v-model="queryParams.customMasterName" filterable placeholder="传输企业备案关区">
+              <el-select v-model="basicParams.customMasterName" filterable placeholder="传输企业备案关区">
                 <el-option
                   v-for="item in hg_customs_code"
                   :key="item.dictValue"
@@ -129,7 +129,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="企业代码" prop="unitCode">
-              <el-select v-model="queryParams.unitCode" filterable placeholder="企业代码">
+              <el-select v-model="basicParams.unitCode" filterable placeholder="企业代码">
                 <el-option
                   v-for="(item,index) in listInfo"
                   :key="index"
@@ -138,7 +138,7 @@
                 </el-option>
               </el-select>
               <!-- <el-input
-                v-model="queryParams.unitCode"
+                v-model="basicParams.unitCode"
                 placeholder="企业代码"
                 clearable
                 size="small"
@@ -149,7 +149,7 @@
           <el-col :span="6">
             <el-form-item label="舱单传输人名称" prop="msgRepName">
               <el-input
-                v-model="queryParams.representativePerson.name"
+                v-model="basicParams.representativePerson.name"
                 placeholder="舱单传输人名称"
                 clearable
                 size="small"
@@ -159,7 +159,7 @@
           <el-col :span="6">
             <el-form-item label="备注" prop="additionalInformation">
               <el-input
-                v-model="queryParams.additionalInformation.content"
+                v-model="basicParams.additionalInformation.content"
                 placeholder="备注"
                 clearable
                 size="small"
@@ -279,9 +279,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="包装种类" prop="packType">
+            <el-form-item label="包装种类" prop="WrapType">
               <el-input
-                v-model="waybill.packType"
+                v-model="waybill.WrapType"
                 placeholder="包装种类"
                 clearable
                 size="small"
@@ -661,8 +661,8 @@ export default {
         copyBtn: false,
         refBtn: false
       },
-      // 查询参数
-      queryParams: {
+      // 基础信息
+      basicParams: {
         declaration: {
           declarationOfficeId: '',// 进出境口岸海关代码
           declarationId: ''//货物运输批次号
@@ -694,13 +694,8 @@ export default {
       // 提运单信息
       waybillList: [],
       waybill: {
-        packType: '',//包装种类
-        paymentType: '',//运费支付方法
+        WrapType: '',//包装种类
         currencyType: '',//金额类型
-        chgCodeAddBtn: [],//变更原因
-        notifyInfo: [],//通知人信息
-        undgInfo: [],//危险品联系人信息
-
         consigneeName: '',//收货人名称
         transportcontrantionId: '',//提（运）单号
         conditionCode: '',//运输条款
@@ -712,6 +707,9 @@ export default {
         grossMassMeasure: '',//货物总毛重(KG)
         valueAmount: '',//货物价值
         deconsolidatorId: '',//拆箱人代码
+        chgCodeAddBtn: [],//变更原因
+        notifyInfo: [],//通知人信息
+        undgInfo: [],//危险品联系人信息
         routingCountryCode: [],//途径国家或地区
         consignee: [],//收货人信息
         consignor: [],//发货人信息
@@ -726,8 +724,9 @@ export default {
         goodsMeasure: '', // 商品项毛重(KG)
         cargoDescription: '', // 商品项简要描述
         description: '', // 商品项描述补充信息
-        classificationId: '' //  危险品编号
-
+        classificationId: '', //  危险品编号
+        HSCode:'', // 商品HS编码
+        goodsPackTypeCode:'' // 包装种类
       },
       // 集装箱信息
       containerInfoList: [],
@@ -768,9 +767,9 @@ export default {
     this.init()
   },
   watch: {
-    'queryParams.voyageNo': {
+    'basicParams.voyageNo': {
       handler: function(newVal) {
-        this.queryParams.voyageNo = newVal.toUpperCase()
+        this.basicParams.voyageNo = newVal.toUpperCase()
       }
     }
   },
@@ -801,7 +800,7 @@ export default {
     },
     // 组件选择
     choose(row) {
-      this.queryParams.postCode = row.codeName
+      this.basicParams.postCode = row.codeName
       this.dialogTableVisible = false
     },
     // 关闭组件
@@ -809,7 +808,7 @@ export default {
       this.dialogTableVisible = false
     },
     choose2(row) {
-      this.queryParams.postCode = row.codeName
+      this.basicParams.postCode = row.codeName
       this.dialogTableVisible2 = false
     },
     close2() {
@@ -943,8 +942,7 @@ export default {
         this.$store.dispatch('originalManifest/consignorInfo', [])
         this.$store.dispatch('originalManifest/receivingInfo', { consigneeList: [], manifestContactList: [] })
         this.waybill = {
-          packType: '',//包装种类
-          paymentType: '',//运费支付方法
+          WrapType: '',//包装种类
           currencyType: '',//金额类型
           chgCodeAddBtn: [],//变更原因
           notifyInfo: [],//通知人信息
@@ -1054,16 +1052,16 @@ export default {
       this.$store.dispatch('originalManifest/getVoyageNo').then(data => {
         console.log(data)
         if (data.code === 200) {
-          this.queryParams.voyageNo = data.msg
+          this.basicParams.voyageNo = data.msg
         }
       })
     },
     saveList() {
-      const { queryParams, waybillList, shopInfoList, containerInfoList } = this
+      const { basicParams, waybillList, shopInfoList, containerInfoList } = this
       // 隐藏企业代码数据
-      queryParams.head = this.listInfo.find(el => el.deptId === queryParams.unitCode)
+      basicParams.head = this.listInfo.find(el => el.deptId === basicParams.unitCode)
       const subData = {
-        queryParams,
+        basicParams,
         waybillList,
       }
 
