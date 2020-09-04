@@ -1060,6 +1060,7 @@ export default {
       const { basicParams, waybillList, shopInfoList, containerInfoList } = this
       // 隐藏企业代码数据
       basicParams.head = this.listInfo.find(el => el.deptId === basicParams.unitCode)
+      basicParams.head.messageType="MT1401"
       const subData = {
         basicParams,
         waybillList,
