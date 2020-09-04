@@ -8,7 +8,14 @@ export function listSheet(query) {
     params: query
   })
 }
-
+//统计分析数据
+export function analysis(query) {
+  return request({
+    url: '/pound/measurement/sheet/analysisList',
+    method: 'get',
+    params: query
+  })
+}
 // 查询计量单详细
 export function getSheet(id) {
   return request({

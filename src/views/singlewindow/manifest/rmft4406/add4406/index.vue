@@ -24,9 +24,7 @@
           v-hasPermi="['report:head:add']"
         >暂存</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger" icon="el-icon-upload2" size="mini" @click="declare">申报</el-button>
-      </el-col>
+        <el-button type="danger" icon="el-icon-thumb" size="mini" @click="declare" style="float:right" disabled>申报</el-button>
     </el-row>
 
     <el-form :model="form" ref="form" :rules="headRules" label-width="190px" size="mini">

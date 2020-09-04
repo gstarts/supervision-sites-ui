@@ -30,6 +30,7 @@
         :disabled="btnDisable.repBtn"
         @click="handleReport"
       >导入</el-button>
+        <el-button type="danger" icon="el-icon-thumb" size="mini" :disabled="btnDisable.repBtn" @click="handleReport" style="float:right">申报</el-button>
       <!-- <el-button type="primary" icon="el-icon-document-copy" size="mini" :disabled="btnDisable.copyBtn" @click="handleCopy">复制</el-button>
       <el-button type="primary" icon="el-icon-refresh" size="mini" :disabled="btnDisable.refBtn" @click="handleRefresh">刷新</el-button>-->
     </div>

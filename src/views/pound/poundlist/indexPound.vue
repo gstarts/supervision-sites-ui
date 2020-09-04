@@ -2,13 +2,14 @@
   <div class="app-container">
     <!-- 按钮组 -->
     <div class="mb20">
-      <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd">新增</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd">打印</el-button>
       <el-button type="success" icon="el-icon-edit" size="mini" @click="MeasurementSheetSave">暂存</el-button>
+    
     </div>
 
     <el-card class="mb20">
       <el-form :model="form" ref="form" :rules="rules" label-width="160px">
-        <el-row type="flex">
+        <!-- <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="日期:" prop="time">
               <el-input v-model="form.time" placeholder="请输入日期" clearable></el-input>
@@ -19,7 +20,7 @@
               <el-input v-model="form.stringTime" placeholder="请输入时间" clearable></el-input>
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row> -->
 
         <el-row type="flex">
           <el-col :span="12">
@@ -136,7 +137,7 @@
 
 <script>
 import { addSheet, updateSheet } from "@/api/pound/poundlist";
-
+import{genTimeCode} from "@/utils/common"
 export default {
   name: "Client",
   data() {
@@ -215,8 +216,7 @@ export default {
 
     /** 提交按钮 */
     MeasurementSheetSave: function () {
-      this.form.finalInspectionTime = this.form.time + this.form.stringTime;
-      this.form.finalInspectionTime = this.form.time + this.form.stringTime;
+      this.form.finalInspectionTime= genTimeCode(new Date(),'YYYY-MM-DD HH:mm:ss')
       this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
