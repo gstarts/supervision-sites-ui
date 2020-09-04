@@ -12,9 +12,9 @@
       <el-form :model="queryParams" class="mb20" ref="queryForm" label-width="160px">
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="发货人代码" prop="postCode" >
+            <el-form-item label="发货人代码" prop="id" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="queryParams.id"
                 placeholder="发货人代码"
                 clearable
                 size="small"
@@ -22,9 +22,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="发货人名称" prop="postCode" >
+            <el-form-item label="发货人名称" prop="name" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="queryParams.name"
                 placeholder="发货人名称"
                 clearable
                 size="small"
@@ -34,9 +34,9 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="联系号码" prop="postCode" >
+            <el-form-item label="联系号码" prop="communicationId" >
               <el-input
-                v-model="queryParams.postCode"
+                v-model="queryParams.communicationId"
                 placeholder="联系号码"
                 clearable
                 size="small"
@@ -44,13 +44,15 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="通讯方式类别代码" prop="postCode" >
-              <el-input
-                v-model="queryParams.postCode"
-                placeholder="通讯方式类别代码"
-                clearable
-                size="small"
-              />
+            <el-form-item label="通讯方式类别代码" prop="communication" >
+              <el-select v-model="queryParams.communication" filterable placeholder="通讯方式类别代码">
+                <el-option
+                  v-for="item in Communication_type"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -66,11 +68,14 @@
         :data="data"
         tooltip-effect="dark"
         style="width: 100%"
+        highlight-current-row
+        :row-class-name="tableRowClassName"
+        @row-click='rowClick'
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" min-width="55"/>
-        <el-table-column prop="num" label="序号" min-width="120"/>
-        <el-table-column prop="num" label="联系号码" min-width="120"/>
-        <el-table-column prop="num" label="通讯方式类别代码" min-width="160"/>
+        <el-table-column type="index" label="序号" min-width="120"/>
+        <el-table-column prop="communicationId" label="联系号码" min-width="120"/>
+        <el-table-column prop="communication" label="通讯方式类别代码" min-width="160"/>
       </el-table>
     </el-dialog>
   </div>
@@ -89,7 +94,10 @@ export default {
       data:[],
       // 查询参数
       queryParams: {
-        postCode: undefined
+        id:'',//发货人代码
+        name:'',//发货人名称
+        communicationId:'',//联系号码
+        communication:'',//通讯方式类别代码
       },
       // 按钮禁用状态
       btnDisable:{
@@ -100,28 +108,73 @@ export default {
         copyBtn:false,
         refBtn:false,
       },
+      Communication_type:[],
+      index:-1,
+      selectInfo:[]
+    }
+  },
+  mounted(){
+    this.init()
+  },
+  watch:{
+    'detailVisible': {
+        handler: function(newVal) {
+          if(newVal) this.init()
+        },
     }
   },
   methods:{
+    init(){
+      this.data = this.$store.state.originalManifest.consignorInfo
+      /** 通讯方式类别代码 */
+      this.getDicts("Communication_type").then((response) => {
+        this.Communication_type = response.data;
+      });
+    },
     // 新增
-    handleAdd(){},
+    handleAdd(){
+      if(this.data.length===3) return
+      const data = JSON.parse(JSON.stringify(this.queryParams))
+      this.data.push(data)
+      this.dataEmpty()
+    },
     // 暂存
     handleSave(){
-      console.log('保存');
-      this.$saveStore("a","123")
+      if(this.index ===-1) return
+      this.data[this.index] = JSON.parse(JSON.stringify(this.queryParams))
+      this.data = JSON.parse(JSON.stringify(this.data))
+      this.index =-1
     },
     // 删除
-    handleDelete(){},
-    // 申报
-    handleReport(){},
-    // 复制
-    handleCopy(){},
-    // 刷新
-    handleRefresh(){},
-    handleSelectionChange(){},
+    handleDelete(){
+      this.data=this.data.filter(el=>!this.selectInfo.includes(el))
+    },
+    // 点击行复制
+    rowClick(row, column, event){
+      this.index = JSON.parse(JSON.stringify(row)).rowIndex
+      this.queryParams = JSON.parse(JSON.stringify(row))
+    },
+    handleSelectionChange(data){
+      console.log(data);
+      this.selectInfo = data
+    },
+    // 添加index
+    tableRowClassName(data){
+      //把每一行的索引放进row
+      data.row.rowIndex = data.rowIndex;
+    },
+    // 数据清空
+    dataEmpty(){
+      this.queryParams={
+        name:'',
+        communicationId:'',
+        communication:''
+      }
+    },
     // 关闭回调
     close(){
       console.log('关闭组件');
+      this.$store.dispatch('originalManifest/consignorInfo',this.data)
       this.$emit('close')
     }
   }
