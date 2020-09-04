@@ -157,7 +157,6 @@
         <el-form-item label="公司地址" prop="eAddress">
           <el-input v-model="form.eAddress" placeholder="请输入公司地址" />
         </el-form-item>
-
         <el-row>
           <el-col :span="8">
             <el-form-item label="法人" prop="eLegalPerson">
@@ -204,12 +203,12 @@
 
         <el-row>
           <el-col :span="8">
-            <el-form-item label="海关编号" prop="customsMaster" :rules="form.eType==2">
+            <el-form-item label="海关编号" prop="customsMaster" :rules="form.eType==='1'?rules.customsMaster:[{ required: false}]">
               <el-input v-model="form.customsMaster" placeholder="请输入海关编号" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="组织机构代码" prop="contractorCode" :rules="form.eType==2">
+            <el-form-item label="组织机构代码" prop="contractorCode" :rules="form.eType==='1'?rules.contractorCode:[{ required: false}]">
               <el-input v-model="form.contractorCode" placeholder="请输入组织机构代码" />
             </el-form-item>
           </el-col>
@@ -218,7 +217,7 @@
               label="统一社会信用代码"
               prop="contractorCodeScc"
               label-width="150px"
-              :rules="form.eType==2"
+              :rules="form.eType==='1'?rules.contractorCodeScc:[{ required: false}]"
             >
               <el-input v-model="form.contractorCodeScc" placeholder="请输入统一社会信用代码" />
             </el-form-item>
@@ -227,35 +226,35 @@
 
         <el-row>
           <el-col :span="8">
-            <el-form-item label="作业场所编号" prop="supvLoctCode" :rules="form.eType==2">
+            <el-form-item label="作业场所编号" prop="supvLoctCode" :rules="form.eType==='1'?rules.supvLoctCode:[{ required: false}]">
               <el-input v-model="form.supvLoctCode" placeholder="请输入作业场所编号" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="操作人ID" prop="opUserId" :rules="form.eType==2">
+            <el-form-item label="操作人ID" prop="opUserId" :rules="form.eType==='1'?rules.opUserId:[{ required: false}]">
               <el-input v-model="form.opUserId" placeholder="请输入操作人ID" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="发送ID" prop="senderId" :rules="form.eType==2">
+            <el-form-item label="发送ID" prop="senderId" :rules="form.eType==='1'?rules.senderId:[{ required: false}]">
               <el-input v-model="form.senderId" placeholder="请输入发送ID" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item label="接收ID" prop="receiverId" :rules="form.eType==2">
+            <el-form-item label="接收ID" prop="receiverId" :rules="form.eType==='1'?rules.receiverId:[{ required: false}]">
               <el-input v-model="form.receiverId" placeholder="请输入接收ID" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="接口协议版本号" prop="version" :rules="form.eType==2">
-              <el-input v-model="version" placeholder="请输入接口协议版本号" />
+            <el-form-item label="接口协议版本号" prop="version" :rules="form.eType==='1'?rules.version:[{ required: false}]">
+              <el-input v-model="form.version" placeholder="请输入接口协议版本号" />
             </el-form-item>
           </el-col>
 
           <el-col :span="8">
-            <el-form-item label="确保传输人名称" prop="stationPersonName" :rules="form.eType==2">
+            <el-form-item label="确保传输人名称" prop="stationPersonName" :rules="form.eType==='1'?rules.stationPersonName:[{ required: false}]">
               <el-input v-model="form.stationPersonName" placeholder="请输入确保传输人名称" />
             </el-form-item>
           </el-col>
@@ -331,7 +330,7 @@ export default {
         opUserId: undefined,
         senderId: undefined,
         receiverId: undefined,
-        version: undefined,
+        version: "1.0",
         deptId:undefined,
       },
       // 表单参数
@@ -346,10 +345,9 @@ export default {
         eType: [
           { required: true, message: "公司性质不能为空", trigger: "blur" },
         ],
-         deptId: [
+        deptId: [
           { required: true, message: "监管场所不能为空", trigger: "blur" },
         ],
-
         eEname: [
           { required: true, message: "公司英文名称不能为空", trigger: "blur" },
         ],
@@ -359,7 +357,6 @@ export default {
         eAddress: [
           { required: true, message: "公司地址不能为空", trigger: "blur" },
         ],
-
         customsMaster: [
           { required: true, message: "海关编号不能为空", trigger: "blur" },
         ],
@@ -376,31 +373,30 @@ export default {
         supvLoctCode: [
           { required: true, message: "作业场所编号不能为空", trigger: "blur" },
         ],
-
         opUserId: [
           { required: true, message: "操作人id不能为空", trigger: "blur" },
         ],
-
         senderId: [
           { required: true, message: "发送人ID不能为空", trigger: "blur" },
         ],
-
         receiverId: [
           { required: true, message: "接收人ID不能为空", trigger: "blur" },
         ],
-
         version: [
           { required: true, message: "版本号ID不能为空", trigger: "blur" },
         ],
-
         stationPersonName: [
           { required: true, message: "确保传输人名称不能为空", trigger: "blur" },
         ],
+        eLegalPersonPhone: [
+          { required: true, message: "法人电话不能为空", trigger: "blur" },
+        ],
+
+        
       },
     };
   },
   created() {
-
     	// 0 监管场所，1保税库，2堆场，3企业
       this.depts = getUserDepts('0')
       console.log(this.depts)
@@ -451,7 +447,7 @@ export default {
         opUserId: undefined,
         senderId: undefined,
         receiverId: undefined,
-        version: undefined,
+        version: "1.0",
         remark: undefined,
       };
       this.resetForm("form");
@@ -475,6 +471,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.form.version = "1.0";
       this.open = true;
       this.title = "添加企业信息备案";
     },

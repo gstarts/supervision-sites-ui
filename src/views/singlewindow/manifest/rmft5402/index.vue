@@ -14,7 +14,7 @@
         icon="el-icon-edit"
         size="mini"
         :disabled="btnDisable.saveBtn"
-        @click="AllSave"
+        @click="handleSave"
       >暂存</el-button>
       <el-button
         type="danger"
@@ -53,12 +53,12 @@
       <el-form :model="queryParams" ref="queryForm" label-width="160px">
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="货物运输批次号" prop="declarationId">
+            <el-form-item label="货物运输批次号" prop="postCode">
               <el-input v-model="declaration.declarationId" placeholder="货物运输批次号" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运输方式代码" prop="typeCode">
+            <el-form-item label="运输方式代码" prop="postCode">
               <el-input
                 @focus="$store.dispatch('originalManifest/changeStatus')"
                 v-model="borderTransportMeans.typeCode"
@@ -69,7 +69,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="进出境口岸代码" prop="declarationOfficeID">
+            <el-form-item label="进出境口岸代码" prop="postCode">
               <el-input
                 @focus="dialogTableVisible = true"
                 v-model="declaration.declarationOfficeID"
@@ -80,30 +80,56 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="卸货地代码" prop="unloadingLocationId">
-              <el-input v-model="unloadingLocation.unloadingLocationId" placeholder="卸货地代码" clearable size="small" />
+            <el-form-item label="卸货地代码" prop="postCode">
+              <el-input v-model="unloadingLocation.unloadinglocationId" placeholder="卸货地代码" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="到达卸货地日期" prop="arrivalDate">
+            <el-form-item label="理货开始时间" prop="postCode">
               <el-date-picker
                 class="datePicker"
-                v-model="unloadingLocation.arrivalDate"
+                v-model="control.inspectionStartDateTime"
                 type="datetime"
                 placeholder="选择日期时间"
               />
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="6">
-            <el-form-item label="传输企业备案关区	" prop="postCode" >
-              <el-input
-                v-model="queryParams.postCode"
-                placeholder="传输企业备案关区"
-                clearable
-                size="small"
+          <el-col :span="6">
+            <el-form-item label="理货结束时间" prop="postCode">
+              <el-date-picker
+                class="datePicker"
+                v-model="control.inspectionEndDateTime"
+                type="datetime"
+                placeholder="选择日期时间"
               />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="理货公司代码" prop="postCode">
+              <el-input v-model="submitter.submitterId" placeholder="理货公司代码" clearable size="small" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="理货责任人名称" prop="postCode">
+              <el-input v-model="contact.name" placeholder="理货责任人名称" clearable size="small">
+                <template slot="append" style="cursor: pointer;">联系方式</template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row type="flex">
+          <!-- <el-col :span="6">
+            <el-form-item label="传输企业备案关区" prop="postCode" >
+              <el-select v-model="depParaVal" filterable placeholder="传输企业备案关区">
+                <el-option
+                  v-for="item in depParaListJson"
+                  :key="item.codeValue"
+                  :label="item.codeName"
+                  :value="item.codeValue">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -116,8 +142,8 @@
               />
             </el-form-item>
           </el-col>-->
-          <el-col :span="6">
-            <el-form-item label="备注" prop="content">
+          <el-col :span="12">
+            <el-form-item label="备注" prop="postCode">
               <el-input
                 v-model="additionalInformation.content"
                 placeholder="备注"
@@ -190,7 +216,7 @@
       >
         <el-table-column type="selection" min-width="55" />
         <el-table-column prop="num" label="序号" min-width="120" />
-        <el-table-column prop="transportContractDocument.transportContractDocumentId" label="提(运)单号" min-width="120" />
+        <el-table-column prop="transportContractDocument.transportcontractdocumentId" label="提(运)单号" min-width="120" />
         <el-table-column prop="grossVolumeMeasure" label="货物体积(M3)" min-width="150" />
         <el-table-column prop="totalPackageQuantity" label="货物总件数" min-width="120" />
         <el-table-column prop="wrapType" label="包装种类" min-width="120" />
@@ -208,9 +234,9 @@
       <el-form :model="queryParams" ref="queryForm" label-width="160px">
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="提(运)单号" prop="transportContractDocumentId">
+            <el-form-item label="提(运)单号" prop="postCode">
               <el-input
-                v-model="consignment.transportContractDocument.transportContractDocumentId"
+                v-model="consignment.transportContractDocument.transportcontractdocumentId"
                 placeholder="提(运)单号"
                 clearable
                 size="small"
@@ -218,7 +244,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="货物体积(M3)" prop="grossVolumeMeasure">
+            <el-form-item label="货物体积(M3)" prop="postCode">
               <el-input
                 v-model="consignment.grossVolumeMeasure"
                 placeholder="货物体积(M3)"
@@ -228,12 +254,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="包装种类" prop="wrapType">
-              <el-input v-model="consignment.wrapType" placeholder="包装种类" clearable size="small" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="货物总件数" prop="totalPackageQuantity">
+            <el-form-item label="货物总件数" prop="postCode">
               <el-input
                 v-model="consignment.totalPackageQuantity"
                 placeholder="货物总件数"
@@ -242,10 +263,15 @@
               />
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="包装种类" prop="postCode">
+              <el-input v-model="consignment.wrapType" placeholder="包装种类" clearable size="small" />
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="货物总毛重(KG)" prop="grossMassMeasure">
+            <el-form-item label="货物总毛重(KG)" prop="postCode">
               <el-input
                 v-model="consignment.goodsMeasure.grossMassMeasure"
                 placeholder="货物总毛重(KG)"
@@ -317,8 +343,8 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column type="index" prop="num" label="序号" min-width="120" />
-        <el-table-column prop="transportEquipmentId" label="集装箱(器)编号" min-width="120" />
+        <el-table-column type="index" prop="num" label="序号" />
+        <el-table-column prop="transportequipmentId" label="集装箱(器)编号" align="center" />
       </el-table>
       <el-pagination
         class="right mb20"
@@ -331,11 +357,21 @@
       />
       <el-form :model="queryParams" ref="queryForm" label-width="160px">
         <el-row type="flex">
-          <el-col :span="24">
-            <el-form-item label="集装箱(器)编号" prop="transportEquipmentId">
+          <el-col :span="12">
+            <el-form-item label="集装箱(器)编号" prop="postCode">
               <el-input
-                v-model="transportEquipmentForm.transportEquipmentId"
+                v-model="transportEquipmentForm.transportequipmentId"
                 placeholder="集装箱(器)编号"
+                clearable
+                size="small"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="集装箱(器)残损说明" prop="postCode">
+              <el-input
+                v-model="transportEquipmentForm.additionalInformation.content"
+                placeholder="集装箱(器)残损说明"
                 clearable
                 size="small"
               />
@@ -375,6 +411,7 @@ export default {
       queryParams: {
         postCode: undefined,
       },
+
       form: {
         head: {},
         declaration: {
@@ -383,6 +420,9 @@ export default {
             transportEquipment: [],
           },
           unloadingLocation: {},
+          control: {},
+          submitter: {},
+          contact: {},
           additionalInformation: {},
           consignment: {
             // 提（运）单号List
@@ -392,11 +432,14 @@ export default {
           },
         },
       },
-
       // 报文功能代码/报文类型代码
       head: {
         functionCode: undefined,
         messageType: undefined,
+        senderID: "0100000000000_0000000000",
+        receiverID: "EPORT",
+        sendTime: "20170222101740716",
+        version: "1.0"
       },
       // 进出境口岸海关代码/货物运输批次号
       declaration: {
@@ -409,8 +452,20 @@ export default {
       },
       // 卸货地表单
       unloadingLocation: {
-        unloadingLocationId: undefined,
-        arrivalDate: undefined,
+        unloadinglocationId: undefined,
+      },
+      // 理货开始时间/理货结束时间表单
+      control: {
+        inspectionStartDateTime: undefined,
+        inspectionEndDateTime: undefined,
+      },
+      // 理货公司代码
+      submitter: {
+        submitterId: undefined,
+      },
+      // 理货责任人名称
+      contact: {
+        name: undefined,
       },
       // 备注表单
       additionalInformation: {
@@ -425,7 +480,7 @@ export default {
         wrapType: undefined,
         // 提（运）单号表单
         transportContractDocument: {
-          transportContractDocumentId: undefined,
+          transportcontractdocumentId: undefined,
         },
         // 货物毛重表单
         goodsMeasure: {
@@ -433,11 +488,17 @@ export default {
         },
       },
       // 集装箱(器)编号表单/集装箱（器）残损说明数据表单
-      transportEquipmentForm: {},
+      transportEquipmentForm: {
+        transportequipmentId: undefined,
+        additionalInformation: {
+          content: undefined,
+        },
+      },
       // 提运单整体List
       List: [],
       // 集装箱(器)List
       transportEquipment: [],
+
       dateTimeVal: "",
       data: [],
     };
@@ -450,6 +511,7 @@ export default {
     async init() {
       // await this.depParaList()
     },
+
     // 提运单新增
     billLading() {
       this.List.push(this.consignment);
@@ -458,7 +520,7 @@ export default {
         totalPackageQuantity: undefined,
         wrapType: undefined,
         transportContractDocument: {
-          transportContractDocumentId: undefined,
+          transportcontractdocumentId: undefined,
         },
         goodsMeasure: {
           grossMassMeasure: undefined,
@@ -471,35 +533,33 @@ export default {
     containerAdd() {
       this.transportEquipment.push(this.transportEquipmentForm);
       this.transportEquipmentForm = {
-        transportEquipmentId: undefined,
+        transportequipmentId: undefined,
+        additionalInformation: {
+          content: undefined,
+        },
       };
       // console.log(this.transportEquipmentForm)
     },
     // 暂存 = 整体新增
-    AllSave() {
+    handleSave() {
       this.head.functionCode = "2";
       this.head.messageType = "MT5402";
       this.form.head = this.head;
       this.form.declaration = this.declaration;
       this.form.declaration.borderTransportMeans = this.borderTransportMeans;
       this.form.declaration.unloadingLocation = this.unloadingLocation;
+      this.form.declaration.control = this.control;
+      this.form.declaration.submitter = this.submitter;
+      this.form.declaration.contact = this.contact;
       this.form.declaration.additionalInformation = this.additionalInformation;
       this.form.declaration.borderTransportMeans.transportEquipment = this.transportEquipment;
       this.form.declaration.consignment = this.List;
       console.log(JSON.stringify(this.form));
     },
 
-    // 新增
-    handleAdd() {},
-    // 暂存
-    handleSave() {
-      console.log("保存");
-      // this.$saveStore("a","123")
-      // this.$getStore('a')
-      // this.$delStore("a")
-    },
     // 删除
     handleDelete() {},
+    handleAdd() {},
     // 申报
     handleReport() {},
     // 复制
@@ -508,7 +568,7 @@ export default {
     handleRefresh() {},
     // 翻页
     currentChange(page) {
-      console.log(page);
+      // console.log(page);
     },
     // 组件选择
     choose(row) {
@@ -528,7 +588,7 @@ export default {
     },
     handleSelectionChange() {},
     numFun() {
-      console.log(123);
+      // console.log(123);
     },
     // 请求接口
     depParaList() {
