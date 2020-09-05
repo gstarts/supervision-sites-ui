@@ -2,8 +2,9 @@
   <div class="app-container">
     <!-- 按钮组 -->
     <div class="mb20">
-      <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd">新增</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd">打印</el-button>
       <el-button type="success" icon="el-icon-edit" size="mini" @click="MeasurementSheetSave">暂存</el-button>
+    
     </div>
 
     <el-card class="mb20">

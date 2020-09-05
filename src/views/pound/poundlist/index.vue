@@ -7,13 +7,14 @@
         icon="el-icon-plus"
         size="mini"
         @click="headHandleAdd"
-      >新增</el-button>
+      >打印</el-button>
       <el-button
         type="success"
         icon="el-icon-edit"
         size="mini"
         @click="handleAdd"
       >暂存</el-button>
+
     </div>
     
     <el-card class="mb20">
