@@ -1069,7 +1069,7 @@ export default {
       this.$store.dispatch('originalManifest/saveList', subData).then(data => {
         console.log(data)
         if (data.code === 200) {
-
+          this.msgSuccess("保存成功");
         }
       })
     }
