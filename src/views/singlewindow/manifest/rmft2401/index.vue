@@ -1004,11 +1004,11 @@ export default {
         this.hg_customs_code = response.data
       })
       /** 进出境口岸关区代码字典 */
-      this.getDicts('currentCode').then((response) => {
+      this.getDicts('sw_current_code').then((response) => {
         this.currentCode = response.data
       })
-      /** 进出境口岸关区代码字典 */
-      this.getDicts('PaymentMethodCode').then((response) => {
+      /** 包装种类代码字典 */
+      this.getDicts('sw_packag_type').then((response) => {
         this.PaymentMethodCode = response.data
       })
       /** 途经国家 */
