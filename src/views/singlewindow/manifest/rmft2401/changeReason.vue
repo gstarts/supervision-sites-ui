@@ -133,7 +133,7 @@ export default {
       this.queryParams.reason=this.$store.state.originalManifest.changeReason.reason
 
       /** 变更原因 */
-      this.getDicts("chgCode").then((response) => {
+      this.getDicts("sw_change_reason").then((response) => {
         this.chgCode = response.data;
       });
     },

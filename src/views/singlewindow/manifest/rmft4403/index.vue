@@ -213,7 +213,7 @@
           </el-select>
           </el-form-item>
         </el-col> -->
-        
+
         <el-col :span="24">
           <el-form-item label="备注" prop="AdditionalInformation.content">
             <el-input
@@ -239,7 +239,7 @@
           @click="addnewcar"
           v-hasPermi="['confirmatory:head:add']"
         >暂存</el-button>
-      </el-col>      
+      </el-col>
     </el-row>
     <el-table :data="AllForm.TransportEquipment" height="300px" v-loading="loading">
       <el-table-column label="序号" align="center" type="index" />
@@ -491,15 +491,15 @@ export default {
       this.customsCodeTypeOptions = response.data;
     });
     //是否有预防接种字典翻译
-    this.getDicts("dy_LCL_logo").then((response) => {
+    this.getDicts("sw_LCL_logo").then((response) => {
       this.VaccinationOptions = response.data;
     });
     //健康状态字典翻译
-    this.getDicts("dy_health_status").then((response) => {
+    this.getDicts("sw_health_status").then((response) => {
       this.healthStatusOption = response.data;
     });
     //途径国家/地区信息
-    this.getDicts("dy_route_country").then((response) => {
+    this.getDicts("sw_route_country").then((response) => {
       this.routingContryIdTextOptions = response.data;
     });
   },
@@ -673,7 +673,7 @@ export default {
 
     }
 
-    
+
   },
 };
 </script>
