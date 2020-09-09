@@ -215,12 +215,12 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column prop="num" label="序号" min-width="120" />
-        <el-table-column prop="transportContractDocument.transportcontractdocumentId" label="提(运)单号" min-width="120" />
-        <el-table-column prop="grossVolumeMeasure" label="货物体积(M3)" min-width="150" />
-        <el-table-column prop="totalPackageQuantity" label="货物总件数" min-width="120" />
-        <el-table-column prop="wrapType" label="包装种类" min-width="120" />
-        <el-table-column prop="goodsMeasure.grossMassMeasure" label="货物总毛重(KG)" min-width="120" />
+        <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
+        <el-table-column prop="transportContractDocument.transportcontractdocumentId" label="提(运)单号" min-width="120" align="center"/>
+        <el-table-column prop="grossVolumeMeasure" label="货物体积(M3)" min-width="150" align="center"/>
+        <el-table-column prop="totalPackageQuantity" label="货物总件数" min-width="120" align="center"/>
+        <el-table-column prop="wrapType" label="包装种类" min-width="120" align="center"/>
+        <el-table-column prop="goodsMeasure.grossMassMeasure" label="货物总毛重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
         class="right mb20"
@@ -342,8 +342,8 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" min-width="55" />
-        <el-table-column type="index" prop="num" label="序号" />
+        <el-table-column type="selection" min-width="55" align="center"/>
+        <el-table-column type="index" prop="num" label="序号" align="center"/>
         <el-table-column prop="transportequipmentId" label="集装箱(器)编号" align="center" />
       </el-table>
       <el-pagination
@@ -385,7 +385,9 @@
 
 <script>
 import depParaListJson from "@/mock/depParaList2.json";
+import { add } from "@/api/manifest/rmft5402_3402_4401/head";
 export default {
+  components: { depParaListJson,add },
   data() {
     return {
       depParaVal: "",
@@ -434,8 +436,8 @@ export default {
       },
       // 报文功能代码/报文类型代码
       head: {
-        functionCode: undefined,
-        messageType: undefined,
+        functionCode: "2",
+        messageType: "MT5402",
         senderID: "0100000000000_0000000000",
         receiverID: "EPORT",
         sendTime: "20170222101740716",
@@ -554,9 +556,45 @@ export default {
       this.form.declaration.additionalInformation = this.additionalInformation;
       this.form.declaration.borderTransportMeans.transportEquipment = this.transportEquipment;
       this.form.declaration.consignment = this.List;
-      console.log(JSON.stringify(this.form));
+      add(this.form).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("新增成功");
+          console.log(JSON.stringify(this.form));
+        } else {
+          this.msgError(response.msg);
+        }
+      });
+      this.reset();
     },
+    reset() {
+      this.declaration = {},
+      this.borderTransportMeans = {},
+      this.unloadingLocation = {},
+      this.control = {},
+      this.submitter = {},
+      this.contact = {},
+      this.additionalInformation = {},
+      this.consignment = {
+        grossVolumeMeasure: undefined,
+        totalPackageQuantity: undefined,
+        wrapType: undefined,
+        transportContractDocument: {
+          transportcontractdocumentId: undefined,
+        },
+        goodsMeasure: {
+          grossMassMeasure: undefined,
+        },
+      },
+      this.transportEquipmentForm = {
+        transportequipmentId: undefined,
+        additionalInformation: {
+          content: undefined,
+        },
+      },
+      this.List = [],
+      this.transportEquipment = []
 
+    },
     // 删除
     handleDelete() {},
     handleAdd() {},

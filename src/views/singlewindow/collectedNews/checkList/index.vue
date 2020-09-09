@@ -800,36 +800,36 @@ export default {
     };
   },
   created() {
-    /** 征免方式字典 */
-    this.getDicts("PaymentMethodCode").then((response) => {
+    /** 计量单位字典 */
+    this.getDicts("dy_transaction_unit").then((response) => {
       this.UnitOfMeasurement = response.data;
     });
     /** 征免方式字典 */
-    this.getDicts("PaymentMethodCode").then((response) => {
+    this.getDicts("dy_exemption_method").then((response) => {
       this.ModeOfCollection = response.data;
     });
     /** 原产国字典 */
-    this.getDicts("PaymentMethodCode").then((response) => {
+    this.getDicts("dy_origin").then((response) => {
       this.Country = response.data;
     });
     /** 币制字典 */
-    this.getDicts("PaymentMethodCode").then((response) => {
+    this.getDicts("dy_currency_system").then((response) => {
       this.CurrencySystem = response.data;
     });
     /** 随附单证代码字典 */
-    this.getDicts("PaymentMethodCode").then((response) => {
+    this.getDicts("dy_attached_document_code").then((response) => {
       this.DocumentCode = response.data;
     });
     /** 集装箱规格字典 */
-    this.getDicts("PaymentMethodCode").then((response) => {
+    this.getDicts("dy_container_specification").then((response) => {
       this.ContainerSpecifications = response.data;
     });
     /** 装运港字典 */
-    this.getDicts("PaymentMethodCode").then((response) => {
+    this.getDicts("dy_area_codes").then((response) => {
       this.LoadingPort = response.data;
     });
     /** 运输方式字典 */
-    this.getDicts("PaymentMethodCode").then((response) => {
+    this.getDicts("dy_mode_of_transport").then((response) => {
       this.typeOfShipping = response.data;
     });
     /** 进口口岸字典 */
@@ -841,7 +841,7 @@ export default {
       this.PackageType = response.data;
     });
     /** 起运国字典 */
-    this.getDicts("PaymentMethodCode").then((response) => {
+    this.getDicts("dy_origin").then((response) => {
       this.CountryOfOrigin = response.data;
     });
   },

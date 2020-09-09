@@ -229,17 +229,17 @@
     </el-form>
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="delectempty">新增</el-button>
+      </el-col>
+      <el-col :span="1.5">
         <el-button
-          type="primary"
-          icon="el-icon-plus"
+          type="success"
+          icon="el-icon-edit"
           size="mini"
           @click="addnewcar"
           v-hasPermi="['confirmatory:head:add']"
-        >新 增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" icon="el-icon-edit" size="mini" @click="delectempty">清 空</el-button>
-      </el-col>
+        >暂存</el-button>
+      </el-col>      
     </el-row>
     <el-table :data="AllForm.TransportEquipment" height="300px" v-loading="loading">
       <el-table-column label="序号" align="center" type="index" />
@@ -305,7 +305,7 @@
         <el-table
           class="mb20"
           ref="multipleTable"
-          :data="AllForm.Declaration.routingContryIdText"
+          :data="AllForm.Declaration"
           tooltip-effect="dark"
           style="width: 100%"
           @selection-change="handleSelectionChange">
@@ -397,7 +397,7 @@ export default {
           //是否有预防接种
           vaccinateText:undefined,
           //地区
-          routingContryIdText:[],
+          // routingContryIdText:[],
         },
         AdditionalInformation:{
           //备注
@@ -506,7 +506,7 @@ export default {
   methods: {
     //途径国家或地区新增
     routingContryIdTextAdd(){
-      this.AllForm.Declaration.routingContryIdText.push(this.routingContryIdTextForm);
+      // this.AllForm.Declaration.routingContryIdText.push(this.routingContryIdTextForm);
       this.routingContryIdTextForm={};
       console.log(this.AllForm.Declaration.routingContryIdText);
     },
