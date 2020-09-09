@@ -711,7 +711,7 @@ export default {
         notifyInfo: [],//通知人信息
         undgInfo: [],//危险品联系人信息
         routingCountryCode: [],//途径国家或地区
-        consignee: [],//收货人信息
+        consignee: '',//收货人信息
         consignor: [],//发货人信息
         shopInfoList: [], // 商品项信息
         containerInfoList: [], // 集装箱信息
@@ -959,7 +959,7 @@ export default {
           valueAmount: '',//货物价值
           deconsolidatorId: '',//拆箱人代码
           routingCountryCode: [],//途径国家或地区
-          consignee: [],//收货人信息
+          consignee: '',//收货人信息
           consignor: [],//发货人信息
           shopInfoList: [], // 商品项信息
           containerInfoList:[], // 集装箱
