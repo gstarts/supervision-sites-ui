@@ -837,7 +837,7 @@ export default {
       this.ImportPort = response.data;
     });
     /** 包装种类字典 */
-    this.getDicts("PaymentMethodCode").then((response) => {
+    this.getDicts("sw_packag_type").then((response) => {
       this.PackageType = response.data;
     });
     /** 起运国字典 */
