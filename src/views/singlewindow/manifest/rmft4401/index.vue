@@ -591,6 +591,7 @@ import dangerousInfo from "./dangerousInfo.vue";
 import consignorInfo from "./consignorInfo.vue";
 // 收货人信息
 import receivingInfo from "./receivingInfo.vue";
+import { add } from "@/api/manifest/rmft5402_3402_4401/head";
 
 export default {
   components: {
@@ -737,9 +738,15 @@ export default {
       this.form.declaration.consignmentVO_4401 = this.AForm;
       // this.form.declaration.consignmentVO_4401.borderTransportMeans.transportEquipment = this.trailerList;
       this.form.declaration.consignmentVO_4401.transportEquipment = this.transportEquipmentList;
-      this.reset();
-      console.log(JSON.stringify(this.form));
-      
+      add(this.form).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("新增成功");
+          console.log(JSON.stringify(this.form));
+        } else {
+          this.msgError(response.msg);
+        }
+      });
+      this.reset();      
     },
     // 运输工具新增
     transportMeansAdd() {
