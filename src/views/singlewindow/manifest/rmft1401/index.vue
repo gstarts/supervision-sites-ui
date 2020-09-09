@@ -1012,7 +1012,7 @@ export default {
         this.PaymentMethodCode = response.data
       })
       /** 途经国家 */
-      this.getDicts('routingContry').then((response) => {
+      this.getDicts('sw_routing_contry').then((response) => {
         this.routingContry = response.data
       })
     },

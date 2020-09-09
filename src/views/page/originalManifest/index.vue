@@ -557,7 +557,7 @@
     <!-- 收货人信息 -->
     <receivingInfo :detailVisible='receivingInfo' @close='receivingInfo = false'></receivingInfo>
 
-    
+
   </div>
 </template>
 
@@ -881,7 +881,7 @@ export default {
         this.hg_customs_code = response.data;
       });
       /** 进出境口岸关区代码字典 */
-      this.getDicts("currentCode").then((response) => {
+      this.getDicts("sw_current_code").then((response) => {
         this.currentCode = response.data;
       });
       /** 进出境口岸关区代码字典 */

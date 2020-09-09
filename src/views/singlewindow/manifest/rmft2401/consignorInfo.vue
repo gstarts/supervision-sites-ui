@@ -127,7 +127,7 @@ export default {
     init(){
       this.data = this.$store.state.originalManifest.consignorInfo
       /** 通讯方式类别代码 */
-      this.getDicts("Communication_type").then((response) => {
+      this.getDicts("sw_communication_type").then((response) => {
         this.Communication_type = response.data;
       });
     },

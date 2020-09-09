@@ -207,7 +207,7 @@ export default {
       this.basic.name = this.$store.state.originalManifest.receivingInfo.name
       this.basic.specificName = this.$store.state.originalManifest.receivingInfo.specificName
       /** 通讯方式类别代码 */
-      this.getDicts("Communication_type").then((response) => {
+      this.getDicts("sw_communication_type").then((response) => {
         this.Communication_type = response.data;
       });
     },
@@ -239,7 +239,7 @@ export default {
         this.dataInfo = JSON.parse(JSON.stringify(this.dataInfo))
         this.indexInfo =-1
       }
-      
+
     },
     // 删除
     handleDelete(e,name){
