@@ -193,7 +193,7 @@
         <el-table-column prop="transportContractDocument.transportcontractdocumentId" label="提(运)单号" min-width="120" align="center"/>
         <el-table-column prop="grossVolumeMeasure" label="货物体积(M3)" min-width="150" align="center"/>
         <el-table-column prop="totalPackageQuantity" label="货物总件数" min-width="120" align="center"/>
-        <el-table-column prop="wrapType" label="包装种类" min-width="120" align="center"/>
+        <el-table-column prop="wrapType" label="包装种类" min-width="120" align="center" :formatter="PackageTypeCodeFormat"/>
         <el-table-column prop="goodsMeasure.grossMassMeasure" label="货物总毛重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
@@ -229,7 +229,14 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="包装种类" prop="wrapType">
-              <el-input v-model="consignment.wrapType" placeholder="包装种类" clearable size="small" />
+              <el-select v-model="consignment.wrapType" placeholder="包装种类" clearable size="small" >
+                <el-option
+                  v-for="dict in PaymentMethodCode"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -344,13 +351,18 @@
         </el-row>
       </el-form>
     </el-card>
+    <depParaList :tableVisible="dialogTableVisible" @choose="choose" @close="close"></depParaList>
+    <depParaList2 :tableVisible="dialogTableVisible2" @choose="choose2" @close="close2"></depParaList2>
   </div>
 </template>
 
 <script>
 import depParaListJson from "@/mock/depParaList2.json";
 import { add } from "@/api/manifest/rmft5402_3402_4401/head";
+import depParaList from "./components/depParaList";
+import depParaList2 from "./components/depParaList2";
 export default {
+  components: { depParaListJson, depParaList, depParaList2, add },
   data() {
     return {
       depParaVal: "",
@@ -398,6 +410,10 @@ export default {
       head: {
         functionCode: "2",
         messageType: "MT3402",
+        senderId: "0100000000000_0000000000",
+        receiverId: "EPORT",
+        sendTime: "20170222101740716",
+        version: "1.0"
       },
       // 进出境口岸海关代码/货物运输批次号
       declaration: {
@@ -441,15 +457,27 @@ export default {
       transportEquipment: [],
       dateTimeVal: "",
       data: [],
+      // 包装种类字典
+      PaymentMethodCode: [],
     };
   },
   mounted() {
     // 初始化
     this.init();
   },
+  created() {
+    /** 包装种类代码字典 */
+      this.getDicts('sw_packag_type').then((response) => {
+        this.PaymentMethodCode = response.data
+      })
+  },
   methods: {
     async init() {
       // await this.depParaList()
+    },
+    //托架/拖挂车类型 翻译
+    PackageTypeCodeFormat(row, column) {
+      return this.selectDictLabel(this.PaymentMethodCode, row.wrapType);
     },
     // 提运单新增
     billLading() {
@@ -544,6 +572,7 @@ export default {
     // 组件选择
     choose(row) {
       this.queryParams.postCode = row.codeName;
+      this.declaration.declarationOfficeID = row.codeName;
       this.dialogTableVisible = false;
     },
     // 关闭组件

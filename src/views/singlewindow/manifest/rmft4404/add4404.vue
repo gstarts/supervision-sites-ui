@@ -414,9 +414,10 @@ export default {
         functionCode: "2",
         messageType: "MT4404",
         customsMaster: "",
-        receiverId: "",
-        version: "",
-        senderId: ""
+        senderId: "0100000000000_0000000000",
+        receiverId: "EPORT",
+        sendTime: "20170222101740716",
+        version: "1.0"
       },
       // 进出境口岸海关代码, 货物运输批次号
       declaration:{

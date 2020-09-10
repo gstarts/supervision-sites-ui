@@ -65,7 +65,7 @@
           <el-col :span="6">
             <el-form-item label="进出境口岸海关代码" prop="declarationOfficeID">
               <el-input
-                @focus="$store.dispatch('originalManifest/changeStatus')"
+                @focus="dialogTableVisible = true"
                 v-model="declaration.declarationOfficeID"
                 placeholder="进出境口岸海关代码"
                 clearable
@@ -75,8 +75,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="承运人代码" prop="carrierId">
-              <el-input
-                @focus="dialogTableVisible = true"
+              <el-input                
                 v-model="declaration.carrier.carrierId"
                 placeholder="承运人代码"
                 clearable
@@ -363,7 +362,7 @@
         <el-table-column type="selection" min-width="55" />
         <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
         <el-table-column prop="transportequipmentId" label="托架/拖挂车编号" min-width="120" align="center"/>
-        <el-table-column prop="characteristicCode" label="托架/拖挂车类型" min-width="150" align="center"/>
+        <el-table-column prop="characteristicCode" label="托架/拖挂车类型" min-width="150" align="center" :formatter="Trailerformat" />
         <el-table-column prop="tareWeight" label="托架/拖挂车自重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
@@ -389,12 +388,14 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="托架/拖挂车类型" prop="characteristicCode">
-              <el-input
-                v-model="trailer.characteristicCode"
-                placeholder="托架/拖挂车类型"
-                clearable
-                size="mini"
+              <el-select v-model="trailer.characteristicCode" placeholder="请输入托架/拖挂车类型" size="mini">
+              <el-option
+                v-for="dict in TrailertypeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
               />
+            </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -472,9 +473,9 @@
         <el-table-column type="selection" min-width="55" />
         <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
         <el-table-column prop="transportequipmentId" label="集装箱(器)编号" min-width="120" align="center"/>
-        <el-table-column prop="fullnessCode" label="重箱或者空箱标识" min-width="150" align="center"/>
-        <el-table-column prop="characteristicCode" label="集装箱(器)尺寸类型" min-width="120" align="center"/>
-        <el-table-column prop="supplierPartyTypeCode" label="集装箱(器)来源代码" min-width="120" align="center"/>
+        <el-table-column prop="fullnessCode" label="重箱或者空箱标识" min-width="150" align="center" :formatter="ContainerSelfWeightformat"/>
+        <el-table-column prop="characteristicCode" label="集装箱(器)尺寸类型" min-width="120" align="center" :formatter="ContainerSizeformat"/>
+        <el-table-column prop="supplierPartyTypeCode" label="集装箱(器)来源代码" min-width="120" align="center" :formatter="ContainerSourceformat"/>
         <el-table-column prop="tareWeight" label="集装箱(器)自重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
@@ -500,32 +501,42 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="重箱或者空箱标识" prop="fullnessCode">
-              <el-input
-                v-model="transportEquipment.fullnessCode"
-                placeholder="重箱或者空箱标识"
-                clearable
-                size="mini"
-              />
+              <el-select v-model="transportEquipment.fullnessCode" placeholder="请选择集装箱(器)重箱或者空箱标识" size="mini">
+              <el-option
+                v-for="dict in ContainerSelfWeight"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="集装箱(器)尺寸类型" prop="characteristicCode">
-              <el-input
-                v-model="transportEquipment.characteristicCode"
-                placeholder="集装箱(器)尺寸类型"
-                clearable
-                size="mini"
-              />
+              <el-select v-model="transportEquipment.characteristicCode" placeholder="请选择集装箱(器)尺寸类型" size="mini">
+              <el-option
+                v-for="dict in ContainerSize"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="集装箱(器)来源代码" prop="supplierPartyTypeCode">
-              <el-input
-                v-model="transportEquipment.supplierPartyTypeCode"
-                placeholder="集装箱(器)来源代码"
-                clearable
-                size="mini"
-              />
+              <el-select
+              v-model="transportEquipment.supplierPartyTypeCode"
+              placeholder="请选择集装箱(器)来源代码"
+              size="mini"
+            >
+              <el-option
+                v-for="dict in ContainerSource"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -651,6 +662,10 @@ export default {
       head: {
         functionCode: "2",
         messageType: "MT4401",
+        senderId: "0100000000000_0000000000",
+        receiverId: "EPORT",
+        sendTime: "20170222101740716",
+        version: "1.0"
       },
       // 表头信息表单
       declaration:{
@@ -721,16 +736,62 @@ export default {
       statusOptions: [],
       dateTimeVal: "",
       data: [],
+      //挂车类型翻译
+      TrailertypeOptions: [],
+      // 集装箱(器)来源字典
+      ContainerSource: [],
+      // 集装箱(器)尺寸类型字典
+      ContainerSize: [],
+      // 集装箱（器）重箱或者空箱标识
+      ContainerSelfWeight: [],
     };
   },
   mounted() {
     // 初始化
     this.init();
   },
+  created() {
+    //挂车类型字典翻译
+    this.getDicts("hg_trailer_type").then((response) => {
+      this.TrailertypeOptions = response.data;
+    });
+    /** 集装箱(器)来源字典 */
+    this.getDicts("hg_container_source").then((response) => {
+      this.ContainerSource = response.data;
+    });
+    /** 集装箱(器)尺寸类型字典 */
+    this.getDicts("hg_container_size_type").then((response) => {
+      this.ContainerSize = response.data;
+    });
+    /** 集装箱（器）重箱或者空箱标识 */
+    this.getDicts("hg_container_self_weight").then((response) => {
+      this.ContainerSelfWeight = response.data;
+    });
+  },
   methods: {
     async init() {
       // await this.depParaList()
     },
+    //托架/拖挂车类型 翻译
+    Trailerformat(row, column) {
+      return this.selectDictLabel(this.TrailertypeOptions, row.characteristicCode);
+    },
+    //集装箱(器)来源 翻译
+    ContainerSourceformat(row, column) {
+      return this.selectDictLabel(
+        this.ContainerSource,
+        row.supplierPartyTypeCode
+      );
+    },
+    //集装箱(器)尺寸类型 翻译
+    ContainerSizeformat(row, column) {
+      return this.selectDictLabel(this.ContainerSize, row.characteristicCode);
+    },
+    //集装箱（器）重箱或者空箱标识翻译
+    ContainerSelfWeightformat(row, column) {
+      return this.selectDictLabel(this.ContainerSelfWeight, row.fullnessCode);
+    },
+
     // 整体暂存 = 新增
     AllSave() {
       this.form.head = this.head;
@@ -838,7 +899,8 @@ export default {
     },
     // 组件选择
     choose(row) {
-      this.declaration.carrier.carrierId = row.codeName;
+      // this.declaration.carrier.carrierId = row.codeName;
+      this.declaration.declarationOfficeID = row.codeName;
       this.dialogTableVisible = false;
     },
     // 关闭组件

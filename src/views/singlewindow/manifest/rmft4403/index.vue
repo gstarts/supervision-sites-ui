@@ -383,7 +383,11 @@ export default {
       AllForm:{
         Head:{
           FunctionCode:"2",
-          MessageType:"MT4403"
+          MessageType:"MT4403",
+          senderId: "0100000000000_0000000000",
+          receiverId: "EPORT",
+          sendTime: "20170222101740716",
+          version: "1.0"
         },
         Declaration:{
           //进出境口岸海关代码

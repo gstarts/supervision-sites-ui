@@ -226,22 +226,26 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="运输条款" prop="conditionCode">
-              <el-input
-                v-model="waybill.conditionCode"
-                placeholder="运输条款"
-                clearable
-                size="small"
-              />
+              <el-select v-model="waybill.conditionCode" filterable placeholder="运输条款" size="small">
+                <el-option
+                  v-for="item in shippingTerms"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="运费支付方法" prop="paymentMethodCode">
-              <el-input
-                v-model="waybill.paymentMethodCode"
-                placeholder="运费支付方法"
-                clearable
-                size="small"
-              />
+              <el-select v-model="waybill.paymentMethodCode" filterable placeholder="运费支付方法" size="small">
+                <el-option
+                  v-for="item in freightPaymentMethod"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -280,12 +284,14 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="包装种类" prop="WrapType">
-              <el-input
-                v-model="waybill.WrapType"
-                placeholder="包装种类"
-                clearable
-                size="small"
-              />
+              <el-select v-model="waybill.WrapType" filterable multiple collapse-tags placeholder="包装种类" size="small">
+                <el-option
+                  v-for="item in PaymentMethodCode"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -322,12 +328,14 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="金额类型	" prop="currencyType">
-              <el-input
-                v-model="waybill.currencyType"
-                placeholder="金额类型	"
-                clearable
-                size="small"
-              />
+              <el-select v-model="waybill.currencyType" filterable multiple collapse-tags placeholder="金额类型" size="small">
+                <el-option
+                  v-for="item in currencySystem"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -342,9 +350,9 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <!-- <el-col :span="6">
             <el-form-item label="途径国家或地区" prop="routingCountryCode">
-              <!-- <el-button type="primary" size="mini" @click="regionInfo = true">详细</el-button> -->
+              <el-button type="primary" size="mini" @click="regionInfo = true">详细</el-button>
               <el-select v-model="waybill.routingCountryCode" filterable multiple collapse-tags placeholder="途径国家或地区">
                 <el-option
                   v-for="item in routingContry"
@@ -354,7 +362,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-col :span="6">
             <el-form-item label="收货人信息" prop="consignee">
               <el-button type="primary" size="mini" @click="receivingInfo = true">详细</el-button>
@@ -365,13 +373,14 @@
               <el-button type="primary" size="mini" @click="consignorInfo = true">详细</el-button>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="通知人信息" prop="notifyInfo">
               <el-button type="primary" size="mini" @click='detailVisible = true'>详细</el-button>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row type="flex">
+          
           <el-col :span="6">
             <el-form-item label="危险品联系人信息" prop="undgInfo">
               <el-button type="primary" size="mini" @click="dangerousInfo = true">详细</el-button>
@@ -473,12 +482,14 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="危险品编号" prop="classificationId">
-              <el-input
-                v-model="shopInfo.classificationId"
-                placeholder="危险品编号"
-                clearable
-                size="small"
-              />
+              <el-select v-model="shopInfo.classificationId" filterable placeholder="危险品编号" size="small">
+                <el-option
+                  v-for="item in dangerousGoodsNumber"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -1014,6 +1025,22 @@ export default {
       /** 途经国家 */
       this.getDicts('sw_routing_contry').then((response) => {
         this.routingContry = response.data
+      })
+      /** 运费支付方法 */
+      this.getDicts('sw_freight_payment_method').then((response) => {
+        this.freightPaymentMethod = response.data
+      })
+      /** 金额类型 */
+      this.getDicts('sw_currency_system').then((response) => {
+        this.currencySystem = response.data
+      })
+      /** 运输条款 */
+      this.getDicts('sw_shipping_terms').then((response) => {
+        this.shippingTerms = response.data
+      })
+      /** 危险品编号 */
+      this.getDicts('sw_dangerous_goods_number').then((response) => {
+        this.dangerousGoodsNumber = response.data
       })
     },
     // 通知人信息关闭
