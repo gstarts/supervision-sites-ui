@@ -380,7 +380,7 @@
           </el-col>
         </el-row>
         <el-row type="flex">
-          
+
           <el-col :span="6">
             <el-form-item label="危险品联系人信息" prop="undgInfo">
               <el-button type="primary" size="mini" @click="dangerousInfo = true">详细</el-button>
@@ -1088,6 +1088,7 @@ export default {
       // 隐藏企业代码数据
       basicParams.head = this.listInfo.find(el => el.deptId === basicParams.unitCode)
       basicParams.head.messageType="MT2401"
+      basicParams.head.functionCode="9"
       const subData = {
         basicParams,
         waybillList,
