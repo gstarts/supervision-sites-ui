@@ -91,6 +91,7 @@
                 class="datePicker"
                 v-model="basicParams.loadingLocation.loadingDateTime"
                 type="datetime"
+                value-format="yyyyMMddHHmmss"
                 placeholder="选择日期时间"/>
             </el-form-item>
           </el-col>
@@ -110,6 +111,7 @@
                 class="datePicker"
                 v-model="basicParams.unloadingLocation.arrivalDateTime"
                 type="date"
+                value-format="yyyyMMdd"
                 placeholder="选择日期"/>
             </el-form-item>
           </el-col>
@@ -711,7 +713,7 @@ export default {
         notifyInfo: [],//通知人信息
         undgInfo: [],//危险品联系人信息
         routingCountryCode: [],//途径国家或地区
-        consignee: '',//收货人信息
+        consignee: {},//收货人信息
         consignor: [],//发货人信息
         shopInfoList: [], // 商品项信息
         containerInfoList: [], // 集装箱信息
