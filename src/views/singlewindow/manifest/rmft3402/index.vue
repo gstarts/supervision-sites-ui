@@ -105,17 +105,19 @@
                 size="small"
               />
             </el-form-item>
-          </el-col>
+          </el-col>-->
           <el-col :span="6">
             <el-form-item label="企业代码" prop="postCode" >
-              <el-input
-                v-model="queryParams.postCode"
-                placeholder="企业代码"
-                clearable
-                size="small"
-              />
+              <el-select v-model="head.unitCode" filterable placeholder="企业代码" size="small">
+                <el-option
+                  v-for="(item,index) in listInfo"
+                  :key="index"
+                  :label="item.eName"
+                  :value="item.deptId">
+                </el-option>
+              </el-select>
             </el-form-item>
-          </el-col>-->
+          </el-col>
           <el-col :span="6">
             <el-form-item label="备注" prop="content">
               <el-input
@@ -361,6 +363,7 @@ import depParaListJson from "@/mock/depParaList2.json";
 import { add } from "@/api/manifest/rmft5402_3402_4401/head";
 import depParaList from "./components/depParaList";
 import depParaList2 from "./components/depParaList2";
+import { listInfo } from '@/api/basis/enterpriseInfo'
 export default {
   components: { depParaListJson, depParaList, depParaList2, add },
   data() {
@@ -407,14 +410,7 @@ export default {
       },
 
       // 报文功能代码/报文类型代码
-      head: {
-        functionCode: "2",
-        messageType: "MT3402",
-        senderId: "0100000000000_0000000000",
-        receiverId: "EPORT",
-        sendTime: "20170222101740716",
-        version: "1.0"
-      },
+      head: {},
       // 进出境口岸海关代码/货物运输批次号
       declaration: {
         declarationOfficeID: undefined,
@@ -457,6 +453,8 @@ export default {
       transportEquipment: [],
       dateTimeVal: "",
       data: [],
+      // 企业代码
+      listInfo: [],
       // 包装种类字典
       PaymentMethodCode: [],
     };
@@ -474,6 +472,11 @@ export default {
   methods: {
     async init() {
       // await this.depParaList()
+      //  企业代码
+      listInfo().then(data => {
+        this.listInfo = data.rows
+        console.log(data)
+      })
     },
     //托架/拖挂车类型 翻译
     PackageTypeCodeFormat(row, column) {
@@ -506,9 +509,9 @@ export default {
     },
     // 暂存 = 整体新增
     AllSave() {
-      this.head.functionCode = "2";
-      this.head.messageType = "MT3402";
-      this.form.head = this.head;
+      this.form.head = this.listInfo.find(el => el.deptId === this.head.unitCode)
+      this.form.head.functionCode = "2";
+      this.form.head.messageType = "MT3402";
       this.form.declaration = this.declaration;
       this.form.declaration.borderTransportMeans = this.borderTransportMeans;
       this.form.declaration.unloadingLocation = this.unloadingLocation;

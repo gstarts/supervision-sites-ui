@@ -200,21 +200,20 @@
         </el-col> -->
       </el-row>
       <el-row>
-        <!-- <el-col :span="6">
+        <el-col :span="6">
           <el-form-item label="企业代码" prop="head.contractorcodescc">
-            <el-select v-model="form.head.contractorcodescc" placeholder="请选择"  @change="change">
-            <el-option
-              v-for="item in enterpriseOptions"
-              :key="item.contractorCodeScc"
-              :label="item.contractorCodeScc"
-              :value="item.contractorCodeScc"
-            >
-           </el-option>
-          </el-select>
+            <el-select v-model="head.unitCode" filterable placeholder="企业代码" size="mini">
+                <el-option
+                  v-for="(item,index) in listInfo"
+                  :key="index"
+                  :label="item.eName"
+                  :value="item.deptId">
+                </el-option>
+              </el-select>
           </el-form-item>
-        </el-col> -->
+        </el-col>
 
-        <el-col :span="24">
+        <el-col :span="18">
           <el-form-item label="备注" prop="AdditionalInformation.content">
             <el-input
               v-model="AllForm.AdditionalInformation.content"
@@ -327,7 +326,6 @@ import {
   exportHead,
   addbody,
   edit,
-  init,
   listemptycar,
   emptycarAll,
   updateCode
@@ -382,12 +380,6 @@ export default {
       //最大的对象
       AllForm:{
         Head:{
-          FunctionCode:"2",
-          MessageType:"MT4403",
-          senderId: "0100000000000_0000000000",
-          receiverId: "EPORT",
-          sendTime: "20170222101740716",
-          version: "1.0"
         },
         Declaration:{
           //进出境口岸海关代码
@@ -447,6 +439,7 @@ export default {
           typeCode:undefined,
         },
       // 表单参数
+      head: {},
       form: {
         head:{
           customsmaster:undefined,
@@ -477,9 +470,12 @@ export default {
       },
       rules: {},
       headList: [],
+      // 企业代码
+      listInfo: [],
     };
   },
   created() {
+    this.init();
     // 获取企业信息列表
      this.enterpriseInfo();
     //挂车类型字典翻译
@@ -508,6 +504,14 @@ export default {
     });
   },
   methods: {
+    async init() {
+      // await this.depParaList()
+      //  企业代码
+      listInfo().then(data => {
+        this.listInfo = data.rows
+        console.log(data)
+      })
+    },
     //途径国家或地区新增
     routingContryIdTextAdd(){
       // this.AllForm.Declaration.routingContryIdText.push(this.routingContryIdTextForm);
@@ -566,6 +570,9 @@ export default {
     },
     /** 表头提交按钮 */
     submitForm: function () {
+      this.AllForm.Head = this.listInfo.find(el => el.deptId === this.head.unitCode)
+      this.AllForm.Head.messageType="MT4403"
+      this.AllForm.Head.functionCode = "2";
       console.log(JSON.stringify(this.AllForm));
       //新增后清空表单
       this.AllForm.Declaration={};
