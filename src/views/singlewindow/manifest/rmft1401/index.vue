@@ -239,7 +239,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运费支付方法" prop="paymentMethodCode">              
+            <el-form-item label="运费支付方法" prop="paymentMethodCode">
               <el-select v-model="waybill.paymentMethodCode" filterable placeholder="运费支付方法" size="small">
                 <el-option
                   v-for="item in freightPaymentMethod"
@@ -285,7 +285,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="包装种类" prop="WrapType">              
+            <el-form-item label="包装种类" prop="WrapType">
               <el-select v-model="waybill.WrapType" filterable placeholder="包装种类" size="small">
                 <el-option
                   v-for="item in PaymentMethodCode"
@@ -1089,6 +1089,7 @@ export default {
       // 隐藏企业代码数据
       basicParams.head = this.listInfo.find(el => el.deptId === basicParams.unitCode)
       basicParams.head.messageType="MT1401"
+      basicParams.head.functionCode="9"
       const subData = {
         basicParams,
         waybillList,
