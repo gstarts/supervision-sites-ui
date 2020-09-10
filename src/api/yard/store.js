@@ -51,7 +51,7 @@ export function listStoreCanUse(query) {
 		params: query
 	})
 }
-
+//获取库位使用量信息
 export function getStoreUse(id) {
 	return request({
 		url: '/yard/store/' + id,

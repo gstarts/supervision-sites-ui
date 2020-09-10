@@ -716,7 +716,7 @@ export default {
       
       // 传入数据的内容
       let data = [
-        { 
+        {
           //口岸公司名称
           PortCompanyPreview:'甘其毛都华方海关监管场所称重单',
          //日期
