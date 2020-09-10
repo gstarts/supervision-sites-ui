@@ -184,7 +184,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column prop="num" label="序号" min-width="120" align="center"/>
+        <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
         <el-table-column prop="bordertransportmeansId" label="运输工具代码" min-width="120" align="center"/>
         <el-table-column prop="name" label="运输工具名称" min-width="150" align="center"/>
         <el-table-column prop="arrivalDateTime" label="抵达关境内第一目的港的日期和时间" min-width="200" align="center">
@@ -361,10 +361,10 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column type="index" prop="num" label="序号" min-width="120" />
-        <el-table-column prop="transportequipmentId" label="托架/拖挂车编号" min-width="120" />
-        <el-table-column prop="characteristicCode" label="托架/拖挂车类型" min-width="150" />
-        <el-table-column prop="tareWeight" label="托架/拖挂车自重(KG)" min-width="120" />
+        <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
+        <el-table-column prop="transportequipmentId" label="托架/拖挂车编号" min-width="120" align="center"/>
+        <el-table-column prop="characteristicCode" label="托架/拖挂车类型" min-width="150" align="center"/>
+        <el-table-column prop="tareWeight" label="托架/拖挂车自重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
         class="right mb20"
@@ -470,12 +470,12 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column type="index" prop="num" label="序号" min-width="120" />
-        <el-table-column prop="transportequipmentId" label="集装箱(器)编号" min-width="120" />
-        <el-table-column prop="fullnessCode" label="重箱或者空箱标识" min-width="150" />
-        <el-table-column prop="characteristicCode" label="集装箱(器)尺寸类型" min-width="120" />
-        <el-table-column prop="supplierPartyTypeCode" label="集装箱(器)来源代码" min-width="120" />
-        <el-table-column prop="tareWeight" label="集装箱(器)自重(KG)" min-width="120" />
+        <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
+        <el-table-column prop="transportequipmentId" label="集装箱(器)编号" min-width="120" align="center"/>
+        <el-table-column prop="fullnessCode" label="重箱或者空箱标识" min-width="150" align="center"/>
+        <el-table-column prop="characteristicCode" label="集装箱(器)尺寸类型" min-width="120" align="center"/>
+        <el-table-column prop="supplierPartyTypeCode" label="集装箱(器)来源代码" min-width="120" align="center"/>
+        <el-table-column prop="tareWeight" label="集装箱(器)自重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
         class="right mb20"
@@ -638,7 +638,7 @@ export default {
       form: {
         head:{},
         declaration:{        
-          consignment:{
+          consignmentVO_4401:{
             
             transportEquipment:[], 
           },  
@@ -682,18 +682,18 @@ export default {
           tareWeight: undefined
         },    
       },	
-      AAA:{
+      AForm:{
         borderTransportMeans:{
-        arrivalDateTime: undefined,
-        bordertransportmeansId: undefined,
-        name: undefined,
-        typeCode: undefined,
-        // 驾驶员
-        master:{
-          masterId :undefined,
-          name : undefined        
-        },   
-        transportEquipment: [],    
+          arrivalDateTime: undefined,
+          bordertransportmeansId: undefined,
+          name: undefined,
+          typeCode: undefined,
+          // 驾驶员
+          master:{
+            masterId :undefined,
+            name : undefined        
+          },   
+          transportEquipment: [],    
       },	
       },	
       // 托架/拖挂车信息表单
@@ -734,15 +734,16 @@ export default {
     AllSave() {
       this.form.head = this.head;
       this.form.declaration = this.declaration;
-      this.form.declaration.consignment = this.AAA;
-      // this.form.declaration.consignment.borderTransportMeans.transportEquipment = this.trailerList;
-      this.form.declaration.consignment.transportEquipment = this.transportEquipmentList;
+      this.form.declaration.consignmentVO_4401 = this.AForm;
+      // this.form.declaration.consignmentVO_4401.borderTransportMeans.transportEquipment = this.trailerList;
+      this.form.declaration.consignmentVO_4401.transportEquipment = this.transportEquipmentList;
+      this.reset();
       console.log(JSON.stringify(this.form));
       
     },
     // 运输工具新增
     transportMeansAdd() {
-      this.AAA.borderTransportMeans = this.borderTransportMeans,
+      this.AForm.borderTransportMeans = this.borderTransportMeans,
       this.borderTransportMeansList.push(this.borderTransportMeans); 
       this.borderTransportMeans = {
         arrivalDateTime: undefined,
@@ -756,11 +757,9 @@ export default {
       }
     },  
     // 拖挂车新增
-    trailerAdd() {
-      // this.AAA.borderTransportMeans.transportEquipment.push(this.trailer);
-      console.log(this.AAA)
+    trailerAdd() {      
       this.trailerList.push(this.trailer);
-      this.AAA.borderTransportMeans.transportEquipment = this.trailerList;
+      this.AForm.borderTransportMeans.transportEquipment = this.trailerList;
       this.trailer = {}
     },  
     // 集装箱新增
@@ -768,6 +767,46 @@ export default {
       this.transportEquipmentList.push(this.transportEquipment);
       this.transportEquipment = {}
     },  
+
+    // 表单清空
+    reset() {
+      this.declaration = {
+        declarationOfficeID: undefined,
+        declarationId: undefined ,
+        carrier:{
+          carrierId: undefined,
+        },        
+        representativePerson:{
+          name: undefined,
+        },        
+        additionalInformation:{
+          content: undefined,
+        },
+      },
+      // 运输工具信息表单
+      this.borderTransportMeans = {
+        arrivalDateTime: undefined,
+        bordertransportmeansId: undefined,
+        name: undefined,
+        typeCode: undefined,
+        // 驾驶员
+        master:{
+          masterId :undefined,
+          name : undefined        
+        },   
+        transportEquipment: {
+          transportequipmentId : undefined,
+          characteristicCode: undefined,
+          tareWeight: undefined
+        },    
+      },	
+     
+      this.trailer = {},		
+      this.transportEquipment = {},
+      this.borderTransportMeansList = [],
+      this.transportEquipmentList = [],
+      this.trailerList = []
+    },
 
     // 新增
     handleAdd() {},

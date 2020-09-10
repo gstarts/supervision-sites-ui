@@ -80,8 +80,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="卸货地代码" prop="unloadingLocationId">
-              <el-input v-model="unloadingLocation.unloadingLocationId" placeholder="卸货地代码" clearable size="small" />
+            <el-form-item label="卸货地代码" prop="unloadinglocationId">
+              <el-input v-model="unloadingLocation.unloadinglocationId" placeholder="卸货地代码" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -189,12 +189,12 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column prop="num" label="序号" min-width="120" />
-        <el-table-column prop="transportContractDocument.transportContractDocumentId" label="提(运)单号" min-width="120" />
-        <el-table-column prop="grossVolumeMeasure" label="货物体积(M3)" min-width="150" />
-        <el-table-column prop="totalPackageQuantity" label="货物总件数" min-width="120" />
-        <el-table-column prop="wrapType" label="包装种类" min-width="120" />
-        <el-table-column prop="goodsMeasure.grossMassMeasure" label="货物总毛重(KG)" min-width="120" />
+        <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
+        <el-table-column prop="transportContractDocument.transportcontractdocumentId" label="提(运)单号" min-width="120" align="center"/>
+        <el-table-column prop="grossVolumeMeasure" label="货物体积(M3)" min-width="150" align="center"/>
+        <el-table-column prop="totalPackageQuantity" label="货物总件数" min-width="120" align="center"/>
+        <el-table-column prop="wrapType" label="包装种类" min-width="120" align="center"/>
+        <el-table-column prop="goodsMeasure.grossMassMeasure" label="货物总毛重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
         class="right mb20"
@@ -208,9 +208,9 @@
       <el-form :model="queryParams" ref="queryForm" label-width="160px">
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="提(运)单号" prop="transportContractDocumentId">
+            <el-form-item label="提(运)单号" prop="transportcontractdocumentId">
               <el-input
-                v-model="consignment.transportContractDocument.transportContractDocumentId"
+                v-model="consignment.transportContractDocument.transportcontractdocumentId"
                 placeholder="提(运)单号"
                 clearable
                 size="small"
@@ -317,8 +317,8 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column type="index" prop="num" label="序号" min-width="120" />
-        <el-table-column prop="transportEquipmentId" label="集装箱(器)编号" min-width="120" />
+        <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
+        <el-table-column prop="transportequipmentId" label="集装箱(器)编号" min-width="120" align="center" />
       </el-table>
       <el-pagination
         class="right mb20"
@@ -332,9 +332,9 @@
       <el-form :model="queryParams" ref="queryForm" label-width="160px">
         <el-row type="flex">
           <el-col :span="24">
-            <el-form-item label="集装箱(器)编号" prop="transportEquipmentId">
+            <el-form-item label="集装箱(器)编号" prop="transportequipmentId">
               <el-input
-                v-model="transportEquipmentForm.transportEquipmentId"
+                v-model="transportEquipmentForm.transportequipmentId"
                 placeholder="集装箱(器)编号"
                 clearable
                 size="small"
@@ -349,6 +349,7 @@
 
 <script>
 import depParaListJson from "@/mock/depParaList2.json";
+import { add } from "@/api/manifest/rmft5402_3402_4401/head";
 export default {
   data() {
     return {
@@ -395,8 +396,8 @@ export default {
 
       // 报文功能代码/报文类型代码
       head: {
-        functionCode: undefined,
-        messageType: undefined,
+        functionCode: "2",
+        messageType: "MT3402",
       },
       // 进出境口岸海关代码/货物运输批次号
       declaration: {
@@ -409,7 +410,7 @@ export default {
       },
       // 卸货地表单
       unloadingLocation: {
-        unloadingLocationId: undefined,
+        unloadinglocationId: undefined,
         arrivalDate: undefined,
       },
       // 备注表单
@@ -425,7 +426,7 @@ export default {
         wrapType: undefined,
         // 提（运）单号表单
         transportContractDocument: {
-          transportContractDocumentId: undefined,
+          transportcontractdocumentId: undefined,
         },
         // 货物毛重表单
         goodsMeasure: {
@@ -458,7 +459,7 @@ export default {
         totalPackageQuantity: undefined,
         wrapType: undefined,
         transportContractDocument: {
-          transportContractDocumentId: undefined,
+          transportcontractdocumentId: undefined,
         },
         goodsMeasure: {
           grossMassMeasure: undefined,
@@ -471,14 +472,14 @@ export default {
     containerAdd() {
       this.transportEquipment.push(this.transportEquipmentForm);
       this.transportEquipmentForm = {
-        transportEquipmentId: undefined,
+        transportequipmentId: undefined,
       };
       // console.log(this.transportEquipmentForm)
     },
     // 暂存 = 整体新增
     AllSave() {
       this.head.functionCode = "2";
-      this.head.messageType = "MT5402";
+      this.head.messageType = "MT3402";
       this.form.head = this.head;
       this.form.declaration = this.declaration;
       this.form.declaration.borderTransportMeans = this.borderTransportMeans;
@@ -486,7 +487,37 @@ export default {
       this.form.declaration.additionalInformation = this.additionalInformation;
       this.form.declaration.borderTransportMeans.transportEquipment = this.transportEquipment;
       this.form.declaration.consignment = this.List;
-      console.log(JSON.stringify(this.form));
+      add(this.form).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("新增成功");
+          console.log(JSON.stringify(this.form));
+        } else {
+          this.msgError(response.msg);
+        }
+      });
+      this.reset();
+    },
+
+    // 表单清空
+    reset() {
+      this.declaration = {},
+      this.borderTransportMeans = {},
+      this.unloadingLocation = {},
+      this.additionalInformation = {},
+      this.consignment = {
+        grossVolumeMeasure: undefined,
+        totalPackageQuantity: undefined,
+        wrapType: undefined,
+        transportContractDocument: {
+          transportcontractdocumentId: undefined,
+        },
+        goodsMeasure: {
+          grossMassMeasure: undefined,
+        },
+      },
+      this.transportEquipmentForm = {},
+      this.List = [],
+      this.transportEquipment = []
     },
 
     // 新增
