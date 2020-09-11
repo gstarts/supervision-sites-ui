@@ -77,6 +77,18 @@
               />
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="企业代码" prop="postCode">
+              <el-select v-model="head.unitCode" filterable placeholder="企业代码" size="mini">
+                <el-option
+                  v-for="(item,index) in listInfo"
+                  :key="index"
+                  :label="item.eName"
+                  :value="item.deptId">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
           <!-- <el-col :span="6">
             <el-form-item label="传输企业备案关区" prop="postCode">
               <el-input
@@ -88,12 +100,7 @@
             </el-form-item>
           </el-col>-->
         </el-row>
-        <el-row type="flex">
-          <!-- <el-col :span="6">
-            <el-form-item label="企业代码" prop="postCode">
-              <el-input v-model="queryParams.postCode" placeholder="企业代码" clearable size="mini" />
-            </el-form-item>
-          </el-col>-->
+        <el-row type="flex">          
           <el-col :span="12">
             <el-form-item label="确报传输人名称" prop="name">
               <el-input
@@ -597,6 +604,7 @@ import consignorInfo from "./consignorInfo.vue";
 // 收货人信息
 import receivingInfo from "./receivingInfo.vue";
 import { add } from "@/api/manifest/rmft5402_3402_4401/head";
+import { listInfo } from '@/api/basis/enterpriseInfo'
 
 export default {
   components: {
@@ -653,14 +661,7 @@ export default {
       },
 
       // 报文功能代码/报文类型代码
-      head: {
-        functionCode: "2",
-        messageType: "MT4401",
-        senderId: "0100000000000_0000000000",
-        receiverId: "EPORT",
-        sendTime: "20170222101740716",
-        version: "1.0"
-      },
+      head: {},
       // 表头信息表单
       declaration:{
         declarationOfficeID: undefined,
@@ -730,6 +731,8 @@ export default {
       statusOptions: [],
       dateTimeVal: "",
       data: [],
+      // 企业代码
+      listInfo: [],
       //挂车类型翻译
       TrailertypeOptions: [],
       // 集装箱(器)来源字典
@@ -765,6 +768,11 @@ export default {
   methods: {
     async init() {
       // await this.depParaList()
+      //  企业代码
+      listInfo().then(data => {
+        this.listInfo = data.rows
+        console.log(data)
+      })
     },
     //托架/拖挂车类型 翻译
     Trailerformat(row, column) {
@@ -788,7 +796,9 @@ export default {
 
     // 整体暂存 = 新增
     AllSave() {
-      this.form.head = this.head;
+      this.form.head = this.listInfo.find(el => el.deptId === this.head.unitCode)
+      this.form.head.messageType="MT4401"
+      this.form.head.functionCode = "2";
       this.form.declaration = this.declaration;
       this.form.declaration.consignmentVO_4401 = this.AForm;
       // this.form.declaration.consignmentVO_4401.borderTransportMeans.transportEquipment = this.trailerList;

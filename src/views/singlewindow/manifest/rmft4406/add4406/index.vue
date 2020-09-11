@@ -428,13 +428,6 @@ export default {
       // 【请填写功能名称】表格数据
       // 报文功能代码/报文类型代码
       head: {
-        functionCode: '2',
-        messageType: 'MT4406',
-        customsMaster: '',
-        senderId: '0100000000000_0000000000',
-        receiverId: 'EPORT',
-        sendTime: '20170222101740716',
-        version: '1.0'
       },
       // 进出境口岸海关代码, 货物运输批次号
       declaration: {
@@ -454,15 +447,15 @@ export default {
         loadingLocationId: ''
       },
       // 确报传输人名称
-      representativePerson: {
-        name: ''
+      representativePerson:{
+        name: ""
       },
       //
       borderTransportMeans: {
         // 抵境内第一目的港时间
         arrivalDateTime: '',
         // 运输工具代码
-        borderTransportMeansId: '',
+        borderTransportMeansId: "",
         // 运输工具名称
         name: '',
         // 运输方式代码
@@ -487,7 +480,7 @@ export default {
       },
       governmentProcedure: {
         // 海关货物通关代码
-        currentCode: ''
+        currentCode: ""
       },
       transportEquipment: {
         // 集装箱(器)编号
@@ -605,7 +598,7 @@ export default {
           }
         ],
         contractorCodeScc: [
-          { required: false, message: '请选择企业代码', trigger: 'blur' }
+          { required: false, message: "请选择企业代码", trigger: "blur" },
         ],
         carrierId: [
           { required: false, message: '请输入承运人代码', trigger: 'blur' }
@@ -656,7 +649,7 @@ export default {
       },
       coalRules: {
         transportEquipmenId: [
-          { required: false, message: '请输入集装箱(器)编号', trigger: 'blur' }
+          { required: false, message: "请输入集装箱(器)编号", trigger: "blur" },
         ],
         characteristicCode: [
           {
@@ -682,12 +675,12 @@ export default {
         fullnessCode: [
           {
             required: false,
-            message: '集装箱（器）重箱或者空箱标识',
-            trigger: 'blur'
-          }
-        ]
-      }
-    }
+            message: "集装箱（器）重箱或者空箱标识",
+            trigger: "blur",
+          },
+        ],
+      },
+    };
   },
   created() {
     // this.getList();
@@ -723,10 +716,10 @@ export default {
     getList() {
       this.loading = true
       getInfoHead().then((response) => {
-        this.form.borderTransportMeans.typeCode = '4'
-        this.total = response.total
-        this.loading = false
-      })
+        this.form.borderTransportMeans.typeCode = "4";
+        this.total = response.total;
+        this.loading = false;
+      });
     },
     /** 新增后表单查询 */
     getHeadList() {
@@ -836,7 +829,7 @@ export default {
           declarationId: undefined,
           declarationOfficeId: undefined
         },
-        governmentprocedure: {
+        governmentprocedure:{
           currentCode: undefined
         },
         carrier: {
@@ -845,7 +838,7 @@ export default {
         loadinglocation: {
           loadinglocationId: undefined
         },
-        master: {
+        master:{
           masterId: undefined,
           name: undefined
         },
@@ -877,8 +870,8 @@ export default {
         characteristicCode: undefined,
         supplierPartyTypeCode: undefined,
         tareWeight: undefined,
-        fullnessCode: undefined
-      }
+        fullnessCode: undefined,
+      };
     },
 
     /** 搜索按钮操作 */
@@ -888,8 +881,8 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm('queryForm')
-      this.handleQuery()
+      this.resetForm("queryForm");
+      this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -899,9 +892,9 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset()
-      this.open = true
-      this.title = '添加【请填写功能名称】'
+      this.reset();
+      this.open = true;
+      this.title = "添加【请填写功能名称】";
     },
     // /** 修改按钮操作 */
     // handleUpdate(row) {
@@ -1061,39 +1054,39 @@ export default {
     // },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const pids = row.pid || this.ids
+      const pids = row.pid || this.ids;
       this.$confirm(
         '是否确认删除【请填写功能名称】编号为"' + pids + '"的数据项?',
         '警告',
         {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
         }
       )
-        .then(function() {
-          return delHead(pids)
+        .then(function () {
+          return delHead(pids);
         })
         .then(() => {
-          this.getList()
-          this.msgSuccess('删除成功')
+          this.getList();
+          this.msgSuccess("删除成功");
         })
         .catch(function() {
         })
     },
     /** 导出按钮操作 */
     handleExport() {
-      const queryParams = this.queryParams
-      this.$confirm('是否确认导出所有【请填写功能名称】数据项?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      const queryParams = this.queryParams;
+      this.$confirm("是否确认导出所有【请填写功能名称】数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
       })
-        .then(function() {
-          return exportHead(queryParams)
+        .then(function () {
+          return exportHead(queryParams);
         })
         .then((response) => {
-          this.download(response.msg)
+          this.download(response.msg);
         })
         .catch(function() {
         })

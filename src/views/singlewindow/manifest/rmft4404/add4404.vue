@@ -415,13 +415,8 @@ export default {
       },
       // 报文功能代码/报文类型代码
       head: {
-        functionCode: "2",
-        messageType: "MT4404",
-        customsMaster: "",
-        senderId: "0100000000000_0000000000",
-        receiverId: "EPORT",
-        sendTime: "20170222101740716",
-        version: "1.0"
+        functionCode: "",
+        messageType: "",
       },
       // 进出境口岸海关代码, 货物运输批次号
       declaration:{
@@ -700,10 +695,9 @@ export default {
           if(element.contractorCodeScc===event){
             // 将得到的企业属性赋值到应用的对象中
             this.representativePerson.name=element.stationPersonName;
-            this.head.customsMaster = element.customsMaster;
-            this.head.receiverId = element.receiverId;
-            this.head.version = element.version;
-            this.head.senderId = element.contractorCode + "_" + element.senderId;
+            this.head = element;
+            this.head.functionCode = "2",
+            this.head.messageType = "MT4404";      
           }
         });
 
