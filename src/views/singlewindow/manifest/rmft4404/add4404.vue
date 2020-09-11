@@ -2,20 +2,21 @@
   <div class="app-container">
     <el-row :gutter="10" class="mb20">
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="emptyall">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="mini"  @click="handleAdd">新增
+        </el-button>
+        <el-button type="success" icon="el-icon-edit" size="mini"  @click="handleSave">暂存
+        </el-button>
+        <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete">
+          删除
+        </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          @click="submitForm"
-          v-hasPermi="['confirmatory:head:add']"
-        >暂存</el-button>
-      </el-col>      
         <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode" v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报</el-button>
     </el-row>
     <!-- :rules="headRules" -->
+    <el-card class="mb20">
+      <div slot="header" class="clearfix">
+        <span>基本信息</span>
+      </div>
     <el-form :model="form" ref="form" label-width="190px" size="mini" >
       <el-row>
         <el-col :span="6">
@@ -200,19 +201,21 @@
         </el-col>
       </el-row>
     </el-form>
+    </el-card>
+    <el-card class="mb20">
+      <div slot="header" class="clearfix">
+        <span>托架/拖挂车信息</span>
+      </div>
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="delectempty">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="mini"  @click="handleAdd">新增
+        </el-button>
+        <el-button type="success" icon="el-icon-edit" size="mini"  @click="handleSave">暂存
+        </el-button>
+        <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete">
+          删除
+        </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          @click="addnewcar"
-          v-hasPermi="['confirmatory:head:add']"
-        >暂存</el-button>
-      </el-col>      
     </el-row>
     <el-table :data="headList" height="300px" v-loading="loading">
       <el-table-column label="序号" align="center" type="index" />
@@ -247,6 +250,7 @@
         </el-col>
       </el-row>
     </el-form>
+    </el-card>
   </div>
 </template>
 
@@ -440,7 +444,7 @@ export default {
       representativePerson:{
         name: ""
       },
-      // 
+      //
       borderTransportMeans:{
         // 抵境内第一目的港时间
         arrivalDateTime: "",
@@ -456,7 +460,7 @@ export default {
           masterId: "",
           // 驾驶员名称
           name: ""
-        },        
+        },
       },
       // 托架/拖挂车信息
         transportEquipmentForm:{
@@ -485,12 +489,12 @@ export default {
       // 表单参数
       form: {
         head:{},
-        declaration:{   
+        declaration:{
           additionalInformation:{},
 	        carrier:{},
           loadingLocation:{},
-	        representativePerson:{},    
-          consignment:{},            
+	        representativePerson:{},
+          consignment:{},
         },
       },
       rules: {},
@@ -556,7 +560,7 @@ export default {
         master:{
           masterId: "",
           name: ""
-        },        
+        },
       },
       this.transportEquipmentForm = {},
       this.governmentProcedure = {},
@@ -598,8 +602,8 @@ export default {
       this.form.declaration.loadingLocation = this.loadingLocation;
       this.form.declaration.representativePerson = this.representativePerson;
       this.AForm.governmentProcedure = this.governmentProcedure;
-      this.AForm.borderTransportMeans = this.borderTransportMeans; 
-      this.AForm.borderTransportMeans.transportEquipment = this.headList;  
+      this.AForm.borderTransportMeans = this.borderTransportMeans;
+      this.AForm.borderTransportMeans.transportEquipment = this.headList;
       this.form.declaration.consignment = this.AForm;
       this.reset();
       console.log(JSON.stringify(this.form));
@@ -623,7 +627,7 @@ export default {
       this.headList.push(this.transportEquipmentForm)
       this.transportEquipmentForm = {};
       // console.log(this.headList)
-      
+
       // this.loading = true;
       // this.$refs["Tform"].validate((valid) => {
       //   if (valid) {
@@ -705,7 +709,7 @@ export default {
 
     }
 
-    
+
   },
 };
 </script>

@@ -17,7 +17,7 @@
                 v-model="queryParams.name"
                 placeholder="危险品联系人名称"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -29,7 +29,7 @@
                 v-model="queryParams.communicationId"
                 placeholder="联系号码"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>

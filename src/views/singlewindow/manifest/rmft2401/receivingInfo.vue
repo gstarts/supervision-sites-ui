@@ -18,7 +18,7 @@
                 v-model="basic.consigneeId"
                 placeholder="收货人代码"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -28,7 +28,7 @@
                 v-model="basic.name"
                 placeholder="收货人名称"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -42,7 +42,7 @@
                 v-model="queryParams.communicationId"
                 placeholder="联系号码"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -89,7 +89,7 @@
                 v-model="basic.specificName"
                 placeholder="收货具体联系人名称"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -103,7 +103,7 @@
                 v-model="queryParamsInfo.communicationId"
                 placeholder="联系号码"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>

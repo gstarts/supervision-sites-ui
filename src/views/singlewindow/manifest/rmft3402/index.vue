@@ -23,38 +23,33 @@
         :disabled="btnDisable.delBtn"
         @click="handleDelete"
       >删除</el-button>
-      <el-button
-        type="danger"
-        icon="el-icon-thumb"
-        size="mini"
-        :disabled="btnDisable.repBtn"
-        @click="handleReport"
-      >申报</el-button>
-      <el-button
-        type="primary"
-        icon="el-icon-document-copy"
-        size="mini"
-        :disabled="btnDisable.copyBtn"
-        @click="handleCopy"
-      >复制</el-button>
-      <el-button
-        type="primary"
-        icon="el-icon-refresh"
-        size="mini"
-        :disabled="btnDisable.refBtn"
-        @click="handleRefresh"
-      >刷新</el-button>
+      <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode" v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报</el-button>
+
+      <!--      <el-button-->
+<!--        type="primary"-->
+<!--        icon="el-icon-document-copy"-->
+<!--        size="mini"-->
+<!--        :disabled="btnDisable.copyBtn"-->
+<!--        @click="handleCopy"-->
+<!--      >复制</el-button>-->
+<!--      <el-button-->
+<!--        type="primary"-->
+<!--        icon="el-icon-refresh"-->
+<!--        size="mini"-->
+<!--        :disabled="btnDisable.refBtn"-->
+<!--        @click="handleRefresh"-->
+<!--      >刷新</el-button>-->
     </div>
     <!-- 基本信息 -->
     <el-card class="mb20">
       <div slot="header" class="clearfix">
         <span>基本信息</span>
       </div>
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="货物运输批次号" prop="declarationId">
-              <el-input v-model="declaration.declarationId" placeholder="货物运输批次号" clearable size="small" />
+              <el-input v-model="declaration.declarationId" placeholder="货物运输批次号" clearable  />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -64,7 +59,7 @@
                 v-model="borderTransportMeans.typeCode"
                 placeholder="运输方式代码"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -75,13 +70,13 @@
                 v-model="declaration.declarationOfficeID"
                 placeholder="进出境口岸代码"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="卸货地代码" prop="unloadinglocationId">
-              <el-input v-model="unloadingLocation.unloadinglocationId" placeholder="卸货地代码" clearable size="small" />
+              <el-input v-model="unloadingLocation.unloadinglocationId" placeholder="卸货地代码" clearable  />
             </el-form-item>
           </el-col>
         </el-row>
@@ -89,7 +84,7 @@
           <el-col :span="6">
             <el-form-item label="到达卸货地日期" prop="arrivalDate">
               <el-date-picker
-                class="datePicker"
+                style="width:100%"
                 v-model="unloadingLocation.arrivalDate"
                 type="datetime"
                 placeholder="选择日期时间"
@@ -102,7 +97,7 @@
                 v-model="queryParams.postCode"
                 placeholder="传输企业备案关区"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -112,7 +107,7 @@
                 v-model="queryParams.postCode"
                 placeholder="企业代码"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>-->
@@ -122,7 +117,7 @@
                 v-model="additionalInformation.content"
                 placeholder="备注"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -157,27 +152,27 @@
             :disabled="btnDisable.delBtn"
             @click="handleDelete"
           >删除</el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-thumb"
-            size="mini"
-            :disabled="btnDisable.repBtn"
-            @click="handleReport"
-          >申报</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-document-copy"
-            size="mini"
-            :disabled="btnDisable.copyBtn"
-            @click="handleCopy"
-          >复制</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-refresh"
-            size="mini"
-            :disabled="btnDisable.refBtn"
-            @click="handleRefresh"
-          >刷新</el-button>
+<!--          <el-button-->
+<!--            type="danger"-->
+<!--            icon="el-icon-thumb"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.repBtn"-->
+<!--            @click="handleReport"-->
+<!--          >申报</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-document-copy"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.copyBtn"-->
+<!--            @click="handleCopy"-->
+<!--          >复制</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-refresh"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.refBtn"-->
+<!--            @click="handleRefresh"-->
+<!--          >刷新</el-button>-->
         </el-col>
       </el-row>
       <el-table
@@ -205,7 +200,7 @@
         :page-size="page.size"
         @current-change="currentChange"
       />
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="提(运)单号" prop="transportcontractdocumentId">
@@ -213,7 +208,7 @@
                 v-model="consignment.transportContractDocument.transportcontractdocumentId"
                 placeholder="提(运)单号"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -223,13 +218,13 @@
                 v-model="consignment.grossVolumeMeasure"
                 placeholder="货物体积(M3)"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="包装种类" prop="wrapType">
-              <el-select v-model="consignment.wrapType" placeholder="包装种类" clearable size="small" >
+              <el-select v-model="consignment.wrapType" placeholder="包装种类" clearable  >
                 <el-option
                   v-for="dict in PaymentMethodCode"
                   :key="dict.dictValue"
@@ -245,7 +240,7 @@
                 v-model="consignment.totalPackageQuantity"
                 placeholder="货物总件数"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -257,7 +252,7 @@
                 v-model="consignment.goodsMeasure.grossMassMeasure"
                 placeholder="货物总毛重(KG)"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -292,27 +287,27 @@
             :disabled="btnDisable.delBtn"
             @click="handleDelete"
           >删除</el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-thumb"
-            size="mini"
-            :disabled="btnDisable.repBtn"
-            @click="handleReport"
-          >申报</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-document-copy"
-            size="mini"
-            :disabled="btnDisable.copyBtn"
-            @click="handleCopy"
-          >复制</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-refresh"
-            size="mini"
-            :disabled="btnDisable.refBtn"
-            @click="handleRefresh"
-          >刷新</el-button>
+<!--          <el-button-->
+<!--            type="danger"-->
+<!--            icon="el-icon-thumb"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.repBtn"-->
+<!--            @click="handleReport"-->
+<!--          >申报</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-document-copy"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.copyBtn"-->
+<!--            @click="handleCopy"-->
+<!--          >复制</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-refresh"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.refBtn"-->
+<!--            @click="handleRefresh"-->
+<!--          >刷新</el-button>-->
         </el-col>
       </el-row>
       <el-table
@@ -336,7 +331,7 @@
         :page-size="page.size"
         @current-change="currentChange"
       />
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="24">
             <el-form-item label="集装箱(器)编号" prop="transportequipmentId">
@@ -344,7 +339,7 @@
                 v-model="transportEquipmentForm.transportequipmentId"
                 placeholder="集装箱(器)编号"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>

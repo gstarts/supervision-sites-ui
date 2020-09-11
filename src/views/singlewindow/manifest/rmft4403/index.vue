@@ -2,20 +2,21 @@
   <div class="app-container">
     <el-row :gutter="10" class="mb20">
       <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="submitForm"
-          v-hasPermi="['confirmatory:head:add']"
-        >新 增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <!-- <el-button type="warning" icon="el-icon-edit" size="mini" @click="emptyall">清 空</el-button> -->
+        <el-button type="primary" icon="el-icon-plus" size="mini"  @click="handleAdd">新增
+        </el-button>
+        <el-button type="success" icon="el-icon-edit" size="mini"  @click="handleSave">暂存
+        </el-button>
+        <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete">
+          删除
+        </el-button>
       </el-col>
         <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode" v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报</el-button>
     </el-row>
     <!-- :rules="headRules" -->
+    <el-card class="mb20">
+      <div slot="header" class="clearfix">
+        <span>基本信息</span>
+      </div>
     <el-form :model="AllForm" ref="AllForm" label-width="190px" size="mini" >
       <el-row>
         <el-col :span="6">
@@ -227,18 +228,20 @@
         </el-col>
       </el-row>
     </el-form>
+    </el-card>
+    <el-card class="mb20">
+      <div slot="header" class="clearfix">
+        <span>托架/拖挂车信息</span>
+      </div>
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="delectempty">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          @click="addnewcar"
-          v-hasPermi="['confirmatory:head:add']"
-        >暂存</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="mini"  @click="handleAdd">新增
+        </el-button>
+        <el-button type="success" icon="el-icon-edit" size="mini"  @click="handleSave">暂存
+        </el-button>
+        <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete">
+          删除
+        </el-button>
       </el-col>
     </el-row>
     <el-table :data="AllForm.TransportEquipment" height="300px" v-loading="loading">
@@ -248,7 +251,7 @@
       <el-table-column label="托架/拖挂车自重(kg)" align="center" prop="tareWeight" />
     </el-table>
 <!-- :rules="headRuless" -->
-    <el-form :model="TransportEquipmentForm" ref="TransportEquipmentForm" :inline="true" label-width="180px" >
+    <el-form :model="TransportEquipmentForm" ref="TransportEquipmentForm" :inline="true" label-width="180px"  size="mini">
       <el-row>
         <el-col :span="8">
           <el-form-item label="托架/拖挂车编号" prop="TransportEquipment.equipmentId">
@@ -284,7 +287,7 @@
                 v-model="AllForm.Declaration.routingContryIdText"
                 placeholder="生产批次"
                 clearable
-                size="small"
+
               /> -->
               <el-select v-model="routingContryIdTextForm.routingContryIdText" clearable placeholder="请选择选择国家/地区">
                 <el-option
@@ -314,6 +317,7 @@
         </el-table>
       </el-form>
     </el-dialog>
+    </el-card>
   </div>
 </template>
 
