@@ -22,12 +22,12 @@
       <el-form :model="AllForm" ref="AllForm" label-width="190px" size="mini">
         <el-row>
           <el-col :span="6">
-            <el-form-item label="货物运输批次号" prop="Declaration.declarationId">
+            <el-form-item label="货物运输批次号" >
               <el-input v-model="AllForm.Declaration.declarationId" placeholder="请输入货物运输批次号"/>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运输工具代码" prop="BorderTransportMeans.borderTransportMeansId">
+            <el-form-item label="运输工具代码" >
               <el-input
                 v-model="AllForm.BorderTransportMeans.borderTransportMeansId"
                 placeholder="请输入运输工具代码"
@@ -38,7 +38,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运输工具名称" prop="BorderTransportMeans.name">
+            <el-form-item label="运输工具名称" >
               <el-input
                 v-model="AllForm.BorderTransportMeans.name"
                 placeholder="请输入运输工具名称"
@@ -49,7 +49,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运输方式代码" prop="borderTransportMeans.typeCode">
+            <el-form-item label="运输方式代码" ">
               <el-select
                 v-model="AllForm.BorderTransportMeans.typeCode"
                 disabled
@@ -69,7 +69,7 @@
         </el-row>
         <el-row>
           <el-col :span="6">
-            <el-form-item label="进出境口岸海关代码" prop="Declaration.declarationOfficeId">
+            <el-form-item label="进出境口岸海关代码" >
               <el-select
                 v-model="AllForm.Declaration.declarationOfficeId"
                 placeholder="请选择进出境口岸海关代码"
@@ -85,7 +85,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="承运人代码" prop="Carrier.carrierId">
+            <el-form-item label="承运人代码" >
               <el-input
                 v-model="AllForm.Carrier.carrierId"
                 placeholder="请输入承运人代码"
@@ -95,7 +95,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="驾驶员代码" prop="Master.masterId">
+            <el-form-item label="驾驶员代码" >
               <el-input
                 v-model="AllForm.Master.masterId"
                 placeholder="请输入驾驶员代码"
@@ -106,7 +106,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="驾驶员名称" prop="Master.name">
+            <el-form-item label="驾驶员名称">
               <el-input
                 v-model="AllForm.Master.name"
                 placeholder="请输入驾驶员名称"
@@ -119,7 +119,7 @@
         </el-row>
         <el-row>
           <el-col :span="6">
-            <el-form-item label="司乘人员人数" prop="Declaration.numStaffMember">
+            <el-form-item label="司乘人员人数" >
               <el-input
                 v-model="AllForm.Declaration.numStaffMember"
                 placeholder="请输入司乘人员人数"
@@ -130,7 +130,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="健康状态" prop="Declaration.healthStatusText">
+            <el-form-item label="健康状态" >
               <el-select
                 v-model="AllForm.Declaration.healthStatusText"
                 placeholder="请选择健康状态"
@@ -146,7 +146,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="是否有预防接种" prop="Declaration.vaccinateText">
+            <el-form-item label="是否有预防接种" >
               <el-select
                 v-model="AllForm.Declaration.vaccinateText"
                 placeholder="请选择是否有预防接种"
@@ -167,7 +167,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="抵境内第一目的港时间" prop="BorderTransportMeans.arrivalDateTime">
+            <el-form-item label="抵境内第一目的港时间" >
               <el-date-picker
                 v-model="AllForm.BorderTransportMeans.arrivalDateTime"
                 style="width:100%"
@@ -178,7 +178,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="确报传输人名称" prop="RepresentativePerson.name">
+            <el-form-item label="确报传输人名称" >
               <el-input
                 v-model="AllForm.RepresentativePerson.name"
                 :disabled="true"
@@ -204,7 +204,7 @@
         </el-row>
         <el-row>
           <el-col :span="6">
-            <el-form-item label="企业代码" prop="head.contractorcodescc">
+            <el-form-item label="企业代码" >
               <el-select v-model="head.unitCode" filterable placeholder="企业代码" size="mini">
                 <el-option
                   v-for="(item,index) in listInfo"
@@ -217,7 +217,7 @@
           </el-col>
 
           <el-col :span="18">
-            <el-form-item label="备注" prop="AdditionalInformation.content">
+            <el-form-item label="备注" >
               <el-input
                 v-model="AllForm.AdditionalInformation.content"
                 placeholder="请输入备注"
@@ -257,12 +257,12 @@
                size="mini">
         <el-row>
           <el-col :span="8">
-            <el-form-item label="托架/拖挂车编号" prop="TransportEquipment.equipmentId">
+            <el-form-item label="托架/拖挂车编号">
               <el-input v-model="TransportEquipmentForm.equipmentId" placeholder="请输入托架/拖挂车编号" size="mini"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="托架/拖挂车类型" prop="TransportEquipment.typeCode">
+            <el-form-item label="托架/拖挂车类型" >
               <el-select v-model="TransportEquipmentForm.typeCode" placeholder="请输入托架/拖挂车类型">
                 <el-option
                   v-for="dict in TrailertypeOptions"
@@ -285,13 +285,7 @@
         <el-form :model="routingContryIdTextForm" ref="routingContryIdTextForm" class="mb20" label-width="100px">
           <el-row>
             <el-col :span="12">
-              <el-form-item label="选择国家/地区" prop="routingContryIdTextForm.routingContryIdText">
-                <!-- <el-input
-                  v-model="AllForm.Declaration.routingContryIdText"
-                  placeholder="生产批次"
-                  clearable
-
-                /> -->
+              <el-form-item label="选择国家/地区" >
                 <el-select v-model="routingContryIdTextForm.routingContryIdText" clearable placeholder="请选择选择国家/地区">
                   <el-option
                     v-for="item in routingContryIdTextOptions"
