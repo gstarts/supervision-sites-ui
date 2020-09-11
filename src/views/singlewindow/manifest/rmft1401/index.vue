@@ -639,6 +639,10 @@ export default {
       consignorInfo: false,
       receivingInfo: false,
       gridData: [],
+      currencySystem:[],
+      shippingTerms:[],
+      dangerousGoodsNumber:[],
+      freightPaymentMethod:[],
       page: {
         num: 1,
         size: 10,
@@ -1065,6 +1069,10 @@ export default {
           this.basicParams.voyageNo = data.msg
         }
       })
+    },
+    /** 申报按钮*/
+    updateStatementCode(){
+
     },
     saveList() {
       const { basicParams, waybillList, shopInfoList, containerInfoList } = this

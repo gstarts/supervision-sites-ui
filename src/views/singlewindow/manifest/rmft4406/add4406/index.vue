@@ -14,7 +14,7 @@
     <el-row :gutter="10" class="mb8">
       <el-button type="primary" icon="el-icon-plus" size="mini"  @click="handleAdd">新增
       </el-button>
-      <el-button type="success" icon="el-icon-edit" size="mini"  @click="handleSave">暂存
+      <el-button type="success" icon="el-icon-edit" size="mini"  @click="addHeadForm">暂存
       </el-button>
       <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete">
         删除
@@ -236,7 +236,7 @@
       </div>
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
-          <el-button type="primary" icon="el-icon-plus" size="mini"  @click="handleAdd">新增
+          <el-button type="primary" icon="el-icon-plus" size="mini"  @click="submitBodyForm">新增
           </el-button>
           <el-button type="success" icon="el-icon-edit" size="mini"  @click="handleSave">暂存
           </el-button>
@@ -246,8 +246,8 @@
         </el-col>
       </el-row>
 
-      <el-table v-loading="loading" :data="headList" height="180px">
-        <!-- <el-table-column type="selection" width="55" align="center" /> -->
+      <el-table v-loading="loading" :data="headList" height="180px"  @selection-change="shopInfoSelectionChange">
+         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="序号" align="center" type="index"/>
         <el-table-column label="托架/拖挂车编号" align="center" prop="transportEquipmentId"/>
         <el-table-column label="托架/拖挂车类型" align="center" prop="characteristicCode" :formatter="TrailerFormat"/>
@@ -302,11 +302,11 @@
     </el-col>-->
     <el-card class="mb20">
       <div slot="header" class="clearfix">
-        <span>托架/拖挂车信息</span>
+        <span>集装箱信息</span>
       </div>
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
-          <el-button type="primary" icon="el-icon-plus" size="mini"  @click="handleAdd">新增
+          <el-button type="primary" icon="el-icon-plus" size="mini"  @click="coalBodyForm">新增
           </el-button>
           <el-button type="success" icon="el-icon-edit" size="mini"  @click="handleSave">暂存
           </el-button>
@@ -315,8 +315,8 @@
           </el-button>
         </el-col>
       </el-row>
-      <el-table v-loading="loading" :data="coalList" height="180px">
-        <!-- <el-table-column type="selection" width="55" align="center" /> -->
+      <el-table v-loading="loading" :data="coalList" height="180px" @selection-change="shopInfoSelectionChange">
+         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="序号" align="center" type="index"/>
         <el-table-column label="集装箱(器)编号" align="center" prop="transportEquipmentId"/>
         <el-table-column
@@ -559,27 +559,10 @@ export default {
       },
       // 挂车表单参数
       Tform: {
-        //   pageNum: 1,
-        //   pageSize: 10,
-        //   equipmentId: undefined,
-        //   characteristicCode: undefined,
-        //   fullnessCode: undefined,
-        //   manifestDeclarationId: undefined,
-        //   supplierPartyTypeCode: undefined,
-        //   equipmentType: undefined,
-        //   typeCode: undefined,
-        //   tareWeight: undefined
+
       },
       // 集装箱表单参数
       Cform: {
-        //   equipmentId: undefined,
-        //   characteristicCode: undefined,
-        //   fullnessCode: undefined,
-        //   manifestDeclarationId: undefined,
-        //   supplierPartyTypeCode: undefined,
-        //   equipmentType: undefined,
-        //   typeCode: undefined,
-        //   tareWeight: undefined
       },
       CID: undefined,
       TID: undefined,
@@ -751,19 +734,12 @@ export default {
         this.enterpriseOptions = response.rows
       })
     },
-    // /** 挂车行点击按钮 */
-    // doubleClick(row, column, cell, event) {
-    //   getTransportDetail(row.id).then((res) => {
-    //     this.Tform = res.data;
-    //   });
-    // },
-    // /**集装箱点击按钮 */
-    // doubleClickOne(row, column, cell, event) {
-    //   getCoalDetail(row.id).then((res) => {
-    //     this.cFrom = res.data;
-    //   });
-    // },
+    /** 修改*/
+    handleSave(){},
+    shopInfoSelectionChange(){
+      console.log(data)
 
+    },
     // 取消按钮
     cancel() {
       this.open = false
@@ -896,28 +872,7 @@ export default {
       this.open = true;
       this.title = "添加【请填写功能名称】";
     },
-    // /** 修改按钮操作 */
-    // handleUpdate(row) {
-    //   this.reset();
-    //   const pid = row.pid || this.ids;
-    //   getInfoHead(pid).then((response) => {
-    //     this.form = response.data;
-    //     this.open = true;
-    //     this.title = "修改【请填写功能名称】";
-    //   });
-    // },
-    // /** 修改表头信息*/
-    // submitHeadForm: function() {
-    //         updateHead(this.form).then(response => {
-    //           if (response.code === 200) {
-    //             this.msgSuccess("修改成功");
-    //             this.getList();
-    //           } else {
-    //             this.msgError(response.msg);
-    //           }
-    //         });
 
-    // },
     declare: function() {
       updateDeclare(this.form).then((response) => {
         if (response.code === 200) {
@@ -943,115 +898,20 @@ export default {
       this.reset()
       console.log(JSON.stringify(this.form))
 
-// form: {
-//         head:{},
-//         declaration:{
-//           additionalInformation:{},
-// 	        carrier:{},
-//           loadingLocation:{},
-// 	        representativePerson:{},
-//           consignment:{
-//             governmentProcedure:{},
-//             transportEquipment:[],
-//           },
-//         },
-//       },
-
-      // this.$refs["form"].validate((valid) => {
-      //   if (valid) {
-      //     if (this.form.messageId != undefined) {
-      //       updateHead(this.form).then((response) => {
-      //         if (response.code === 200) {
-      //           this.msgSuccess("修改成功");
-      //           // this.getHeadList();
-      //         } else {
-      //           this.msgError(response.msg);
-      //         }
-      //       });
-      //     } else {
-      //       addHead(this.form).then((response) => {
-      //         if (response.code === 200) {
-      //           this.msgSuccess(response.msg);
-      //           this.TID = response.data.Tid;
-      //           // this.CID = response.data.Cid;
-      //           this.form.head.id = response.data.Hid;
-      //           this.form.head.messageId = response.data.Mid;
-      //           // this.getHeadList();
-      //         } else {
-      //           this.msgError(response.msg);
-      //         }
-      //       });
-      //     }
-      //   }
-      // });
     },
     /** 挂车表体提交按钮 */
     submitBodyForm: function() {
       this.headList.push(this.transportEquipmentForm)
       this.transportEquipmentForm = {}
-      // this.$refs["Tform"].validate((valid) => {
-      //   this.Tform.manifestDeclarationId = this.TID;
-      //   this.Tform.equipmentType = "2";
-      //   if (valid) {
-      //     updateTransport(this.Tform).then((response) => {
-      //       if (response.code == 200) {
-      //         this.msgSuccess("新增成功");
-      //         this.getListsmt();
-      //         this.clearBody();
-      //       } else {
-      //         this.msgError(response.msg);
-      //       }
-      //     });
-      //   }
-      // });
     },
 
     /** 集装箱表体提交按钮 */
     coalBodyForm: function() {
       this.coalList.push(this.transportEquipment)
       this.transportEquipment = {}
-      // this.$refs["Cform"].validate((valid) => {
-      //   this.Cform.manifestDeclarationId = this.TID;
-      //   this.Cform.equipmentType = "1";
-      //   if (valid) {
-      //     updateTransport(this.Cform).then((response) => {
-      //       if (response.code === 200) {
-      //         this.msgSuccess("新增成功");
-      //         this.getListCoal();
-      //         this.clearCoalBody();
-      //       } else {
-      //         this.msgError(response.msg);
-      //       }
-      //     });
-      //   }
-      // });
     },
 
-    // /** 挂车修改按钮 */
-    // submittForm: function () {
-    //   updateTransport(this.Tform).then((response) => {
-    //     if (response.code === 200) {
-    //       this.msgSuccess("修改成功");
-    //       // this.reset();
-    //       this.getListsmt();
-    //       this.clearBody();
-    //     } else {
-    //       this.msgError(response.msg);
-    //     }
-    //   });
-    // },
-    // /**集装箱修改按钮 */
-    // submitcForm: function () {
-    //   updateCoal(this.cFrom).then((response) => {
-    //     if (response.code === 200) {
-    //       this.msgSuccess("修改成功");
-    //       this.getListCoal();
-    //       this.clearCoalBody();
-    //     } else {
-    //       this.msgError(response.msg);
-    //     }
-    //   });
-    // },
+
     /** 删除按钮操作 */
     handleDelete(row) {
       const pids = row.pid || this.ids;
@@ -1105,18 +965,7 @@ export default {
         }
       })
     }
-    // /**页面初始化数据 */
-    // initialization() {
-    //   init().then(response => {
-    //     this.form = response.data;
-    //     this.coalList = response.data;
-    //     this.headList = response.data
-    //     // this.queryParams.id = this.form.id;
-    //     // this.smallform.headId = this.form.id;
-    //     // this.queryParams.headId = this.form.id;
-    //     // this.form.ieDirection = "I";
-    //   });
-    // }
+
   }
 }
 </script>

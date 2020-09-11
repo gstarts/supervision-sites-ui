@@ -653,6 +653,10 @@ export default {
       consignorInfo: false,
       receivingInfo: false,
       gridData: [],
+      shippingTerms:[],
+      freightPaymentMethod:[],
+      currencySystem:[],
+      dangerousGoodsNumber:[],
       page: {
         num: 1,
         size: 10,
@@ -1080,6 +1084,7 @@ export default {
         }
       })
     },
+    updateStatementCode(){},
     saveList() {
       const { basicParams, waybillList } = this
       // 隐藏企业代码数据

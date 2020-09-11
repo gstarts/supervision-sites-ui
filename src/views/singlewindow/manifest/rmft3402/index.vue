@@ -581,6 +581,8 @@ export default {
     numFun() {
       console.log(123);
     },
+    /** 申报按钮 */
+    updateStatementCode(){},
     // 请求接口
     depParaList() {
       return new Promise((resolve) => {

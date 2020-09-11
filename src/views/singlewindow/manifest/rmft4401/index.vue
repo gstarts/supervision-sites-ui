@@ -6,21 +6,18 @@
         type="primary"
         icon="el-icon-plus"
         size="mini"
-        :disabled="btnDisable.addBtn"
         @click="handleAdd"
       >新增</el-button>
       <el-button
         type="success"
         icon="el-icon-edit"
         size="mini"
-        :disabled="btnDisable.saveBtn"
         @click="AllSave"
       >暂存</el-button>
       <el-button
         type="danger"
         icon="el-icon-delete"
         size="mini"
-        :disabled="btnDisable.delBtn"
         @click="handleDelete"
       >删除</el-button>
       <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode" v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报</el-button>
@@ -313,21 +310,18 @@
             type="primary"
             icon="el-icon-plus"
             size="mini"
-            :disabled="btnDisable.addBtn"
             @click="trailerAdd"
           >新增</el-button>
           <el-button
             type="success"
             icon="el-icon-edit"
             size="mini"
-            :disabled="btnDisable.saveBtn"
             @click="handleSave"
           >暂存</el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
             size="mini"
-            :disabled="btnDisable.delBtn"
             @click="handleDelete"
           >删除</el-button>
 <!--          <el-button-->
@@ -804,7 +798,6 @@ export default {
       this.form.head.functionCode = "2";
       this.form.declaration = this.declaration;
       this.form.declaration.consignmentVO_4401 = this.AForm;
-      // this.form.declaration.consignmentVO_4401.borderTransportMeans.transportEquipment = this.trailerList;
       this.form.declaration.consignmentVO_4401.transportEquipment = this.transportEquipmentList;
       add(this.form).then((response) => {
         if (response.code === 200) {
@@ -875,7 +868,6 @@ export default {
           tareWeight: undefined
         },
       },
-
       this.trailer = {},
       this.transportEquipment = {},
       this.borderTransportMeansList = [],
@@ -888,9 +880,6 @@ export default {
     // 暂存
     handleSave() {
       console.log("保存");
-      // this.$saveStore("a","123")
-      // this.$getStore('a')
-      // this.$delStore("a")
     },
     // 删除
     handleDelete() {},
@@ -926,6 +915,8 @@ export default {
     numFun() {
       console.log(123);
     },
+    /** 申报*/
+    updateStatementCode(){},
     // 请求接口
     depParaList() {
       return new Promise((resolve) => {
