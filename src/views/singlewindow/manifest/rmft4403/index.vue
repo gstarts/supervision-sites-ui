@@ -49,12 +49,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运输方式代码" ">
+            <el-form-item label="运输方式代码">
               <el-select
                 v-model="AllForm.BorderTransportMeans.typeCode"
                 disabled
                 placeholder="系统反填"
-                style="width:100%"
               >
                 <el-option
                   :disabled="true"
