@@ -45,7 +45,7 @@
       <div slot="header" class="clearfix">
         <span>基本信息</span>
       </div>
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="货物运输批次号" prop="declarationId">
@@ -59,7 +59,6 @@
                 v-model="borderTransportMeans.typeCode"
                 placeholder="运输方式代码"
                 clearable
-
               />
             </el-form-item>
           </el-col>
@@ -70,13 +69,12 @@
                 v-model="declaration.declarationOfficeID"
                 placeholder="进出境口岸代码"
                 clearable
-
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="卸货地代码" prop="unloadinglocationId">
-              <el-input v-model="unloadingLocation.unloadinglocationId" placeholder="卸货地代码" clearable size="small" />
+              <el-input v-model="unloadingLocation.unloadinglocationId" placeholder="卸货地代码" clearable />
             </el-form-item>
           </el-col>
         </el-row>
@@ -84,7 +82,7 @@
           <el-col :span="6">
             <el-form-item label="到达卸货地日期" prop="arrivalDate">
               <el-date-picker
-                style="width:100%"
+                class="datePicker"
                 v-model="unloadingLocation.arrivalDate"
                 type="datetime"
                 placeholder="选择日期时间"
@@ -97,13 +95,12 @@
                 v-model="queryParams.postCode"
                 placeholder="传输企业备案关区"
                 clearable
-                size="small"
               />
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-col :span="6">
             <el-form-item label="企业代码" prop="postCode" >
-              <el-select v-model="head.unitCode" filterable placeholder="企业代码" size="small">
+              <el-select v-model="head.unitCode" filterable placeholder="企业代码" >
                 <el-option
                   v-for="(item,index) in listInfo"
                   :key="index"
@@ -119,7 +116,6 @@
                 v-model="additionalInformation.content"
                 placeholder="备注"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
@@ -196,6 +192,7 @@
       <el-pagination
         class="right mb20"
         background
+        v-show="page.total>0"
         layout="prev, pager, next"
         :current-page="page.num"
         :total="page.total"
@@ -210,7 +207,6 @@
                 v-model="consignment.transportContractDocument.transportcontractdocumentId"
                 placeholder="提(运)单号"
                 clearable
-
               />
             </el-form-item>
           </el-col>
@@ -220,7 +216,6 @@
                 v-model="consignment.grossVolumeMeasure"
                 placeholder="货物体积(M3)"
                 clearable
-
               />
             </el-form-item>
           </el-col>
@@ -242,7 +237,6 @@
                 v-model="consignment.totalPackageQuantity"
                 placeholder="货物总件数"
                 clearable
-
               />
             </el-form-item>
           </el-col>
@@ -254,7 +248,6 @@
                 v-model="consignment.goodsMeasure.grossMassMeasure"
                 placeholder="货物总毛重(KG)"
                 clearable
-
               />
             </el-form-item>
           </el-col>
@@ -325,6 +318,7 @@
         <el-table-column prop="transportequipmentId" label="集装箱(器)编号" min-width="120" align="center" />
       </el-table>
       <el-pagination
+        v-show="page.total>0"
         class="right mb20"
         background
         layout="prev, pager, next"
@@ -341,7 +335,6 @@
                 v-model="transportEquipmentForm.transportequipmentId"
                 placeholder="集装箱(器)编号"
                 clearable
-
               />
             </el-form-item>
           </el-col>
@@ -610,6 +603,7 @@ export default {
   text-align: right;
 }
 .datePicker {
-  width: auto !important;
+  width: 100% !important;
 }
+.el-select{width: 100%}
 </style>

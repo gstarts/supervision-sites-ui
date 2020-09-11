@@ -100,7 +100,7 @@
             </el-form-item>
           </el-col>-->
         </el-row>
-        <el-row type="flex">          
+        <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="确报传输人名称" prop="name">
               <el-input
@@ -196,6 +196,7 @@
         <el-table-column prop="master.name" label="驾驶员名称" min-width="120" align="center"/>
       </el-table>
       <el-pagination
+        v-show="page.total>0"
         class="right mb20"
         background
         layout="prev, pager, next"
@@ -367,6 +368,7 @@
         <el-table-column prop="tareWeight" label="托架/拖挂车自重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
+        v-show="page.total>0"
         class="right mb20"
         background
         layout="prev, pager, next"
@@ -480,6 +482,7 @@
         <el-table-column prop="tareWeight" label="集装箱(器)自重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
+        v-show="page.total>0"
         class="right mb20"
         background
         layout="prev, pager, next"
