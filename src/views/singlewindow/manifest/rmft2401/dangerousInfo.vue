@@ -17,7 +17,7 @@
                 v-model="queryParams.name"
                 placeholder="危险品联系人名称"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -29,7 +29,7 @@
                 v-model="queryParams.communicationId"
                 placeholder="联系号码"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -116,7 +116,7 @@ export default {
     init(){
       this.data = this.$store.state.originalManifest.dangerousInfo
       /** 通讯方式类别代码 */
-      this.getDicts("Communication_type").then((response) => {
+      this.getDicts("sw_communication_type").then((response) => {
         this.Communication_type = response.data;
       });
     },

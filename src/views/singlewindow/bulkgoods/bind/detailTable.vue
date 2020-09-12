@@ -153,7 +153,7 @@
             <el-input v-model="form.contaweight" placeholder="请输入集装箱重量" />
           </el-form-item>
         </el-col>
-       
+
         <el-col :span="18">
           <el-form-item label="备注" prop="remark">
             <el-input v-model="form.remark" placeholder="请输入备注信息" />
@@ -315,7 +315,7 @@
       </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer">
-   
+
     </div>
     <el-dialog :title="title" :visible.sync="open" width="300px">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px" size="small">
@@ -345,8 +345,8 @@ import {
   getWaybillBody,
   addWaybill,
   autoAllocation,
-  subReject
-} from "@/api/bulkgoods/waybill/declare";
+  subReject, getsiteBody
+} from '@/api/bulkgoods/waybill/declare'
 
 
 export default {
@@ -359,6 +359,8 @@ export default {
       tables: [],
       // 总条数
       total: 0,
+      //
+      title:undefined,
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -371,6 +373,8 @@ export default {
       ids: [],
       //绑定介质类型
       mediumTypeOptions: [],
+      // 单证状态
+      feedbackOptions:[],
       // 绑定对戏类型
       bindobjtypeOptions: [],
       //进出口标志
@@ -475,7 +479,7 @@ export default {
     },
     /**驳回按钮 */
     handleReject(){
-      // 打开对话框 
+      // 打开对话框
       this.open=true
     },
     // 取消按钮
@@ -500,7 +504,7 @@ export default {
 
         }
        })
-      
+
     },
     // 绑定介质类型翻译
     mediumTypeFormat(row, column) {
@@ -516,11 +520,11 @@ export default {
     },
     bindobjtypeFormatter(row, column) {
       return this.selectDictLabel(this.bindobjtypeOptions, row.bindobjtype);
-    },    
+    },
     /** 行点击按钮 */
-    doubleClick(row, column, cell, event) {
+    doubleClick(row) {
       if (row.id != undefined) {
-        getWaybillBody(row.id).then(res => {
+        getsiteBody(row.id).then(res => {
           if (res.code === 200) {
             this.bodyform = res.data;
           }

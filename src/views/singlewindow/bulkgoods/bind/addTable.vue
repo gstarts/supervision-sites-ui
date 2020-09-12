@@ -26,7 +26,7 @@
       <el-row v-if="show==true">
         <el-col :span="6">
          <el-form-item label="报关企业"  >
-            <el-select  placeholder="请选择报关企业信息" @change="change" >
+            <el-select v-model="form.enterpriseId"  placeholder="请选择报关企业信息" @change="change" >
               <el-option
                 v-for="dict in enterpriseOptions"
                 :key="dict.contractorCodeScc"
@@ -95,7 +95,6 @@
             <el-select
               v-model="form.bindkeytype"
               placeholder="请选择绑定介质类型"
-             
             >
               <el-option
                 v-for="dict in mediumTypeOptions"
@@ -402,6 +401,7 @@ import {
 import {listInfo} from "@/api/basis/enterpriseInfo";
 
 import {listStore} from "@/api/yard/store"
+import { listStoreCanUse } from '@/api/place/store'
 export default {
    name: "BindEdit",
   data() {
@@ -429,7 +429,7 @@ export default {
         callback();
       }
     };
-  
+
     /** 校验绑定对象ID */
     var validateBindobjid = (rule, value, callback) => {
       const toNumberVal = Number(value);
@@ -521,8 +521,7 @@ export default {
       },
       // 表头表单校验
       rules: {},
-      // 表体表单校验
-      bodyRules: {},
+
       // 自动分配时表头信息是否插入
       insertFlag: false,
 
@@ -551,7 +550,7 @@ export default {
         contaweight: [{ required: true, message: "请输入", trigger: "blur" }],
         bayonetrdcode: [{ required: true, message: "请输入", trigger: "blur" }]
       },
-
+      // 表体表单校验
       bodyRules: {
         // 绑定对象类型
         bindobjtype: [{ required: true, message: "请选择", trigger: "blur" }],
@@ -571,50 +570,52 @@ export default {
     };
   },
 
-  created() {
+  created: function() {
     // 报关企业
     this.enterpriseInfo()
-    this.getDicts("station_medium_type").then(response => {
-      this.mediumTypeOptions = response.data;
-    });
-    this.getDicts("station_bindobjt_type").then(response => {
-      this.bindobjtypeOptions = response.data;
-    });
-    this.getDicts("station_IE_flag").then(response => {
-      this.importExitOptions = response.data;
-    });
-    this.getDicts("station_via_type").then(response => {
-      this.viaOptions = response.data;
-    });
-    this.getDicts("station_transport_fashion").then(response => {
-      this.shipTypeOptions = response.data;
-    });
-    this.getDicts("station_business_type").then(response => {
-      this.businessTypeOptions = response.data;
-    });
-    this.getDicts("station_IO_flag").then(response => {
-      this.inOutOptions = response.data;
-    });
-    this.getDicts("station_waybill_type").then(response => {
-      this.waybillTypeOptions = response.data;
-    });
-    this.getDicts("station_declear_status").then(response => {
-      this.feedbackOptions = response.data;
-    });
+    this.getDicts('station_medium_type').then(response => {
+      this.mediumTypeOptions = response.data
+    })
+    this.getDicts('station_bindobjt_type').then(response => {
+      this.bindobjtypeOptions = response.data
+    })
+    this.getDicts('station_IE_flag').then(response => {
+      this.importExitOptions = response.data
+    })
+    this.getDicts('station_via_type').then(response => {
+      this.viaOptions = response.data
+    })
+    this.getDicts('station_transport_fashion').then(response => {
+      this.shipTypeOptions = response.data
+    })
+    this.getDicts('station_business_type').then(response => {
+      this.businessTypeOptions = response.data
+    })
+    this.getDicts('station_IO_flag').then(response => {
+      this.inOutOptions = response.data
+    })
+    this.getDicts('station_waybill_type').then(response => {
+      this.waybillTypeOptions = response.data
+    })
+    this.getDicts('station_declear_status').then(response => {
+      this.feedbackOptions = response.data
+    })
     // this.getdepotList();
-    const {tableId,show}  = this.$route.query;
-    console.log("tableId"+tableId)
+    const { tableId, show } = this.$route.query
+    console.log('tableId' + tableId)
     if (tableId) {
       //将表头id 保存
-      this.headId = tableId;
-      this.show=show
+      this.headId = tableId
+      this.show = show
       // 获取表详细信息
       getDeclare(this.headId).then(res => {
-        this.form = res.data.info;
-        this.bodyList = res.data.rows;
-      });
+        this.form = res.data.info
+        const data =this.enterpriseOptions.find(el => el.contractorCodeScc === this.form.contractorcodescc)
+        this.getStore(data.deptId)
+        this.bodyList = res.data.rows
+      })
     } else {
-      this.initialization();
+      this.initialization()
     }
   },
   methods: {
@@ -634,9 +635,10 @@ export default {
         this.bodyform.warehouseId=this.depotNameOptions[0].id
       })
     },
-    /** 企业申报信息列表*/ 
+    /** 企业申报信息列表*/
     enterpriseInfo(){
        listInfo(this.enterpriseParams).then((response) => {
+         console.log("企业列表")
         this.enterpriseOptions = response.rows;
       });
     },
@@ -808,28 +810,28 @@ export default {
     },
      /** 选中值发生变化时触发 */
     change(event){
-        this.enterpriseOptions.forEach(element => {
-          console.log("企业id"+event)
-          if(element.id===event){
-            // 将得到的企业属性赋值到应用的对象中
-            this.bodyform.deptId=event
-            this.deptId=event
-            // 根据 企业id 获取仓库信息
-            var store={
-              yard_id:event
-            } 
-            listStore(store).then(res=>{
-              this.depotNameOptions=res.rows
-            });
-            this.show=false;
-            this.form.stationPersonName=element.customsMaster
-            this.form.contractorcodescc=element.contractorCodeScc
-            this.form.customsmaster=element.customsMaster
-            this.form.contractorcode=element.contractorCode
-            this.form.opuserid=element.opUserId
-          }
-        });
+     const data =this.enterpriseOptions.find(el => el.id == event)
+       this.bodyform.deptId=data.deptId
+       this.show=false;
+       this.form.stationPersonName=data.customsMaster
+       this.form.contractorcodescc=data.contractorCodeScc
+       this.form.customsmaster=data.customsMaster
+       this.form.contractorcode=data.contractorCode
+       this.form.opuserid=data.opUserId
+       this.deptId=data.deptId
+       this.getStore(data.deptId)
+    },
 
+    /** 获取 仓库列表 */
+    getStore(event){
+      const store={
+        placeId:event,
+        storeState:'0',
+        zoneType:'2'
+      }
+      listStoreCanUse(store).then(res=>{
+        this.depotNameOptions=res.rows
+      });
     }
   }
 };

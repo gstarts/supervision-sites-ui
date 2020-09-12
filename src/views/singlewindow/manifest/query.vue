@@ -1,29 +1,30 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="120px">
-      <el-form-item label="货物运输批次号" prop="bindkeyinfo">
+      <el-form-item label="货物运输批次号" prop="declarationId">
         <el-input
-          v-model="queryParams.bindkeyinfo"
+          v-model="queryParams.declarationId"
           placeholder="请输入货物运输批次号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="单证名称" prop="sureid">
-        <el-input
-          v-model="queryParams.sureid"
-          placeholder="请输入对应车次确认号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="单证名称" prop="messageType">
+        <el-select v-model="queryParams.messageType" placeholder="请选择查询的单证">
+          <el-option
+            v-for="dict in router"
+            :key="dict.messageType"
+            :label="dict.value"
+            :value="dict.messageType"
+          ></el-option>
+        </el-select>
       </el-form-item>
 
-      <el-form-item label="提运单状态" prop="feedback">
-        <el-select v-model="queryParams.feedback" placeholder="请选择状态">
+      <el-form-item label="单证状态" prop="statementCode">
+        <el-select v-model="queryParams.statementCode" placeholder="请选择状态">
           <el-option
-            v-for="dict in feedbackOptions"
+            v-for="dict in statementCodeOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
@@ -54,22 +55,21 @@
 
     <el-table
       v-loading="loading"
-      :data="declareList"
-      :row-class-name="tableRowClassName"
+      :data="manifestList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="货物运输批次号" align="center" prop="bindkeyinfo" />
-      <el-table-column label="录入时间" align="center" prop="optime" />
-      <el-table-column label="单证状态" align="center" prop="decltrafmode" :formatter="shipTypeFormat" />
-      <el-table-column label="单证名称" align="center" prop="ieflag" :formatter="inOutMarkFormat" />
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="货物运输批次号" align="center" prop="declarationId"/>
+      <el-table-column label="录入时间" align="center" prop="createTime"/>
+      <el-table-column label="单证状态" align="center" prop="statementCode" :formatter="statementFormat"/>
+      <el-table-column label="单证名称" align="center" prop="messageType" :formatter="messageTypeFormat"/>
       <el-table-column
         label="报文功能"
         align="center"
-        prop="bayonetrdcode"
+        prop="functionCode"
         :formatter="viaVehicleFormat"
       />
-      <el-table-column label="回执说明" align="center" prop="feedbackMsg" />
+      <el-table-column label="回执说明" align="center" prop="statementDescription"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -77,24 +77,24 @@
             type="text"
             icon="el-icon-detail"
             @click="detail(scope.row)"
-            v-hasPermi="['waybill:declare:query']"
-          >详情</el-button>
+          >详情
+          </el-button>
           <el-button
-            v-if="scope.row.feedback=='10' || scope.row.feedback=='20'|| scope.row.feedback=='0'|| scope.row.feedback=='FF'|| scope.row.feedback=='3' "
+            v-if="scope.row.statementCode=='10' || scope.row.statementCode=='20'|| scope.row.statementCode=='0'|| scope.row.statementCode=='FF'|| scope.row.statementCode=='3' "
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['waybill:declare:query']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
-            v-if="scope.row.feedback!='2'"
+            v-if="scope.row.statementCode!='2'"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['waybill:declare:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -107,13 +107,11 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改提运单申报对话框 -->
-    <!-- <import-table ref="import" @ok="handleQuery" /> -->
   </div>
 </template>
 
 <script>
-
+import { manifestList } from '@/api/manifest/query'
 
 export default {
   data() {
@@ -131,134 +129,104 @@ export default {
       // 总条数
       total: 0,
       // 舱单列表
-     manifestList: [],
+      manifestList: [],
+      // 单证状态
+      statementCodeOptions: [],
       // 弹出层标题
-      title: "",
+      title: '',
       // 是否显示弹出层
+      router: [
+        { path: '/rmft1401', messageType: 'MT1401', value: '原始舱单' },
+        { path: '/rmft2401', messageType: 'MT2401', value: '预配舱单' },
+        { path: '/rmft5402', messageType: 'MT5402', value: '出口理货报告' },
+        { path: '/rmft3402', messageType: 'MT3402', value: '运抵报告' },
+        { path: '/rmft4401', messageType: 'MT4401', value: '载货进境确报' },
+        { path: '/rmft4403', messageType: 'MT4403', value: '空载进境确报' },
+        { path: '/rmft4404', messageType: 'MT4404', value: '空载出境确报' },
+        { path: '/rmft4406', messageType: 'MT4406', value: '空箱出境确报' }],
       open: false,
-
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        BindKeyInfo: undefined,
-        sureid: undefined
-      },
-      // 表头id
-      headId: "",
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {}
-    };
+        statementCode: undefined,
+        declarationId: undefined,
+        messageType: undefined
+      }
+    }
   },
   mounted() {
-
+    this.getList()
+    /** 单证状态 */
+    this.getDicts("station_declear_status").then(response => {
+      this.statementCodeOptions = response.data;
+    });
   },
   methods: {
-    /** 查询提运单列表 */
+    /** 查询公路舱单列表 */
     getList() {
-      wayListByuserId(this.addDateRange(this.queryParams, this.dateRange)).then(
+      manifestList(this.addDateRange(this.queryParams, this.dateRange)).then(
         response => {
-          this.declareList = response.rows;
-          this.total = response.total;
-          this.loading = false;
+          this.manifestList = response.rows
+          this.total = response.total
+          this.loading = false
         }
-      );
+      )
     },
-    // 改变驳回数据颜色
-    // 运输方式翻译
-    shipTypeFormat(row, column) {
-      return this.selectDictLabel(this.shipTypeOptions, row.decltrafmode);
+
+    // 单证状态翻译
+    statementFormat(row) {
+      return this.selectDictLabel(this.statementCodeOptions, row.statementCode);
     },
-    // 进出口标志翻译
-    inOutMarkFormat(row, column) {
-      return this.selectDictLabel(this.inOutMarkOptions, row.ieflag);
+    // 单证名称翻译
+    messageTypeFormat(row) {
+      const data = this.router.find(el => el.messageType === row.messageType)
+      return data.value
     },
-    // 过卡车辆类型
-    viaVehicleFormat(row, column) {
-      return this.selectDictLabel(this.viaOptions, row.bayonetrdcode);
-    },
-    // 提运单状态
-    waybillFormat(row, column) {
-      return this.selectDictLabel(this.feedbackOptions, row.feedback);
-    },
+    // 报文功能翻译
+
     // 取消按钮
     cancel() {
-      this.open = false;
-      this.reset();
+      this.open = false
+      this.reset()
     },
-    // 表单重置
-    reset() {
-      this.form = {
-        id: undefined,
-        sureid: undefined,
-        optime: undefined,
-        opuserid: undefined,
-        bindkeytype: undefined,
-        bindkeyinfo: undefined,
-        rdcode: undefined,
-        decltrafmode: undefined,
-        ieflag: undefined,
-        customsmaster: undefined,
-        contractorcode: undefined,
-        contractorcodescc: undefined,
-        bayonetrdcode: undefined,
-        vehicleweight: undefined,
-        trailerweight: undefined,
-        contaweight: undefined,
-        feedback: undefined,
-        feedbackMsg: undefined,
-        feedbackTime: undefined,
-        remark: undefined,
-        enterpriseId: undefined
-      };
-      this.resetForm("form");
-    },
+
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.dateRange = [];
-      this.resetForm("queryForm");
-      this.handleQuery();
+      this.dateRange = []
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
-      this.single = selection.length != 1;
-      this.multiple = !selection.length;
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加提运单申报";
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      // this.$refs.import.showedit(id);
-      this.$router.push({ path: "/bind/edit", query: { tableId: id } });
+      this.ids = selection.map(item => item.id)
+      this.single = selection.length != 1
+      this.multiple = !selection.length
     },
 
-    /** 打开新增弹窗 */
-    openAddDialog() {
-      this.$refs.import.show();
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      const id = row.id || this.ids
+      // 跳转到原始舱单页面
+      const data = this.router.find(el => el.messageType === row.messageType)
+      this.$router.push({ path: '/singlewindow' + data.path })
     },
 
     /**详情按钮 */
     detail(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      this.$router.push({ path: "/bind/details", query: { tableId: id } });
+      // this.reset();
+      return this.$message('功能正在完善中...')
+      const id = row.id || this.ids
+      const data = this.router.find(el => el.messageType === row.messageType)
+      this.$router.push({ path: '/singlewindow' + data.path })
     }
   }
-};
+}
 </script>
 <style>
 

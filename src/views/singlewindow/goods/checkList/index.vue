@@ -2160,10 +2160,10 @@ export default {
   // attaDocuCdstr: undefined,
   created() {
     //业务事项 字典翻译
-    this.getDicts("dy_business_matters").then((response) => {
+    this.getDicts("sw_business_matters").then((response) => {
       this.businessMattersOptions = response.data;
     });
-    
+
     //临时字典翻译
     this.getDicts("sys_user_sex").then((response) => {
       this.TestOptions = response.data;
@@ -2177,24 +2177,24 @@ export default {
       this.regulateOptions = response.data;
     });
     //运输方式 字典翻译
-    this.getDicts("dy_mode_of_transport").then((response) => {
+    this.getDicts("sw_mode_of_transport").then((response) => {
       this.transportOptions = response.data;
     });
     //征免性质字典翻译
-    this.getDicts("dy_nature_of_exemption").then((response) => {
+    this.getDicts("sw_nature_of_exemption").then((response) => {
       this.exemptionOptions = response.data;
     });
     //成交方式 字典翻译
-    this.getDicts("dy_transaction_method").then((response) => {
+    this.getDicts("sw_transaction_method").then((response) => {
       this.methodOptions = response.data;
     });
 
     //运费/保险费/杂费 率 字典翻译
-    this.getDicts("dy_rate").then((response) => {
+    this.getDicts("sw_rate").then((response) => {
       this.rateOptions = response.data;
     });
     //币制/运费率标记/保险费标记/杂费标记  字典翻译
-    this.getDicts("dy_currency_system").then((response) => {
+    this.getDicts("sw_currency_system").then((response) => {
       this.currencySystemOptions = response.data;
     });
     //包装种类 字典翻译
@@ -2206,39 +2206,39 @@ export default {
       this.codeOptions = response.data;
     });
     //报关单类型 字典翻译
-    this.getDicts("dy_customs_declaration_type").then((response) => {
+    this.getDicts("sw_customs_declaration_type").then((response) => {
       this.declarationTypeOptions = response.data;
     });
     //成交计量单位 字典翻译
-    this.getDicts("dy_transaction_unit").then((response) => {
+    this.getDicts("sw_transaction_unit").then((response) => {
       this.transactionUnitOptions = response.data;
     });
     //最终目的国(地区)/原产国(地区) 字典翻译
-    this.getDicts("dy_area_codes").then((response) => {
+    this.getDicts("sw_area_codes").then((response) => {
       this.areaCodesOptions = response.data;
     });
     //原产地区 字典翻译
-    this.getDicts("dy_origin").then((response) => {
+    this.getDicts("sw_origin").then((response) => {
       this.originOptions = response.data;
     });
     //征免方式 字典翻译
-    this.getDicts("dy_nature_of_exemption").then((response) => {
+    this.getDicts("sw_nature_of_exemption").then((response) => {
       this.exemptionMethodOptions = response.data;
     });
     //集装箱规格 字典翻译
-    this.getDicts("dy_container_specification").then((response) => {
+    this.getDicts("sw_container_specification").then((response) => {
       this.specificationOptions = response.data;
     });
     //拼箱标识 字典翻译
-    this.getDicts("dy_LCL_logo").then((response) => {
+    this.getDicts("sw_LCL_logo").then((response) => {
       this.LCLlogoOptions = response.data;
     });
     //随附单证代码 字典翻译
-    this.getDicts("dy_attached_document_code").then((response) => {
+    this.getDicts("sw_attached_document_code").then((response) => {
       this.documentCodeOptions = response.data;
     });
     //经停港 字典翻译
-    this.getDicts("dy_port_of_stop").then((response) => {
+    this.getDicts("sw_port_of_stop").then((response) => {
       this.ofStopOptions = response.data;
     });
   },

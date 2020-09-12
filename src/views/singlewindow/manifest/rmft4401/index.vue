@@ -6,44 +6,35 @@
         type="primary"
         icon="el-icon-plus"
         size="mini"
-        :disabled="btnDisable.addBtn"
         @click="handleAdd"
       >新增</el-button>
       <el-button
         type="success"
         icon="el-icon-edit"
         size="mini"
-        :disabled="btnDisable.saveBtn"
         @click="AllSave"
       >暂存</el-button>
       <el-button
         type="danger"
         icon="el-icon-delete"
         size="mini"
-        :disabled="btnDisable.delBtn"
         @click="handleDelete"
       >删除</el-button>
-      <el-button
-        type="danger"
-        icon="el-icon-thumb"
-        size="mini"
-        :disabled="btnDisable.repBtn"
-        @click="handleReport"
-      >申报</el-button>
-      <el-button
-        type="primary"
-        icon="el-icon-document-copy"
-        size="mini"
-        :disabled="btnDisable.copyBtn"
-        @click="handleCopy"
-      >复制</el-button>
-      <el-button
-        type="primary"
-        icon="el-icon-refresh"
-        size="mini"
-        :disabled="btnDisable.refBtn"
-        @click="handleRefresh"
-      >刷新</el-button>
+      <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode" v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报</el-button>
+      <!--      <el-button-->
+<!--        type="primary"-->
+<!--        icon="el-icon-document-copy"-->
+<!--        size="mini"-->
+<!--        :disabled="btnDisable.copyBtn"-->
+<!--        @click="handleCopy"-->
+<!--      >复制</el-button>-->
+<!--      <el-button-->
+<!--        type="primary"-->
+<!--        icon="el-icon-refresh"-->
+<!--        size="mini"-->
+<!--        :disabled="btnDisable.refBtn"-->
+<!--        @click="handleRefresh"-->
+<!--      >刷新</el-button>-->
     </div>
     <!-- 基本信息 -->
     <el-card class="mb20">
@@ -65,7 +56,7 @@
           <el-col :span="6">
             <el-form-item label="进出境口岸海关代码" prop="declarationOfficeID">
               <el-input
-                @focus="$store.dispatch('originalManifest/changeStatus')"
+                @focus="dialogTableVisible = true"
                 v-model="declaration.declarationOfficeID"
                 placeholder="进出境口岸海关代码"
                 clearable
@@ -76,12 +67,23 @@
           <el-col :span="6">
             <el-form-item label="承运人代码" prop="carrierId">
               <el-input
-                @focus="dialogTableVisible = true"
                 v-model="declaration.carrier.carrierId"
                 placeholder="承运人代码"
                 clearable
                 size="mini"
               />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="企业代码" prop="postCode">
+              <el-select v-model="head.unitCode" filterable placeholder="企业代码" size="mini">
+                <el-option
+                  v-for="(item,index) in listInfo"
+                  :key="index"
+                  :label="item.eName"
+                  :value="item.deptId">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <!-- <el-col :span="6">
@@ -96,11 +98,6 @@
           </el-col>-->
         </el-row>
         <el-row type="flex">
-          <!-- <el-col :span="6">
-            <el-form-item label="企业代码" prop="postCode">
-              <el-input v-model="queryParams.postCode" placeholder="企业代码" clearable size="mini" />
-            </el-form-item>
-          </el-col>-->
           <el-col :span="12">
             <el-form-item label="确报传输人名称" prop="name">
               <el-input
@@ -152,27 +149,27 @@
             :disabled="btnDisable.delBtn"
             @click="handleDelete"
           >删除</el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-thumb"
-            size="mini"
-            :disabled="btnDisable.repBtn"
-            @click="handleReport"
-          >申报</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-document-copy"
-            size="mini"
-            :disabled="btnDisable.copyBtn"
-            @click="handleCopy"
-          >复制</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-refresh"
-            size="mini"
-            :disabled="btnDisable.refBtn"
-            @click="handleRefresh"
-          >刷新</el-button>
+<!--          <el-button-->
+<!--            type="danger"-->
+<!--            icon="el-icon-thumb"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.repBtn"-->
+<!--            @click="handleReport"-->
+<!--          >申报</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-document-copy"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.copyBtn"-->
+<!--            @click="handleCopy"-->
+<!--          >复制</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-refresh"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.refBtn"-->
+<!--            @click="handleRefresh"-->
+<!--          >刷新</el-button>-->
         </el-col>
       </el-row>
       <el-table
@@ -184,7 +181,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column prop="num" label="序号" min-width="120" align="center"/>
+        <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
         <el-table-column prop="bordertransportmeansId" label="运输工具代码" min-width="120" align="center"/>
         <el-table-column prop="name" label="运输工具名称" min-width="150" align="center"/>
         <el-table-column prop="arrivalDateTime" label="抵达关境内第一目的港的日期和时间" min-width="200" align="center">
@@ -196,6 +193,7 @@
         <el-table-column prop="master.name" label="驾驶员名称" min-width="120" align="center"/>
       </el-table>
       <el-pagination
+        v-show="page.total>0"
         class="right mb20"
         background
         layout="prev, pager, next"
@@ -312,44 +310,41 @@
             type="primary"
             icon="el-icon-plus"
             size="mini"
-            :disabled="btnDisable.addBtn"
             @click="trailerAdd"
           >新增</el-button>
           <el-button
             type="success"
             icon="el-icon-edit"
             size="mini"
-            :disabled="btnDisable.saveBtn"
             @click="handleSave"
           >暂存</el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
             size="mini"
-            :disabled="btnDisable.delBtn"
             @click="handleDelete"
           >删除</el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-thumb"
-            size="mini"
-            :disabled="btnDisable.repBtn"
-            @click="handleReport"
-          >申报</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-document-copy"
-            size="mini"
-            :disabled="btnDisable.copyBtn"
-            @click="handleCopy"
-          >复制</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-refresh"
-            size="mini"
-            :disabled="btnDisable.refBtn"
-            @click="handleRefresh"
-          >刷新</el-button>
+<!--          <el-button-->
+<!--            type="danger"-->
+<!--            icon="el-icon-thumb"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.repBtn"-->
+<!--            @click="handleReport"-->
+<!--          >申报</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-document-copy"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.copyBtn"-->
+<!--            @click="handleCopy"-->
+<!--          >复制</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-refresh"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.refBtn"-->
+<!--            @click="handleRefresh"-->
+<!--          >刷新</el-button>-->
         </el-col>
       </el-row>
       <el-table
@@ -361,12 +356,13 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column type="index" prop="num" label="序号" min-width="120" />
-        <el-table-column prop="transportequipmentId" label="托架/拖挂车编号" min-width="120" />
-        <el-table-column prop="characteristicCode" label="托架/拖挂车类型" min-width="150" />
-        <el-table-column prop="tareWeight" label="托架/拖挂车自重(KG)" min-width="120" />
+        <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
+        <el-table-column prop="transportequipmentId" label="托架/拖挂车编号" min-width="120" align="center"/>
+        <el-table-column prop="characteristicCode" label="托架/拖挂车类型" min-width="150" align="center" :formatter="Trailerformat" />
+        <el-table-column prop="tareWeight" label="托架/拖挂车自重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
+        v-show="page.total>0"
         class="right mb20"
         background
         layout="prev, pager, next"
@@ -377,7 +373,7 @@
       />
       <el-form :model="queryParams" ref="queryForm" label-width="160px">
         <el-row type="flex">
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item label="托架/拖挂车编号" prop="transportequipmentId">
               <el-input
                 v-model="trailer.transportequipmentId"
@@ -387,17 +383,19 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item label="托架/拖挂车类型" prop="characteristicCode">
-              <el-input
-                v-model="trailer.characteristicCode"
-                placeholder="托架/拖挂车类型"
-                clearable
-                size="mini"
+              <el-select v-model="trailer.characteristicCode" placeholder="请输入托架/拖挂车类型" size="mini">
+              <el-option
+                v-for="dict in TrailertypeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
               />
+            </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item label="托架/拖挂车自重(KG)" prop="tareWeight">
               <el-input
                 v-model="trailer.tareWeight"
@@ -438,27 +436,27 @@
             :disabled="btnDisable.delBtn"
             @click="handleDelete"
           >删除</el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-thumb"
-            size="mini"
-            :disabled="btnDisable.repBtn"
-            @click="handleReport"
-          >申报</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-document-copy"
-            size="mini"
-            :disabled="btnDisable.copyBtn"
-            @click="handleCopy"
-          >复制</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-refresh"
-            size="mini"
-            :disabled="btnDisable.refBtn"
-            @click="handleRefresh"
-          >刷新</el-button>
+<!--          <el-button-->
+<!--            type="danger"-->
+<!--            icon="el-icon-thumb"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.repBtn"-->
+<!--            @click="handleReport"-->
+<!--          >申报</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-document-copy"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.copyBtn"-->
+<!--            @click="handleCopy"-->
+<!--          >复制</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-refresh"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.refBtn"-->
+<!--            @click="handleRefresh"-->
+<!--          >刷新</el-button>-->
         </el-col>
       </el-row>
       <el-table
@@ -470,14 +468,15 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column type="index" prop="num" label="序号" min-width="120" />
-        <el-table-column prop="transportequipmentId" label="集装箱(器)编号" min-width="120" />
-        <el-table-column prop="fullnessCode" label="重箱或者空箱标识" min-width="150" />
-        <el-table-column prop="characteristicCode" label="集装箱(器)尺寸类型" min-width="120" />
-        <el-table-column prop="supplierPartyTypeCode" label="集装箱(器)来源代码" min-width="120" />
-        <el-table-column prop="tareWeight" label="集装箱(器)自重(KG)" min-width="120" />
+        <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
+        <el-table-column prop="transportequipmentId" label="集装箱(器)编号" min-width="120" align="center"/>
+        <el-table-column prop="fullnessCode" label="重箱或者空箱标识" min-width="150" align="center" :formatter="ContainerSelfWeightformat"/>
+        <el-table-column prop="characteristicCode" label="集装箱(器)尺寸类型" min-width="120" align="center" :formatter="ContainerSizeformat"/>
+        <el-table-column prop="supplierPartyTypeCode" label="集装箱(器)来源代码" min-width="120" align="center" :formatter="ContainerSourceformat"/>
+        <el-table-column prop="tareWeight" label="集装箱(器)自重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
+        v-show="page.total>0"
         class="right mb20"
         background
         layout="prev, pager, next"
@@ -500,32 +499,42 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="重箱或者空箱标识" prop="fullnessCode">
-              <el-input
-                v-model="transportEquipment.fullnessCode"
-                placeholder="重箱或者空箱标识"
-                clearable
-                size="mini"
-              />
+              <el-select v-model="transportEquipment.fullnessCode" placeholder="请选择集装箱(器)重箱或者空箱标识" size="mini">
+              <el-option
+                v-for="dict in ContainerSelfWeight"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="集装箱(器)尺寸类型" prop="characteristicCode">
-              <el-input
-                v-model="transportEquipment.characteristicCode"
-                placeholder="集装箱(器)尺寸类型"
-                clearable
-                size="mini"
-              />
+              <el-select v-model="transportEquipment.characteristicCode" placeholder="请选择集装箱(器)尺寸类型" size="mini">
+              <el-option
+                v-for="dict in ContainerSize"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="集装箱(器)来源代码" prop="supplierPartyTypeCode">
-              <el-input
-                v-model="transportEquipment.supplierPartyTypeCode"
-                placeholder="集装箱(器)来源代码"
-                clearable
-                size="mini"
-              />
+              <el-select
+              v-model="transportEquipment.supplierPartyTypeCode"
+              placeholder="请选择集装箱(器)来源代码"
+              size="mini"
+            >
+              <el-option
+                v-for="dict in ContainerSource"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -591,6 +600,8 @@ import dangerousInfo from "./dangerousInfo.vue";
 import consignorInfo from "./consignorInfo.vue";
 // 收货人信息
 import receivingInfo from "./receivingInfo.vue";
+import { add } from "@/api/manifest/rmft5402_3402_4401/head";
+import { listInfo } from '@/api/basis/enterpriseInfo'
 
 export default {
   components: {
@@ -637,30 +648,27 @@ export default {
       // 以json格式向后台传递
       form: {
         head:{},
-        declaration:{        
-          consignment:{
-            
-            transportEquipment:[], 
-          },  
-          
-        },        
+        declaration:{
+          consignmentVO_4401:{
+
+            transportEquipment:[],
+          },
+
+        },
       },
 
       // 报文功能代码/报文类型代码
-      head: {
-        functionCode: "2",
-        messageType: "MT4401",
-      },
+      head: {},
       // 表头信息表单
       declaration:{
         declarationOfficeID: undefined,
         declarationId: undefined ,
         carrier:{
           carrierId: undefined,
-        },        
+        },
         representativePerson:{
           name: undefined,
-        },        
+        },
         additionalInformation:{
           content: undefined,
         },
@@ -674,39 +682,39 @@ export default {
         // 驾驶员
         master:{
           masterId :undefined,
-          name : undefined        
-        },   
+          name : undefined
+        },
         transportEquipment: {
           transportequipmentId : undefined,
           characteristicCode: undefined,
           tareWeight: undefined
-        },    
-      },	
-      AAA:{
+        },
+      },
+      AForm:{
         borderTransportMeans:{
-        arrivalDateTime: undefined,
-        bordertransportmeansId: undefined,
-        name: undefined,
-        typeCode: undefined,
-        // 驾驶员
-        master:{
-          masterId :undefined,
-          name : undefined        
-        },   
-        transportEquipment: [],    
-      },	
-      },	
+          arrivalDateTime: undefined,
+          bordertransportmeansId: undefined,
+          name: undefined,
+          typeCode: undefined,
+          // 驾驶员
+          master:{
+            masterId :undefined,
+            name : undefined
+          },
+          transportEquipment: [],
+      },
+      },
       // 托架/拖挂车信息表单
       trailer:{
         transportequipmentId : undefined,
         characteristicCode: undefined,
         tareWeight: undefined
-      },		
+      },
       // 集装箱信息表单
       transportEquipment:{
         transportequipmentId : undefined,
         fullnessCode: undefined,
-        characteristicCode: undefined,			
+        characteristicCode: undefined,
         supplierPartyTypeCode: undefined,
         tareWeight: undefined
       },
@@ -720,30 +728,91 @@ export default {
       statusOptions: [],
       dateTimeVal: "",
       data: [],
+      // 企业代码
+      listInfo: [],
+      //挂车类型翻译
+      TrailertypeOptions: [],
+      // 集装箱(器)来源字典
+      ContainerSource: [],
+      // 集装箱(器)尺寸类型字典
+      ContainerSize: [],
+      // 集装箱（器）重箱或者空箱标识
+      ContainerSelfWeight: [],
     };
   },
   mounted() {
     // 初始化
     this.init();
   },
+  created() {
+    //挂车类型字典翻译
+    this.getDicts("hg_trailer_type").then((response) => {
+      this.TrailertypeOptions = response.data;
+    });
+    /** 集装箱(器)来源字典 */
+    this.getDicts("hg_container_source").then((response) => {
+      this.ContainerSource = response.data;
+    });
+    /** 集装箱(器)尺寸类型字典 */
+    this.getDicts("hg_container_size_type").then((response) => {
+      this.ContainerSize = response.data;
+    });
+    /** 集装箱（器）重箱或者空箱标识 */
+    this.getDicts("hg_container_self_weight").then((response) => {
+      this.ContainerSelfWeight = response.data;
+    });
+  },
   methods: {
     async init() {
       // await this.depParaList()
+      //  企业代码
+      listInfo().then(data => {
+        this.listInfo = data.rows
+        console.log(data)
+      })
     },
+    //托架/拖挂车类型 翻译
+    Trailerformat(row, column) {
+      return this.selectDictLabel(this.TrailertypeOptions, row.characteristicCode);
+    },
+    //集装箱(器)来源 翻译
+    ContainerSourceformat(row, column) {
+      return this.selectDictLabel(
+        this.ContainerSource,
+        row.supplierPartyTypeCode
+      );
+    },
+    //集装箱(器)尺寸类型 翻译
+    ContainerSizeformat(row, column) {
+      return this.selectDictLabel(this.ContainerSize, row.characteristicCode);
+    },
+    //集装箱（器）重箱或者空箱标识翻译
+    ContainerSelfWeightformat(row, column) {
+      return this.selectDictLabel(this.ContainerSelfWeight, row.fullnessCode);
+    },
+
     // 整体暂存 = 新增
     AllSave() {
-      this.form.head = this.head;
+      this.form.head = this.listInfo.find(el => el.deptId === this.head.unitCode)
+      this.form.head.messageType="MT4401"
+      this.form.head.functionCode = "2";
       this.form.declaration = this.declaration;
-      this.form.declaration.consignment = this.AAA;
-      // this.form.declaration.consignment.borderTransportMeans.transportEquipment = this.trailerList;
-      this.form.declaration.consignment.transportEquipment = this.transportEquipmentList;
-      console.log(JSON.stringify(this.form));
-      
+      this.form.declaration.consignmentVO_4401 = this.AForm;
+      this.form.declaration.consignmentVO_4401.transportEquipment = this.transportEquipmentList;
+      add(this.form).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("新增成功");
+          console.log(JSON.stringify(this.form));
+        } else {
+          this.msgError(response.msg);
+        }
+      });
+      this.reset();
     },
     // 运输工具新增
     transportMeansAdd() {
-      this.AAA.borderTransportMeans = this.borderTransportMeans,
-      this.borderTransportMeansList.push(this.borderTransportMeans); 
+      this.AForm.borderTransportMeans = this.borderTransportMeans,
+      this.borderTransportMeansList.push(this.borderTransportMeans);
       this.borderTransportMeans = {
         arrivalDateTime: undefined,
         bordertransportmeansId: undefined,
@@ -751,32 +820,66 @@ export default {
         typeCode: undefined,
         master:{
           masterId :undefined,
-          name : undefined        
-        },       
+          name : undefined
+        },
       }
-    },  
+    },
     // 拖挂车新增
     trailerAdd() {
-      // this.AAA.borderTransportMeans.transportEquipment.push(this.trailer);
-      console.log(this.AAA)
       this.trailerList.push(this.trailer);
-      this.AAA.borderTransportMeans.transportEquipment = this.trailerList;
+      this.AForm.borderTransportMeans.transportEquipment = this.trailerList;
       this.trailer = {}
-    },  
+    },
     // 集装箱新增
     containerAdd() {
       this.transportEquipmentList.push(this.transportEquipment);
       this.transportEquipment = {}
-    },  
+    },
+
+    // 表单清空
+    reset() {
+      this.declaration = {
+        declarationOfficeID: undefined,
+        declarationId: undefined ,
+        carrier:{
+          carrierId: undefined,
+        },
+        representativePerson:{
+          name: undefined,
+        },
+        additionalInformation:{
+          content: undefined,
+        },
+      },
+      // 运输工具信息表单
+      this.borderTransportMeans = {
+        arrivalDateTime: undefined,
+        bordertransportmeansId: undefined,
+        name: undefined,
+        typeCode: undefined,
+        // 驾驶员
+        master:{
+          masterId :undefined,
+          name : undefined
+        },
+        transportEquipment: {
+          transportequipmentId : undefined,
+          characteristicCode: undefined,
+          tareWeight: undefined
+        },
+      },
+      this.trailer = {},
+      this.transportEquipment = {},
+      this.borderTransportMeansList = [],
+      this.transportEquipmentList = [],
+      this.trailerList = []
+    },
 
     // 新增
     handleAdd() {},
     // 暂存
     handleSave() {
       console.log("保存");
-      // this.$saveStore("a","123")
-      // this.$getStore('a')
-      // this.$delStore("a")
     },
     // 删除
     handleDelete() {},
@@ -792,7 +895,8 @@ export default {
     },
     // 组件选择
     choose(row) {
-      this.declaration.carrier.carrierId = row.codeName;
+      // this.declaration.carrier.carrierId = row.codeName;
+      this.declaration.declarationOfficeID = row.codeName;
       this.dialogTableVisible = false;
     },
     // 关闭组件
@@ -811,6 +915,8 @@ export default {
     numFun() {
       console.log(123);
     },
+    /** 申报*/
+    updateStatementCode(){},
     // 请求接口
     depParaList() {
       return new Promise((resolve) => {
@@ -833,6 +939,9 @@ export default {
   text-align: right;
 }
 .datePicker {
-  width: auto !important;
+  width: 100% !important;
+}
+.el-select{
+  width: 100%;
 }
 </style>

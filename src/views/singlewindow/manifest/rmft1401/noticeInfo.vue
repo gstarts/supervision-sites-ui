@@ -17,7 +17,6 @@
                 v-model="Notifyparty.notifypartyId"
                 placeholder="通知人代码"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
@@ -27,7 +26,7 @@
                 v-model="Notifyparty.name"
                 placeholder="通知人名称"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -39,7 +38,7 @@
                 v-model="Notifyparty.address"
                 placeholder="通知人地址(街道,邮箱)"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -51,7 +50,7 @@
                 v-model="Notifyparty.communicationId"
                 placeholder="联系号码"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -140,7 +139,7 @@ export default {
     init(){
       this.data = this.$store.state.originalManifest.noticeInfo
       /** 通讯方式类别代码 */
-      this.getDicts("Communication_type").then((response) => {
+      this.getDicts("sw_communication_type").then((response) => {
         this.Communication_type = response.data;
       });
     },

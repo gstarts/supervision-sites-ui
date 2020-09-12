@@ -52,7 +52,7 @@
                 v-model="queryParams.name"
                 placeholder="变更申请联系人姓名"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -62,7 +62,7 @@
                 v-model="queryParams.communication"
                 placeholder="变更申请联系人电话"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -75,7 +75,7 @@
                 v-model="queryParams.reason"
                 placeholder="变更原因描述"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -133,7 +133,7 @@ export default {
       this.queryParams.reason=this.$store.state.originalManifest.changeReason.reason
 
       /** 变更原因 */
-      this.getDicts("chgCode").then((response) => {
+      this.getDicts("sw_change_reason").then((response) => {
         this.chgCode = response.data;
       });
     },
