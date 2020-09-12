@@ -371,7 +371,6 @@ export default {
       this.timer = setInterval(() => {
         poundSelect(event).then((response) => {
           this.Poundweight = response.data.weight;
-          this.Poundweight = undefined;
           if (this.Poundweight && this.Poundweight > 0) {
             this.form.grossWeight = this.Poundweight;
           } else {
