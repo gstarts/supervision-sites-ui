@@ -17,7 +17,7 @@
                 v-model="queryParams.id"
                 placeholder="发货人代码"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -27,7 +27,7 @@
                 v-model="queryParams.name"
                 placeholder="发货人名称"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -39,7 +39,7 @@
                 v-model="queryParams.communicationId"
                 placeholder="联系号码"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>

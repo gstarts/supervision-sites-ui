@@ -17,6 +17,7 @@
                 v-model="Notifyparty.notifypartyId"
                 placeholder="通知人代码"
                 clearable
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -26,7 +27,7 @@
                 v-model="Notifyparty.name"
                 placeholder="通知人名称"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -38,7 +39,7 @@
                 v-model="Notifyparty.address"
                 placeholder="通知人地址(街道,邮箱)"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -50,7 +51,7 @@
                 v-model="Notifyparty.communicationId"
                 placeholder="联系号码"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>

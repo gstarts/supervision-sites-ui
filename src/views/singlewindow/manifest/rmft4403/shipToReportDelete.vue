@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <!-- 按钮组 -->
+    <!-- 按钮组 --> 
     <div class="mb20">
       <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn" @click="handleAdd">新增</el-button>
       <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable.saveBtn" @click="handleSave">暂存</el-button>
@@ -22,7 +22,7 @@
                 v-model="queryParams.postCode"
                 placeholder="货物运输批次号"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -33,7 +33,7 @@
                 v-model="queryParams.postCode"
                 placeholder="运输方式代码"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -44,7 +44,7 @@
                 v-model="queryParams.postCode"
                 placeholder="进出境口岸代码"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -54,7 +54,7 @@
                 v-model="queryParams.postCode"
                 placeholder="卸货地代码"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -75,7 +75,7 @@
                 v-model="queryParams.postCode"
                 placeholder="传输企业备案关区"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -85,7 +85,7 @@
                 v-model="queryParams.postCode"
                 placeholder="企业代码"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -95,7 +95,7 @@
                 v-model="queryParams.postCode"
                 placeholder="备注"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -149,7 +149,7 @@
                 v-model="queryParams.postCode"
                 placeholder="提(运)单号"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -159,7 +159,7 @@
                 v-model="queryParams.postCode"
                 placeholder="货物体积(M3)"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -169,7 +169,7 @@
                 v-model="queryParams.postCode"
                 placeholder="包装种类"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -179,7 +179,7 @@
                 v-model="queryParams.postCode"
                 placeholder="货物总件数"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -191,7 +191,7 @@
                 v-model="queryParams.postCode"
                 placeholder="货物总毛重(KG)"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -246,7 +246,7 @@
                 v-model="queryParams.postCode"
                 placeholder="集装箱(器)编号"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -267,7 +267,7 @@
                 v-model="queryParams.postCode"
                 placeholder="变更申请联系人姓名"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -277,7 +277,7 @@
                 v-model="queryParams.postCode"
                 placeholder="变更申请联系人电话"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
@@ -290,7 +290,7 @@
                 v-model="queryParams.postCode"
                 placeholder="变更原因描述"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>

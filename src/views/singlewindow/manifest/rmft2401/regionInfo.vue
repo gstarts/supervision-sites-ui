@@ -17,7 +17,7 @@
                 v-model="queryParams.postCode"
                 placeholder="选择国家/地区"
                 clearable
-
+                size="small"
               />
             </el-form-item>
           </el-col>
