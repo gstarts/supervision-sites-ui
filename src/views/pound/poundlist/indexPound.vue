@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-   
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -28,90 +27,106 @@
         <el-button type="info" class="fa fa-print" size="mini" @click="print">打印</el-button>
       </el-col>
     </el-row>
-     <el-card class="mb20">
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px" size="small">
-      <!-- 左侧开始 -->
-      <el-row>
-        <el-col :span="6">
-          <el-form-item label="发货单位" prop="finalInspectionTime">
-            <el-input v-model="form.finalInspectionTime" placeholder="请输入发货单位" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="5">
-          <el-form-item label="车牌号" prop="plateNum">
-            <el-input v-model="form.plateNum" placeholder="请输入车牌号" />
-          </el-form-item>
-        </el-col>
-        <!-- 蒙文键盘 -->
-        <el-col :span="1">
-          <el-popover placement="right" width="500" trigger="click">
-            <SimpleKeyboard @onChange="onChange" :input="form.plateNum" />
-            <el-button slot="reference" class="fa fa-keyboard-o" size="mini"></el-button>
-          </el-popover>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="货物名称" prop="specification">
-            <el-input v-model="form.specification" placeholder="请输入货物名称" />
-          </el-form-item>
-        </el-col>
+    <el-card class="mb20">
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px" size="small">
+        <!-- 左侧开始 -->
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="发货单位" prop="finalInspectionTime">
+              <el-input v-model="form.finalInspectionTime" placeholder="请输入发货单位" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="车牌号" prop="plateNum">
+              <el-input v-model="form.plateNum" placeholder="请输入车牌号" />
+            </el-form-item>
+          </el-col>
+          <!-- 蒙文键盘 -->
+          <el-col :span="1">
+            <el-popover placement="right" width="500" trigger="click">
+              <SimpleKeyboard @onChange="onChange" :input="form.plateNum" />
+              <el-button slot="reference" class="fa fa-keyboard-o" size="mini"></el-button>
+            </el-popover>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="货物名称" prop="specification">
+              <el-input v-model="form.specification" placeholder="请输入货物名称" />
+            </el-form-item>
+          </el-col>
 
-        <el-col :span="6">
-          <el-form-item label="收货单位" prop="receivingUnit">
-            <el-input v-model="form.receivingUnit" placeholder="请输收货单位" />
-          </el-form-item>
-        </el-col>
-        <!-- 左侧结束 -->
-      </el-row>
-      <el-row>
-        <!-- 右侧开始 -->
-        <el-col :span="6">
-          <el-form-item label="毛重" prop="grossWeight">
-            <el-input v-model="form.grossWeight" placeholder="请输入毛重" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="皮重" prop="tare">
-            <el-input v-model="form.tare" placeholder="请输入皮重" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="箱皮重" prop="NetTareWeight">
-            <el-input v-model="form.NetTareWeight" placeholder="请输入箱皮重" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="净重" prop="netWeight">
-            <el-input v-model="form.netWeight" placeholder="请输入净重" />
-          </el-form-item>
-        </el-col>
-        <!-- 右侧结束 -->
-      </el-row>
-      <!-- 底部三个 -->
-      <el-row>
-         <el-col :span="24">
-          <el-form-item label="箱 号" prop="CaseNumber">
-            <el-input v-model="form.CaseNumber" placeholder="请输入箱号" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-       <el-row>
-         <el-col :span="24">
-          <el-form-item label="提煤单号" prop="CoalMentionNumber">
-            <el-input v-model="form.CoalMentionNumber" placeholder="请输入提煤单号" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-       <el-row>
-         <el-col :span="24">
-          <el-form-item label="备注" prop="Remarks">
-            <el-input v-model="form.Remarks" placeholder="请输入备注" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
+          <el-col :span="6">
+            <el-form-item label="收货单位" prop="receivingUnit">
+              <el-input v-model="form.receivingUnit" placeholder="请输收货单位" />
+            </el-form-item>
+          </el-col>
+          <!-- 左侧结束 -->
+        </el-row>
+        <el-row>
+          <!-- 右侧开始 -->
+          <el-col :span="6">
+            <el-form-item label="毛重" prop="grossWeight">
+              <el-input v-model="form.grossWeight" placeholder="系统反填" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="皮重" prop="tare">
+              <el-input v-model="form.tare" placeholder="请输入皮重" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="箱皮重" prop="NetTareWeight">
+              <el-input v-model="form.NetTareWeight" placeholder="请输入箱皮重" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="净重" prop="netWeight">
+              <el-input v-model="form.netWeight" placeholder="请输入净重" />
+            </el-form-item>
+          </el-col>
+          <!-- 右侧结束 -->
+        </el-row>
+        <!-- 底部三个 -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="箱 号" prop="CaseNumber">
+              <el-input v-model="form.CaseNumber" placeholder="请输入箱号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="通 道 号" prop="ChannelNumber">
+              <el-select
+                v-model="form.ChannelNumber"
+                placeholder="请选择通道号"
+                @change="ChannelNumberChange"
+              >
+                <el-option
+                  v-for="dept in chnlConfigList"
+                  :key="dept.cChnlNo"
+                  :label="dept.cChnlName"
+                  :value="dept.cChnlNo"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="提煤单号" prop="CoalMentionNumber">
+              <el-input v-model="form.CoalMentionNumber" placeholder="请输入提煤单号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="Remarks">
+              <el-input v-model="form.Remarks" placeholder="请输入备注" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
       <!-- 底部结束 -->
 
-    <!-- <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -119,136 +134,131 @@
           @click="cancel"
           v-hasPermi="['measurement:sheet:export']"
         >导出</el-button>
-    </el-col>-->
+      </el-col>-->
 
-    <el-table  :data="sheetList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="计量员" align="center" prop="id" />
-      <el-table-column label="末检时间" align="center" prop="finalInspectionTime" />
-      <el-table-column label="计量号" align="center" prop="measurementNum" />
-      <el-table-column label="车牌号" align="center" prop="plateNum" />
-      <el-table-column label="货物名称" align="center" prop="goodsName" />
-      <el-table-column label="规格" align="center" prop="specification" />
-      <el-table-column label="承运人" align="center" prop="carrier" />
-      <el-table-column label="皮重" align="center" prop="tare" />
-      <el-table-column label="毛重" align="center" prop="grossWeight" />
-      <el-table-column label="净重" align="center" prop="netWeight" />
-      <el-table-column label="供货单位" align="center" prop="deliveryUnit" />
-      <el-table-column label="收货单位" align="center" prop="receivingUnit" />
-      <el-table-column label="流向" align="center" prop="flowDirection" />
-      <el-table-column label="计量员" align="center" prop="measurer" />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['measurement:sheet:edit']"
-          >修改</el-button>
-           <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="preview(scope.row)"
-          >预览</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+      <el-table :data="sheetList" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="计量员" align="center" prop="id" />
+        <el-table-column label="末检时间" align="center" prop="finalInspectionTime" />
+        <el-table-column label="计量号" align="center" prop="measurementNum" />
+        <el-table-column label="车牌号" align="center" prop="plateNum" />
+        <el-table-column label="货物名称" align="center" prop="goodsName" />
+        <el-table-column label="规格" align="center" prop="specification" />
+        <el-table-column label="承运人" align="center" prop="carrier" />
+        <el-table-column label="皮重" align="center" prop="tare" />
+        <el-table-column label="毛重" align="center" prop="grossWeight" />
+        <el-table-column label="净重" align="center" prop="netWeight" />
+        <el-table-column label="供货单位" align="center" prop="deliveryUnit" />
+        <el-table-column label="收货单位" align="center" prop="receivingUnit" />
+        <el-table-column label="流向" align="center" prop="flowDirection" />
+        <el-table-column label="计量员" align="center" prop="measurer" />
+        <el-table-column label="备注" align="center" prop="remark" />
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="handleUpdate(scope.row)"
+              v-hasPermi="['measurement:sheet:edit']"
+            >修改</el-button>
+            <el-button size="mini" type="text" icon="el-icon-edit" @click="preview(scope.row)">预览</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getList"
+      />
 
-    <!-- 添加或修改计量单对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="末检时间" prop="finalInspectionTime">
-              <el-input v-model="form.finalInspectionTime" placeholder="请输入末检时间" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="计量号" prop="measurementNum">
-              <el-input v-model="form.measurementNum" placeholder="请输入计量号" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="车牌号" prop="plateNum">
-              <el-input v-model="form.plateNum" placeholder="请输入车牌号" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="货物名称" prop="goodsName">
-              <el-input v-model="form.goodsName" placeholder="请输入货物名称" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="规格" prop="specification">
-              <el-input v-model="form.specification" placeholder="请输入规格" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="承运人" prop="carrier">
-              <el-input v-model="form.carrier" placeholder="请输入承运人" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="皮重" prop="tare">
-              <el-input v-model="form.tare" placeholder="请输入皮重" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="毛重" prop="grossWeight">
-              <el-input v-model="form.grossWeight" placeholder="请输入毛重" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="净重" prop="netWeight">
-              <el-input v-model="form.netWeight" placeholder="请输入净重" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="供货单位" prop="deliveryUnit">
-              <el-input v-model="form.deliveryUnit" placeholder="请输入供货单位" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="收货单位" prop="receivingUnit">
-              <el-input v-model="form.receivingUnit" placeholder="请输入收货单位" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="流向" prop="flowDirection">
-              <el-input v-model="form.flowDirection" placeholder="请输入流向" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-form-item label="计量员" prop="measurer">
-          <el-input v-model="form.measurer" placeholder="请输入计量员" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
+      <!-- 添加或修改计量单对话框 -->
+      <el-dialog :title="title" :visible.sync="open" width="500px">
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="末检时间" prop="finalInspectionTime">
+                <el-input v-model="form.finalInspectionTime" placeholder="请输入末检时间" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="计量号" prop="measurementNum">
+                <el-input v-model="form.measurementNum" placeholder="请输入计量号" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="车牌号" prop="plateNum">
+                <el-input v-model="form.plateNum" placeholder="请输入车牌号" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="货物名称" prop="goodsName">
+                <el-input v-model="form.goodsName" placeholder="请输入货物名称" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="规格" prop="specification">
+                <el-input v-model="form.specification" placeholder="请输入规格" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="承运人" prop="carrier">
+                <el-input v-model="form.carrier" placeholder="请输入承运人" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="皮重" prop="tare">
+                <el-input v-model="form.tare" placeholder="请输入皮重" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="毛重" prop="grossWeight">
+                <el-input v-model="form.grossWeight" placeholder="请输入毛重" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="净重" prop="netWeight">
+                <el-input v-model="form.netWeight" placeholder="请输入净重" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="供货单位" prop="deliveryUnit">
+                <el-input v-model="form.deliveryUnit" placeholder="请输入供货单位" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="收货单位" prop="receivingUnit">
+                <el-input v-model="form.receivingUnit" placeholder="请输入收货单位" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="流向" prop="flowDirection">
+                <el-input v-model="form.flowDirection" placeholder="请输入流向" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item label="计量员" prop="measurer">
+            <el-input v-model="form.measurer" placeholder="请输入计量员" />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button @click="cancel">取 消</el-button>
+        </div>
+      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -264,6 +274,9 @@
 // } from "@/api/pound/poundlist";
 import SimpleKeyboard from "@/components/SimpleKeyboard/SimpleKeyboard";
 import printTemplate from "print-template";
+import { listChnlConfig } from "@/api/basis/chnlConfig";
+import { getUserDepts } from "@/utils/charutils";
+import { poundSelect } from "@/api/pound/poundlist";
 export default {
   name: "Sheet",
   components: {
@@ -285,6 +298,8 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      // 通道配置表格数据
+      chnlConfigList: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -297,6 +312,9 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //重量
+      Poundweight: undefined,
+      //
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -305,7 +323,7 @@ export default {
         measurementNum: undefined,
         plateNum: undefined,
         goodsName: undefined,
-        
+
         specification: undefined,
         carrier: undefined,
         tare: undefined,
@@ -317,20 +335,50 @@ export default {
         measurer: undefined,
       },
       // 表单参数
-      form: { plateNum: undefined,
-      NetTareWeight:undefined,
-      CaseNumber:undefined,
-      CoalMentionNumber:undefined,
-      Remarks:undefined,
+      form: {
+        plateNum: undefined,
+        NetTareWeight: undefined,
+        CaseNumber: undefined,
+        CoalMentionNumber: undefined,
+        Remarks: undefined,
+        grossWeight: undefined,
+        //通道号
+        ChannelNumber: undefined,
       },
       // 表单校验
       rules: {},
     };
   },
   created() {
+    // 0 监管场所，1保税库，2堆场，3企业
+    this.depts = getUserDepts("0");
+    if (this.depts.length > 0) {
+      this.queryParams.stationId = this.depts[0].deptId;
+      this.created();
+    }
     this.getList();
   },
   methods: {
+    /** 查询通道配置列表 */
+    created() {
+      listChnlConfig(this.queryParams).then((response) => {
+        this.chnlConfigList = response.rows;
+        this.total = response.total;
+      });
+    },
+    //下拉选 选择定时反添重量方法
+    ChannelNumberChange(event) {
+      this.timer = setInterval(() => {
+        poundSelect(event).then((response) => {
+          this.Poundweight = response.data.weight;
+          if (this.Poundweight && this.Poundweight > 0) {
+            this.form.grossWeight = this.Poundweight;
+          } else {
+            this.form.grossWeight = 0;
+          }
+        });
+      }, 1000);
+    },
     /** 查询计量单列表 */
     getList() {
       this.loading = true;
@@ -353,7 +401,7 @@ export default {
         measurementNum: undefined,
         plateNum: undefined,
         goodsName: undefined,
-        NetTareWeight:undefined,
+        NetTareWeight: undefined,
         specification: undefined,
         carrier: undefined,
         tare: undefined,
@@ -368,8 +416,9 @@ export default {
         updateBy: undefined,
         updateTime: undefined,
         remark: undefined,
+        ChannelNumber: this.Poundweight,
       };
-      this.resetForm("form");
+      // this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -378,8 +427,8 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+      // this.resetForm("queryForm");
+      // this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -473,15 +522,12 @@ export default {
         .catch(function () {});
     },
     onChange(input) {
-      console.log("输出" + input);
       this.form.plateNum = input;
     },
     //打印功能
     print() {
       var myDate = new Date();
-      console.log("aa");
       let template = new printTemplate();
-      console.log("bb");
       let yto = {
         name: "yto", // 模板名称
         unit: "mm", // 尺寸 默认mm    mm / px
@@ -660,44 +706,44 @@ export default {
           //右侧 X轴 71  左侧X轴  20
           // 动态数据 传入值的位置
           //口岸公司名称
-          PortCompanyPreview:{type: 'text', x: 23, y: 1, fontSize: 4},
+          PortCompanyPreview: { type: "text", x: 23, y: 1, fontSize: 4 },
           //日期
-          datePreview:{type: 'text', x: 20, y: 8, fontSize: 3},
+          datePreview: { type: "text", x: 20, y: 8, fontSize: 3 },
           //时间
-          timePreview:{type: 'text', x: 50, y: 8, fontSize: 3},
+          timePreview: { type: "text", x: 50, y: 8, fontSize: 3 },
           //第一排开始
 
           //发货单位
-          ShipperPreview:{type: 'text', x: 20, y: 14, fontSize: 3},
+          ShipperPreview: { type: "text", x: 20, y: 14, fontSize: 3 },
           //收货单位
-          ReceivingUnitPreview:{type: 'text', x: 20, y: 19, fontSize: 3},
+          ReceivingUnitPreview: { type: "text", x: 20, y: 19, fontSize: 3 },
           //货物名称
-          itemNamePreview:{type: 'text', x: 20, y: 26, fontSize: 3},
+          itemNamePreview: { type: "text", x: 20, y: 26, fontSize: 3 },
           //车号
-          CarNumberPreview:{type: 'text', x: 20, y: 32, fontSize: 3},
+          CarNumberPreview: { type: "text", x: 20, y: 32, fontSize: 3 },
           //第一排结束
 
           //第二排开始
 
-           //毛重
-           grossWeightPreview:{type: 'text', x: 75, y: 14, fontSize: 3},
-           //皮重
-           tarePreview:{type: 'text', x: 75, y: 20, fontSize: 3},
-           //箱皮重
-           NetTareWeightPreview:{type: 'text', x: 75, y: 26, fontSize: 3},
-           //净重
-           netWeightPreview:{type: 'text', x: 75, y: 32, fontSize: 3},
-           //第二排结束
-          
+          //毛重
+          grossWeightPreview: { type: "text", x: 75, y: 14, fontSize: 3 },
+          //皮重
+          tarePreview: { type: "text", x: 75, y: 20, fontSize: 3 },
+          //箱皮重
+          NetTareWeightPreview: { type: "text", x: 75, y: 26, fontSize: 3 },
+          //净重
+          netWeightPreview: { type: "text", x: 75, y: 32, fontSize: 3 },
+          //第二排结束
+
           //底部三排
           //箱号
-            CaseNumberPreview:{type: 'text', x: 20, y: 38, fontSize: 3},
+          CaseNumberPreview: { type: "text", x: 20, y: 38, fontSize: 3 },
           //提煤单号
-            CoalMentionNumberPreview:{type: 'text', x: 20, y: 44, fontSize: 3},
+          CoalMentionNumberPreview: { type: "text", x: 20, y: 44, fontSize: 3 },
           //备注
-            RemarksPreview:{type: 'text', x: 20, y: 50, fontSize: 3},
-            // 第三排结束
-            
+          RemarksPreview: { type: "text", x: 20, y: 50, fontSize: 3 },
+          // 第三排结束
+
           //   type: "barcode",
           //   x: 7,
           //   y: 13,
@@ -713,44 +759,42 @@ export default {
       };
       // 添加模板
       template.push(yto);
-      
+
       // 传入数据的内容
       let data = [
-        { 
+        {
           //口岸公司名称
-          PortCompanyPreview:'甘其毛都华方海关监管场所称重单',
-         //日期
-         datePreview:myDate.toLocaleDateString(),
-         //时间
-         timePreview:myDate.toLocaleTimeString(),
+          PortCompanyPreview: "甘其毛都华方海关监管场所称重单",
+          //日期
+          datePreview: myDate.toLocaleDateString(),
+          //时间
+          timePreview: myDate.toLocaleTimeString(),
           //发货单位
-          ShipperPreview:this.form.finalInspectionTime,
+          ShipperPreview: this.form.finalInspectionTime,
           //收货单位
-          ReceivingUnitPreview:this.form.receivingUnit,
+          ReceivingUnitPreview: this.form.receivingUnit,
           //货物名称
-          itemNamePreview:this.form.specification,
+          itemNamePreview: this.form.specification,
           //车号
-          CarNumberPreview:this.form.plateNum,
-           //毛重
-          grossWeightPreview:this.form.grossWeight,
+          CarNumberPreview: this.form.plateNum,
+          //毛重
+          grossWeightPreview: this.form.grossWeight,
           //皮重
-          tarePreview:this.form.tare,
+          tarePreview: this.form.tare,
           //箱皮重
-          NetTareWeightPreview:this.form.NetTareWeight,
+          NetTareWeightPreview: this.form.NetTareWeight,
           //净重
-          netWeightPreview:this.form.netWeight,
-         //箱号
-         CaseNumberPreview:this.form.CaseNumber,
-         //提煤单号
-         CoalMentionNumberPreview:this.form.CoalMentionNumber,
-         //备注
-         RemarksPreview:this.form.Remarks,
-           },
+          netWeightPreview: this.form.netWeight,
+          //箱号
+          CaseNumberPreview: this.form.CaseNumber,
+          //提煤单号
+          CoalMentionNumberPreview: this.form.CoalMentionNumber,
+          //备注
+          RemarksPreview: this.form.Remarks,
+        },
         // { name: "张三2", code: "YT100011112" },
       ];
       // 打印
-      console.log(this.form.goodsName);
-      console.log("aaa"+this.form.measurementNum);
       template.print("yto", data).then((pdf) => {
         // 返回 jspdf
         // blob 地址
@@ -760,5 +804,14 @@ export default {
       });
     },
   },
+  //销毁前清除定时器
+  beforeDestroy() {
+    clearInterval(this.timer);
+  },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+</style>
