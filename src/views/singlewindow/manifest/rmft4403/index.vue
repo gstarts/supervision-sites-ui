@@ -332,6 +332,7 @@ import {
 } from "@/api/manifest/rmft4404/emptycar/Head/head";
 
 import {listInfo} from "@/api/basis/enterpriseInfo";
+import { add } from "@/api/manifest/rmft4403/head";
 export default {
   name: "Head",
   data() {
@@ -573,7 +574,15 @@ export default {
       this.AllForm.Head = this.listInfo.find(el => el.deptId === this.head.unitCode)
       this.AllForm.Head.messageType="MT4403"
       this.AllForm.Head.functionCode = "2";
-      console.log(JSON.stringify(this.AllForm));
+      add(this.AllForm).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("新增成功");
+          console.log(JSON.stringify(this.form));
+        } else {
+          this.msgError(response.msg);
+        }
+      });
+      
       //新增后清空表单
       this.AllForm.Declaration={};
       this.AllForm.AdditionalInformation={};
