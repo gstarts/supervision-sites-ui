@@ -217,7 +217,7 @@
     <el-table :data="headList" height="300px" v-loading="loading">
       <el-table-column label="序号" align="center" type="index" />
       <el-table-column label="托架/拖挂车编号" align="center" prop="transportEquipmentId" />
-      <el-table-column label="托架/拖挂车类型" align="center" prop="characteristicCode" :formatter="Trailerformat" />
+      <el-table-column label="托架/拖挂车类型" align="center" prop="typeCode" :formatter="Trailerformat" />
       <el-table-column label="托架/拖挂车自重(kg)" align="center" prop="tareWeight" />
     </el-table>
 <!-- :rules="headRuless" -->
@@ -229,8 +229,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="托架/拖挂车类型" prop="characteristicCode">
-            <el-select v-model="transportEquipmentForm.characteristicCode" placeholder="请输入托架/拖挂车类型" size="mini">
+          <el-form-item label="托架/拖挂车类型" prop="typeCode">
+            <el-select v-model="transportEquipmentForm.typeCode" placeholder="请输入托架/拖挂车类型" size="mini">
               <el-option
                 v-for="dict in TrailertypeOptions"
                 :key="dict.dictValue"
@@ -267,6 +267,7 @@ import {
 } from "@/api/manifest/rmft4404/emptycar/Head/head";
 
 import {listInfo} from "@/api/basis/enterpriseInfo";
+import { add } from "@/api/manifest/rmft4403/head";
 export default {
   name: "Head",
   data() {
@@ -458,7 +459,7 @@ export default {
           // 托架/拖挂车编号
           transportEquipmentId :"",
           // 托架/拖挂车类型
-          characteristicCode:  "",
+          typeCode:  "",
           // 托架/拖挂车自重
           tareWeight: ""
         },
@@ -511,7 +512,7 @@ export default {
   methods: {
     //托架/拖挂车类型 翻译
     Trailerformat(row, column) {
-      return this.selectDictLabel(this.TrailertypeOptions, row.characteristicCode);
+      return this.selectDictLabel(this.TrailertypeOptions, row.typeCode);
     },
     // 企业申报信息列表
     enterpriseInfo(){
@@ -596,8 +597,15 @@ export default {
       this.AForm.borderTransportMeans = this.borderTransportMeans; 
       this.AForm.borderTransportMeans.transportEquipment = this.headList;  
       this.form.declaration.consignment = this.AForm;
+      add(this.form).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("新增成功");
+          console.log(JSON.stringify(this.form));
+        } else {
+          this.msgError(response.msg);
+        }
+      });
       this.reset();
-      console.log(JSON.stringify(this.form));
       // this.$refs["form"].validate((valid) => {
       //   if (valid) {
       //     addbody(this.form).then((response) => {

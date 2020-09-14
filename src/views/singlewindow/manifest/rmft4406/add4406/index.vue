@@ -250,7 +250,7 @@
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="序号" align="center" type="index" />
       <el-table-column label="托架/拖挂车编号" align="center" prop="transportEquipmentId" />
-      <el-table-column label="托架/拖挂车类型" align="center" prop="characteristicCode" :formatter="Trailerformat" />
+      <el-table-column label="托架/拖挂车类型" align="center" prop="typeCode" :formatter="Trailerformat" />
       <el-table-column label="托架/拖挂车自重(kg)" align="center" prop="tareWeight" />
     </el-table>
 
@@ -270,8 +270,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="托架/拖挂车类型" prop="characteristicCode">
-            <el-select v-model="transportEquipmentForm.characteristicCode" placeholder="请选择托架/拖挂车类型" size="mini">
+          <el-form-item label="托架/拖挂车类型" prop="typeCode">
+            <el-select v-model="transportEquipmentForm.typeCode" placeholder="请选择托架/拖挂车类型" size="mini">
               <el-option
                 v-for="dict in TrailerType"
                 :key="dict.dictValue"
@@ -383,7 +383,10 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="重箱或者空箱标识" prop="fullnessCode">
-            <el-select v-model="transportEquipment.fullnessCode" placeholder="请选择集装箱(器)重箱或者空箱标识" size="mini">
+            <el-select
+              v-model="transportEquipment.fullnessCode"
+              placeholder="请选择集装箱(器)重箱或者空箱标识" size="mini"
+            >
               <el-option
                 v-for="dict in ContainerSelfWeight"
                 :key="dict.dictValue"
@@ -480,7 +483,7 @@ export default {
           // 托架/拖挂车编号
           transportEquipmentId :"",
           // 托架/拖挂车类型
-          characteristicCode:  "",
+          typeCode:  "",
           // 托架/拖挂车自重
           tareWeight: ""
         },
@@ -646,7 +649,7 @@ export default {
         transportEquipmentId: [
           { required: false, message: "请输入托架/拖挂车编号", trigger: "blur" },
         ],
-        characteristicCode: [
+        typeCode: [
           { required: false, message: "请输入托架/拖挂车类型", trigger: "blur" },
         ],
         tareWeight: [
@@ -777,7 +780,7 @@ export default {
     },
     //托架/拖挂车类型 翻译
     Trailerformat(row, column) {
-      return this.selectDictLabel(this.TrailerType, row.characteristicCode);
+      return this.selectDictLabel(this.TrailerType, row.typeCode);
     },
     //集装箱(器)来源 翻译
     ContainerSourceformat(row, column) {
