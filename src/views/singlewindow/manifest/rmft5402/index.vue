@@ -23,43 +23,39 @@
         :disabled="btnDisable.delBtn"
         @click="handleDelete"
       >删除</el-button>
-      <el-button
-        type="danger"
-        icon="el-icon-thumb"
-        size="mini"
-        :disabled="btnDisable.repBtn"
-        @click="handleReport"
-      >申报</el-button>
-      <el-button
-        type="primary"
-        icon="el-icon-document-copy"
-        size="mini"
-        :disabled="btnDisable.copyBtn"
-        @click="handleCopy"
-      >复制</el-button>
-      <el-button
-        type="primary"
-        icon="el-icon-refresh"
-        size="mini"
-        :disabled="btnDisable.refBtn"
-        @click="handleRefresh"
-      >刷新</el-button>
+      <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode" v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报</el-button>
+      <!--      <el-button-->
+<!--        type="danger"-->
+<!--        icon="el-icon-thumb"-->
+<!--        size="mini"-->
+<!--        :disabled="btnDisable.repBtn"-->
+<!--        @click="handleReport"-->
+<!--      >申报</el-button>-->
+<!--      <el-button-->
+<!--        type="primary"-->
+<!--        icon="el-icon-document-copy"-->
+<!--        size="mini"-->
+<!--        :disabled="btnDisable.copyBtn"-->
+<!--        @click="handleCopy"-->
+<!--      >复制</el-button>-->
+<!--      <el-button-->
+<!--        type="primary"-->
+<!--        icon="el-icon-refresh"-->
+<!--        size="mini"-->
+<!--        :disabled="btnDisable.refBtn"-->
+<!--        @click="handleRefresh"-->
+<!--      >刷新</el-button>-->
     </div>
     <!-- 基本信息 -->
     <el-card class="mb20">
       <div slot="header" class="clearfix">
         <span>基本信息</span>
       </div>
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="货物运输批次号" prop="postCode">
-              <el-input
-                v-model="declaration.declarationId"
-                placeholder="货物运输批次号"
-                clearable
-                size="small"
-              />
+              <el-input v-model="declaration.declarationId" placeholder="货物运输批次号" clearable  />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -69,7 +65,6 @@
                 v-model="borderTransportMeans.typeCode"
                 placeholder="运输方式代码"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
@@ -80,18 +75,12 @@
                 v-model="declaration.declarationOfficeID"
                 placeholder="进出境口岸代码"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="卸货地代码" prop="postCode">
-              <el-input
-                v-model="unloadingLocation.unloadinglocationId"
-                placeholder="卸货地代码"
-                clearable
-                size="small"
-              />
+              <el-input v-model="unloadingLocation.unloadinglocationId" placeholder="卸货地代码" clearable  />
             </el-form-item>
           </el-col>
         </el-row>
@@ -99,7 +88,7 @@
           <el-col :span="6">
             <el-form-item label="理货开始时间" prop="postCode">
               <el-date-picker
-                class="datePicker"
+                style="width:100%"
                 v-model="control.inspectionStartDateTime"
                 type="datetime"
                 placeholder="选择日期时间"
@@ -118,12 +107,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="理货公司代码" prop="postCode">
-              <el-input
-                v-model="submitter.submitterId"
-                placeholder="理货公司代码"
-                clearable
-                size="small"
-              />
+              <el-input v-model="submitter.submitterId" placeholder="理货公司代码" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -146,7 +130,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-          </el-col>-->
+          </el-col> -->
           <el-col :span="6">
             <el-form-item label="企业代码" prop="postCode">
               <el-select v-model="head.unitCode" filterable placeholder="企业代码">
@@ -165,7 +149,6 @@
                 v-model="additionalInformation.content"
                 placeholder="备注"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
@@ -200,27 +183,27 @@
             :disabled="btnDisable.delBtn"
             @click="handleDelete"
           >删除</el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-thumb"
-            size="mini"
-            :disabled="btnDisable.repBtn"
-            @click="handleReport"
-          >申报</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-document-copy"
-            size="mini"
-            :disabled="btnDisable.copyBtn"
-            @click="handleCopy"
-          >复制</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-refresh"
-            size="mini"
-            :disabled="btnDisable.refBtn"
-            @click="handleRefresh"
-          >刷新</el-button>
+<!--          <el-button-->
+<!--            type="danger"-->
+<!--            icon="el-icon-thumb"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.repBtn"-->
+<!--            @click="handleReport"-->
+<!--          >申报</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-document-copy"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.copyBtn"-->
+<!--            @click="handleCopy"-->
+<!--          >复制</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-refresh"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.refBtn"-->
+<!--            @click="handleRefresh"-->
+<!--          >刷新</el-button>-->
         </el-col>
       </el-row>
       <el-table
@@ -232,30 +215,15 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
-        <el-table-column type="index" prop="num" label="序号" min-width="120" align="center" />
-        <el-table-column
-          prop="transportContractDocument.transportcontractdocumentId"
-          label="提(运)单号"
-          min-width="120"
-          align="center"
-        />
-        <el-table-column prop="grossVolumeMeasure" label="货物体积(M3)" min-width="150" align="center" />
-        <el-table-column prop="totalPackageQuantity" label="货物总件数" min-width="120" align="center" />
-        <el-table-column
-          prop="wrapType"
-          label="包装种类"
-          min-width="120"
-          align="center"
-          :formatter="PackageTypeCodeFormat"
-        />
-        <el-table-column
-          prop="goodsMeasure.grossMassMeasure"
-          label="货物总毛重(KG)"
-          min-width="120"
-          align="center"
-        />
+        <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
+        <el-table-column prop="transportContractDocument.transportcontractdocumentId" label="提(运)单号" min-width="120" align="center"/>
+        <el-table-column prop="grossVolumeMeasure" label="货物体积(M3)" min-width="150" align="center"/>
+        <el-table-column prop="totalPackageQuantity" label="货物总件数" min-width="120" align="center"/>
+        <el-table-column prop="wrapType" label="包装种类" min-width="120" align="center" :formatter="PackageTypeCodeFormat"/>
+        <el-table-column prop="goodsMeasure.grossMassMeasure" label="货物总毛重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
+        v-show="page.total>0"
         class="right mb20"
         background
         layout="prev, pager, next"
@@ -264,7 +232,7 @@
         :page-size="page.size"
         @current-change="currentChange"
       />
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="提(运)单号" prop="postCode">
@@ -272,7 +240,6 @@
                 v-model="consignment.transportContractDocument.transportcontractdocumentId"
                 placeholder="提(运)单号"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
@@ -282,7 +249,6 @@
                 v-model="consignment.grossVolumeMeasure"
                 placeholder="货物体积(M3)"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
@@ -292,13 +258,12 @@
                 v-model="consignment.totalPackageQuantity"
                 placeholder="货物总件数"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="包装种类" prop="postCode">
-              <el-select v-model="consignment.wrapType" placeholder="包装种类" clearable size="mini">
+              <el-select v-model="consignment.wrapType" placeholder="包装种类" clearable  >
                 <el-option
                   v-for="dict in PaymentMethodCode"
                   :key="dict.dictValue"
@@ -316,7 +281,6 @@
                 v-model="consignment.goodsMeasure.grossMassMeasure"
                 placeholder="货物总毛重(KG)"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
@@ -351,27 +315,27 @@
             :disabled="btnDisable.delBtn"
             @click="handleDelete"
           >删除</el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-thumb"
-            size="mini"
-            :disabled="btnDisable.repBtn"
-            @click="handleReport"
-          >申报</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-document-copy"
-            size="mini"
-            :disabled="btnDisable.copyBtn"
-            @click="handleCopy"
-          >复制</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-refresh"
-            size="mini"
-            :disabled="btnDisable.refBtn"
-            @click="handleRefresh"
-          >刷新</el-button>
+<!--          <el-button-->
+<!--            type="danger"-->
+<!--            icon="el-icon-thumb"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.repBtn"-->
+<!--            @click="handleReport"-->
+<!--          >申报</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-document-copy"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.copyBtn"-->
+<!--            @click="handleCopy"-->
+<!--          >复制</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-refresh"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.refBtn"-->
+<!--            @click="handleRefresh"-->
+<!--          >刷新</el-button>-->
         </el-col>
       </el-row>
       <el-table
@@ -382,11 +346,12 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" min-width="55" align="center" />
-        <el-table-column type="index" prop="num" label="序号" align="center" />
+        <el-table-column type="selection" min-width="55" align="center"/>
+        <el-table-column type="index" prop="num" label="序号" align="center"/>
         <el-table-column prop="transportequipmentId" label="集装箱(器)编号" align="center" />
       </el-table>
       <el-pagination
+        v-show="page.total>0"
         class="right mb20"
         background
         layout="prev, pager, next"
@@ -395,7 +360,7 @@
         :page-size="page.size"
         @current-change="currentChange"
       />
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="集装箱(器)编号" prop="postCode">
@@ -403,7 +368,7 @@
                 v-model="transportEquipmentForm.transportequipmentId"
                 placeholder="集装箱(器)编号"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -549,6 +514,7 @@ export default {
   mounted() {
     // 初始化
     this.init();
+
   },
   created() {
     /** 包装种类代码字典 */
@@ -687,6 +653,8 @@ export default {
     numFun() {
       // console.log(123);
     },
+    /** 申报按钮*/
+    updateStatementCode(){},
     // 请求接口
     depParaList() {
       return new Promise((resolve) => {
@@ -709,6 +677,9 @@ export default {
   text-align: right;
 }
 .datePicker {
-  width: auto !important;
+  width: 100% !important;
+}
+.el-select{
+  width: 100%;
 }
 </style>

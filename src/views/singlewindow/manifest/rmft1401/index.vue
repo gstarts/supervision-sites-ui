@@ -9,22 +9,21 @@
       <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn" @click="handleDelete">
         删除
       </el-button>
-      <el-button type="danger" icon="el-icon-thumb" size="mini" :disabled="btnDisable.repBtn" @click="handleReport"
-                 style="float:right">申报
-      </el-button>
-      <el-button type="primary" icon="el-icon-document-copy" size="mini" :disabled="btnDisable.copyBtn"
-                 @click="handleCopy">复制
-      </el-button>
-      <el-button type="primary" icon="el-icon-refresh" size="mini" :disabled="btnDisable.refBtn" @click="handleRefresh">
-        刷新
-      </el-button>
+      <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode" v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报</el-button>
+
+      <!--      <el-button type="primary" icon="el-icon-document-copy" size="mini" :disabled="btnDisable.copyBtn"-->
+<!--                 @click="handleCopy">复制-->
+<!--      </el-button>-->
+<!--      <el-button type="primary" icon="el-icon-refresh" size="mini" :disabled="btnDisable.refBtn" @click="handleRefresh">-->
+<!--        刷新-->
+<!--      </el-button>-->
     </div>
     <!-- 基本信息 -->
     <el-card class="mb20">
       <div slot="header" class="clearfix">
         <span>基本信息</span>
       </div>
-      <el-form :model="basicParams" ref="queryForm" label-width="160px">
+      <el-form :model="basicParams" ref="queryForm" label-width="160px"  size="mini">
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="货物运输批次号" prop="voyageNo">
@@ -32,7 +31,6 @@
                 v-model="basicParams.declaration.declarationId"
                 placeholder="货物运输批次号"
                 clearable
-                size="small"
               >
                 <!-- <el-tooltip slot="append" class="item" effect="dark" content="系统分配批次号" placement="top-start">
                   <el-button  icon="el-icon-plus" @click="getVoyageNo"></el-button>
@@ -47,7 +45,6 @@
                 v-model="basicParams.borderTransportMeans.typeCode"
                 placeholder="运输方式代码"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
@@ -69,7 +66,6 @@
                 v-model="basicParams.carrierIdentification.manifestDeclarationId"
                 placeholder="承运人代码"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
@@ -81,14 +77,13 @@
                 v-model="basicParams.agent.agentId"
                 placeholder="运输工具代理企业代码"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="货物装载时间" prop="loadingDate">
               <el-date-picker
-                class="datePicker"
+                style="width:100%"
                 v-model="basicParams.loadingLocation.loadingDateTime"
                 type="datetime"
                 value-format="yyyyMMddHHmmss"
@@ -101,15 +96,14 @@
                 v-model="basicParams.unloadingLocation.unloadinglocationId"
                 placeholder="卸货地代码"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="到达卸货地日期" prop="arrivalDate">
               <el-date-picker
-                class="datePicker"
                 v-model="basicParams.unloadingLocation.arrivalDateTime"
+                style="width:100%"
                 type="date"
                 value-format="yyyyMMdd"
                 placeholder="选择日期"/>
@@ -139,13 +133,6 @@
                   :value="item.deptId">
                 </el-option>
               </el-select>
-              <!-- <el-input
-                v-model="basicParams.unitCode"
-                placeholder="企业代码"
-                clearable
-                size="small"
-                disabled
-              /> -->
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -154,7 +141,6 @@
                 v-model="basicParams.representativePerson.name"
                 placeholder="舱单传输人名称"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
@@ -164,7 +150,6 @@
                 v-model="basicParams.additionalInformation.content"
                 placeholder="备注"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
@@ -209,7 +194,7 @@
         <el-table-column prop="valueAmount" label="货物价值" min-width="120"/>
         <el-table-column prop="consigneeName" label="收货人名称" min-width="120"/>
       </el-table>
-      <el-form :model="waybill" ref="waybill" label-width="160px">
+      <el-form :model="waybill" ref="waybill" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="提（运）单号" prop="transportcontrantionId">
@@ -217,7 +202,6 @@
                 v-model="waybill.transportcontrantionId"
                 placeholder="提（运）单号"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
@@ -228,7 +212,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="运输条款" prop="conditionCode">
-              <el-select v-model="waybill.conditionCode" filterable placeholder="运输条款" size="small">
+              <el-select v-model="waybill.conditionCode" filterable placeholder="运输条款" >
                 <el-option
                   v-for="item in shippingTerms"
                   :key="item.dictValue"
@@ -240,7 +224,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="运费支付方法" prop="paymentMethodCode">
-              <el-select v-model="waybill.paymentMethodCode" filterable placeholder="运费支付方法" size="small">
+              <el-select v-model="waybill.paymentMethodCode" filterable placeholder="运费支付方法" >
                 <el-option
                   v-for="item in freightPaymentMethod"
                   :key="item.dictValue"
@@ -270,7 +254,6 @@
                 v-model="waybill.transitdestinationId"
                 placeholder="跨境指运地"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
@@ -280,13 +263,13 @@
                 v-model="waybill.totalPackageQuantity"
                 placeholder="货物总件数"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="包装种类" prop="WrapType">
-              <el-select v-model="waybill.WrapType" filterable placeholder="包装种类" size="small">
+              <el-select v-model="waybill.WrapType" filterable placeholder="包装种类" >
                 <el-option
                   v-for="item in PaymentMethodCode"
                   :key="item.dictValue"
@@ -304,7 +287,7 @@
                 v-model="waybill.grossVolumeMeasure"
                 placeholder="货物体积(M3)"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -314,7 +297,7 @@
                 v-model="waybill.grossMassMeasure"
                 placeholder="货物总毛重(KG)	"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -324,13 +307,13 @@
                 v-model="waybill.valueAmount"
                 placeholder="货物价值"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="金额类型	" prop="currencyType">
-              <el-select v-model="waybill.currencyType" filterable multiple collapse-tags placeholder="金额类型" size="small">
+              <el-select v-model="waybill.currencyType" filterable multiple collapse-tags placeholder="金额类型" >
                 <el-option
                   v-for="item in currencySystem"
                   :key="item.dictValue"
@@ -348,7 +331,7 @@
                 v-model="waybill.deconsolidatorId"
                 placeholder="拆箱人代码"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -425,7 +408,7 @@
         <el-table-column prop="cargoDescription" label="商品项简要描述" min-width="120"/>
         <el-table-column prop="goodsMeasure" label="商品项毛重(kg)" min-width="120"/>
       </el-table>
-      <el-form :model="shopInfo" ref="queryForm" label-width="160px">
+      <el-form :model="shopInfo" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="商品项序号" prop="sequenceNumeric">
@@ -433,7 +416,7 @@
                 v-model="shopInfo.sequenceNumeric"
                 placeholder="商品项序号"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -443,7 +426,7 @@
                 v-model="shopInfo.quantityQuantity"
                 placeholder="商品项件数"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -465,7 +448,7 @@
                 v-model="shopInfo.goodsMeasure"
                 placeholder="商品项毛重(KG)"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -477,13 +460,13 @@
                 v-model="shopInfo.cargoDescription"
                 placeholder="商品项简要描述"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="危险品编号" prop="classificationId">
-              <el-select v-model="shopInfo.classificationId" filterable placeholder="危险品编号" size="small">
+              <el-select v-model="shopInfo.classificationId" filterable placeholder="危险品编号" >
                 <el-option
                   v-for="item in dangerousGoodsNumber"
                   :key="item.dictValue"
@@ -499,7 +482,7 @@
                 v-model="shopInfo.HSCode"
                 placeholder="商品HS编码"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -509,7 +492,7 @@
                 v-model="shopInfo.description"
                 placeholder="商品项描述补充信息"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -551,7 +534,7 @@
         <el-table-column prop="supplierPartyTypeCode" label="来源代码" min-width="120"/>
         <el-table-column prop="fullnessCode" label="重箱或空箱标识" min-width="120"/>
       </el-table>
-      <el-form :model="containerInfo" ref="containerInfo" label-width="160px">
+      <el-form :model="containerInfo" ref="containerInfo" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="集装箱（器）编号" prop="equipmentId">
@@ -559,7 +542,7 @@
                 v-model="containerInfo.equipmentId"
                 placeholder="集装箱（器）编号"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -569,7 +552,7 @@
                 v-model="containerInfo.characteristicCode"
                 placeholder="尺寸和类型"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -579,7 +562,7 @@
                 v-model="containerInfo.supplierPartyTypeCode"
                 placeholder="来源代码"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -589,7 +572,6 @@
                 v-model="containerInfo.fullnessCode"
                 placeholder="重箱或空箱标识"
                 clearable
-                size="small"
               />
             </el-form-item>
           </el-col>
@@ -657,6 +639,10 @@ export default {
       consignorInfo: false,
       receivingInfo: false,
       gridData: [],
+      currencySystem:[],
+      shippingTerms:[],
+      dangerousGoodsNumber:[],
+      freightPaymentMethod:[],
       page: {
         num: 1,
         size: 10,
@@ -1084,6 +1070,10 @@ export default {
         }
       })
     },
+    /** 申报按钮*/
+    updateStatementCode(){
+
+    },
     saveList() {
       const { basicParams, waybillList, shopInfoList, containerInfoList } = this
       // 隐藏企业代码数据
@@ -1119,4 +1109,8 @@ export default {
 .el-table .success-row {
   background: #f0f9eb;
 }
+.el-select{
+  width: 100%;
+}
+
 </style>

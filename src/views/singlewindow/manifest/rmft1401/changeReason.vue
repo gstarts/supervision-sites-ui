@@ -52,7 +52,7 @@
                 v-model="queryParams.name"
                 placeholder="变更申请联系人姓名"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -62,7 +62,7 @@
                 v-model="queryParams.communication"
                 placeholder="变更申请联系人电话"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
@@ -75,7 +75,7 @@
                 v-model="queryParams.reason"
                 placeholder="变更原因描述"
                 clearable
-                size="small"
+
               />
             </el-form-item>
           </el-col>
