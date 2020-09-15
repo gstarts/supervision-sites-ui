@@ -9,14 +9,16 @@
       <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn" @click="handleDelete">
         删除
       </el-button>
-      <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode" v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报</el-button>
+      <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode"
+                 v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报
+      </el-button>
 
       <!--      <el-button type="primary" icon="el-icon-document-copy" size="mini" :disabled="btnDisable.copyBtn"-->
-<!--                 @click="handleCopy">复制-->
-<!--      </el-button>-->
-<!--      <el-button type="primary" icon="el-icon-refresh" size="mini" :disabled="btnDisable.refBtn" @click="handleRefresh">-->
-<!--        刷新-->
-<!--      </el-button>-->
+      <!--                 @click="handleCopy">复制-->
+      <!--      </el-button>-->
+      <!--      <el-button type="primary" icon="el-icon-refresh" size="mini" :disabled="btnDisable.refBtn" @click="handleRefresh">-->
+      <!--        刷新-->
+      <!--      </el-button>-->
     </div>
     <!-- 基本信息 -->
     <el-card class="mb20">
@@ -31,7 +33,6 @@
                 v-model="basicParams.declaration.declarationId"
                 placeholder="货物运输批次号"
                 clearable
-
               >
                 <!-- <el-tooltip slot="append" class="item" effect="dark" content="系统分配批次号" placement="top-start">
                   <el-button  icon="el-icon-plus" @click="getVoyageNo"></el-button>
@@ -40,13 +41,19 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="运输方式代码" prop="trafMode">
-              <el-input
-                @focus="$store.dispatch('originalManifest/changeStatus')"
+            <el-form-item label="运输方式代码" prop="trafMode" disabled>
+              <el-select
                 v-model="basicParams.borderTransportMeans.typeCode"
-                placeholder="运输方式代码"
-                clearable
-              />
+                disabled
+              >
+                <el-option
+                  :disabled="true"
+                  v-for="dict in businessTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -61,33 +68,33 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="承运人代码" prop="carrierCode">
-              <el-input
-                v-model="basicParams.carrierIdentification.manifestDeclarationId"
-                placeholder="承运人代码"
-                clearable
-              />
-            </el-form-item>
-          </el-col>
+          <!--          <el-col :span="6">-->
+          <!--            <el-form-item label="承运人代码" prop="carrierCode">-->
+          <!--              <el-input-->
+          <!--                v-model="basicParams.carrierIdentification.manifestDeclarationId"-->
+          <!--                placeholder="承运人代码"-->
+          <!--                clearable-->
+          <!--              />-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
         </el-row>
         <el-row type="flex">
-          <el-col :span="6">
-            <el-form-item label="运输工具代理企业代码" prop="transAgentCode">
-              <el-input
-                v-model="basicParams.agent.agentId"
-                placeholder="运输工具代理企业代码"
-                clearable
-              />
-            </el-form-item>
-          </el-col>
+          <!--          <el-col :span="6">-->
+          <!--            <el-form-item label="运输工具代理企业代码" prop="transAgentCode">-->
+          <!--              <el-input-->
+          <!--                v-model="basicParams.agent.agentId"-->
+          <!--                placeholder="运输工具代理企业代码"-->
+          <!--                clearable-->
+          <!--              />-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
           <el-col :span="6">
             <el-form-item label="货物装载时间" prop="loadingDate">
               <el-date-picker
-
                 style="width:100%"
                 v-model="basicParams.loadingLocation.loadingDateTime"
                 type="datetime"
+                value-format="yyyyMMddHHmmss"
                 placeholder="选择日期时间"/>
             </el-form-item>
           </el-col>
@@ -103,11 +110,20 @@
           <el-col :span="6">
             <el-form-item label="到达卸货地日期" prop="arrivalDate">
               <el-date-picker
-                style="width:100%"
-
                 v-model="basicParams.unloadingLocation.arrivalDateTime"
+                style="width:100%"
                 type="date"
+                value-format="yyyyMMdd"
                 placeholder="选择日期"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="中蒙数据交换项" prop="postCode">
+              <el-input
+                v-model="basicParams.postCode"
+                placeholder="中蒙数据交换项"
+                clearable
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -126,7 +142,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="企业代码" prop="unitCode">
-              <el-select v-model="basicParams.unitCode" filterable placeholder="企业代码">
+              <el-select v-model="basicParams.unitCode" filterable placeholder="企业代码" @change="onChange">
                 <el-option
                   v-for="(item,index) in listInfo"
                   :key="index"
@@ -134,22 +150,15 @@
                   :value="item.deptId">
                 </el-option>
               </el-select>
-              <!-- <el-input
-                v-model="basicParams.unitCode"
-                placeholder="企业代码"
-                clearable
 
-                disabled
-              /> -->
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="中蒙数据交换项" prop="postCode">
+            <el-form-item label="舱单传输人名称" prop="msgRepName" >
               <el-input
-                v-model="basicParams.postCode"
-                placeholder="中蒙数据交换项"
-                clearable
-
+                v-model="basicParams.representativePerson.name"
+                placeholder="舱单传输人名称"
+                disabled
               />
             </el-form-item>
           </el-col>
@@ -159,7 +168,6 @@
                 v-model="basicParams.additionalInformation.content"
                 placeholder="备注"
                 clearable
-
               />
             </el-form-item>
           </el-col>
@@ -212,15 +220,14 @@
                 v-model="waybill.transportcontrantionId"
                 placeholder="提（运）单号"
                 clearable
-
               />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="变更原因" prop="chgCodeAddBtn">
-              <el-button type="primary" size="mini" @click="changeReason=true">详细</el-button>
-            </el-form-item>
-          </el-col>
+          <!--          <el-col :span="6">-->
+          <!--            <el-form-item label="变更原因" prop="chgCodeAddBtn">-->
+          <!--              <el-button type="primary" size="mini" @click="changeReason=true">详细</el-button>-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
           <el-col :span="6">
             <el-form-item label="运输条款" prop="conditionCode">
               <el-select v-model="waybill.conditionCode" filterable placeholder="运输条款">
@@ -259,16 +266,15 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="跨境指运地" prop="transitdestinationId">
-              <el-input
-                v-model="waybill.transitdestinationId"
-                placeholder="跨境指运地"
-                clearable
-
-              />
-            </el-form-item>
-          </el-col>
+          <!--          <el-col :span="6">-->
+          <!--            <el-form-item label="跨境指运地" prop="transitdestinationId">-->
+          <!--              <el-input-->
+          <!--                v-model="waybill.transitdestinationId"-->
+          <!--                placeholder="跨境指运地"-->
+          <!--                clearable-->
+          <!--              />-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
           <el-col :span="6">
             <el-form-item label="货物总件数" prop="totalPackageQuantity">
               <el-input
@@ -281,7 +287,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="包装种类" prop="WrapType">
-              <el-select v-model="waybill.WrapType" filterable multiple collapse-tags placeholder="包装种类">
+              <el-select v-model="waybill.WrapType" filterable placeholder="包装种类">
                 <el-option
                   v-for="item in PaymentMethodCode"
                   :key="item.dictValue"
@@ -337,29 +343,29 @@
           </el-col>
         </el-row>
         <el-row type="flex">
-          <el-col :span="6">
-            <el-form-item label="拆箱人代码" prop="deconsolidatorId">
-              <el-input
-                v-model="waybill.deconsolidatorId"
-                placeholder="拆箱人代码"
-                clearable
+          <!--          <el-col :span="6">-->
+          <!--            <el-form-item label="拆箱人代码" prop="deconsolidatorId">-->
+          <!--              <el-input-->
+          <!--                v-model="waybill.deconsolidatorId"-->
+          <!--                placeholder="拆箱人代码"-->
+          <!--                clearable-->
 
-              />
-            </el-form-item>
-          </el-col>
-          <!-- <el-col :span="6">
-            <el-form-item label="途径国家或地区" prop="routingCountryCode">
-              <el-button type="primary" size="mini" @click="regionInfo = true">详细</el-button>
-              <el-select v-model="waybill.routingCountryCode" filterable multiple collapse-tags placeholder="途径国家或地区">
-                <el-option
-                  v-for="item in routingContry"
-                  :key="item.dictValue"
-                  :label="item.dictLabel"
-                  :value="item.dictValue">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col> -->
+          <!--              />-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
+          <!--          <el-col :span="6">-->
+          <!--            <el-form-item label="途径国家或地区" prop="routingCountryCode">-->
+          <!--              &lt;!&ndash; <el-button type="primary" size="mini" @click="regionInfo = true">详细</el-button> &ndash;&gt;-->
+          <!--              <el-select v-model="waybill.routingCountryCode" filterable multiple collapse-tags placeholder="途径国家或地区">-->
+          <!--                <el-option-->
+          <!--                  v-for="item in routingContry"-->
+          <!--                  :key="item.dictValue"-->
+          <!--                  :label="item.dictLabel"-->
+          <!--                  :value="item.dictValue">-->
+          <!--                </el-option>-->
+          <!--              </el-select>-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
           <el-col :span="6">
             <el-form-item label="收货人信息" prop="consignee">
               <el-button type="primary" size="mini" @click="receivingInfo = true">详细</el-button>
@@ -370,20 +376,19 @@
               <el-button type="primary" size="mini" @click="consignorInfo = true">详细</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="通知人信息" prop="notifyInfo">
-              <el-button type="primary" size="mini" @click='detailVisible = true'>详细</el-button>
-            </el-form-item>
-          </el-col>
         </el-row>
-        <el-row type="flex">
-
-          <el-col :span="6">
-            <el-form-item label="危险品联系人信息" prop="undgInfo">
-              <el-button type="primary" size="mini" @click="dangerousInfo = true">详细</el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <!--        <el-row type="flex">-->
+        <!--          <el-col :span="6">-->
+        <!--            <el-form-item label="通知人信息" prop="notifyInfo">-->
+        <!--              <el-button type="primary" size="mini" @click='detailVisible = true'>详细</el-button>-->
+        <!--            </el-form-item>-->
+        <!--          </el-col>-->
+        <!--          <el-col :span="6">-->
+        <!--            <el-form-item label="危险品联系人信息" prop="undgInfo">-->
+        <!--              <el-button type="primary" size="mini" @click="dangerousInfo = true">详细</el-button>-->
+        <!--            </el-form-item>-->
+        <!--          </el-col>-->
+        <!--        </el-row>-->
       </el-form>
     </el-card>
     <!-- 商品项信息 -->
@@ -477,38 +482,38 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="危险品编号" prop="classificationId">
-              <el-select v-model="shopInfo.classificationId" filterable placeholder="危险品编号">
-                <el-option
-                  v-for="item in dangerousGoodsNumber"
-                  :key="item.dictValue"
-                  :label="item.dictLabel"
-                  :value="item.dictValue">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="商品HS编码" prop="HSCode">
-              <el-input
-                v-model="shopInfo.HSCode"
-                placeholder="商品HS编码"
-                clearable
+          <!--          <el-col :span="6">-->
+          <!--            <el-form-item label="危险品编号" prop="classificationId">-->
+          <!--              <el-select v-model="shopInfo.classificationId" filterable placeholder="危险品编号">-->
+          <!--                <el-option-->
+          <!--                  v-for="item in dangerousGoodsNumber"-->
+          <!--                  :key="item.dictValue"-->
+          <!--                  :label="item.dictLabel"-->
+          <!--                  :value="item.dictValue">-->
+          <!--                </el-option>-->
+          <!--              </el-select>-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
+          <!--          <el-col :span="6">-->
+          <!--            <el-form-item label="商品HS编码" prop="HSCode">-->
+          <!--              <el-input-->
+          <!--                v-model="shopInfo.HSCode"-->
+          <!--                placeholder="商品HS编码"-->
+          <!--                clearable-->
 
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="商品项描述补充信息" prop="description">
-              <el-input
-                v-model="shopInfo.description"
-                placeholder="商品项描述补充信息"
-                clearable
+          <!--              />-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
+          <!--          <el-col :span="6">-->
+          <!--            <el-form-item label="商品项描述补充信息" prop="description">-->
+          <!--              <el-input-->
+          <!--                v-model="shopInfo.description"-->
+          <!--                placeholder="商品项描述补充信息"-->
+          <!--                clearable-->
 
-              />
-            </el-form-item>
-          </el-col>
+          <!--              />-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
         </el-row>
       </el-form>
     </el-card>
@@ -585,7 +590,6 @@
                 v-model="containerInfo.fullnessCode"
                 placeholder="重箱或空箱标识"
                 clearable
-
               />
             </el-form-item>
           </el-col>
@@ -653,10 +657,11 @@ export default {
       consignorInfo: false,
       receivingInfo: false,
       gridData: [],
-      shippingTerms:[],
-      freightPaymentMethod:[],
-      currencySystem:[],
-      dangerousGoodsNumber:[],
+      currencySystem: [],
+      shippingTerms: [],
+      dangerousGoodsNumber: [],
+      freightPaymentMethod: [],
+      businessTypeOptions: [],
       page: {
         num: 1,
         size: 10,
@@ -680,7 +685,7 @@ export default {
           declarationId: ''//货物运输批次号
         },
         borderTransportMeans: {
-          typeCode: ''//运输方式代码
+          typeCode: '4'//运输方式代码
         },
         carrierIdentification: {
           manifestDeclarationId: '' // 承运人代码
@@ -723,7 +728,7 @@ export default {
         notifyInfo: [],//通知人信息
         undgInfo: [],//危险品联系人信息
         routingCountryCode: [],//途径国家或地区
-        consignee: '',//收货人信息
+        consignee: {},//收货人信息
         consignor: [],//发货人信息
         shopInfoList: [], // 商品项信息
         containerInfoList: [] // 集装箱信息
@@ -793,6 +798,10 @@ export default {
       listInfo().then(data => {
         this.listInfo = data.rows
         console.log(data)
+      })
+      // 运输方式
+      this.getDicts('station_transport_fashion').then((response) => {
+        this.businessTypeOptions = response.data
       })
     },
 
@@ -971,7 +980,7 @@ export default {
           valueAmount: '',//货物价值
           deconsolidatorId: '',//拆箱人代码
           routingCountryCode: [],//途径国家或地区
-          consignee: '',//收货人信息
+          consignee: [],//收货人信息
           consignor: [],//发货人信息
           shopInfoList: [], // 商品项信息
           containerInfoList: [] // 集装箱
@@ -1084,12 +1093,26 @@ export default {
         }
       })
     },
-    updateStatementCode(){},
+    /** 申报按钮*/
+    updateStatementCode() {
+
+    },
+    /** 回显防范*/
+    onChange(id) {
+      const data = this.listInfo.find(el => el.deptId === id)
+      console.log(data)
+      const code = data.customsMaster
+      this.basicParams.representativePerson.name = data.stationPersonName
+      this.basicParams.unloadingLocation.unloadinglocationId = code
+      this.basicParams.declaration.declarationOfficeId = code
+      this.basicParams.customMasterName = code
+
+    },
     saveList() {
-      const { basicParams, waybillList } = this
+      const { basicParams, waybillList, shopInfoList, containerInfoList } = this
       // 隐藏企业代码数据
       basicParams.head = this.listInfo.find(el => el.deptId === basicParams.unitCode)
-      basicParams.head.messageType = 'MT2401'
+      basicParams.head.messageType = 'MT1401'
       basicParams.head.functionCode = '9'
       const subData = {
         basicParams,
@@ -1099,7 +1122,7 @@ export default {
       this.$store.dispatch('originalManifest/saveList', subData).then(data => {
         console.log(data)
         if (data.code === 200) {
-
+          this.msgSuccess('保存成功')
         }
       })
     }
@@ -1124,4 +1147,5 @@ export default {
 .el-select {
   width: 100%;
 }
+
 </style>

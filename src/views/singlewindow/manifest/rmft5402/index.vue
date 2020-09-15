@@ -60,12 +60,18 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="运输方式代码" prop="postCode">
-              <el-input
-                @focus="$store.dispatch('originalManifest/changeStatus')"
+              <el-select
                 v-model="borderTransportMeans.typeCode"
-                placeholder="运输方式代码"
-                clearable
-              />
+                disabled
+              >
+                <el-option
+                  :disabled="true"
+                  v-for="dict in businessTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -92,6 +98,7 @@
                 v-model="control.inspectionStartDateTime"
                 type="datetime"
                 placeholder="选择日期时间"
+                value-format="yyyyMMddHHmmss"
               />
             </el-form-item>
           </el-col>
@@ -102,6 +109,7 @@
                 v-model="control.inspectionEndDateTime"
                 type="datetime"
                 placeholder="选择日期时间"
+                value-format="yyyyMMddHHmmss"
               />
             </el-form-item>
           </el-col>
@@ -133,7 +141,7 @@
           </el-col> -->
           <el-col :span="6">
             <el-form-item label="企业代码" prop="postCode">
-              <el-select v-model="head.unitCode" filterable placeholder="企业代码">
+              <el-select v-model="head.unitCode" filterable placeholder="企业代码" @change="onChange">
                 <el-option
                   v-for="(item,index) in listInfo"
                   :key="index"
@@ -408,6 +416,7 @@ export default {
         size: 10,
         total: 0,
       },
+      businessTypeOptions:[],
       dialogTableVisible: false,
       dialogTableVisible2: false,
       // 按钮禁用状态
@@ -453,7 +462,7 @@ export default {
       },
       // 运输方式表单
       borderTransportMeans: {
-        typeCode: undefined,
+        typeCode: '4',
       },
       // 卸货地表单
       unloadingLocation: {
@@ -521,6 +530,7 @@ export default {
     this.getDicts("sw_packag_type").then((response) => {
       this.PaymentMethodCode = response.data;
     });
+
   },
   methods: {
     async init() {
@@ -530,6 +540,10 @@ export default {
         this.listInfo = data.rows;
         console.log(data);
       });
+      // 运输方式
+      this.getDicts('station_transport_fashion').then((response) => {
+        this.businessTypeOptions = response.data
+      })
     },
 
     //托架/拖挂车类型 翻译
@@ -655,6 +669,14 @@ export default {
     },
     /** 申报按钮*/
     updateStatementCode(){},
+    /** 回显防范*/
+    onChange(id) {
+      const data = this.listInfo.find(el => el.deptId === id)
+      console.log(data)
+      const code = data.customsMaster
+      this.unloadingLocation.unloadinglocationId = code
+      this.submitter.submitterId=data.contractorCodeScc
+    },
     // 请求接口
     depParaList() {
       return new Promise((resolve) => {

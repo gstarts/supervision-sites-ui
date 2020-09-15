@@ -41,7 +41,7 @@
       <div slot="header" class="clearfix">
         <span>基本备案信息填写</span>
       </div>
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="货物运输批次号" prop="declarationId">
@@ -60,23 +60,23 @@
                 v-model="declaration.declarationOfficeID"
                 placeholder="进出境口岸海关代码"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="承运人代码" prop="carrierId">
-              <el-input
-                v-model="declaration.carrier.carrierId"
-                placeholder="承运人代码"
-                clearable
-                size="mini"
-              />
-            </el-form-item>
-          </el-col>
+<!--          <el-col :span="6">-->
+<!--            <el-form-item label="承运人代码" prop="carrierId">-->
+<!--              <el-input-->
+<!--                v-model="declaration.carrier.carrierId"-->
+<!--                placeholder="承运人代码"-->
+<!--                clearable-->
+<!--                -->
+<!--              />-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
           <el-col :span="6">
             <el-form-item label="企业代码" prop="postCode">
-              <el-select v-model="head.unitCode" filterable placeholder="企业代码" size="mini">
+              <el-select v-model="head.unitCode" filterable placeholder="企业代码" @change="onChange" >
                 <el-option
                   v-for="(item,index) in listInfo"
                   :key="index"
@@ -92,7 +92,7 @@
                 v-model="queryParams.postCode"
                 placeholder="传输企业备案关区"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>-->
@@ -104,7 +104,7 @@
                 v-model="declaration.representativePerson.name"
                 placeholder="确报传输人名称"
                 clearable
-                size="mini"
+                disabled
               />
             </el-form-item>
           </el-col>
@@ -114,7 +114,7 @@
                 v-model="declaration.additionalInformation.content"
                 placeholder="备注"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
@@ -202,21 +202,32 @@
         :page-size="page.size"
         @current-change="currentChange"
       />
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="8">
             <el-form-item label="运输工具代码" prop="bordertransportmeansId">
-              <el-input v-model="borderTransportMeans.bordertransportmeansId" placeholder="运输工具代码" clearable size="mini" />
+              <el-input v-model="borderTransportMeans.bordertransportmeansId" placeholder="运输工具代码" clearable  />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="运输工具名称" prop="name">
-              <el-input v-model="borderTransportMeans.name" placeholder="运输工具名称" clearable size="mini" />
+              <el-input v-model="borderTransportMeans.name" placeholder="运输工具名称" clearable  />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="运输方式代码" prop="typeCode">
-              <el-input v-model="borderTransportMeans.typeCode" placeholder="运输方式代码" clearable size="mini" />
+              <el-select
+                v-model="borderTransportMeans.typeCode"
+                disabled
+              >
+                <el-option
+                  :disabled="true"
+                  v-for="dict in businessTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -228,7 +239,7 @@
                 v-model="borderTransportMeans.master.masterId"
                 placeholder="驾驶员代码"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
@@ -239,7 +250,7 @@
                 v-model="borderTransportMeans.master.name"
                 placeholder="驾驶员名称"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
@@ -250,13 +261,13 @@
                 v-model="borderTransportMeans.arrivalDateTime"
                 type="datetime"
                 placeholder="选择日期时间"
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
           <!-- <el-col :span="6">
             <el-form-item label="途径国家或地区" prop="postCode" >
-              <el-button type="primary" size="mini" @click="regionInfo=true">详细</el-button>
+              <el-button type="primary"  @click="regionInfo=true">详细</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -265,7 +276,7 @@
                 v-model="queryParams.postCode"
                 placeholder="司乘人员数"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
@@ -277,7 +288,7 @@
                 v-model="queryParams.postCode"
                 placeholder="健康状态"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
@@ -287,13 +298,13 @@
                 v-model="queryParams.postCode"
                 placeholder="是否预防接种"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="关锁信息" prop="postCode" >
-              <el-button type="primary" size="mini" @click="detailVisible=true">详细</el-button>
+              <el-button type="primary"  @click="detailVisible=true">详细</el-button>
             </el-form-item>
           </el-col>-->
         </el-row>
@@ -371,7 +382,7 @@
         :page-size="page.size"
         @current-change="currentChange"
       />
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="8">
             <el-form-item label="托架/拖挂车编号" prop="transportequipmentId">
@@ -379,13 +390,13 @@
                 v-model="trailer.transportequipmentId"
                 placeholder="托架/拖挂车编号"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="托架/拖挂车类型" prop="characteristicCode">
-              <el-select v-model="trailer.characteristicCode" placeholder="请输入托架/拖挂车类型" size="mini">
+              <el-select v-model="trailer.characteristicCode" placeholder="请输入托架/拖挂车类型" >
               <el-option
                 v-for="dict in TrailertypeOptions"
                 :key="dict.dictValue"
@@ -401,7 +412,7 @@
                 v-model="trailer.tareWeight"
                 placeholder="托架/拖挂车自重(KG)"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
@@ -485,7 +496,7 @@
         :page-size="page.size"
         @current-change="currentChange"
       />
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="集装箱(器)编号" prop="transportequipmentId">
@@ -493,13 +504,13 @@
                 v-model="transportEquipment.transportequipmentId"
                 placeholder="集装箱(器)编号"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="重箱或者空箱标识" prop="fullnessCode">
-              <el-select v-model="transportEquipment.fullnessCode" placeholder="请选择集装箱(器)重箱或者空箱标识" size="mini">
+              <el-select v-model="transportEquipment.fullnessCode" placeholder="请选择集装箱(器)重箱或者空箱标识" >
               <el-option
                 v-for="dict in ContainerSelfWeight"
                 :key="dict.dictValue"
@@ -511,7 +522,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="集装箱(器)尺寸类型" prop="characteristicCode">
-              <el-select v-model="transportEquipment.characteristicCode" placeholder="请选择集装箱(器)尺寸类型" size="mini">
+              <el-select v-model="transportEquipment.characteristicCode" placeholder="请选择集装箱(器)尺寸类型" >
               <el-option
                 v-for="dict in ContainerSize"
                 :key="dict.dictValue"
@@ -526,7 +537,7 @@
               <el-select
               v-model="transportEquipment.supplierPartyTypeCode"
               placeholder="请选择集装箱(器)来源代码"
-              size="mini"
+
             >
               <el-option
                 v-for="dict in ContainerSource"
@@ -545,13 +556,13 @@
                 v-model="transportEquipment.tareWeight"
                 placeholder="集装箱(器)自重(KG)"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
           <!-- <el-col :span="6">
             <el-form-item label="集装箱封志信息" prop="postCode">
-              <el-button type="primary" size="mini" @click="dangerousInfo=true">详细</el-button>
+              <el-button type="primary"  @click="dangerousInfo=true">详细</el-button>
             </el-form-item>
           </el-col>-->
         </el-row>
@@ -632,6 +643,7 @@ export default {
       },
       dialogTableVisible: false,
       dialogTableVisible2: false,
+      businessTypeOptions:[],
       // 按钮禁用状态
       btnDisable: {
         addBtn: false,
@@ -678,7 +690,7 @@ export default {
         arrivalDateTime: undefined,
         bordertransportmeansId: undefined,
         name: undefined,
-        typeCode: undefined,
+        typeCode: '4',
         // 驾驶员
         master:{
           masterId :undefined,
@@ -742,13 +754,19 @@ export default {
   },
   mounted() {
     // 初始化
-    this.init();
+    this.init(
+
+    );
   },
   created() {
     //挂车类型字典翻译
     this.getDicts("hg_trailer_type").then((response) => {
       this.TrailertypeOptions = response.data;
     });
+    // 运输方式
+    this.getDicts('station_transport_fashion').then((response) => {
+      this.businessTypeOptions = response.data
+    })
     /** 集装箱(器)来源字典 */
     this.getDicts("hg_container_source").then((response) => {
       this.ContainerSource = response.data;
@@ -917,6 +935,13 @@ export default {
     },
     /** 申报*/
     updateStatementCode(){},
+    /** 回显方法*/
+    onChange(id) {
+      const data = this.listInfo.find(el => el.deptId === id)
+      console.log(data)
+      const code = data.customsMaster
+      this.declaration.representativePerson.name = data.stationPersonName
+    },
     // 请求接口
     depParaList() {
       return new Promise((resolve) => {
