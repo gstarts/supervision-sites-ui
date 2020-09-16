@@ -4,6 +4,7 @@
     <div class="mb20">
       <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd">打印</el-button>
       <el-button type="success" icon="el-icon-edit" size="mini" @click="handleAdd">暂存</el-button>
+      <el-button type="success" icon="el-icon-edit" size="mini" @click="generateAdd">生成</el-button>
     </div>
     <el-row :gutter="10">
       <el-col :span="15">
@@ -29,8 +30,8 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="毛重" prop="grossWeight">
-                  <el-input v-model.number="form.grossWeight" placeholder="请输入毛重" clearable></el-input>
+                <el-form-item label="毛重" prop="grossWeight" >
+                  <el-input v-model.number="form.grossWeight" placeholder="请输入毛重" clearable disabled></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -43,7 +44,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="皮重" prop="tare">
-                  <el-input v-model.number="form.tare" placeholder="请输入皮重" clearable></el-input>
+                  <el-input v-model.number="form.tare" placeholder="请输入皮重" clearable disabled></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -56,7 +57,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="净重" prop="netWeight">
-                  <el-input v-model.number="form.netWeight" placeholder="请输入净重" clearable></el-input>
+                  <el-input v-model.number="form.netWeight" placeholder="请输入净重" clearable disabled></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -73,12 +74,12 @@
       </el-col>
       <el-col :span="9">
         <el-card>
-          <el-form :model="form" ref="form" :rules="rules" label-width="60px" class="mb20" >
-           
-           <input class="Pound" v-model="this.Poundweight" disabled>
+          <el-form :model="form" ref="form" :rules="rules" label-width="80px" class="mb20">
+            <input class="Pound" v-if="this.stable === 1" style="color:green" v-model="this.Poundweight" disabled />
+            <input class="Pound"  v-else style="color:red"  v-model="this.Poundweight" disabled />
             <el-form-item label="流向" prop="flowDirection">
               <!-- <el-input v-model="form.flowDirection" placeholder="请输入流向" clearable></el-input> -->
-              <el-select v-model="form.flowDirection" placeholder="请选择流向">
+              <el-select v-model="form.flowDirection" placeholder="请选择流向" >
                 <el-option
                   v-for="dict in flowDirectionOptions"
                   :key="dict.dictValue"
@@ -103,11 +104,11 @@
               </el-select>
             </el-form-item>
             <!-- -->
-             <el-form-item label="车辆类型" prop="stationViaType">
+            <el-form-item label="车辆类型" prop="stationViaType">
               <el-select
                 filterable
                 v-model="form.stationViaType"
-                placeholder="请选择通道号"
+                placeholder="请选择车辆类型"
                 @change="stationViaTypeChange"
               >
                 <el-option
@@ -176,7 +177,7 @@ export default {
   data() {
     return {
       //稳定
-      stable:undefined,
+      stable: undefined,
       //测试重量
       Poundweight: 0,
       // 遮罩层
@@ -197,7 +198,7 @@ export default {
       // 流向
       flowDirectionOptions: [],
       //过卡车辆类型
-      stationViaTypeOptions:[],
+      stationViaTypeOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -217,11 +218,13 @@ export default {
         stringTime: undefined,
         ChannelNumber: undefined,
         grossWeight: undefined,
-        stationViaType:undefined,
-        tare:undefined,
+        stationViaType: undefined,
+        tare: undefined,
+        netWeight: undefined,
       },
       // 表单校验
       rules: {
+
         grossWeight: [{ type: "number", message: "请输入数字" }],
 
         tare: [{ type: "number", message: "请输入数字" }],
@@ -230,8 +233,8 @@ export default {
     };
   },
   created() {
-//过卡车辆类型
- this.getDicts("station_via_type").then((response) => {
+    //过卡车辆类型
+    this.getDicts("station_via_type").then((response) => {
       this.stationViaTypeOptions = response.data;
     });
     /**流向  */
@@ -265,13 +268,13 @@ export default {
       this.timer = setInterval(() => {
         poundSelect(event).then((response) => {
           this.Poundweight = response.data.weight;
-          this.stable=response.data.stable;
-          if (this.Poundweight && this.Poundweight > 0) {
-            this.form.grossWeight = this.Poundweight;
-            if(this.stable == 1){
-                
-            }
-          } else {
+          this.stable = response.data.stable;
+          // if (this.Poundweight && this.Poundweight > 0) {
+          //   this.form.grossWeight = this.Poundweight;
+          // } else {
+          //   this.form.grossWeight = 0;
+          // }
+          if (this.stable == 0) {
             this.form.grossWeight = 0;
           }
         });
@@ -281,21 +284,21 @@ export default {
         clearInterval(this.timer);
       });
     },
-    stationViaTypeChange(event){
-      if(this.stable =='1'){
-        console.log("数值稳定");
-          if(event=='01'){
-         this.form.grossWeight=this.Poundweight;
-      }else if(event == '02'){
-          this.form.tare=this.Poundweight;
-          console.log("我是空进"+this.Poundweight);
-      }
-      }else{
-        this.msgError("地磅数值未稳定,请稍后.....");
-       this.form.stationViaType=undefined;
-      }
-      
-    },
+    // stationViaTypeChange(event) {
+    //   if (this.stable == "1") {
+    //     console.log("数值稳定");
+    //     if (event == "01") {
+    //       this.form.grossWeight = this.Poundweight;
+    //     } else if (event == "02") {
+    //       this.form.tare = this.Poundweight;
+    //       console.log("我是空进" + this.Poundweight);
+    //     }
+    //   } else {
+    //     console.log(this.form.flowDirection);
+    //     this.msgError("地磅数值未稳定,请稍后.....");
+    //     this.form.stationViaType = undefined;
+    //   }
+    // },
     /** 提交按钮 */
     handleAdd: function () {
       this.form.finalInspectionTime = genTimeCode(
@@ -328,14 +331,50 @@ export default {
         }
       });
     },
-
+    // 生成按钮
+    generateAdd() {
+      //进场
+      if(this.stable =='1'){
+      if (this.form.flowDirection == "I") {
+        //重进空出 进场
+        if (this.form.stationViaType == "01") {
+          //毛重
+          this.form.grossWeight = this.Poundweight;
+          //空进重出  进场
+        } else if (this.form.stationViaType == "02") {
+          //皮重
+          this.form.tare = this.Poundweight;
+        }
+        //出场
+      } else if (this.form.flowDirection == "E") {
+        console.log("出场if进入");
+        //重进空出 出场
+        if (this.form.stationViaType == "01") {
+          //皮重
+          this.form.tare = this.Poundweight;
+          //计算净重
+          this.form.netWeight = this.form.grossWeight - this.form.tare;
+          //空进重出 出场
+        } else if (this.form.stationViaType == "02") {
+          //毛重
+          this.form.grossWeight = this.Poundweight;
+          //计算净重
+          this.form.netWeight = this.form.grossWeight - this.form.tare;
+        }
+      }
+      }else{
+        this.msgError("地磅数值未稳定,请稍候....");
+      }
+    },
     // 取消按钮
     cancel() {
       this.reset();
     },
     // 表单重置
     reset() {
-      this.form = {};
+      this.form = {
+        
+      };
       this.resetForm("form");
     },
   },
@@ -345,12 +384,12 @@ export default {
 .el-select {
   width: 100%;
 }
-.Pound{
+.Pound {
   font-size: 40px;
   width: 50%;
   color: red;
   margin-bottom: 15px;
   text-align: center;
-  padding:50px;
+  padding: 50px;
 }
 </style>
