@@ -152,7 +152,7 @@
           </el-col>-->
             <el-col :span="12">
               <el-form-item label="集装箱报警阈值" prop="containerAlarmValue" label-width="120px" v-if="form.deptType!=3">
-                <el-input v-model="form.containerAlarmValue" placeholder="请输入" maxlength="20"/>
+                <el-input v-model.number="form.containerAlarmValue" placeholder="请输入" maxlength="20"/>
               </el-form-item>
             </el-col>
          
@@ -169,7 +169,7 @@
           
             <el-col :span="12">
               <el-form-item label="散杂货库位报警阈值" prop="bulkGoodsAlarmValue" label-width="150px" v-if="form.deptType!=3">
-                <el-input v-model="form.bulkGoodsAlarmValue" placeholder="请输入" maxlength="20"/>
+                <el-input v-model.number="form.bulkGoodsAlarmValue" placeholder="请输入" maxlength="20"/>
               </el-form-item>
             </el-col>
          
@@ -287,7 +287,7 @@
              {type : "number", message: "请输入数字"}
           ],
           
-            bulkGoodsCapacity: [
+            bulkGoodsAlarmValue: [
 						{ required: true, message: "散杂货库位报警阈值不能为空", trigger: "blur"},
 	            {type : "number", message: "请输入数字"}
           ],
