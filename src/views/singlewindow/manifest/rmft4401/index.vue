@@ -6,51 +6,42 @@
         type="primary"
         icon="el-icon-plus"
         size="mini"
-        :disabled="btnDisable.addBtn"
         @click="handleAdd"
       >新增</el-button>
       <el-button
         type="success"
         icon="el-icon-edit"
         size="mini"
-        :disabled="btnDisable.saveBtn"
         @click="AllSave"
       >暂存</el-button>
       <el-button
         type="danger"
         icon="el-icon-delete"
         size="mini"
-        :disabled="btnDisable.delBtn"
         @click="handleDelete"
       >删除</el-button>
-      <el-button
-        type="danger"
-        icon="el-icon-thumb"
-        size="mini"
-        :disabled="btnDisable.repBtn"
-        @click="handleReport"
-      >申报</el-button>
-      <el-button
-        type="primary"
-        icon="el-icon-document-copy"
-        size="mini"
-        :disabled="btnDisable.copyBtn"
-        @click="handleCopy"
-      >复制</el-button>
-      <el-button
-        type="primary"
-        icon="el-icon-refresh"
-        size="mini"
-        :disabled="btnDisable.refBtn"
-        @click="handleRefresh"
-      >刷新</el-button>
+      <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode" v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报</el-button>
+      <!--      <el-button-->
+<!--        type="primary"-->
+<!--        icon="el-icon-document-copy"-->
+<!--        size="mini"-->
+<!--        :disabled="btnDisable.copyBtn"-->
+<!--        @click="handleCopy"-->
+<!--      >复制</el-button>-->
+<!--      <el-button-->
+<!--        type="primary"-->
+<!--        icon="el-icon-refresh"-->
+<!--        size="mini"-->
+<!--        :disabled="btnDisable.refBtn"-->
+<!--        @click="handleRefresh"-->
+<!--      >刷新</el-button>-->
     </div>
     <!-- 基本信息 -->
     <el-card class="mb20">
       <div slot="header" class="clearfix">
         <span>基本备案信息填写</span>
       </div>
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="货物运输批次号" prop="declarationId">
@@ -65,23 +56,34 @@
           <el-col :span="6">
             <el-form-item label="进出境口岸海关代码" prop="declarationOfficeID">
               <el-input
-                @focus="$store.dispatch('originalManifest/changeStatus')"
+                @focus="dialogTableVisible = true"
                 v-model="declaration.declarationOfficeID"
                 placeholder="进出境口岸海关代码"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
+<!--          <el-col :span="6">-->
+<!--            <el-form-item label="承运人代码" prop="carrierId">-->
+<!--              <el-input-->
+<!--                v-model="declaration.carrier.carrierId"-->
+<!--                placeholder="承运人代码"-->
+<!--                clearable-->
+<!--                -->
+<!--              />-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
           <el-col :span="6">
-            <el-form-item label="承运人代码" prop="carrierId">
-              <el-input
-                @focus="dialogTableVisible = true"
-                v-model="declaration.carrier.carrierId"
-                placeholder="承运人代码"
-                clearable
-                size="mini"
-              />
+            <el-form-item label="企业代码" prop="postCode">
+              <el-select v-model="head.unitCode" filterable placeholder="企业代码" @change="onChange" >
+                <el-option
+                  v-for="(item,index) in listInfo"
+                  :key="index"
+                  :label="item.eName"
+                  :value="item.deptId">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <!-- <el-col :span="6">
@@ -90,24 +92,19 @@
                 v-model="queryParams.postCode"
                 placeholder="传输企业备案关区"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>-->
         </el-row>
         <el-row type="flex">
-          <!-- <el-col :span="6">
-            <el-form-item label="企业代码" prop="postCode">
-              <el-input v-model="queryParams.postCode" placeholder="企业代码" clearable size="mini" />
-            </el-form-item>
-          </el-col>-->
           <el-col :span="12">
             <el-form-item label="确报传输人名称" prop="name">
               <el-input
                 v-model="declaration.representativePerson.name"
                 placeholder="确报传输人名称"
                 clearable
-                size="mini"
+                disabled
               />
             </el-form-item>
           </el-col>
@@ -117,7 +114,7 @@
                 v-model="declaration.additionalInformation.content"
                 placeholder="备注"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
@@ -152,27 +149,27 @@
             :disabled="btnDisable.delBtn"
             @click="handleDelete"
           >删除</el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-thumb"
-            size="mini"
-            :disabled="btnDisable.repBtn"
-            @click="handleReport"
-          >申报</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-document-copy"
-            size="mini"
-            :disabled="btnDisable.copyBtn"
-            @click="handleCopy"
-          >复制</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-refresh"
-            size="mini"
-            :disabled="btnDisable.refBtn"
-            @click="handleRefresh"
-          >刷新</el-button>
+<!--          <el-button-->
+<!--            type="danger"-->
+<!--            icon="el-icon-thumb"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.repBtn"-->
+<!--            @click="handleReport"-->
+<!--          >申报</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-document-copy"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.copyBtn"-->
+<!--            @click="handleCopy"-->
+<!--          >复制</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-refresh"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.refBtn"-->
+<!--            @click="handleRefresh"-->
+<!--          >刷新</el-button>-->
         </el-col>
       </el-row>
       <el-table
@@ -196,6 +193,7 @@
         <el-table-column prop="master.name" label="驾驶员名称" min-width="120" align="center"/>
       </el-table>
       <el-pagination
+        v-show="page.total>0"
         class="right mb20"
         background
         layout="prev, pager, next"
@@ -204,21 +202,32 @@
         :page-size="page.size"
         @current-change="currentChange"
       />
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="8">
             <el-form-item label="运输工具代码" prop="bordertransportmeansId">
-              <el-input v-model="borderTransportMeans.bordertransportmeansId" placeholder="运输工具代码" clearable size="mini" />
+              <el-input v-model="borderTransportMeans.bordertransportmeansId" placeholder="运输工具代码" clearable  />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="运输工具名称" prop="name">
-              <el-input v-model="borderTransportMeans.name" placeholder="运输工具名称" clearable size="mini" />
+              <el-input v-model="borderTransportMeans.name" placeholder="运输工具名称" clearable  />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="运输方式代码" prop="typeCode">
-              <el-input v-model="borderTransportMeans.typeCode" placeholder="运输方式代码" clearable size="mini" />
+              <el-select
+                v-model="borderTransportMeans.typeCode"
+                disabled
+              >
+                <el-option
+                  :disabled="true"
+                  v-for="dict in businessTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -230,7 +239,7 @@
                 v-model="borderTransportMeans.master.masterId"
                 placeholder="驾驶员代码"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
@@ -241,7 +250,7 @@
                 v-model="borderTransportMeans.master.name"
                 placeholder="驾驶员名称"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
@@ -252,13 +261,13 @@
                 v-model="borderTransportMeans.arrivalDateTime"
                 type="datetime"
                 placeholder="选择日期时间"
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
           <!-- <el-col :span="6">
             <el-form-item label="途径国家或地区" prop="postCode" >
-              <el-button type="primary" size="mini" @click="regionInfo=true">详细</el-button>
+              <el-button type="primary"  @click="regionInfo=true">详细</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -267,7 +276,7 @@
                 v-model="queryParams.postCode"
                 placeholder="司乘人员数"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
@@ -279,7 +288,7 @@
                 v-model="queryParams.postCode"
                 placeholder="健康状态"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
@@ -289,13 +298,13 @@
                 v-model="queryParams.postCode"
                 placeholder="是否预防接种"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="关锁信息" prop="postCode" >
-              <el-button type="primary" size="mini" @click="detailVisible=true">详细</el-button>
+              <el-button type="primary"  @click="detailVisible=true">详细</el-button>
             </el-form-item>
           </el-col>-->
         </el-row>
@@ -312,44 +321,41 @@
             type="primary"
             icon="el-icon-plus"
             size="mini"
-            :disabled="btnDisable.addBtn"
             @click="trailerAdd"
           >新增</el-button>
           <el-button
             type="success"
             icon="el-icon-edit"
             size="mini"
-            :disabled="btnDisable.saveBtn"
             @click="handleSave"
           >暂存</el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
             size="mini"
-            :disabled="btnDisable.delBtn"
             @click="handleDelete"
           >删除</el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-thumb"
-            size="mini"
-            :disabled="btnDisable.repBtn"
-            @click="handleReport"
-          >申报</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-document-copy"
-            size="mini"
-            :disabled="btnDisable.copyBtn"
-            @click="handleCopy"
-          >复制</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-refresh"
-            size="mini"
-            :disabled="btnDisable.refBtn"
-            @click="handleRefresh"
-          >刷新</el-button>
+<!--          <el-button-->
+<!--            type="danger"-->
+<!--            icon="el-icon-thumb"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.repBtn"-->
+<!--            @click="handleReport"-->
+<!--          >申报</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-document-copy"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.copyBtn"-->
+<!--            @click="handleCopy"-->
+<!--          >复制</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-refresh"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.refBtn"-->
+<!--            @click="handleRefresh"-->
+<!--          >刷新</el-button>-->
         </el-col>
       </el-row>
       <el-table
@@ -363,10 +369,11 @@
         <el-table-column type="selection" min-width="55" />
         <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
         <el-table-column prop="transportequipmentId" label="托架/拖挂车编号" min-width="120" align="center"/>
-        <el-table-column prop="characteristicCode" label="托架/拖挂车类型" min-width="150" align="center"/>
+        <el-table-column prop="characteristicCode" label="托架/拖挂车类型" min-width="150" align="center" :formatter="Trailerformat" />
         <el-table-column prop="tareWeight" label="托架/拖挂车自重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
+        v-show="page.total>0"
         class="right mb20"
         background
         layout="prev, pager, next"
@@ -375,35 +382,37 @@
         :page-size="page.size"
         @current-change="currentChange"
       />
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item label="托架/拖挂车编号" prop="transportequipmentId">
               <el-input
                 v-model="trailer.transportequipmentId"
                 placeholder="托架/拖挂车编号"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item label="托架/拖挂车类型" prop="characteristicCode">
-              <el-input
-                v-model="trailer.characteristicCode"
-                placeholder="托架/拖挂车类型"
-                clearable
-                size="mini"
+              <el-select v-model="trailer.characteristicCode" placeholder="请输入托架/拖挂车类型" >
+              <el-option
+                v-for="dict in TrailertypeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
               />
+            </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item label="托架/拖挂车自重(KG)" prop="tareWeight">
               <el-input
                 v-model="trailer.tareWeight"
                 placeholder="托架/拖挂车自重(KG)"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
@@ -438,27 +447,27 @@
             :disabled="btnDisable.delBtn"
             @click="handleDelete"
           >删除</el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-thumb"
-            size="mini"
-            :disabled="btnDisable.repBtn"
-            @click="handleReport"
-          >申报</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-document-copy"
-            size="mini"
-            :disabled="btnDisable.copyBtn"
-            @click="handleCopy"
-          >复制</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-refresh"
-            size="mini"
-            :disabled="btnDisable.refBtn"
-            @click="handleRefresh"
-          >刷新</el-button>
+<!--          <el-button-->
+<!--            type="danger"-->
+<!--            icon="el-icon-thumb"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.repBtn"-->
+<!--            @click="handleReport"-->
+<!--          >申报</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-document-copy"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.copyBtn"-->
+<!--            @click="handleCopy"-->
+<!--          >复制</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            icon="el-icon-refresh"-->
+<!--            size="mini"-->
+<!--            :disabled="btnDisable.refBtn"-->
+<!--            @click="handleRefresh"-->
+<!--          >刷新</el-button>-->
         </el-col>
       </el-row>
       <el-table
@@ -472,12 +481,13 @@
         <el-table-column type="selection" min-width="55" />
         <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
         <el-table-column prop="transportequipmentId" label="集装箱(器)编号" min-width="120" align="center"/>
-        <el-table-column prop="fullnessCode" label="重箱或者空箱标识" min-width="150" align="center"/>
-        <el-table-column prop="characteristicCode" label="集装箱(器)尺寸类型" min-width="120" align="center"/>
-        <el-table-column prop="supplierPartyTypeCode" label="集装箱(器)来源代码" min-width="120" align="center"/>
+        <el-table-column prop="fullnessCode" label="重箱或者空箱标识" min-width="150" align="center" :formatter="ContainerSelfWeightformat"/>
+        <el-table-column prop="characteristicCode" label="集装箱(器)尺寸类型" min-width="120" align="center" :formatter="ContainerSizeformat"/>
+        <el-table-column prop="supplierPartyTypeCode" label="集装箱(器)来源代码" min-width="120" align="center" :formatter="ContainerSourceformat"/>
         <el-table-column prop="tareWeight" label="集装箱(器)自重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
+        v-show="page.total>0"
         class="right mb20"
         background
         layout="prev, pager, next"
@@ -486,7 +496,7 @@
         :page-size="page.size"
         @current-change="currentChange"
       />
-      <el-form :model="queryParams" ref="queryForm" label-width="160px">
+      <el-form :model="queryParams" ref="queryForm" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="集装箱(器)编号" prop="transportequipmentId">
@@ -494,38 +504,48 @@
                 v-model="transportEquipment.transportequipmentId"
                 placeholder="集装箱(器)编号"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="重箱或者空箱标识" prop="fullnessCode">
-              <el-input
-                v-model="transportEquipment.fullnessCode"
-                placeholder="重箱或者空箱标识"
-                clearable
-                size="mini"
-              />
+              <el-select v-model="transportEquipment.fullnessCode" placeholder="请选择集装箱(器)重箱或者空箱标识" >
+              <el-option
+                v-for="dict in ContainerSelfWeight"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="集装箱(器)尺寸类型" prop="characteristicCode">
-              <el-input
-                v-model="transportEquipment.characteristicCode"
-                placeholder="集装箱(器)尺寸类型"
-                clearable
-                size="mini"
-              />
+              <el-select v-model="transportEquipment.characteristicCode" placeholder="请选择集装箱(器)尺寸类型" >
+              <el-option
+                v-for="dict in ContainerSize"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="集装箱(器)来源代码" prop="supplierPartyTypeCode">
-              <el-input
-                v-model="transportEquipment.supplierPartyTypeCode"
-                placeholder="集装箱(器)来源代码"
-                clearable
-                size="mini"
-              />
+              <el-select
+              v-model="transportEquipment.supplierPartyTypeCode"
+              placeholder="请选择集装箱(器)来源代码"
+
+            >
+              <el-option
+                v-for="dict in ContainerSource"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -536,13 +556,13 @@
                 v-model="transportEquipment.tareWeight"
                 placeholder="集装箱(器)自重(KG)"
                 clearable
-                size="mini"
+
               />
             </el-form-item>
           </el-col>
           <!-- <el-col :span="6">
             <el-form-item label="集装箱封志信息" prop="postCode">
-              <el-button type="primary" size="mini" @click="dangerousInfo=true">详细</el-button>
+              <el-button type="primary"  @click="dangerousInfo=true">详细</el-button>
             </el-form-item>
           </el-col>-->
         </el-row>
@@ -591,6 +611,8 @@ import dangerousInfo from "./dangerousInfo.vue";
 import consignorInfo from "./consignorInfo.vue";
 // 收货人信息
 import receivingInfo from "./receivingInfo.vue";
+import { add } from "@/api/manifest/rmft5402_3402_4401/head";
+import { listInfo } from '@/api/basis/enterpriseInfo'
 
 export default {
   components: {
@@ -621,6 +643,7 @@ export default {
       },
       dialogTableVisible: false,
       dialogTableVisible2: false,
+      businessTypeOptions:[],
       // 按钮禁用状态
       btnDisable: {
         addBtn: false,
@@ -637,30 +660,27 @@ export default {
       // 以json格式向后台传递
       form: {
         head:{},
-        declaration:{        
+        declaration:{
           consignmentVO_4401:{
-            
-            transportEquipment:[], 
-          },  
-          
-        },        
+
+            transportEquipment:[],
+          },
+
+        },
       },
 
       // 报文功能代码/报文类型代码
-      head: {
-        functionCode: "2",
-        messageType: "MT4401",
-      },
+      head: {},
       // 表头信息表单
       declaration:{
         declarationOfficeID: undefined,
         declarationId: undefined ,
         carrier:{
           carrierId: undefined,
-        },        
+        },
         representativePerson:{
           name: undefined,
-        },        
+        },
         additionalInformation:{
           content: undefined,
         },
@@ -670,18 +690,18 @@ export default {
         arrivalDateTime: undefined,
         bordertransportmeansId: undefined,
         name: undefined,
-        typeCode: undefined,
+        typeCode: '4',
         // 驾驶员
         master:{
           masterId :undefined,
-          name : undefined        
-        },   
+          name : undefined
+        },
         transportEquipment: {
           transportequipmentId : undefined,
           characteristicCode: undefined,
           tareWeight: undefined
-        },    
-      },	
+        },
+      },
       AForm:{
         borderTransportMeans:{
           arrivalDateTime: undefined,
@@ -691,22 +711,22 @@ export default {
           // 驾驶员
           master:{
             masterId :undefined,
-            name : undefined        
-          },   
-          transportEquipment: [],    
-      },	
-      },	
+            name : undefined
+          },
+          transportEquipment: [],
+      },
+      },
       // 托架/拖挂车信息表单
       trailer:{
         transportequipmentId : undefined,
         characteristicCode: undefined,
         tareWeight: undefined
-      },		
+      },
       // 集装箱信息表单
       transportEquipment:{
         transportequipmentId : undefined,
         fullnessCode: undefined,
-        characteristicCode: undefined,			
+        characteristicCode: undefined,
         supplierPartyTypeCode: undefined,
         tareWeight: undefined
       },
@@ -720,31 +740,97 @@ export default {
       statusOptions: [],
       dateTimeVal: "",
       data: [],
+      // 企业代码
+      listInfo: [],
+      //挂车类型翻译
+      TrailertypeOptions: [],
+      // 集装箱(器)来源字典
+      ContainerSource: [],
+      // 集装箱(器)尺寸类型字典
+      ContainerSize: [],
+      // 集装箱（器）重箱或者空箱标识
+      ContainerSelfWeight: [],
     };
   },
   mounted() {
     // 初始化
-    this.init();
+    this.init(
+
+    );
+  },
+  created() {
+    //挂车类型字典翻译
+    this.getDicts("hg_trailer_type").then((response) => {
+      this.TrailertypeOptions = response.data;
+    });
+    // 运输方式
+    this.getDicts('station_transport_fashion').then((response) => {
+      this.businessTypeOptions = response.data
+    })
+    /** 集装箱(器)来源字典 */
+    this.getDicts("hg_container_source").then((response) => {
+      this.ContainerSource = response.data;
+    });
+    /** 集装箱(器)尺寸类型字典 */
+    this.getDicts("hg_container_size_type").then((response) => {
+      this.ContainerSize = response.data;
+    });
+    /** 集装箱（器）重箱或者空箱标识 */
+    this.getDicts("hg_container_self_weight").then((response) => {
+      this.ContainerSelfWeight = response.data;
+    });
   },
   methods: {
     async init() {
       // await this.depParaList()
+      //  企业代码
+      listInfo().then(data => {
+        this.listInfo = data.rows
+        console.log(data)
+      })
     },
+    //托架/拖挂车类型 翻译
+    Trailerformat(row, column) {
+      return this.selectDictLabel(this.TrailertypeOptions, row.characteristicCode);
+    },
+    //集装箱(器)来源 翻译
+    ContainerSourceformat(row, column) {
+      return this.selectDictLabel(
+        this.ContainerSource,
+        row.supplierPartyTypeCode
+      );
+    },
+    //集装箱(器)尺寸类型 翻译
+    ContainerSizeformat(row, column) {
+      return this.selectDictLabel(this.ContainerSize, row.characteristicCode);
+    },
+    //集装箱（器）重箱或者空箱标识翻译
+    ContainerSelfWeightformat(row, column) {
+      return this.selectDictLabel(this.ContainerSelfWeight, row.fullnessCode);
+    },
+
     // 整体暂存 = 新增
     AllSave() {
-      this.form.head = this.head;
+      this.form.head = this.listInfo.find(el => el.deptId === this.head.unitCode)
+      this.form.head.messageType="MT4401"
+      this.form.head.functionCode = "2";
       this.form.declaration = this.declaration;
       this.form.declaration.consignmentVO_4401 = this.AForm;
-      // this.form.declaration.consignmentVO_4401.borderTransportMeans.transportEquipment = this.trailerList;
       this.form.declaration.consignmentVO_4401.transportEquipment = this.transportEquipmentList;
+      add(this.form).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("新增成功");
+          console.log(JSON.stringify(this.form));
+        } else {
+          this.msgError(response.msg);
+        }
+      });
       this.reset();
-      console.log(JSON.stringify(this.form));
-      
     },
     // 运输工具新增
     transportMeansAdd() {
       this.AForm.borderTransportMeans = this.borderTransportMeans,
-      this.borderTransportMeansList.push(this.borderTransportMeans); 
+      this.borderTransportMeansList.push(this.borderTransportMeans);
       this.borderTransportMeans = {
         arrivalDateTime: undefined,
         bordertransportmeansId: undefined,
@@ -752,21 +838,21 @@ export default {
         typeCode: undefined,
         master:{
           masterId :undefined,
-          name : undefined        
-        },       
+          name : undefined
+        },
       }
-    },  
+    },
     // 拖挂车新增
-    trailerAdd() {      
+    trailerAdd() {
       this.trailerList.push(this.trailer);
       this.AForm.borderTransportMeans.transportEquipment = this.trailerList;
       this.trailer = {}
-    },  
+    },
     // 集装箱新增
     containerAdd() {
       this.transportEquipmentList.push(this.transportEquipment);
       this.transportEquipment = {}
-    },  
+    },
 
     // 表单清空
     reset() {
@@ -775,10 +861,10 @@ export default {
         declarationId: undefined ,
         carrier:{
           carrierId: undefined,
-        },        
+        },
         representativePerson:{
           name: undefined,
-        },        
+        },
         additionalInformation:{
           content: undefined,
         },
@@ -792,16 +878,15 @@ export default {
         // 驾驶员
         master:{
           masterId :undefined,
-          name : undefined        
-        },   
+          name : undefined
+        },
         transportEquipment: {
           transportequipmentId : undefined,
           characteristicCode: undefined,
           tareWeight: undefined
-        },    
-      },	
-     
-      this.trailer = {},		
+        },
+      },
+      this.trailer = {},
       this.transportEquipment = {},
       this.borderTransportMeansList = [],
       this.transportEquipmentList = [],
@@ -813,9 +898,6 @@ export default {
     // 暂存
     handleSave() {
       console.log("保存");
-      // this.$saveStore("a","123")
-      // this.$getStore('a')
-      // this.$delStore("a")
     },
     // 删除
     handleDelete() {},
@@ -831,7 +913,8 @@ export default {
     },
     // 组件选择
     choose(row) {
-      this.declaration.carrier.carrierId = row.codeName;
+      // this.declaration.carrier.carrierId = row.codeName;
+      this.declaration.declarationOfficeID = row.codeName;
       this.dialogTableVisible = false;
     },
     // 关闭组件
@@ -849,6 +932,15 @@ export default {
     handleSelectionChange() {},
     numFun() {
       console.log(123);
+    },
+    /** 申报*/
+    updateStatementCode(){},
+    /** 回显方法*/
+    onChange(id) {
+      const data = this.listInfo.find(el => el.deptId === id)
+      console.log(data)
+      const code = data.customsMaster
+      this.declaration.representativePerson.name = data.stationPersonName
     },
     // 请求接口
     depParaList() {
@@ -872,6 +964,9 @@ export default {
   text-align: right;
 }
 .datePicker {
-  width: auto !important;
+  width: 100% !important;
+}
+.el-select{
+  width: 100%;
 }
 </style>
