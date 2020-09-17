@@ -21,7 +21,7 @@
       </el-button>
       <el-button type="danger" icon="el-icon-thumb" size="mini" @click="declare" style="float:right" disabled>申报
       </el-button>
-    </el-row>
+    </el-row>    
     <el-card class="mb20">
       <div slot="header" class="clearfix">
         <span>基本信息</span>
@@ -217,7 +217,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-      </el-form>
+      </el-form>     
     </el-card>
     <!-- <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -393,7 +393,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row>        
       </el-form>
     </el-card>
   </div>
@@ -411,6 +411,7 @@ import {
   updateDeclare
 } from '@/api/manifest/rmft4406/head'
 import { listInfo } from '@/api/basis/enterpriseInfo'
+import noticeInfoVue from '../../rmft2401/noticeInfo.vue';
 
 export default {
   name: 'Head',
@@ -974,8 +975,7 @@ export default {
           this.form.head = element
         }
       })
-    }
-
+    },
   }
 }
 </script>
@@ -983,5 +983,4 @@ export default {
 .el-select {
   width: 100%
 }
-
 </style>

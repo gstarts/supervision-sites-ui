@@ -94,7 +94,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <!-- <el-col :span="6">
             <el-form-item label="海关货物通关代码" prop="currentCode">
               <el-input
                 v-model="governmentProcedure.currentCode"
@@ -115,9 +115,7 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
+          </el-col> -->
           <el-col :span="6">
             <el-form-item label="驾驶员代码" prop="masterId">
               <el-input
@@ -140,18 +138,20 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+        </el-row>
+        <el-row>          
+          <el-col :span="12">
             <el-form-item label="抵境内第一目的港时间" prop="arrivalDateTime">
               <el-date-picker
                 v-model="borderTransportMeans.arrivalDateTime"
                 style="width:100%"
                 type="datetime"
-                value-format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyyMMddHHmmss"
                 placeholder="选择日期时间"
               ></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="12">
             <el-form-item label="传输企业备案关区" prop="customsMaster">
               <el-input
                 v-model="head.customsMaster"
@@ -165,7 +165,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="6">
+          <el-col :span="12">
             <el-form-item label="企业代码" prop="contractorCodeScc">
               <el-select v-model="form.head.contractorcodescc" placeholder="请选择" @change="change">
                 <el-option
@@ -178,7 +178,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="18">
+          <el-col :span="12">
             <el-form-item label="确报传输人名称" prop="name">
               <el-input
                 v-model="representativePerson.name"
@@ -222,21 +222,21 @@
       <el-table :data="headList" height="300px" v-loading="loading"  @selection-change="shopInfoSelectionChange">
         <el-table-column type="selection"></el-table-column>
         <el-table-column label="序号" align="center" type="index"/>
-        <el-table-column label="托架/拖挂车编号" align="center" prop="transportEquipmentId"/>
-        <el-table-column label="托架/拖挂车类型" align="center" prop="characteristicCode" :formatter="Trailerformat"/>
+        <el-table-column label="托架/拖挂车编号" align="center" prop="transportequipmentId"/>
+        <el-table-column label="托架/拖挂车类型" align="center" prop="typeCode" :formatter="Trailerformat"/>
         <el-table-column label="托架/拖挂车自重(kg)" align="center" prop="tareWeight"/>
       </el-table>
       <!-- :rules="headRuless" -->
       <el-form :model="Tform" ref="Tform" :inline="true" label-width="180px">
         <el-row>
           <el-col :span="8">
-            <el-form-item label="托架/拖挂车编号" prop="transportEquipmentId">
-              <el-input v-model="transportEquipmentForm.transportEquipmentId" placeholder="请输入托架/拖挂车编号" size="mini"/>
+            <el-form-item label="托架/拖挂车编号" prop="transportequipmentId">
+              <el-input v-model="transportEquipmentForm.transportequipmentId" placeholder="请输入托架/拖挂车编号" size="mini"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="托架/拖挂车类型" prop="characteristicCode">
-              <el-select v-model="transportEquipmentForm.characteristicCode" placeholder="请输入托架/拖挂车类型" size="mini">
+            <el-form-item label="托架/拖挂车类型" prop="typeCode">
+              <el-select v-model="transportEquipmentForm.typeCode" placeholder="请输入托架/拖挂车类型" size="mini">
                 <el-option
                   v-for="dict in TrailertypeOptions"
                   :key="dict.dictValue"
@@ -268,6 +268,7 @@ import {
   addbody,
   edit,
   init,
+  add,
   listemptycar,
   emptycarAll,
   updateCode
@@ -332,10 +333,10 @@ export default {
       carrier: {
         carrierId: ''
       },
-      // 装货地代码
-      loadingLocation: {
-        loadingLocationId: ''
-      },
+      // // 装货地代码
+      // loadingLocation: {
+      //   loadingLocationId: ''
+      // },
       // 确报传输人名称
       representativePerson: {
         name: ''
@@ -361,16 +362,16 @@ export default {
       // 托架/拖挂车信息
       transportEquipmentForm: {
         // 托架/拖挂车编号
-        transportEquipmentId: '',
+        transportequipmentId: '',
         // 托架/拖挂车类型
-        characteristicCode: '',
+        typeCode: '',
         // 托架/拖挂车自重
         tareWeight: ''
       },
-      governmentProcedure: {
-        // 海关货物通关代码
-        currentCode: ''
-      },
+      // governmentProcedure: {
+      //   // 海关货物通关代码
+      //   currentCode: ''
+      // },
       AForm: {
         borderTransportMeans: {
           arrivalDateTime: '',
@@ -380,7 +381,7 @@ export default {
           master: {},
           transportEquipment: []
         },
-        governmentProcedure: {}
+        // governmentProcedure: {}
       },
       // 表单参数
       form: {
@@ -388,7 +389,7 @@ export default {
         declaration: {
           additionalInformation: {},
           carrier: {},
-          loadingLocation: {},
+          // loadingLocation: {},
           representativePerson: {},
           consignment: {}
         }
@@ -415,7 +416,7 @@ export default {
   methods: {
     //托架/拖挂车类型 翻译
     Trailerformat(row, column) {
-      return this.selectDictLabel(this.TrailertypeOptions, row.characteristicCode)
+      return this.selectDictLabel(this.TrailertypeOptions, row.typeCode)
     },
     // 企业申报信息列表
     enterpriseInfo() {
@@ -445,7 +446,7 @@ export default {
       this.declaration = {},
         this.additionalInformation = {},
         this.carrier = {},
-        this.loadingLocation = {},
+        // this.loadingLocation = {},
         this.representativePerson = {},
         this.borderTransportMeans = {
           arrivalDateTime: '',
@@ -458,7 +459,7 @@ export default {
           }
         },
         this.transportEquipmentForm = {},
-        this.governmentProcedure = {},
+        // this.governmentProcedure = {},
         this.headList = []
     },
     resetcar() {
@@ -502,14 +503,21 @@ export default {
       this.form.declaration = this.declaration
       this.form.declaration.additionalInformation = this.additionalInformation
       this.form.declaration.carrier = this.carrier
-      this.form.declaration.loadingLocation = this.loadingLocation
+      // this.form.declaration.loadingLocation = this.loadingLocation
       this.form.declaration.representativePerson = this.representativePerson
-      this.AForm.governmentProcedure = this.governmentProcedure
+      // this.AForm.governmentProcedure = this.governmentProcedure
       this.AForm.borderTransportMeans = this.borderTransportMeans
       this.AForm.borderTransportMeans.transportEquipment = this.headList
       this.form.declaration.consignment = this.AForm
+      add(this.form).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("新增成功");
+          console.log(JSON.stringify(this.form));
+        } else {
+          this.msgError(response.msg);
+        }
+      });
       this.reset()
-      console.log(JSON.stringify(this.form))
     },
     // //挂车新增按钮
     addnewcar: function() {

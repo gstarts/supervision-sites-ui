@@ -261,7 +261,7 @@
                 v-model="borderTransportMeans.arrivalDateTime"
                 type="datetime"
                 placeholder="选择日期时间"
-
+                value-format="yyyyMMddHHmmss"
               />
             </el-form-item>
           </el-col>
