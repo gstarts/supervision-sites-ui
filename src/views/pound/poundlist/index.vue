@@ -9,7 +9,7 @@
     <el-row :gutter="10">
       <el-col :span="15">
         <el-card class="mb20">
-          <el-form :model="form" ref="form" :rules="rules" label-width="160px">
+          <el-form :model="form" ref="form" :rules="rules" label-width="160px" >
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="发货单位" prop="deliveryUnit">
@@ -402,6 +402,6 @@ export default {
   color: red;
   margin-bottom: 15px;
   text-align: center;
-  padding: 50px;
+  padding: 25px;
 }
 </style>
