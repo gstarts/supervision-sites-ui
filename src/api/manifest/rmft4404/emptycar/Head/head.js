@@ -151,3 +151,12 @@ export function updateCoal(data) {
   })
 }
 
+// 新增【整体新增】
+export function add(data) {
+  return request({
+    url: '/manifest/head/addMt4403_4404',
+    method: 'post',
+    data: data
+  })
+}
+
