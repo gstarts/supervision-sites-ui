@@ -2,14 +2,17 @@
   <div class="app-container">
     <!-- 按钮组 -->
     <div class="mb20">
-      <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd">打印</el-button>
       <el-button type="success" icon="el-icon-edit" size="mini" @click="handleAdd">暂存</el-button>
       <el-button type="success" icon="el-icon-edit" size="mini" @click="generateAdd">生成</el-button>
+
+      <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd" v-if="this.form.netWeight == undefined || this.form.plateNum == undefined" style="display:none" >打印</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd" v-else>打印</el-button>
+
     </div>
     <el-row :gutter="10">
       <el-col :span="15">
         <el-card class="mb20">
-          <el-form :model="form" ref="form" :rules="rules" label-width="160px" >
+          <el-form :model="form" ref="form" :rules="rules" label-width="160px">
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="发货单位" prop="deliveryUnit">
@@ -26,7 +29,7 @@
                       :label="dict.dictLabel"
                       :value="dict.dictValue"
                     ></el-option>
-                  </el-select> -->
+                  </el-select>-->
                 </el-form-item>
               </el-col>
             </el-row>
@@ -137,7 +140,7 @@
       </el-col>
     </el-row>
     <el-card>
-      <el-table :data="sheetList">
+      <el-table :data="sheetList" >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="计量员" align="center" prop="id" />
         <el-table-column label="末检时间" align="center" prop="finalInspectionTime" />
@@ -229,9 +232,9 @@ export default {
         //车号
         plateNum: undefined,
         //末检时间
-        finalInspectionTime: undefined,
-        time: undefined,
-        stringTime: undefined,
+        // finalInspectionTime: undefined,
+        // time: undefined,
+        // stringTime: undefined,
         //皮重
         tare: undefined,
         //毛重
@@ -291,8 +294,10 @@ export default {
     ChannelNumberChange(event) {
       this.timer = setInterval(() => {
         poundSelect(event).then((response) => {
+          console.log("进入反添重量方法");
           this.Poundweight = response.data.weight;
           this.stable = response.data.stable;
+          console.log("后台返回内容:"+response.genTimeCode);
         });
       }, 1000);
       //离开当前页面定时器停止
@@ -301,51 +306,50 @@ export default {
       });
     },
     /** 提交按钮 */
-    handleAdd: function () {
-      this.form.finalInspectionTime = genTimeCode(
-        new Date(),
-        "YYYY-MM-DD HH:mm:ss"
-      );
-      this.$refs["form"].validate((valid) => {
-        if (valid) {
-          if (this.form.id != undefined) {
-            updateSheet(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.reset();
-              } else {
-                this.msgError(response.msg);
-              }
-            });
-          } else {
-            addSheet(this.form).then((response) => {
-              console.log(JSON.stringify(this.form));
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.reset();
-              } else {
-                this.msgError(response.msg);
-              }
-            });
-          }
-        }
-      });
+    handleAdd(){
+      console.log(this.form);
+      this.reset();
     },
+    // handleAdd: function () {
+    //   this.form.finalInspectionTime = genTimeCode(
+    //     new Date(),
+    //     "YYYY-MM-DD HH:mm:ss"
+    //   );
+    //   this.$refs["form"].validate((valid) => {
+    //     if (valid) {
+    //       if (this.form.id != undefined) {
+    //         updateSheet(this.form).then((response) => {
+    //           if (response.code === 200) {
+    //             this.msgSuccess("修改成功");
+    //             this.reset();
+    //           } else {
+    //             this.msgError(response.msg);
+    //           }
+    //         });
+    //       } else {
+    //         addSheet(this.form).then((response) => {
+    //           console.log(JSON.stringify(this.form));
+    //           if (response.code === 200) {
+    //             this.msgSuccess("新增成功");
+    //             this.open = false;
+    //             this.reset();
+    //           } else {
+    //             this.msgError(response.msg);
+    //           }
+    //         });
+    //       }
+    //     }
+    //   });
+    // },
     // 生成按钮
     generateAdd() {
       //进场
       if (this.stable == "1") {
         if (this.PoundForm.flowDirection == "I") {
           //重进空出 进场
-          if (
-            this.PoundForm.stationViaType == "01" ||
-            this.PoundForm.stationViaType == "02"
-          ) {
+          if ( this.PoundForm.stationViaType == "01" || this.PoundForm.stationViaType == "02" ) {
             //通过车辆类型 赋值毛重或皮重
-            this.PoundForm.stationViaType == "01"
-              ? (this.form.grossWeight = this.Poundweight)
-              : (this.form.tare = this.Poundweight);
+            this.PoundForm.stationViaType == "01" ? (this.form.grossWeight = this.Poundweight) : (this.form.tare = this.Poundweight);
           } else {
             this.msgError("车辆类型不可为空或选择错误,请检查");
           }
@@ -355,14 +359,24 @@ export default {
           if (this.PoundForm.stationViaType == "01") {
             //皮重
             this.form.tare = this.Poundweight;
-            //计算净重
-            this.form.netWeight = this.form.grossWeight - this.form.tare;
+            //判断出场时毛重是否未填写
+            if (this.form.grossWeight >= 0) {
+              //计算净重
+              this.form.netWeight = this.form.grossWeight - this.form.tare;
+            } else {
+              this.msgError("净重计算失败,毛重不可为空");
+            }
             //空进重出 出场
           } else if (this.PoundForm.stationViaType == "02") {
             //毛重
             this.form.grossWeight = this.Poundweight;
-            //计算净重
-            this.form.netWeight = this.form.grossWeight - this.form.tare;
+            //判断出场时皮重是否未填写
+            if (this.form.tare >= 0) {
+              //计算净重
+              this.form.netWeight = this.form.grossWeight - this.form.tare;
+            } else {
+              this.msgError("净重计算失败,皮重不可为空");
+            }
           } else {
             this.msgError("车辆类型不可为空或选择错误,请检查");
           }
@@ -380,14 +394,11 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        finalInspectionTime: undefined,
-        time: undefined,
-        stringTime: undefined,
         tare: undefined,
         grossWeight: undefined,
         netWeight: undefined,
       };
-      this.resetForm("form");
+      // this.resetForm("form");
     },
   },
 };
