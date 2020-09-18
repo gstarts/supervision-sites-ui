@@ -5,8 +5,8 @@
       <el-button type="success" icon="el-icon-edit" size="mini" @click="handleAdd">暂存</el-button>
       <el-button type="success" icon="el-icon-edit" size="mini" @click="generateAdd">生成</el-button>
 
-      <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd" v-if="this.form.netWeight == undefined || this.form.plateNum == undefined" style="display:none" >打印</el-button>
-      <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd" v-else>打印</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd" v-if="this.form.netWeight == undefined" style="display:none" >打印</el-button>
+      <el-button type="info" class="fa fa-print" size="mini" v-print="'#dayin'" @click="print" v-else>打印</el-button>
 
     </div>
     <el-row :gutter="10">
@@ -177,6 +177,45 @@
         :limit.sync="queryParams.pageSize"
       />
     </el-card>
+    <div id="dayin" v-show="Explicit ">
+        <div id="test">
+          <span class="area-in-style">{{nowData}}</span>
+        </div>
+        <div id="test1">
+          <span>{{nowTime}}</span>
+        </div>
+        <div id="area-style">
+          <span class="area-in-style">{{form.deliveryUnit}}</span>
+        </div>
+        <div id="area-right-style">
+          <span>{{form.plateNum}}</span>
+        </div>
+        <br />
+        <div id="area-style">
+          <span class="area-in-style">{{form.receivingUnit}}</span>
+        </div>
+        <div id="area-right-style">
+          <span>{{form.grossWeight}}</span>
+        </div>
+        <div id="area-style">
+          <span class="area-in-style">{{form.goodsName}}</span>
+        </div>
+        <div id="area-right-style">
+          <span>{{form.tare}}</span>
+          <br />
+        </div>
+        <div id="area-style">
+          <span class="area-in-style">{{form.specification}}</span>
+        </div>
+        <div id="area-right-style">
+          <span>{{form.netWeight}}</span>
+          <br />
+        </div>
+        <div id="area-all-style">
+          <span class="area-in-style">{{form.Remarks}}</span>
+          <br />
+        </div>
+      </div>
   </div>
 </template>
 
@@ -203,12 +242,15 @@ export default {
       chnlConfigList: [],
       //List统计列表
       sheetList: [],
+      Explici:false,
       // 非单个禁用
       single: true,
       // 非多个禁用
       multiple: true,
       // 总条数
       total: 0,
+      nowData:'',
+      nowTime:'',
       // 终端表格数据
       clientList: [],
       // 流向
@@ -391,6 +433,29 @@ export default {
     cancel() {
       this.reset();
     },
+    //打印功能
+    print() {
+      this.print1();
+      clearTimeout(this.timer); //清除延迟执行
+      this.timer = setTimeout(() => {
+        //设置延迟执行
+        this.form = [];
+        this.nowData = '';
+        this.nowTime = '';
+      }, 5000);
+    },
+    print1() {
+      this.Explicit = true;
+      var aData = new Date();
+      this.nowData =
+        aData.getFullYear() +
+        "-" +
+        (aData.getMonth() + 1) +
+        "-" +
+        aData.getDate();
+      this.nowTime =
+        aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
+    },
     // 表单重置
     reset() {
       this.form = {
@@ -414,5 +479,50 @@ export default {
   margin-bottom: 15px;
   text-align: center;
   padding: 25px;
+}
+
+#dayin {
+  height: 400px;
+  width: 800px;
+}
+
+#test {
+  width: 300px;
+  height: 40px;
+
+  float: left;
+}
+
+#test1 {
+  width: 300px;
+  height: 40px;
+
+  float: left;
+}
+#area-style {
+  width: 480px;
+  height: 40px;
+  font-size: 20px;
+
+  float: left;
+}
+#area-right-style {
+  height: 40px;
+  width: 300px;
+  font-size: 20px;
+  margin-top: 0px;
+
+  float: right;
+}
+
+#area-all-style {
+  width: 800px;
+  height: 40px;
+  font-size: 20px;
+  float: left;
+}
+
+.area-in-style {
+  padding-left: 3cm;
 }
 </style>

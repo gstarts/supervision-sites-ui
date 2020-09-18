@@ -24,9 +24,6 @@
         <el-button type="warning" icon="el-icon-refresh-right" size="mini" @click="cancel">重置</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" icon="el-icon-refresh-right" size="mini" @click="date">设置时间</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="info" class="fa fa-print" size="mini" v-print="'#dayin'" @click="print">打印</el-button>
       </el-col>
     </el-row>
@@ -604,29 +601,6 @@ export default {
       this.nowTime =
         aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
     },
-    //测试获取时间
-    date() {
-      this.ysl = true;
-      var aData = new Date();
-      this.nowData =
-        aData.getFullYear() +
-        "-" +
-        (aData.getMonth() + 1) +
-        "-" +
-        aData.getDate();
-      this.nowTime =
-        aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
-      console.log(
-        aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds()
-      );
-      console.log(
-        aData.getFullYear() +
-          "-" +
-          (aData.getMonth() + 1) +
-          "-" +
-          aData.getDate()
-      );
-    },
   },
   //销毁前清除定时器
   beforeDestroy() {
@@ -634,6 +608,9 @@ export default {
   },
 };
 </script>
+
+
+
 <style lang="scss" scoped>
 .el-select {
   width: 100%;
