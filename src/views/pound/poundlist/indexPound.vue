@@ -24,7 +24,10 @@
         <el-button type="warning" icon="el-icon-refresh-right" size="mini" @click="cancel">重置</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="info" class="fa fa-print" size="mini" @click="print">打印</el-button>
+        <el-button type="warning" icon="el-icon-refresh-right" size="mini" @click="date">设置时间</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="info" class="fa fa-print" size="mini" v-print="'#dayin'" @click="print">打印</el-button>
       </el-col>
     </el-row>
     <el-card class="mb20">
@@ -32,8 +35,8 @@
         <!-- 左侧开始 -->
         <el-row>
           <el-col :span="6">
-            <el-form-item label="发货单位" prop="finalInspectionTime">
-              <el-input v-model="form.finalInspectionTime" placeholder="请输入发货单位" />
+            <el-form-item label="发货单位" prop="deliveryUnit">
+              <el-input v-model="form.deliveryUnit" placeholder="请输入发货单位" :class="{inputtte :ysl}" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
@@ -124,6 +127,7 @@
           </el-col>
         </el-row>
       </el-form>
+     
       <!-- 底部结束 -->
 
       <!-- <el-col :span="1.5">
@@ -260,18 +264,65 @@
         </div>
       </el-dialog>
     </el-card>
+     <div id="dayin" v-show="Explicit ">
+        <div id="test">
+          <span class="area-in-style">{{nowData}}</span>
+        </div>
+        <div id="test1">
+          <span>{{nowTime}}</span>
+        </div>
+        <div id="area-style">
+          <span class="area-in-style">{{form.deliveryUnit}}</span>
+        </div>
+        <div id="area-right-style">
+          <span>{{form.grossWeight}}</span>
+        </div>
+        <br />
+        <div id="area-style">
+          <span class="area-in-style">{{form.receivingUnit}}</span>
+        </div>
+        <div id="area-right-style">
+          <span>{{form.tare}}</span>
+        </div>
+        <div id="area-style">
+          <span class="area-in-style">{{form.specification}}</span>
+        </div>
+        <div id="area-right-style">
+          <span>{{form.NetTareWeight}}</span>
+          <br />
+        </div>
+        <div id="area-style">
+          <span class="area-in-style">{{form.plateNum}}</span>
+        </div>
+        <div id="area-right-style">
+          <span>{{form.netWeight}}</span>
+          <br />
+        </div>
+        <div id="area-all-style">
+          <span class="area-in-style">{{form.CaseNumber}}</span>
+          <br />
+        </div>
+        <div id="area-all-style">
+          <span class="area-in-style">{{form.CoalMentionNumber}}</span>
+          <br />
+        </div>
+        <div id="area-all-style">
+          <span class="area-in-style">{{form.Remarks}}</span>
+          <br />
+        </div>
+      </div>
   </div>
 </template>
 
 <script>
-// import {
-//   listSheet,
-//   getSheet,
-//   delSheet,
-//   addSheet,
-//   updateSheet,
-//   exportSheet,
-// } from "@/api/pound/poundlist";
+import {
+  listSheet,
+  getSheet,
+  delSheet,
+  addSheet,
+  updateSheet,
+  exportSheet,
+} from "@/api/pound/poundlist";
 import SimpleKeyboard from "@/components/SimpleKeyboard/SimpleKeyboard";
 import printTemplate from "print-template";
 import { listChnlConfig } from "@/api/basis/chnlConfig";
@@ -302,8 +353,14 @@ export default {
       chnlConfigList: [],
       // 非单个禁用
       single: true,
+      timer: "",
+      ysl: false,
+      nowTime: "",
+      nowData: "",
       // 非多个禁用
       multiple: true,
+      //磅单隐藏域显示隐藏
+      Explicit: false,
       // 总条数
       total: 0,
       // 计量单表格数据
@@ -418,6 +475,8 @@ export default {
         remark: undefined,
         ChannelNumber: this.Poundweight,
       };
+      this.nowTime = "";
+      this.nowData = "";
       // this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -526,282 +585,47 @@ export default {
     },
     //打印功能
     print() {
-      var myDate = new Date();
-      let template = new printTemplate();
-      let yto = {
-        name: "yto", // 模板名称
-        unit: "mm", // 尺寸 默认mm    mm / px
-        size: [130, 70], // 模板大小  宽 130mm / 高70mm
-        // fixed: [
-        //  // 固定内容 比如：线条 、logo 广告、固定字体
-        //  // 第一条
-        //   { type: "line", x: 1, y: 12, length: 110 },
-        //   //第二条
-        //   { type: "line", x: 1, y: 18, length: 110 },
-        //   //第三条
-        //   { type: "line", x: 1, y: 24, length: 110 },
-        //   //第四条
-        //   { type: "line", x: 1, y: 30, length: 110 },
-        //   //第五条
-        //   { type: "line", x: 1, y: 36, length: 110 },
-        //   //第六条
-        //   { type: "line", x: 1, y: 42, length: 110 },
-        //   //第七条
-        //   { type: "line", x: 1, y: 48, length: 110 },
-        //   //左侧第一条
-        //   { type: "line", x: 1, y: 12, orientation: "p", length: 36 },
-        //   //左侧第二条
-        //   { type: "line", x: 16, y: 12, orientation: "p", length: 36 },
-        //   //左侧第三条
-        //   { type: "line", x: 57, y: 12, orientation: "p", length: 36 },
-        //   //左侧第四条
-        //   { type: "line", x: 70, y: 12, orientation: "p", length: 36 },
-        //   //右侧第一条
-        //   { type: "line", x: 111, y: 12, orientation: "p", length: 36 },
-        //  // 公司名称
-        //   {
-        //     type: "text",
-        //     fontSize: 4,
-        //     fontWeight: 100,
-        //     x: 2,
-        //     y: 1,
-        //     default: "内蒙古额济纳旗庆华马克那林苏海特商贸有限责任公司",
-        //   }, // 固定文字   \n 换行  也可以设置 maxWidth:3.8*2  自动换行
-        //   //计量单标题
-        //   {
-        //     type:"text",
-        //     fontSize:2.6,
-        //     x:53,
-        //     y:7,
-        //     default:"计量单",
-        //   },
-        //   //盖章区
-        //   {
-        //     type:"text",
-        //     fontSize:1.8,
-        //     fontWeight:100,
-        //     x:2,
-        //     y:10,
-        //     default:"( 盖 章 有 效 )",
-        //   },
-        //   //票号
-        //    {
-        //     type:"text",
-        //     fontSize:1.8,
-        //     fontWeight:100,
-        //     x:67,
-        //     y:10,
-        //     default:"票号 Q H M K:",
-        //   },
-        //   //末检时间
-        //   {
-        //     type:"text",
-        //     fontSize:1.7,
-        //     fontWeight:100,
-        //     x:6,
-        //     y:14.5,
-        //     default:"末 检 时 间",
-        //   },
-        //   //车号
-        //   {
-        //     type:"text",
-        //     fontSize:1.7,
-        //     fontWeight:100,
-        //     x:6,
-        //     y:20.5,
-        //     default:"车         号",
-        //   },
-        //   //规格
-        //    {
-        //     type:"text",
-        //     fontSize:1.7,
-        //     fontWeight:100,
-        //     x:6,
-        //     y:26.5,
-        //     default:"规         格",
-        //   },
-        //   //承运人
-        //   {
-        //     type:"text",
-        //     fontSize:1.7,
-        //     fontWeight:100,
-        //     x:6,
-        //     y:32.5,
-        //     default:"承  运  人",
-        //   },
-        // //供货单位
-        // {
-        //     type:"text",
-        //     fontSize:1.7,
-        //     fontWeight:100,
-        //     x:5.5,
-        //     y:38.5,
-        //     default:"供 货 单 位",
-        //   },
-        //   //收货单位
-        //   {
-        //     type:"text",
-        //     fontSize:1.7,
-        //     fontWeight:100,
-        //     x:5.5,
-        //     y:44.5,
-        //     default:"收 货 单 位",
-        //   },
-        //   //计量号
-        //   {
-        //     type:"text",
-        //     fontSize:1.7,
-        //     fontWeight:100,
-        //     x:60,
-        //     y:14.5,
-        //     default:"计  量  号",
-        //   },
-        //   //货物名称
-        //   {
-        //     type:"text",
-        //     fontSize:1.7,
-        //     fontWeight:100,
-        //     x:59.5,
-        //     y:20.5,
-        //     default:"货 物 名 称",
-        //   },
-        //   //毛重(kg)
-        //   {
-        //     type:"text",
-        //     fontSize:1.7,
-        //     fontWeight:100,
-        //     x:60,
-        //     y:26.5,
-        //     default:"毛 重 (kg)",
-        //   },
-        //   //皮重(kg)
-        //   {
-        //     type:"text",
-        //     fontSize:1.7,
-        //     fontWeight:100,
-        //     x:60,
-        //     y:32.5,
-        //     default:"皮 重 (kg)",
-        //   },
-        //   //净重(kg)
-        //   {
-        //     type:"text",
-        //     fontSize:1.7,
-        //     fontWeight:100,
-        //     x:60,
-        //     y:38.5,
-        //     default:"净 重 (kg)",
-        //   },
-        //   //备注
-        //   {
-        //     type:"text",
-        //     fontSize:1.7,
-        //     fontWeight:100,
-        //     x:60,
-        //     y:44.5,
-        //     default:"备         注",
-        //   },
-        // ],
-        data: {
-          //右侧 X轴 71  左侧X轴  20
-          // 动态数据 传入值的位置
-          //口岸公司名称
-          PortCompanyPreview: { type: "text", x: 23, y: 1, fontSize: 4 },
-          //日期
-          datePreview: { type: "text", x: 20, y: 8, fontSize: 3 },
-          //时间
-          timePreview: { type: "text", x: 50, y: 8, fontSize: 3 },
-          //第一排开始
-
-          //发货单位
-          ShipperPreview: { type: "text", x: 20, y: 14, fontSize: 3 },
-          //收货单位
-          ReceivingUnitPreview: { type: "text", x: 20, y: 19, fontSize: 3 },
-          //货物名称
-          itemNamePreview: { type: "text", x: 20, y: 26, fontSize: 3 },
-          //车号
-          CarNumberPreview: { type: "text", x: 20, y: 32, fontSize: 3 },
-          //第一排结束
-
-          //第二排开始
-
-          //毛重
-          grossWeightPreview: { type: "text", x: 75, y: 14, fontSize: 3 },
-          //皮重
-          tarePreview: { type: "text", x: 75, y: 20, fontSize: 3 },
-          //箱皮重
-          NetTareWeightPreview: { type: "text", x: 75, y: 26, fontSize: 3 },
-          //净重
-          netWeightPreview: { type: "text", x: 75, y: 32, fontSize: 3 },
-          //第二排结束
-
-          //底部三排
-          //箱号
-          CaseNumberPreview: { type: "text", x: 20, y: 38, fontSize: 3 },
-          //提煤单号
-          CoalMentionNumberPreview: { type: "text", x: 20, y: 44, fontSize: 3 },
-          //备注
-          RemarksPreview: { type: "text", x: 20, y: 50, fontSize: 3 },
-          // 第三排结束
-
-          //   type: "barcode",
-          //   x: 7,
-          //   y: 13,
-          //   format: "CODE128A",
-          //   width: 4,
-          //   margin: 0,
-          //   fontSize: 3.3,
-          //   fontOptions: "bold",
-          //   displayValue: true,
-          //   height: 13,
-          // },
-        },
-      };
-      // 添加模板
-      template.push(yto);
-
-      // 传入数据的内容
-      let data = [
-        {
-          //口岸公司名称
-          PortCompanyPreview: "甘其毛都华方海关监管场所称重单",
-          //日期
-          datePreview: myDate.toLocaleDateString(),
-          //时间
-          timePreview: myDate.toLocaleTimeString(),
-          //发货单位
-          ShipperPreview: this.form.finalInspectionTime,
-          //收货单位
-          ReceivingUnitPreview: this.form.receivingUnit,
-          //货物名称
-          itemNamePreview: this.form.specification,
-          //车号
-          CarNumberPreview: this.form.plateNum,
-          //毛重
-          grossWeightPreview: this.form.grossWeight,
-          //皮重
-          tarePreview: this.form.tare,
-          //箱皮重
-          NetTareWeightPreview: this.form.NetTareWeight,
-          //净重
-          netWeightPreview: this.form.netWeight,
-          //箱号
-          CaseNumberPreview: this.form.CaseNumber,
-          //提煤单号
-          CoalMentionNumberPreview: this.form.CoalMentionNumber,
-          //备注
-          RemarksPreview: this.form.Remarks,
-        },
-        // { name: "张三2", code: "YT100011112" },
-      ];
-      // 打印
-      template.print("yto", data).then((pdf) => {
-        // 返回 jspdf
-        // blob 地址
-        let uri = pdf.output("bloburi", { filename: "磅单PDF生成" });
-        // 下载保存
-        pdf.save("洗精煤磅单打印");
-      });
+      this.print1();
+      clearTimeout(this.timer); //清除延迟执行
+      this.timer = setTimeout(() => {
+        //设置延迟执行
+        this.reset();
+      }, 5000);
+    },
+    print1() {
+      this.Explicit = true;
+      var aData = new Date();
+      this.nowData =
+        aData.getFullYear() +
+        "-" +
+        (aData.getMonth() + 1) +
+        "-" +
+        aData.getDate();
+      this.nowTime =
+        aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
+    },
+    //测试获取时间
+    date() {
+      this.ysl = true;
+      var aData = new Date();
+      this.nowData =
+        aData.getFullYear() +
+        "-" +
+        (aData.getMonth() + 1) +
+        "-" +
+        aData.getDate();
+      this.nowTime =
+        aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
+      console.log(
+        aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds()
+      );
+      console.log(
+        aData.getFullYear() +
+          "-" +
+          (aData.getMonth() + 1) +
+          "-" +
+          aData.getDate()
+      );
     },
   },
   //销毁前清除定时器
@@ -813,5 +637,72 @@ export default {
 <style lang="scss" scoped>
 .el-select {
   width: 100%;
+}
+
+// .textarea {
+//   margin-left:3cm ;
+//   margin-top: 2.5cm;
+//   font-size:20px ;
+// }
+// .textarea1 {
+//   margin-left:8cm ;
+//   margin-top: 2.5cm;
+//   font-size:20px ;
+// }
+// .textarea2 {
+//   margin-left:3cm ;
+//   margin-top: -20px;
+//   font-size:20px ;
+// }
+
+// .inputtte .el-input__inner{
+//   border: none;
+
+// }
+
+#dayin {
+  height: 400px;
+  width: 800px;
+}
+
+#test {
+  width: 300px;
+  height: 40px;
+
+  float: left;
+}
+
+#test1 {
+  width: 300px;
+  height: 40px;
+
+  float: left;
+}
+#area-style {
+  width: 480px;
+  height: 40px;
+  font-size: 20px;
+
+  float: left;
+}
+#area-right-style {
+  height: 40px;
+  width: 300px;
+  font-size: 20px;
+  margin-top: 0px;
+
+  float: right;
+}
+
+#area-all-style {
+  width: 800px;
+  height: 40px;
+  font-size: 20px;
+  // border: 1px solid;
+  float: left;
+}
+
+.area-in-style {
+  padding-left: 3cm;
 }
 </style>
