@@ -473,12 +473,12 @@ export default {
   width: 100%;
 }
 .Pound {
-  font-size: 40px;
-  width: 50%;
+  font-size: 60px;
+  width: 100%;
   color: red;
   margin-bottom: 15px;
   text-align: center;
-  padding: 25px;
+  padding: 15px;
 }
 
 #dayin {
