@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 按钮组 -->
     <div class="mb20">
-      <el-button type="success" icon="el-icon-edit" size="mini" @click="handleAdd">暂存</el-button>
+      <el-button type="success" icon="el-icon-edit" size="mini" @click="AllADD">暂存</el-button>
       <el-button type="success" icon="el-icon-edit" size="mini" @click="generateAdd">生成</el-button>
 
       <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd" v-if="this.form.netWeight == undefined" style="display:none" >打印</el-button>
@@ -275,7 +275,7 @@ export default {
       },
       // 是否新增
       isAdd: false,
-      // 地磅数值
+      // 地磅数据
       form: {
         //车号
         plateNum: undefined,
@@ -295,6 +295,10 @@ export default {
         goodsName:undefined,
         //规格型号
         specification:undefined,
+        //备注
+        remark:undefined,
+        //通道号 (新增时 通过通道配置赋值)
+        ChannelNumber:undefined,
       },
       //通道配置
       PoundForm: {
@@ -360,9 +364,20 @@ export default {
       });
     },
     /** 提交按钮 */
-    handleAdd(){
-      console.log(this.form);
-      this.reset();
+    AllADD(){
+      //通道号赋值
+      this.form.ChannelNumber=this.PoundForm.ChannelNumber;
+        if(this.PoundForm.flowDirection=="I"){
+            //调用后台接口 新增数据
+             console.log(this.form);
+             console.log("我是进场");
+        }else if(this.PoundForm.flowDirection=="E"){
+            //调用后台接口 新增数据
+            // console.log(this.form);
+            console.log("我是出场");
+        }
+            //清空地磅数据
+            this.reset();
     },
     // handleAdd: function () {
     //   this.form.finalInspectionTime = genTimeCode(
