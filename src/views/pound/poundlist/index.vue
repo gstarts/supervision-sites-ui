@@ -439,7 +439,7 @@ export default {
       clearTimeout(this.timer); //清除延迟执行
       this.timer = setTimeout(() => {
         //设置延迟执行
-        this.form = [];
+        this.reset()
         this.nowData = '';
         this.nowTime = '';
       }, 5000);
