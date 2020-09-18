@@ -79,9 +79,14 @@
             </el-row>
 
             <el-row type="flex">
-              <el-col :span="24">
+              <el-col :span="12">
                 <el-form-item label="备注" prop="remark">
                   <el-input v-model="form.remark" placeholder="请输入备注" clearable></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="库位号" prop="LocationNumber">
+                  <el-input v-model="form.LocationNumber" placeholder="请输入库位号" clearable></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -140,23 +145,23 @@
       </el-col>
     </el-row>
     <el-card>
-      <el-table :data="sheetList" >
+        <el-table
+        class="mb20"
+        ref="sheetList"
+        :data="sheetList"
+        tooltip-effect="dark"
+        style="width: 100%"
+      >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="计量员" align="center" prop="id" />
-        <el-table-column label="末检时间" align="center" prop="finalInspectionTime" />
-        <el-table-column label="计量号" align="center" prop="measurementNum" />
-        <el-table-column label="车牌号" align="center" prop="plateNum" />
-        <el-table-column label="货物名称" align="center" prop="goodsName" />
-        <el-table-column label="规格" align="center" prop="specification" />
-        <el-table-column label="承运人" align="center" prop="carrier" />
-        <el-table-column label="皮重" align="center" prop="tare" />
+        <el-table-column label="车号" align="center" prop="plateNum" />
         <el-table-column label="毛重" align="center" prop="grossWeight" />
+        <el-table-column label="皮重" align="center" prop="tare" />
         <el-table-column label="净重" align="center" prop="netWeight" />
-        <el-table-column label="供货单位" align="center" prop="deliveryUnit" />
+        <el-table-column label="库位号" align="center" prop="LocationNumber" />
+        <el-table-column label="发货单位" align="center" prop="deliveryUnit" />
         <el-table-column label="收货单位" align="center" prop="receivingUnit" />
-        <el-table-column label="流向" align="center" prop="flowDirection" />
-        <el-table-column label="计量员" align="center" prop="measurer" />
-        <el-table-column label="备注" align="center" prop="remark" />
+        <el-table-column label="货物名称" align="center" prop="goodsName" />
+        <el-table-column label="规格型号" align="center" prop="specification" />
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
@@ -242,7 +247,8 @@ export default {
       chnlConfigList: [],
       //List统计列表
       sheetList: [],
-      Explici:false,
+      //隐藏域
+      Explicit:false,
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -273,16 +279,22 @@ export default {
       form: {
         //车号
         plateNum: undefined,
-        //末检时间
-        // finalInspectionTime: undefined,
-        // time: undefined,
-        // stringTime: undefined,
         //皮重
         tare: undefined,
         //毛重
         grossWeight: undefined,
         //净重
         netWeight: undefined,
+        //库位号
+        LocationNumber:undefined,
+        //发货单位
+        deliveryUnit:undefined,
+        //收货单位
+        receivingUnit:undefined,
+        //货物名称
+        goodsName:undefined,
+        //规格型号
+        specification:undefined,
       },
       //通道配置
       PoundForm: {
