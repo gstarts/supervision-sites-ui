@@ -318,6 +318,7 @@ export default {
         grossWeight: [{ type: "number", message: "请输入数字" }],
         tare: [{ type: "number", message: "请输入数字" }],
         netWeight: [{ type: "number", message: "请输入数字" }],
+        plateNum:[{ required: true, message: "不可为空", trigger: "blur" }],
       },
       ruless: {
         flowDirection: [{ required: true, message: "请输入", trigger: "blur" }],
@@ -369,15 +370,16 @@ export default {
       });
     },
     /** 暂存按钮 */
-    AllADD: function (){
+    AllADD(){
       //通道号赋值
       this.form.ChannelNumber=this.PoundForm.ChannelNumber;
       this.form.updateTime=genTimeCode(new Date(),"YYYY-MM-DD HH:mm:ss");
        this.$refs["form"].validate((valid) => {
-         debugger
          if(valid){
-           console.log("valid进入");
+           if(this.PoundForm.flowDirection=="I"){
+             //进场 新增
               addSheet(this.form).then((response) => {
+                console.log(this.form);
              console.log("后台接口进入");
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
@@ -387,6 +389,10 @@ export default {
                 this.msgError(response.msg);
               }
             });
+           }else if(this.PoundForm.flowDirection=="E"){
+              //出场 修改
+              this.msgError("功能待开发,请稍后...");
+           }   
          }
       
        });
