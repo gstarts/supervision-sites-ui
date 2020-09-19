@@ -299,6 +299,8 @@ export default {
         remark:undefined,
         //通道号 (新增时 通过通道配置赋值)
         ChannelNumber:undefined,
+        //更新时间
+        updateTime:undefined,
       },
       //通道配置
       PoundForm: {
@@ -363,17 +365,26 @@ export default {
         clearInterval(this.timer);
       });
     },
-    /** 提交按钮 */
+    /** 暂存按钮 */
     AllADD(){
       //通道号赋值
       this.form.ChannelNumber=this.PoundForm.ChannelNumber;
+      this.form.updateTime=genTimeCode(new Date(),"YYYY-MM-DD HH:mm:ss");
         if(this.PoundForm.flowDirection=="I"){
             //调用后台接口 新增数据
              console.log(this.form);
+             addSheet(this.form).then((response) =>{
+               console.log("进入后台接口");
+               if(response === 200){
+                this.msgSuccess("新增成功");
+               }else{
+                 this.msgError(response.msg);
+               }
+             })
              console.log("我是进场");
         }else if(this.PoundForm.flowDirection=="E"){
             //调用后台接口 新增数据
-            // console.log(this.form);
+            console.log(this.form);
             console.log("我是出场");
         }
             //清空地磅数据
