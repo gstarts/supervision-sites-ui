@@ -85,8 +85,8 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="库位号" prop="LocationNumber">
-                  <el-input v-model="form.LocationNumber" placeholder="请输入库位号" clearable></el-input>
+                <el-form-item label="库位号" prop="locationNumber">
+                  <el-input v-model="form.locationNumber" placeholder="请输入库位号" clearable></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -114,10 +114,10 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="通道号" prop="ChannelNumber">
+            <el-form-item label="通道号" prop="channelNumber">
               <el-select
                 filterable
-                v-model="PoundForm.ChannelNumber"
+                v-model="PoundForm.channelNumber"
                 placeholder="请选择通道号"
                 @change="ChannelNumberChange"
               >
@@ -157,7 +157,7 @@
         <el-table-column label="毛重" align="center" prop="grossWeight" />
         <el-table-column label="皮重" align="center" prop="tare" />
         <el-table-column label="净重" align="center" prop="netWeight" />
-        <el-table-column label="库位号" align="center" prop="LocationNumber" />
+        <el-table-column label="库位号" align="center" prop="locationNumber" />
         <el-table-column label="发货单位" align="center" prop="deliveryUnit" />
         <el-table-column label="收货单位" align="center" prop="receivingUnit" />
         <el-table-column label="货物名称" align="center" prop="goodsName" />
@@ -288,7 +288,7 @@ export default {
         //净重
         netWeight: undefined,
         //库位号
-        LocationNumber:undefined,
+        locationNumber:undefined,
         //发货单位
         deliveryUnit:undefined,
         //收货单位
@@ -300,16 +300,17 @@ export default {
         //备注
         remark:undefined,
         //通道号 (新增时 通过通道配置赋值)
-        ChannelNumber:undefined,
+        channelNumber:undefined,
         //更新时间
         updateTime:undefined,
+        
       },
       //通道配置
       PoundForm: {
         //流向
         flowDirection: undefined,
         //通道号
-        ChannelNumber: undefined,
+        channelNumber: undefined,
         //过卡车辆类型
         stationViaType: undefined,
       },
@@ -371,12 +372,12 @@ export default {
     /** 暂存按钮 */
     AllADD: function (){
       //通道号赋值
-      this.form.ChannelNumber=this.PoundForm.ChannelNumber;
+      this.form.channelNumber=this.PoundForm.channelNumber;
       this.form.updateTime=genTimeCode(new Date(),"YYYY-MM-DD HH:mm:ss");
        this.$refs["form"].validate((valid) => {
-         debugger
          if(valid){
-           console.log("valid进入");
+           console.log(JSON.stringify(this.form));
+
               addSheet(this.form).then((response) => {
              console.log("后台接口进入");
               if (response.code === 200) {
