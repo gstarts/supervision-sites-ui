@@ -352,6 +352,7 @@ export default {
     },
     //选择通道号定时反添重量方法
     ChannelNumberChange(event) {
+      clearInterval(this.timer);
       this.timer = setInterval(() => {
         poundSelect(event).then((response) => {
           console.log("进入反添重量方法");
