@@ -95,7 +95,7 @@
       </el-col>
       <el-col :span="9">
         <el-card>
-          <el-form :model="form" ref="form" :rules="ruless" label-width="80px" class="mb20">
+          <el-form :model="PoundForm" ref="PoundForm" :rules="ruless" label-width="80px" class="mb20">
             <input
               class="Pound"
               v-if="this.stable === 1"
@@ -103,7 +103,7 @@
               v-model="this.Poundweight"
               disabled
             />
-            <input class="Pound" v-else style="color:red" v-model="this.Poundweight" disabled />
+            <input class="Pound" v-else style="color:red"  v-model="this.Poundweight" disabled />
             <el-form-item label="流向">
               <el-select v-model="PoundForm.flowDirection" placeholder="请选择流向" prop="flowDirection">
                 <el-option
@@ -225,7 +225,9 @@
 </template>
 
 <script>
-import { addSheet, updateSheet } from "@/api/pound/poundlist";
+import { 
+addSheet, 
+updateSheet } from "@/api/pound/poundlist";
 import { genTimeCode } from "@/utils/common";
 //获取实时重量
 import { poundSelect } from "@/api/pound/poundlist";
@@ -367,29 +369,47 @@ export default {
       });
     },
     /** 暂存按钮 */
-    AllADD(){
+    AllADD: function (){
       //通道号赋值
       this.form.ChannelNumber=this.PoundForm.ChannelNumber;
       this.form.updateTime=genTimeCode(new Date(),"YYYY-MM-DD HH:mm:ss");
-        if(this.PoundForm.flowDirection=="I"){
-            //调用后台接口 新增数据
-             console.log(this.form);
-             addSheet(this.form).then((response) =>{
-               console.log("进入后台接口");
-               if(response === 200){
+       this.$refs["form"].validate((valid) => {
+         debugger
+         if(valid){
+           console.log("valid进入");
+              addSheet(this.form).then((response) => {
+             console.log("后台接口进入");
+              if (response.code === 200) {
                 this.msgSuccess("新增成功");
-               }else{
-                 this.msgError(response.msg);
-               }
-             })
-             console.log("我是进场");
-        }else if(this.PoundForm.flowDirection=="E"){
-            //调用后台接口 新增数据
-            console.log(this.form);
-            console.log("我是出场");
-        }
+                this.open = false;
+                this.reset();
+              } else {
+                this.msgError(response.msg);
+              }
+            });
+         }
+      
+       });
+        // if(this.PoundForm.flowDirection=="I"){
+        //     //调用后台接口 新增数据
+        //      console.log(this.form);
+        //      addSheet().then(response =>{
+        //        this.msgSuccess("进入后台接口");
+        //        console.log("进入后台接口");
+        //        if(response === 200){
+        //         this.msgSuccess("新增成功");
+        //        }else{
+        //          this.msgError(response.msg);
+        //        }
+        //      })
+        //      console.log("我是进场");
+        // }else if(this.PoundForm.flowDirection=="E"){
+        //     //调用后台接口 新增数据
+        //     console.log(this.form);
+        //     console.log("我是出场");
+        // }
             //清空地磅数据
-            this.reset();
+            // this.reset();
     },
     // handleAdd: function () {
     //   this.form.finalInspectionTime = genTimeCode(
