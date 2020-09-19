@@ -27,6 +27,9 @@ import VCharts from 'v-charts'
 Vue.use(VCharts)
 import AFTableColumn from 'af-table-column'
 Vue.use(AFTableColumn)
+//打印
+import Print from 'vue-print-nb'
+Vue.use(Print);
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
 Vue.prototype.getConfigKey = getConfigKey
