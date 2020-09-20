@@ -336,7 +336,7 @@ export default {
       this.flowDirectionOptions = response.data;
     });
     // 0 监管场所，1保税库，2堆场，3企业
-    this.depts = getUserDepts("0");
+    this.depts = getUserDepts("1");
     if (this.depts.length > 0) {
       this.queryParams.stationId = this.depts[0].deptId;
       this.created();
