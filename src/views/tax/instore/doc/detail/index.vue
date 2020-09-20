@@ -1,27 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="场所" prop="placeId">
-        <el-select
-          v-model="queryParams.placeId" placeholder="请选择场所" size="small">
-          <el-option
-            v-for="dept in depts"
-            :key="dept.deptId"
-            :label="dept.deptName"
-            :value="dept.deptId"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="入库通知单号" prop="instoreNoticeNo" label-width="100px">
-        <el-input
-          v-model="queryParams.instoreNoticeNo"
-          placeholder="请输入入库通知单号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <!--<el-form-item label="净重" prop="bagNetWeight">
+      <el-form-item label="净重" prop="bagNetWeight">
         <el-input
           v-model="queryParams.bagNetWeight"
           placeholder="请输入净重"
@@ -29,8 +9,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
-      <!--<el-form-item label="袋号" prop="bagNumber">
+      </el-form-item>
+      <el-form-item label="袋号" prop="bagNumber">
         <el-input
           v-model="queryParams.bagNumber"
           placeholder="请输入袋号"
@@ -38,8 +18,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
-     <!-- <el-form-item label="毛重" prop="bagRoughWeight">
+      </el-form-item>
+      <el-form-item label="毛重" prop="bagRoughWeight">
         <el-input
           v-model="queryParams.bagRoughWeight"
           placeholder="请输入毛重"
@@ -47,7 +27,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
+      </el-form-item>
       <el-form-item label="袋封号" prop="bagSealNo">
         <el-input
           v-model="queryParams.bagSealNo"
@@ -75,7 +55,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!--<el-form-item label="是否已加工" prop="hasProcess">
+      <el-form-item label="是否已加工,0未加工，1已加工" prop="hasProcess">
         <el-input
           v-model="queryParams.hasProcess"
           placeholder="请输入是否已加工,0未加工，1已加工"
@@ -83,9 +63,17 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
-      
-      <!--<el-form-item label="包装单位" prop="packingUnit">
+      </el-form-item>
+      <el-form-item label="入库单号" prop="instoreDocNo">
+        <el-input
+          v-model="queryParams.instoreDocNo"
+          placeholder="请输入入库单号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="包装单位" prop="packingUnit">
         <el-input
           v-model="queryParams.packingUnit"
           placeholder="请输入包装单位"
@@ -93,8 +81,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
-      <!--<el-form-item label="场所ID" prop="placeId">
+      </el-form-item>
+      <el-form-item label="场所ID" prop="placeId">
         <el-input
           v-model="queryParams.placeId"
           placeholder="请输入场所ID"
@@ -102,8 +90,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
-      <!--<el-form-item label="预订货位号" prop="bookStoreCode">
+      </el-form-item>
+      <el-form-item label="预订货位号" prop="bookStoreCode">
         <el-input
           v-model="queryParams.bookStoreCode"
           placeholder="请输入预订货位号"
@@ -111,7 +99,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -125,7 +113,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['tax:instore_notice_detail:add']"
+          v-hasPermi="['tax:instore_doc_detail:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -135,7 +123,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['tax:instore_notice_detail:edit']"
+          v-hasPermi="['tax:instore_doc_detail:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -145,7 +133,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['tax:instore_notice_detail:remove']"
+          v-hasPermi="['tax:instore_doc_detail:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -154,48 +142,44 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['tax:instore_notice_detail:export']"
+          v-hasPermi="['tax:instore_doc_detail:export']"
         >导出</el-button>
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="instore_notice_detailList" @selection-change="handleSelectionChange">
-      <!--<af-table-column type="selection" width="55" align="center" />-->
-      <af-table-column label="入库通知单号" align="center" prop="instoreNoticeNo" />
-      <af-table-column label="品名" align="center" prop="goodsName" />
-      <af-table-column label="批次号" align="center" prop="batchNo" />
-      <af-table-column label="袋封号" align="center" prop="bagSealNo" />
-      <af-table-column label="袋号" align="center" prop="bagNumber" />
-      <af-table-column label="包装单位" align="center" prop="packingUnit" />
-      <af-table-column label="毛重(KG)" align="center" prop="bagRoughWeight" />
-      <af-table-column label="净重(KG)" align="center" prop="bagNetWeight" />
-      <!--<af-table-column label="预订货位号" align="center" prop="id" />-->
-      <af-table-column label="是否已加工" align="center" prop="hasProcess" >
-        <template slot-scope="scope">
-          {{scope.row.hasProcess === 0?'否':'是'}}
-        </template>
-      </af-table-column>
-      <!--<af-table-column label="备注" align="center" prop="remark" />-->
-      <!--<af-table-column label="场所ID" align="center" prop="placeId" />-->
-      <!--<af-table-column label="预订货位号" align="center" prop="bookStoreCode" />-->
-      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+    <el-table v-loading="loading" :data="instore_doc_detailList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="预订货位号" align="center" prop="id" />
+      <el-table-column label="预订货位号" align="center" prop="remark" />
+      <el-table-column label="净重" align="center" prop="bagNetWeight" />
+      <el-table-column label="袋号" align="center" prop="bagNumber" />
+      <el-table-column label="毛重" align="center" prop="bagRoughWeight" />
+      <el-table-column label="袋封号" align="center" prop="bagSealNo" />
+      <el-table-column label="批次号" align="center" prop="batchNo" />
+      <el-table-column label="品名" align="center" prop="goodsName" />
+      <el-table-column label="是否已加工,0未加工，1已加工" align="center" prop="hasProcess" />
+      <el-table-column label="入库单号" align="center" prop="instoreDocNo" />
+      <el-table-column label="包装单位" align="center" prop="packingUnit" />
+      <el-table-column label="场所ID" align="center" prop="placeId" />
+      <el-table-column label="预订货位号" align="center" prop="bookStoreCode" />
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['tax:instore_notice_detail:edit']"
+            v-hasPermi="['tax:instore_doc_detail:edit']"
           >修改</el-button>
-          <el-button v-show="scope.row.templateId===null"
+          <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['tax:instore_notice_detail:remove']"
+            v-hasPermi="['tax:instore_doc_detail:remove']"
           >删除</el-button>
         </template>
-      </af-table-column>
+      </el-table-column>
     </el-table>
     
     <pagination
@@ -206,7 +190,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改入库通知单明细对话框 -->
+    <!-- 添加或修改入库单明细对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="预订货位号" prop="createBy">
@@ -255,8 +239,8 @@
         <el-form-item label="是否已加工,0未加工，1已加工" prop="hasProcess">
           <el-input v-model="form.hasProcess" placeholder="请输入是否已加工,0未加工，1已加工" />
         </el-form-item>
-        <el-form-item label="入库通知单号" prop="instoreNoticeNo">
-          <el-input v-model="form.instoreNoticeNo" placeholder="请输入入库通知单号" />
+        <el-form-item label="入库单号" prop="instoreDocNo">
+          <el-input v-model="form.instoreDocNo" placeholder="请输入入库单号" />
         </el-form-item>
         <el-form-item label="包装单位" prop="packingUnit">
           <el-input v-model="form.packingUnit" placeholder="请输入包装单位" />
@@ -277,26 +261,24 @@
 </template>
 
 <script>
-import { listInstore_notice_detail, getInstore_notice_detail, delInstore_notice_detail, addInstore_notice_detail, updateInstore_notice_detail } from "@/api/tax/instore_notice_detail";
-import {getUserDepts} from '@/utils/charutils'
+import { listInstore_doc_detail, getInstore_doc_detail, delInstore_doc_detail, addInstore_doc_detail, updateInstore_doc_detail } from "@/api/tax/instore_doc_detail";
 
 export default {
-  name: "Instore_notice_detail",
+  name: "Instore_doc_detail",
   data() {
     return {
       // 遮罩层
       loading: true,
       // 选中数组
       ids: [],
-      depts: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
       multiple: true,
       // 总条数
       total: 0,
-      // 入库通知单明细表格数据
-      instore_notice_detailList: [],
+      // 入库单明细表格数据
+      instore_doc_detailList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -312,19 +294,17 @@ export default {
         batchNo: undefined,
         goodsName: undefined,
         hasProcess: undefined,
-        instoreNoticeNo: undefined,
+        instoreDocNo: undefined,
         packingUnit: undefined,
         placeId: undefined,
-        bookStoreCode: undefined,
-	      orderByColumn: 'id',
-	      isAsc: 'desc'
+        bookStoreCode: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        instoreNoticeNo: [
-          { required: true, message: "入库通知单号不能为空", trigger: "blur" }
+        instoreDocNo: [
+          { required: true, message: "入库单号不能为空", trigger: "blur" }
         ],
         placeId: [
           { required: true, message: "场所ID不能为空", trigger: "blur" }
@@ -333,30 +313,14 @@ export default {
     };
   },
   created() {
-	  let queryPlaceId = this.$route.query.placeId
-	  let queryNoticeNo = this.$route.query.noticeNo
-
-	  // 参数不为空，并非参数在用户权限范围内
-	  if (typeof (queryPlaceId) != 'undefined' && this.depts.findIndex((v) => {
-		  return v.deptId === queryPlaceId
-	  }) !== -1) {
-		  this.queryParams.placeId = queryPlaceId
-	  }
-	  if (typeof (queryNoticeNo) != 'undefined') {
-		  this.queryParams.instoreNoticeNo = queryNoticeNo
-	  }
-	  this.depts = getUserDepts('1')
-	  if (this.depts.length > 0) {
-		  this.queryParams.placeId = this.depts[0].deptId
-		  this.getList();
-	  }
+    this.getList();
   },
   methods: {
-    /** 查询入库通知单明细列表 */
+    /** 查询入库单明细列表 */
     getList() {
       this.loading = true;
-      listInstore_notice_detail(this.queryParams).then(response => {
-        this.instore_notice_detailList = response.rows;
+      listInstore_doc_detail(this.queryParams).then(response => {
+        this.instore_doc_detailList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -382,7 +346,7 @@ export default {
         batchNo: undefined,
         goodsName: undefined,
         hasProcess: undefined,
-        instoreNoticeNo: undefined,
+        instoreDocNo: undefined,
         packingUnit: undefined,
         placeId: undefined,
         bookStoreCode: undefined
@@ -396,7 +360,6 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-    	this.queryParams.instoreNoticeNo = ''
       this.resetForm("queryForm");
       this.handleQuery();
     },
@@ -410,16 +373,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加入库通知单明细";
+      this.title = "添加入库单明细";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getInstore_notice_detail(id).then(response => {
+      getInstore_doc_detail(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改入库通知单明细";
+        this.title = "修改入库单明细";
       });
     },
     /** 提交按钮 */
@@ -427,7 +390,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateInstore_notice_detail(this.form).then(response => {
+            updateInstore_doc_detail(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -435,7 +398,7 @@ export default {
               }
             });
           } else {
-            addInstore_notice_detail(this.form).then(response => {
+            addInstore_doc_detail(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -449,12 +412,12 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除入库通知单明细编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除入库单明细编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delInstore_notice_detail(ids);
+          return delInstore_doc_detail(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
@@ -462,9 +425,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('tax/instore_notice_detail/export', {
+      this.download('tax/instore_doc_detail/export', {
         ...this.queryParams
-      }, `tax_instore_notice_detail.xlsx`)
+      }, `tax_instore_doc_detail.xlsx`)
     }
   }
 };

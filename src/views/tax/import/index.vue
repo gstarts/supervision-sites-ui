@@ -106,7 +106,7 @@
       <el-table-column label="ID" align="center" prop="id" width="60px"/>
       <el-table-column label="模板类型" align="center" width="100px">
         <template slot-scope="scope">
-          {{scope.row.templateType === '1'?'入库通知单':'出库通知单'}}
+          {{importTypeDic.find(item=> item.value ===scope.row.templateType ).label}}
         </template>
       </el-table-column>
       <el-table-column label="寄舱客户" align="center" prop="storeCustomer"/>
@@ -123,18 +123,17 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
-          
-          <el-button v-show="scope.row.isGenStoreNotice===0"
+          <el-button v-show="scope.row.isGenStoreNotice===0 && scope.row.templateType ==='0' "
                      size="mini"
                      type="text"
                      icon="el-icon-edit"
                      :loading="noticeGening"
                      @click="handleGenNotice(scope.row)"
                      v-hasPermi="['tax:import:genNotice']"
-          >生成通知单
+          >生成出库通知单
           </el-button>
           <span v-show="scope.row.isGenStoreNotice===1">已生成通知单</span>
-          <el-button v-show="scope.row.isGenReport===0"
+          <el-button v-show="scope.row.isGenReport===0 && scope.row.templateType === '2'"
                      size="mini"
                      type="text"
                      icon="el-icon-edit"
@@ -152,17 +151,16 @@
           >下载
           </el-button>
           <el-button v-show="scope.row.isGenReport ===0 && scope.row.isGenStoreNotice ===0"
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['tax:import:remove']"
+                     size="mini"
+                     type="text"
+                     icon="el-icon-delete"
+                     @click="handleDelete(scope.row)"
+                     v-hasPermi="['tax:import:remove']"
           >删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
-    
     <pagination
       v-show="total>0"
       :total="total"
@@ -220,19 +218,32 @@
         <el-form-item label="场所编号" prop="placeId">
           <el-input v-model="form.placeId" placeholder="请输入场所编号" />
         </el-form-item>-->
-        <el-form-item label="模板类型" prop="templateType">
-          <el-select v-model="form.templateType" placeholder="请选择模板类型">
-            <el-option
-              v-for="type in importTypeDic"
-              :key="type.value"
-              :label="type.label"
-              :value="type.value"
-            />
-          </el-select>
-        </el-form-item>
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="寄舱客户" prop="storeCustomer">
+            <el-form-item label="模板类型" prop="templateType">
+              <el-select v-model="form.templateType" placeholder="请选择模板类型" @change="templateChange">
+                <el-option
+                  v-for="type in importTypeDic"
+                  :key="type.value"
+                  :label="type.label"
+                  :value="type.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="业务编号" prop="businessNo" v-show="noticeType">
+              <el-input v-model="form.businessNo" placeholder="请输入业务编号"
+                        clearable
+                        size="small">
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="寄舱客户" prop="storeCustomer" v-show="noticeType">
               <el-select v-model="form.storeCustomer" placeholder="请选择寄舱客户" @change="setStoreCustomer">
                 <el-option
                   v-for="type in contractList"
@@ -244,7 +255,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="结算客户" prop="settlementCustomer">
+            <el-form-item label="结算客户" prop="settlementCustomer" v-show="noticeType">
               <el-select v-model="form.settlementCustomer" placeholder="请选择结算客户" @change="setSettlementCustomer">
                 <el-option
                   v-for="type in contractList"
@@ -268,7 +279,9 @@
             :on-progress="uploadProcess"
             :on-success="uploadSuccess"
             :on-error="uploadError"
+            :before-upload="uploadBefore"
             :disabled="uploading"
+            :file-list="fileList"
             :auto-upload="false">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击选择文件</em></div>
@@ -315,7 +328,8 @@
 				importList: [],
 				importTypeDic: [
 					{value: '1', label: '入库通知单'},
-					{value: '0', label: '出库通知单'}
+					{value: '0', label: '出库通知单'},
+					{value: '2', label: '报关数据单'}
 				],
 				// 弹出层标题
 				title: "",
@@ -334,18 +348,21 @@
 					placeId: undefined,
 					templateType: undefined,
 					orderByColumn: 'id',
-          isAsc: 'desc'
+					isAsc: 'desc'
 				},
 				// 表单参数
 				form: {
 					templateType: '',
+					businessNo: '',
 					storeCustomer: '',
 					settlementCustomer: '',
 					storeContractId: '',
 					settlementContractId: ''
 				},
+				noticeType: true,
+				rules: {},
 				// 表单校验
-				rules: {
+				rules1: {
 					templateType: [
 						{required: true, message: "模板类型不能为空", trigger: "change"}
 					],
@@ -354,6 +371,14 @@
 					],
 					settlementCustomer: [
 						{required: true, message: "结算客户不能为空", trigger: "change"}
+					],
+					businessNo: [
+						{required: true, message: "业务编号不能为空", trigger: "blur"}
+					]
+				},
+				rules2: {
+					templateType: [
+						{required: true, message: "模板类型不能为空", trigger: "change"}
 					]
 				},
 				uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/tax/upload',
@@ -366,13 +391,15 @@
 					'placeId': '',
 					'bucketName': ''
 				},
+        fileList: [],
 			};
 		},
 		created() {
 			// 0 监管场所，1保税库，2堆场，3企业
 			this.importTypeDic = [
 				{value: '1', label: '入库通知单'},
-				{value: '0', label: '出库通知单'}
+				{value: '0', label: '出库通知单'},
+				{value: '2', label: '报关数据单'}
 			]
 			listContract({'placeId': this.queryParams.placeId}).then(response => {
 				this.contractList = response.rows;
@@ -382,6 +409,7 @@
 				this.queryParams.placeId = this.depts[0].deptId
 				this.getList();
 			}
+			this.rules = this.rules1
 		},
 		methods: {
 			/** 查询导入文件记录列表 */
@@ -420,6 +448,7 @@
 					path: undefined,
 					placeId: undefined,
 				};
+				this.uploading = false
 				this.resetForm("form");
 			},
 			/** 搜索按钮操作 */
@@ -474,10 +503,10 @@
 						} else {
 							this.msgError("通知单生成失败");
 						}
-					}).catch(err=>{
+					}).catch(err => {
 						this.loading = false
 						colsone.log("取消生成通知单")
-          })
+					})
 				}).catch((err) => {
 					this.loading = false
 					colsone.log("取消生成通知单")
@@ -488,7 +517,20 @@
 			uploadProcess() {
 				this.uploading = true
 			},
+      uploadBefore(file){
+				/*alert("要上传")
+				console.log(file)
+				if(!file){
+					this.$message.error('请选择要上传的文件22')
+					return false
+        }*/
+      },
 			uploadSuccess(response) {
+				if(response.code !==200){
+					this.$message.error(response.msg)
+					this.uploading = false
+          return false
+        }
 				this.uploading = true
 				this.$refs.upload.clearFiles()
 				console.log(response.data)
@@ -521,8 +563,19 @@
 			},
 			/** 提交上传按钮 */
 			submitForm: function () {
+				//console.log(this.fileList)
+				//console.log(this.$refs.upload.$refs['upload-inner'].fileList)
+				//console.log(this.$refs.upload.fileList)
+				/*if (this.$refs.upload.fileList.length === 0) {
+					this.$message.error('请选择要上传的文件')
+					return
+				}*/
 				this.$refs["form"].validate(valid => {
 					if (valid) {
+						if(this.$refs.upload.$refs['upload-inner'].fileList.length === 0){
+								this.$message.error('请选择要上传的文件')
+								return false
+            }
 						this.uploading = true
 						this.headers.Authorization = 'Bearer ' + getToken()
 						this.headers.placeId = this.queryParams.placeId
@@ -532,8 +585,6 @@
 						this.$refs.upload.submit();
 					}
 				});
-
-
 				/*if (this.form.id != undefined) {
           updateImport(this.form).then(response => {
             if (response.code === 200) {
@@ -576,6 +627,21 @@
 				this.form.settlementContractId = this.contractList.find(item => item.customerName === this.form.settlementCustomer).id
 				console.log(this.form)
 			},
+			templateChange() {
+				console.log(this.form.templateType)
+				if (this.form.templateType === '0' || this.form.templateType === '1') {
+					this.rules = this.rules1
+					this.noticeType = true
+				} else {
+					this.form.businessNo = ''
+					this.form.settlementCustomer = ''
+					this.form.storeCustomer = ''
+					this.form.storeContractId = ''
+					this.form.settlementContractId = ''
+					this.rules = this.rules2
+					this.noticeType = false
+				}
+			}
 		}
 	};
 </script>

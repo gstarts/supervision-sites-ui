@@ -42,3 +42,11 @@ export function delInstore_notice(id) {
     method: 'delete'
   })
 }
+
+
+export function getInstore_notice_with_details(placeId,noticeNo) {
+	return request({
+		url: '/tax/instore_notice/'+placeId+'/'+noticeNo,
+		method: 'get'
+	})
+}
