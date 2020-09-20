@@ -336,7 +336,7 @@ export default {
       this.flowDirectionOptions = response.data;
     });
     // 0 监管场所，1保税库，2堆场，3企业
-    this.depts = getUserDepts("0");
+    this.depts = getUserDepts("1");
     if (this.depts.length > 0) {
       this.queryParams.stationId = this.depts[0].deptId;
       this.created();
@@ -383,7 +383,7 @@ export default {
                 console.log(this.form);
              console.log("后台接口进入");
               if (response.code === 200) {
-                this.msgSuccess("新增成功");
+                this.msgSuccess("进场成功");
                 this.open = false;
                 this.reset();
               } else {
@@ -391,8 +391,16 @@ export default {
               }
             });
            }else if(this.PoundForm.flowDirection=="E"){
-              //出场 修改
-              this.msgError("功能待开发,请稍后...");
+             //出场修改按钮
+             updateSheet(this.form).then((response) => {
+               if (response.code === 200) {
+                this.msgSuccess("出场成功");
+                this.open = false;
+                this.reset();
+              } else {
+                this.msgError(response.msg);
+              }
+             })
            }   
          }
       
