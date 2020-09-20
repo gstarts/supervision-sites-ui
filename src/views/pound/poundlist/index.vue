@@ -561,6 +561,11 @@ export default {
 .el-select {
   width: 100%;
 }
+
+@page{
+		margin: 8mm;
+  		
+    }
 .Pound {
   font-size: 60px;
   width: 100%;
@@ -568,6 +573,7 @@ export default {
   margin-bottom: 15px;
   text-align: center;
   padding: 15px;
+  
 }
 
 #dayin {
