@@ -17,9 +17,9 @@ export function analysis(query) {
   })
 }
 // 查询计量单详细
-export function getSheet(id) {
+export function getSheet(flowDirection) {
   return request({
-    url: '/pound/measurement/sheet/' + id,
+    url: '/pound/measurement/sheet/' + flowDirection,
     method: 'get'
   })
 }

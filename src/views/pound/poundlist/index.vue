@@ -5,7 +5,7 @@
       <el-button type="success" icon="el-icon-edit" size="mini" @click="AllADD">暂存</el-button>
       <el-button type="success" icon="el-icon-edit" size="mini" @click="generateAdd">生成</el-button>
 
-      <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd" v-if="this.form.netWeight == undefined" style="display:none" >打印</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd" v-if="this.form.netWeight == undefined || this.form.plateNum == undefined" style="display:none" >打印</el-button>
       <el-button type="info" class="fa fa-print" size="mini" v-print="'#dayin'" @click="print" v-else>打印</el-button>
 
     </div>
@@ -151,6 +151,7 @@
         :data="sheetList"
         tooltip-effect="dark"
         style="width: 100%"
+        @row-dblclick="dbRow"
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="车号" align="center" prop="plateNum" />
@@ -226,8 +227,7 @@
 
 <script>
 import { 
-addSheet, 
-updateSheet } from "@/api/pound/poundlist";
+addSheet,updateSheet,getSheet } from "@/api/pound/poundlist";
 import { genTimeCode } from "@/utils/common";
 //获取实时重量
 import { poundSelect } from "@/api/pound/poundlist";
@@ -303,7 +303,8 @@ export default {
         channelNumber:undefined,
         //更新时间
         updateTime:undefined,
-        
+        //流向 (新增时 通过通道配置赋值)
+        flowDirection:undefined,
       },
       //通道配置
       PoundForm: {
@@ -341,8 +342,20 @@ export default {
       this.queryParams.stationId = this.depts[0].deptId;
       this.created();
     }
+    this.getList();
   },
   methods: {
+    //初始化页面 查询出场记录
+    getList(){
+      getSheet("E").then(response =>{
+        this.sheetList=response.rows;
+        console.log(this.sheetList);
+      })
+    },
+    //双击列表赋值form表单
+    dbRow(row,column){
+      this.form=row;
+    },
     // 打印按钮
     headHandleAdd() {
       this.reset();
@@ -378,6 +391,7 @@ export default {
        this.$refs["form"].validate((valid) => {
          if(valid){
            if(this.PoundForm.flowDirection=="I"){
+             this.form.flowDirection=this.PoundForm.flowDirection;
              //进场 新增
               addSheet(this.form).then((response) => {
                 console.log(this.form);
@@ -391,6 +405,7 @@ export default {
               }
             });
            }else if(this.PoundForm.flowDirection=="E"){
+             this.form.flowDirection=this.PoundForm.flowDirection;
              //出场修改按钮
              updateSheet(this.form).then((response) => {
                if (response.code === 200) {
