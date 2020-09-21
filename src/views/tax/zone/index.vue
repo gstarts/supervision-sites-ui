@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="保税库" prop="deptId">
+      <el-form-item label="场所" prop="placeId">
         <el-select
-          v-model="queryParams.deptId"
-          placeholder="请输入保税库ID"
+          v-model="queryParams.placeId"
+          placeholder="请选择场所"
           clearable
           size="small"
           @change="handleQuery">
@@ -103,11 +103,11 @@
       <el-table-column label="区域长" align="center" prop="zoneLength"/>
       <el-table-column label="区域宽" align="center" prop="zoneWidth"/>
       <el-table-column label="区域面积(㎡)" align="center" prop="zoneArea"/>
-      <el-table-column label="存放行数" align="center" prop="storageRows"/>
-      <el-table-column label="存放列数" align="center" prop="storageColumns"/>
-      <el-table-column label="货位层数" align="center" prop="storeLevel"/>
+      <el-table-column label="存放行数" align="center" prop="storeRows"/>
+      <el-table-column label="存放列数" align="center" prop="storeColumns"/>
+      <!--<el-table-column label="货位层数" align="center" prop="storeLevel"/>-->
       <el-table-column label="货位数量" align="center" prop="storeCount"/>
-      <el-table-column label="货位容量(KG)" align="center" prop="storeCapacity"/>
+      <el-table-column label="货位容量" align="center" prop="storeCapacity"/>
       <el-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
@@ -144,8 +144,8 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row>
           <el-col :span="8">
-            <el-form-item label="保税库" prop="deptId">
-              <el-select v-model="form.deptId" placeholder="请选择保税库">
+            <el-form-item label="保税库" prop="placeId">
+              <el-select v-model="form.placeId" placeholder="请选择保税库">
                 <el-option
                   v-for="dept in depts"
                   :key="dept.deptId"
@@ -157,7 +157,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="区域类型" prop="zoneType">
-              <el-select v-model="form.zoneType" placeholder="请选择区域类型">
+              <el-select v-model="form.zoneType" placeholder="请选择区域类型" disabled>
                 <el-option
                   v-for="dict in zoneTypeOptions"
                   :key="dict.dictValue"
@@ -182,7 +182,7 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item label="区域代码" prop="zoneCode">
+            <el-form-item label="区域编号" prop="zoneCode">
               <el-select v-model="form.zoneCode" placeholder="请输入区域编号">
                 <el-option
                   v-for="item in numArr"
@@ -211,23 +211,23 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="存放行数" prop="storageRows">
-              <el-input v-model="form.storageRows" placeholder="请输入存放行数"/>
+            <el-form-item label="存放行数" prop="storeRows">
+              <el-input v-model="form.storeRows" placeholder="请输入存放行数"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="存放列数" prop="storageColumns">
-              <el-input v-model="form.storageColumns" placeholder="请输入存放列数"/>
+            <el-form-item label="存放列数" prop="storeColumns">
+              <el-input v-model="form.storeColumns" placeholder="请输入存放列数"/>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row>
-          <el-col :span="8">
+          <!--<el-col :span="8">
             <el-form-item label="货位层数" prop="storeLevel">
               <el-input v-model="form.storeLevel" placeholder="请输入货位层数"/>
             </el-form-item>
-          </el-col>
+          </el-col>-->
           <el-col :span="8">
             <el-form-item label="货位数量" prop="storeCount">
               <el-input v-model="form.storeCount" placeholder="请输入货位数量"/>
@@ -291,15 +291,15 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 20,
-        deptId: undefined,
+        placeId: undefined,
         zoneType: undefined,
         zoneName: undefined,
         zoneCode: undefined,
         zoneLength: undefined,
         zoneWidth: undefined,
         zoneArea: undefined,
-        storageRows: undefined,
-        storageColumns: undefined,
+        storeRows: undefined,
+        storeColumns: undefined,
         storeLevel: undefined,
         storeCount: undefined,
         storeCapacity: undefined,
@@ -308,7 +308,7 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        deptId: [
+        placeId: [
           {required: true, message: "保税库不能为空", trigger: "blur"}
         ],
         zoneType: [
@@ -320,21 +320,21 @@ export default {
         zoneCode: [
           {required: true, message: "区域代码不能为空", trigger: "blur"}
         ],
-        storageRows: [
+        storeRows: [
           {required: true, message: "存放行数不能为空", trigger: "blur"}
         ],
-        storageColumns: [
+        storeColumns: [
           {required: true, message: "存放列数不能为空", trigger: "blur"}
         ],
-        storeLevel: [
+       /* storeLevel: [
           {required: true, message: "货位层数不能为空", trigger: "blur"}
-        ],
+        ],*/
       }
     };
   },
   created() {
     this.wordArr = genEnglishChar()
-    this.numArr = genNumChar(1, 30)
+    this.numArr = genNumChar(1, 10,'')
 
     this.getDicts("yard_zone_type").then(response => {
       this.zoneTypeOptions = response.data;
@@ -343,8 +343,9 @@ export default {
     this.depts = getUserDepts('1')
     if (this.depts.length > 0) {
       //默认选中第一个
-      this.queryParams.deptId = this.depts[0].deptId;
+      this.queryParams.placeId = this.depts[0].deptId;
       this.deptId = this.depts[0].deptId;
+      this.form.placeId = this.queryParams.placeId
       this.getList()
     }
   },
@@ -367,16 +368,16 @@ export default {
     reset() {
       this.form = {
         id: undefined,
-        deptId: undefined,
-        zoneType: undefined,
+        placeId: this.queryParams.placeId,
+        zoneType: '2',
         zoneName: undefined,
         zoneCode: undefined,
         zoneLength: undefined,
         zoneWidth: undefined,
         zoneArea: undefined,
-        storageRows: undefined,
-        storageColumns: undefined,
-        storeLevel: undefined,
+        storeRows: undefined,
+        storeColumns: undefined,
+        storeLevel: 1,
         storeCount: undefined,
         storeCapacity: undefined,
         remark: undefined,

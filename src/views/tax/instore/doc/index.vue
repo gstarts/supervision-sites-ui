@@ -1,6 +1,17 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="场所" prop="placeId">
+        <el-select
+          v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="批次号" prop="batchNo">
         <el-input
           v-model="queryParams.batchNo"
@@ -10,14 +21,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="预订库位号" prop="bookStoreCode">
+      <!--<el-form-item label="预订库位号" prop="bookStoreCode">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.bookStoreCode"
           type="date"
           value-format="yyyy-MM-dd"
           placeholder="选择预订库位号">
         </el-date-picker>
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="业务编号" prop="businessNo">
         <el-input
           v-model="queryParams.businessNo"
@@ -36,7 +47,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="寄舱合同编号" prop="contractNo">
+      <!--<el-form-item label="寄舱合同编号" prop="contractNo">
         <el-input
           v-model="queryParams.contractNo"
           placeholder="请输入寄舱合同编号"
@@ -44,8 +55,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="车队号" prop="convoyNo">
+      </el-form-item>-->
+      <!--<el-form-item label="车队号" prop="convoyNo">
         <el-input
           v-model="queryParams.convoyNo"
           placeholder="请输入车队号"
@@ -53,8 +64,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="报关单号" prop="customsDeclarationNo">
+      </el-form-item>-->
+      <!--<el-form-item label="报关单号" prop="customsDeclarationNo">
         <el-input
           v-model="queryParams.customsDeclarationNo"
           placeholder="请输入报关单号"
@@ -62,8 +73,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="提运单号" prop="deliveryNo">
+      </el-form-item>-->
+      <!--<el-form-item label="提运单号" prop="deliveryNo">
         <el-input
           v-model="queryParams.deliveryNo"
           placeholder="请输入提运单号"
@@ -71,8 +82,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="司机姓名" prop="driverName">
+      </el-form-item>-->
+      <!--<el-form-item label="司机姓名" prop="driverName">
         <el-input
           v-model="queryParams.driverName"
           placeholder="请输入司机姓名"
@@ -97,16 +108,16 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="通知单产生时间" prop="genTime">
+      </el-form-item>-->
+      <!--<el-form-item label="通知单产生时间" prop="genTime">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.genTime"
           type="date"
           value-format="yyyy-MM-dd"
           placeholder="选择通知单产生时间">
         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="件数" prop="goodsCount">
+      </el-form-item>-->
+      <!--<el-form-item label="件数" prop="goodsCount">
         <el-input
           v-model="queryParams.goodsCount"
           placeholder="请输入件数"
@@ -114,7 +125,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="入库单号" prop="inDocNo">
         <el-input
           v-model="queryParams.inDocNo"
@@ -124,7 +135,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="机械号" prop="mechanicalNo">
+      <!--<el-form-item label="机械号" prop="mechanicalNo">
         <el-input
           v-model="queryParams.mechanicalNo"
           placeholder="请输入机械号"
@@ -141,16 +152,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="场所ID" prop="placeId">
-        <el-input
-          v-model="queryParams.placeId"
-          placeholder="请输入场所ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+      </el-form-item>-->
+      
       <el-form-item label="车头号" prop="primeMoverNo">
         <el-input
           v-model="queryParams.primeMoverNo"
@@ -160,7 +163,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="销售合同号" prop="saleContractNo">
+      <!--<el-form-item label="销售合同号" prop="saleContractNo">
         <el-input
           v-model="queryParams.saleContractNo"
           placeholder="请输入销售合同号"
@@ -168,8 +171,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="订单号" prop="soNo">
+      </el-form-item>-->
+      <!--<el-form-item label="订单号" prop="soNo">
         <el-input
           v-model="queryParams.soNo"
           placeholder="请输入订单号"
@@ -177,16 +180,16 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="卸车开始时间" prop="startTime">
+      </el-form-item>-->
+      <!--<el-form-item label="卸车开始时间" prop="startTime">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.startTime"
           type="date"
           value-format="yyyy-MM-dd"
           placeholder="选择卸车开始时间">
         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="状态,未完成，磅单记录时标记，已完成，已归档" prop="state">
+      </el-form-item>-->
+     <!-- <el-form-item label="状态,未完成，磅单记录时标记，已完成，已归档" prop="state">
         <el-input
           v-model="queryParams.state"
           placeholder="请输入状态,未完成，磅单记录时标记，已完成，已归档"
@@ -194,8 +197,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="理货员" prop="tallyClerk">
+      </el-form-item>-->
+      <!--<el-form-item label="理货员" prop="tallyClerk">
         <el-input
           v-model="queryParams.tallyClerk"
           placeholder="请输入理货员"
@@ -203,8 +206,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="总毛重" prop="totalRoughWeight">
+      </el-form-item>-->
+      <!--<el-form-item label="总毛重" prop="totalRoughWeight">
         <el-input
           v-model="queryParams.totalRoughWeight"
           placeholder="请输入总毛重"
@@ -212,8 +215,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="车板号" prop="trailerNo">
+      </el-form-item>-->
+      <!--<el-form-item label="车板号" prop="trailerNo">
         <el-input
           v-model="queryParams.trailerNo"
           placeholder="请输入车板号"
@@ -221,8 +224,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="装卸组" prop="unloadGroup">
+      </el-form-item>-->
+      <!--<el-form-item label="装卸组" prop="unloadGroup">
         <el-input
           v-model="queryParams.unloadGroup"
           placeholder="请输入装卸组"
@@ -230,7 +233,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="车牌号" prop="vehicleNo">
         <el-input
           v-model="queryParams.vehicleNo"
@@ -240,7 +243,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="工组人员" prop="workGroup">
+      <!--<el-form-item label="工组人员" prop="workGroup">
         <el-input
           v-model="queryParams.workGroup"
           placeholder="请输入工组人员"
@@ -248,7 +251,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -256,7 +259,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+     <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -264,8 +267,8 @@
           @click="handleAdd"
           v-hasPermi="['tax:instore_doc:add']"
         >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
+      </el-col>-->
+      <!--<el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -274,8 +277,8 @@
           @click="handleUpdate"
           v-hasPermi="['tax:instore_doc:edit']"
         >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
+      </el-col>-->
+      <!--<el-col :span="1.5">
         <el-button
           type="danger"
           icon="el-icon-delete"
@@ -284,7 +287,7 @@
           @click="handleDelete"
           v-hasPermi="['tax:instore_doc:remove']"
         >删除</el-button>
-      </el-col>
+      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -351,15 +354,15 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['tax:instore_doc:edit']"
-          >修改</el-button>
-          <el-button
+            v-hasPermi="['tax:instore_doca_detail:list']"
+          >明细</el-button>
+          <!--<el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['tax:instore_doc:remove']"
-          >删除</el-button>
+          >删除</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -515,6 +518,7 @@
 
 <script>
 import { listInstore_doc, getInstore_doc, delInstore_doc, addInstore_doc, updateInstore_doc } from "@/api/tax/instore_doc";
+import {getUserDepts} from '@/utils/charutils'
 
 export default {
   name: "Instore_doc",
@@ -524,6 +528,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      depts: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -583,7 +588,11 @@ export default {
     };
   },
   created() {
-    this.getList();
+	  this.depts = getUserDepts('1')
+	  if (this.depts.length > 0) {
+		  this.queryParams.placeId = this.depts[0].deptId
+		  this.getList();
+	  }
   },
   methods: {
     /** 查询入库单列表 */

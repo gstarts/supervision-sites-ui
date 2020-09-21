@@ -77,7 +77,7 @@
           v-hasPermi="['tax:import:edit']"
         >修改</el-button>
       </el-col>-->
-      <el-col :span="1.5">
+      <!--<el-col :span="1.5">
         <el-button
           type="danger"
           icon="el-icon-delete"
@@ -87,7 +87,7 @@
           v-hasPermi="['tax:import:remove']"
         >删除
         </el-button>
-      </el-col>
+      </el-col>-->
       <!--<el-col :span="1.5">
         <el-button
           type="warning"
@@ -100,8 +100,8 @@
       </el-col>-->
     </el-row>
     
-    <el-table v-loading="loading" :data="importList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
+    <el-table v-loading="loading" :data="importList">
+      <!--<el-table-column type="selection" width="55" align="center"/>-->
       <!--<el-table-column label="场所编号" align="center" prop="placeId" />-->
       <el-table-column label="ID" align="center" prop="id" width="60px"/>
       <el-table-column label="模板类型" align="center" width="100px">
@@ -123,6 +123,15 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
+          <el-button v-show="scope.row.isGenStoreNotice===0 && scope.row.templateType ==='1' "
+                     size="mini"
+                     type="text"
+                     icon="el-icon-edit"
+                     :loading="noticeGening"
+                     @click="handleGenNotice(scope.row)"
+                     v-hasPermi="['tax:import:genNotice']"
+          >生成入库通知单
+          </el-button>
           <el-button v-show="scope.row.isGenStoreNotice===0 && scope.row.templateType ==='0' "
                      size="mini"
                      type="text"
@@ -328,8 +337,8 @@
 				importList: [],
 				importTypeDic: [
 					{value: '1', label: '入库通知单'},
-					{value: '0', label: '出库通知单'},
-					{value: '2', label: '报关数据单'}
+					{value: '0', label: '出库通知单'}
+					/*{value: '2', label: '报关数据单'}*/
 				],
 				// 弹出层标题
 				title: "",
@@ -398,8 +407,8 @@
 			// 0 监管场所，1保税库，2堆场，3企业
 			this.importTypeDic = [
 				{value: '1', label: '入库通知单'},
-				{value: '0', label: '出库通知单'},
-				{value: '2', label: '报关数据单'}
+				{value: '0', label: '出库通知单'}
+				/*{value: '2', label: '报关数据单'}*/
 			]
 			listContract({'placeId': this.queryParams.placeId}).then(response => {
 				this.contractList = response.rows;
@@ -497,7 +506,7 @@
 					this.loading = true
 					genNotice(row.id).then(response => {
 						this.loading = false
-						if (response.code == '200') {
+						if (response.code === 200) {
 							this.msgSuccess("通知单生成成功");
 							row.isGenStoreNotice = 1
 						} else {
@@ -505,14 +514,36 @@
 						}
 					}).catch(err => {
 						this.loading = false
-						colsone.log("取消生成通知单")
+						console.log("取消生成通知单")
 					})
 				}).catch((err) => {
 					this.loading = false
-					colsone.log("取消生成通知单")
+					console.log("取消生成通知单")
 				});
 			},
 			handleGenReport(row) {
+				this.$confirm('生成报关数据单前请确认文件格式正确无误?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.loading = true
+					genNotice(row.id).then(response => {
+						this.loading = false
+						if (response.code === 200) {
+							this.msgSuccess("报关数据生成成功");
+							row.isGenReport = 1
+						} else {
+							this.msgError("报关数据生成失败");
+						}
+					}).catch(err => {
+						this.loading = false
+						console.log("报关数据生成失败")
+					})
+				}).catch((err) => {
+					this.loading = false
+					console.log("取消生成通知单")
+				});
 			},
 			uploadProcess() {
 				this.uploading = true

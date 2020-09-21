@@ -183,13 +183,15 @@
         </el-date-picker>
       </el-form-item>-->
       <el-form-item label="状态" prop="state">
-        <el-input
-          v-model="queryParams.state"
-          placeholder="请输入状态,未完成，磅单记录时标记，已完成"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select  clearable
+          v-model="queryParams.state" placeholder="请选择状态" size="small">
+          <el-option
+            v-for="dept in stateDic"
+            :key="dept.value"
+            :label="dept.label"
+            :value="dept.value"
+          />
+        </el-select>
       </el-form-item>
       <!--<el-form-item label="理货员" prop="tallyClerk">
         <el-input
@@ -271,7 +273,7 @@
           v-hasPermi="['tax:instore_notice:edit']"
         >修改</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!--<el-col :span="1.5">
         <el-button
           type="danger"
           icon="el-icon-delete"
@@ -280,7 +282,7 @@
           @click="handleDelete"
           v-hasPermi="['tax:instore_notice:remove']"
         >删除</el-button>
-      </el-col>
+      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -293,19 +295,19 @@
     </el-row>
 
     <el-table v-loading="loading" :data="instore_noticeList" @selection-change="handleSelectionChange">
-      <af-table-column type="selection" width="55" align="center" />
+      <!--<af-table-column type="selection" align="center" />-->
       <!--<af-table-column label="ID" align="center" prop="id" />-->
-      <af-table-column label="入库通知单号" align="center" prop="inNoticeNo" />
+      <af-table-column label="入库通知单号" align="center" prop="inNoticeNo" width="190px" />
       <!--<af-table-column label="备注" align="center" prop="remark" />-->
       <!--<af-table-column label="预订库位号" align="center" prop="bookStoreCode" width="180" />-->
       <af-table-column label="业务编号" align="center" prop="businessNo" />
-      <af-table-column label="寄舱客户" align="center" prop="checkConsumer"/>
+      <af-table-column label="寄舱客户" align="center" prop="checkConsumer" width="180px"/>
       <af-table-column label="寄舱合同编号" align="center" prop="contractNo" />
       <af-table-column label="销售合同号" align="center" prop="saleContractNo" />
       <af-table-column label="批次号" align="center" prop="batchNo" />
       <af-table-column label="司机姓名" align="center" prop="driverName" />
-      <af-table-column label="车牌号" align="center" prop="vehicleNo" />
-      <af-table-column label="车板号" align="center" prop="trailerNo" />
+      <af-table-column label="车牌号" align="center" prop="vehicleNo" width="90px" />
+      <af-table-column label="车板号" align="center" prop="trailerNo" width="90px" />
       <af-table-column label="车队号" align="center" prop="convoyNo" />
       <af-table-column label="车队名称" align="center" prop="fleetName" />
       <af-table-column label="报关单号" align="center" prop="customsDeclarationNo" />
@@ -333,12 +335,32 @@
       
       <!--<af-table-column label="工组人员" align="center" prop="workGroup" />-->
       <af-table-column label="状态" align="center" prop="state" />
-      <af-table-column label="通知单产生时间" align="center" prop="genTime" width="180">
+      <af-table-column label="产生时间" align="center" prop="genTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.genTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </af-table-column>
-      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      <af-table-column label="打印时间" align="center" prop="printTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.printTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+        </template>
+      </af-table-column>
+      <af-table-column label="磅单时间" align="center" prop="poundTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.poundTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+        </template>
+      </af-table-column>
+      <af-table-column label="完成时间" align="center" prop="competeTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.competeTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+        </template>
+      </af-table-column>
+      <af-table-column label="归档时间" align="center" prop="archiveTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.archiveTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+        </template>
+      </af-table-column>
+      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="190px">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -359,7 +381,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleNoticePrint(scope.row)"
-            v-hasPermi="['tax:instore_notice:list']"
+            v-hasPermi="['tax:instore_notice:print']"
           >打印</el-button>
           <el-button v-show="scope.row.templateId == null"
             size="mini"
@@ -591,7 +613,14 @@ export default {
         placeId: [
           { required: true, message: "场所ID不能为空", trigger: "blur" }
         ],
-      }
+      },
+      stateDic: [
+        {'value':'1','label':'生成'},
+        {'value':'2','label':'打印'},
+        {'value':'3','label':'磅单'},
+        {'value':'4','label':'完成'},
+        {'value':'5','label':'归档'},
+      ]
     };
   },
   created() {

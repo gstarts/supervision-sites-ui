@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询库位列表
+// 查询库存库位列表
 export function listStore(query) {
   return request({
     url: '/tax/store/list',
@@ -9,15 +9,15 @@ export function listStore(query) {
   })
 }
 
-// 查询库位详细
-export function getStore(storeId) {
+// 查询库存库位详细
+export function getStore(id) {
   return request({
-    url: '/tax/store/' + storeId,
+    url: '/tax/store/' + id,
     method: 'get'
   })
 }
 
-// 新增库位
+// 新增库存库位
 export function addStore(data) {
   return request({
     url: '/tax/store',
@@ -26,7 +26,7 @@ export function addStore(data) {
   })
 }
 
-// 修改库位
+// 修改库存库位
 export function updateStore(data) {
   return request({
     url: '/tax/store',
@@ -35,11 +35,10 @@ export function updateStore(data) {
   })
 }
 
-// 删除库位
-export function delStore(storeId) {
+// 删除库存库位
+export function delStore(id) {
   return request({
-    url: '/tax/store/' + storeId,
+    url: '/tax/store/' + id,
     method: 'delete'
   })
 }
-
