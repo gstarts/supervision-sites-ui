@@ -16,10 +16,10 @@ export function analysis(query) {
     params: query
   })
 }
-// 查询计量单详细
-export function getSheet(flowDirection) {
+// 通过车号查询数据
+export function getSheet(event) {
   return request({
-    url: '/pound/measurement/sheet/' + flowDirection,
+    url: '/pound/measurement/sheet/' + event,
     method: 'get'
   })
 }
