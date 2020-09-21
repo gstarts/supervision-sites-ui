@@ -8,3 +8,12 @@ export function manifestList(query) {
     params: query
   })
 }
+
+// 批量申报
+export function declareManifest(data) {
+  return request({
+    url: '/manifest/head/declare',
+    method: 'post',
+    data:{ids:data} 
+  })
+}
