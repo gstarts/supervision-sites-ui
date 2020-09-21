@@ -1,14 +1,16 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="堆场编号" prop="yardCode">
-        <el-input
-          v-model="queryParams.yardCode"
-          placeholder="请输入堆场编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="堆场" prop="yardCode">
+        <el-select v-model="queryParams.deptId" placeholder="请选择堆场">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+            @change="handleQuery"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="名称" prop="yardName">
         <el-input
@@ -74,57 +76,90 @@
         >导出</el-button>
       </el-col>
     </el-row>
+  
+    <el-row :gutter="10" style="margin-bottom: 15px;" v-loading="loading">
+      <el-card class="box-card" shadow="hover">
+        <div slot="header" class="clearfix">
+          <span>堆场备案信息</span>
+          <el-button style="float: right; padding: 3px 0" type="text">修改</el-button>
+        </div>
+        <el-row :gutter="10">
+          <el-col :span="12" >
+            <el-card class="box-card" shadow="never">
+              <el-row :gutter="10" class="row10px">
+                <el-col :span="12">
+                    名称： {{deptInfo.deptName}}
+                </el-col>
+                <el-col :span="12">
+                    简称： {{deptInfo.sortName}}
+                </el-col>
+              </el-row>
+              <el-row :gutter="10" class="row10px">
+                <el-col :span="12">
+                  负责人： {{deptInfo.leader}}
+                </el-col>
+                <el-col :span="12">
+                  电话： {{deptInfo.phone}}
+                </el-col>
+              </el-row>
+              <el-row :gutter="10" class="row10px">
+                <el-col :span="12">
+                  地址： {{deptInfo.address}}
+                </el-col>
+                <el-col :span="12">
+                  面积(㎡)： {{deptInfo.area}}
+                </el-col>
+              </el-row>
+              <el-row :gutter="10" class="row10px">
+                <el-col :span="12">
+                  集装箱货位占用数量报警阈值： {{deptInfo.containerAlarmValue}}
+                </el-col>
+                <el-col :span="12">
+                  散杂货货位数量报警阈值： {{deptInfo.bulkgoodsAlarmValue}}
+                </el-col>
+              </el-row>
+            </el-card>
+          </el-col>
+  
+          <el-col :span="12" >
+            <el-card class="box-card" shadow="never">
+              <el-row :gutter="10" class="row10px">
+                <el-col :span="12">
+                  集装箱货位数量： {{deptInfo.deptName}}
+                </el-col>
+                <el-col :span="12">
+                  散杂货货位数量： {{deptInfo.sortName}}
+                </el-col>
+              </el-row>
+              <el-row :gutter="10" class="row10px">
+                <el-col :span="12">
+                  当前货位使用量： {{deptInfo.leader}}
+                </el-col>
+                <el-col :span="12">
+                  当前货位使用量： {{deptInfo.phone}}
+                </el-col>
+              </el-row>
+              <el-row :gutter="10" class="row10px">
+                <el-col :span="12">
+                  使用占比： {{deptInfo.address}}
+                </el-col>
+                <el-col :span="12">
+                  使用占比： {{deptInfo.area}}
+                </el-col>
+              </el-row>
+              <!--占位-->
+              <el-row :gutter="10" class="row10px" style="height: 18px">
+                <el-col :span="12">
+                </el-col>
+                <el-col :span="12">
+                </el-col>
+              </el-row>
+            </el-card>
+          </el-col>
+        </el-row>
+      </el-card>
+    </el-row>
     
-    <el-table v-loading="loading" :data="yard_infoList" @selection-change="handleSelectionChange">
-      <!--<el-table-column type="selection" width="55" align="center" fixed="left" />-->
-      <el-table-column label="ID" align="center" prop="id" fixed="left" />
-      <el-table-column label="堆场编号" align="center" >
-        <template slot-scope="scope">
-          <router-link :to="'/yard/zone/' + scope.row.id" class="link-type">
-            <span>{{ scope.row.yardCode }}</span>
-          </router-link>
-        </template>
-      </el-table-column>
-      <el-table-column label="名称" align="center" prop="yardName" />
-      <el-table-column label="简称" align="center" prop="sortName" />
-      <el-table-column label="地址" align="center" prop="address" />
-      <el-table-column label="面积(㎡)" align="center" prop="area" />
-      <el-table-column label="所属企业" align="center" prop="company" />
-      <el-table-column label="联系人" align="center" prop="contact" />
-      <el-table-column label="联系电话" align="center" prop="phone" />
-      <el-table-column label="集装箱容量" align="center" prop="containerCapacity" />
-      <el-table-column label="集装箱报警(%)" align="center" prop="conainerAlarmValue" />
-      <el-table-column label="散杂货容量" align="center" prop="bulkgoodsCapacity" />
-      <el-table-column label="散杂货报警(%)" align="center" prop="bulkgoodsAlarmValue" />
-      <el-table-column label="当前集装箱容量" align="center" prop="containerCount" />
-      <el-table-column label="当前散杂货容量" align="center" prop="bulkgoodsCount" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['yard:info:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['yard:info:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
     
     <!-- 添加或修改堆场基本信息对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
@@ -184,7 +219,9 @@
 </template>
 
 <script>
-	import { listYard_info, getYard_info, delYard_info, addYard_info, updateYard_info } from "@/api/yard/info";
+	import { getYard_info, delYard_info, addYard_info, updateYard_info } from "@/api/yard/info";
+	import {getUserDepts} from '@/utils/charutils'
+	import {getDept} from '@/api/system/dept'
 
 	export default {
 		name: "Yard_info",
@@ -194,6 +231,20 @@
 				loading: true,
 				// 选中数组
 				ids: [],
+        depts: [],
+        deptInfo: {
+					deptId: undefined,
+          deptName: undefined,
+          sortName: undefined,
+          leader: undefined,
+          phone: undefined,
+          email: undefined,
+	        bulkgoodsWeightAlarmValue: undefined,
+	        containerAlarmValue: undefined, //集装箱货位报警
+	        bulkgoodsAlarmValue: undefined, //散杂货货位报警
+          updateTime: undefined,
+          updateBy: undefined
+        },
 				// 非单个禁用
 				single: true,
 				// 非多个禁用
@@ -240,18 +291,37 @@
 			};
 		},
 		created() {
-      this.getList();
+			// 0 监管场所，1保税库，2堆场，3企业
+			this.depts = getUserDepts('2')
+			if (this.depts.length > 0) {
+				this.queryParams.deptId = this.depts[0].deptId
+				this.getList();
+			}
 		},
 		methods: {
 			/** 查询堆场基本信息列表 */
 			getList() {
 				this.loading = true;
-				listYard_info(this.queryParams).then(response => {
-					this.yard_infoList = response.rows;
-					this.total = response.total;
+				getDept(this.queryParams.deptId).then(response => {
+					this.yard_infoList = []
+          console.log(response)
+          this.deptInfo = response.data
+					//this.yard_infoList.push(response.data);
 					this.loading = false;
 				});
 			},
+      //获取库位数量信息
+      getStoreCount(){
+	      this.loading = true;
+	      getDept(this.queryParams.deptId).then(response => {
+		      this.yard_infoList = []
+		      console.log(response)
+		      this.deptInfo = response.data
+		      //this.yard_infoList.push(response.data);
+		      this.loading = false;
+	      });
+				
+      },
 			// 取消按钮
 			cancel() {
 				this.open = false;
@@ -362,3 +432,8 @@
 		}
 	};
 </script>
+<style scoped>
+  .row10px{
+    margin-bottom: 15px;
+  }
+</style>
