@@ -4,7 +4,7 @@
     <div class="mb20">
       <el-button type="success" icon="el-icon-edit" size="mini" @click="AllADD">暂存</el-button>
       <el-button type="success" icon="el-icon-edit" size="mini" @click="generateAdd">生成</el-button>
-
+      <!-- <el-button @click="ADDTest">测试按钮</el-button> -->
       <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd" v-if="this.form.netWeight == undefined || this.form.plateNum == undefined" style="display:none" >打印</el-button>
       <el-button type="info" class="fa fa-print" size="mini" v-print="'#dayin'" @click="print" v-else>打印</el-button>
 
@@ -353,6 +353,21 @@ export default {
     this.getList();
   },
   methods: {
+    // ADDTest(){
+    //   if(this.PoundForm.flowDirection=="E"){
+    //     //调用后台查询API 通过选择的车号反添数据
+    //       getSheet(this.form.plateNum).then(response =>{
+    //             if(response.code===200){
+    //                this.form=response.data;
+    //             }else{
+    //                this.msgError(response.msg);
+    //             }
+    //       });
+    //   }else{
+    //       this.msgError("流向不可为空");
+    //        this.form.plateNum=undefined;
+    //   }
+    // },
     //车号Change
     CarNumberChange(event){
       //进场 调用刘猛接口 连带数据赋值给input
@@ -360,7 +375,7 @@ export default {
         //出场 调用自己的接口 查询数据库里的数据赋值给input。
       }else if(this.PoundForm.flowDirection=="E"){
         //调用后台查询API 通过选择的车号反添数据
-          getSheet(event).chen(response =>{
+          getSheet(event).then(response =>{
                 if(response.code===200){
                    this.form=response.data;
                 }else{
