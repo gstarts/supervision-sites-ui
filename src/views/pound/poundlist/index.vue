@@ -181,6 +181,7 @@
         :total="total"
         :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"
+        @pagination="getList"
       />
     </el-card>
     <div id="dayin" v-show="Explicit ">
@@ -227,7 +228,7 @@
 
 <script>
 import { 
-addSheet,updateSheet,getSheet } from "@/api/pound/poundlist";
+addSheet,updateSheet,getSheet,listSheet } from "@/api/pound/poundlist";
 import { genTimeCode } from "@/utils/common";
 //获取实时重量
 import { poundSelect } from "@/api/pound/poundlist";
@@ -345,10 +346,23 @@ export default {
     this.getList();
   },
   methods: {
+    //车号Change
+    CarNumberChange(event){
+      //进场 调用刘猛接口 连带数据赋值给input
+      if(this.PoundForm.flowDirection=="I"){
+        //出场 调用自己的接口 查询数据库里的数据赋值给input。
+      }else if(this.PoundForm.flowDirection=="E"){
+
+      }else{
+
+      }
+    },
     //初始化页面 查询出场记录
     getList(){
-      getSheet("E").then(response =>{
+      listSheet(this.queryParams).then(response =>{
+        console.log();
         this.sheetList=response.rows;
+        this.total = response.total;
         console.log(this.sheetList);
       })
     },
@@ -369,8 +383,8 @@ export default {
     },
     //选择通道号定时反添重量方法
     ChannelNumberChange(event) {
-      clearInterval(this.timer);
-      this.timer = setInterval(() => {
+      clearInterval(this.ChannelNumberTimer);
+      this.ChannelNumberTimer = setInterval(() => {
         poundSelect(event).then((response) => {
           console.log("进入反添重量方法");
           this.Poundweight = response.data.weight;
@@ -380,7 +394,7 @@ export default {
       }, 1000);
       //离开当前页面定时器停止
       this.$once("hook:beforeDestroy", () => {
-        clearInterval(this.timer);
+        clearInterval(this.ChannelNumberTimer);
       });
     },
     /** 暂存按钮 */
