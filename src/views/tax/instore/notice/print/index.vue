@@ -76,7 +76,7 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="15">
-          <el-table border v-loading="loading" :data="instore_notice_detailList" :span-method="arraySpanMethod">
+          <el-table border v-loading="loading" :data="instore_notice_detailList" :span-method="arraySpanMethod" style="border: 1px solid;">
             <el-table-column label="收货人填写" align="center">
               <el-table-column type="index" :index="getIndex" label="序号" align="center" width="80px">
               </el-table-column>
@@ -363,7 +363,7 @@
 		margin-left: 1.5cm;
 		margin-bottom: 3mm;
 		margin-top: 8mm;
-  		
+		margin-right: 20px;		
     }
 
 </style>

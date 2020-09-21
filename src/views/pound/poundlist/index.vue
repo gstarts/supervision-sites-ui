@@ -4,7 +4,7 @@
     <div class="mb20">
       <el-button type="success" icon="el-icon-edit" size="mini" @click="AllADD">暂存</el-button>
       <el-button type="success" icon="el-icon-edit" size="mini" @click="generateAdd">生成</el-button>
-
+      <!-- <el-button @click="ADDTest">测试按钮</el-button> -->
       <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd" v-if="this.form.netWeight == undefined || this.form.plateNum == undefined" style="display:none" >打印</el-button>
       <el-button type="info" class="fa fa-print" size="mini" v-print="'#dayin'" @click="print" v-else>打印</el-button>
 
@@ -189,10 +189,10 @@
       <div style="align-content: center;" >
         <span class = "poundTotal11">{{poundTotal}}</span>
       </div>
-        <div id="test">
+        <div id="area">
           <span class="area-in-style">{{nowData}}</span>
         </div>
-        <div id="test1">
+        <div id="areadate">
           <span>{{nowTime}}</span>
         </div>
         <div id="area-style">
@@ -260,6 +260,8 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
+      
+      timer1:'',
       // 总条数
       total: 0,
       nowData:'',
@@ -353,6 +355,21 @@ export default {
     this.getList();
   },
   methods: {
+    // ADDTest(){
+    //   if(this.PoundForm.flowDirection=="E"){
+    //     //调用后台查询API 通过选择的车号反添数据
+    //       getSheet(this.form.plateNum).then(response =>{
+    //             if(response.code===200){
+    //                this.form=response.data;
+    //             }else{
+    //                this.msgError(response.msg);
+    //             }
+    //       });
+    //   }else{
+    //       this.msgError("流向不可为空");
+    //        this.form.plateNum=undefined;
+    //   }
+    // },
     //车号Change
     CarNumberChange(event){
       //进场 调用刘猛接口 连带数据赋值给input
@@ -360,7 +377,7 @@ export default {
         //出场 调用自己的接口 查询数据库里的数据赋值给input。
       }else if(this.PoundForm.flowDirection=="E"){
         //调用后台查询API 通过选择的车号反添数据
-          getSheet(event).chen(response =>{
+          getSheet(event).then(response =>{
                 if(response.code===200){
                    this.form=response.data;
                 }else{
@@ -555,15 +572,21 @@ export default {
     },
     //打印功能
     print() {
-      this.print1();
-      clearTimeout(this.timer); //清除延迟执行
-      this.timer = setTimeout(() => {
+      this.print1();      
+    clearTimeout(this.timer1);      
+     //清除延迟执行
+      this.timer1 = setTimeout(() => {
         //设置延迟执行
-        this.reset()
+        //this.reset();
+        this.Explicit = false;
         this.nowData = '';
         this.nowTime = '';
         this.poundTotal='';
-      }, 5000);
+      }, 3000);
+ 
+    },
+    endCallback(){
+     
     },
     print1() {
       this.Explicit = true;
@@ -578,6 +601,11 @@ export default {
         aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
         this.poundTotal='铜精粉磅单'
     },
+
+   //销毁前清除定时器
+  beforeDestroy() {
+    clearInterval(this.timer1);
+  },
     // 表单重置
     reset() {
       this.form = {
@@ -614,17 +642,17 @@ export default {
   width: 800px;
 }
 
-#test {
+#area {
   width: 300px;
   height: 40px;
-
+  margin-top: 40px;
   float: left;
 }
 
-#test1 {
+#areadate {
   width: 300px;
   height: 40px;
-
+  margin-top: 40px;
   float: left;
 }
 
@@ -661,8 +689,6 @@ export default {
 
 .poundTotal11{ 
   font-size:20px ;
-  padding-left: 250px;
-  padding-bottom: 20px;
-  
+  padding-left: 280px;
 }
 </style>
