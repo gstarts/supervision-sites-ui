@@ -189,10 +189,10 @@
       <div style="align-content: center;" >
         <span class = "poundTotal11">{{poundTotal}}</span>
       </div>
-        <div id="test">
+        <div id="area">
           <span class="area-in-style">{{nowData}}</span>
         </div>
-        <div id="test1">
+        <div id="areadate">
           <span>{{nowTime}}</span>
         </div>
         <div id="area-style">
@@ -260,6 +260,8 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
+      
+      timer1:'',
       // 总条数
       total: 0,
       nowData:'',
@@ -555,15 +557,21 @@ export default {
     },
     //打印功能
     print() {
-      this.print1();
-      clearTimeout(this.timer); //清除延迟执行
-      this.timer = setTimeout(() => {
+      this.print1();      
+    clearTimeout(this.timer1);      
+     //清除延迟执行
+      this.timer1 = setTimeout(() => {
         //设置延迟执行
-        this.reset()
+        //this.reset();
+        this.Explicit = false;
         this.nowData = '';
         this.nowTime = '';
         this.poundTotal='';
-      }, 5000);
+      }, 3000);
+ 
+    },
+    endCallback(){
+     
     },
     print1() {
       this.Explicit = true;
@@ -578,6 +586,11 @@ export default {
         aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
         this.poundTotal='铜精粉磅单'
     },
+
+   //销毁前清除定时器
+  beforeDestroy() {
+    clearInterval(this.timer1);
+  },
     // 表单重置
     reset() {
       this.form = {
@@ -614,17 +627,17 @@ export default {
   width: 800px;
 }
 
-#test {
+#area {
   width: 300px;
   height: 40px;
-
+  margin-top: 40px;
   float: left;
 }
 
-#test1 {
+#areadate {
   width: 300px;
   height: 40px;
-
+  margin-top: 40px;
   float: left;
 }
 
@@ -661,8 +674,6 @@ export default {
 
 .poundTotal11{ 
   font-size:20px ;
-  padding-left: 250px;
-  padding-bottom: 20px;
-  
+  padding-left: 280px;
 }
 </style>
