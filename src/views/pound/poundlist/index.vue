@@ -184,6 +184,9 @@
       />
     </el-card>
     <div id="dayin" v-show="Explicit ">
+      <div style="align-content: center;" >
+        <span class = "poundTotal11">{{poundTotal}}</span>
+      </div>
         <div id="test">
           <span class="area-in-style">{{nowData}}</span>
         </div>
@@ -261,6 +264,7 @@ export default {
       nowTime:'',
       // 终端表格数据
       clientList: [],
+      poundTotal:'',
       // 流向
       flowDirectionOptions: [],
       //过卡车辆类型
@@ -531,6 +535,7 @@ export default {
         this.reset()
         this.nowData = '';
         this.nowTime = '';
+        this.poundTotal='';
       }, 5000);
     },
     print1() {
@@ -544,6 +549,7 @@ export default {
         aData.getDate();
       this.nowTime =
         aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
+        this.poundTotal='铜精粉磅单'
     },
     // 表单重置
     reset() {
@@ -594,6 +600,11 @@ export default {
 
   float: left;
 }
+
+#poundtotal{
+  width: 300px;
+  height: 10px4;
+}
 #area-style {
   width: 480px;
   height: 40px;
@@ -619,5 +630,12 @@ export default {
 
 .area-in-style {
   padding-left: 3cm;
+}
+
+.poundTotal11{ 
+  font-size:20px ;
+  padding-left: 250px;
+  padding-bottom: 20px;
+  
 }
 </style>
