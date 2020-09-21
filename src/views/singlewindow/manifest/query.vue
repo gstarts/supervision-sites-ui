@@ -51,8 +51,18 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8"></el-row>
-
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          icon="el-icon-thumb"
+          size="mini"
+          :disabled="multiple"
+          @click="declare"
+          v-hasPermi="['manifest:head:declare']"
+        >申报</el-button>
+      </el-col>
+    </el-row>
     <el-table
       v-loading="loading"
       :data="manifestList"
@@ -63,12 +73,12 @@
       <el-table-column label="录入时间" align="center" prop="createTime"/>
       <el-table-column label="单证状态" align="center" prop="statementCode" :formatter="statementFormat"/>
       <el-table-column label="单证名称" align="center" prop="messageType" :formatter="messageTypeFormat"/>
-      <el-table-column
+      <!-- <el-table-column
         label="报文功能"
         align="center"
         prop="functionCode"
         :formatter="viaVehicleFormat"
-      />
+      /> -->
       <el-table-column label="回执说明" align="center" prop="statementDescription"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -111,7 +121,7 @@
 </template>
 
 <script>
-import { manifestList } from '@/api/manifest/query'
+import { manifestList,declareManifest } from '@/api/manifest/query'
 
 export default {
   data() {
@@ -183,8 +193,11 @@ export default {
       const data = this.router.find(el => el.messageType === row.messageType)
       return data.value
     },
+    
     // 报文功能翻译
+    viaVehicleFormat(){
 
+    },
     // 取消按钮
     cancel() {
       this.open = false
@@ -216,7 +229,23 @@ export default {
       const data = this.router.find(el => el.messageType === row.messageType)
       this.$router.push({ path: '/singlewindow' + data.path })
     },
-
+ /** 申报按钮操作 */
+    declare(row) {
+      const ids = row.id || this.ids;
+      this.$confirm("是否确认进行批量申报", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
+          return declareManifest(ids);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("申报成功");
+        })
+        .catch(function() {});
+    },
     /**详情按钮 */
     detail(row) {
       // this.reset();
