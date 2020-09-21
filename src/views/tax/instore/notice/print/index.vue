@@ -25,29 +25,32 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="8">
         <el-button
-          type="primary"
-          icon="el-icon-plus"
+          type="info"
+          icon="fa fa-print"
           size="mini"
-          @click="handleAdd"
+		  v-print="'#dayin'"
+          @click="print"
           v-hasPermi="['tax:instore_notice:print']"
         >打印
         </el-button>
       </el-col>
+	  
     </el-row>
-    <div class="box-card" style="margin: 0 auto">
-      <el-row :gutter="10">
+    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1650px;padding-left: 5px ;padding-top:50px"  id="dayin" >
+		 
+      <el-row :gutter="10" style="font-size:30px;">
         <el-col :span="2"> &nbsp;</el-col>
-        <el-col :span="5">入库通知单</el-col>
-        <el-col :span="2">GR</el-col>
+        <el-col :span="5" >入库通知单</el-col>
+        <el-col :span="2" >GR</el-col>
         <el-col :span="5">{{instoreNotice.inNoticeNo}}</el-col>
       </el-row>
-      <el-row :gutter="10">
-        <el-col :span="2">日期:</el-col>
-        <el-col :span="5">{{instoreNotice.genTime}}</el-col>
+      <el-row :gutter="10" style="padding-top: 20px;">
+        <el-col :span="2"  >日期:</el-col>
+        <el-col :span="5" style="font-size:30px;">{{instoreNotice.genTime}}</el-col>
         <el-col :span="2">业务编号:</el-col>
         <el-col :span="5">{{instoreNotice.businessNo}}</el-col>
       </el-row>
-      <el-row :gutter="10">
+      <el-row :gutter="10" id="test" style="padding-top: 20px;">
         <el-col :span="2">客户:</el-col>
         <el-col :span="4">{{instoreNotice.checkConsumer}}</el-col>
         <el-col :span="2">车牌号:</el-col>
@@ -55,7 +58,7 @@
         <el-col :span="2">卸车日期:</el-col>
         <el-col :span="4"></el-col>
       </el-row>
-      <el-row :gutter="10">
+      <el-row :gutter="10" style="padding-top: 10px;">
         <el-col :span="2">&nbsp;</el-col>
         <el-col :span="4">&nbsp;</el-col>
         <el-col :span="2">&nbsp;</el-col>
@@ -63,7 +66,7 @@
         <el-col :span="2">开始时间:</el-col>
         <el-col :span="4"></el-col>
       </el-row>
-      <el-row :gutter="10">
+      <el-row :gutter="10" style="padding-top: 10px;padding-bottom:10px ;">
         <el-col :span="2">批次:</el-col>
         <el-col :span="4">{{instoreNotice.batchNo}}</el-col>
         <el-col :span="2">司机名:</el-col>
@@ -95,7 +98,7 @@
           </el-table>
         </el-col>
       </el-row>
-      <el-row :gutter="10" style="margin-top: 15px; ">
+      <el-row :gutter="10" style="margin-top: 20px; ">
         <el-col :span="2">装卸组:</el-col>
         <el-col :span="2">&nbsp;</el-col>
         <el-col :span="2">机械号:</el-col>
@@ -271,6 +274,11 @@
 				this.queryParams.pageNum = 1;
 				this.getList();
 			},
+
+			print(){
+				 
+
+			},
 			/** 重置按钮操作 */
 			resetQuery() {
 				this.queryParams.instoreNoticeNo = ''
@@ -347,3 +355,15 @@
 		}
 	};
 </script>
+
+<style scoped>
+
+@page{
+        size: auto A4 landscape;
+		margin-left: 1.5cm;
+		margin-bottom: 3mm;
+		margin-top: 8mm;
+  		
+    }
+
+</style>

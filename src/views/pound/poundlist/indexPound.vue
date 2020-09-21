@@ -637,6 +637,10 @@ export default {
 
 // }
 
+@page{
+		margin: 8mm; 		
+    }
+
 #dayin {
   height: 400px;
   width: 800px;
