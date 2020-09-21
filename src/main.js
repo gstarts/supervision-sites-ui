@@ -25,7 +25,9 @@ import Pagination from "@/components/Pagination";
 //v-charts 引入
 import VCharts from 'v-charts'
 Vue.use(VCharts)
-//大印
+import AFTableColumn from 'af-table-column'
+Vue.use(AFTableColumn)
+//打印
 import Print from 'vue-print-nb'
 Vue.use(Print);
 // 全局方法挂载
