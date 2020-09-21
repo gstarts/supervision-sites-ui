@@ -42,3 +42,12 @@ export function delNemsinvtheadtype(id) {
     method: 'delete'
   })
 }
+
+// 批量申报
+export function declareBonded(data) {
+  return request({
+    url: '/manifest/nemsinvtheadtype/declare',
+    method: 'post',
+    data:{ids:data} 
+  })
+}

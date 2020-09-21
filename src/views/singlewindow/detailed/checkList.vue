@@ -1,21 +1,21 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="申请编号" prop="applyNo">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="130px">
+      <!-- <el-form-item label="申请编号" prop="applyNo">
         <el-input
           v-model="queryParams.applyNo"
           placeholder="请输入申请编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!-- <el-form-item label="经营企业名称" prop="bizopEtpsnm">
+       <el-form-item label="经营企业名称" prop="bizopEtpsnm">
         <el-input
           v-model="queryParams.bizopEtpsnm"
           placeholder="请输入经营企业名称"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -24,7 +24,7 @@
           v-model="queryParams.bizopEtpsno"
           placeholder="请输入经营企业编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -33,7 +33,7 @@
           v-model="queryParams.bizopEtpsSccd"
           placeholder="请输入经营企业社会信用代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -42,7 +42,7 @@
           v-model="queryParams.bondInvtNo"
           placeholder="请输入保税清单编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -51,7 +51,7 @@
           v-model="queryParams.chgTmsCnt"
           placeholder="请输入变更次数"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -60,7 +60,7 @@
           v-model="queryParams.corrEntryDclEtpsnm"
           placeholder="请输入对应报关单申报单位名称"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -69,7 +69,7 @@
           v-model="queryParams.corrEntryDclEtpsno"
           placeholder="请输入对应报关单申报单位代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -78,7 +78,7 @@
           v-model="queryParams.corrEntryDclEtpsSccd"
           placeholder="请输入对应报关单申报单位社会统一信用代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -87,7 +87,7 @@
           v-model="queryParams.dclcusFlag"
           placeholder="请输入是否报关标志"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -96,25 +96,25 @@
           v-model="queryParams.dclcusTypecd"
           placeholder="请输入报关类型代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="申报企业名称" prop="dclEtpsNm">
         <el-input
           v-model="queryParams.dclEtpsNm"
           placeholder="请输入申报企业名称"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="申报企业编号" prop="dclEtpsno">
+      <!-- <el-form-item label="申报企业编号" prop="dclEtpsno">
         <el-input
           v-model="queryParams.dclEtpsno"
           placeholder="请输入申报企业编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -123,7 +123,7 @@
           v-model="queryParams.dclEtpsSccd"
           placeholder="请输入申报企业社会信用代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -132,7 +132,7 @@
           v-model="queryParams.dclPlcCuscd"
           placeholder="请输入申报地关区代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -141,12 +141,12 @@
           v-model="queryParams.dclTypecd"
           placeholder="请输入申报类型(1-备案申请 2-变更申请 3-删除申请)"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="报关单类型" prop="decType">
-        <el-select v-model="queryParams.decType" placeholder="请选择报关单类型" clearable size="small">
+        <el-select v-model="queryParams.decType" placeholder="请选择报关单类型" clearable size="mini">
           <el-option label="请选择字典生成" value="" />
         </el-select>
       </el-form-item>
@@ -155,7 +155,7 @@
           v-model="queryParams.entryDclTime"
           placeholder="请输入报关单申报时间"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -164,7 +164,7 @@
           v-model="queryParams.entryNo"
           placeholder="请输入对应报关单编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -173,7 +173,7 @@
           v-model="queryParams.entryStucd"
           placeholder="请输入报关状态"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -182,7 +182,7 @@
           v-model="queryParams.etpsInnerInvtNo"
           placeholder="请输入企业内部清单编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -191,7 +191,7 @@
           v-model="queryParams.formalVrfdedTime"
           placeholder="请输入正式核扣时间"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -200,7 +200,7 @@
           v-model="queryParams.genDecFlag"
           placeholder="请输入是否生成报关单:1-生成 2-不生成"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -209,7 +209,7 @@
           v-model="queryParams.icCardNo"
           placeholder="请输入申报人ic卡号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -218,7 +218,7 @@
           v-model="queryParams.impexpMarkcd"
           placeholder="请输入进出口标记代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -227,7 +227,7 @@
           v-model="queryParams.impexpPortcd"
           placeholder="请输入进出境关别"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -236,7 +236,7 @@
           v-model="queryParams.inputCode"
           placeholder="请输入录入单位代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -245,7 +245,7 @@
           v-model="queryParams.inputCreditCode"
           placeholder="请输入录入单位社会信用代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -254,25 +254,39 @@
           v-model="queryParams.inputName"
           placeholder="请输入录入单位名称"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item> -->      
+      <el-form-item label="申报状态" prop="manageResult">
+        <el-select v-model="queryParams.manageResult" placeholder="请选择申报状态" size="mini">
+          <el-option
+            v-for="dict in manageResultOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="录入日期" prop="inputTime">
-        <el-input
-          v-model="queryParams.inputTime"
-          placeholder="请输入录入日期"
+      <el-form-item label="录入时间" prop="createTime">
+        <el-date-picker
           clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          size="mini"
+          style="width: 350px"
+          v-model="dateRange"
+          type="datetimerange"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :default-time="['00:00:00']"
+        ></el-date-picker>
       </el-form-item>
-      <el-form-item label="清单申报时间" prop="invtdclTime">
+      <!-- <el-form-item label="清单申报时间" prop="invtdclTime">
         <el-input
           v-model="queryParams.invtdclTime"
           placeholder="请输入清单申报时间"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -281,12 +295,12 @@
           v-model="queryParams.invtIochkptStucd"
           placeholder="请输入清单进出卡口状态代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="清单类型" prop="invtType">
-        <el-select v-model="queryParams.invtType" placeholder="请选择清单类型" clearable size="small">
+        <el-select v-model="queryParams.invtType" placeholder="请选择清单类型" clearable size="mini">
           <el-option label="请选择字典生成" value="" />
         </el-select>
       </el-form-item>
@@ -295,7 +309,7 @@
           v-model="queryParams.levyBlamt"
           placeholder="请输入计征金额"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -304,12 +318,12 @@
           v-model="queryParams.listStat"
           placeholder="请输入清单状态"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="流转类型" prop="listType">
-        <el-select v-model="queryParams.listType" placeholder="请选择流转类型" clearable size="small">
+        <el-select v-model="queryParams.listType" placeholder="请选择流转类型" clearable size="mini">
           <el-option label="请选择字典生成" value="" />
         </el-select>
       </el-form-item>
@@ -318,7 +332,7 @@
           v-model="queryParams.mtpckEndprdMarkcd"
           placeholder="请输入料件成品标记代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -327,7 +341,7 @@
           v-model="queryParams.needEntryModified"
           placeholder="请输入报关单同步修改标志"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -336,7 +350,7 @@
           v-model="queryParams.passportUsedTypecd"
           placeholder="请输入核放单生成标志代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -345,7 +359,7 @@
           v-model="queryParams.prevdTime"
           placeholder="请输入预核扣时间"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -354,7 +368,7 @@
           v-model="queryParams.putrecNo"
           placeholder="请输入备案编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -363,7 +377,7 @@
           v-model="queryParams.rcvgdEtpsnm"
           placeholder="请输入收货企业名称"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -372,7 +386,7 @@
           v-model="queryParams.rcvgdEtpsno"
           placeholder="请输入收货企业编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -381,7 +395,7 @@
           v-model="queryParams.rltEntryBizopEtpsnm"
           placeholder="请输入关联报关单境内收发货人名称"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -390,7 +404,7 @@
           v-model="queryParams.rltEntryBizopEtpsno"
           placeholder="请输入关联报关单境内收发货人编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -399,7 +413,7 @@
           v-model="queryParams.rltEntryBizopEtpsSccd"
           placeholder="请输入关联报关单境内收发货人社会信用代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -408,7 +422,7 @@
           v-model="queryParams.rltEntryDclEtpsNm"
           placeholder="请输入关联报关单申报单位名称"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -417,7 +431,7 @@
           v-model="queryParams.rltEntryDclEtpsno"
           placeholder="请输入关联报关单申报单位编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -426,7 +440,7 @@
           v-model="queryParams.rltEntryDclEtpsSccd"
           placeholder="请输入关联报关单申报单位社会信用代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -435,7 +449,7 @@
           v-model="queryParams.rltEntryNo"
           placeholder="请输入关联报关单编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -444,7 +458,7 @@
           v-model="queryParams.rltEntryRcvgdEtpsNm"
           placeholder="请输入关联报关单收发货单位名称"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -453,7 +467,7 @@
           v-model="queryParams.rltEntryRcvgdEtpsno"
           placeholder="请输入关联报关单收发货单位编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -462,7 +476,7 @@
           v-model="queryParams.rltEntryRvsngdEtpsSccd"
           placeholder="请输入关联报关单收发货单位社会信用代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -471,7 +485,7 @@
           v-model="queryParams.rltInvtNo"
           placeholder="请输入关联清单编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -480,7 +494,7 @@
           v-model="queryParams.rltPutrecNo"
           placeholder="请输入关联备案编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -489,7 +503,7 @@
           v-model="queryParams.rvsngdEtpssccd"
           placeholder="请输入收发货企业社会信用代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -498,7 +512,7 @@
           v-model="queryParams.seqNo"
           placeholder="请输入中心统一编号"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -507,7 +521,7 @@
           v-model="queryParams.stshipTrsarvNatcd"
           placeholder="请输入起运/运抵国(地区）"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -516,7 +530,7 @@
           v-model="queryParams.supvModecd"
           placeholder="请输入监管方式代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -525,7 +539,7 @@
           v-model="queryParams.trspModecd"
           placeholder="请输入运输方式代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -534,25 +548,17 @@
           v-model="queryParams.vrfdedMarkcd"
           placeholder="请输入核扣标记代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="核扣标记代码" prop="manageResult">
-        <el-input
-          v-model="queryParams.manageResult"
-          placeholder="请输入核扣标记代码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+      
       <el-form-item label="核扣标记代码" prop="createDate">
         <el-input
           v-model="queryParams.createDate"
           placeholder="请输入核扣标记代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -561,7 +567,7 @@
           v-model="queryParams.reason"
           placeholder="请输入核扣标记代码"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item> -->
@@ -574,14 +580,15 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          icon="el-icon-plus"
+          type="danger"
+          icon="el-icon-thumb"
           size="mini"
-          @click="handleAdd"
-          v-hasPermi="['manifest:nemsinvtheadtype:add']"
-        >新增</el-button>
+          :disabled="multiple"
+          @click="declare"
+          v-hasPermi="['manifest:head:declare']"
+        >申报</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -609,7 +616,7 @@
           @click="handleExport"
           v-hasPermi="['manifest:nemsinvtheadtype:export']"
         >导出</el-button>
-      </el-col>
+      </el-col> -->
     </el-row>
 
     <el-table v-loading="loading" :data="nemsinvtheadtypeList" @selection-change="handleSelectionChange">
@@ -628,23 +635,23 @@
       <el-table-column label="报关类型代码" align="center" prop="dclcusTypecd" />
       <el-table-column label="申报企业名称" align="center" prop="dclEtpsNm" />
       <el-table-column label="申报企业编号" align="center" prop="dclEtpsno" />
-      <el-table-column label="申报企业社会信用代码" align="center" prop="dclEtpsSccd" />
+      <!-- <el-table-column label="申报企业社会信用代码" align="center" prop="dclEtpsSccd" />
       <el-table-column label="申报地关区代码" align="center" prop="dclPlcCuscd" />
-      <!-- <el-table-column label="申报类型(1-备案申请 2-变更申请 3-删除申请)" align="center" prop="dclTypecd" />
+      <el-table-column label="申报类型(1-备案申请 2-变更申请 3-删除申请)" align="center" prop="dclTypecd" />
       <el-table-column label="报关单类型" align="center" prop="decType" />
       <el-table-column label="报关单申报时间" align="center" prop="entryDclTime" />
       <el-table-column label="对应报关单编号" align="center" prop="entryNo" />
       <el-table-column label="报关状态" align="center" prop="entryStucd" />
       <el-table-column label="企业内部清单编号" align="center" prop="etpsInnerInvtNo" />
-      <el-table-column label="正式核扣时间" align="center" prop="formalVrfdedTime" /> -->
-      <el-table-column label="是否生成报关单:1-生成 2-不生成" align="center" prop="genDecFlag" />
-      <el-table-column label="申报人ic卡号" align="center" prop="icCardNo" />
-      <el-table-column label="进出口标记代码" align="center" prop="impexpMarkcd" />
+      <el-table-column label="正式核扣时间" align="center" prop="formalVrfdedTime" />
+      <el-table-column label="是否生成报关单:1-生成 2-不生成" align="center" prop="genDecFlag" /> -->
+      <el-table-column label="申报状态" align="center" prop="manageResult" :formatter="manageResultFormat"/>
+      <!-- <el-table-column label="进出口标记代码" align="center" prop="impexpMarkcd" />
       <el-table-column label="进出境关别" align="center" prop="impexpPortcd" />
       <el-table-column label="录入单位代码" align="center" prop="inputCode" />
-      <el-table-column label="录入单位社会信用代码" align="center" prop="inputCreditCode" />
+      <el-table-column label="录入单位社会信用代码" align="center" prop="inputCreditCode" /> -->
       <el-table-column label="录入单位名称" align="center" prop="inputName" />
-      <el-table-column label="录入日期" align="center" prop="inputTime" />
+      <el-table-column label="录入时间" align="center" prop="createTime" />
       <!-- <el-table-column label="清单申报时间" align="center" prop="invtdclTime" />
       <el-table-column label="清单进出卡口状态代码" align="center" prop="invtIochkptStucd" />
       <el-table-column label="清单类型" align="center" prop="invtType" />
@@ -680,9 +687,17 @@
       <el-table-column label="核扣标记代码" align="center" prop="manageResult" />
       <el-table-column label="核扣标记代码" align="center" prop="createDate" />
       <el-table-column label="核扣标记代码" align="center" prop="reason" /> -->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      <el-table-column label="操作" align="center" class-name="mini-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-detail"
+            @click="detail(scope.row)"
+          >详情
+          </el-button>
+          <el-button
+            v-if="scope.row.statementCode=='10' || scope.row.statementCode=='20'|| scope.row.statementCode=='0'|| scope.row.statementCode=='FF'|| scope.row.statementCode=='3' "
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -800,8 +815,8 @@
         <el-form-item label="录入单位名称" prop="inputName">
           <el-input v-model="form.inputName" placeholder="请输入录入单位名称" />
         </el-form-item>
-        <el-form-item label="录入日期" prop="inputTime">
-          <el-input v-model="form.inputTime" placeholder="请输入录入日期" />
+        <el-form-item label="录入时间" prop="createTime">
+          <el-input v-model="form.createTime" placeholder="请输入录入时间" />
         </el-form-item>
         <el-form-item label="清单申报时间" prop="invtdclTime">
           <el-input v-model="form.invtdclTime" placeholder="请输入清单申报时间" />
@@ -922,7 +937,7 @@
 </template>
 
 <script>
-import { listNemsinvtheadtype, getNemsinvtheadtype, delNemsinvtheadtype, addNemsinvtheadtype, updateNemsinvtheadtype } from "@/api/detailed/nemsinvtheadtype";
+import { listNemsinvtheadtype, declareBonded, getNemsinvtheadtype, delNemsinvtheadtype, addNemsinvtheadtype, updateNemsinvtheadtype } from "@/api/detailed/nemsinvtheadtype";
 
 export default {
   name: "Nemsinvtheadtype",
@@ -932,6 +947,8 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      // 日期范围
+      dateRange: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -940,6 +957,8 @@ export default {
       total: 0,
       // 【请填写功能名称】表格数据
       nemsinvtheadtypeList: [],
+      // 申报状态
+      manageResultOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -977,7 +996,7 @@ export default {
         inputCode: undefined,
         inputCreditCode: undefined,
         inputName: undefined,
-        inputTime: undefined,
+        createTime: undefined,
         invtdclTime: undefined,
         invtIochkptStucd: undefined,
         invtType: undefined,
@@ -1012,7 +1031,10 @@ export default {
         vrfdedMarkcd: undefined,
         manageResult: undefined,
         createDate: undefined,
-        reason: undefined
+        reason: undefined,
+        manageResult: undefined,
+        createTime: undefined,     
+
       },
       // 表单参数
       form: {},
@@ -1023,13 +1045,22 @@ export default {
   },
   created() {
     this.getList();
+    /** 申报状态 */
+    this.getDicts("station_declear_status").then(response => {
+      this.manageResultOptions = response.data;
+    });
   },
   methods: {
+    // 申报状态翻译
+    manageResultFormat(row) {
+      return this.selectDictLabel(this.manageResultOptions, row.manageResult);
+    },
     /** 查询【请填写功能名称】列表 */
     getList() {
       this.loading = true;
-      listNemsinvtheadtype(this.queryParams).then(response => {
+      listNemsinvtheadtype(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.nemsinvtheadtypeList = response.rows;
+        console.log(this.nemsinvtheadtypeList)
         this.total = response.total;
         this.loading = false;
       });
@@ -1072,7 +1103,7 @@ export default {
         inputCode: undefined,
         inputCreditCode: undefined,
         inputName: undefined,
-        inputTime: undefined,
+        createTime: undefined,
         invtdclTime: undefined,
         invtIochkptStucd: undefined,
         invtType: undefined,
@@ -1118,6 +1149,7 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.dateRange = []
       this.resetForm("queryForm");
       this.handleQuery();
     },
@@ -1186,6 +1218,31 @@ export default {
       this.download('manifest/nemsinvtheadtype/export', {
         ...this.queryParams
       }, `manifest_nemsinvtheadtype.xlsx`)
+    },
+    /** 申报按钮操作 */
+    declare(row) {
+      const ids = row.id || this.ids;
+      this.$confirm("是否确认进行批量申报", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
+          return declareBonded(ids);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("申报成功");
+        })
+        .catch(function() {});
+    },
+    /**详情按钮 */
+    detail(row) {
+      // this.reset();
+      return this.$message('功能正在完善中...')
+      const id = row.id || this.ids
+      const data = this.router.find(el => el.messageType === row.messageType)
+      this.$router.push({ path: '/singlewindow' + data.path })
     }
   }
 };
