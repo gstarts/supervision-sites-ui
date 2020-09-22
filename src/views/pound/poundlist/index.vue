@@ -284,6 +284,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         clientId: undefined,
+        stationId:undefined,
       },
       // 是否新增
       isAdd: false,
@@ -315,6 +316,8 @@ export default {
         updateTime:undefined,
         //流向 (新增时 通过通道配置赋值)
         flowDirection:undefined,
+        //场站ID
+        stationId:undefined,
       },
       //通道配置
       PoundForm: {
@@ -385,6 +388,7 @@ export default {
     CarNumberChange(event){
       //进场 调用刘猛接口 连带数据赋值给input
       if(this.PoundForm.flowDirection=="I"){
+        
         //出场 调用自己的接口 查询数据库里的数据赋值给input。
       }else if(this.PoundForm.flowDirection=="E"){
         //调用后台查询API 通过选择的车号反添数据
@@ -445,6 +449,8 @@ export default {
     AllADD(){
       //通道号赋值
       this.form.channelNumber=this.PoundForm.channelNumber;
+      //场站ID赋值
+      this.form.stationId=this.queryParams.stationId;
       this.form.updateTime=genTimeCode(new Date(),"YYYY-MM-DD HH:mm:ss");
        this.$refs["form"].validate((valid) => {
          if(valid){
