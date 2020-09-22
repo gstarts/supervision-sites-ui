@@ -223,7 +223,7 @@
           <br />
         </div>
         <div id="area-all-style">
-          <span class="area-in-style">{{form.Remarks}}</span>
+          <span class="area-in-style">{{form.remark}}</span>
           <br />
         </div>
       </div>
@@ -465,7 +465,7 @@ export default {
               }
              })
            }   
-         }
+         } 
       
        });
         // if(this.PoundForm.flowDirection=="I"){
@@ -664,6 +664,7 @@ export default {
   width: 480px;
   height: 40px;
   font-size: 20px;
+  margin-top: 20px;
 
   float: left;
 }
@@ -671,9 +672,9 @@ export default {
   height: 40px;
   width: 300px;
   font-size: 20px;
-  margin-top: 0px;
-
+  margin-top: 20px;
   float: right;
+  
 }
 
 #area-all-style {
@@ -681,10 +682,12 @@ export default {
   height: 40px;
   font-size: 20px;
   float: left;
+  margin-top: 20px;
 }
 
 .area-in-style {
   padding-left: 3cm;
+  margin-top: 20px;
 }
 
 .poundTotal11{ 
