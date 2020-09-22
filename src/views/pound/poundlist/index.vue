@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 按钮组 -->
     <div class="mb20">
-      <el-button type="success" icon="el-icon-edit" size="mini" @click="AllADD">暂存</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="mini" @click="AllADD">暂存</el-button>
       <el-button type="success" icon="el-icon-edit" size="mini" @click="generateAdd">生成</el-button>
       <!-- <el-button @click="ADDTest">测试按钮</el-button> -->
       <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd" v-if="this.form.netWeight == undefined || this.form.plateNum == undefined" style="display:none" >打印</el-button>
@@ -592,8 +592,8 @@ export default {
         this.nowData = '';
         this.nowTime = '';
         this.poundTotal='';
-      }, 3000);
- 
+      }, 2000);
+  
     },
     endCallback(){
      
