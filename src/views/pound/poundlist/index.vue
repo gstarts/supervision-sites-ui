@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 按钮组 -->
     <div class="mb20">
-      <el-button type="success" icon="el-icon-edit" size="mini" @click="AllADD">暂存</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="mini" @click="AllADD">暂存</el-button>
       <el-button type="success" icon="el-icon-edit" size="mini" @click="generateAdd">生成</el-button>
       <!-- <el-button @click="ADDTest">测试按钮</el-button> -->
       <el-button type="primary" icon="el-icon-plus" size="mini" @click="headHandleAdd" v-if="this.form.netWeight == undefined || this.form.plateNum == undefined" style="display:none" >打印</el-button>
@@ -98,7 +98,7 @@
           <el-form :model="PoundForm" ref="PoundForm" :rules="ruless" label-width="80px" class="mb20">
             <input
               class="Pound"
-              v-if="this.stable === 1"
+              v-if="this.isStable === 1"
               style="color:green"
               v-model="this.Poundweight"
               disabled
@@ -223,7 +223,7 @@
           <br />
         </div>
         <div id="area-all-style">
-          <span class="area-in-style">{{form.Remarks}}</span>
+          <span class="area-in-style">{{form.remark}}</span>
           <br />
         </div>
       </div>
@@ -243,7 +243,7 @@ export default {
   data() {
     return {
       //稳定标识
-      stable: undefined,
+      isStable: undefined,
       //地磅返回重量
       Poundweight: 0,
       // 遮罩层
@@ -436,7 +436,7 @@ export default {
         poundSelect(event).then((response) => {
           console.log("进入反添重量方法");
           this.Poundweight = response.data.weight;
-          this.stable = response.data.stable;
+          this.isStable = response.data.isStable;
           console.log("后台返回内容:"+response.genTimeCode);
         });
       }, 1000);
@@ -481,7 +481,7 @@ export default {
               }
              })
            }   
-         }
+         } 
       
        });
         // if(this.PoundForm.flowDirection=="I"){
@@ -539,7 +539,7 @@ export default {
     // 生成按钮
     generateAdd() {
       //进场
-      if (this.stable == "1") {
+      if (this.isStable == "1") {
         if (this.PoundForm.flowDirection == "I") {
           //重进空出 进场
           if ( this.PoundForm.stationViaType == "01" || this.PoundForm.stationViaType == "02" ) {
@@ -598,8 +598,8 @@ export default {
         this.nowData = '';
         this.nowTime = '';
         this.poundTotal='';
-      }, 3000);
- 
+      }, 2000);
+  
     },
     endCallback(){
      
@@ -669,7 +669,9 @@ export default {
   width: 300px;
   height: 40px;
   margin-top: 40px;
+  padding-left: 40px;
   float: left;
+  margin-left: 20px;
 }
 
 #poundtotal{
@@ -680,6 +682,7 @@ export default {
   width: 480px;
   height: 40px;
   font-size: 20px;
+  margin-top: 10px;
 
   float: left;
 }
@@ -687,9 +690,9 @@ export default {
   height: 40px;
   width: 300px;
   font-size: 20px;
-  margin-top: 0px;
-
+  margin-top: 10px;
   float: right;
+  
 }
 
 #area-all-style {
@@ -697,10 +700,12 @@ export default {
   height: 40px;
   font-size: 20px;
   float: left;
+  margin-top: 10px;
 }
 
 .area-in-style {
   padding-left: 3cm;
+  margin-top: 10px;
 }
 
 .poundTotal11{ 

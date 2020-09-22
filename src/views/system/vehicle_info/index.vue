@@ -168,6 +168,7 @@
 		updateVehicle_info, listVehicleNoList
 	} from "@/api/system/vehicle_info";
 	import store from '@/store/index'
+	import {getInstore_notice_with_vehicle} from '@/api/tax/instore_notice'
 
 	export default {
 		name: "Vehicle_info",
@@ -218,10 +219,7 @@
 			this.depts.push(store.getters.dept)
 			//console.log(this.depts)
 			this.getList();
-			/*listVehicleNoList(104).then(response=>{
-				console.log('车辆号')
-				console.log(response)
-      })*/
+			
 		},
 		methods: {
 			/** 查询vehicle列表 */

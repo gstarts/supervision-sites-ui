@@ -88,7 +88,7 @@ const user = {
 		// 刷新token
 		RefreshToken({commit, state}) {
 			return new Promise((resolve, reject) => {
-				refreshToken(state.refresh_token).then(res => {
+				refreshToken(state.refreshToken).then(res => {
 					setToken(res.access_token)
 					commit('SET_TOKEN', res.access_token)
 					setRefreshToken(res.refresh_token)
