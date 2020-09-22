@@ -21,15 +21,15 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="车号" prop="plateNum">
-                  <el-input v-model="form.plateNum" placeholder="请输入车号" clearable></el-input>
-                  <!-- <el-select v-model="form.plateNum" placeholder="请选择车号" prop="plateNum" filterable @change="CarNumberChange">
+                  <!-- <el-input v-model="form.plateNum" placeholder="请输入车号" clearable></el-input> -->
+                  <el-select v-model="form.plateNum" placeholder="请选择车号" prop="plateNum" filterable @change="CarNumberChange">
                     <el-option
                       v-for="dict in plateNumOptions"
-                      :key="dict.dictValue"
-                      :label="dict.dictLabel"
-                      :value="dict.dictValue"
+                      :key="dict.value"
+                      :label="dict.key"
+                      :value="dict.value"
                     ></el-option>
-                  </el-select>-->
+                  </el-select>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -231,8 +231,8 @@
 </template>
 
 <script>
-import { 
-addSheet,updateSheet,getSheet,listSheet } from "@/api/pound/poundlist";
+import { addSheet,updateSheet,getSheet,listSheet } from "@/api/pound/poundlist";
+import {listVehicleNoList} from "@/api/system/vehicle_info";
 import { genTimeCode } from "@/utils/common";
 //获取实时重量
 import { poundSelect } from "@/api/pound/poundlist";
@@ -338,6 +338,17 @@ export default {
     };
   },
   created() {
+    //车牌号
+    listVehicleNoList(104).then(response=>{
+      
+    this.plateNumOptions=response.data;
+    for(var i=0;i>this.plateNumOptions.length;i++){
+      map =new Map();
+      map.put();
+    }
+    console.log("车牌号");
+    console.log(this.plateNumOptions);
+    });
     //过卡车辆类型
     this.getDicts("station_via_type").then((response) => {
       this.stationViaTypeOptions = response.data;
@@ -378,7 +389,7 @@ export default {
       }else if(this.PoundForm.flowDirection=="E"){
         //调用后台查询API 通过选择的车号反添数据
           getSheet(event).then(response =>{
-                if(response.code===200){
+                if(response.code===200){  
                    this.form=response.data;
                 }else{
                    this.msgError(response.msg);
@@ -393,7 +404,6 @@ export default {
     getList(){
       this.loading = true;
       listSheet(this.queryParams).then(response =>{
-        console.log();
         this.sheetList=response.rows;
         this.total = response.total;
         console.log(this.sheetList);
@@ -591,7 +601,7 @@ export default {
     print1() {
       this.Explicit = true;
       var aData = new Date();
-      this.nowData =
+      this.nowData = 
         aData.getFullYear() +
         "-" +
         (aData.getMonth() + 1) +
