@@ -70,8 +70,8 @@ service.interceptors.response.use(res => {
 				message = '请求参数有误'
 				break
 			case 401:
-				//message = '登录超时，请重新登录'
-				MessageBox.confirm(
+				message = '状态401，您无权访问此资源'
+				/*MessageBox.confirm(
 					'登录超时，可以取消继续留在该页面，或者重新登录',
 					'确定登出',
 					{
@@ -83,7 +83,7 @@ service.interceptors.response.use(res => {
 					store.dispatch('FedLogOut').then(() => {
 						location.reload() // 为了重新实例化vue-router对象 避免bug
 					})
-				})
+				})*/
 				break
 			case 403:
 				message = '抱歉，您无权访问此资源'
