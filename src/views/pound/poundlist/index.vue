@@ -170,7 +170,7 @@
     </el-row>
     <el-card>
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="进场纪录" name="Approach" >
+        <el-tab-pane label="进场记录" name="Approach" >
           <el-table
         class="mb20"
         ref="ApproachList"
@@ -416,7 +416,7 @@ export default {
       this.queryParams.stationId = this.depts[0].deptId;
       this.created();
     }
-    //进场纪录
+    //进场记录
     this.getListI();
   },
   methods: {
