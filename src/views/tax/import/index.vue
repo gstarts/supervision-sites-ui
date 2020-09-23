@@ -341,8 +341,8 @@
 	import {listImport, getImport, delImport, addImport, genNotice} from "@/api/tax/import";
 	import {getUserDepts} from '@/utils/charutils'
 	import {getRefreshToken, getToken} from '@/utils/auth'
-	import {addContract, listContract, updateContract} from '@/api/tax/contract'
-	import {getNoticeByVehicle} from '@/api/tax/instore_notice'
+	import { listContract} from '@/api/tax/contract'
+	import {genDoc, genStoreDoc} from '@/api/tax/instore_notice'
 
 	export default {
 		name: "Import",
@@ -448,13 +448,13 @@
 			};
 		},
 		created() {
-			console.log(getRefreshToken())
 			// 0 监管场所，1保税库，2堆场，3企业
 			this.importTypeDic = [
 				{value: '1', label: '入库通知单'},
 				{value: '0', label: '出库通知单'}
 				/*{value: '2', label: '报关数据单'}*/
 			]
+			
 			listContract({'placeId': this.queryParams.placeId}).then(response => {
 				this.contractList = response.rows;
 			});

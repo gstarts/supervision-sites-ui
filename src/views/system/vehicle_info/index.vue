@@ -168,7 +168,6 @@
 		updateVehicle_info, listVehicleNoList
 	} from "@/api/system/vehicle_info";
 	import store from '@/store/index'
-	import {getInstore_notice_with_vehicle} from '@/api/tax/instore_notice'
 
 	export default {
 		name: "Vehicle_info",

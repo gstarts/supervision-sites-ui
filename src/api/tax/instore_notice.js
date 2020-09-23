@@ -51,23 +51,31 @@ export function getInstore_notice_with_details(placeId, noticeNo) {
 	})
 }
 
-export function getInstore_notice_with_vehicle(placeId, vehicleNo) {
+/*export function getInstore_notice_with_vehicle(placeId, vehicleNo) {
 	return request({
 		url: '/tax/instore_notice/notice/' + placeId + '/' + vehicleNo,
 		method: 'get'
 	})
-}
+}*/
 
 /**
  * 通过车号查出入库通知单
- * @param placeId  场所ID
- * @param direction 方向 1 入库通知单 0 出库通知单
- * @param vehicleNo  车牌号
+ * @param placeId  场所ID 整数
+ * @param direction 方向整数 1 入库通知单 0 出库通知单
+ * @param vehicleNo  车牌号 字符串
  * @returns {AxiosPromise}
  */
+///doc/{placeId}/{direction}/{noticeNo}/{storeCode}
 export function getNoticeByVehicle(placeId, direction, vehicleNo) {
 	return request({
 		url: '/tax/notice/' + placeId + '/' + direction + '/' + vehicleNo,
 		method: 'get'
+	})
+}
+
+export function genStoreDoc(placeId, direction, noticeNo,storeCode) {
+	return request({
+		url: '/tax/notice/doc/'+placeId+'/'+direction+'/'+noticeNo+'/'+storeCode,
+		method: 'post'
 	})
 }
