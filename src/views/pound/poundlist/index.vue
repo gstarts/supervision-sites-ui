@@ -410,19 +410,19 @@ export default {
           this.direction = "0";
         } else {
           this.msgError("车辆类型不可为空或选择不正确");
-          this.form.plateNum=undefined;
+          this.form.plateNum = undefined;
         }
         if ( this.PoundForm.stationViaType == "01" || this.PoundForm.stationViaType == "02" ) {
           getNoticeByVehicle( this.queryParams.stationId, this.direction, event ).then((response) => {
             if (response.code === 200) {
               //规格型号
-              this.form.specification= response.data.businessNo;
+              this.form.specification = response.data.businessNo;
               //货物名称
-              this.form.goodsName=response.data.goodsName;
+              this.form.goodsName = response.data.goodsName;
               //收货单位
-              this.form.receivingUnit=response.data.receiveName;
+              this.form.receivingUnit = response.data.receiveName;
               //发货单位
-              this.form.deliveryUnit=response.data.sendName;
+              this.form.deliveryUnit = response.data.sendName;
             } else {
               this.msgError(response.msg);
             }
@@ -449,7 +449,6 @@ export default {
       listSheet(this.queryParams).then((response) => {
         this.sheetList = response.rows;
         this.total = response.total;
-        console.log(this.sheetList);
         this.loading = false;
       });
     },
@@ -473,10 +472,8 @@ export default {
       clearInterval(this.ChannelNumberTimer);
       this.ChannelNumberTimer = setInterval(() => {
         poundSelect(event).then((response) => {
-          console.log("进入反添重量方法");
           this.Poundweight = response.data.weight;
           this.isStable = response.data.isStable;
-          console.log("后台返回内容:" + response.genTimeCode);
         });
       }, 1000);
       //离开当前页面定时器停止
@@ -497,8 +494,6 @@ export default {
             this.form.flowDirection = this.PoundForm.flowDirection;
             //进场 新增
             addSheet(this.form).then((response) => {
-              console.log(this.form);
-              console.log("后台接口进入");
               if (response.code === 200) {
                 this.msgSuccess("进场成功");
                 this.reset();
@@ -601,7 +596,6 @@ export default {
         aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
       this.poundTotal = "铜精粉磅单";
     },
-
     //销毁前清除定时器
     beforeDestroy() {
       clearInterval(this.timer1);
@@ -609,7 +603,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-         //车号
+        //车号
         plateNum: undefined,
         //皮重
         tare: undefined,
