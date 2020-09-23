@@ -101,27 +101,31 @@
     </el-row>
     
     <el-table v-loading="loading" :data="importList">
-      <!--<el-table-column type="selection" width="55" align="center"/>-->
-      <!--<el-table-column label="场所编号" align="center" prop="placeId" />-->
-      <el-table-column label="ID" align="center" prop="id" width="60px"/>
-      <el-table-column label="模板类型" align="center" width="100px">
+      <!--<af-table-column type="selection" width="55" align="center"/>-->
+      <!--<af-table-column label="场所编号" align="center" prop="placeId" />-->
+      <af-table-column label="ID" align="center" prop="id" width="60px"/>
+      <af-table-column label="模板类型" align="center" width="100px">
         <template slot-scope="scope">
           {{importTypeDic.find(item=> item.value ===scope.row.templateType ).label}}
         </template>
-      </el-table-column>
-      <el-table-column label="寄舱客户" align="center" prop="storeCustomer"/>
-      <el-table-column label="文件路径" align="center" prop="path"/>
-      <el-table-column label="文件名" align="center" prop="fileName"/>
-      <!--<el-table-column label="是否生成报关数据" align="center" prop="isGenReport"/>
-      <el-table-column label="是否生成出入库通知单" align="center" prop="isGenStoreNotice"/>-->
-      <el-table-column label="文件大小" align="center" prop="fileLength" width="100px"/>
-      <el-table-column label="创建人" align="center" prop="updateBy" width="100px"/>
-      <el-table-column label="创建时间" align="center" prop="updateTime" width="180px">
+      </af-table-column>
+      <af-table-column label="业务编号" align="center" prop="businessNo"/>
+      <af-table-column label="寄舱客户" align="center" prop="storeCustomer"/>
+      <af-table-column label="寄舱客户" align="center" prop="settlementCustomer"/>
+      <af-table-column label="发货单位" align="center" prop="sendName"/>
+      <af-table-column label="收货单位" align="center" prop="receiveName"/>
+      <af-table-column label="文件路径" align="center" prop="path"/>
+      <af-table-column label="文件名" align="center" prop="fileName"/>
+      <!--<af-table-column label="是否生成报关数据" align="center" prop="isGenReport"/>
+      <af-table-column label="是否生成出入库通知单" align="center" prop="isGenStoreNotice"/>-->
+      <af-table-column label="文件大小" align="center" prop="fileLength" width="100px"/>
+      <af-table-column label="创建人" align="center" prop="updateBy" width="100px"/>
+      <af-table-column label="创建时间" align="center" prop="updateTime" width="180px">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      </af-table-column>
+      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button v-show="scope.row.isGenStoreNotice===0 && scope.row.templateType ==='1' "
                      size="mini"
@@ -168,7 +172,7 @@
           >删除
           </el-button>
         </template>
-      </el-table-column>
+      </af-table-column>
     </el-table>
     <pagination
       v-show="total>0"
@@ -257,7 +261,7 @@
                 <el-option
                   v-for="type in contractList"
                   :key="type.id"
-                  :label="type.customerName +'('+ type.contractNo+')'"
+                  :label="type.customerName"
                   :value="type.customerName"
                 />
               </el-select>
@@ -269,11 +273,36 @@
                 <el-option
                   v-for="type in contractList"
                   :key="type.id"
-                  :label="type.customerName +'('+ type.contractNo+')'"
+                  :label="type.customerName"
                   :value="type.customerName"
                 />
               </el-select>
             </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="发货单位" prop="sendName">
+              <el-autocomplete
+                class="inline-input"
+                v-model="form.sendName"
+                :fetch-suggestions="nameSearch"
+                placeholder="请输入发货单位"
+                @select="handleSelect"
+                clearable
+              ></el-autocomplete>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+              <el-form-item label="收货单位" prop="receiveName">
+                <el-autocomplete
+                  class="inline-input"
+                  v-model="form.receiveName"
+                  :fetch-suggestions="nameSearch"
+                  placeholder="请输入收货单位"
+                  @select="handleSelect2"
+                ></el-autocomplete>
+              </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="10" style="text-align: center">
@@ -311,8 +340,9 @@
 <script>
 	import {listImport, getImport, delImport, addImport, genNotice} from "@/api/tax/import";
 	import {getUserDepts} from '@/utils/charutils'
-	import {getToken} from '@/utils/auth'
+	import {getRefreshToken, getToken} from '@/utils/auth'
 	import {addContract, listContract, updateContract} from '@/api/tax/contract'
+	import {getNoticeByVehicle} from '@/api/tax/instore_notice'
 
 	export default {
 		name: "Import",
@@ -325,6 +355,12 @@
 				ids: [],
 				//客户合同
 				contractList: [],
+        nameList: [
+          {"value":"金航保税库 Jinhang Bonded Warehouse"},
+          {"value":"奥云陶勒盖 Oyu Tolgoi Limited"},
+          {"value":"金航保税库"},
+          {"value":"飞尚铜业"},
+        ],
 				//机构列表
 				depts: [],
 				// 非单个禁用
@@ -366,7 +402,9 @@
 					storeCustomer: '',
 					settlementCustomer: '',
 					storeContractId: '',
-					settlementContractId: ''
+					settlementContractId: '',
+          sendName: '',
+          receiveName: ''
 				},
 				noticeType: true,
 				rules: {},
@@ -383,6 +421,12 @@
 					],
 					businessNo: [
 						{required: true, message: "业务编号不能为空", trigger: "blur"}
+					],
+					sendName: [
+						{required: true, message: "发货单位不能为空", trigger: "blur"}
+					],
+          receiveName: [
+						{required: true, message: "收货单位不能为空", trigger: "blur"}
 					]
 				},
 				rules2: {
@@ -404,6 +448,7 @@
 			};
 		},
 		created() {
+			console.log(getRefreshToken())
 			// 0 监管场所，1保税库，2堆场，3企业
 			this.importTypeDic = [
 				{value: '1', label: '入库通知单'},
@@ -419,6 +464,7 @@
 				this.getList();
 			}
 			this.rules = this.rules1
+   
 		},
 		methods: {
 			/** 查询导入文件记录列表 */
@@ -672,6 +718,22 @@
 					this.rules = this.rules2
 					this.noticeType = false
 				}
+			},
+      // 收发货单位建议
+			nameSearch(queryString,cb){
+				let results = queryString?this.nameList.filter(this.createFilter(queryString)):this.nameList
+        cb(results)
+      },
+			createFilter(queryString) {
+				return (name) => {
+					return (name.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+				}
+			},
+			handleSelect(item) {
+        this.form.sendName = item.value
+			},
+			handleSelect2(item) {
+				this.form.receiveName = item.value
 			}
 		}
 	};
