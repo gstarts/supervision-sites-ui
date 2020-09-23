@@ -648,8 +648,8 @@ export default {
 }
 
 #dayin {
-  height: 400px;
-  width: 800px;
+  height: 500px;
+  width: 1000px;
 }
 
 #area {
@@ -685,6 +685,7 @@ export default {
   width: 300px;
   font-size: 20px;
   margin-top: 10px;
+  margin-left: 30px;
   float: right;
   
 }
@@ -706,4 +707,4 @@ export default {
   font-size:20px ;
   padding-left: 280px;
 }
-</style>
+</style>px
