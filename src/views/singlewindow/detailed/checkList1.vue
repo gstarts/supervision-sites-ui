@@ -258,6 +258,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item> -->      
+      <el-form-item label="申报状态" prop="manageResult">
+        <el-select v-model="queryParams.manageResult" placeholder="请选择申报状态" size="mini">
+          <el-option
+            v-for="dict in manageResultOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="录入时间" prop="createTime">
         <el-date-picker
           clearable
@@ -1048,7 +1058,6 @@ export default {
     /** 查询【请填写功能名称】列表 */
     getList() {
       this.loading = true;
-      this.queryParams.dclcusFlag="2";
       listNemsinvtheadtype(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.nemsinvtheadtypeList = response.rows;
         console.log(this.nemsinvtheadtypeList)
