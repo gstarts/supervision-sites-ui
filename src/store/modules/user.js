@@ -88,7 +88,9 @@ const user = {
 		// 刷新token
 		RefreshToken({commit, state}) {
 			return new Promise((resolve, reject) => {
+				//todo token总是失效，待查找问题原因
 				refreshToken(state.refreshToken).then(res => {
+				//refreshToken(state.refresh_token).then(res => {
 					setToken(res.access_token)
 					commit('SET_TOKEN', res.access_token)
 					setRefreshToken(res.refresh_token)

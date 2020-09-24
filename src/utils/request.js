@@ -70,7 +70,7 @@ service.interceptors.response.use(res => {
 				message = '请求参数有误'
 				break
 			case 401:
-				message = '状态401，您无权访问此资源'
+				message = '权限不足或登录超时，请刷新页面'
 				/*MessageBox.confirm(
 					'登录超时，可以取消继续留在该页面，或者重新登录',
 					'确定登出',
