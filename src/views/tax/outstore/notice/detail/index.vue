@@ -12,37 +12,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="净重" prop="bagNetWeight">
+      <el-form-item label="出库通知单号" prop="outstoreNoticeNo" label-width="180px">
         <el-input
-          v-model="queryParams.bagNetWeight"
-          placeholder="请输入净重"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="袋号" prop="bagNumber">
-        <el-input
-          v-model="queryParams.bagNumber"
-          placeholder="请输入袋号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="毛重" prop="bagRoughWeight">
-        <el-input
-          v-model="queryParams.bagRoughWeight"
-          placeholder="请输入毛重"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="袋封号" prop="bagSealNo">
-        <el-input
-          v-model="queryParams.bagSealNo"
-          placeholder="请输入袋封号"
+          v-model="queryParams.outstoreNoticeNo"
+          placeholder="请输入出库通知单号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -57,6 +30,43 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <!--<el-form-item label="净重" prop="bagNetWeight">
+        <el-input
+          v-model="queryParams.bagNetWeight"
+          placeholder="请输入净重"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="袋号" prop="bagNumber">
+        <el-input
+          v-model="queryParams.bagNumber"
+          placeholder="请输入袋号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="毛重" prop="bagRoughWeight">
+        <el-input
+          v-model="queryParams.bagRoughWeight"
+          placeholder="请输入毛重"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <el-form-item label="袋封号" prop="bagSealNo">
+        <el-input
+          v-model="queryParams.bagSealNo"
+          placeholder="请输入袋封号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      
       <el-form-item label="品名" prop="goodsName">
         <el-input
           v-model="queryParams.goodsName"
@@ -66,7 +76,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="是否已加工,0未加工，1已加工" prop="hasProcess">
+      <!--<el-form-item label="是否已加工,0未加工，1已加工" prop="hasProcess">
         <el-input
           v-model="queryParams.hasProcess"
           placeholder="请输入是否已加工,0未加工，1已加工"
@@ -74,17 +84,9 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="入库通知单号" prop="outstoreNoticeNo">
-        <el-input
-          v-model="queryParams.outstoreNoticeNo"
-          placeholder="请输入入库通知单号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="包装单位" prop="packingUnit">
+      </el-form-item>-->
+      
+     <!-- <el-form-item label="包装单位" prop="packingUnit">
         <el-input
           v-model="queryParams.packingUnit"
           placeholder="请输入包装单位"
@@ -92,16 +94,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="场所ID" prop="placeId">
-        <el-input
-          v-model="queryParams.placeId"
-          placeholder="请输入场所ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="货位号" prop="storeCode">
         <el-input
           v-model="queryParams.storeCode"
@@ -158,22 +151,21 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="outstore_notice_detailList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="货位号" align="center" prop="id" />
-      <el-table-column label="货位号" align="center" prop="remark" />
-      <el-table-column label="净重" align="center" prop="bagNetWeight" />
-      <el-table-column label="袋号" align="center" prop="bagNumber" />
-      <el-table-column label="毛重" align="center" prop="bagRoughWeight" />
-      <el-table-column label="袋封号" align="center" prop="bagSealNo" />
-      <el-table-column label="批次号" align="center" prop="batchNo" />
-      <el-table-column label="品名" align="center" prop="goodsName" />
-      <el-table-column label="是否已加工,0未加工，1已加工" align="center" prop="hasProcess" />
-      <el-table-column label="入库通知单号" align="center" prop="outstoreNoticeNo" />
-      <el-table-column label="包装单位" align="center" prop="packingUnit" />
-      <el-table-column label="场所ID" align="center" prop="placeId" />
-      <el-table-column label="货位号" align="center" prop="storeCode" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+    <el-table v-loading="loading" :data="outstore_notice_detailList">
+      <af-table-column label="出库通知单号" align="center" prop="outstoreNoticeNo"/>
+      <af-table-column label="货位号" align="center" prop="storeCode" />
+      <!--<af-table-column label="货位号" align="center" prop="id" />-->
+      <!--<af-table-column label="货位号" align="center" prop="remark" />-->
+      <af-table-column label="批次号" align="center" prop="batchNo" />
+      <af-table-column label="品名" align="center" prop="goodsName" />
+      <af-table-column label="袋封号" align="center" prop="bagSealNo" />
+      <af-table-column label="袋号" align="center" prop="bagNumber" />
+      <af-table-column label="净重" align="center" prop="bagNetWeight" />
+      <af-table-column label="毛重" align="center" prop="bagRoughWeight" />
+      <af-table-column label="包装单位" align="center" prop="packingUnit" />
+      <af-table-column label="是否已加工" align="center" prop="hasProcess" />
+      <!--<af-table-column label="场所ID" align="center" prop="placeId" />-->
+      <!--<af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -190,7 +182,7 @@
             v-hasPermi="['tax:outstore_notice_detail:remove']"
           >删除</el-button>
         </template>
-      </el-table-column>
+      </af-table-column>-->
     </el-table>
     
     <pagination
@@ -323,6 +315,19 @@ export default {
     };
   },
   created() {
+
+	  let queryPlaceId = this.$route.query.placeId
+	  let queryNoticeNo = this.$route.query.noticeNo
+
+	  // 参数不为空，并非参数在用户权限范围内
+	  if (typeof (queryPlaceId) != 'undefined' && this.depts.findIndex((v) => {
+		  return v.deptId === queryPlaceId
+	  }) !== -1) {
+		  this.queryParams.placeId = queryPlaceId
+	  }
+	  if (typeof (queryNoticeNo) != 'undefined') {
+		  this.queryParams.outstoreNoticeNo = queryNoticeNo
+	  }
 	  this.depts = getUserDepts('1')
 	  if (this.depts.length > 0) {
 		  this.queryParams.placeId = this.depts[0].deptId

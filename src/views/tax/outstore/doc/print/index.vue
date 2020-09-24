@@ -12,7 +12,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="入库通知单号" prop="instoreNoticeNo">
+      <el-form-item label="出库通知单" prop="instoreNoticeNo">
         <el-input
           v-model="queryParams.outstoreNoticeNo" label-width="100px" :disabled="true"
           placeholder="请输入出库通知单号"
@@ -36,86 +36,201 @@
       </el-col>
     
     </el-row>
-    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1650px;padding-left: 5px ;padding-top:50px"
+    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1650px;padding-left: 5px ;padding-top:40px"
          id="dayin">
-      <el-row :gutter="10" style="font-size:30px;">
-        <el-col :span="2"> &nbsp;</el-col>
-        <el-col :span="5">出库通知单</el-col>
-        <el-col :span="2">GR</el-col>
-        <el-col :span="5">{{instoreNotice.outNoticeNo}}</el-col>
+      
+      <el-row :gutter="10" style="margin-bottom: 20px">
+        <el-col :span="14" style="text-align: center;font-size: 22px">
+          OUTBOUND SHEET <br/>出库单
+        </el-col>
       </el-row>
-      <el-row :gutter="10" style="padding-top: 20px;">
-        <el-col :span="2">日期:</el-col>
-        <el-col :span="5" style="font-size:30px;">{{instoreNotice.genTime}}</el-col>
-        <el-col :span="2">业务编号:</el-col>
-        <el-col :span="5">{{instoreNotice.businessNo}}</el-col>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="7" class="font14">
+          Carrier Information 承运人信息
+        </el-col>
+        <el-col :span="7" class="font14">
+          Buyer Information 客户信息
+        </el-col>
       </el-row>
-      <el-row :gutter="10" id="test" style="padding-top: 20px;">
-        <el-col :span="2">客户:</el-col>
-        <el-col :span="4">{{instoreNotice.checkConsumer}}</el-col>
-        <el-col :span="2">车牌号:</el-col>
-        <el-col :span="4">{{instoreNotice.vehicleNo}}</el-col>
-        <el-col :span="2">卸车日期:</el-col>
-        <el-col :span="4"></el-col>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="3" class="font14">
+          Driver ID 司机证件号:
+        </el-col>
+        <el-col :span="4" class="font14">
+         {{instoreNotice.driverIdCard}}
+        </el-col>
+        <el-col :span="7"class="font14">
+          {{instoreNotice.receiveName}}
+        </el-col>
       </el-row>
-      <el-row :gutter="10" style="padding-top: 10px;">
-        <el-col :span="2">&nbsp;</el-col>
-        <el-col :span="4">&nbsp;</el-col>
-        <el-col :span="2">&nbsp;</el-col>
-        <el-col :span="4">&nbsp;</el-col>
-        <el-col :span="2">开始时间:</el-col>
-        <el-col :span="4"></el-col>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="4" class="font14">
+          Pickup vehicle no. 提货车头号
+        </el-col>
+        <el-col :span="3" class="font14">
+          {{instoreNotice.primeMoverNo}}
+        </el-col>
+        <el-col :span="7" class="font14">
+          销售订单号
+        </el-col>
       </el-row>
-      <el-row :gutter="10" style="padding-top: 10px;padding-bottom:10px ;">
-        <el-col :span="2">批次:</el-col>
-        <el-col :span="4">{{instoreNotice.batchNo}}</el-col>
-        <el-col :span="2">司机名:</el-col>
-        <el-col :span="4">{{instoreNotice.driverName}}</el-col>
-        <el-col :span="2">完成日期:</el-col>
-        <el-col :span="4"></el-col>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="4" class="font14">
+          Pickup trailer no. 拖车登记号
+        </el-col>
+        <el-col :span="3" class="font14">
+          {{instoreNotice.trailerNo}}
+        </el-col>
+        <el-col :span="7" class="font14">
+          {{instoreNotice.soNo}} 待修复
+        </el-col>
+      </el-row>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="4" class="font14">
+          Product 产品:
+        </el-col>
+        <el-col :span="3" class="font14">
+          {{instoreNotice.detailList[0].goodsName}}
+        </el-col>
+        <el-col :span="7" class="font14">
+          Jinhang outbound ref no. 金航出库单号
+        </el-col>
+      </el-row>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="4" class="font14">
+          Producer 生产商:
+        </el-col>
+        <el-col :span="3" class="font14">
+          <!--{{instoreNotice.checkConsumer}}-->Oyu Tolgoi LLC
+        </el-col>
+        <el-col :span="7" class="font14">
+          {{instoreNotice.outNoticeNo}}
+        </el-col>
+      </el-row>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="4" class="font14">
+          Origin 原产地:
+        </el-col>
+        <el-col :span="3" class="font14">
+          Mongolia
+        </el-col>
+        <el-col :span="4" class="font14">
+          Pick Up Date 提货日期:
+        </el-col>
+        <el-col :span="3" class="font14">
+          {{ parseTime(instoreNotice.genTime, '{y}-{m}-{d}') }}
+        </el-col>
+      </el-row>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="4" class="font14">
+          Packing mode 包装方式:
+        </el-col>
+        <el-col :span="3" class="font14">
+          In bags
+        </el-col>
+        <el-col :span="4" class="font14">
+          Shipment No.业务编号:
+        </el-col>
+        <el-col :span="3" class="font14">
+          {{instoreNotice.businessNo}}
+        </el-col>
       </el-row>
       <el-row :gutter="10">
-        <el-col :span="15">
-          <el-table border v-loading="loading" :data="instore_notice_detailList" :span-method="arraySpanMethod"
-                    style="border: 1px solid;">
-            <el-table-column label="收货人填写" align="center">
-              <el-table-column type="index" :index="getIndex" label="序号" align="center" width="80px">
-              </el-table-column>
-              <el-table-column label="袋封号" align="center" prop="bagSealNo" width="250px"/>
-              <el-table-column label="品名" align="center" prop="goodsName" width="240px"/>
-              <el-table-column label="数量" align="center" prop="">
+        <el-col :span="14">
+          <el-table border v-loading="loading" :data="instore_notice_detailList" style="border: 1px solid;">
+              <el-table-column prop="index" type="index" :label="'No.\n序号'" align="center" width="80px" />
+              <el-table-column :label="'Date of inbound\n入库日期'" align="center" prop=""/>
+              <el-table-column :label="'Storage Location\n存储位置'" align="center" prop="storeCode"/>
+              <el-table-column :label="'Lot Number\n批次号'" align="center" prop="batchNo"/>
+             <!-- <el-table-column label="数量" align="center" prop="">
                 <template slot-scope="scope">
                   {{scope.row.remark === null?1:scope.row.remark}}
                 </template>
-              </el-table-column>
+              </el-table-column>-->
               <!--<el-table-column label="袋号" align="center" prop="bagNumber" />-->
-              <el-table-column label="包装单位" align="center" prop="packingUnit"/>
-              <el-table-column label="货位号" align="center" prop="storeCode"/>
+              <el-table-column :label="'Bag Seal Number\n货袋封条号'" align="center" prop="bagSealNo"/>
               <!--<el-table-column label="预订货位号" align="center" prop="id" />-->
-              <el-table-column label="备注" align="center" prop="fleetName">
+              <!--<el-table-column label="备注" align="center" prop="fleetName">
                 <template slot-scope="scope"></template>
-              </el-table-column>
-            </el-table-column>
+              </el-table-column>-->
           </el-table>
         </el-col>
       </el-row>
-      <el-row :gutter="10" style="margin-top: 20px; ">
-        <el-col :span="2">装卸组:</el-col>
-        <el-col :span="2">&nbsp;</el-col>
-        <el-col :span="2">机械号:</el-col>
-        <el-col :span="2">&nbsp;</el-col>
-        <el-col :span="2">机械员:</el-col>
-        <el-col :span="2">&nbsp;</el-col>
-        <el-col :span="2">理货员签字:</el-col>
-        <el-col :span="2"></el-col>
+      <el-row :gutter="10" style="padding:10px;text-align: right">
+       <el-col :span="14" class="font14">
+         <p>Total Valid Gross Weight 经以下各方确认有效总重量<span class="weight">435453</span> incl.wt of bag（含袋）</p>
+         <p>OT provided gross weight for reference ( prior to inbound ) 以上货物OT入库前提供参考重量 <span class="weight">402323</span>incl.wt of bag（含袋）</p>
+       </el-col>
       </el-row>
-      <el-row :gutter="10" style="margin-top: 20px; ">
-        <el-col :span="2">装卸人员:</el-col>
-        <el-col :span="3">&nbsp;</el-col>
-        <el-col :span="2">捆扎加固人员:</el-col>
-        <el-col :span="3">&nbsp;</el-col>
-        <el-col :span="2">嘉友司机:</el-col>
-        <el-col :span="2">&nbsp;</el-col>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="7" class="font14">
+          OT Supervisor Jinhang OT派驻金航主管
+        </el-col>
+        <el-col :span="7" class="font14">
+          Jinhang Representative 金航代表
+        </el-col>
+      </el-row>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="7" class="font14">
+          Date 日期:
+        </el-col>
+        <el-col :span="7" class="font14">
+          Date 日期:
+        </el-col>
+      </el-row>
+      <el-row :gutter="10" style="margin-bottom: 30px">
+        <el-col :span="7" class="font14">
+          Signature 签字:
+        </el-col>
+        <el-col :span="7" class="font14">
+          Signature 签字:
+        </el-col>
+      </el-row>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="7" class="font14">
+          OT Supervisor Jinhang OT派驻金航主管
+        </el-col>
+        <el-col :span="7" class="font14">
+          Jinhang Representative 金航代表
+        </el-col>
+      </el-row>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="7" class="font14">
+          Date 日期:
+        </el-col>
+        <el-col :span="7" class="font14">
+          Date 日期:
+        </el-col>
+      </el-row>
+      <el-row :gutter="10" style="margin-bottom: 30px">
+        <el-col :span="7" class="font14">
+          Signature 签字:
+        </el-col>
+        <el-col :span="7" class="font14">
+          Signature 签字:
+        </el-col>
+      </el-row>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="7" class="font14">
+          Receiving Smelter收货冶炼厂 ( Only for Traders仅适用贸易商 )
+        </el-col>
+        <el-col :span="7" class="font14">
+          Jinhang Representative 金航代表
+        </el-col>
+      </el-row>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="4" class="font14">
+          Delivery Date 送达日期:
+        </el-col>
+        <el-col :span="3" class="font14">
+          {{ parseTime(instoreNotice.genTime, '{y}-{m}-{d}') }}
+        </el-col>
+      </el-row>
+      <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="7" class="font14">
+          Signature 签字:
+        </el-col>
+        
       </el-row>
     </div>
   </div>
@@ -131,7 +246,7 @@
 	import {getUserDepts} from '@/utils/charutils'
 	import {updateDocNotice} from '@/api/tax/instore_notice'
 	import {getOutstore_notice_with_details} from '@/api/tax/outstore_notice'
-
+	import {getStoreUsable} from '@/api/tax/store'
 	export default {
 		name: "Outstore_notice_print",
 		data() {
@@ -217,13 +332,13 @@
 							packingUnit: ""
 
 						}
-						let row22 = {
+						/*let row22 = {
 							bagSealNo: "",
 							bookStoreCode: "",
 							goodsName: "",
 							batchNo: "备注",
 							packingUnit: ""
-						}
+						}*/
 						/*let row23 = {
 							bagSealNo: "",
 							bookStoreCode: "",
@@ -232,8 +347,8 @@
 							packingUnit: ""
 
 						}*/
-						this.instore_notice_detailList.push(row17)
-						this.instore_notice_detailList.push(row22)
+						//this.instore_notice_detailList.push(row17)
+						//this.instore_notice_detailList.push(row22)
 						//this.instore_notice_detailList.push(row23)
 						//this.total = response.data.detailList.length;
 						this.loading = false;
@@ -371,14 +486,30 @@
 	};
 </script>
 
-<style scoped media="dayin">
-  
+<style scoped>
   @page {
     size: auto A4 landscape;
     margin-left: 1.5cm;
     margin-bottom: 3mm;
     margin-top: 8mm;
     margin-right: 20px;
+  }
+  .font14{
+    font-size: 16px;
+  }
+  
+  .elTable td{
+    padding: 1px !important;
+  }
+  .elTable th{
+    padding: 1px 10px !important;
+  }
+  .el-table .cell{
+    /*text-align: center;*/
+    white-space: pre-line;/*保留换行符*/
+  }
+  .weight{
+    width:120px;padding:2px 15px;border-bottom: #1e1e1e 1px solid
   }
 
 </style>

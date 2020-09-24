@@ -28,24 +28,25 @@
           type="info"
           icon="fa fa-print"
           size="mini"
-		  v-print="'#dayin'"
+          v-print="'#dayin'"
           @click="print"
           v-hasPermi="['tax:instore_notice:print']"
         >打印
         </el-button>
       </el-col>
-	  
+    
     </el-row>
-    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1650px;padding-left: 5px ;padding-top:50px"  id="dayin" >
-		 
+    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1650px;padding-left: 5px ;padding-top:50px"
+         id="dayin">
+      
       <el-row :gutter="10" style="font-size:30px;">
         <el-col :span="2"> &nbsp;</el-col>
-        <el-col :span="5" >入库通知单</el-col>
-        <el-col :span="2" >GR</el-col>
+        <el-col :span="5">入库通知单</el-col>
+        <el-col :span="2">GR</el-col>
         <el-col :span="5">{{instoreNotice.inNoticeNo}}</el-col>
       </el-row>
       <el-row :gutter="10" style="padding-top: 20px;">
-        <el-col :span="2"  >日期:</el-col>
+        <el-col :span="2">日期:</el-col>
         <el-col :span="5" style="font-size:30px;">{{instoreNotice.genTime}}</el-col>
         <el-col :span="2">业务编号:</el-col>
         <el-col :span="5">{{instoreNotice.businessNo}}</el-col>
@@ -76,7 +77,8 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="15">
-          <el-table border v-loading="loading" :data="instore_notice_detailList" :span-method="arraySpanMethod" style="border: 1px solid;">
+          <el-table border v-loading="loading" :data="instore_notice_detailList" :span-method="arraySpanMethod"
+                    style="border: 1px solid;">
             <el-table-column label="收货人填写" align="center">
               <el-table-column type="index" :index="getIndex" label="序号" align="center" width="80px">
               </el-table-column>
@@ -124,7 +126,7 @@
 		updateInstore_notice_detail
 	} from "@/api/tax/instore_notice_detail";
 	import {getUserDepts} from '@/utils/charutils'
-	import {getInstore_notice_with_details} from '@/api/tax/instore_notice'
+	import {getInstore_notice_with_details, updateDocNotice} from '@/api/tax/instore_notice'
 
 	export default {
 		name: "Instore_notice_print",
@@ -227,7 +229,7 @@
 					}
 				});
 			},
-      //合并单元格
+			//合并单元格
 			arraySpanMethod({row, column, rowIndex, columnIndex}) {
 				if ((rowIndex === 21 || rowIndex === 22) && columnIndex === 1) {
 					return {
@@ -275,9 +277,10 @@
 				this.getList();
 			},
 
-			print(){
-				 
-
+			print() {
+				if (this.instoreNotice.printTime == null) {
+					updateDocNotice(this.instoreNotice.placeId, this.instoreNotice.inNoticeNo, 'innotice', 'print')
+				}
 			},
 			/** 重置按钮操作 */
 			resetQuery() {
@@ -357,13 +360,13 @@
 </script>
 
 <style scoped>
-
-@page{
-        size: auto A4 landscape;
-		margin-left: 1.5cm;
-		margin-bottom: 3mm;
-		margin-top: 8mm;
-		margin-right: 20px;		
-    }
+  
+  @page {
+    size: auto A4 landscape;
+    margin-left: 1.5cm;
+    margin-bottom: 3mm;
+    margin-top: 8mm;
+    margin-right: 20px;
+  }
 
 </style>

@@ -67,15 +67,38 @@ export function getInstore_notice_with_details(placeId, noticeNo) {
  */
 ///doc/{placeId}/{direction}/{noticeNo}/{storeCode}
 export function getNoticeByVehicle(placeId, direction, vehicleNo) {
+	let data = {
+		'placeId': placeId,
+		'direction': direction,
+		'vehicleNo': vehicleNo,
+	}
 	return request({
-		url: '/tax/notice/' + placeId + '/' + direction + '/' + vehicleNo,
-		method: 'get'
+		url: '/tax/notice/getNoticeInfo',
+		method: 'post',
+		data: data
+	})
+}
+//生成出库通知单
+export function genStoreDoc(placeId, direction, noticeNo, storeCode, weight) {
+	let data = {
+		'placeId': placeId,
+		'direction': direction,
+		'noticeNo': noticeNo,
+		'storeCode': storeCode,
+		'weight': weight
+	}
+	return request({
+		url: '/tax/notice/doc',
+		method: 'post',
+		data: data
 	})
 }
 
-export function genStoreDoc(placeId, direction, noticeNo,storeCode) {
+//更新通知单状态
+export function updateDocNotice(placeId, noticeNo, type, state) {
 	return request({
-		url: '/tax/notice/doc/'+placeId+'/'+direction+'/'+noticeNo+'/'+storeCode,
+		url: '/tax/notice/update/' + placeId + '/' + noticeNo + '/' + type + '/' + state,
 		method: 'post'
 	})
 }
+
