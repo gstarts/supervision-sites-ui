@@ -62,7 +62,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            
+
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="收货单位" prop="receivingUnit">
@@ -80,7 +80,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            
+
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="货物名称" prop="goodsName">
@@ -93,7 +93,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            
+
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="规格型号" prop="specification">
@@ -106,7 +106,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            
+
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="备注" prop="remark">
@@ -193,63 +193,63 @@
     </el-row>
     <el-card>
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="进场记录" name="Approach">
+        <el-tab-pane label="进场记录" name="Approach" >
           <el-table
-            class="mb20"
-            ref="ApproachList"
-            :data="ApproachList"
-            v-loading="loading"
-            tooltip-effect="dark"
-            style="width: 100%"
-            @row-dblclick="dbRow"
-          >
-            <el-table-column type="selection" width="55" align="center"/>
-            <el-table-column label="车号" align="center" prop="plateNum"/>
-            <el-table-column label="毛重" align="center" prop="grossWeight"/>
-            <el-table-column label="皮重" align="center" prop="tare"/>
-            <el-table-column label="净重" align="center" prop="netWeight"/>
-            <el-table-column label="库位号" align="center" prop="locationNumber"/>
-            <el-table-column label="发货单位" align="center" prop="deliveryUnit"/>
-            <el-table-column label="收货单位" align="center" prop="receivingUnit"/>
-            <el-table-column label="货物名称" align="center" prop="goodsName"/>
-            <el-table-column label="规格型号" align="center" prop="specification"/>
-          </el-table>
-          <pagination
-            v-show="total>0"
-            :total="total"
-            :page.sync="queryParams.pageNum"
-            :limit.sync="queryParams.pageSize"
-            @pagination="getListI"
-          />
+        class="mb20"
+        ref="ApproachList"
+        :data="ApproachList"
+        v-loading="loading"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @row-dblclick="dbRow"
+      >
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="车号" align="center" prop="plateNum" />
+        <el-table-column label="毛重" align="center" prop="grossWeight" />
+        <el-table-column label="皮重" align="center" prop="tare" />
+        <el-table-column label="净重" align="center" prop="netWeight" />
+        <el-table-column label="库位号" align="center" prop="locationNumber" />
+        <el-table-column label="发货单位" align="center" prop="deliveryUnit" />
+        <el-table-column label="收货单位" align="center" prop="receivingUnit" />
+        <el-table-column label="货物名称" align="center" prop="goodsName" />
+        <el-table-column label="规格型号" align="center" prop="specification" />
+      </el-table>
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getListI"
+      />
         </el-tab-pane>
         <el-tab-pane label="已完成" name="end">
-          <el-table
-            class="mb20"
-            ref="sheetList"
-            :data="sheetList"
-            v-loading="loading"
-            tooltip-effect="dark"
-            style="width: 100%"
-            @row-dblclick="dbRow"
-          >
-            <el-table-column type="selection" width="55" align="center"/>
-            <el-table-column label="车号" align="center" prop="plateNum"/>
-            <el-table-column label="毛重" align="center" prop="grossWeight"/>
-            <el-table-column label="皮重" align="center" prop="tare"/>
-            <el-table-column label="净重" align="center" prop="netWeight"/>
-            <el-table-column label="库位号" align="center" prop="locationNumber"/>
-            <el-table-column label="发货单位" align="center" prop="deliveryUnit"/>
-            <el-table-column label="收货单位" align="center" prop="receivingUnit"/>
-            <el-table-column label="货物名称" align="center" prop="goodsName"/>
-            <el-table-column label="规格型号" align="center" prop="specification"/>
-          </el-table>
-          <pagination
-            v-show="total>0"
-            :total="total"
-            :page.sync="queryParams.pageNum"
-            :limit.sync="queryParams.pageSize"
-            @pagination="getListE"
-          />
+      <el-table
+        class="mb20"
+        ref="sheetList"
+        :data="sheetList"
+        v-loading="loading"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @row-dblclick="dbRow"
+      >
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="车号" align="center" prop="plateNum" />
+        <el-table-column label="毛重" align="center" prop="grossWeight" />
+        <el-table-column label="皮重" align="center" prop="tare" />
+        <el-table-column label="净重" align="center" prop="netWeight" />
+        <el-table-column label="库位号" align="center" prop="locationNumber" />
+        <el-table-column label="发货单位" align="center" prop="deliveryUnit" />
+        <el-table-column label="收货单位" align="center" prop="receivingUnit" />
+        <el-table-column label="货物名称" align="center" prop="goodsName" />
+        <el-table-column label="规格型号" align="center" prop="specification" />
+      </el-table>
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getListE"
+      />
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -269,7 +269,7 @@
       <div id="area-right-style">
         <span>{{form.plateNum}}</span>
       </div>
-      <br/>
+      <br />
       <div id="area-style">
         <span class="area-in-style">{{form.receivingUnit}}</span>
       </div>
@@ -281,24 +281,432 @@
       </div>
       <div id="area-right-style">
         <span>{{form.tare}}</span>
-        <br/>
+        <br />
       </div>
       <div id="area-style">
         <span class="area-in-style">{{form.specification}}</span>
       </div>
       <div id="area-right-style">
         <span>{{form.netWeight}}</span>
-        <br/>
+        <br />
       </div>
       <div id="area-all-style">
         <span class="area-in-style">{{form.remark}}</span>
-        <br/>
+        <br />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {
+  addSheet,
+  updateSheet,
+  getSheet,
+  listSheet,
+} from "@/api/pound/poundlist";
+import { listVehicleNoList } from "@/api/system/vehicle_info";
+import { genTimeCode } from "@/utils/common";
+//获取实时重量
+import { poundSelect } from "@/api/pound/poundlist";
+import { listChnlConfig } from "@/api/basis/chnlConfig";
+import { getUserDepts } from "@/utils/charutils";
+import { getNoticeByVehicle } from "@/api/tax/instore_notice";
+export default {
+  name: "Client",
+  data() {
+    return {
+      //标签页
+      activeName:'Approach',
+      //稳定标识
+      isStable: undefined,
+      //地磅返回重量
+      Poundweight: 0,
+      // 遮罩层
+      loading: true,
+      // 选中数组
+      ids: [],
+      // 通道配置表格数据
+      chnlConfigList: [],
+      //出场完结List统计列表
+      sheetList: [],
+      //进场数据List
+      ApproachList:[],
+      //隐藏域
+      Explicit: false,
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      timer1: "",
+      // 总条数
+      total: 0,
+      nowData: "",
+      nowTime: "",
+      // 终端表格数据
+      clientList: [],
+      poundTotal: "",
+      // 流向
+      flowDirectionOptions: [],
+      //过卡车辆类型
+      stationViaTypeOptions: [],
+      //车牌号集合
+      plateNumOptions: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        clientId: undefined,
+        stationId: undefined,
+        flowDirection:undefined,
+      },
+      // 是否新增
+      isAdd: false,
+      // 地磅数据
+      form: {
+        //车号
+        plateNum: undefined,
+        //皮重
+        tare: undefined,
+        //毛重
+        grossWeight: undefined,
+        //净重
+        netWeight: undefined,
+        //库位号
+        locationNumber: undefined,
+        //发货单位
+        deliveryUnit: undefined,
+        //收货单位
+        receivingUnit: undefined,
+        //货物名称
+        goodsName: undefined,
+        //规格型号
+        specification: undefined,
+        //备注
+        remark: undefined,
+        //通道号 (新增时 通过通道配置赋值)
+        channelNumber: undefined,
+        //更新时间
+        updateTime: undefined,
+        //流向 (新增时 通过通道配置赋值)
+        flowDirection: undefined,
+         //单号 (新增时 赋值)
+        noticeNo:undefined,
+        //场站ID
+        stationId: undefined,
+        //出库/入库 标识  进 1  出0
+        direction: undefined,
+      },
+      //通道配置
+      PoundForm: {
+        //流向
+        flowDirection: undefined,
+        //通道号
+        channelNumber: undefined,
+        //过卡车辆类型
+        stationViaType: undefined,
+      },
+      // 重量类型效验
+      rules: {
+        grossWeight: [{ type: "number", message: "请输入数字" }],
+        tare: [{ type: "number", message: "请输入数字" }],
+        netWeight: [{ type: "number", message: "请输入数字" }],
+        plateNum: [{ required: true, message: "不可为空", trigger: "blur" }],
+      },
+      ruless: {
+        flowDirection: [{ required: true, message: "请输入", trigger: "blur" }],
+      },
+    };
+  },
+  created() {
+    //车牌号
+    listVehicleNoList(104).then((response) => {
+      this.plateNumOptions = response.data;
+    });
+    //过卡车辆类型
+    this.getDicts("station_via_type").then((response) => {
+      this.stationViaTypeOptions = response.data;
+    });
+    /**流向  */
+    this.getDicts("station_IO_flag").then((response) => {
+      this.flowDirectionOptions = response.data;
+    });
+    // 0 监管场所，1保税库，2堆场，3企业
+    this.depts = getUserDepts("1");
+    if (this.depts.length > 0) {
+      this.queryParams.stationId = this.depts[0].deptId;
+      this.created();
+    }
+    //进场记录
+    this.getListI();
+  },
+  methods: {
+    handleClick(tab, event){
+    this.getListE();
+    },
+    //车号Change
+    CarNumberChange(event) {
+      //进场 调用接口 连带数据赋值给input
+      if (this.PoundForm.flowDirection == "I") {
+        /**
+         * 通过车号查出入库通知单
+         * @param this.queryParams.stationId  场所ID
+         * @param this.direction 方向 1 入库通知单 0 出库通知单
+         * @param event  车牌号
+         */
+        //通过车辆类型判断 是入库还是出库
+        if (this.PoundForm.stationViaType == "01") {
+          this.direction = "1";
+        } else if (this.PoundForm.stationViaType == "02") {
+          this.direction = "0";
+        } else {
+          this.msgError("车辆类型不可为空或选择不正确");
+          this.form.plateNum = undefined;
+        }
+        if ( this.PoundForm.stationViaType == "01" || this.PoundForm.stationViaType == "02" ) {
+          getNoticeByVehicle( this.queryParams.stationId, this.direction, event ).then((response) => {
+            if (response.code === 200) {
+              //规格型号
+              this.form.specification = response.data.businessNo;
+              //货物名称
+              this.form.goodsName = response.data.goodsName;
+              //收货单位
+              this.form.receivingUnit = response.data.receiveName;
+              //发货单位
+              this.form.deliveryUnit = response.data.sendName;
+              //单号
+              this.noticeNo =response.data.inNoticeNo;
+            } else {
+              this.msgError(response.msg);
+            }
+          });
+        }
+        //出场 调用自己的接口 查询数据库里的数据赋值给input。
+      } else if (this.PoundForm.flowDirection == "E") {
+        //调用后台查询API 通过选择的车号反添数据
+        getSheet(event).then((response) => {
+          if (response.code === 200) {
+            this.form = response.data;
+          } else {
+            this.msgError(response.msg);
+          }
+        });
+      } else {
+        this.msgError("请先选择流向");
+        this.form.plateNum = undefined;
+      }
+    },
+    //初始化页面 查询出场记录
+    getListE() {
+      this.loading = true;
+      this.queryParams.flowDirection="E";
+      listSheet(this.queryParams).then((response) => {
+        this.sheetList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    //初始化页面 查询进场纪录
+    getListI() {
+      this.loading = true;
+      this.queryParams.flowDirection="I";
+      listSheet(this.queryParams).then((response) => {
+        this.ApproachList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    //双击列表赋值form表单
+    dbRow(row, column) {
+      this.form = row;
+    },
+    // 打印按钮
+    headHandleAdd() {
+      this.reset();
+    },
+    /** 查询通道配置列表 */
+    created() {
+      listChnlConfig(this.queryParams).then((response) => {
+        this.chnlConfigList = response.rows;
+        this.total = response.total;
+      });
+    },
+    //选择通道号定时反添重量方法
+    ChannelNumberChange(event) {
+      clearInterval(this.ChannelNumberTimer);
+      this.ChannelNumberTimer = setInterval(() => {
+        poundSelect(event).then((response) => {
+          this.Poundweight = response.data.weight;
+          this.isStable = response.data.isStable;
+        });
+      }, 1000);
+      //离开当前页面定时器停止
+      this.$once("hook:beforeDestroy", () => {
+        clearInterval(this.ChannelNumberTimer);
+      });
+    },
+    /** 暂存按钮 */
+    AllADD() {
+      //通道号赋值
+      this.form.channelNumber = this.PoundForm.channelNumber;
+      //场站ID赋值
+      this.form.stationId = this.queryParams.stationId;
+      this.form.updateTime = genTimeCode(new Date(), "YYYY-MM-DD HH:mm:ss");
+      this.$refs["form"].validate((valid) => {
+        if (valid) {
+          if (this.PoundForm.flowDirection == "I") {
+            this.form.flowDirection = this.PoundForm.flowDirection;
+            this.form.noticeNo=this.noticeNo;
+            //进场 新增
+            addSheet(this.form).then((response) => {
+              if (response.code === 200) {
+                this.msgSuccess("进场成功");
+                this.reset();
+                this.getListI();
+              } else {
+                this.msgError(response.msg);
+              }
+            });
+          } else if (this.PoundForm.flowDirection == "E") {
+            this.form.flowDirection = this.PoundForm.flowDirection;
+            this.form.noticeNo=this.noticeNo;
+            //出场修改按钮
+            updateSheet(this.form).then((response) => {
+              if (response.code === 200) {
+                this.msgSuccess("出场成功");
+                this.reset();
+                this.getListI();
+              } else {
+                this.msgError(response.msg);
+              }
+            });
+          }
+        }
+      });
+    },
+    // 生成按钮
+    generateAdd() {
+      //进场
+      if (this.isStable == "1") {
+        if (this.PoundForm.flowDirection == "I") {
+          //重进空出 进场
+          if ( this.PoundForm.stationViaType == "01" || this.PoundForm.stationViaType == "02" ) {
+            //通过车辆类型 赋值毛重或皮重
+            this.PoundForm.stationViaType == "01" ? (this.form.grossWeight = this.Poundweight) : (this.form.tare = this.Poundweight);
+          } else {
+            this.msgError("车辆类型不可为空或选择错误,请检查");
+          }
+          //出场
+        } else if (this.PoundForm.flowDirection == "E") {
+          //重进空出 出场
+          if (this.PoundForm.stationViaType == "01") {
+            //皮重
+            this.form.tare = this.Poundweight;
+            //判断出场时毛重是否未填写
+            if (this.form.grossWeight >= 0) {
+              //计算净重
+              this.form.netWeight = this.form.grossWeight - this.form.tare;
+            } else {
+              this.msgError("净重计算失败,毛重不可为空");
+            }
+            //空进重出 出场
+          } else if (this.PoundForm.stationViaType == "02") {
+            //毛重
+            this.form.grossWeight = this.Poundweight;
+            //判断出场时皮重是否未填写
+            if (this.form.tare >= 0) {
+              //计算净重
+              this.form.netWeight = this.form.grossWeight - this.form.tare;
+            } else {
+              this.msgError("净重计算失败,皮重不可为空");
+            }
+          } else {
+            this.msgError("车辆类型不可为空或选择错误,请检查");
+          }
+        } else {
+          this.msgError("流向不可为空,请选择");
+        }
+      } else {
+        this.msgError("地磅数值未稳定,请稍候....");
+      }
+    },
+    // 清空按钮
+    cancel() {
+      this.reset();
+    },
+    //打印功能
+    print() {
+      this.print1();
+      clearTimeout(this.timer1);
+      //清除延迟执行
+      this.timer1 = setTimeout(() => {
+        //设置延迟执行
+        //this.reset();
+        this.Explicit = false;
+        this.nowData = "";
+        this.nowTime = "";
+        this.poundTotal = "";
+      }, 2000);
+    },
+    endCallback() {},
+    print1() {
+      this.Explicit = true;
+      var aData = new Date();
+      this.nowData =
+        aData.getFullYear() +
+        "-" +
+        (aData.getMonth() + 1) +
+        "-" +
+        aData.getDate();
+      this.nowTime =
+        aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
+      this.poundTotal = "铜精粉磅单";
+    },
+    //销毁前清除定时器
+    beforeDestroy() {
+      clearInterval(this.timer1);
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        //车号
+        plateNum: undefined,
+        //皮重
+        tare: undefined,
+        //毛重
+        grossWeight: undefined,
+        //净重
+        netWeight: undefined,
+        //库位号
+        locationNumber: undefined,
+        //发货单位
+        deliveryUnit: undefined,
+        //收货单位
+        receivingUnit: undefined,
+        //货物名称
+        goodsName: undefined,
+        //规格型号
+        specification: undefined,
+        //备注
+        remark: undefined,
+        //通道号 (新增时 通过通道配置赋值)
+        channelNumber: undefined,
+        //更新时间
+        updateTime: undefined,
+        //流向 (新增时 通过通道配置赋值)
+        flowDirection: undefined,
+        //场站ID
+        stationId: undefined,
+        //出库/入库 标识  进 1  出0
+        direction: undefined,
+      };
+    },
+  },
+};
 	import {
 		addSheet,
 		updateSheet,
@@ -821,4 +1229,4 @@
     font-size: 20px;
     padding-left: 280px;
   }
-</style>px
+</style>
