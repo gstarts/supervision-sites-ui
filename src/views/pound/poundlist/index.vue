@@ -169,6 +169,37 @@
       </el-col>
     </el-row>
     <el-card>
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="进场记录" name="Approach" >
+          <el-table
+        class="mb20"
+        ref="ApproachList"
+        :data="ApproachList"
+        v-loading="loading"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @row-dblclick="dbRow"
+      >
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="车号" align="center" prop="plateNum" />
+        <el-table-column label="毛重" align="center" prop="grossWeight" />
+        <el-table-column label="皮重" align="center" prop="tare" />
+        <el-table-column label="净重" align="center" prop="netWeight" />
+        <el-table-column label="库位号" align="center" prop="locationNumber" />
+        <el-table-column label="发货单位" align="center" prop="deliveryUnit" />
+        <el-table-column label="收货单位" align="center" prop="receivingUnit" />
+        <el-table-column label="货物名称" align="center" prop="goodsName" />
+        <el-table-column label="规格型号" align="center" prop="specification" />
+      </el-table>
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getListI"
+      />
+        </el-tab-pane>
+        <el-tab-pane label="已完成" name="end">
       <el-table
         class="mb20"
         ref="sheetList"
@@ -188,26 +219,16 @@
         <el-table-column label="收货单位" align="center" prop="receivingUnit" />
         <el-table-column label="货物名称" align="center" prop="goodsName" />
         <el-table-column label="规格型号" align="center" prop="specification" />
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-edit"
-              @click="handleUpdate(scope.row)"
-              v-hasPermi="['measurement:sheet:edit']"
-            >修改</el-button>
-            <el-button size="mini" type="text" icon="el-icon-edit" @click="preview(scope.row)">预览</el-button>
-          </template>
-        </el-table-column>
       </el-table>
       <pagination
         v-show="total>0"
         :total="total"
         :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"
-        @pagination="getList"
+        @pagination="getListE"
       />
+        </el-tab-pane>
+      </el-tabs>
     </el-card>
     <div id="dayin" v-show="Explicit ">
       <div style="align-content: center;">
@@ -272,6 +293,8 @@ export default {
   name: "Client",
   data() {
     return {
+      //标签页
+      activeName:'Approach',
       //稳定标识
       isStable: undefined,
       //地磅返回重量
@@ -282,8 +305,10 @@ export default {
       ids: [],
       // 通道配置表格数据
       chnlConfigList: [],
-      //List统计列表
+      //出场完结List统计列表
       sheetList: [],
+      //进场数据List
+      ApproachList:[],
       //隐藏域
       Explicit: false,
       // 非单个禁用
@@ -314,6 +339,7 @@ export default {
         pageSize: 10,
         clientId: undefined,
         stationId: undefined,
+        flowDirection:undefined,
       },
       // 是否新增
       isAdd: false,
@@ -390,9 +416,13 @@ export default {
       this.queryParams.stationId = this.depts[0].deptId;
       this.created();
     }
-    this.getList();
+    //进场记录
+    this.getListI();
   },
   methods: {
+    handleClick(tab, event){
+    this.getListE();
+    },
     //车号Change
     CarNumberChange(event) {
       //进场 调用接口 连带数据赋值给input
@@ -444,10 +474,21 @@ export default {
       }
     },
     //初始化页面 查询出场记录
-    getList() {
+    getListE() {
       this.loading = true;
+      this.queryParams.flowDirection="E";
       listSheet(this.queryParams).then((response) => {
         this.sheetList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    //初始化页面 查询进场纪录
+    getListI() {
+      this.loading = true;
+      this.queryParams.flowDirection="I";
+      listSheet(this.queryParams).then((response) => {
+        this.ApproachList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -497,7 +538,7 @@ export default {
               if (response.code === 200) {
                 this.msgSuccess("进场成功");
                 this.reset();
-                this.getList();
+                this.getListE();
               } else {
                 this.msgError(response.msg);
               }
@@ -509,7 +550,7 @@ export default {
               if (response.code === 200) {
                 this.msgSuccess("出场成功");
                 this.reset();
-                this.getList();
+                this.getListE();
               } else {
                 this.msgError(response.msg);
               }
