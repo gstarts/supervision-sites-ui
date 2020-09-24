@@ -371,6 +371,8 @@ export default {
         updateTime: undefined,
         //流向 (新增时 通过通道配置赋值)
         flowDirection: undefined,
+         //单号 (新增时 赋值)
+        noticeNo:undefined,
         //场站ID
         stationId: undefined,
         //出库/入库 标识  进 1  出0
@@ -453,6 +455,8 @@ export default {
               this.form.receivingUnit = response.data.receiveName;
               //发货单位
               this.form.deliveryUnit = response.data.sendName;
+              //单号
+              this.noticeNo =response.data.inNoticeNo;
             } else {
               this.msgError(response.msg);
             }
@@ -533,24 +537,26 @@ export default {
         if (valid) {
           if (this.PoundForm.flowDirection == "I") {
             this.form.flowDirection = this.PoundForm.flowDirection;
+            this.form.noticeNo=this.noticeNo;
             //进场 新增
             addSheet(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("进场成功");
                 this.reset();
-                this.getListE();
+                this.getListI();
               } else {
                 this.msgError(response.msg);
               }
             });
           } else if (this.PoundForm.flowDirection == "E") {
             this.form.flowDirection = this.PoundForm.flowDirection;
+            this.form.noticeNo=this.noticeNo;
             //出场修改按钮
             updateSheet(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("出场成功");
                 this.reset();
-                this.getListE();
+                this.getListI();
               } else {
                 this.msgError(response.msg);
               }
