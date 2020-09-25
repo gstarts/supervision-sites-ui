@@ -322,7 +322,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="金额类型	" prop="currencyType">
-              <el-select v-model="waybill.currencyType" filterable multiple collapse-tags placeholder="金额类型">
+              <el-select v-model="waybill.currencyType" placeholder="金额类型">
                 <el-option
                   v-for="item in currencySystem"
                   :key="item.dictValue"
