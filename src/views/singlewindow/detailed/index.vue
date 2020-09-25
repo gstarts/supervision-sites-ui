@@ -7,7 +7,7 @@
         icon="el-icon-plus"
         size="mini"
         :disabled="btnDisable.addBtn"
-        @click="headHandleAdd"
+        @click="headHandleAdd"        
       >新增</el-button>
       <el-button
         type="success"
@@ -1875,7 +1875,7 @@ import depParaList from "./depParaList";
 import depParaList2 from "./depParaList2";
 // import noticeInfo from './noticeInfo.vue';
 
-import { add } from "@/api/detailed/head";
+import { add, getNemsinvtheadtype } from "@/api/detailed/head";
 export default {
   components: { depParaList, depParaList2 },
   data() {
@@ -1925,6 +1925,7 @@ export default {
       },
       // 查询参数
       queryParams: {
+        id: "16",
         seqNo: undefined,
         bondInvtNo: undefined,
         invtType: undefined,
@@ -2060,6 +2061,7 @@ export default {
   mounted() {
     // 初始化
     this.init();
+    this.getList();
      /**清单类型 */
     this.getDicts("station_enterprise_type").then((response) => {
       this.invtTypeOptions = response.data;
@@ -2114,6 +2116,15 @@ export default {
     async init() {
       // await this.depParaList()
     },
+    getList() {
+      this.loading = true;
+      getNemsinvtheadtype(this.queryParams.id).then(response => {
+        this.nemsInvtHeadType = response.data.nemsInvtHeadType;
+        this.nemsInvtListType = response.data.nemsInvtListType;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
     // 新增
     handleAdd() {},
     // 暂存
@@ -2140,7 +2151,7 @@ export default {
     nemsInvtHeadTypeSave:function() {    
       this.form.nemsInvtHeadType=this.nemsInvtHeadType;
       this.form.nemsInvtListType = this.nemsInvtListType;
-      // console.log(JSON.stringify(this.form));
+      console.log(JSON.stringify(this.form));
             add(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");   
