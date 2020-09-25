@@ -21,7 +21,7 @@
         </el-select>
       </el-form-item>
 
-      
+
 
       <el-form-item label="录入时间" prop="optime">
         <el-date-picker
@@ -186,7 +186,7 @@ export default {
       const data = this.router.find(el => el.messageType === row.messageType)
       return data.value
     },
-    
+
     // 报文功能翻译
     viaVehicleFormat(){
 
@@ -220,7 +220,7 @@ export default {
       const id = row.id || this.ids
       // 跳转到原始舱单页面
       const data = this.router.find(el => el.messageType === row.messageType)
-      this.$router.push({ path: '/singlewindow' + data.path })
+      this.$router.push({ path: '/singlewindow' + data.path,query: { id: id }  })
     },
  /** 申报按钮操作 */
     declare(row) {
@@ -245,6 +245,7 @@ export default {
       return this.$message('功能正在完善中...')
       const id = row.id || this.ids
       const data = this.router.find(el => el.messageType === row.messageType)
+      // 调用 某页面 的初始化方法
       this.$router.push({ path: '/singlewindow' + data.path })
     }
   }
