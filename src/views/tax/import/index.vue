@@ -642,6 +642,7 @@
 						//this.msgSuccess("上传成功");
 						this.uploading = false
 						this.open = false;
+						this.cancel()
 						this.getList();
 					} else {
 						this.uploading = false
@@ -725,10 +726,10 @@
 			},
 			templateChange() {
 				console.log(this.form.templateType)
-				if (this.form.templateType === '0' ){
+				if (this.form.templateType === '1' ){
 					this.rules = this.rules1
 					this.noticeType = true
-				} else if(this.form.templateType === '1') {
+				} else if(this.form.templateType === '0') {
 					this.rules = this.rules3
 					this.noticeType = true
 				}else{

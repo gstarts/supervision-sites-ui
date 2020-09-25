@@ -133,7 +133,10 @@
       <el-table-column label="净重" align="center" prop="bagNetWeight" />
       <el-table-column label="毛重" align="center" prop="bagRoughWeight" />
       <el-table-column label="包装单位" align="center" prop="packingUnit" />
-      <el-table-column label="是否已加工" align="center" prop="hasProcess" />
+      <el-table-column label="入库单号" align="center" prop="inDocNo" />
+      <el-table-column label="出库单号" align="center" prop="outDocNo" />
+      
+      <!--<el-table-column label="是否已加工" align="center" prop="hasProcess" />-->
       <!--<el-table-column label="场所ID" align="center" prop="placeId" />-->
       <!--<el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
