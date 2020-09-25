@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询保税库分区库位信息 列表
+// 查询库存区域列表
 export function listZone(query) {
   return request({
     url: '/tax/zone/list',
@@ -9,7 +9,7 @@ export function listZone(query) {
   })
 }
 
-// 查询保税库分区库位信息 详细
+// 查询库存区域详细
 export function getZone(id) {
   return request({
     url: '/tax/zone/' + id,
@@ -17,7 +17,7 @@ export function getZone(id) {
   })
 }
 
-// 新增保税库分区库位信息 
+// 新增库存区域
 export function addZone(data) {
   return request({
     url: '/tax/zone',
@@ -26,7 +26,7 @@ export function addZone(data) {
   })
 }
 
-// 修改保税库分区库位信息 
+// 修改库存区域
 export function updateZone(data) {
   return request({
     url: '/tax/zone',
@@ -35,7 +35,7 @@ export function updateZone(data) {
   })
 }
 
-// 删除保税库分区库位信息 
+// 删除库存区域
 export function delZone(id) {
   return request({
     url: '/tax/zone/' + id,

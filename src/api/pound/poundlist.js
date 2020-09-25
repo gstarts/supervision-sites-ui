@@ -19,7 +19,7 @@ export function analysis(query) {
 // 通过车号查询数据
 export function getSheet(event) {
   return request({
-    url: '/pound/measurement/sheet/' + event,
+    url: '/pound/measurement/sheet/inrecord?vehicleNo=' + event,
     method: 'get'
   })
 }

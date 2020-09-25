@@ -21,7 +21,16 @@
         </el-select>
       </el-form-item>
 
-      
+      <el-form-item label="单证状态" prop="statementCode">
+        <el-select v-model="queryParams.statementCode" placeholder="请选择状态">
+          <el-option
+            v-for="dict in statementCodeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
+      </el-form-item>
 
       <el-form-item label="录入时间" prop="optime">
         <el-date-picker
@@ -166,13 +175,11 @@ export default {
   methods: {
     /** 查询公路舱单列表 */
     getList() {
-      this.queryParams.statementCode="0"
       manifestList(this.addDateRange(this.queryParams, this.dateRange)).then(
         response => {
           this.manifestList = response.rows
           this.total = response.total
           this.loading = false
-      this.queryParams.statementCode=undefined
         }
       )
     },
