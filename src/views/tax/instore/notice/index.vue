@@ -424,75 +424,107 @@
     <!-- 添加或修改入库通知单对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="工组人员" prop="createBy">
-          <el-input v-model="form.createBy" placeholder="请输入工组人员"/>
+        <el-row type="flex">
+          <el-col :span="12">
+        <el-form-item label="入库通知单号" prop="inNoticeNo">
+          <el-input v-model="form.inNoticeNo" placeholder="请输入入库通知单号"/>
         </el-form-item>
-        <el-form-item label="工组人员" prop="createTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.createTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择工组人员">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="工组人员" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入工组人员"/>
-        </el-form-item>
-        <el-form-item label="工组人员" prop="updateBy">
-          <el-input v-model="form.updateBy" placeholder="请输入工组人员"/>
-        </el-form-item>
-        <el-form-item label="工组人员" prop="updateTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.updateTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择工组人员">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="批次号" prop="batchNo">
-          <el-input v-model="form.batchNo" placeholder="请输入批次号"/>
-        </el-form-item>
-        <el-form-item label="预订库位号" prop="bookStoreCode">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.bookStoreCode"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择预订库位号">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="业务编号" prop="businessNo">
+          </el-col>
+          <el-col :span="12">
+       <el-form-item label="业务编号" prop="businessNo">
           <el-input v-model="form.businessNo" placeholder="请输入业务编号"/>
         </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row type="flex">
+          <el-col :span="12">
         <el-form-item label="寄舱客户" prop="checkConsumer">
           <el-input v-model="form.checkConsumer" placeholder="请输入寄舱客户"/>
         </el-form-item>
-        <el-form-item label="寄舱合同编号" prop="contractNo">
+        </el-col>
+        <el-col :span="12">
+         <el-form-item label="寄舱合同编号" prop="contractNo">
           <el-input v-model="form.contractNo" placeholder="请输入寄舱合同编号"/>
         </el-form-item>
-        <el-form-item label="车队号" prop="convoyNo">
+        </el-col>
+        </el-row>
+
+        <el-row type="flex">
+          <el-col :span="12">
+          <el-form-item label="销售合同号" prop="saleContractNo">
+          <el-input v-model="form.saleContractNo" placeholder="请输入销售合同号"/>
+        </el-form-item>
+          </el-col>
+        <el-col :span="12">
+         <el-form-item label="批次号" prop="batchNo">
+          <el-input v-model="form.batchNo" placeholder="请输入批次号"/>
+        </el-form-item>
+        </el-col>
+        </el-row>
+
+        <el-row type="flex">
+          <el-col :span="12">
+           <el-form-item label="司机姓名" prop="driverName">
+          <el-input v-model="form.driverName" placeholder="请输入司机姓名"/>
+          </el-form-item>
+          </el-col>
+          <el-col :span="12">
+         <el-form-item label="车牌号" prop="vehicleNo">
+          <el-input v-model="form.vehicleNo" placeholder="请输入车牌号"/>
+        </el-form-item>
+        </el-col>
+        </el-row>
+
+        <el-row type="flex">
+           <el-col :span="12">
+           <el-form-item label="车板号" prop="trailerNo">
+          <el-input v-model="form.trailerNo" placeholder="请输入车板号"/>
+        </el-form-item>
+        </el-col>
+         <el-col :span="12">
+         <el-form-item label="车队号" prop="convoyNo">
           <el-input v-model="form.convoyNo" placeholder="请输入车队号"/>
         </el-form-item>
-        <el-form-item label="报关单号" prop="customsDeclarationNo">
-          <el-input v-model="form.customsDeclarationNo" placeholder="请输入报关单号"/>
-        </el-form-item>
-        <el-form-item label="提运单号" prop="deliveryNo">
-          <el-input v-model="form.deliveryNo" placeholder="请输入提运单号"/>
-        </el-form-item>
-        <el-form-item label="司机姓名" prop="driverName">
-          <el-input v-model="form.driverName" placeholder="请输入司机姓名"/>
-        </el-form-item>
-        <el-form-item label="卸车结束时间" prop="endTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.endTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择卸车结束时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="车队名称" prop="fleetName">
+        </el-col>
+         </el-row>
+
+         <el-row type="flex">
+           <el-col :span="12">
+           <el-form-item label="车队名称" prop="fleetName">
           <el-input v-model="form.fleetName" placeholder="请输入车队名称"/>
+           </el-form-item>
+             </el-col>
+           <el-col :span="12">
+          <el-form-item label="件数" prop="goodsCount">
+          <el-input v-model="form.goodsCount" placeholder="请输入件数"/>
+            </el-form-item>
+              </el-col>
+           </el-row>
+
+           <el-row type="flex">
+             <el-col :span="12">
+              <el-form-item label="订单号" prop="soNo">
+            <el-input v-model="form.soNo" placeholder="请输入订单号"/>
+            </el-form-item>
+             </el-col>
+             <el-col :span="12">
+            <el-form-item label="总毛重" prop="totalRoughWeight">
+          <el-input v-model="form.totalRoughWeight" placeholder="请输入总毛重"/>
         </el-form-item>
-        <el-form-item label="通知单产生时间" prop="genTime">
+             </el-col>
+
+           </el-row>
+
+           <el-row type="flex">
+             <el-col :span="12">
+        <el-form-item label="状态" prop="state">
+          <el-input v-model="form.state" placeholder="请输入状态,未完成，磅单记录时标记，已完成"/>
+        </el-form-item>
+            </el-col>
+
+        <el-col :span="12">
+         <el-form-item label="产生时间" prop="genTime">
           <el-date-picker clearable size="small" style="width: 200px"
                           v-model="form.genTime"
                           type="date"
@@ -500,59 +532,58 @@
                           placeholder="选择通知单产生时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="件数" prop="goodsCount">
-          <el-input v-model="form.goodsCount" placeholder="请输入件数"/>
-        </el-form-item>
-        <el-form-item label="入库通知单号" prop="inNoticeNo">
-          <el-input v-model="form.inNoticeNo" placeholder="请输入入库通知单号"/>
-        </el-form-item>
-        <el-form-item label="机械号" prop="mechanicalNo">
-          <el-input v-model="form.mechanicalNo" placeholder="请输入机械号"/>
-        </el-form-item>
-        <el-form-item label="机械员" prop="mechanicalPerson">
-          <el-input v-model="form.mechanicalPerson" placeholder="请输入机械员"/>
-        </el-form-item>
-        <el-form-item label="场所ID" prop="placeId">
-          <el-input v-model="form.placeId" placeholder="请输入场所ID"/>
-        </el-form-item>
-        <el-form-item label="车头号" prop="primeMoverNo">
-          <el-input v-model="form.primeMoverNo" placeholder="请输入车头号"/>
-        </el-form-item>
-        <el-form-item label="销售合同号" prop="saleContractNo">
-          <el-input v-model="form.saleContractNo" placeholder="请输入销售合同号"/>
-        </el-form-item>
-        <el-form-item label="订单号" prop="soNo">
-          <el-input v-model="form.soNo" placeholder="请输入订单号"/>
-        </el-form-item>
-        <el-form-item label="卸车开始时间" prop="startTime">
+         </el-col>
+             </el-row>
+
+      <el-row type="flex">
+                 <el-col :span="12">
+         <el-form-item label="打印时间" prop="printTime">
           <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.startTime"
+                          v-model="form.printTime"
                           type="date"
                           value-format="yyyy-MM-dd"
-                          placeholder="选择卸车开始时间">
+                          placeholder="选择打印时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="状态,未完成，磅单记录时标记，已完成" prop="state">
-          <el-input v-model="form.state" placeholder="请输入状态,未完成，磅单记录时标记，已完成"/>
+         </el-col>
+
+             <el-col :span="12">
+         <el-form-item label="磅单时间" prop="poundTime">
+          <el-date-picker clearable size="small" style="width: 200px"
+                          v-model="form.poundTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="选择磅单时间">
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="理货员" prop="tallyClerk">
-          <el-input v-model="form.tallyClerk" placeholder="请输入理货员"/>
+         </el-col>
+
+               </el-row>
+
+               <el-row type="flex">
+                       <el-col :span="12">
+         <el-form-item label="完成时间" prop="competeTime">
+          <el-date-picker clearable size="small" style="width: 200px"
+                          v-model="form.competeTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="选择完成时间">
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="总毛重" prop="totalRoughWeight">
-          <el-input v-model="form.totalRoughWeight" placeholder="请输入总毛重"/>
+         </el-col>
+               <el-col :span="12">
+         <el-form-item label="归档时间" prop="archiveTime">
+          <el-date-picker clearable size="small" style="width: 200px"
+                          v-model="form.archiveTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="选择归档时间">
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="车板号" prop="trailerNo">
-          <el-input v-model="form.trailerNo" placeholder="请输入车板号"/>
-        </el-form-item>
-        <el-form-item label="装卸组" prop="unloadGroup">
-          <el-input v-model="form.unloadGroup" placeholder="请输入装卸组"/>
-        </el-form-item>
-        <el-form-item label="车牌号" prop="vehicleNo">
-          <el-input v-model="form.vehicleNo" placeholder="请输入车牌号"/>
-        </el-form-item>
-        <el-form-item label="工组人员" prop="workGroup">
-          <el-input v-model="form.workGroup" placeholder="请输入工组人员"/>
-        </el-form-item>
+         </el-col>
+
+
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
