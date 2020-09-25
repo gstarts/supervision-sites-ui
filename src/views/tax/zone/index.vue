@@ -234,8 +234,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="货位容量(KG)" prop="storeCapacity">
-              <el-input v-model="form.storeCapacity" placeholder="请输入货位容量(KG)"/>
+            <el-form-item label="货位容量" prop="storeCapacity">
+              <el-input v-model="form.storeCapacity" placeholder="请输入货位容量"/>
             </el-form-item>
           </el-col>
         </el-row>

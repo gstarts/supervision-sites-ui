@@ -733,7 +733,6 @@
 				}, `tax_instore_doc.xlsx`)
 			},
 			handleNoticeDetail(row) {
-				console.log(row.inDocNo)
 				this.$router.push({
 					path: '/tax/instore/doc/detail',
 					query: {
