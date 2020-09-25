@@ -322,7 +322,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="金额类型	" prop="currencyType">
-              <el-select v-model="waybill.currencyType" filterable multiple collapse-tags placeholder="金额类型">
+              <el-select v-model="waybill.currencyType" placeholder="金额类型">
                 <el-option
                   v-for="item in currencySystem"
                   :key="item.dictValue"
@@ -625,6 +625,7 @@ import consignorInfo from './consignorInfo.vue'
 import receivingInfo from './receivingInfo.vue'
 
 import { listInfo } from '@/api/basis/enterpriseInfo'
+import { queryById } from '@/api/manifest/query'
 
 export default {
   components: {
@@ -773,11 +774,21 @@ export default {
   mounted() {
     // 初始化
     this.init()
+    const  id =this.$route.query.id
+    if(id){
+      this.query(id)
+    }
   },
   watch: {
     'basicParams.voyageNo': {
       handler: function(newVal) {
         this.basicParams.voyageNo = newVal.toUpperCase()
+      }
+    },
+    'basicParams.representativePerson.name':{
+      handler: function(newVal) {
+       const data = this.listInfo.find(el => el.stationPersonName === newVal)
+        this.basicParams.unitCode =data.deptId
       }
     }
   },
@@ -795,7 +806,16 @@ export default {
         this.businessTypeOptions = response.data
       })
     },
+     // 查询方法
+    query(id){
+      queryById(id).then(res =>{
+       if(res.code ==200){
+         this.basicParams=res.data.basicParams
+         this.waybillList =res.data.waybillList
 
+       }
+      })
+    },
     // 暂存
     handleSave() {
       console.log('保存')

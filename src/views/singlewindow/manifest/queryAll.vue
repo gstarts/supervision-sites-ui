@@ -21,7 +21,16 @@
         </el-select>
       </el-form-item>
 
-
+      <el-form-item label="单证状态" prop="statementCode">
+        <el-select v-model="queryParams.statementCode" placeholder="请选择状态">
+          <el-option
+            v-for="dict in statementCodeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
+      </el-form-item>
 
       <el-form-item label="录入时间" prop="optime">
         <el-date-picker
@@ -166,13 +175,11 @@ export default {
   methods: {
     /** 查询公路舱单列表 */
     getList() {
-      this.queryParams.statementCode="0"
       manifestList(this.addDateRange(this.queryParams, this.dateRange)).then(
         response => {
           this.manifestList = response.rows
           this.total = response.total
           this.loading = false
-      this.queryParams.statementCode=undefined
         }
       )
     },
@@ -186,7 +193,7 @@ export default {
       const data = this.router.find(el => el.messageType === row.messageType)
       return data.value
     },
-
+    
     // 报文功能翻译
     viaVehicleFormat(){
 
@@ -220,7 +227,7 @@ export default {
       const id = row.id || this.ids
       // 跳转到原始舱单页面
       const data = this.router.find(el => el.messageType === row.messageType)
-      this.$router.push({ path: '/singlewindow' + data.path,query: { id: id }  })
+      this.$router.push({ path: '/singlewindow' + data.path })
     },
  /** 申报按钮操作 */
     declare(row) {
@@ -245,7 +252,6 @@ export default {
       return this.$message('功能正在完善中...')
       const id = row.id || this.ids
       const data = this.router.find(el => el.messageType === row.messageType)
-      // 调用 某页面 的初始化方法
       this.$router.push({ path: '/singlewindow' + data.path })
     }
   }

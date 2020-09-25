@@ -14,8 +14,8 @@
       </el-form-item>
       <el-form-item label="入库通知单号" prop="instoreNoticeNo">
         <el-input
-          v-model="queryParams.instoreNoticeNo" label-width="100px" :disabled="true"
-          placeholder="请输入入库通知单号"
+          v-model="queryParams.outstoreNoticeNo" label-width="100px" :disabled="true"
+          placeholder="请输入出库通知单号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -30,7 +30,7 @@
           size="mini"
           v-print="'#dayin'"
           @click="print"
-          v-hasPermi="['tax:instore_notice:print']"
+          v-hasPermi="['tax:outstore_notice:print']"
         >打印
         </el-button>
       </el-col>
@@ -38,12 +38,11 @@
     </el-row>
     <div class="box-card" style="margin: 0 auto;font-size:18px;width:1650px;padding-left: 5px ;padding-top:50px"
          id="dayin">
-      
       <el-row :gutter="10" style="font-size:30px;">
         <el-col :span="2"> &nbsp;</el-col>
-        <el-col :span="5">入库通知单</el-col>
+        <el-col :span="5">出库通知单</el-col>
         <el-col :span="2">GR</el-col>
-        <el-col :span="5">{{instoreNotice.inNoticeNo}}</el-col>
+        <el-col :span="5">{{instoreNotice.outNoticeNo}}</el-col>
       </el-row>
       <el-row :gutter="10" style="padding-top: 20px;">
         <el-col :span="2">日期:</el-col>
@@ -84,16 +83,16 @@
               </el-table-column>
               <el-table-column label="袋封号" align="center" prop="bagSealNo" width="250px"/>
               <el-table-column label="品名" align="center" prop="goodsName" width="240px"/>
-              <el-table-column label="预订数量" align="center" prop="bookStoreCode">
+              <el-table-column label="数量" align="center" prop="">
                 <template slot-scope="scope">
-                  {{scope.row.bookStoreCode === null?1:scope.row.bookStoreCode}}
+                  {{scope.row.remark === null?1:scope.row.remark}}
                 </template>
               </el-table-column>
               <!--<el-table-column label="袋号" align="center" prop="bagNumber" />-->
               <el-table-column label="包装单位" align="center" prop="packingUnit"/>
-              <el-table-column label="货位号" align="center" prop=""/>
+              <el-table-column label="货位号" align="center" prop="storeCode"/>
               <!--<el-table-column label="预订货位号" align="center" prop="id" />-->
-              <el-table-column label="是否已加工" align="center" prop="hasProcess">
+              <el-table-column label="备注" align="center" prop="fleetName">
                 <template slot-scope="scope"></template>
               </el-table-column>
             </el-table-column>
@@ -110,26 +109,31 @@
         <el-col :span="2">理货员签字:</el-col>
         <el-col :span="2"></el-col>
       </el-row>
-    
+      <el-row :gutter="10" style="margin-top: 20px; ">
+        <el-col :span="2">装卸人员:</el-col>
+        <el-col :span="3">&nbsp;</el-col>
+        <el-col :span="2">捆扎加固人员:</el-col>
+        <el-col :span="3">&nbsp;</el-col>
+        <el-col :span="2">嘉友司机:</el-col>
+        <el-col :span="2">&nbsp;</el-col>
+      </el-row>
     </div>
-  
-  
   </div>
 </template>
 
 <script>
 	import {
-		listInstore_notice_detail,
 		getInstore_notice_detail,
 		delInstore_notice_detail,
 		addInstore_notice_detail,
 		updateInstore_notice_detail
 	} from "@/api/tax/instore_notice_detail";
 	import {getUserDepts} from '@/utils/charutils'
-	import {getInstore_notice_with_details, updateDocNotice} from '@/api/tax/instore_notice'
+	import {updateDocNotice} from '@/api/tax/instore_notice'
+	import {getOutstore_notice_with_details} from '@/api/tax/outstore_notice'
 
 	export default {
-		name: "Instore_notice_print",
+		name: "Outstore_notice_print",
 		data() {
 			return {
 				// 遮罩层
@@ -155,7 +159,7 @@
 					batchNo: undefined,
 					goodsName: undefined,
 					hasProcess: undefined,
-					instoreNoticeNo: undefined,
+					outstoreNoticeNo: undefined,
 					packingUnit: undefined,
 					placeId: undefined,
 					bookStoreCode: undefined,
@@ -165,6 +169,14 @@
 				// 表单参数
 				form: {},
 				// 表单校验
+				printObj: {
+					id: "dayin",
+					popTitle: 'good print',
+					extraHead: '<meta http-equiv="Content-Language"content="zh-cn"/>',
+					endCallback: function () {
+						console.log('over')
+					}
+				}
 
 			};
 		},
@@ -179,7 +191,7 @@
 				this.queryParams.placeId = queryPlaceId
 			}
 			if (typeof (queryNoticeNo) != 'undefined') {
-				this.queryParams.instoreNoticeNo = queryNoticeNo
+				this.queryParams.outstoreNoticeNo = queryNoticeNo
 			}
 			this.depts = getUserDepts('1')
 			if (this.depts.length > 0) {
@@ -192,14 +204,14 @@
 			getList() {
 				this.loading = true;
 				//listInstore_notice_detail(this.queryParams).then(response => {
-				getInstore_notice_with_details(this.queryParams.placeId, this.queryParams.instoreNoticeNo).then(response => {
+				getOutstore_notice_with_details(this.queryParams.placeId, this.queryParams.outstoreNoticeNo).then(response => {
 					console.log(response)
 					if (response.code === 200) {
 						this.instoreNotice = response.data
 						this.instore_notice_detailList = response.data.detailList;
-						let row21 = {
+						let row17 = {
 							bagSealNo: "",
-							bookStoreCode: response.data.detailList.length,
+							remark: response.data.detailList.length,
 							goodsName: "合计",
 							batchNo: "",
 							packingUnit: ""
@@ -211,27 +223,26 @@
 							goodsName: "",
 							batchNo: "备注",
 							packingUnit: ""
-
 						}
-						let row23 = {
+						/*let row23 = {
 							bagSealNo: "",
 							bookStoreCode: "",
 							goodsName: "",
 							batchNo: "工组人员",
 							packingUnit: ""
 
-						}
-						this.instore_notice_detailList.push(row21)
+						}*/
+						this.instore_notice_detailList.push(row17)
 						this.instore_notice_detailList.push(row22)
-						this.instore_notice_detailList.push(row23)
-						this.total = response.data.detailList.length;
+						//this.instore_notice_detailList.push(row23)
+						//this.total = response.data.detailList.length;
 						this.loading = false;
 					}
 				});
 			},
 			//合并单元格
 			arraySpanMethod({row, column, rowIndex, columnIndex}) {
-				if ((rowIndex === 21 || rowIndex === 22) && columnIndex === 1) {
+				if ((rowIndex === this.instore_notice_detailList.length + 2) && columnIndex === 1) {
 					return {
 						rowspan: 1,
 						colspan: 6
@@ -239,8 +250,7 @@
 				}
 			},
 			getIndex(index) {
-				console.log(index)
-				if (index <= 19) return index + 1
+				if (index <= 15) return index + 1
 				return this.instore_notice_detailList[index].batchNo
 			},
 			// 取消按钮
@@ -278,8 +288,10 @@
 			},
 
 			print() {
+				//console.log('打印了')
+				//更新通知单打印时间
 				if (this.instoreNotice.printTime == null) {
-					updateDocNotice(this.instoreNotice.placeId, this.instoreNotice.inNoticeNo, 'innotice', 'print')
+					updateDocNotice(this.instoreNotice.placeId, this.instoreNotice.outNoticeNo, 'outnotice', 'print')
 				}
 			},
 			/** 重置按钮操作 */
@@ -359,7 +371,7 @@
 	};
 </script>
 
-<style scoped>
+<style scoped media="dayin">
   
   @page {
     size: auto A4 landscape;

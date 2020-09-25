@@ -10,10 +10,17 @@ export function genEnglishChar(){
 }
 
 //生成数字
-export function genNumChar(start,end){
+export function genNumChar(start,end,prefix){
+    //如果有前缀，就用前缀顶，如果没有就用0
     let numArr = []
     for(let i=start;i<=end;i++){
-        numArr.push({'key':i,'value': i<10?'0'+i:i})
+        if(prefix){
+        numArr.push({'key':i,'value': i<10?prefix+i:i})
+        }else{
+        numArr.push({'key':i,'value': i<10?+'0'+i:i})
+        }
+
+
     }
     return numArr
 }

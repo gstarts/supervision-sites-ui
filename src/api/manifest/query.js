@@ -14,6 +14,13 @@ export function declareManifest(data) {
   return request({
     url: '/manifest/head/declare',
     method: 'post',
-    data:{ids:data} 
+    data:{ids:data}
+  })
+}
+// 根据id查询
+export function queryById(id) {
+  return request({
+    url: '/manifest/head/query/mt1401/'+id,
+    method: 'get'
   })
 }
