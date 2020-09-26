@@ -299,6 +299,19 @@ export default {
     };
   },
   created() {
+	  let queryPlaceId = this.$route.query.placeId
+	  let queryStoreCode = this.$route.query.storeCode
+
+	  // 参数不为空，并非参数在用户权限范围内
+	  if (typeof (queryPlaceId) != 'undefined' && this.depts.findIndex((v) => {
+		  return v.deptId === queryPlaceId
+	  }) !== -1) {
+		  this.queryParams.placeId = queryPlaceId
+	  }
+	  if (typeof (queryStoreCode) != 'undefined') {
+		  this.queryParams.storeCode = queryStoreCode
+	  }
+   
 	  this.depts = getUserDepts('1')
 	  if (this.depts.length > 0) {
 		  this.queryParams.placeId = this.depts[0].deptId

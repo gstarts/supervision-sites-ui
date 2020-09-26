@@ -42,3 +42,10 @@ export function delOutstore_doc(id) {
     method: 'delete'
   })
 }
+
+export function getOutstore_doc_with_details(placeId, noticeNo) {
+	return request({
+		url: '/tax/outstore_doc/' + placeId + '/' + noticeNo,
+		method: 'get'
+	})
+}
