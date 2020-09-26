@@ -29,7 +29,8 @@
         size="mini"
         v-print="'#dayin'"
         @click="print"
-        v-show="this.form.netWeight !== undefined &&  this.form.plateNum !== undefined && this.form.locationNumber !== undefined"
+        v-show="this.form.netWeight !== undefined && this.form.netWeight !== '' &&  this.form.plateNum !== undefined && this.form.plateNum !==''
+        && this.form.locationNumber !== undefined &&  this.form.locationNumber !=='' && this.PoundForm.stationViaType ==='01'"
       >打印
       </el-button>
     </div>
@@ -418,9 +419,10 @@
 					tare: [{type: "number", message: "请输入数字"}],
 					netWeight: [{type: "number", message: "请输入数字"}],
 					plateNum: [{required: true, message: "不可为空", trigger: "blur"}],
+          locationNumber:[{required: true,message: "不可为空" , trigger: "blur"}]
 				},
 				ruless: {
-					flowDirection: [{required: true, message: "请输入", trigger: "blur"}],
+					flowDirection: [{required: true, message: "请选择库位号", trigger: "blur"}],
 				},
 				storeList: [], //保存库位号.
 				showStore: false,
@@ -533,6 +535,8 @@
 			//双击列表赋值form表单
 			dbRow(row, column) {
 				this.form = row;
+				console.log(this.form)
+				this.form
 			},
 			// 打印按钮
 			headHandleAdd() {
@@ -734,7 +738,8 @@
 				})
 			},
 			vehicleChange() {
-				if (this.PoundForm.stationViaType === '01') { //重进空出
+			  console.log(this.PoundForm.flowDirection)
+				if (this.PoundForm.stationViaType === '01' && this.PoundForm.flowDirection === 'E'){ //重进空出
 					this.showStore = true
 					this.form.locationNumber = undefined;
 				} else {
@@ -765,7 +770,7 @@
   
   #dayin {
     height: 500px;
-    width: 1000px;
+    width: 1200px;
   }
   
   #area {
@@ -786,11 +791,11 @@
   
   #poundtotal {
     width: 300px;
-    height: 10 px4;
+    height: 10px;
   }
   
   #area-style {
-    width: 480px;
+    width: 600px;
     height: 40px;
     font-size: 20px;
     margin-top: 10px;
@@ -800,10 +805,10 @@
   
   #area-right-style {
     height: 40px;
-    width: 300px;
+    width: 350px;
     font-size: 20px;
     margin-top: 10px;
-    margin-left: 30px;
+    margin-left: 100px;
     float: right;
   }
   
