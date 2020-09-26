@@ -8,6 +8,15 @@ export function listSheet(query) {
     params: query
   })
 }
+
+// 查询计量单列表
+export function listIESheet(query) {
+	return request({
+		url: '/pound/measurement/sheet/IElist',
+		method: 'get',
+		params: query
+	})
+}
 //统计分析数据
 export function analysis(query) {
   return request({

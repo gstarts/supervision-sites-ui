@@ -196,64 +196,72 @@
     <!-- 添加或修改入库通知单明细对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="货位号" prop="createBy">
-          <el-input v-model="form.createBy" placeholder="请输入货位号" />
-        </el-form-item>
-        <el-form-item label="货位号" prop="createTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.createTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择货位号">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="货位号" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入货位号" />
-        </el-form-item>
-        <el-form-item label="货位号" prop="updateBy">
-          <el-input v-model="form.updateBy" placeholder="请输入货位号" />
-        </el-form-item>
-        <el-form-item label="货位号" prop="updateTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.updateTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择货位号">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="净重" prop="bagNetWeight">
-          <el-input v-model="form.bagNetWeight" placeholder="请输入净重" />
-        </el-form-item>
-        <el-form-item label="袋号" prop="bagNumber">
-          <el-input v-model="form.bagNumber" placeholder="请输入袋号" />
-        </el-form-item>
-        <el-form-item label="毛重" prop="bagRoughWeight">
-          <el-input v-model="form.bagRoughWeight" placeholder="请输入毛重" />
-        </el-form-item>
-        <el-form-item label="袋封号" prop="bagSealNo">
-          <el-input v-model="form.bagSealNo" placeholder="请输入袋封号" />
-        </el-form-item>
-        <el-form-item label="批次号" prop="batchNo">
-          <el-input v-model="form.batchNo" placeholder="请输入批次号" />
-        </el-form-item>
-        <el-form-item label="品名" prop="goodsName">
-          <el-input v-model="form.goodsName" placeholder="请输入品名" />
-        </el-form-item>
-        <el-form-item label="是否已加工,0未加工，1已加工" prop="hasProcess">
-          <el-input v-model="form.hasProcess" placeholder="请输入是否已加工,0未加工，1已加工" />
-        </el-form-item>
-        <el-form-item label="入库通知单号" prop="outstoreNoticeNo">
-          <el-input v-model="form.outstoreNoticeNo" placeholder="请输入入库通知单号" />
-        </el-form-item>
-        <el-form-item label="包装单位" prop="packingUnit">
-          <el-input v-model="form.packingUnit" placeholder="请输入包装单位" />
-        </el-form-item>
-        <el-form-item label="场所ID" prop="placeId">
+        
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="入库通知单号" prop="outstoreNoticeNo">
+              <el-input v-model="form.outstoreNoticeNo" placeholder="请输入入库通知单号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="批次号" prop="batchNo">
+              <el-input v-model="form.batchNo" placeholder="请输入批次号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="袋封号" prop="bagSealNo">
+              <el-input v-model="form.bagSealNo" placeholder="请输入袋封号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="袋号" prop="bagNumber">
+              <el-input v-model="form.bagNumber" placeholder="请输入袋号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="品名" prop="goodsName">
+              <el-input v-model="form.goodsName" placeholder="请输入品名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="包装单位" prop="packingUnit">
+              <el-input v-model="form.packingUnit" placeholder="请输入包装单位" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="货位号" prop="storeCode">
+              <el-input v-model="form.storeCode" placeholder="请输入货位号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="是否已加工" prop="hasProcess">
+              <el-input v-model="form.hasProcess" placeholder="请输入是否已加工,0未加工，1已加工" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="净重" prop="bagNetWeight">
+              <el-input v-model="form.bagNetWeight" placeholder="请输入净重" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="毛重" prop="bagRoughWeight">
+              <el-input v-model="form.bagRoughWeight" placeholder="请输入毛重" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        
+        <el-form-item label="场所ID" prop="placeId" style="display: none">
           <el-input v-model="form.placeId" placeholder="请输入场所ID" />
         </el-form-item>
-        <el-form-item label="货位号" prop="storeCode">
-          <el-input v-model="form.storeCode" placeholder="请输入货位号" />
-        </el-form-item>
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -311,6 +319,9 @@ export default {
         placeId: [
           { required: true, message: "场所ID不能为空", trigger: "blur" }
         ],
+	      outstoreNoticeNo: [
+		      { required: true, message: "通知单号不能为空", trigger: "blur" }
+        ]
       }
     };
   },
@@ -365,9 +376,9 @@ export default {
         batchNo: undefined,
         goodsName: undefined,
         hasProcess: undefined,
-        outstoreNoticeNo: undefined,
+        outstoreNoticeNo: this.queryParams.outstoreNoticeNo,
         packingUnit: undefined,
-        placeId: undefined,
+        placeId: this.queryParams.placeId,
         storeCode: undefined
       };
       this.resetForm("form");
