@@ -246,7 +246,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="业务编号" prop="businessNo" v-show="noticeType">
-              <el-input v-model="form.businessNo" placeholder="请输入业务编号"
+              <el-input v-model="form.businessNo"  placeholder="请输入业务编号"
                         clearable
                         size="small">
               </el-input>
@@ -300,6 +300,7 @@
                   v-model="form.receiveName"
                   :fetch-suggestions="nameSearch"
                   placeholder="请输入收货单位"
+                  clearable
                   @select="handleSelect2"
                 ></el-autocomplete>
               </el-form-item>
@@ -410,44 +411,44 @@
 				// 表单校验
 				rules1: {
 					templateType: [
-						{required: true, message: "模板类型不能为空", trigger: "change"}
+						{ type:"string", required: true, message: "模板类型不能为空", trigger: "change"}
 					],
 					storeCustomer: [
-						{required: true, message: "寄舱客户不能为空", trigger: "change"}
+						{type:"string",required: true, message: "寄舱客户不能为空", trigger: "change"}
 					],
 					settlementCustomer: [
-						{required: true, message: "结算客户不能为空", trigger: "change"}
+						{type:"string",required: true, message: "结算客户不能为空", trigger: "change"}
 					],
 					businessNo: [
-						{required: true, message: "业务编号不能为空", trigger: "blur"}
+						{type:"string",required: true, message: "业务编号不能为空", trigger: "change"}
 					],
 					sendName: [
-						{required: true, message: "发货单位不能为空", trigger: "blur"}
+						{type:"string",required: true, message: "发货单位不能为空", trigger: "change"}
 					],
           receiveName: [
-						{required: true, message: "收货单位不能为空", trigger: "blur"}
+						{type:"string",required: true, message: "收货单位不能为空", trigger: "change"}
 					]
 				},
 				rules2: {
 					templateType: [
-						{required: true, message: "模板类型不能为空", trigger: "change"}
+						{type:"string",required: true, message: "模板类型不能为空", trigger: "change"}
 					]
 				},
 				rules3: {
 					templateType: [
-						{required: true, message: "模板类型不能为空", trigger: "change"}
+						{type:"string",required: true, message: "模板类型不能为空", trigger: "change"}
 					],
 					storeCustomer: [
-						{required: true, message: "寄舱客户不能为空", trigger: "change"}
+						{type:"string",required: true, message: "寄舱客户不能为空", trigger: "change"}
 					],
 					settlementCustomer: [
-						{required: true, message: "结算客户不能为空", trigger: "change"}
+						{type:"string",required: true, message: "结算客户不能为空", trigger: "change"}
 					],
 					sendName: [
-						{required: true, message: "发货单位不能为空", trigger: "blur"}
+						{type:"string",required: true, message: "发货单位不能为空", trigger: "change"}
 					],
 					receiveName: [
-						{required: true, message: "收货单位不能为空", trigger: "blur"}
+						{type:"string",required: true, message: "收货单位不能为空", trigger: "change"}
 					]
 				},
 				uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/tax/upload',
