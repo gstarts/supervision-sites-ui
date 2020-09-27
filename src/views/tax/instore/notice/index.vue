@@ -398,7 +398,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleNoticeArchive(scope.row)"
-            v-hasPermi="['tax:instore_notice:print']"
+            v-hasPermi="['tax:instore_notice:archive']"
           >归档
           </el-button>
           <el-button v-show="scope.row.templateId == null"
