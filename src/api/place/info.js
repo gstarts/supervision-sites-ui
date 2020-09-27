@@ -42,3 +42,30 @@ export function delplace_info(id) {
     method: 'delete'
   })
 }
+
+export function getNoticeByVehicle(placeId, direction, vehicleNo) {
+	let data = {
+		'placeId': placeId,
+		'direction': direction,
+		'vehicleNo': vehicleNo,
+	}
+	return request({
+		url: '/place/pound/getNoticeInfo',
+		method: 'post',
+		data: data
+	})
+}
+export function genStoreDoc(placeId, direction, noticeNo, storeCode, weight) {
+	let data = {
+		'placeId': placeId,
+		'direction': direction,
+		'noticeNo': noticeNo,
+		'storeCode': storeCode,
+		'weight': weight
+	}
+	return request({
+		url: '/place/pound/doc',
+		method: 'post',
+		data: data
+	})
+}

@@ -170,6 +170,7 @@
 <script>
 import { listOutstore_doc, getOutstore_doc, delOutstore_doc, addOutstore_doc, updateOutstore_doc } from "@/api/tax/outstore_doc";
 import {getUserDepts} from '@/utils/charutils'
+import {updateDocNotice} from '@/api/tax/instore_notice'
 
 export default {
   name: "Outstore_doc",

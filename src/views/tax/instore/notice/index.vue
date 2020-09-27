@@ -393,6 +393,14 @@
             v-hasPermi="['tax:instore_notice:print']"
           >打印
           </el-button>
+          <el-button v-show="scope.row.archiveTime === null"
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleNoticeArchive(scope.row)"
+            v-hasPermi="['tax:instore_notice:archive']"
+          >归档
+          </el-button>
           <el-button v-show="scope.row.templateId == null"
                      size="mini"
                      type="text"
@@ -594,7 +602,7 @@
 		getInstore_notice,
 		delInstore_notice,
 		addInstore_notice,
-		updateInstore_notice, genStoreDoc
+		updateInstore_notice, genStoreDoc, updateDocNotice
 	} from "@/api/tax/instore_notice";
 	import {getUserDepts} from '@/utils/charutils'
 
@@ -603,7 +611,7 @@
 		data() {
 			return {
 				// 遮罩层
-				loading: true,
+				loading: false,
 				// 选中数组
 				ids: [],
 				depts: [],
@@ -833,6 +841,15 @@
 					...this.queryParams
 				}, `tax_instore_notice.xlsx`)
 			},
+			handleNoticeArchive(row){
+				console.log(row)
+				updateDocNotice(row.placeId, row.inNoticeNo, 'innotice', 'archive').then(response=>{
+					if(response.code ===200){
+						this.$message.success("归档成功")
+            this.getList()
+          }
+        })
+      }
 			/*genDoc(row) {
 				genStoreDoc(row.placeId, 1, row.inNoticeNo, 'A10103').then(response => {
 					console.log(response)

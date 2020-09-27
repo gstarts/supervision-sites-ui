@@ -50,6 +50,7 @@
                     placeholder="请选择车号"
                     prop="plateNum"
                     filterable
+                    clearable
                     @change="CarNumberChange"
                   >
                     <el-option
@@ -312,8 +313,8 @@
   import {poundSelect} from "@/api/pound/poundlist";
   import {listChnlConfig} from "@/api/basis/chnlConfig";
   import {getUserDepts} from "@/utils/charutils";
-  import {genStoreDoc, getNoticeByVehicle} from "@/api/tax/instore_notice";
-  import {getStoreUsable} from '@/api/tax/store'
+  import {genStoreDoc, getNoticeByVehicle} from "@/api/place/info";
+  import {getStoreUsable} from '@/api/place/store'
 
   export default {
     name: "Client",
@@ -416,42 +417,42 @@
         rulesAll: {},
         // 重量类型效验
         rules: {
-          grossWeight: [{type: "number", message: "毛重需为数字"}],
-          tare: [{type: "number", message: "请输入数字"}],
-          netWeight: [{type: "number", message: "请输入数字"}],
-          plateNum: [{required: true, message: "不可为空", trigger: "blur"}],
-          locationNumber:[{message: "库位号不可为空" , trigger: "change"}]
+          grossWeight: [{type: "number", message: "毛重需为数字",trigger:"blur"}],
+          tare: [{type: "number", message: "请输入数字",trigger:"blur"}],
+          netWeight: [{type: "number", message: "请输入数字",trigger:"blur"}],
+          plateNum: [{type:"string",required: true, message: "不可为空", trigger: "change"}],
+          locationNumber:[{type:"string",message: "库位号不可为空" , trigger: "change"}]
         },
         rulesIn1: { //进场 重进空出
-          grossWeight: [{required: true,type: "number", message: "毛重需为数字"}],
+          grossWeight: [{required: true,type: "number", message: "毛重需为数字",trigger:"blur"}],
           //tare: [{type: "number", message: "请输入数字"}],
           //netWeight: [{type: "number", message: "请输入数字"}],
-          plateNum: [{required: true, message: "车号不可为空", trigger: "blur"}],
+          plateNum: [{required: true, message: "车号不可为空", trigger: "change"}],
           //locationNumber:[{required: true,message: "不可为空" , trigger: "blur"}]
         },
         rulesIn2: { //进场 空进重出
           //grossWeight: [{type: "number", message: "毛重需为数字"}],
-          tare: [{required: true,type: "number", message: "请输入数字"}],
+          tare: [{required: true,type: "number", message: "请输入数字",trigger:"blur"}],
           //netWeight: [{type: "number", message: "请输入数字"}],
-          plateNum: [{required: true, message: "车号不可为空", trigger: "blur"}],
+          plateNum: [{type:"string",required: true, message: "车号不可为空", trigger: "change"}],
           //locationNumber:[{required: true,message: "不可为空" , trigger: "blur"}]
         },
         rulesOut1: { //出场 重进空出
-          grossWeight: [{required: true,type: "number", message: "毛重需为数字"}],
-          tare: [{required: true,type: "number", message: "请输入数字"}],
-          netWeight: [{required: true,type: "number", message: "请输入数字"}],
-          plateNum: [{required: true, message: "车号不可为空", trigger: "blur"}],
-          locationNumber:[{required: true,message: "不可为空" , trigger: "change"}]
+          grossWeight: [{required: true,type: "number", message: "毛重需为数字",trigger:"blur"}],
+          tare: [{required: true,type: "number", message: "请输入数字",trigger:"blur"}],
+          netWeight: [{required: true,type: "number", message: "请输入数字",trigger:"blur"}],
+          plateNum: [{type:"string",required: true, message: "车号不可为空", trigger: "change"}],
+          locationNumber:[{type:"string",required: true,message: "不可为空" , trigger: "change"}]
         },
         rulesOut2: { //出场 空进重出
-          grossWeight: [{required: true,type: "number", message: "毛重需为数字"}],
-          tare: [{required: true,type: "number", message: "请输入数字"}],
-          netWeight: [{required: true,type: "number", message: "请输入数字"}],
-          plateNum: [{required: true, message: "车号不可为空", trigger: "blur"}],
+          grossWeight: [{required: true,type: "number", message: "毛重需为数字",trigger:"blur"}],
+          tare: [{required: true,type: "number", message: "请输入数字",trigger:"blur"}],
+          netWeight: [{required: true,type: "number", message: "请输入数字",trigger:"blur"}],
+          plateNum: [{type:"string",required: true, message: "车号不可为空", trigger: "change"}],
           //locationNumber:[{required: true,message: "不可为空" , trigger: "blur"}]
         },
         ruless: {
-          flowDirection: [{required: true, message: "请选择流向", trigger: "blur"}],
+          flowDirection: [{type:"string",required: true, message: "请选择流向", trigger: "change"}],
         },
         storeList: [], //保存库位号.
         showStore: false,
@@ -460,7 +461,7 @@
     },
     created() {
       // 0 监管场所，1保税库，2堆场，3企业
-      this.depts = getUserDepts("1");
+      this.depts = getUserDepts("0");
       if (this.depts.length > 0) {
         this.queryParams.stationId = this.depts[0].deptId;
         this.created();
@@ -492,6 +493,7 @@
       },
       //车号Change
       CarNumberChange(event) {
+      	console.log(event)
         //进场 调用接口 连带数据赋值给input
         this.form.grossWeight = 0
         this.form.tare = 0
@@ -509,6 +511,7 @@
         //单号 从保税库接口中返回的
         this.noticeNo = ''
         this.form.noticeNo = ''
+	      if(!event || event === '') return
         if (this.PoundForm.flowDirection == "I") {
           /**
            * 通过车号查出入库通知单
@@ -547,7 +550,7 @@
           //出场 调用自己的接口 查询数据库里的数据赋值给input。
         } else if (this.PoundForm.flowDirection == "E") {
           //调用后台查询API 通过选择的车号反添数据
-          getSheet(event).then((response) => {
+          getSheet(event,this.queryParams.stationId).then((response) => {
             if (response.code === 200) {
               this.form = response.data;
             } else {
@@ -601,8 +604,10 @@
         clearInterval(this.ChannelNumberTimer);
         this.ChannelNumberTimer = setInterval(() => {
           poundSelect(event).then((response) => {
-            this.Poundweight = response.data.weight;
-            this.isStable = response.data.isStable;
+          	//if(response.data !== null){
+		          this.Poundweight = response.data.weight;
+		          this.isStable = response.data.isStable;
+            //}
           });
         }, 1000);
         //离开当前页面定时器停止

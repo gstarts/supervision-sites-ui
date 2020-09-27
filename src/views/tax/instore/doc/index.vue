@@ -531,7 +531,7 @@
 		data() {
 			return {
 				// 遮罩层
-				loading: true,
+				loading: false,
 				// 选中数组
 				ids: [],
 				depts: [],

@@ -241,12 +241,10 @@ export default {
     },
     /**详情按钮 */
     detail(row) {
-      // this.reset();
-      return this.$message('功能正在完善中...')
       const id = row.id || this.ids
       const data = this.router.find(el => el.messageType === row.messageType)
       // 调用 某页面 的初始化方法
-      this.$router.push({ path: '/singlewindow' + data.path })
+      this.$router.push({ path: '/singlewindow' + data.path,query: { id: id, flag:true }  })
     }
   }
 }

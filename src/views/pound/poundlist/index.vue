@@ -28,8 +28,8 @@
         size="small"
         v-print="'#dayin'"
         @click="print">
-       <!-- v-show="this.form.netWeight !== undefined && this.form.netWeight !== '' &&  this.form.plateNum !== undefined && this.form.plateNum !==''
-        && this.form.locationNumber !== undefined &&  this.form.locationNumber !=='' && this.PoundForm.stationViaType ==='01'"-->
+        <!-- v-show="this.form.netWeight !== undefined && this.form.netWeight !== '' &&  this.form.plateNum !== undefined && this.form.plateNum !==''
+         && this.form.locationNumber !== undefined &&  this.form.locationNumber !=='' && this.PoundForm.stationViaType ==='01'"-->
         <i class="fa fa-print" aria-hidden="true">&nbsp;&nbsp;打印</i>
       </el-button>
     </div>
@@ -50,6 +50,7 @@
                     placeholder="请选择车号"
                     prop="plateNum"
                     filterable
+                    clearable
                     @change="CarNumberChange"
                   >
                     <el-option
@@ -131,7 +132,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-           <span style="display: none"> 单号：{{form.noticeNo}}</span>
+            <span style="display: none"> 单号：{{form.noticeNo}}</span>
           </el-form>
         </el-card>
       </el-col>
@@ -304,7 +305,7 @@
 		addSheet,
 		updateSheet,
 		getSheet,
-    listIESheet,
+		listIESheet,
 	} from "@/api/pound/poundlist";
 	import {listVehicleNoList} from "@/api/system/vehicle_info";
 	import {genTimeCode} from "@/utils/common";
@@ -413,49 +414,49 @@
 					//过卡车辆类型
 					stationViaType: undefined,
 				},
-        rulesAll: {},
+				rulesAll: {},
 				// 重量类型效验
 				rules: {
-					grossWeight: [{type: "number", message: "毛重需为数字"}],
-					tare: [{type: "number", message: "请输入数字"}],
-					netWeight: [{type: "number", message: "请输入数字"}],
-					plateNum: [{required: true, message: "不可为空", trigger: "blur"}],
-          locationNumber:[{message: "库位号不可为空" , trigger: "change"}]
+					grossWeight: [{type: "number", message: "毛重需为数字", trigger: "blur"}],
+					tare: [{type: "number", message: "请输入数字", trigger: "blur"}],
+					netWeight: [{type: "number", message: "请输入数字", trigger: "blur"}],
+					plateNum: [{type: "string", required: true, message: "不可为空", trigger: "change"}],
+					locationNumber: [{type: "string", message: "库位号不可为空", trigger: "change"}]
 				},
 				rulesIn1: { //进场 重进空出
-					grossWeight: [{required: true,type: "number", message: "毛重需为数字"}],
+					grossWeight: [{required: true, type: "number", message: "毛重需为数字", trigger: "blur"}],
 					//tare: [{type: "number", message: "请输入数字"}],
 					//netWeight: [{type: "number", message: "请输入数字"}],
-					plateNum: [{required: true, message: "车号不可为空", trigger: "blur"}],
+					plateNum: [{required: true, message: "车号不可为空", trigger: "change"}],
 					//locationNumber:[{required: true,message: "不可为空" , trigger: "blur"}]
 				},
 				rulesIn2: { //进场 空进重出
 					//grossWeight: [{type: "number", message: "毛重需为数字"}],
-					tare: [{required: true,type: "number", message: "请输入数字"}],
+					tare: [{required: true, type: "number", message: "请输入数字", trigger: "blur"}],
 					//netWeight: [{type: "number", message: "请输入数字"}],
-					plateNum: [{required: true, message: "车号不可为空", trigger: "blur"}],
+					plateNum: [{type: "string", required: true, message: "车号不可为空", trigger: "change"}],
 					//locationNumber:[{required: true,message: "不可为空" , trigger: "blur"}]
 				},
 				rulesOut1: { //出场 重进空出
-					grossWeight: [{required: true,type: "number", message: "毛重需为数字"}],
-					tare: [{required: true,type: "number", message: "请输入数字"}],
-					netWeight: [{required: true,type: "number", message: "请输入数字"}],
-					plateNum: [{required: true, message: "车号不可为空", trigger: "blur"}],
-					locationNumber:[{required: true,message: "不可为空" , trigger: "change"}]
+					grossWeight: [{required: true, type: "number", message: "毛重需为数字", trigger: "blur"}],
+					tare: [{required: true, type: "number", message: "请输入数字", trigger: "blur"}],
+					netWeight: [{required: true, type: "number", message: "请输入数字", trigger: "blur"}],
+					plateNum: [{type: "string", required: true, message: "车号不可为空", trigger: "change"}],
+					locationNumber: [{type: "string", required: true, message: "不可为空", trigger: "change"}]
 				},
 				rulesOut2: { //出场 空进重出
-					grossWeight: [{required: true,type: "number", message: "毛重需为数字"}],
-					tare: [{required: true,type: "number", message: "请输入数字"}],
-					netWeight: [{required: true,type: "number", message: "请输入数字"}],
-					plateNum: [{required: true, message: "车号不可为空", trigger: "blur"}],
+					grossWeight: [{required: true, type: "number", message: "毛重需为数字", trigger: "blur"}],
+					tare: [{required: true, type: "number", message: "请输入数字", trigger: "blur"}],
+					netWeight: [{required: true, type: "number", message: "请输入数字", trigger: "blur"}],
+					plateNum: [{type: "string", required: true, message: "车号不可为空", trigger: "change"}],
 					//locationNumber:[{required: true,message: "不可为空" , trigger: "blur"}]
 				},
 				ruless: {
-					flowDirection: [{required: true, message: "请选择流向", trigger: "blur"}],
+					flowDirection: [{type: "string", required: true, message: "请选择流向", trigger: "change"}],
 				},
 				storeList: [], //保存库位号.
 				showStore: false,
-        noticeNo: ''
+				noticeNo: ''
 			};
 		},
 		created() {
@@ -483,8 +484,8 @@
 
 			//库位号
 			this.getStoreCode(this.queryParams.stationId)
-      
-      this.rulesAll = this.rules
+
+			this.rulesAll = this.rules
 		},
 		methods: {
 			handleClick(tab, event) {
@@ -493,11 +494,11 @@
 			//车号Change
 			CarNumberChange(event) {
 				//进场 调用接口 连带数据赋值给input
-        this.form.grossWeight = 0
-        this.form.tare = 0
-        this.form.netWeight = 0
-        //this.form.locationNumber = ''
-        this.form.remark = ''
+				this.form.grossWeight = 0
+				this.form.tare = 0
+				this.form.netWeight = 0
+				//this.form.locationNumber = ''
+				this.form.remark = ''
 				//规格型号
 				this.form.specification = ''
 				//货物名称
@@ -547,7 +548,7 @@
 					//出场 调用自己的接口 查询数据库里的数据赋值给input。
 				} else if (this.PoundForm.flowDirection == "E") {
 					//调用后台查询API 通过选择的车号反添数据
-					getSheet(event).then((response) => {
+					getSheet(event, this.queryParams.stationId).then((response) => {
 						if (response.code === 200) {
 							this.form = response.data;
 						} else {
@@ -601,8 +602,10 @@
 				clearInterval(this.ChannelNumberTimer);
 				this.ChannelNumberTimer = setInterval(() => {
 					poundSelect(event).then((response) => {
-						this.Poundweight = response.data.weight;
-						this.isStable = response.data.isStable;
+						//if (response.data !== null) {
+							this.Poundweight = response.data.weight;
+							this.isStable = response.data.isStable;
+						//}
 					});
 				}, 1000);
 				//离开当前页面定时器停止
@@ -635,30 +638,30 @@
 						} else if (this.PoundForm.flowDirection == "E") {
 							this.form.flowDirection = this.PoundForm.flowDirection;
 							//this.form.noticeNo = this.noticeNo;
-              //return false
+							//return false
 							//出场修改按钮
 							updateSheet(this.form).then((response) => {
 								if (response.code === 200) {
 									this.msgSuccess("出场成功");
 									if (this.PoundForm.stationViaType === '01') {//重进空出 生成入库单
-										genStoreDoc(this.queryParams.stationId, 1, this.form.noticeNo, this.form.locationNumber, 0).then(response=>{
-											if(response.code === 200){
+										genStoreDoc(this.queryParams.stationId, 1, this.form.noticeNo, this.form.locationNumber, 0).then(response => {
+											if (response.code === 200) {
 												this.msgSuccess("入库成功");
 												//更新一下库位
 												this.getStoreCode(this.queryParams.stationId)
-                      }else{
-												this.msgError(response.msg);
-                      }
-                    })
-									}
-									if(this.PoundForm.stationViaType === '02'){//空进重出，生成出库单
-										genStoreDoc(this.queryParams.stationId, 0, this.form.noticeNo, this.form.locationNumber, this.form.netWeight).then(response=>{
-											if(response.code === 200){
-												this.msgSuccess("出库成功");
-											}else{
+											} else {
 												this.msgError(response.msg);
 											}
-                    })
+										})
+									}
+									if (this.PoundForm.stationViaType === '02') {//空进重出，生成出库单
+										genStoreDoc(this.queryParams.stationId, 0, this.form.noticeNo, this.form.locationNumber, this.form.netWeight).then(response => {
+											if (response.code === 200) {
+												this.msgSuccess("出库成功");
+											} else {
+												this.msgError(response.msg);
+											}
+										})
 									}
 									this.getListI();
 								} else {
@@ -799,8 +802,8 @@
 			},
 			vehicleChange() {
 				this.flowCheck()
-			  console.log(this.PoundForm.flowDirection)
-				if (this.PoundForm.stationViaType === '01' && this.PoundForm.flowDirection === 'E'){ //重进空出
+				console.log(this.PoundForm.flowDirection)
+				if (this.PoundForm.stationViaType === '01' && this.PoundForm.flowDirection === 'E') { //重进空出
 					this.showStore = true
 					this.form.locationNumber = undefined;
 				} else {
@@ -808,25 +811,25 @@
 					this.form.locationNumber = undefined;
 				}
 			},
-			flowCheck(){
-				if(this.PoundForm.flowDirection === 'I' || this.PoundForm.flowDirection === undefined ){//如果是进场
-					if(this.PoundForm.stationViaType === '01' || this.PoundForm.stationViaType == undefined){//重进空出
+			flowCheck() {
+				if (this.PoundForm.flowDirection === 'I' || this.PoundForm.flowDirection === undefined) {//如果是进场
+					if (this.PoundForm.stationViaType === '01' || this.PoundForm.stationViaType == undefined) {//重进空出
 						this.rulesAll = this.rulesIn1
-          }else if(this.PoundForm.stationViaType === '02' || this.PoundForm.stationViaType == undefined){//空进重出
+					} else if (this.PoundForm.stationViaType === '02' || this.PoundForm.stationViaType == undefined) {//空进重出
 						this.rulesAll = this.rulesIn2
-          }else{
-						this.rulesAll = {}
-          }
-        }else if(this.PoundForm.flowDirection === 'E' ||this.PoundForm.flowDirection === undefined){ //出场
-					if(this.PoundForm.stationViaType === '01' || this.PoundForm.stationViaType == undefined){//重进空出
-						this.rulesAll = this.rulesOut1
-					}else if(this.PoundForm.stationViaType === '02' || this.PoundForm.stationViaType == undefined){//空进重出
-						this.rulesAll = this.rulesOut2
-					}else{
+					} else {
 						this.rulesAll = {}
 					}
-        }
-      }
+				} else if (this.PoundForm.flowDirection === 'E' || this.PoundForm.flowDirection === undefined) { //出场
+					if (this.PoundForm.stationViaType === '01' || this.PoundForm.stationViaType == undefined) {//重进空出
+						this.rulesAll = this.rulesOut1
+					} else if (this.PoundForm.stationViaType === '02' || this.PoundForm.stationViaType == undefined) {//空进重出
+						this.rulesAll = this.rulesOut2
+					} else {
+						this.rulesAll = {}
+					}
+				}
+			}
 		},
 	};
 </script>

@@ -341,9 +341,24 @@
         </template>
       </af-table-column>-->
       <!--<af-table-column label="车队名称" align="center" prop="fleetName" />-->
-      <af-table-column label="通知单生成时间" align="center" prop="genTime" width="180">
+      <af-table-column label="生成时间" align="center" prop="genTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.genTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+        </template>
+      </af-table-column>
+      <af-table-column label="打印时间" align="center" prop="printTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.printTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+        </template>
+      </af-table-column>
+      <af-table-column label="完成时间" align="center" prop="completeTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.completeTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+        </template>
+      </af-table-column>
+      <af-table-column label="归档时间" align="center" prop="archiveTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.archiveTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </af-table-column>
       <af-table-column label="件数" align="center" prop="goodsCount"/>
@@ -403,6 +418,14 @@
             @click="handleNoticePrint(scope.row)"
             v-hasPermi="['tax:outstore_notice:print']"
           >打印
+          </el-button>
+          <el-button v-show="scope.row.archiveTime === null"
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleNoticeArchive(scope.row)"
+            v-hasPermi="['tax:outstore_notice:archive']"
+          >归档
           </el-button>
         </template>
       </af-table-column>
@@ -579,13 +602,14 @@
 		updateOutstore_notice
 	} from "@/api/tax/outstore_notice";
 	import {getUserDepts} from '@/utils/charutils'
+	import {updateDocNotice} from '@/api/tax/instore_notice'
 
 	export default {
 		name: "Outstore_notice",
 		data() {
 			return {
 				// 遮罩层
-				loading: true,
+				loading: false,
 				// 选中数组
 				ids: [],
 				depts: [],
@@ -814,6 +838,15 @@
 					}
 				})
 			},
+			handleNoticeArchive(row){
+				console.log(row)
+				updateDocNotice(row.placeId, row.outNoticeNo, 'outnotice', 'archive').then(response=>{
+					if(response.code ===200){
+						this.$message.success("归档成功")
+						this.getList()
+					}
+				})
+			}
 		}
 	};
 </script>

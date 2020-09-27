@@ -26,9 +26,9 @@ export function analysis(query) {
   })
 }
 // 通过车号查询数据
-export function getSheet(event) {
+export function getSheet(event,stationId) {
   return request({
-    url: '/pound/measurement/sheet/inrecord?vehicleNo=' + event,
+    url: '/pound/measurement/sheet/inrecord?vehicleNo=' + event+'&stationId='+stationId,
     method: 'get'
   })
 }
