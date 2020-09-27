@@ -90,7 +90,7 @@ export function genStoreDoc(placeId, direction, noticeNo, storeCode, weight) {
 		'weight': weight
 	}
 	return request({
-		url: '/place/pound/doc',
+		url: '/tax/notice/doc',
 		method: 'post',
 		data: data
 	})

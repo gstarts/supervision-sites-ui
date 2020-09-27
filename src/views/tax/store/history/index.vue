@@ -122,23 +122,33 @@
     </el-row>
     
     <el-table v-loading="loading" :data="goods_info_historyList">
-     <!-- <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="库位号" align="center" prop="id" />
-      <el-table-column label="库位号" align="center" prop="remark" />-->
-      <el-table-column label="库位号" align="center" prop="storeCode" />
-      <el-table-column label="批次号" align="center" prop="batchNo" />
-      <el-table-column label="袋封号" align="center" prop="bagSealNo" />
-      <el-table-column label="品名" align="center" prop="goodsName" />
-      <el-table-column label="袋号" align="center" prop="bagNumber" />
-      <el-table-column label="净重" align="center" prop="bagNetWeight" />
-      <el-table-column label="毛重" align="center" prop="bagRoughWeight" />
-      <el-table-column label="包装单位" align="center" prop="packingUnit" />
-      <el-table-column label="入库单号" align="center" prop="inDocNo" />
-      <el-table-column label="出库单号" align="center" prop="outDocNo" />
+     <!-- <af-table-column type="selection" width="55" align="center" />
+      <af-table-column label="库位号" align="center" prop="id" />
+      <af-table-column label="库位号" align="center" prop="remark" />-->
+      <af-table-column label="库位号" align="center" prop="storeCode"  />
+      <af-table-column label="批次号" align="center" prop="batchNo" />
+      <af-table-column label="袋封号" align="center" prop="bagSealNo"  />
+      <af-table-column label="品名" align="center" prop="goodsName" />
+      <af-table-column label="袋号" align="center" prop="bagNumber" />
+      <af-table-column label="净重" align="center" prop="bagNetWeight" />
+      <af-table-column label="毛重" align="center" prop="bagRoughWeight" />
+      <af-table-column label="包装单位" align="center" prop="packingUnit" />
+      <af-table-column label="入库单号" align="center" prop="inDocNo" />
+      <af-table-column label="入库时间" align="center" prop="createTime" >
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.createTime) }}</span>
+        </template>
+      </af-table-column>
+      <af-table-column label="出库单号" align="center" prop="outDocNo" />
+      <af-table-column label="出库时间" align="center" prop="updateTime" >
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.updateTime) }}</span>
+        </template>
+      </af-table-column>
       
-      <!--<el-table-column label="是否已加工" align="center" prop="hasProcess" />-->
-      <!--<el-table-column label="场所ID" align="center" prop="placeId" />-->
-      <!--<el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      <!--<af-table-column label="是否已加工" align="center" prop="hasProcess" />-->
+      <!--<af-table-column label="场所ID" align="center" prop="placeId" />-->
+      <!--<af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -155,7 +165,7 @@
             v-hasPermi="['tax:goods_info_history:remove']"
           >删除</el-button>
         </template>
-      </el-table-column>-->
+      </af-table-column>-->
     </el-table>
     
     <pagination
@@ -206,7 +216,9 @@
 					hasProcess: undefined,
 					packingUnit: undefined,
 					placeId: undefined,
-					storeCode: undefined
+					storeCode: undefined,
+					orderByColumn: 'id',
+					isAsc: 'desc'
 				},
 				// 表单参数
 				form: {},
