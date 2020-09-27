@@ -187,7 +187,7 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <!--<el-form-item label="模板类型，1入库知单，0出库通知单" prop="createBy">
           <el-input v-model="form.createBy" placeholder="请输入模板类型，1入库知单，0出库通知单" />
-        </el-form-item>
+        </el-form-item>k
         <el-form-item label="模板类型，1入库知单，0出库通知单" prop="createTime">
           <el-date-picker clearable size="small" style="width: 200px"
             v-model="form.createTime"
@@ -246,7 +246,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="业务编号" prop="businessNo" v-show="noticeType">
-              <el-input v-model="form.businessNo" placeholder="请输入业务编号"
+              <el-input v-model="form.businessNo"  placeholder="请输入业务编号"
                         clearable
                         size="small">
               </el-input>
@@ -280,7 +280,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="10">
+        <el-row :gutter="10" v-show="noticeType">
           <el-col :span="12">
             <el-form-item label="发货单位" prop="sendName">
               <el-autocomplete
@@ -300,6 +300,7 @@
                   v-model="form.receiveName"
                   :fetch-suggestions="nameSearch"
                   placeholder="请输入收货单位"
+                  clearable
                   @select="handleSelect2"
                 ></el-autocomplete>
               </el-form-item>
@@ -340,9 +341,8 @@
 <script>
 	import {listImport, getImport, delImport, addImport, genNotice} from "@/api/tax/import";
 	import {getUserDepts} from '@/utils/charutils'
-	import {getRefreshToken, getToken} from '@/utils/auth'
 	import { listContract} from '@/api/tax/contract'
-	import {genDoc, genStoreDoc} from '@/api/tax/instore_notice'
+	import {getToken} from '@/utils/auth'
 
 	export default {
 		name: "Import",
@@ -373,8 +373,8 @@
 				importList: [],
 				importTypeDic: [
 					{value: '1', label: '入库通知单'},
-					{value: '0', label: '出库通知单'}
-					/*{value: '2', label: '报关数据单'}*/
+					{value: '0', label: '出库通知单'},
+					{value: '2', label: '报关数据单'}
 				],
 				// 弹出层标题
 				title: "",
@@ -411,27 +411,44 @@
 				// 表单校验
 				rules1: {
 					templateType: [
-						{required: true, message: "模板类型不能为空", trigger: "change"}
+						{ type:"string", required: true, message: "模板类型不能为空", trigger: "change"}
 					],
 					storeCustomer: [
-						{required: true, message: "寄舱客户不能为空", trigger: "change"}
+						{type:"string",required: true, message: "寄舱客户不能为空", trigger: "change"}
 					],
 					settlementCustomer: [
-						{required: true, message: "结算客户不能为空", trigger: "change"}
+						{type:"string",required: true, message: "结算客户不能为空", trigger: "change"}
 					],
 					businessNo: [
-						{required: true, message: "业务编号不能为空", trigger: "blur"}
+						{type:"string",required: true, message: "业务编号不能为空", trigger: "change"}
 					],
 					sendName: [
-						{required: true, message: "发货单位不能为空", trigger: "blur"}
+						{type:"string",required: true, message: "发货单位不能为空", trigger: "change"}
 					],
           receiveName: [
-						{required: true, message: "收货单位不能为空", trigger: "blur"}
+						{type:"string",required: true, message: "收货单位不能为空", trigger: "change"}
 					]
 				},
 				rules2: {
 					templateType: [
-						{required: true, message: "模板类型不能为空", trigger: "change"}
+						{type:"string",required: true, message: "模板类型不能为空", trigger: "change"}
+					]
+				},
+				rules3: {
+					templateType: [
+						{type:"string",required: true, message: "模板类型不能为空", trigger: "change"}
+					],
+					storeCustomer: [
+						{type:"string",required: true, message: "寄舱客户不能为空", trigger: "change"}
+					],
+					settlementCustomer: [
+						{type:"string",required: true, message: "结算客户不能为空", trigger: "change"}
+					],
+					sendName: [
+						{type:"string",required: true, message: "发货单位不能为空", trigger: "change"}
+					],
+					receiveName: [
+						{type:"string",required: true, message: "收货单位不能为空", trigger: "change"}
 					]
 				},
 				uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/tax/upload',
@@ -451,8 +468,8 @@
 			// 0 监管场所，1保税库，2堆场，3企业
 			this.importTypeDic = [
 				{value: '1', label: '入库通知单'},
-				{value: '0', label: '出库通知单'}
-				/*{value: '2', label: '报关数据单'}*/
+				{value: '0', label: '出库通知单'},
+				{value: '2', label: '报关数据单'}
 			]
 			
 			listContract({'placeId': this.queryParams.placeId}).then(response => {
@@ -480,6 +497,7 @@
 			cancel() {
 				this.open = false;
 				this.reset();
+				this.$refs.upload.$refs['upload-inner'].fileList =[]
 			},
 			// 表单重置
 			reset() {
@@ -502,6 +520,7 @@
 					objectName: undefined,
 					path: undefined,
 					placeId: undefined,
+     
 				};
 				this.uploading = false
 				this.resetForm("form");
@@ -610,7 +629,6 @@
         }
 				this.uploading = true
 				this.$refs.upload.clearFiles()
-				console.log(response.data)
 				this.form.createTime = response.data.createTime
 				this.form.bucketName = this.headers.bucketName
 				this.form.fileName = response.data.name
@@ -619,10 +637,13 @@
 				this.form.fileLength = response.data.length
 
 				addImport(this.form).then(response => {
+					console.log('上传数据')
 					if (response.code === 200) {
+						this.$message.success("上传成功")
+						//this.msgSuccess("上传成功");
 						this.uploading = false
-						this.msgSuccess("上传成功");
 						this.open = false;
+						this.cancel()
 						this.getList();
 					} else {
 						this.uploading = false
@@ -706,16 +727,21 @@
 			},
 			templateChange() {
 				console.log(this.form.templateType)
-				if (this.form.templateType === '0' || this.form.templateType === '1') {
+				if (this.form.templateType === '1' ){
 					this.rules = this.rules1
 					this.noticeType = true
-				} else {
+				} else if(this.form.templateType === '0') {
+					this.rules = this.rules3
+					this.noticeType = true
+				}else{
 					this.form.businessNo = ''
 					this.form.settlementCustomer = ''
 					this.form.storeCustomer = ''
 					this.form.storeContractId = ''
 					this.form.settlementContractId = ''
 					this.rules = this.rules2
+          this.form.sendName = ''
+          this.form.receiveName = ''
 					this.noticeType = false
 				}
 			},

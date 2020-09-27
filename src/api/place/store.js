@@ -51,3 +51,10 @@ export function listStoreCanUse(query) {
 		params: query
 	})
 }
+
+export function getStoreUsable(placeId) {
+	return request({
+		url: '/place/store/usable/' + placeId,
+		method: 'post'
+	})
+}

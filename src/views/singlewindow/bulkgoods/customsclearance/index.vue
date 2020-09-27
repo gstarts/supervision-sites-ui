@@ -126,7 +126,6 @@
         </div>
 
         <div class="el-upload__tip" slot="tip">
-          
           <el-link type="info" style="font-size:12px" @click="importTemplate">下载模板</el-link>
         </div>
 
@@ -211,7 +210,7 @@ export default {
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/waybill/customs/importData"
+        url: process.env.VUE_APP_BASE_API + "/manifest/customs/importData"
       },
       // 表单参数
       form: {},
@@ -379,9 +378,11 @@ export default {
 
     /** 下载模板操作 */
     importTemplate() {
-      importTemplate().then(response => {
+	    window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=file&objectName=manifest/提运单导入模板.xlsx'
+      // manifest/customs/importTemplate
+      /*importTemplate().then(response => {
         this.download(response.msg);
-      });
+      });*/
     },
 
     // 文件上传中处理
