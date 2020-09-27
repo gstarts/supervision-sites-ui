@@ -2,11 +2,11 @@
   <div class="app-container">
     <!-- 按钮组 -->
     <div class="mb20">
-      <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn" @click="handleAdd">新增
+      <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable" @click="handleAdd">新增
       </el-button>
-      <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable.saveBtn" @click="handleSave">暂存
+      <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable" @click="handleSave">暂存
       </el-button>
-      <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn" @click="handleDelete">
+      <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable" @click="handleDelete">
         删除
       </el-button>
       <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode"
@@ -172,13 +172,13 @@
       </div>
       <el-row type="flex" class="mb20">
         <el-col>
-          <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn"
+          <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable"
                      @click="handleAdd($event,'waybill')">新增
           </el-button>
-          <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable.saveBtn"
+          <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable"
                      @click="handleChange($event,'waybill')">修改
           </el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn"
+          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable"
                      @click="handleDelete($event,'waybill')">删除
           </el-button>
           <span>&nbsp;&nbsp;注：对选中数据修改完成之后请点击左侧“保存”按钮</span>
@@ -389,13 +389,13 @@
       </div>
       <el-row type="flex" class="mb20">
         <el-col>
-          <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn"
+          <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable"
                      @click="handleAdd($event,'shopInfo')">新增
           </el-button>
-          <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable.saveBtn"
+          <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable"
                      @click="handleChange($event,'shopInfo')">修改
           </el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn"
+          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable"
                      @click="handleDelete($event,'shopInfo')">删除
           </el-button>
         </el-col>
@@ -515,13 +515,13 @@
       </div>
       <el-row type="flex" class="mb20">
         <el-col>
-          <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn"
+          <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable"
                      @click="handleAdd($event,'containerInfo')">新增
           </el-button>
-          <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable.saveBtn"
+          <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable"
                      @click="handleChange($event,'containerInfo')">修改
           </el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn"
+          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable"
                      @click="handleDelete($event,'containerInfo')">删除
           </el-button>
         </el-col>
@@ -664,14 +664,7 @@ export default {
       dialogTableVisible: false,
       dialogTableVisible2: false,
       // 按钮禁用状态
-      btnDisable: {
-        addBtn: false,
-        saveBtn: false,
-        delBtn: false,
-        repBtn: true,
-        copyBtn: false,
-        refBtn: false
-      },
+      btnDisable: false,
       ContainerSize: [],
       // 基础信息
       basicParams: {
@@ -778,6 +771,11 @@ export default {
     // 初始化
     this.init()
     const id = this.$route.query.id
+    const flag = this.$route.query.flag
+    if (flag) {
+      this.btnDisable = true
+    }
+
     if (id) {
       this.query(id)
     }

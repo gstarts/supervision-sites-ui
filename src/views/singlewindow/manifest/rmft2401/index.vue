@@ -2,11 +2,11 @@
   <div class="app-container">
     <!-- 按钮组 -->
     <div class="mb20">
-      <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn" @click="handleAdd">新增
+      <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable" @click="handleAdd">新增
       </el-button>
-      <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable.saveBtn" @click="handleSave">暂存
+      <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable" @click="handleSave">暂存
       </el-button>
-      <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn" @click="handleDelete">
+      <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable" @click="handleDelete">
         删除
       </el-button>
       <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode"
@@ -181,13 +181,13 @@
       </div>
       <el-row type="flex" class="mb20">
         <el-col>
-          <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn"
+          <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable"
                      @click="handleAdd($event,'waybill')">新增
           </el-button>
-          <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable.saveBtn"
+          <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable"
                      @click="handleChange($event,'waybill')">修改
           </el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn"
+          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable"
                      @click="handleDelete($event,'waybill')">删除
           </el-button>
           <span>&nbsp;&nbsp;注：对选中数据修改完成之后请点击左侧“保存”按钮</span>
@@ -331,7 +331,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="金额类型	" prop="currencyType">
-              <el-select v-model="waybill.currencyType" filterable multiple collapse-tags placeholder="金额类型">
+              <el-select v-model="waybill.currencyType" placeholder="金额类型">
                 <el-option
                   v-for="item in currencySystem"
                   :key="item.dictValue"
@@ -398,13 +398,13 @@
       </div>
       <el-row type="flex" class="mb20">
         <el-col>
-          <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn"
+          <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable"
                      @click="handleAdd($event,'shopInfo')">新增
           </el-button>
-          <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable.saveBtn"
+          <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable"
                      @click="handleChange($event,'shopInfo')">修改
           </el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn"
+          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable"
                      @click="handleDelete($event,'shopInfo')">删除
           </el-button>
         </el-col>
@@ -524,13 +524,13 @@
       </div>
       <el-row type="flex" class="mb20">
         <el-col>
-          <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable.addBtn"
+          <el-button type="primary" icon="el-icon-plus" size="mini" :disabled="btnDisable"
                      @click="handleAdd($event,'containerInfo')">新增
           </el-button>
-          <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable.saveBtn"
+          <el-button type="success" icon="el-icon-edit" size="mini" :disabled="btnDisable"
                      @click="handleChange($event,'containerInfo')">修改
           </el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable.delBtn"
+          <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="btnDisable"
                      @click="handleDelete($event,'containerInfo')">删除
           </el-button>
         </el-col>
@@ -560,18 +560,20 @@
                 v-model="containerInfo.equipmentId"
                 placeholder="集装箱（器）编号"
                 clearable
-
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="尺寸和类型" prop="characteristicCode">
-              <el-input
-                v-model="containerInfo.characteristicCode"
-                placeholder="尺寸和类型"
-                clearable
+              <el-select v-model="containerInfo.characteristicCode" placeholder="尺寸和类型" clearable>
+                <el-option
+                  v-for="dict in ContainerSize"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
 
-              />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -634,6 +636,7 @@ import consignorInfo from './consignorInfo.vue'
 import receivingInfo from './receivingInfo.vue'
 
 import { listInfo } from '@/api/basis/enterpriseInfo'
+import { queryById } from '@/api/manifest/query'
 
 export default {
   components: {
@@ -670,14 +673,8 @@ export default {
       dialogTableVisible: false,
       dialogTableVisible2: false,
       // 按钮禁用状态
-      btnDisable: {
-        addBtn: false,
-        saveBtn: false,
-        delBtn: false,
-        repBtn: true,
-        copyBtn: false,
-        refBtn: false
-      },
+      btnDisable: false,
+      ContainerSize: [],
       // 基础信息
       basicParams: {
         declaration: {
@@ -782,11 +779,26 @@ export default {
   mounted() {
     // 初始化
     this.init()
+    const id = this.$route.query.id
+    const flag = this.$route.query.flag
+    if (flag) {
+      this.btnDisable = true
+    }
+
+    if (id) {
+      this.query(id)
+    }
   },
   watch: {
     'basicParams.voyageNo': {
       handler: function(newVal) {
         this.basicParams.voyageNo = newVal.toUpperCase()
+      }
+    },
+    'basicParams.representativePerson.name': {
+      handler: function(newVal) {
+        const data = this.listInfo.find(el => el.stationPersonName === newVal)
+        this.basicParams.unitCode = data.deptId
       }
     }
   },
@@ -803,8 +815,21 @@ export default {
       this.getDicts('station_transport_fashion').then((response) => {
         this.businessTypeOptions = response.data
       })
+      /** 集装箱(器)尺寸类型字典 */
+      this.getDicts('hg_container_size_type').then((response) => {
+        this.ContainerSize = response.data
+      })
     },
+    // 查询方法
+    query(id) {
+      queryById(id).then(res => {
+        if (res.code == 200) {
+          this.basicParams = res.data.basicParams
+          this.waybillList = res.data.waybillList
 
+        }
+      })
+    },
     // 暂存
     handleSave() {
       console.log('保存')
@@ -1106,7 +1131,6 @@ export default {
       this.basicParams.unloadingLocation.unloadinglocationId = code
       this.basicParams.declaration.declarationOfficeId = code
       this.basicParams.customMasterName = code
-
     },
     saveList() {
       const { basicParams, waybillList, shopInfoList, containerInfoList } = this
