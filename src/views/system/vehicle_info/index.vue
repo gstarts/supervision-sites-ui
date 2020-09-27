@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="场所ID" prop="placeId">
         <el-select
-          v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+          v-model="queryParams.placeId" placeholder="请选择场所" size="small" @change="getList">
           <el-option
             v-for="dept in depts"
             :key="dept.deptId"
@@ -92,13 +92,22 @@
       </el-col>
     </el-row>
     
-    <el-table v-loading="loading" :data="vehicle_infoList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
+    <el-table v-loading="loading" :data="vehicle_infoList">
+     <!-- <el-table-column type="selection" width="55" align="center"/>-->
       <el-table-column label="ID" align="center" prop="id"/>
       <el-table-column label="车牌号" align="center" prop="vehicleNo"/>
       <el-table-column label="电子车牌" align="center" prop="vehicleElecNo"/>
-      <el-table-column label="车辆类型" align="center" prop="vehicleType"/>
-      <el-table-column label="场所ID" align="center" prop="placeId"/>
+      <el-table-column label="车辆类型" align="center" prop="vehicleType">
+        <template slot-scope="scope">
+          {{vehicle_type.find(item=>item.value === scope.row.vehicleType).label}}
+        </template>
+      </el-table-column>
+      <el-table-column label="场所名称" align="center" prop="placeId">
+        <template slot-scope="scope">
+          {{depts.find(item=>item.deptId === scope.row.placeId).deptName}}
+        </template>
+      </el-table-column>
+      <el-table-column label="场所编号" align="center" prop="placeId"/>
       <el-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
@@ -133,20 +142,45 @@
     <!-- 添加或修改vehicle对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="车牌号" prop="vehicleNo">
-          <el-input v-model="form.vehicleNo" placeholder="请输入车牌号"/>
-        </el-form-item>
-        <el-form-item label="电子车牌" prop="vehicleElecNo">
-          <el-input v-model="form.vehicleElecNo" placeholder="请输入电子车牌"/>
-        </el-form-item>
-        <el-form-item label="场所ID" prop="placeId">
-          <el-input v-model="form.placeId" placeholder="请输入场所ID"/>
-        </el-form-item>
-        <el-form-item label="车辆类型，1货运车辆，2行政车辆">
-          <el-select v-model="form.vehicleType" placeholder="请选择车辆类型，1货运车辆，2行政车辆">
-            <el-option label="请选择字典生成" value=""/>
-          </el-select>
-        </el-form-item>
+        <el-row :gutter="10">
+         <el-col :span="12">
+           <el-form-item label="场所" prop="placeId">
+             <el-select v-model="form.placeId" placeholder="请选择场站">
+               <el-option
+                 v-for="dept in depts1"
+                 :key="dept.deptId"
+                 :label="dept.deptName"
+                 :value="dept.deptId"
+               />
+             </el-select>
+           </el-form-item>
+         </el-col>
+         <el-col :span="12">
+           <el-form-item label="车牌号" prop="vehicleNo">
+             <el-input v-model="form.vehicleNo" placeholder="请输入车牌号"/>
+           </el-form-item>
+         </el-col>
+        </el-row>
+  
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="电子车牌" prop="vehicleElecNo">
+              <el-input v-model="form.vehicleElecNo" placeholder="请输入电子车牌"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="车辆类型" prop="vehicleType">
+              <el-select v-model="form.vehicleType" placeholder="请选择车辆类型">
+                <el-option
+                  v-for="type in vehicle_type"
+                  :key="type.value"
+                  :label="type.label"
+                  :value="type.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注"/>
         </el-form-item>
@@ -168,6 +202,7 @@
 		updateVehicle_info, listVehicleNoList
 	} from "@/api/system/vehicle_info";
 	import store from '@/store/index'
+	import {getUserDepts} from '@/utils/charutils'
 
 	export default {
 		name: "Vehicle_info",
@@ -178,6 +213,7 @@
 				// 选中数组
 				ids: [],
 				depts: [],
+        depts1: [],
 				// 非单个禁用
 				single: true,
 				// 非多个禁用
@@ -207,18 +243,33 @@
 				form: {},
 				// 表单校验
 				rules: {
+					placeId: [
+						{required: true, message: "场所不能为空", trigger: "change"}
+          ],
 					vehicleNo: [
 						{required: true, message: "车牌号不能为空", trigger: "blur"}
 					],
+					vehicleType: [
+						{required: true, message: "车辆类型不能为空", trigger: "change"}
+          ]
 				}
 			};
 		},
 		created() {
-			this.depts = store.getters.dept.children
-			this.depts.push(store.getters.dept)
+
+			this.depts = getUserDepts('')
+
+			this.depts1 = [...this.depts]
+			this.depts.unshift({deptId: '', deptName: '全部'})
+
+			if (this.depts.length > 0) {
+				this.queryParams.placeId = this.depts[0].deptId
+			}
+			//this.depts = store.getters.dept.children
+			//this.depts.push(store.getters.dept)
 			//console.log(this.depts)
 			this.getList();
-			
+
 		},
 		methods: {
 			/** 查询vehicle列表 */
