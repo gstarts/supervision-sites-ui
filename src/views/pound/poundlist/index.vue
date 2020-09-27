@@ -256,43 +256,43 @@
       </el-tabs>
     </el-card>
     <div id="dayin" v-show="Explicit ">
-      <div style="align-content: center;">
-        <span class="poundTotal11">{{poundTotal}}</span>
+      <div  id="poundtotalStyle">
+        <span class="poundtoalFont" >{{poundTotal}}</span>
       </div>
-      <div id="area">
+      <div id="nowDataStyle">
         <span class="area-in-style">{{nowData}}</span>
       </div>
-      <div id="areadate">
+      <div id="nowTimeStyle">
         <span>{{nowTime}}</span>
       </div>
-      <div id="area-style">
-        <span class="area-in-style">{{form.deliveryUnit}}</span>
+      <div id="areaLeftstyle">
+        <span >{{form.deliveryUnit}}</span>
       </div>
-      <div id="area-right-style">
+      <div id="areaRightStyle">
         <span>{{form.plateNum}}</span>
       </div>
       <br/>
-      <div id="area-style">
-        <span class="area-in-style">{{form.receivingUnit}}</span>
+      <div id="areaLeftstyle">
+        <span >{{form.receivingUnit}}</span>
       </div>
-      <div id="area-right-style">
+      <div id="areaRightStyle">
         <span>{{form.grossWeight}}</span>
       </div>
-      <div id="area-style">
-        <span class="area-in-style">{{form.goodsName}}</span>
+      <div id="areaLeftstyle">
+        <span >{{form.goodsName}}</span>
       </div>
-      <div id="area-right-style">
+      <div id="areaRightStyle">
         <span>{{form.tare}}</span>
         <br/>
       </div>
-      <div id="area-style">
-        <span class="area-in-style">{{form.specification}}</span>
+      <div id="areaLeftstyle">
+        <span>{{form.specification}}</span>
       </div>
-      <div id="area-right-style">
+      <div id="areaRightStyle">
         <span>{{form.netWeight}}</span>
         <br/>
       </div>
-      <div id="area-all-style">
+      <div id="remarkStyle">
         <span class="area-in-style">{{form.remark}}</span>
         <br/>
       </div>
@@ -854,22 +854,26 @@
   #dayin {
     height: 500px;
     width: 1200px;
+    /*border: 1px solid ;*/
   }
   
-  #area {
+  #nowDataStyle {
     width: 300px;
     height: 40px;
-    margin-top: 40px;
+    margin-top: 20px;
     float: left;
+    margin-left: 4cm;
+    padding-left: 1.5cm;
+    /*border: 1px solid ;*/
   }
   
-  #areadate {
+  #nowTimeStyle {
     width: 300px;
     height: 40px;
-    margin-top: 40px;
+    margin-top: 20px;
     padding-left: 40px;
     float: left;
-    margin-left: 20px;
+    /*border: 1px solid ;*/
   }
   
   #poundtotal {
@@ -877,39 +881,69 @@
     height: 10px;
   }
   
-  #area-style {
+  #areaLeftstyle {
     width: 600px;
     height: 40px;
     font-size: 20px;
     margin-top: 10px;
-    
+    padding-left: 2cm;
     float: left;
+    margin-left: 4cm;
+    /*border: 1px solid ;*/
+
   }
+
+  /*#area-style1{*/
+  /*  width: 600px;*/
+  /*  height: 40px;*/
+  /*  font-size: 20px;*/
+  /*  padding-right: 0px;*/
+  /*  margin-top: 10px;*/
+
+  /*}*/
   
-  #area-right-style {
+  #areaRightStyle {
     height: 40px;
-    width: 350px;
+    width: 300px;
     font-size: 20px;
     margin-top: 10px;
-    margin-left: 100px;
-    float: right;
+    float: left;
+    /*border: 1px solid ;*/
   }
   
-  #area-all-style {
+  #remarkStyle {
     width: 800px;
     height: 40px;
     font-size: 20px;
     float: left;
     margin-top: 10px;
+    margin-left: 4cm;
+    /*border: 1px solid ;*/
   }
   
-  .area-in-style {
+  /*.area-in-style {*/
+  /*  padding-left: 3cm;*/
+  /*  margin-top: 10px;*/
+  /*  !*border: 1px solid ;*!*/
+  /*}*/
+
+  #poundtotalStyle{
+    width: 600px;
+    height: 40px;
+    margin-top: 55px;
+    margin-left: 7cm;
     padding-left: 3cm;
-    margin-top: 10px;
+    /*border: 1px solid ;*/
+
+
+  }
+  .poundtoalFont{
+    font-size: 20px;
   }
   
-  .poundTotal11 {
-    font-size: 20px;
-    padding-left: 280px;
-  }
+  /*.poundTotal11 {*/
+  /*  font-size: 20px;*/
+  /*  padding-left: 280px;*/
+  /*  !*border: 1px solid ;*!*/
+  /*}*/
 </style>
