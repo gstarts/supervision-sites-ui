@@ -530,7 +530,7 @@
 						getNoticeByVehicle(this.queryParams.stationId, this.direction, event).then((response) => {
 							if (response.code === 200) {
 								//规格型号
-								this.form.specification = response.data.businessNo;
+								this.form.remark = response.data.businessNo;
 								//货物名称
 								this.form.goodsName = response.data.goodsName;
 								//收货单位
@@ -617,6 +617,8 @@
 			AllADD() {
 				//通道号赋值
 				this.form.channelNumber = this.PoundForm.channelNumber;
+        ///规格型号
+        this.form.specification = this.form.remark;
 				//场站ID赋值
 				this.form.stationId = this.queryParams.stationId;
 				this.form.updateTime = genTimeCode(new Date(), "YYYY-MM-DD HH:mm:ss");
@@ -862,8 +864,9 @@
     height: 40px;
     margin-top: 20px;
     float: left;
-    margin-left: 4cm;
+    margin-left: 6cm;
     padding-left: 1.5cm;
+    font-size: 20px;
     /*border: 1px solid ;*/
   }
   
@@ -873,6 +876,7 @@
     margin-top: 20px;
     padding-left: 40px;
     float: left;
+    font-size: 20px;
     /*border: 1px solid ;*/
   }
   
@@ -886,9 +890,9 @@
     height: 40px;
     font-size: 20px;
     margin-top: 10px;
-    padding-left: 2cm;
+    padding-left: 2.5cm;
     float: left;
-    margin-left: 4cm;
+    margin-left: 6cm;
     /*border: 1px solid ;*/
 
   }
@@ -938,7 +942,7 @@
 
   }
   .poundtoalFont{
-    font-size: 20px;
+    font-size: 30px;
   }
   
   /*.poundTotal11 {*/
