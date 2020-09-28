@@ -214,7 +214,7 @@
             <el-table-column label="发货单位" align="center" prop="deliveryUnit"/>
             <el-table-column label="收货单位" align="center" prop="receivingUnit"/>
             <el-table-column label="货物名称" align="center" prop="goodsName"/>
-            <el-table-column label="规格型号" align="center" prop="specification"/>
+            <el-table-column label="备注" align="center" prop="remark"/>
           </el-table>
           <pagination
             v-show="total>0"
@@ -243,7 +243,7 @@
             <el-table-column label="发货单位" align="center" prop="deliveryUnit"/>
             <el-table-column label="收货单位" align="center" prop="receivingUnit"/>
             <el-table-column label="货物名称" align="center" prop="goodsName"/>
-            <el-table-column label="规格型号" align="center" prop="specification"/>
+            <el-table-column label="备注" align="center" prop="remark"/>
           </el-table>
           <pagination
             v-show="total>0"
@@ -584,6 +584,7 @@
 			dbRow(row, column) {
 				this.form = row;
 				console.log(this.form)
+
 				this.form
 			},
 			// 打印按钮
@@ -618,7 +619,7 @@
 				//通道号赋值
 				this.form.channelNumber = this.PoundForm.channelNumber;
         ///规格型号
-        this.form.specification = this.form.remark;
+        // this.form.specification = this.form.remark;
 				//场站ID赋值
 				this.form.stationId = this.queryParams.stationId;
 				this.form.updateTime = genTimeCode(new Date(), "YYYY-MM-DD HH:mm:ss");
@@ -921,7 +922,8 @@
     font-size: 20px;
     float: left;
     margin-top: 10px;
-    margin-left: 4cm;
+
+    margin-left: 8.5cm;
     /*border: 1px solid ;*/
   }
   
