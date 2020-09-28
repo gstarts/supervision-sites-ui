@@ -34,60 +34,57 @@
         </el-button>
       </el-col>
     </el-row>
-    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1550px;padding-left: 3px ;padding-top:50px" id="print">
-      <el-row :gutter="10" style="font-size:26px;">
-        <el-col :span="8" style="text-align: center">入 库 通 知 单</el-col>
+    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1600px;padding-left: 3px ;padding-top:50px" id="print">
+      <el-row :gutter="10" style="font-size:32px;">
+        <el-col :span="7" style="text-align: center">入 库 通 知 单</el-col>
         <el-col :span="1">GR</el-col>
         <el-col :span="5">{{instoreNotice.inNoticeNo}}</el-col>
       </el-row>
       <el-row :gutter="10" style="padding-top: 18px;">
-        <el-col :span="2">日期:</el-col>
-        <el-col :span="5" style="font-size:24px;">{{instoreNotice.genTime}}</el-col>
-        <el-col :span="1" style="width: 90px">业务编号:</el-col>
-        <el-col :span="6">{{instoreNotice.businessNo}}</el-col>
+        <el-col :span="1" style="font-size: 20px;width: 120px">日期:</el-col>
+        <el-col :span="4" style="font-size:24px;margin-top: -5px;width: 350px">{{instoreNotice.genTime}}</el-col>
+        <el-col :span="2" style="width: 100px;font-size: 18px">业务编号:</el-col>
+        <el-col :span="5" style="font-size: 26px;margin-top: -5px">{{instoreNotice.businessNo}}</el-col>
       </el-row>
       <el-row :gutter="10" id="test" style="padding-top: 18px;">
-        <el-col :span="1">客户:</el-col>
-        <el-col :span="5" style="text-align: center">{{instoreNotice.checkConsumer}}</el-col>
-        <el-col :span="1" style="width:70px">车牌号:</el-col>
-        <el-col :span="4" style="text-align: center">{{instoreNotice.vehicleNo}}</el-col>
-        <el-col :span="2">卸车日期:</el-col>
+        <el-col :span="1" style="font-size: 20px;width: 80px">客户:</el-col>
+        <el-col :span="4" style="text-align: left;width: 300px">{{instoreNotice.checkConsumer}}</el-col>
+        <el-col :span="1" style="width:100px;font-size: 20px">车牌号:</el-col>
+        <el-col :span="3" style="text-align: left;font-size: 20px;width: 237px">{{instoreNotice.vehicleNo}}</el-col>
+        <el-col :span="2" style="font-size: 18px;">卸车日期:</el-col>
       </el-row>
       <el-row :gutter="10" style="padding-top: 10px;">
-        <el-col :span="1">&nbsp;</el-col>
-        <el-col :span="5">&nbsp;</el-col>
-        <el-col :span="1" style="width:70px">&nbsp;</el-col>
-        <el-col :span="4">&nbsp;</el-col>
-        <el-col :span="2">开始时间:</el-col>
+        <el-col :span="2" style="font-size: 18px;margin-left:717px">开始时间:</el-col>
       </el-row>
       <el-row :gutter="10" style="padding-top: 10px;padding-bottom:10px ;">
         <el-col :span="1">批次:</el-col>
-        <el-col :span="5" style="text-align: center">{{instoreNotice.batchNo}}</el-col>
+        <el-col :span="5" style="text-align: center;font-size: 26px;margin-top: -5px;width: 314px">{{instoreNotice.batchNo}}</el-col>
         <el-col :span="1" style="width:70px">司机名:</el-col>
-        <el-col :span="4" style="text-align: center">{{instoreNotice.driverName}}</el-col>
-        <el-col :span="2">完成日期:</el-col>
+        <el-col :span="4" style="text-align: center;width: 266px">{{instoreNotice.driverName}}</el-col>
+        <el-col :span="2">完成时间:</el-col>
       </el-row>
       <el-row :gutter="10">
         <el-col :span="14">
-          <el-table border v-loading="loading" :data="instore_notice_detailList" :span-method="arraySpanMethod"
-                    :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'16px'}"
-                    :cell-style="{border:'solid .5px black',fontSize:'16px',padding:'8px 2px',color:'black'}"
-                    style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
+          <el-table  v-loading="loading" :data="instore_notice_detailList" :span-method="arraySpanMethod"
+                    :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'16px',padding:'3 -3px',margin:'-3'}"
+                    :cell-style="{border:'solid .5px black',fontSize:'18px',padding:'12px 0',color:'black'}"
+                    style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black"
+          >
             <el-table-column label="收货人填写" align="center">
               <el-table-column type="index" :index="getIndex" label="序号" align="center" width="100px">
               </el-table-column>
-              <el-table-column label="袋封号" align="center" prop="bagSealNo" width="220px"/>
-              <el-table-column label="品名" align="center" prop="goodsName" width="180px"/>
-              <el-table-column label="预计数量" align="center" prop="bookStoreCode" width="90px">
+              <el-table-column label="袋封号" align="center" prop="bagSealNo" width="230px"/>
+              <el-table-column label="品名" align="center" prop="goodsName" width="190px"/>
+              <el-table-column label="预计数量" align="center" prop="bookStoreCode" width="86px" style="padding:0">
                 <template slot-scope="scope">
                   {{scope.row.bookStoreCode === null?1:scope.row.bookStoreCode}}
                 </template>
               </el-table-column>
               <!--<el-table-column label="袋号" align="center" prop="bagNumber" />-->
-              <el-table-column label="包装单位" align="center" prop="packingUnit" width="90px"/>
-              <el-table-column label="货位号" align="center" prop=""/>
+              <el-table-column label="包装单位" align="center" prop="packingUnit" width="86px"/>
+              <el-table-column label="货位号" align="center" prop="" width="127px"/>
               <!--<el-table-column label="预订货位号" align="center" prop="id" />-->
-              <el-table-column label="是否已加工" align="center" prop="hasProcess" width="110px">
+              <el-table-column label="是否已加工" align="center" prop="hasProcess" width="104px">
                 <template slot-scope="scope"></template>
               </el-table-column>
             </el-table-column>
@@ -341,7 +338,12 @@
 				this.download('tax/instore_notice_detail/export', {
 					...this.queryParams
 				}, `tax_instore_notice_detail.xlsx`)
-			}
+			},
+			goodsCount(row){
+				//if(row.columnIndex === 3){
+					return 'goodsCount'
+        //}
+      }
 		}
 	};
 </script>
@@ -355,5 +357,11 @@
     margin-top: 8mm;
     margin-right: 20px;
   }*/
-  
+  .goodsCount{
+    padding: 0 !important;
+  }
+  .goodsCount .cell{
+    padding: 0;
+    overflow: unset;
+  }
 </style>

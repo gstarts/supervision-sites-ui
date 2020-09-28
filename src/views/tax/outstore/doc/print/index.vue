@@ -136,7 +136,11 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="14">
-          <el-table border v-loading="loading" :data="instore_notice_detailList" style="border: 1px solid;">
+          <el-table  v-loading="loading" :data="instore_notice_detailList"
+                    :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'14px',padding:'3 -3px',margin:'-3'}"
+                    :cell-style="{border:'solid .5px black',fontSize:'16px',padding:'12px 0',color:'black'}"
+                    style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black"
+          >
             <el-table-column prop="index" type="index" :label="'No.\n序号'" align="center" width="80px"/>
             <el-table-column :label="'Date of inbound\n入库日期'" align="center" prop="">
               <template slot-scope="scope">
