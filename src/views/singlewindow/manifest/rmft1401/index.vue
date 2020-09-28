@@ -117,6 +117,15 @@
                 placeholder="选择日期"/>
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="中蒙数据交换项" prop="postCode">
+              <el-input
+                v-model="basicParams.postCode"
+                placeholder="中蒙数据交换项"
+                clearable
+              />
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
@@ -278,7 +287,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="包装种类" prop="WrapType">
-              <el-select v-model="waybill.WrapType" filterable placeholder="包装种类">
+              <el-select v-model="waybill.wrapType" filterable placeholder="包装种类">
                 <el-option
                   v-for="item in PaymentMethodCode"
                   :key="item.dictValue"
@@ -321,8 +330,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="金额类型	" prop="currencyType">
-              <el-select v-model="waybill.currencyType" placeholder="金额类型">
+            <el-form-item label="金额类型	" prop="amountType">
+              <el-select v-model="waybill.amountType" placeholder="金额类型">
                 <el-option
                   v-for="item in currencySystem"
                   :key="item.dictValue"
@@ -538,7 +547,7 @@
         @selection-change="containerInfoSelectionChange">
         <el-table-column type="selection" min-width="55"/>
         <el-table-column type="index" label="序号" min-width="120"/>
-        <el-table-column prop="equipmentId" label="集装箱（器）编号" min-width="120"/>
+        <el-table-column prop="transportequipmentId" label="集装箱（器）编号" min-width="120"/>
         <el-table-column prop="characteristicCode" label="尺寸和类型" min-width="150"/>
         <el-table-column prop="supplierPartyTypeCode" label="来源代码" min-width="120"/>
         <el-table-column prop="fullnessCode" label="重箱或空箱标识" min-width="120"/>
@@ -546,9 +555,9 @@
       <el-form :model="containerInfo" ref="containerInfo" label-width="160px" size="mini">
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="集装箱（器）编号" prop="equipmentId">
+            <el-form-item label="集装箱（器）编号" prop="transportequipmentId">
               <el-input
-                v-model="containerInfo.equipmentId"
+                v-model="containerInfo.transportequipmentId"
                 placeholder="集装箱（器）编号"
                 clearable
               />
@@ -699,8 +708,8 @@ export default {
       // 提运单信息
       waybillList: [],
       waybill: {
-        WrapType: '',//包装种类
-        currencyType: '',//金额类型
+        wrapType: '',//包装种类
+        amountType: '',//金额类型
         consigneeName: '',//收货人名称
         transportcontrantionId: '',//提（运）单号
         conditionCode: '',//运输条款
@@ -736,8 +745,7 @@ export default {
       // 集装箱信息
       containerInfoList: [],
       containerInfo: {
-
-        equipmentId: '', // 集装箱（器）编号
+        transportequipmentId: '', // 集装箱（器）编号
         characteristicCode: '', // 尺寸和类型
         supplierPartyTypeCode: '', // 来源代码
         fullnessCode: '' // 重箱或空箱标识
@@ -979,8 +987,8 @@ export default {
         this.$store.dispatch('originalManifest/consignorInfo', [])
         this.$store.dispatch('originalManifest/receivingInfo', { consigneeList: [], manifestContactList: [] })
         this.waybill = {
-          WrapType: '',//包装种类
-          currencyType: '',//金额类型
+          wrapType: '',//包装种类
+          amountType: '',//金额类型
           chgCodeAddBtn: [],//变更原因
           notifyInfo: [],//通知人信息
           undgInfo: [],//危险品联系人信息
