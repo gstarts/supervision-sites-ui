@@ -71,12 +71,12 @@
         <el-col :span="14">
           <el-table border v-loading="loading" :data="instore_notice_detailList" :span-method="arraySpanMethod"
                     :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'16px'}"
-                    :cell-style="{border:'solid .5px black',fontSize:'16px',padding:'5px 2px',color:'black'}"
+                    :cell-style="{border:'solid .5px black',fontSize:'16px',padding:'8px 2px',color:'black'}"
                     style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
             <el-table-column label="收货人填写" align="center">
               <el-table-column type="index" :index="getIndex" label="序号" align="center" width="100px">
               </el-table-column>
-              <el-table-column label="袋封号" align="center" prop="bagSealNo" width="210px"/>
+              <el-table-column label="袋封号" align="center" prop="bagSealNo" width="220px"/>
               <el-table-column label="品名" align="center" prop="goodsName" width="180px"/>
               <el-table-column label="预计数量" align="center" prop="bookStoreCode" width="90px">
                 <template slot-scope="scope">
