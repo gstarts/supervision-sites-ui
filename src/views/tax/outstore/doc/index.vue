@@ -226,7 +226,9 @@ export default {
         trailerNo: undefined,
         unloadGroup: undefined,
         vehicleNo: undefined,
-        workGroup: undefined
+        workGroup: undefined,
+	      orderByColumn: 'id',
+	      isAsc: 'desc'
       },
       // 表单参数
       form: {},

@@ -658,7 +658,9 @@
 					trailerNo: undefined,
 					unloadGroup: undefined,
 					vehicleNo: undefined,
-					workGroup: undefined
+					workGroup: undefined,
+					orderByColumn: 'id',
+					isAsc: 'desc'
 				},
 				stateDic: [
 					{'value': '1', 'label': '生成'},
