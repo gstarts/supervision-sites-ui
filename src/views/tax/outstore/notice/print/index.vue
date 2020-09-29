@@ -26,17 +26,15 @@
         <el-button
           type="info"
           icon="fa fa-print"
-          size="mini"
-          v-print="'#dayin'"
+          v-print="'#print'"
           @click="print"
           v-hasPermi="['tax:outstore_notice:print']"
-        >打印
+        > 打印
         </el-button>
       </el-col>
     
     </el-row>
-    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1650px;padding-left: 5px ;padding-top:50px"
-         id="dayin">
+    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1600px;padding-left: 5px ;padding-top:50px" id="print">
       <el-row :gutter="10" style="font-size:32px;">
         <el-col :span="7" style="text-align: center">出 库 通 知 单</el-col>
         <el-col :span="1">GR</el-col>
@@ -66,26 +64,26 @@
         <el-col :span="2">完成时间:</el-col>
       </el-row>
       <el-row :gutter="10">
-        <el-col :span="15">
+        <el-col :span="14">
           <el-table v-loading="loading" :data="instore_notice_detailList" :span-method="arraySpanMethod"
                     :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'16px',padding:'3 -3px',margin:'-3'}"
                     :cell-style="{border:'solid .5px black',fontSize:'18px',padding:'15px 0',color:'black'}"
                     style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
             <el-table-column label="收货人填写" align="center">
-              <el-table-column type="index" :index="getIndex" label="序号" align="center" width="80px">
+              <el-table-column type="index" :index="getIndex" label="序号" align="center" width="60px">
               </el-table-column>
-              <el-table-column label="袋封号" align="center" prop="bagSealNo" width="250px"/>
-              <el-table-column label="品名" align="center" prop="goodsName" width="240px"/>
-              <el-table-column label="数量" align="center" prop="">
+              <el-table-column label="袋封号" align="center" prop="bagSealNo" width="235px"/>
+              <el-table-column label="品名" align="center" prop="goodsName" width="210px"/>
+              <el-table-column label="数量" align="center" width="60px">
                 <template slot-scope="scope">
                   {{scope.row.remark === null?1:scope.row.remark}}
                 </template>
               </el-table-column>
               <!--<el-table-column label="袋号" align="center" prop="bagNumber" />-->
-              <el-table-column label="包装单位" align="center" prop="packingUnit"/>
-              <el-table-column label="货位号" align="center" prop="storeCode"/>
+              <el-table-column label="包装单位" align="center" prop="packingUnit" width="90px"/>
+              <el-table-column label="货位号" align="center" prop="storeCode" width="100px"/>
               <!--<el-table-column label="预订货位号" align="center" prop="id" />-->
-              <el-table-column label="备注" align="center" prop="fleetName">
+              <el-table-column label="备注" align="center" width="170px">
                 <template slot-scope="scope"></template>
               </el-table-column>
             </el-table-column>
@@ -102,7 +100,7 @@
         <el-col :span="2">装卸人员:</el-col>
         <el-col :span="3">&nbsp;</el-col>
         <el-col :span="2">捆扎加固人员:</el-col>
-        <el-col :span="4">&nbsp;</el-col>
+        <el-col :span="3">&nbsp;</el-col>
         <el-col :span="2">嘉友司机:</el-col>
         <el-col :span="2">&nbsp;</el-col>
       </el-row>
@@ -362,12 +360,12 @@
 
 <style scoped media="dayin">
   
-  @page {
+  /*@page {
     size: auto A4 landscape;
     margin-left: 1.5cm;
     margin-bottom: 3mm;
     margin-top: 8mm;
     margin-right: 20px;
-  }
+  }*/
 
 </style>

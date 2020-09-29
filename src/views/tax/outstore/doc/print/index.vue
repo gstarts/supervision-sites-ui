@@ -27,19 +27,18 @@
         <el-button
           type="info"
           icon="fa fa-print"
-          size="mini"
-          v-print="'#dayin'"
+          v-print="'#print'"
           @click="print"
           v-hasPermi="['tax:outstore_notice:print']"
-        >打印
+        > 打印
         </el-button>
       </el-col>
     
     </el-row>
-    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1650px;padding-left: 5px ;padding-top:40px"
-         id="dayin">
+    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1600px;padding-left: 5px ;padding-top:20px"
+         id="print">
       <el-row :gutter="10" style="margin-bottom: 20px">
-        <el-col :span="14" style="text-align: center;font-size: 22px">
+        <el-col :span="14" style="text-align: center;font-size: 30px">
           OUTBOUND SHEET <br/>出库单
         </el-col>
       </el-row>
@@ -138,17 +137,17 @@
         <el-col :span="14">
           <el-table  v-loading="loading" :data="instore_notice_detailList"
                     :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'14px',padding:'3 -3px',margin:'-3'}"
-                    :cell-style="{border:'solid .5px black',fontSize:'16px',padding:'12px 0',color:'black'}"
+                    :cell-style="{border:'solid .5px black',fontSize:'16px',padding:'8px 0',color:'black'}"
                     style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black"
           >
             <el-table-column prop="index" type="index" :label="'No.\n序号'" align="center" width="80px"/>
-            <el-table-column :label="'Date of inbound\n入库日期'" align="center" prop="">
+            <el-table-column :label="'Date of inbound\n入库日期'" align="center" width="200px">
               <template slot-scope="scope">
                 {{ parseTime(instoreNotice.startTime, '{y}-{m}-{d}') }}
               </template>
             </el-table-column>
-            <el-table-column :label="'Storage Location\n存储位置'" align="center" prop="storeCode"/>
-            <el-table-column :label="'Lot Number\n批次号'" align="center" prop="batchNo"/>
+            <el-table-column :label="'Storage Location\n存储位置'" align="center" prop="storeCode" width="200px"/>
+            <el-table-column :label="'Lot Number\n批次号'" align="center" prop="batchNo" width="190px"/>
             <!-- <el-table-column label="数量" align="center" prop="">
                <template slot-scope="scope">
                  {{scope.row.remark === null?1:scope.row.remark}}
@@ -163,8 +162,8 @@
           </el-table>
         </el-col>
       </el-row>
-      <el-row :gutter="10" style="padding:10px;text-align: right">
-        <el-col :span="14" class="font14">
+      <el-row :gutter="10" style="padding:0;text-align: right">
+        <el-col :span="14" class="font14" style="font-size: 17px;margin:0;padding: 0">
           <p>Total Valid Gross Weight 经以下各方确认有效总重量<span class="weight">{{instoreNotice.realRoughWeight}}</span> incl.wt
             of bag（含袋）</p>
           <p>OT provided gross weight for reference ( prior to inbound ) 以上货物OT入库前提供参考重量 <span
@@ -172,58 +171,58 @@
         </el-col>
       </el-row>
       <el-row :gutter="10" style="margin-bottom: 10px">
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           OT Supervisor Jinhang OT派驻金航主管
         </el-col>
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           Jinhang Representative 金航代表
         </el-col>
       </el-row>
       <el-row :gutter="10" style="margin-bottom: 10px">
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           Date 日期:
         </el-col>
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           Date 日期:
         </el-col>
       </el-row>
       <el-row :gutter="10" style="margin-bottom: 30px">
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           Signature 签字:
         </el-col>
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           Signature 签字:
         </el-col>
       </el-row>
       <el-row :gutter="10" style="margin-bottom: 10px">
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           OT Supervisor Jinhang OT派驻金航主管
         </el-col>
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           Jinhang Representative 金航代表
         </el-col>
       </el-row>
       <el-row :gutter="10" style="margin-bottom: 10px">
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           Date 日期:
         </el-col>
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           Date 日期:
         </el-col>
       </el-row>
       <el-row :gutter="10" style="margin-bottom: 30px">
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           Signature 签字:
         </el-col>
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           Signature 签字:
         </el-col>
       </el-row>
       <el-row :gutter="10" style="margin-bottom: 10px">
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           Receiving Smelter收货冶炼厂 ( Only for Traders仅适用贸易商 )
         </el-col>
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           Jinhang Representative 金航代表
         </el-col>
       </el-row>
@@ -231,15 +230,14 @@
         <el-col :span="4" class="font14">
           Delivery Date 送达日期:
         </el-col>
-        <el-col :span="3" class="font14">
+        <el-col :span="4" class="font14">
           {{ parseTime(instoreNotice.genTime, '{y}-{m}-{d}') }}
         </el-col>
       </el-row>
       <el-row :gutter="10" style="margin-bottom: 10px">
-        <el-col :span="7" class="font14">
+        <el-col :span="8" class="font14">
           Signature 签字:
         </el-col>
-      
       </el-row>
     </div>
   </div>
@@ -516,7 +514,7 @@
   }
   
   .font14 {
-    font-size: 16px;
+    font-size: 18px;
   }
   
   .elTable td {
@@ -534,7 +532,7 @@
   
   .weight {
     width: 120px;
-    padding: 2px 15px;
+    padding: 1px 8px;
     border-bottom: #1e1e1e 1px solid
   }
 

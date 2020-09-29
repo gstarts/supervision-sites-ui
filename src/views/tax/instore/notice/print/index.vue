@@ -30,7 +30,7 @@
           v-print="'#print'"
           @click="print"
           v-hasPermi="['tax:instore_notice:print']"
-        >打印
+        > 打印
         </el-button>
       </el-col>
     </el-row>
@@ -73,7 +73,7 @@
             <el-table-column label="收货人填写" align="center">
               <el-table-column type="index" :index="getIndex" label="序号" align="center" width="100px">
               </el-table-column>
-              <el-table-column label="袋封号" align="center" prop="bagSealNo" width="230px"/>
+              <el-table-column label="袋封号" align="center" prop="bagSealNo" width="235px"/>
               <el-table-column label="品名" align="center" prop="goodsName" width="190px"/>
               <el-table-column label="预计数量" align="center" prop="bookStoreCode" width="86px" style="padding:0">
                 <template slot-scope="scope">
@@ -82,7 +82,7 @@
               </el-table-column>
               <!--<el-table-column label="袋号" align="center" prop="bagNumber" />-->
               <el-table-column label="包装单位" align="center" prop="packingUnit" width="86px"/>
-              <el-table-column label="货位号" align="center" prop="" width="127px"/>
+              <el-table-column label="货位号" align="center" prop="" width="122px"/>
               <!--<el-table-column label="预订货位号" align="center" prop="id" />-->
               <el-table-column label="是否已加工" align="center" prop="hasProcess" width="104px">
                 <template slot-scope="scope"></template>
