@@ -159,4 +159,3 @@ export function add(data) {
     data: data
   })
 }
-
