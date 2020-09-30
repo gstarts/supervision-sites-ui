@@ -27,14 +27,16 @@ export function genNumChar(start,end,prefix){
 
 //获取用户所在部门及下属部门
 export function getUserDepts(deptType){
+    //debugger
     let depts = []
     let dept = store.getters.dept
+    //debugger
     console.log(dept)
 
     // 0 监管场所，1保税库，2堆场，3企业
     //如果所属部门是堆场，加入列表
     if(dept.deptType == deptType){
-        depts.add(dept)
+        depts.push(dept)
     }
 
     if(dept.children && dept.children.length>0){
@@ -44,6 +46,19 @@ export function getUserDepts(deptType){
             }
         }
     }
+     //如果传进来是空串，则把所有类型的场所都加进去
+     if(deptType === ''){
+        if(dept.deptType === '0' ||dept.deptType==='1'|| dept.deptType==='2' ){
+             depts.push(dept)
+         }
+
+        for(let item of dept.children){
+                 if(item.deptType == '0'||item.deptType == '1' || item.deptType == '2'){
+                     depts.push(item)
+                 }
+             }
+        }
+
     return depts;
 }
 

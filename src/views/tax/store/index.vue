@@ -109,11 +109,11 @@
     <el-table v-loading="loading" :data="storeList">
       <!-- <el-table-column type="selection" width="55" align="center" />-->
       <!--<el-table-column label="ID" align="center" prop="id" />-->
-      <el-table-column label="场所" align="center" prop="placeId" :fixed="true">
+      <!--<el-table-column label="场所" align="center" prop="placeId" :fixed="true">
         <template slot-scope="scope">
           <span> {{depts.find(item=>item.deptId === scope.row.placeId).deptName}}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="区域类型" align="center" prop="zoneType" >
         <template slot-scope="scope">
           <span> {{yardZoneTypeOptions.find(item=>item.dictValue === scope.row.zoneType).dictLabel}}</span>
@@ -125,11 +125,12 @@
       <!--<el-table-column label="库位层级" align="center" prop="storeLevel" />-->
       <el-table-column label="库位状态" align="center" prop="storeState" :formatter="storeStateFormat" />
       <!--<el-table-column label="集装箱号" align="center" prop="containerNo" />-->
-      <el-table-column label="库位容量(KG)" align="center" prop="storeCapacity" />
+      <!--<el-table-column label="库位容量" align="center" prop="storeCapacity" />-->
       <!--<el-table-column label="空/重箱" align="center" prop="isHeavy" :formatter="isHeavyFormat" />-->
       <!--<el-table-column label="货物净重(KG)" align="center" prop="netWeight" />-->
       <!-- <el-table-column label="货物毛重(KG)" align="center" prop="roughWight" />-->
       <el-table-column label="货物批次号" align="center" prop="goodsBatchNo" />
+      <el-table-column label="货物数量" align="center" prop="storeGoodsCount" />
       <el-table-column label="变更原因" align="center" prop="updateReason" />
       <el-table-column label="更新人" align="center" prop="updateBy" />
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
@@ -236,7 +237,7 @@
       },*/
 			gotoDetail(row) {
 				this.$router.push({
-					path: '/tax/store/detail',
+					path: '/tax/store/goods',
 					query: {
 						'placeId': row.placeId,
 						'storeCode': row.storeCode

@@ -58,8 +58,8 @@
     <el-table v-loading="loading" :data="vehicleList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="车牌号码" align="center" prop="dvLicense" />
-      <el-table-column label="净重(KG)" align="center" prop="dvWeight" />
-      <el-table-column label="载重(KG)" align="center" prop="dvLoad" />
+      <el-table-column label="皮重(KG)" align="center" prop="dvWeight" />
+      <el-table-column label="净重(KG)" align="center" prop="dvLoad" />
       <el-table-column label="运输次数" align="center" prop="dvTransportNumber" />
       <el-table-column label="已完成次数" align="center" prop="dvOutTimes" />
       <el-table-column label="所属公司" align="center" prop="dvCorporation" :formatter="corporationFormat" />
@@ -78,10 +78,10 @@
         <el-form-item label="车牌号码" prop="dvLicense">
           <el-input v-model="form.dvLicense" placeholder="请输入车牌号码" />
         </el-form-item>
-        <el-form-item label="净重(KG)" prop="dvWeight">
+        <el-form-item label="皮重(KG)" prop="dvWeight">
           <el-input v-model.number="form.dvWeight" placeholder="请输入净重" />
         </el-form-item>
-        <el-form-item label="载重(KG)" prop="dvLoad">
+        <el-form-item label="净重(KG)" prop="dvLoad">
           <el-input v-model.number="form.dvLoad" placeholder="请输入载重" />
         </el-form-item>
         <el-form-item label="运输次数" prop="dvTransportNumber">
@@ -207,11 +207,10 @@ export default {
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/waybill/vehicle/importData"
+        url: process.env.VUE_APP_BASE_API + "/manifest/vehicle/importData"
       },
       // 表单参数
       form: {},
-  
       // 表单校验
       rules: {
         dvLicense: [
@@ -373,9 +372,10 @@ export default {
 
     /** 下载模板操作 */
     importTemplate() {
-      importTemplate().then(response => {
+	    window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=file&objectName=manifest/货运车辆导入模板.xlsx'
+      /*importTemplate().then(response => {
         this.download(response.msg);
-      });
+      });*/
     },
 
     // 文件上传中处理

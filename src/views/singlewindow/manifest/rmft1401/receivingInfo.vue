@@ -8,7 +8,7 @@
 -->
 <template>
   <div>
-      <el-dialog title="收货人信息" :visible.sync="detailVisible" :before-close="close">
+    <el-dialog title="收货人信息" :visible.sync="detailVisible" :before-close="close">
       <h4>收货人联系方式</h4>
       <el-form :model="basic" ref="queryForm" label-width="160px">
         <el-row type="flex">
@@ -47,8 +47,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="通讯方式类别代码" prop="communication" >
-              <el-select v-model="queryParams.communication" filterable placeholder="通讯方式类别代码">
+            <el-form-item label="通讯方式类别代码" prop="typeId" >
+              <el-select v-model="queryParams.typeId" filterable placeholder="通讯方式类别代码">
                 <el-option
                   v-for="item in Communication_type"
                   :key="item.dictValue"
@@ -78,7 +78,7 @@
         <el-table-column type="selection" min-width="55"/>
         <el-table-column type="index" label="序号" min-width="120"/>
         <el-table-column prop="communicationId" label="联系号码" min-width="120"/>
-        <el-table-column prop="communication" label="通讯方式类别代码" min-width="160"/>
+        <el-table-column prop="typeId" label="通讯方式类别代码" min-width="160"/>
       </el-table>
       <h4>收货具体联系人联系方式</h4>
       <el-form :model="basic" ref="queryForm" label-width="160px">
@@ -108,8 +108,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="通讯方式类别代码" prop="communication" >
-              <el-select v-model="queryParamsInfo.communication" filterable placeholder="通讯方式类别代码">
+            <el-form-item label="通讯方式类别代码" prop="typeId" >
+              <el-select v-model="queryParamsInfo.typeId" filterable placeholder="通讯方式类别代码">
                 <el-option
                   v-for="item in Communication_type"
                   :key="item.dictValue"
@@ -139,7 +139,7 @@
         <el-table-column type="selection" min-width="55"/>
         <el-table-column type="index" label="序号" min-width="120"/>
         <el-table-column prop="communicationId" label="联系号码" min-width="120"/>
-        <el-table-column prop="communication" label="通讯方式类别代码" min-width="160"/>
+        <el-table-column prop="typeId" label="通讯方式类别代码" min-width="160"/>
       </el-table>
     </el-dialog>
   </div>
@@ -165,12 +165,12 @@ export default {
       // 查询参数
       queryParams: {
         communicationId:'',
-        communication:''
+        typeId:''
       },
       // 查询参数
       queryParamsInfo: {
         communicationId:'',
-        communication:''
+        typeId:''
       },
       // 按钮禁用状态
       btnDisable:{
@@ -194,9 +194,9 @@ export default {
   },
   watch:{
     'detailVisible': {
-        handler: function(newVal) {
-          if(newVal) this.init()
-        },
+      handler: function(newVal) {
+        if(newVal) this.init()
+      },
     }
   },
   methods:{

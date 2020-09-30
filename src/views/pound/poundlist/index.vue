@@ -2,9 +2,9 @@
   <div class="app-container">
     <!-- 按钮组 -->
     <div class="mb20">
-      <el-button type="primary" icon="el-icon-plus" size="mini" @click="AllADD">暂存</el-button>
-      <el-button type="success" icon="el-icon-edit" size="mini" @click="generateAdd">生成</el-button>
-      <el-button type="warning" icon="el-icon-refresh-right" size="mini" @click="cancel">清空</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="small" @click="AllADD">暂存</el-button>
+      <el-button type="success" icon="el-icon-edit" size="small" @click="generateAdd">生成</el-button>
+      <el-button type="warning" icon="el-icon-refresh-right" size="small" @click="cancel">清空</el-button>
       <!-- <el-button
          type="primary"
          icon="el-icon-plus"
@@ -25,18 +25,18 @@
        </el-button>-->
       <el-button
         type="info"
-        class="fa fa-print"
-        size="mini"
+        size="small"
         v-print="'#dayin'"
-        @click="print"
-        v-show="this.form.netWeight !== undefined &&  this.form.plateNum !== undefined && this.form.locationNumber !== undefined"
-      >打印
+        @click="print">
+        <!-- v-show="this.form.netWeight !== undefined && this.form.netWeight !== '' &&  this.form.plateNum !== undefined && this.form.plateNum !==''
+         && this.form.locationNumber !== undefined &&  this.form.locationNumber !=='' && this.PoundForm.stationViaType ==='01'"-->
+        <i class="fa fa-print" aria-hidden="true">&nbsp;&nbsp;打印</i>
       </el-button>
     </div>
     <el-row :gutter="10">
       <el-col :span="15">
         <el-card class="mb20">
-          <el-form :model="form" ref="form" :rules="rules" label-width="160px">
+          <el-form :model="form" ref="form" :rules="rulesAll" label-width="160px">
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="发货单位" prop="deliveryUnit">
@@ -50,6 +50,7 @@
                     placeholder="请选择车号"
                     prop="plateNum"
                     filterable
+                    clearable
                     @change="CarNumberChange"
                   >
                     <el-option
@@ -113,7 +114,7 @@
                   <el-input v-model="form.remark" placeholder="请输入备注" clearable></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="12" v-show="showStore">
+              <el-col :span="12"> <!--v-show="showStore"-->
                 <el-form-item label="库位号" prop="locationNumber">
                   <el-select
                     v-model="form.locationNumber"
@@ -131,6 +132,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
+            <span style="display: none"> 单号：{{form.noticeNo}}</span>
           </el-form>
         </el-card>
       </el-col>
@@ -152,7 +154,7 @@
             />
             <input class="Pound" v-else style="color:red" v-model="this.Poundweight" disabled/>
             <el-form-item label="流向">
-              <el-select v-model="PoundForm.flowDirection" placeholder="请选择流向" prop="flowDirection">
+              <el-select v-model="PoundForm.flowDirection" placeholder="请选择流向" prop="flowDirection" @change="flowCheck">
                 <el-option
                   v-for="dict in flowDirectionOptions"
                   :key="dict.dictValue"
@@ -212,7 +214,7 @@
             <el-table-column label="发货单位" align="center" prop="deliveryUnit"/>
             <el-table-column label="收货单位" align="center" prop="receivingUnit"/>
             <el-table-column label="货物名称" align="center" prop="goodsName"/>
-            <el-table-column label="规格型号" align="center" prop="specification"/>
+            <el-table-column label="备注" align="center" prop="remark"/>
           </el-table>
           <pagination
             v-show="total>0"
@@ -241,7 +243,7 @@
             <el-table-column label="发货单位" align="center" prop="deliveryUnit"/>
             <el-table-column label="收货单位" align="center" prop="receivingUnit"/>
             <el-table-column label="货物名称" align="center" prop="goodsName"/>
-            <el-table-column label="规格型号" align="center" prop="specification"/>
+            <el-table-column label="备注" align="center" prop="remark"/>
           </el-table>
           <pagination
             v-show="total>0"
@@ -254,43 +256,43 @@
       </el-tabs>
     </el-card>
     <div id="dayin" v-show="Explicit ">
-      <div style="align-content: center;">
-        <span class="poundTotal11">{{poundTotal}}</span>
+      <div  id="poundtotalStyle">
+        <span class="poundtoalFont" >{{poundTotal}}</span>
       </div>
-      <div id="area">
+      <div id="nowDataStyle">
         <span class="area-in-style">{{nowData}}</span>
       </div>
-      <div id="areadate">
+      <div id="nowTimeStyle">
         <span>{{nowTime}}</span>
       </div>
-      <div id="area-style">
-        <span class="area-in-style">{{form.deliveryUnit}}</span>
+      <div id="areaLeftstyle">
+        <span >{{form.deliveryUnit}}</span>
       </div>
-      <div id="area-right-style">
+      <div id="areaRightStyle">
         <span>{{form.plateNum}}</span>
       </div>
       <br/>
-      <div id="area-style">
-        <span class="area-in-style">{{form.receivingUnit}}</span>
+      <div id="areaLeftstyle">
+        <span >{{form.receivingUnit}}</span>
       </div>
-      <div id="area-right-style">
+      <div id="areaRightStyle">
         <span>{{form.grossWeight}}</span>
       </div>
-      <div id="area-style">
-        <span class="area-in-style">{{form.goodsName}}</span>
+      <div id="areaLeftstyle">
+        <span >{{form.goodsName}}</span>
       </div>
-      <div id="area-right-style">
+      <div id="areaRightStyle">
         <span>{{form.tare}}</span>
         <br/>
       </div>
-      <div id="area-style">
-        <span class="area-in-style">{{form.specification}}</span>
+      <div id="areaLeftstyle">
+        <span>{{form.specification}}</span>
       </div>
-      <div id="area-right-style">
+      <div id="areaRightStyle">
         <span>{{form.netWeight}}</span>
         <br/>
       </div>
-      <div id="area-all-style">
+      <div id="remarkStyle">
         <span class="area-in-style">{{form.remark}}</span>
         <br/>
       </div>
@@ -303,7 +305,7 @@
 		addSheet,
 		updateSheet,
 		getSheet,
-		listSheet,
+		listIESheet,
 	} from "@/api/pound/poundlist";
 	import {listVehicleNoList} from "@/api/system/vehicle_info";
 	import {genTimeCode} from "@/utils/common";
@@ -373,11 +375,11 @@
 					//车号
 					plateNum: undefined,
 					//皮重
-					tare: undefined,
+					tare: 0,
 					//毛重
-					grossWeight: undefined,
+					grossWeight: 0,
 					//净重
-					netWeight: undefined,
+					netWeight: 0,
 					//库位号
 					locationNumber: undefined,
 					//发货单位
@@ -412,19 +414,49 @@
 					//过卡车辆类型
 					stationViaType: undefined,
 				},
+				rulesAll: {},
 				// 重量类型效验
 				rules: {
-					grossWeight: [{type: "number", message: "请输入数字"}],
-					tare: [{type: "number", message: "请输入数字"}],
-					netWeight: [{type: "number", message: "请输入数字"}],
-					plateNum: [{required: true, message: "不可为空", trigger: "blur"}],
+					grossWeight: [{type: "number", message: "毛重需为数字", trigger: "blur"}],
+					tare: [{type: "number", message: "请输入数字", trigger: "blur"}],
+					netWeight: [{type: "number", message: "请输入数字", trigger: "blur"}],
+					plateNum: [{type: "string", required: true, message: "不可为空", trigger: "change"}],
+					locationNumber: [{type: "string", message: "库位号不可为空", trigger: "change"}]
+				},
+				rulesIn1: { //进场 重进空出
+					grossWeight: [{required: true, type: "number", message: "毛重需为数字", trigger: "blur"}],
+					//tare: [{type: "number", message: "请输入数字"}],
+					//netWeight: [{type: "number", message: "请输入数字"}],
+					plateNum: [{required: true, message: "车号不可为空", trigger: "change"}],
+					//locationNumber:[{required: true,message: "不可为空" , trigger: "blur"}]
+				},
+				rulesIn2: { //进场 空进重出
+					//grossWeight: [{type: "number", message: "毛重需为数字"}],
+					tare: [{required: true, type: "number", message: "请输入数字", trigger: "blur"}],
+					//netWeight: [{type: "number", message: "请输入数字"}],
+					plateNum: [{type: "string", required: true, message: "车号不可为空", trigger: "change"}],
+					//locationNumber:[{required: true,message: "不可为空" , trigger: "blur"}]
+				},
+				rulesOut1: { //出场 重进空出
+					grossWeight: [{required: true, type: "number", message: "毛重需为数字", trigger: "blur"}],
+					tare: [{required: true, type: "number", message: "请输入数字", trigger: "blur"}],
+					netWeight: [{required: true, type: "number", message: "请输入数字", trigger: "blur"}],
+					plateNum: [{type: "string", required: true, message: "车号不可为空", trigger: "change"}],
+					locationNumber: [{type: "string", required: true, message: "不可为空", trigger: "change"}]
+				},
+				rulesOut2: { //出场 空进重出
+					grossWeight: [{required: true, type: "number", message: "毛重需为数字", trigger: "blur"}],
+					tare: [{required: true, type: "number", message: "请输入数字", trigger: "blur"}],
+					netWeight: [{required: true, type: "number", message: "请输入数字", trigger: "blur"}],
+					plateNum: [{type: "string", required: true, message: "车号不可为空", trigger: "change"}],
+					//locationNumber:[{required: true,message: "不可为空" , trigger: "blur"}]
 				},
 				ruless: {
-					flowDirection: [{required: true, message: "请输入", trigger: "blur"}],
+					flowDirection: [{type: "string", required: true, message: "请选择流向", trigger: "change"}],
 				},
 				storeList: [], //保存库位号.
 				showStore: false,
-        noticeNo: ''
+				noticeNo: ''
 			};
 		},
 		created() {
@@ -452,6 +484,8 @@
 
 			//库位号
 			this.getStoreCode(this.queryParams.stationId)
+
+			this.rulesAll = this.rules
 		},
 		methods: {
 			handleClick(tab, event) {
@@ -460,6 +494,22 @@
 			//车号Change
 			CarNumberChange(event) {
 				//进场 调用接口 连带数据赋值给input
+				this.form.grossWeight = 0
+				this.form.tare = 0
+				this.form.netWeight = 0
+				//this.form.locationNumber = ''
+				this.form.remark = ''
+				//规格型号
+				this.form.specification = ''
+				//货物名称
+				this.form.goodsName = ''
+				//收货单位
+				this.form.receivingUnit = ''
+				//发货单位
+				this.form.deliveryUnit = ''
+				//单号 从保税库接口中返回的
+				this.noticeNo = ''
+				this.form.noticeNo = ''
 				if (this.PoundForm.flowDirection == "I") {
 					/**
 					 * 通过车号查出入库通知单
@@ -480,7 +530,7 @@
 						getNoticeByVehicle(this.queryParams.stationId, this.direction, event).then((response) => {
 							if (response.code === 200) {
 								//规格型号
-								this.form.specification = response.data.businessNo;
+								this.form.remark = response.data.businessNo;
 								//货物名称
 								this.form.goodsName = response.data.goodsName;
 								//收货单位
@@ -498,7 +548,7 @@
 					//出场 调用自己的接口 查询数据库里的数据赋值给input。
 				} else if (this.PoundForm.flowDirection == "E") {
 					//调用后台查询API 通过选择的车号反添数据
-					getSheet(event).then((response) => {
+					getSheet(event, this.queryParams.stationId).then((response) => {
 						if (response.code === 200) {
 							this.form = response.data;
 						} else {
@@ -514,7 +564,7 @@
 			getListE() {
 				this.loading = true;
 				this.queryParams.flowDirection = "E";
-				listSheet(this.queryParams).then((response) => {
+				listIESheet(this.queryParams).then((response) => {
 					this.sheetList = response.rows;
 					this.total = response.total;
 					this.loading = false;
@@ -524,7 +574,7 @@
 			getListI() {
 				this.loading = true;
 				this.queryParams.flowDirection = "I";
-				listSheet(this.queryParams).then((response) => {
+				listIESheet(this.queryParams).then((response) => {
 					this.ApproachList = response.rows;
 					this.total = response.total;
 					this.loading = false;
@@ -533,6 +583,9 @@
 			//双击列表赋值form表单
 			dbRow(row, column) {
 				this.form = row;
+				console.log(this.form)
+
+				this.form
 			},
 			// 打印按钮
 			headHandleAdd() {
@@ -550,8 +603,10 @@
 				clearInterval(this.ChannelNumberTimer);
 				this.ChannelNumberTimer = setInterval(() => {
 					poundSelect(event).then((response) => {
-						this.Poundweight = response.data.weight;
-						this.isStable = response.data.isStable;
+						//if (response.data !== null) {
+							this.Poundweight = response.data.weight;
+							this.isStable = response.data.isStable;
+						//}
 					});
 				}, 1000);
 				//离开当前页面定时器停止
@@ -563,6 +618,8 @@
 			AllADD() {
 				//通道号赋值
 				this.form.channelNumber = this.PoundForm.channelNumber;
+        ///规格型号
+        // this.form.specification = this.form.remark;
 				//场站ID赋值
 				this.form.stationId = this.queryParams.stationId;
 				this.form.updateTime = genTimeCode(new Date(), "YYYY-MM-DD HH:mm:ss");
@@ -570,7 +627,7 @@
 					if (valid) {
 						if (this.PoundForm.flowDirection == "I") {
 							this.form.flowDirection = this.PoundForm.flowDirection;
-							this.form.noticeNo = this.noticeNo;
+							//this.form.noticeNo = this.noticeNo;
 							//进场 新增
 							addSheet(this.form).then((response) => {
 								if (response.code === 200) {
@@ -583,17 +640,37 @@
 							});
 						} else if (this.PoundForm.flowDirection == "E") {
 							this.form.flowDirection = this.PoundForm.flowDirection;
-							this.form.noticeNo = this.noticeNo;
+							//this.form.noticeNo = this.noticeNo;
+							//return false
 							//出场修改按钮
 							updateSheet(this.form).then((response) => {
 								if (response.code === 200) {
 									this.msgSuccess("出场成功");
-									this.reset();
+									if (this.PoundForm.stationViaType === '01') {//重进空出 生成入库单
+										genStoreDoc(this.queryParams.stationId, 1, this.form.noticeNo, this.form.locationNumber, 0).then(response => {
+											if (response.code === 200) {
+												this.msgSuccess("入库成功");
+												//更新一下库位
+												this.getStoreCode(this.queryParams.stationId)
+											} else {
+												this.msgError(response.msg);
+											}
+										})
+									}
+									if (this.PoundForm.stationViaType === '02') {//空进重出，生成出库单
+										genStoreDoc(this.queryParams.stationId, 0, this.form.noticeNo, this.form.locationNumber, this.form.netWeight).then(response => {
+											if (response.code === 200) {
+												this.msgSuccess("出库成功");
+											} else {
+												this.msgError(response.msg);
+											}
+										})
+									}
 									this.getListI();
 								} else {
 									this.msgError(response.msg);
 								}
-							});
+							})
 						}
 					}
 				});
@@ -660,15 +737,8 @@
 					this.nowData = "";
 					this.nowTime = "";
 					this.poundTotal = "";
+					this.reset()
 				}, 2000);
-
-				if (this.PoundForm.stationViaType === '01') {//重进空出 生成入库单
-					genStoreDoc(this.queryParams.stationId, 1, this.form.noticeNo, this.form.locationNumber, 0)
-				}
-				if(this.PoundForm.stationViaType === '02'){//空进重出，生成出库单
-					genStoreDoc(this.queryParams.stationId, 0, this.form.noticeNo, this.form.locationNumber, this.form.netWeight)
-        }
-
 			},
 			endCallback() {
 			},
@@ -695,11 +765,11 @@
 					//车号
 					plateNum: undefined,
 					//皮重
-					tare: undefined,
+					tare: 0,
 					//毛重
-					grossWeight: undefined,
+					grossWeight: 0,
 					//净重
-					netWeight: undefined,
+					netWeight: 0,
 					//库位号
 					locationNumber: undefined,
 					//发货单位
@@ -734,12 +804,33 @@
 				})
 			},
 			vehicleChange() {
-				if (this.PoundForm.stationViaType === '01') { //重进空出
+				this.flowCheck()
+				console.log(this.PoundForm.flowDirection)
+				if (this.PoundForm.stationViaType === '01' && this.PoundForm.flowDirection === 'E') { //重进空出
 					this.showStore = true
 					this.form.locationNumber = undefined;
 				} else {
 					this.showStore = false
 					this.form.locationNumber = undefined;
+				}
+			},
+			flowCheck() {
+				if (this.PoundForm.flowDirection === 'I' || this.PoundForm.flowDirection === undefined) {//如果是进场
+					if (this.PoundForm.stationViaType === '01' || this.PoundForm.stationViaType == undefined) {//重进空出
+						this.rulesAll = this.rulesIn1
+					} else if (this.PoundForm.stationViaType === '02' || this.PoundForm.stationViaType == undefined) {//空进重出
+						this.rulesAll = this.rulesIn2
+					} else {
+						this.rulesAll = {}
+					}
+				} else if (this.PoundForm.flowDirection === 'E' || this.PoundForm.flowDirection === undefined) { //出场
+					if (this.PoundForm.stationViaType === '01' || this.PoundForm.stationViaType == undefined) {//重进空出
+						this.rulesAll = this.rulesOut1
+					} else if (this.PoundForm.stationViaType === '02' || this.PoundForm.stationViaType == undefined) {//空进重出
+						this.rulesAll = this.rulesOut2
+					} else {
+						this.rulesAll = {}
+					}
 				}
 			}
 		},
@@ -765,63 +856,100 @@
   
   #dayin {
     height: 500px;
-    width: 1000px;
+    width: 1200px;
+    /*border: 1px solid ;*/
   }
   
-  #area {
+  #nowDataStyle {
     width: 300px;
     height: 40px;
-    margin-top: 40px;
+    margin-top: 20px;
     float: left;
+    margin-left: 6cm;
+    padding-left: 1.5cm;
+    font-size: 20px;
+    /*border: 1px solid ;*/
   }
   
-  #areadate {
+  #nowTimeStyle {
     width: 300px;
     height: 40px;
-    margin-top: 40px;
+    margin-top: 20px;
     padding-left: 40px;
     float: left;
-    margin-left: 20px;
+    font-size: 20px;
+    /*border: 1px solid ;*/
   }
   
   #poundtotal {
     width: 300px;
-    height: 10 px4;
+    height: 10px;
   }
   
-  #area-style {
-    width: 480px;
+  #areaLeftstyle {
+    width: 600px;
     height: 40px;
     font-size: 20px;
     margin-top: 10px;
-    
+    padding-left: 2.5cm;
     float: left;
+    margin-left: 6cm;
+    /*border: 1px solid ;*/
+
   }
+
+  /*#area-style1{*/
+  /*  width: 600px;*/
+  /*  height: 40px;*/
+  /*  font-size: 20px;*/
+  /*  padding-right: 0px;*/
+  /*  margin-top: 10px;*/
+
+  /*}*/
   
-  #area-right-style {
+  #areaRightStyle {
     height: 40px;
     width: 300px;
     font-size: 20px;
     margin-top: 10px;
-    margin-left: 30px;
-    float: right;
+    float: left;
+    /*border: 1px solid ;*/
   }
   
-  #area-all-style {
+  #remarkStyle {
     width: 800px;
     height: 40px;
     font-size: 20px;
     float: left;
     margin-top: 10px;
+
+    margin-left: 8.5cm;
+    /*border: 1px solid ;*/
   }
   
-  .area-in-style {
-    padding-left: 3cm;
-    margin-top: 10px;
+  /*.area-in-style {*/
+  /*  padding-left: 3cm;*/
+  /*  margin-top: 10px;*/
+  /*  !*border: 1px solid ;*!*/
+  /*}*/
+
+  #poundtotalStyle{
+    width: 600px;
+    height: 40px;
+    margin-top: 55px;
+    margin-left: 7cm;
+    padding-left: 5cm;
+    /*border: 1px solid ;*/
+
+
+  }
+  .poundtoalFont{
+    font-size: 30px;
   }
   
-  .poundTotal11 {
-    font-size: 20px;
-    padding-left: 280px;
-  }
+  /*.poundTotal11 {*/
+  /*  font-size: 20px;*/
+  /*  padding-left: 280px;*/
+  /*  !*border: 1px solid ;*!*/
+  /*}*/
 </style>

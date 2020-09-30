@@ -8,6 +8,15 @@ export function listSheet(query) {
     params: query
   })
 }
+
+// 查询计量单列表
+export function listIESheet(query) {
+	return request({
+		url: '/pound/measurement/sheet/IElist',
+		method: 'get',
+		params: query
+	})
+}
 //统计分析数据
 export function analysis(query) {
   return request({
@@ -17,9 +26,9 @@ export function analysis(query) {
   })
 }
 // 通过车号查询数据
-export function getSheet(event) {
+export function getSheet(event,stationId) {
   return request({
-    url: '/pound/measurement/sheet/inrecord?vehicleNo=' + event,
+    url: '/pound/measurement/sheet/inrecord?vehicleNo=' + event+'&stationId='+stationId,
     method: 'get'
   })
 }

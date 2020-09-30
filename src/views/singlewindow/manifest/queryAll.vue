@@ -51,7 +51,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <!--<el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -62,13 +62,11 @@
           v-hasPermi="['manifest:head:declare']"
         >申报</el-button>
       </el-col>
-    </el-row>
+    </el-row>-->
     <el-table
       v-loading="loading"
       :data="manifestList"
-      @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="货物运输批次号" align="center" prop="declarationId"/>
       <el-table-column label="录入时间" align="center" prop="createTime"/>
       <el-table-column label="单证状态" align="center" prop="statementCode" :formatter="statementFormat"/>

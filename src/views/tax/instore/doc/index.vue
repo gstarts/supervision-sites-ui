@@ -531,7 +531,7 @@
 		data() {
 			return {
 				// 遮罩层
-				loading: true,
+				loading: false,
 				// 选中数组
 				ids: [],
 				depts: [],
@@ -578,7 +578,9 @@
 					trailerNo: undefined,
 					unloadGroup: undefined,
 					vehicleNo: undefined,
-					workGroup: undefined
+					workGroup: undefined,
+					orderByColumn: 'id',
+					isAsc: 'desc'
 				},
 				// 表单参数
 				form: {},
@@ -733,7 +735,6 @@
 				}, `tax_instore_doc.xlsx`)
 			},
 			handleNoticeDetail(row) {
-				console.log(row.inDocNo)
 				this.$router.push({
 					path: '/tax/instore/doc/detail',
 					query: {
