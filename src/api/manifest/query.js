@@ -24,3 +24,11 @@ export function queryById(id) {
     method: 'get'
   })
 }
+
+// 根据id查询4403/4404/4406
+export function queryDetailsById(id) {
+  return request({
+    url: '/manifest/head/query/4403_4404_4406/'+id,
+    method: 'get'
+  })
+}

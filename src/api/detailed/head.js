@@ -9,3 +9,12 @@ export function add(data) {
     data: data
   })
 }
+
+
+// 查询【请填写功能名称】详细
+export function getNemsinvtheadtype(id) {
+  return request({
+    url: '/manifest/nemsinvtheadtype/' + id,
+    method: 'get'
+  })
+}

@@ -687,7 +687,6 @@
           >详情
           </el-button>
           <el-button
-            v-if="scope.row.statementCode=='10' || scope.row.statementCode=='20'|| scope.row.statementCode=='0'|| scope.row.statementCode=='FF'|| scope.row.statementCode=='3' "
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -1048,7 +1047,7 @@ export default {
     /** 查询【请填写功能名称】列表 */
     getList() {
       this.loading = true;
-      this.queryParams.dclcusFlag="2";
+      // this.queryParams.dclcusFlag="2";
       listNemsinvtheadtype(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.nemsinvtheadtypeList = response.rows;
         console.log(this.nemsinvtheadtypeList)
@@ -1158,13 +1157,10 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
       const id = row.id || this.ids
-      getNemsinvtheadtype(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改【请填写功能名称】";
-      });
+      // 跳转到原始舱单页面
+      // const data = this.router.find(el => el.messageType === row.messageType)
+      this.$router.push({ path: '/singlewindow2/detailed',query: { id: id }  })
     },
     /** 提交按钮 */
     submitForm: function() {
@@ -1230,11 +1226,13 @@ export default {
     /**详情按钮 */
     detail(row) {
       // this.reset();
-      return this.$message('功能正在完善中...')
+      // return this.$message('功能正在完善中...')
       const id = row.id || this.ids
-      const data = this.router.find(el => el.messageType === row.messageType)
-      this.$router.push({ path: '/singlewindow' + data.path })
+      // const data = this.router.find(el => el.messageType === row.messageType)
+      // this.$router.push({ path: '/singlewindow' + data.path })
+      this.$router.push({ path: '/singlewindow2/detailed',query: { id: id , type:true }  })
     }
+    
   }
 };
 </script>

@@ -218,6 +218,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       const id = row.id || this.ids
+      console.log(row)
       // 跳转到原始舱单页面
       const data = this.router.find(el => el.messageType === row.messageType)
       this.$router.push({ path: '/singlewindow' + data.path,query: { id: id }  })

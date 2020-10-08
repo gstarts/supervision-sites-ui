@@ -7,7 +7,7 @@
         icon="el-icon-plus"
         size="mini"
         :disabled="btnDisable.addBtn"
-        @click="headHandleAdd"
+        @click="headHandleAdd"        
       >新增</el-button>
       <el-button
         type="success"
@@ -801,9 +801,9 @@
           </el-col>
 
           <el-col :span="8">
-            <el-form-item label="规格型号" prop="gdsSpcfModelDesc">
+            <el-form-item label="规格型号" prop="gdsspcfModelDesc">
               <el-input
-                v-model="bodyForm.gdsSpcfModelDesc"
+                v-model="bodyForm.gdsspcfModelDesc"
                 placeholder="规格型号"
                 clearable
                 size="mini"
@@ -1081,11 +1081,18 @@
               @click="handleBodyAdd"
             >新增</el-button>
             <el-button
+              type="success"
+              icon="el-icon-edit"
+              size="mini"
+              :disabled="btnDisable.saveBtn"
+              @click="handleChange($event,'body')"
+            >修改</el-button>            
+            <el-button
               type="danger"
               icon="el-icon-delete"
               size="mini"
               :disabled="btnDisable.delBtn"
-              @click="handleDelete"
+              @click="handleDelete($event,'body')"
             >删除</el-button>
             <el-button
               type="primary"
@@ -1111,7 +1118,11 @@
           :data="nemsInvtListType"
           tooltip-effect="dark"
           style="width: 100%"
-          @selection-change="handleSelectionChange"
+          highlight-current-row
+          :cell-style="rowClass"
+          @row-click='bodyFormClick'
+          :row-class-name="tableRowClassName"
+          @selection-change="SelectionChange"
         >
           <el-table-column type="selection" min-width="55" />
           <el-table-column prop="gdsSeqno" label="序号" min-width="60" />
@@ -1121,7 +1132,7 @@
           <el-table-column prop="applyTbSeqno" label="流转申报表序号" min-width="120" />
           <el-table-column prop="gdecd" label="商品编码" min-width="80" />
           <el-table-column prop="gdsNm" label="商品名称" min-width="80" />
-          <el-table-column prop="gdsSpcfModelDesc" label="规格型号" min-width="80" />
+          <el-table-column prop="gdsspcfModelDesc" label="规格型号" min-width="80" />
           <el-table-column prop="dclUnitcd" label="申报计量单位" min-width="100" />
           <el-table-column prop="lawfUnitcd" label="法定计量单位" min-width="100" />
           <el-table-column prop="secdLawfUnitcd" label="法定第二计量单位" min-width="130" />
@@ -1143,7 +1154,7 @@
           <el-table-column prop="ucnsVerno" label="单耗版本号" min-width="100" />
           <el-table-column prop="clyMarkcd" label="归类标志" min-width="80" />
           <el-table-column prop="param3" label="自动备案序号" min-width="120" />
-          <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+          <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -1153,7 +1164,7 @@
           >删除
           </el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
         </el-table>
         <!-- <el-pagination
           class="right mb20"
@@ -1183,7 +1194,7 @@
             <el-table-column prop="entryGdsSeqno" label="报关单商品序号" min-width="120" />
             <el-table-column prop="gdecd" label="商品编码" min-width="80" />
             <el-table-column prop="gdsNm" label="商品名称" min-width="120" />
-            <el-table-column prop="gdsSpcfModelDesc" label="规格型号" min-width="120" />
+            <el-table-column prop="gdsspcfModelDesc" label="规格型号" min-width="120" />
             <el-table-column prop="dclQty" label="申报数量" min-width="80" />
             <el-table-column prop="dclUprcAmt" label="申报单价" min-width="80" />
             <el-table-column prop="dclCurrcd" label="申报币制" min-width="80" />
@@ -1875,7 +1886,7 @@ import depParaList from "./depParaList";
 import depParaList2 from "./depParaList2";
 // import noticeInfo from './noticeInfo.vue';
 
-import { add } from "@/api/detailed/head";
+import { add, getNemsinvtheadtype } from "@/api/detailed/head";
 export default {
   components: { depParaList, depParaList2 },
   data() {
@@ -1907,6 +1918,8 @@ export default {
       genDecFlagOptions:[],
       //报关类型
       dclcusTypecdOptions:[],
+      // 当前操作表体数据
+      bodyIndex: -1,
       page: {
         num: 1,
         size: 10,
@@ -2054,12 +2067,30 @@ export default {
       statusOptions: [],
       dateTimeVal: "",
       dateTimeValOne: "",
+      // 已选择数据      
+      selectBodyForm: [],
       data: [],
     };
   },
   mounted() {
     // 初始化
     this.init();
+    const  id =this.$route.query.id
+    if(id){
+      this.query(id)
+    }
+    const t = this.$route.query.type
+    if(t){
+       this.btnDisable = {
+        addBtn: true,
+        saveBtn: true,
+        delBtn: true,
+        repBtn: true,
+        copyBtn: true,
+        refBtn: true,
+      }
+    }
+   
      /**清单类型 */
     this.getDicts("station_enterprise_type").then((response) => {
       this.invtTypeOptions = response.data;
@@ -2113,7 +2144,21 @@ export default {
   methods: {
     async init() {
       // await this.depParaList()
+    },   
+    // 表格样式设置
+    rowClass () {
+       return 'text-align: center;'
     },
+    // 查询方法
+    query(id){
+      getNemsinvtheadtype(id).then(res =>{
+       if(res.code ==200){
+         this.nemsInvtHeadType = res.data.nemsInvtHeadType;
+         this.nemsInvtListType = res.data.nemsInvtListType;
+       }
+      })
+    },
+    
     // 新增
     handleAdd() {},
     // 暂存
@@ -2122,7 +2167,14 @@ export default {
       this.$saveStore("a", "123");
     },
     // 删除
-    handleDelete() {},
+    handleDelete(e, name) {
+      if (name === 'body') {
+        console.log(this.nemsInvtListType)
+        this.nemsInvtListType = this.nemsInvtListType.filter(el => !this.selectBodyForm.includes(el))
+        // this.nemsInvtListType[this.bodyIndex].nemsInvtListType = this.nemsInvtListType
+        console.log(this.nemsInvtListType)
+      }
+    },
     // 申报
     handleReport() {},
     // 复制
@@ -2140,10 +2192,10 @@ export default {
     nemsInvtHeadTypeSave:function() {    
       this.form.nemsInvtHeadType=this.nemsInvtHeadType;
       this.form.nemsInvtListType = this.nemsInvtListType;
-      // console.log(JSON.stringify(this.form));
+      console.log(JSON.stringify(this.form));
             add(this.form).then(response => {
               if (response.code === 200) {
-                this.msgSuccess("新增成功");   
+                this.msgSuccess("操作成功");   
               } else {
                 this.msgError(response.msg);
               }
@@ -2153,20 +2205,42 @@ export default {
 
     //表体新增
     handleBodyAdd(){
-
     this.nemsInvtListType.push(this.bodyForm)
     this.bodyForm = {};
     this.otherForm = {};
     console.log(JSON.stringify(this.nemsInvtListType))
-
     },
-    //表体删除
-    handleBodyDelete(index,row) {
-      this.nemsInvtListType.splice(index, 1)
-				//this.form.containerCount = this.subList.length
-				console.log(this.nemsInvtListType)
-
+    // 点击某一条集装箱信息
+    bodyFormClick(row, column, event) {
+      console.log(row)
+      this.bodyIndex = JSON.parse(JSON.stringify(row)).rowIndex
+      this.bodyForm = JSON.parse(JSON.stringify(row))
     },
+    SelectionChange(data) {
+      console.log(data)
+      this.selectBodyForm = data
+    },
+    // 添加index
+    tableRowClassName(data) {
+      //把每一行的索引放进row
+      data.row.rowIndex = data.rowIndex
+    },
+    // 表格修改
+    handleChange(e, name) {
+      if (name === 'body') {
+        if (this.bodyIndex === -1) return
+        this.nemsInvtListType[this.bodyIndex] = JSON.parse(JSON.stringify(this.bodyForm))
+        this.nemsInvtListType = JSON.parse(JSON.stringify(this.nemsInvtListType))
+        this.bodyIndex = -1
+      }
+    },
+    // //表体删除
+    // handleBodyDelete(index,row) {
+    //   this.nemsInvtListType.splice(index, 1)
+		// 		//this.form.containerCount = this.subList.length
+		// 		console.log(this.nemsInvtListType)
+
+    // },
 
     // 翻页
     currentChange(page) {
