@@ -258,6 +258,7 @@
     <div id="dayin" v-show="Explicit ">
       <div  id="poundtotalStyle">
         <span class="poundtoalFont" >{{poundTotal}}</span>
+        <div id="batchNumber"><span>{{batchNum}}</span></div>
       </div>
       <div id="nowDataStyle">
         <span class="area-in-style">{{nowData}}</span>
@@ -295,6 +296,9 @@
       <div id="remarkStyle">
         <span class="area-in-style">{{form.remark}}</span>
         <br/>
+      </div>
+      <div id="nameStyle">
+        <span>{{WeighmanName}}</span>
       </div>
     </div>
   </div>
@@ -345,8 +349,11 @@
 				timer1: "",
 				// 总条数
 				total: 0,
+        //司磅员姓名
+        WeighmanName:"",
 				nowData: "",
 				nowTime: "",
+        batchNum: "",
 				// 终端表格数据
 				clientList: [],
 				poundTotal: "",
@@ -482,6 +489,7 @@
 			//进场记录
 			this.getListI();
 
+
 			//库位号
 			this.getStoreCode(this.queryParams.stationId)
 
@@ -489,7 +497,7 @@
 		},
 		methods: {
 			handleClick(tab, event) {
-				this.getListE();
+				this.getListE()
 			},
 			//车号Change
 			CarNumberChange(event) {
@@ -497,6 +505,7 @@
 				this.form.grossWeight = 0
 				this.form.tare = 0
 				this.form.netWeight = 0
+
 				//this.form.locationNumber = ''
 				this.form.remark = ''
 				//规格型号
@@ -570,6 +579,15 @@
 					this.loading = false;
 				});
 			},
+
+      getListE1() {
+        this.queryParams.flowDirection = "E";
+        listIESheet(this.queryParams).then((response) => {
+          this.sheetList = response.rows;
+          this.total = response.total;
+
+        });
+      },
 			//初始化页面 查询进场纪录
 			getListI() {
 				this.loading = true;
@@ -583,7 +601,6 @@
 			//双击列表赋值form表单
 			dbRow(row, column) {
 				this.form = row;
-				console.log(this.form)
 
 				this.form
 			},
@@ -634,6 +651,7 @@
 									this.msgSuccess("进场成功");
 									this.reset();
 									this.getListI();
+
 								} else {
 									this.msgError(response.msg);
 								}
@@ -646,6 +664,7 @@
 							updateSheet(this.form).then((response) => {
 								if (response.code === 200) {
 									this.msgSuccess("出场成功");
+                  this.getListE();
 									if (this.PoundForm.stationViaType === '01') {//重进空出 生成入库单
 										genStoreDoc(this.queryParams.stationId, 1, this.form.noticeNo, this.form.locationNumber, 0).then(response => {
 											if (response.code === 200) {
@@ -753,8 +772,21 @@
 					aData.getDate();
 				this.nowTime =
 					aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
-				this.poundTotal = "铜精粉磅单";
+				this.poundTotal = "金航报税库称重磅单";
+        //this.getListE();
+        console.log(this.sheetList.length+'长度')
+        this.batchNum = this.sheetList.length.toString()
+        this.getListE();
+        this.batchNum = this.pad(this.batchNum)
+        this.WeighmanName  = this.$store.state.user.nickName
+        this.batchNum = aData.getFullYear().toString()+(aData.getMonth() + 1).toString()+aData.getDate()+this.batchNum
+
 			},
+      pad(num) {
+      var i = (num + "").length;
+      while(i++ < 5) num = "0" + num;
+     return num;
+     },
 			//销毁前清除定时器
 			beforeDestroy() {
 				clearInterval(this.timer1);
@@ -805,7 +837,6 @@
 			},
 			vehicleChange() {
 				this.flowCheck()
-				console.log(this.PoundForm.flowDirection)
 				if (this.PoundForm.stationViaType === '01' && this.PoundForm.flowDirection === 'E') { //重进空出
 					this.showStore = true
 					this.form.locationNumber = undefined;
@@ -863,9 +894,9 @@
   #nowDataStyle {
     width: 300px;
     height: 40px;
-    margin-top: 20px;
+    margin-top: 10px;
     float: left;
-    margin-left: 6cm;
+    margin-left: 7cm;
     padding-left: 1.5cm;
     font-size: 20px;
     /*border: 1px solid ;*/
@@ -874,7 +905,7 @@
   #nowTimeStyle {
     width: 300px;
     height: 40px;
-    margin-top: 20px;
+    margin-top: 10px;
     padding-left: 40px;
     float: left;
     font-size: 20px;
@@ -891,7 +922,7 @@
     height: 40px;
     font-size: 20px;
     margin-top: 10px;
-    padding-left: 2.5cm;
+    padding-left: 3.5cm;
     float: left;
     margin-left: 6cm;
     /*border: 1px solid ;*/
@@ -913,6 +944,7 @@
     font-size: 20px;
     margin-top: 10px;
     float: left;
+    padding-left: 0.8cm;
     /*border: 1px solid ;*/
   }
   
@@ -922,8 +954,8 @@
     font-size: 20px;
     float: left;
     margin-top: 10px;
-
-    margin-left: 8.5cm;
+    margin-left: 6cm;
+    padding-left: 3.5cm;
     /*border: 1px solid ;*/
   }
   
@@ -934,18 +966,39 @@
   /*}*/
 
   #poundtotalStyle{
-    width: 600px;
+    width: 800px;
     height: 40px;
-    margin-top: 55px;
+    margin-top: 65px;
     margin-left: 7cm;
-    padding-left: 5cm;
+    padding-left: 6cm;
     /*border: 1px solid ;*/
-
 
   }
   .poundtoalFont{
     font-size: 30px;
   }
+
+  #nameStyle{
+    width: 600px;
+    height: 40px;
+    font-size: 20px;
+    margin-top: 10px;
+    padding-left: 4cm;
+    float: left;
+    margin-left: 6cm;
+    /*border: 1px solid ;*/
+
+  }
+
+  #batchNumber{
+    width:400px;
+    height: 20px;
+    /*border: 1px solid ;*/
+    margin-left: 70px;
+    margin-top: -20px;
+    text-align: right;
+  }
+
   
   /*.poundTotal11 {*/
   /*  font-size: 20px;*/
