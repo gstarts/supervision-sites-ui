@@ -2,11 +2,11 @@
   <div class="app-container">
     <el-row :gutter="10" class="mb20">
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd" :disabled="btnDisable">新增
         </el-button>
-        <el-button type="success" icon="el-icon-edit" size="mini" @click="submitForm">暂存
+        <el-button type="success" icon="el-icon-edit" size="mini" @click="submitForm" :disabled="btnDisable">暂存
         </el-button>
-        <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete">
+        <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete" :disabled="btnDisable">
           删除
         </el-button>
       </el-col>
@@ -69,9 +69,9 @@
         </el-row>
         <el-row>
           <el-col :span="6">
-            <el-form-item label="进出境口岸海关代码" prop="declarationOfficeID">
+            <el-form-item label="进出境口岸海关代码" prop="declarationOfficeId">
               <el-select
-                v-model="declaration.declarationOfficeID"
+                v-model="declaration.declarationOfficeId"
                 placeholder="请选择进出境口岸海关代码"
                 style="width:100%"
               >
@@ -210,16 +210,16 @@
       </div>
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
-          <el-button type="primary" icon="el-icon-plus" size="mini" @click="addnewcar">新增
+          <el-button type="primary" icon="el-icon-plus" size="mini" @click="addnewcar" :disabled="btnDisable">新增
           </el-button>
-          <el-button type="success" icon="el-icon-edit" size="mini" @click="handleSave">暂存
+          <el-button type="success" icon="el-icon-edit" size="mini" @click="handleChange($event,'body')" :disabled="btnDisable">修改
           </el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete">
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete($event,'body')" :disabled="btnDisable">
             删除
           </el-button>
         </el-col>
       </el-row>
-      <el-table :data="headList" height="300px" v-loading="loading"  @selection-change="shopInfoSelectionChange">
+      <el-table :data="headList" height="300px" v-loading="loading" @row-click='bodyFormClick' :row-class-name="tableRowClassName" @selection-change="SelectionChange">
         <el-table-column type="selection"></el-table-column>
         <el-table-column label="序号" align="center" type="index"/>
         <el-table-column label="托架/拖挂车编号" align="center" prop="transportequipmentId"/>
@@ -275,6 +275,7 @@ import {
 } from '@/api/manifest/rmft4404/emptycar/Head/head'
 
 import { listInfo } from '@/api/basis/enterpriseInfo'
+import { queryDetailsById } from '@/api/manifest/query'
 
 export default {
   name: 'Head',
@@ -305,6 +306,12 @@ export default {
       TrailertypeOptions: [],
       //进出境口岸海关代码
       customsCodeTypeOptions: [],
+      // 当前操作表体数据
+      bodyIndex: -1,
+      // 已选择数据      
+      selectBodyForm: [],
+      // 按钮禁用状态
+      btnDisable: false,
       // 弹出层标题
       title: '',
       // 是否显示弹出层
@@ -322,7 +329,7 @@ export default {
       },
       // 进出境口岸海关代码, 货物运输批次号
       declaration: {
-        declarationOfficeID: '',
+        declarationOfficeId: '',
         declarationId: ''
       },
       // 备注
@@ -397,7 +404,7 @@ export default {
       rules: {}
     }
   },
-  created() {
+  mounted() {
     // 获取企业信息列表
     this.enterpriseInfo()
     //挂车类型字典翻译
@@ -412,8 +419,46 @@ export default {
     this.getDicts('hg_customs_code').then((response) => {
       this.customsCodeTypeOptions = response.data
     })
+    const  id =this.$route.query.id
+    const flag = this.$route.query.flag
+    if (flag) {
+      this.btnDisable = true
+    }
+    if(id){
+      this.query(id)
+    }
+  },
+  watch: {
+    'representativePerson.name': {      
+      handler: function(newVal) {     
+        const data = this.enterpriseOptions.find(el => el.stationPersonName === newVal)        
+        this.form.head.contractorcodescc = data.contractorCodeScc,
+        this.head.customsMaster = data.customsMaster,
+        this.head = data,
+        this.head.functionCode = '2',
+        this.head.messageType = 'MT4404'
+      }
+    }
   },
   methods: {
+    // 查询方法
+    query(id){
+      queryDetailsById(id).then(res =>{
+       if(res.code ==200){
+        //  this.nemsInvtHeadType = res.data.nemsInvtHeadType;
+        //  this.headList = res.data.headList;        
+        this.declaration = res.data.declaration
+        this.declaration.mtHeadId = res.data.declaration.mtHeadId
+        console.log(111111)
+        this.additionalInformation = res.data.declaration.additionalInformation
+        this.carrier = res.data.declaration.carrier        
+        this.representativePerson = res.data.declaration.representativePerson
+        this.borderTransportMeans = res.data.declaration.consignment.borderTransportMeans
+        this.headList = res.data.declaration.consignment.borderTransportMeans.transportEquipment
+        console.log(res.data)
+       }
+      })
+    },
     //托架/拖挂车类型 翻译
     Trailerformat(row, column) {
       return this.selectDictLabel(this.TrailertypeOptions, row.typeCode)
@@ -558,6 +603,36 @@ export default {
         .catch(function() {
         })
     },
+    // 点击某一条集装箱信息
+    bodyFormClick(row, column, event) {
+      this.bodyIndex = JSON.parse(JSON.stringify(row)).rowIndex
+      this.transportEquipmentForm = JSON.parse(JSON.stringify(row))
+    },
+    SelectionChange(data) {
+      this.selectBodyForm = data
+    },
+    // 添加index
+    tableRowClassName(data) {
+      //把每一行的索引放进row
+      data.row.rowIndex = data.rowIndex
+    },
+    // 表格修改
+    handleChange(e, name) {
+      if (name === 'body') {
+        if (this.bodyIndex === -1) return
+        this.headList[this.bodyIndex] = JSON.parse(JSON.stringify(this.transportEquipmentForm))
+        this.headList = JSON.parse(JSON.stringify(this.headList))
+        this.bodyIndex = -1
+      }
+      this.transportEquipmentForm = {}
+    },
+    // 删除
+    handleDelete(e, name) {
+      if (name === 'body') {
+        this.headList = this.headList.filter(el => !this.selectBodyForm.includes(el))
+        // this.headList[this.bodyIndex].headList = this.headList
+      }
+    },
     /** 选中值发生变化时触发 */
     change(event) {
       this.enterpriseOptions.forEach(element => {
@@ -567,7 +642,7 @@ export default {
           this.representativePerson.name = element.stationPersonName
           this.head = element
           this.head.functionCode = '2',
-            this.head.messageType = 'MT4404'
+          this.head.messageType = 'MT4404'
         }
       })
 
