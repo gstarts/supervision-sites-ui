@@ -11,10 +11,10 @@ export function add(data) {
     data: data
   })
 }
-// 5402根据id查询
+// 5402_3402根据id查询
 export function queryById(id) {
   return request({
-    url: '/manifest/head/query/mt5402/'+id,
+    url: '/manifest/head/query/mt5402_3402/'+id,
     method: 'get'
   })
 }

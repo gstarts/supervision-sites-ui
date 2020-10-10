@@ -6,21 +6,21 @@
         type="primary"
         icon="el-icon-plus"
         size="mini"
-        :disabled="btnDisable.addBtn"
+        :disabled="btnDisable"
         @click="handleAdd"
       >新增</el-button>
       <el-button
         type="success"
         icon="el-icon-edit"
         size="mini"
-        :disabled="btnDisable.saveBtn"
+        :disabled="btnDisable"
         @click="AllSave"
       >暂存</el-button>
       <el-button
         type="danger"
         icon="el-icon-delete"
         size="mini"
-        :disabled="btnDisable.delBtn"
+        :disabled="btnDisable"
         @click="handleDelete"
       >删除</el-button>
       <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode" v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报</el-button>
@@ -29,14 +29,14 @@
 <!--        type="primary"-->
 <!--        icon="el-icon-document-copy"-->
 <!--        size="mini"-->
-<!--        :disabled="btnDisable.copyBtn"-->
+<!--        :disabled="btnDisable"-->
 <!--        @click="handleCopy"-->
 <!--      >复制</el-button>-->
 <!--      <el-button-->
 <!--        type="primary"-->
 <!--        icon="el-icon-refresh"-->
 <!--        size="mini"-->
-<!--        :disabled="btnDisable.refBtn"-->
+<!--        :disabled="btnDisable"-->
 <!--        @click="handleRefresh"-->
 <!--      >刷新</el-button>-->
     </div>
@@ -91,10 +91,10 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item label="到达卸货地日期" prop="arrivalDate">
+            <el-form-item label="到达卸货地日期" prop="arrivalDateTime">
               <el-date-picker
                 class="datePicker"
-                v-model="unloadingLocation.arrivalDate"
+                v-model="unloadingLocation.arrivalDateTime"
                 type="datetime"
                 placeholder="选择日期时间"
                 value-format="yyyyMMddHHmmss"
@@ -145,42 +145,42 @@
             type="primary"
             icon="el-icon-plus"
             size="mini"
-            :disabled="btnDisable.addBtn"
+            :disabled="btnDisable"
             @click="billLading"
           >新增</el-button>
           <el-button
             type="success"
             icon="el-icon-edit"
             size="mini"
-            :disabled="btnDisable.saveBtn"
+            :disabled="btnDisable"
             @click="handleSave"
           >暂存</el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
             size="mini"
-            :disabled="btnDisable.delBtn"
+            :disabled="btnDisable"
             @click="handleDelete"
           >删除</el-button>
 <!--          <el-button-->
 <!--            type="danger"-->
 <!--            icon="el-icon-thumb"-->
 <!--            size="mini"-->
-<!--            :disabled="btnDisable.repBtn"-->
+<!--            :disabled="btnDisable"-->
 <!--            @click="handleReport"-->
 <!--          >申报</el-button>-->
 <!--          <el-button-->
 <!--            type="primary"-->
 <!--            icon="el-icon-document-copy"-->
 <!--            size="mini"-->
-<!--            :disabled="btnDisable.copyBtn"-->
+<!--            :disabled="btnDisable"-->
 <!--            @click="handleCopy"-->
 <!--          >复制</el-button>-->
 <!--          <el-button-->
 <!--            type="primary"-->
 <!--            icon="el-icon-refresh"-->
 <!--            size="mini"-->
-<!--            :disabled="btnDisable.refBtn"-->
+<!--            :disabled="btnDisable"-->
 <!--            @click="handleRefresh"-->
 <!--          >刷新</el-button>-->
         </el-col>
@@ -277,42 +277,42 @@
             type="primary"
             icon="el-icon-plus"
             size="mini"
-            :disabled="btnDisable.addBtn"
+            :disabled="btnDisable"
             @click="containerAdd"
           >新增</el-button>
           <el-button
             type="success"
             icon="el-icon-edit"
             size="mini"
-            :disabled="btnDisable.saveBtn"
+            :disabled="btnDisable"
             @click="handleSave"
           >暂存</el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
             size="mini"
-            :disabled="btnDisable.delBtn"
+            :disabled="btnDisable"
             @click="handleDelete"
           >删除</el-button>
 <!--          <el-button-->
 <!--            type="danger"-->
 <!--            icon="el-icon-thumb"-->
 <!--            size="mini"-->
-<!--            :disabled="btnDisable.repBtn"-->
+<!--            :disabled="btnDisable"-->
 <!--            @click="handleReport"-->
 <!--          >申报</el-button>-->
 <!--          <el-button-->
 <!--            type="primary"-->
 <!--            icon="el-icon-document-copy"-->
 <!--            size="mini"-->
-<!--            :disabled="btnDisable.copyBtn"-->
+<!--            :disabled="btnDisable"-->
 <!--            @click="handleCopy"-->
 <!--          >复制</el-button>-->
 <!--          <el-button-->
 <!--            type="primary"-->
 <!--            icon="el-icon-refresh"-->
 <!--            size="mini"-->
-<!--            :disabled="btnDisable.refBtn"-->
+<!--            :disabled="btnDisable"-->
 <!--            @click="handleRefresh"-->
 <!--          >刷新</el-button>-->
         </el-col>
@@ -360,7 +360,7 @@
 
 <script>
 import depParaListJson from "@/mock/depParaList2.json";
-import { add } from "@/api/manifest/rmft5402_3402_4401/head";
+import { add,queryById } from "@/api/manifest/rmft5402_3402_4401/head";
 import depParaList from "./components/depParaList";
 import depParaList2 from "./components/depParaList2";
 import { listInfo } from '@/api/basis/enterpriseInfo'
@@ -380,14 +380,8 @@ export default {
       dialogTableVisible: false,
       dialogTableVisible2: false,
       // 按钮禁用状态
-      btnDisable: {
-        addBtn: false,
-        saveBtn: false,
-        delBtn: false,
-        repBtn: true,
-        copyBtn: false,
-        refBtn: false,
-      },
+      btnDisable:false,
+
       // 查询参数
       queryParams: {
         postCode: undefined,
@@ -424,7 +418,7 @@ export default {
       // 卸货地表单
       unloadingLocation: {
         unloadinglocationId: undefined,
-        arrivalDate: undefined,
+        arrivalDateTime: undefined,
       },
       // 备注表单
       additionalInformation: {
@@ -463,6 +457,14 @@ export default {
   mounted() {
     // 初始化
     this.init();
+    const id=this.$route.query.id;
+    const flag=this.$route.query.flag;
+    if(flag){
+      this.btnDisable=true;
+    }
+    if(id){
+      this.query(id);
+    }
   },
   created() {
     /** 包装种类代码字典 */
@@ -471,6 +473,18 @@ export default {
       })
   },
   methods: {
+    //根据ID查询详情数据
+    query(id){
+      queryById(id).then( res=>{
+        //declaration
+        this.declaration=res.data.declaration;
+        this.borderTransportMeans=res.data.declaration.borderTransportMeans;
+        this.unloadingLocation=res.data.declaration.unloadingLocation;
+        this.additionalInformation=res.data.declaration.additionalInformation;
+        this.List=res.data.declaration.consignment;
+        this.transportEquipment=res.data.declaration.borderTransportMeans.transportEquipment;
+      })
+    },
     async init() {
       // await this.depParaList()
       //  企业代码
