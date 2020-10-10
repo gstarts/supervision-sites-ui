@@ -11,5 +11,12 @@ export function add(data) {
     data: data
   })
 }
+// 5402根据id查询
+export function queryById(id) {
+  return request({
+    url: '/manifest/head/query/mt5402/'+id,
+    method: 'get'
+  })
+}
 
 
