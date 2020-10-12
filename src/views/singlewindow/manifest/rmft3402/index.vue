@@ -457,6 +457,10 @@ export default {
   mounted() {
     // 初始化
     this.init();
+    /** 包装种类代码字典 */
+    this.getDicts('sw_packag_type').then((response) => {
+      this.PaymentMethodCode = response.data
+    })
     const id=this.$route.query.id;
     const flag=this.$route.query.flag;
     if(flag){
@@ -466,12 +470,9 @@ export default {
       this.query(id);
     }
   },
-  created() {
-    /** 包装种类代码字典 */
-      this.getDicts('sw_packag_type').then((response) => {
-        this.PaymentMethodCode = response.data
-      })
-  },
+  // created() {
+  //
+  // },
   methods: {
     //根据ID查询详情数据
     query(id){
@@ -483,6 +484,10 @@ export default {
         this.additionalInformation=res.data.declaration.additionalInformation;
         this.List=res.data.declaration.consignment;
         this.transportEquipment=res.data.declaration.borderTransportMeans.transportEquipment;
+        // this.head.unitCode=this.listInfo[0].eName;
+        console.log(this.listInfo)
+
+
       })
     },
     async init() {

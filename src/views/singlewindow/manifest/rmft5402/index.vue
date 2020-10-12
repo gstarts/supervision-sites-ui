@@ -558,6 +558,8 @@ export default {
           this.List=res.data.declaration.consignment;
           //集装箱信息
           this.transportEquipment=res.data.declaration.borderTransportMeans.transportEquipment;
+          // this.head.unitCode=this.listInfo[0].eName;
+          console.log(this.listInfo)
         }
       })
     },
