@@ -662,8 +662,6 @@ export default {
         head:{},
         declaration:{
           consignmentVO_4401:{
-
-            transportEquipment:[],
           },
 
         },
@@ -817,6 +815,8 @@ export default {
       this.form.declaration = this.declaration;
       this.form.declaration.consignmentVO_4401 = this.AForm;
       this.form.declaration.consignmentVO_4401.transportEquipment = this.transportEquipmentList;
+      console.log("--------------------")
+      console.log(JSON.stringify(this.form));
       add(this.form).then((response) => {
         if (response.code === 200) {
           this.msgSuccess("新增成功");
