@@ -12,11 +12,11 @@
       </el-col>
     </el-row>-->
     <el-row :gutter="10" class="mb8">
-      <el-button type="primary" icon="el-icon-plus" size="mini"  @click="handleAdd">新增
+      <el-button type="primary" icon="el-icon-plus" size="mini"  @click="handleAdd" :disabled="btnDisable">新增
       </el-button>
-      <el-button type="success" icon="el-icon-edit" size="mini"  @click="addHeadForm">暂存
+      <el-button type="success" icon="el-icon-edit" size="mini"  @click="addHeadForm" :disabled="btnDisable">暂存
       </el-button>
-      <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete">
+      <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete" :disabled="btnDisable">
         删除
       </el-button>
       <el-button type="danger" icon="el-icon-thumb" size="mini" @click="declare" style="float:right" disabled>申报
@@ -180,8 +180,8 @@
         </el-row>
         <el-row>
           <el-col :span="6">
-            <el-form-item label="进出境口岸海关代码" prop="declarationOfficeID">
-              <el-select v-model="declaration.declarationOfficeID" placeholder="请选择进出境口岸海关">
+            <el-form-item label="进出境口岸海关代码" prop="declarationOfficeId">
+              <el-select v-model="declaration.declarationOfficeId" placeholder="请选择进出境口岸海关">
                 <el-option
                   v-for="dict in CustomsDictionary"
                   :key="dict.dictValue"
@@ -236,21 +236,21 @@
       </div>
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
-          <el-button type="primary" icon="el-icon-plus" size="mini"  @click="submitBodyForm">新增
+          <el-button type="primary" icon="el-icon-plus" size="mini"  @click="submitBodyForm" :disabled="btnDisable">新增
           </el-button>
-          <el-button type="success" icon="el-icon-edit" size="mini"  @click="handleSave">暂存
+          <el-button type="success" icon="el-icon-edit" size="mini"  @click="handleChange($event,'body')" :disabled="btnDisable">修改
           </el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete">
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete($event,'body')" :disabled="btnDisable">
             删除
           </el-button>
         </el-col>
       </el-row>
 
-      <el-table v-loading="loading" :data="headList" height="180px"  @selection-change="shopInfoSelectionChange">
+      <el-table v-loading="loading" :data="headList" height="180px"  @row-click='bodyFormClick' :row-class-name="tableRowClassName" @selection-change="SelectionChange">
          <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="序号" align="center" type="index"/>
-        <el-table-column label="托架/拖挂车编号" align="center" prop="transportEquipmentId"/>
-        <el-table-column label="托架/拖挂车类型" align="center" prop="characteristicCode" :formatter="TrailerFormat"/>
+        <el-table-column label="托架/拖挂车编号" align="center" prop="transportequipmentId"/>
+        <el-table-column label="托架/拖挂车类型" align="center" prop="typeCode" :formatter="TrailerFormat"/>
         <el-table-column label="托架/拖挂车自重(kg)" align="center" prop="tareWeight"/>
       </el-table>
 
@@ -265,13 +265,13 @@
       <el-form :model="Tform" ref="Tform" :rules="bodyRules" :inline="true" label-width="180px">
         <el-row>
           <el-col :span="8">
-            <el-form-item label="托架/拖挂车编号" prop="transportEquipmentId">
-              <el-input v-model="transportEquipmentForm.transportEquipmentId" placeholder="请输入托架/拖挂车编号" size="mini"/>
+            <el-form-item label="托架/拖挂车编号" prop="transportequipmentId">
+              <el-input v-model="transportEquipmentForm.transportequipmentId" placeholder="请输入托架/拖挂车编号" size="mini"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="托架/拖挂车类型" prop="characteristicCode">
-              <el-select v-model="transportEquipmentForm.characteristicCode" placeholder="请选择托架/拖挂车类型" size="mini">
+            <el-form-item label="托架/拖挂车类型" prop="typeCode">
+              <el-select v-model="transportEquipmentForm.typeCode" placeholder="请选择托架/拖挂车类型" size="mini">
                 <el-option
                   v-for="dict in TrailerType"
                   :key="dict.dictValue"
@@ -306,16 +306,16 @@
       </div>
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
-          <el-button type="primary" icon="el-icon-plus" size="mini"  @click="coalBodyForm">新增
+          <el-button type="primary" icon="el-icon-plus" size="mini"  @click="coalBodyForm" :disabled="btnDisable">新增
           </el-button>
-          <el-button type="success" icon="el-icon-edit" size="mini"  @click="handleSave">暂存
+          <el-button type="success" icon="el-icon-edit" size="mini"  @click="handleChange($event,'coal')" :disabled="btnDisable" >修改
           </el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete">
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete($event,'coal')" :disabled="btnDisable">
             删除
           </el-button>
         </el-col>
       </el-row>
-      <el-table v-loading="loading" :data="coalList" height="180px" @selection-change="shopInfoSelectionChange">
+      <el-table v-loading="loading" :data="coalList" height="180px" @row-click='coalFormClick' :row-class-name="tableRowClassName" @selection-change="SelectionChange">
          <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="序号" align="center" type="index"/>
         <el-table-column label="集装箱(器)编号" align="center" prop="transportequipmentId"/>
@@ -411,7 +411,9 @@ import {
   updateDeclare
 } from '@/api/manifest/rmft4406/head'
 import { listInfo } from '@/api/basis/enterpriseInfo'
-import noticeInfoVue from '../../rmft2401/noticeInfo.vue';
+import noticeInfoVue from '../../rmft2401/noticeInfo.vue'
+
+import { queryDetailsById } from '@/api/manifest/query'
 
 export default {
   name: 'Head',
@@ -421,6 +423,14 @@ export default {
       loading: false,
       // 选中数组
       ids: [],
+      // 当前操作挂车表体数据
+      bodyIndex: -1,
+      // 当前操作集装箱表体数据
+      coalIndex: -1,
+      // 已选择数据      
+      selectBodyForm: [],
+      // 按钮禁用状态
+      btnDisable: false,
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -433,7 +443,7 @@ export default {
       },
       // 进出境口岸海关代码, 货物运输批次号
       declaration: {
-        declarationOfficeID: '',
+        declarationOfficeId: '',
         declarationId: ''
       },
       // 备注
@@ -474,9 +484,9 @@ export default {
       // 托架/拖挂车信息
       transportEquipmentForm: {
         // 托架/拖挂车编号
-        transportEquipmentId: '',
+        transportequipmentId: '',
         // 托架/拖挂车类型
-        characteristicCode: '',
+        typeCode: '',
         // 托架/拖挂车自重
         tareWeight: ''
       },
@@ -575,7 +585,7 @@ export default {
           { required: false, message: '请输入货物运输批次号', trigger: 'blur' }
         ],
 
-        declarationOfficeID: [
+        declarationOfficeId: [
           {
             required: false,
             message: '请输入进出境口岸海关代码',
@@ -622,10 +632,10 @@ export default {
         ]
       },
       bodyRules: {
-        transportEquipmentId: [
+        transportequipmentId: [
           { required: false, message: '请输入托架/拖挂车编号', trigger: 'blur' }
         ],
-        characteristicCode: [
+        typeCode: [
           { required: false, message: '请输入托架/拖挂车类型', trigger: 'blur' }
         ],
         tareWeight: [
@@ -695,8 +705,48 @@ export default {
     this.getDicts('hg_container_self_weight').then((response) => {
       this.ContainerSelfWeight = response.data
     })
+    const  id =this.$route.query.id
+    const flag = this.$route.query.flag
+    if (flag) {
+      this.btnDisable = true
+    }
+    if(id){
+      this.query(id)
+    }
+  },
+  watch: {
+    'representativePerson.name': {      
+      handler: function(newVal) {     
+        const data = this.enterpriseOptions.find(el => el.stationPersonName === newVal)  
+        // console.log(data)      
+        this.form.head.contractorCodeScc = data.contractorCodeScc
+        this.head.customsMaster = data.customsMaster
+        this.form.head = data
+      }
+    }
   },
   methods: {
+    // 跳转后查询方法
+    query(id){
+      queryDetailsById(id).then(res =>{
+       if(res.code ==200){
+        //  this.nemsInvtHeadType = res.data.nemsInvtHeadType;
+        //  this.headList = res.data.headList;        
+        this.declaration = res.data.declaration
+        this.declaration.mtHeadId = res.data.declaration.mtHeadId
+        console.log(res.data.declaration)
+        this.additionalInformation = res.data.declaration.additionalInformation
+        this.carrier = res.data.declaration.carrier        
+        this.representativePerson = res.data.declaration.representativePerson
+        this.borderTransportMeans = res.data.declaration.consignment.borderTransportMeans
+        this.governmentprocedure = res.data.declaration.consignment.governmentprocedure
+        this.loadinglocation = res.data.declaration.loadinglocation
+        this.headList = res.data.declaration.consignment.borderTransportMeans.transportEquipment
+        this.coalList = res.data.declaration.consignment.transportequipment
+        // console.log(res.data)
+       }
+      })
+    },
     /** 查询表头信息列表 */
     getList() {
       this.loading = true
@@ -749,7 +799,7 @@ export default {
     },
     //托架/拖挂车类型 翻译
     TrailerFormat(row, column) {
-      return this.selectDictLabel(this.TrailerType, row.characteristicCode)
+      return this.selectDictLabel(this.TrailerType, row.typeCode)
     },
     //集装箱(器)来源 翻译
     ContainerSourceFormat(row, column) {
@@ -961,6 +1011,51 @@ export default {
         .catch(function() {
         })
     },
+    // 点击某一条集装箱信息
+    bodyFormClick(row, column, event) {
+      this.bodyIndex = JSON.parse(JSON.stringify(row)).rowIndex
+      this.transportEquipmentForm = JSON.parse(JSON.stringify(row))
+    },
+    coalFormClick(row, column, event) {
+      this.coalIndex = JSON.parse(JSON.stringify(row)).rowIndex
+      this.transportequipment = JSON.parse(JSON.stringify(row))
+    },
+    SelectionChange(data) {
+      this.selectBodyForm = data
+    },
+    // 添加index
+    tableRowClassName(data) {
+      //把每一行的索引放进row
+      data.row.rowIndex = data.rowIndex
+    },
+    // 表格修改
+    handleChange(e, name) {
+      if (name === 'body') {
+        if (this.bodyIndex === -1) return
+        this.headList[this.bodyIndex] = JSON.parse(JSON.stringify(this.transportEquipmentForm))
+        this.headList = JSON.parse(JSON.stringify(this.headList))
+        this.bodyIndex = -1
+        this.transportEquipmentForm = {}
+      }
+      if (name === 'coal') {
+        if (this.coalIndex === -1) return
+        this.coalList[this.coalIndex] = JSON.parse(JSON.stringify(this.transportequipment))
+        this.coalList = JSON.parse(JSON.stringify(this.coalList))
+        this.coalIndex = -1
+        this.transportequipment = {}
+      }
+      
+    },
+    // 删除
+    handleDelete(e, name) {
+      if (name === 'body') {
+        this.headList = this.headList.filter(el => !this.selectBodyForm.includes(el))
+        // this.headList[this.bodyIndex].headList = this.headList
+      }
+      if (name === 'coal') {
+        this.coalList = this.coalList.filter(el => !this.selectBodyForm.includes(el))
+      }
+    },
     /** 选中值发生变化时触发 */
     change(event) {
       this.enterpriseOptions.forEach(element => {
@@ -968,10 +1063,10 @@ export default {
         if (element.contractorCodeScc === event) {
           // 将得到的企业属性赋值到应用的对象中
           this.representativePerson.name = element.stationPersonName
-          this.head.customsMaster = element.customsMaster
-          this.head.receiverId = element.receiverId
-          this.head.version = element.version
-          this.head.senderId = element.contractorCode + '_' + element.senderId
+          // this.head.customsMaster = element.customsMaster
+          // this.head.receiverId = element.receiverId
+          // this.head.version = element.version
+          // this.head.senderId = element.contractorCode + '_' + element.senderId
           this.form.head = element
         }
       })

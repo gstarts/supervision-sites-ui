@@ -2,11 +2,11 @@
   <div class="app-container">
     <el-row :gutter="10" class="mb20">
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd" :disabled="btnDisable">新增
         </el-button>
-        <el-button type="success" icon="el-icon-edit" size="mini" @click="submitForm">暂存
+        <el-button type="success" icon="el-icon-edit" size="mini" @click="submitForm" :disabled="btnDisable">暂存
         </el-button>
-        <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete">
+        <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete" :disabled="btnDisable">
           删除
         </el-button>
       </el-col>
@@ -201,14 +201,28 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="传输企业备案关区" prop="customsMaster">
-              <el-input
+              <!-- <el-input
                 v-model="head.customsMaster"
                 :disabled="true"
                 placeholder="系统反填"
                 clearable
                 size="mini"
                 @keyup.enter.native="handleQuery"
-              />
+              /> -->
+              <el-select
+                v-model="head.customsMaster"
+                :disabled="true"
+                placeholder="请选择进出境口岸海关代码"
+                style="width:100%"
+                size="mini"
+              >
+                <el-option
+                  v-for="dict in customsCodeTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -258,11 +272,11 @@
       </div>
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
-          <el-button type="primary" icon="el-icon-plus" size="mini" @click="addnewcar">新增
+          <el-button type="primary" icon="el-icon-plus" size="mini" @click="addnewcar" :disabled="btnDisable">新增
           </el-button>
-          <el-button type="success" icon="el-icon-edit" size="mini" @click="handleChange($event,'body')">修改
+          <el-button type="success" icon="el-icon-edit" size="mini" @click="handleChange($event,'body')" :disabled="btnDisable">修改
           </el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete($event,'body')">
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete($event,'body')" :disabled="btnDisable">
             删除
           </el-button>
         </el-col>
@@ -400,6 +414,8 @@ export default {
       bodyIndex: -1,
       // 已选择数据      
       selectBodyForm: [],
+      // 按钮禁用状态
+      btnDisable: false,
       // 弹出层标题
       title: '',
       // 是否显示弹出层
@@ -504,11 +520,7 @@ export default {
       rules: {}
     }
   },
-  created() {
-    const  id =this.$route.query.id
-    if(id){
-      this.query(id)
-    }
+  mounted() {    
     // 获取企业信息列表
     this.enterpriseInfo()
     //挂车类型字典翻译
@@ -535,6 +547,26 @@ export default {
     this.getDicts('sw_route_country').then((response) => {
       this.routingContryIdTextOptions = response.data
     })
+    const  id =this.$route.query.id
+    const flag = this.$route.query.flag
+    if (flag) {
+      this.btnDisable = true
+    }
+    if(id){
+      this.query(id)
+    }
+  },
+  watch: {
+    'representativePerson.name': {      
+      handler: function(newVal) {     
+        const data = this.enterpriseOptions.find(el => el.stationPersonName === newVal)  
+        this.form.head.contractorcodescc = data.contractorCodeScc
+        this.head.customsMaster = data.customsMaster
+        this.head = data
+        this.head.functionCode = '2'
+        this.head.messageType = 'MT4403'
+      }
+    }
   },
   methods: {
     // 查询方法
@@ -545,7 +577,7 @@ export default {
         //  this.headList = res.data.headList;        
         this.declaration = res.data.declaration
         this.declaration.mtHeadId = res.data.declaration.mtHeadId
-        console.log(res.data)
+        // console.log(res.data)
         this.additionalInformation = res.data.declaration.additionalInformation
         this.carrier = res.data.declaration.carrier        
         this.representativePerson = res.data.declaration.representativePerson
@@ -626,8 +658,7 @@ export default {
     //handleAdd
     handleAdd(){},
     shopInfoSelectionChange(data){
-      console.log(data)
-
+      // console.log(data)
     },
     /** 暂存按钮*/
     handleSave(){},
@@ -661,7 +692,7 @@ export default {
       add(this.form).then((response) => {
         if (response.code === 200) {
           this.msgSuccess("新增成功");
-          console.log(JSON.stringify(this.form));
+          // console.log(JSON.stringify(this.form));
         } else {
           this.msgError(response.msg);
         }
