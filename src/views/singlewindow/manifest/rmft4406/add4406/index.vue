@@ -718,10 +718,12 @@ export default {
     'representativePerson.name': {      
       handler: function(newVal) {     
         const data = this.enterpriseOptions.find(el => el.stationPersonName === newVal)  
-        // console.log(data)      
-        this.form.head.contractorCodeScc = data.contractorCodeScc
-        this.head.customsMaster = data.customsMaster
-        this.form.head = data
+        // console.log(data)    
+        if(data != undefined) {
+          this.form.head.contractorCodeScc = data.contractorCodeScc
+          this.head.customsMaster = data.customsMaster
+          this.form.head = data
+        }          
       }
     }
   },
@@ -734,7 +736,7 @@ export default {
         //  this.headList = res.data.headList;        
         this.declaration = res.data.declaration
         this.declaration.mtHeadId = res.data.declaration.mtHeadId
-        console.log(res.data.declaration)
+        // console.log(res.data.declaration)
         this.additionalInformation = res.data.declaration.additionalInformation
         this.carrier = res.data.declaration.carrier        
         this.representativePerson = res.data.declaration.representativePerson
@@ -951,12 +953,13 @@ export default {
       add(this.form).then((response) => {
         if (response.code === 200) {
           this.msgSuccess("新增成功");
-          console.log(JSON.stringify(this.form));
+          // console.log(JSON.stringify(this.form));
         } else {
           this.msgError(response.msg);
         }
       });
-      this.reset()
+      this.reset();
+      this.clearHead() 
 
     },
     /** 挂车表体提交按钮 */
