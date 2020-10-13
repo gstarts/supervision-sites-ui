@@ -452,6 +452,7 @@ export default {
       listInfo: [],
       // 包装种类字典
       PaymentMethodCode: [],
+      ids:undefined,
     };
   },
   mounted() {
@@ -462,6 +463,7 @@ export default {
       this.PaymentMethodCode = response.data
     })
     const id=this.$route.query.id;
+    this.ids=id;
     const flag=this.$route.query.flag;
     if(flag){
       this.btnDisable=true;
@@ -536,6 +538,7 @@ export default {
       this.form.head = this.listInfo.find(el => el.deptId === this.head.unitCode)
       this.form.head.functionCode = "2";
       this.form.head.messageType = "MT3402";
+      this.declaration.mtHeadId=this.ids;
       this.form.declaration = this.declaration;
       this.form.declaration.borderTransportMeans = this.borderTransportMeans;
       this.form.declaration.unloadingLocation = this.unloadingLocation;

@@ -747,6 +747,7 @@ export default {
       ContainerSize: [],
       // 集装箱（器）重箱或者空箱标识
       ContainerSelfWeight: [],
+      ids:undefined,
     };
   },
   mounted() {
@@ -754,6 +755,7 @@ export default {
     this.init(
     );
     const id=this.$route.query.id;
+    this.ids=id;
     const flag=this.$route.query.flag;
     if(flag){
       this.btnDisable=true;
@@ -834,6 +836,7 @@ export default {
       this.form.head = this.listInfo.find(el => el.deptId === this.head.unitCode)
       this.form.head.messageType="MT4401"
       this.form.head.functionCode = "2";
+      this.declaration.mtHeadId=this.ids;
       this.form.declaration = this.declaration;
       this.form.declaration.consignmentVO_4401 = this.AForm;
       this.form.declaration.consignmentVO_4401.transportEquipment = this.transportEquipmentList;

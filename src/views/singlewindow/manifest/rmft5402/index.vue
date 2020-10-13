@@ -425,7 +425,7 @@ export default {
       queryParams: {
         postCode: undefined,
       },
-
+      ids:undefined,
       form: {
         head: {},
         declaration: {
@@ -452,6 +452,7 @@ export default {
       declaration: {
         declarationOfficeID: undefined,
         declarationId: undefined,
+        mtHeadId:undefined,
       },
       // 运输方式表单
       borderTransportMeans: {
@@ -517,6 +518,7 @@ export default {
     // 初始化
     this.init();
     const id=this.$route.query.id;
+    this.ids=id;
     const flag=this.$route.query.flag;
     console.log(flag)
     if(flag){
@@ -527,12 +529,10 @@ export default {
     }
   },
   created() {
-
     /** 包装种类代码字典 */
     this.getDicts("sw_packag_type").then((response) => {
       this.PaymentMethodCode = response.data;
     });
-
   },
   methods: {
     //详情页查询
@@ -616,6 +616,7 @@ export default {
       );
       this.form.head.messageType = "MT5402";
       this.form.head.functionCode = "2";
+      this.declaration.mtHeadId=this.ids;
       this.form.declaration = this.declaration;
       this.form.declaration.borderTransportMeans = this.borderTransportMeans;
       this.form.declaration.unloadingLocation = this.unloadingLocation;
