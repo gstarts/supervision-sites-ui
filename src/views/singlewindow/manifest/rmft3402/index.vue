@@ -410,6 +410,7 @@ export default {
       declaration: {
         declarationOfficeID: undefined,
         declarationId: undefined,
+        mtHeadId:undefined,
       },
       // 运输方式表单
       borderTransportMeans: {
@@ -472,9 +473,15 @@ export default {
       this.query(id);
     }
   },
-  // created() {
-  //
-  // },
+  //反填
+  watch:{
+    'submitter.submitterId':{
+      handler: function(newVal) {
+        const data = this.listInfo.find(el => el.contractorCodeScc === newVal)
+        this.head.unitCode = data.eName
+      }
+    }
+  },
   methods: {
     //根据ID查询详情数据
     query(id){

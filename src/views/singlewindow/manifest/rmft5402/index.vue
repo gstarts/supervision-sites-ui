@@ -8,43 +8,48 @@
         size="mini"
         :disabled="btnDisable"
         @click="handleAdd"
-      >新增</el-button>
+      >新增
+      </el-button>
       <el-button
         type="success"
         icon="el-icon-edit"
         size="mini"
         :disabled="btnDisable"
         @click="handleSave"
-      >暂存</el-button>
+      >暂存
+      </el-button>
       <el-button
         type="danger"
         icon="el-icon-delete"
         size="mini"
         :disabled="btnDisable"
         @click="handleDelete"
-      >删除</el-button>
-      <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode" v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报</el-button>
+      >删除
+      </el-button>
+      <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode"
+                 v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报
+      </el-button>
       <!--      <el-button-->
-<!--        type="danger"-->
-<!--        icon="el-icon-thumb"-->
-<!--        size="mini"-->
-<!--        :disabled="btnDisable"-->
-<!--        @click="handleReport"-->
-<!--      >申报</el-button>-->
-<!--      <el-button-->
-<!--        type="primary"-->
-<!--        icon="el-icon-document-copy"-->
-<!--        size="mini"-->
-<!--        :disabled="btnDisable"-->
-<!--        @click="handleCopy"-->
-<!--      >复制</el-button>-->
-<!--      <el-button-->
-<!--        type="primary"-->
-<!--        icon="el-icon-refresh"-->
-<!--        size="mini"-->
-<!--        :disabled="btnDisable"-->
-<!--        @click="handleRefresh"-->
-<!--      >刷新</el-button>-->
+      <!--        type="danger"-->
+      <!--        icon="el-icon-thumb"-->
+      <!--        size="mini"-->
+      <!--        :disabled="btnDisable"-->
+      <!--        @click="handleReport"-->
+      <!--      >申报</el-button>-->
+      <!--      <el-button-->
+      <!--        type="primary"-->
+      <!--        icon="el-icon-document-copy"-->
+      <!--        size="mini"-->
+      <!--        :disabled="btnDisable"-->
+      <!--        @click="handleCopy"-->
+      <!--      >复制</el-button>-->
+      <!--      <el-button-->
+      <!--        type="primary"-->
+      <!--        icon="el-icon-refresh"-->
+      <!--        size="mini"-->
+      <!--        :disabled="btnDisable"-->
+      <!--        @click="handleRefresh"-->
+      <!--      >刷新</el-button>-->
     </div>
     <!-- 基本信息 -->
     <el-card class="mb20">
@@ -55,7 +60,7 @@
         <el-row type="flex">
           <el-col :span="6">
             <el-form-item label="货物运输批次号" prop="postCode">
-              <el-input v-model="declaration.declarationId" placeholder="货物运输批次号" clearable  />
+              <el-input v-model="declaration.declarationId" placeholder="货物运输批次号" clearable/>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -86,7 +91,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="卸货地代码" prop="postCode">
-              <el-input v-model="unloadingLocation.unloadinglocationId" placeholder="卸货地代码" clearable  />
+              <el-input v-model="unloadingLocation.unloadinglocationId" placeholder="卸货地代码" clearable/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -115,7 +120,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="理货公司代码" prop="postCode">
-              <el-input v-model="submitter.submitterId" placeholder="理货公司代码" clearable size="small" />
+              <el-input v-model="submitter.submitterId" placeholder="理货公司代码" clearable size="small"/>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -176,7 +181,8 @@
             size="mini"
             :disabled="btnDisable"
             @click="billLading"
-          >新增</el-button>
+          >新增
+          </el-button>
           <!-- <el-button
             type="success"
             icon="el-icon-edit"
@@ -190,28 +196,29 @@
             size="mini"
             :disabled="btnDisable"
             @click="handleDelete"
-          >删除</el-button>
-<!--          <el-button-->
-<!--            type="danger"-->
-<!--            icon="el-icon-thumb"-->
-<!--            size="mini"-->
-<!--            :disabled="btnDisable"-->
-<!--            @click="handleReport"-->
-<!--          >申报</el-button>-->
-<!--          <el-button-->
-<!--            type="primary"-->
-<!--            icon="el-icon-document-copy"-->
-<!--            size="mini"-->
-<!--            :disabled="btnDisable"-->
-<!--            @click="handleCopy"-->
-<!--          >复制</el-button>-->
-<!--          <el-button-->
-<!--            type="primary"-->
-<!--            icon="el-icon-refresh"-->
-<!--            size="mini"-->
-<!--            :disabled="btnDisable"-->
-<!--            @click="handleRefresh"-->
-<!--          >刷新</el-button>-->
+          >删除
+          </el-button>
+          <!--          <el-button-->
+          <!--            type="danger"-->
+          <!--            icon="el-icon-thumb"-->
+          <!--            size="mini"-->
+          <!--            :disabled="btnDisable"-->
+          <!--            @click="handleReport"-->
+          <!--          >申报</el-button>-->
+          <!--          <el-button-->
+          <!--            type="primary"-->
+          <!--            icon="el-icon-document-copy"-->
+          <!--            size="mini"-->
+          <!--            :disabled="btnDisable"-->
+          <!--            @click="handleCopy"-->
+          <!--          >复制</el-button>-->
+          <!--          <el-button-->
+          <!--            type="primary"-->
+          <!--            icon="el-icon-refresh"-->
+          <!--            size="mini"-->
+          <!--            :disabled="btnDisable"-->
+          <!--            @click="handleRefresh"-->
+          <!--          >刷新</el-button>-->
         </el-col>
       </el-row>
       <el-table
@@ -222,12 +229,14 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" min-width="55" />
+        <el-table-column type="selection" min-width="55"/>
         <el-table-column type="index" prop="num" label="序号" min-width="120" align="center"/>
-        <el-table-column prop="transportContractDocument.transportcontractdocumentId" label="提(运)单号" min-width="120" align="center"/>
+        <el-table-column prop="transportContractDocument.transportcontractdocumentId" label="提(运)单号" min-width="120"
+                         align="center"/>
         <el-table-column prop="grossVolumeMeasure" label="货物体积(M3)" min-width="150" align="center"/>
         <el-table-column prop="totalPackageQuantity" label="货物总件数" min-width="120" align="center"/>
-        <el-table-column prop="wrapType" label="包装种类" min-width="120" align="center" :formatter="PackageTypeCodeFormat"/>
+        <el-table-column prop="wrapType" label="包装种类" min-width="120" align="center"
+                         :formatter="PackageTypeCodeFormat"/>
         <el-table-column prop="goodsMeasure.grossMassMeasure" label="货物总毛重(KG)" min-width="120" align="center"/>
       </el-table>
       <el-pagination
@@ -271,7 +280,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="包装种类" prop="postCode">
-              <el-select v-model="consignment.wrapType" placeholder="包装种类" clearable  >
+              <el-select v-model="consignment.wrapType" placeholder="包装种类" clearable>
                 <el-option
                   v-for="dict in PaymentMethodCode"
                   :key="dict.dictValue"
@@ -308,7 +317,8 @@
             size="mini"
             :disabled="btnDisable"
             @click="containerAdd"
-          >新增</el-button>
+          >新增
+          </el-button>
           <!-- <el-button
             type="success"
             icon="el-icon-edit"
@@ -322,28 +332,29 @@
             size="mini"
             :disabled="btnDisable"
             @click="handleDelete"
-          >删除</el-button>
-<!--          <el-button-->
-<!--            type="danger"-->
-<!--            icon="el-icon-thumb"-->
-<!--            size="mini"-->
-<!--            :disabled="btnDisable"-->
-<!--            @click="handleReport"-->
-<!--          >申报</el-button>-->
-<!--          <el-button-->
-<!--            type="primary"-->
-<!--            icon="el-icon-document-copy"-->
-<!--            size="mini"-->
-<!--            :disabled="btnDisable"-->
-<!--            @click="handleCopy"-->
-<!--          >复制</el-button>-->
-<!--          <el-button-->
-<!--            type="primary"-->
-<!--            icon="el-icon-refresh"-->
-<!--            size="mini"-->
-<!--            :disabled="btnDisable"-->
-<!--            @click="handleRefresh"-->
-<!--          >刷新</el-button>-->
+          >删除
+          </el-button>
+          <!--          <el-button-->
+          <!--            type="danger"-->
+          <!--            icon="el-icon-thumb"-->
+          <!--            size="mini"-->
+          <!--            :disabled="btnDisable"-->
+          <!--            @click="handleReport"-->
+          <!--          >申报</el-button>-->
+          <!--          <el-button-->
+          <!--            type="primary"-->
+          <!--            icon="el-icon-document-copy"-->
+          <!--            size="mini"-->
+          <!--            :disabled="btnDisable"-->
+          <!--            @click="handleCopy"-->
+          <!--          >复制</el-button>-->
+          <!--          <el-button-->
+          <!--            type="primary"-->
+          <!--            icon="el-icon-refresh"-->
+          <!--            size="mini"-->
+          <!--            :disabled="btnDisable"-->
+          <!--            @click="handleRefresh"-->
+          <!--          >刷新</el-button>-->
         </el-col>
       </el-row>
       <el-table
@@ -356,7 +367,7 @@
       >
         <el-table-column type="selection" min-width="55" align="center"/>
         <el-table-column type="index" prop="num" label="序号" align="center"/>
-        <el-table-column prop="transportequipmentId" label="集装箱(器)编号" align="center" />
+        <el-table-column prop="transportequipmentId" label="集装箱(器)编号" align="center"/>
       </el-table>
       <el-pagination
         v-show="page.total>0"
@@ -399,39 +410,40 @@
 </template>
 
 <script>
-import depParaListJson from "@/mock/depParaList2.json";
-import depParaList from "./components/depParaList";
-import depParaList2 from "./components/depParaList2";
-import { add,queryById } from "@/api/manifest/rmft5402_3402_4401/head";
-import { listInfo } from "@/api/basis/enterpriseInfo";
+import depParaListJson from '@/mock/depParaList2.json'
+import depParaList from './components/depParaList'
+import depParaList2 from './components/depParaList2'
+import { add, queryById } from '@/api/manifest/rmft5402_3402_4401/head'
+import { listInfo } from '@/api/basis/enterpriseInfo'
+
 export default {
   components: { depParaListJson, depParaList, depParaList2, add },
   data() {
     return {
-      depParaVal: "",
+      depParaVal: '',
       depParaListJson,
       gridData: [],
       page: {
         num: 1,
         size: 10,
-        total: 0,
+        total: 0
       },
-      businessTypeOptions:[],
+      businessTypeOptions: [],
       dialogTableVisible: false,
       dialogTableVisible2: false,
       // 按钮禁用状态
       btnDisable: false,
       // 查询参数
       queryParams: {
-        postCode: undefined,
+        postCode: undefined
       },
-      ids:undefined,
+      ids: undefined,
       form: {
         head: {},
         declaration: {
           borderTransportMeans: {
             // 集装箱(器)List
-            transportEquipment: [],
+            transportEquipment: []
           },
           unloadingLocation: {},
           control: {},
@@ -442,9 +454,9 @@ export default {
             // 提（运）单号List
             transportContractDocument: [],
             // 货物毛重List
-            goodsMeasure: [],
-          },
-        },
+            goodsMeasure: []
+          }
+        }
       },
       // 报文功能代码/报文类型代码
       head: {},
@@ -452,32 +464,32 @@ export default {
       declaration: {
         declarationOfficeID: undefined,
         declarationId: undefined,
-        mtHeadId:undefined,
+        mtHeadId: undefined
       },
       // 运输方式表单
       borderTransportMeans: {
-        typeCode: '4',
+        typeCode: '4'
       },
       // 卸货地表单
       unloadingLocation: {
-        unloadinglocationId: undefined,
+        unloadinglocationId: undefined
       },
       // 理货开始时间/理货结束时间表单
       control: {
         inspectionStartDateTime: undefined,
-        inspectionEndDateTime: undefined,
+        inspectionEndDateTime: undefined
       },
       // 理货公司代码
       submitter: {
-        submitterId: undefined,
+        submitterId: undefined
       },
       // 理货责任人名称
       contact: {
-        name: undefined,
+        name: undefined
       },
       // 备注表单
       additionalInformation: {
-        content: undefined,
+        content: undefined
       },
       // 提运单整体表单
       consignment: {
@@ -488,19 +500,19 @@ export default {
         wrapType: undefined,
         // 提（运）单号表单
         transportContractDocument: {
-          transportcontractdocumentId: undefined,
+          transportcontractdocumentId: undefined
         },
         // 货物毛重表单
         goodsMeasure: {
-          grossMassMeasure: undefined,
-        },
+          grossMassMeasure: undefined
+        }
       },
       // 集装箱(器)编号表单/集装箱（器）残损说明数据表单
       transportEquipmentForm: {
         transportequipmentId: undefined,
         additionalInformation: {
-          content: undefined,
-        },
+          content: undefined
+        }
       },
       // 提运单整体List
       List: [],
@@ -508,68 +520,70 @@ export default {
       transportEquipment: [],
       // 企业代码
       listInfo: [],
-      dateTimeVal: "",
+      dateTimeVal: '',
       data: [],
       // 包装种类字典
-      PaymentMethodCode: [],
-    };
+      PaymentMethodCode: []
+    }
   },
   mounted() {
-    // 初始化
-    this.init();
-    const id=this.$route.query.id;
-    this.ids=id;
-    const flag=this.$route.query.flag;
-    console.log(flag)
-    if(flag){
-      this.btnDisable=true;
-    }
-    if(id){
-      this.query(id);
-    }
-  },
-  created() {
+    this.init()
     /** 包装种类代码字典 */
-    this.getDicts("sw_packag_type").then((response) => {
-      this.PaymentMethodCode = response.data;
-    });
+    this.getDicts('sw_packag_type').then((response) => {
+      this.PaymentMethodCode = response.data
+    })
+    const id = this.$route.query.id
+    this.ids = id
+    const flag = this.$route.query.flag
+    console.log(flag)
+    if (flag) {
+      this.btnDisable = true
+    }
+    if (id) {
+      this.query(id)
+    }
+
+  },
+  watch: {
+    'submitter.submitterId': {
+      handler: function(newVal) {
+        const data = this.listInfo.find(el => el.contractorCodeScc === newVal)
+        this.head.unitCode = data.deptId
+      }
+    }
   },
   methods: {
     //详情页查询
-    query(id){
-      queryById(id).then( res=>{
-        if(res.code===200){
-         console.log(JSON.stringify(res.data))
+    query(id) {
+      queryById(id).then(res => {
+        if (res.code === 200) {
+          console.log(JSON.stringify(res.data))
           //进出境口岸海关代码/货 v物运输批次号
-          this.declaration=res.data.declaration;
+          this.declaration = res.data.declaration
           //运输方式表单
-          this.borderTransportMeans=res.data.declaration.borderTransportMeans;
+          this.borderTransportMeans = res.data.declaration.borderTransportMeans
           //卸货地表单
-          this.unloadingLocation=res.data.declaration.unloadingLocation;
+          this.unloadingLocation = res.data.declaration.unloadingLocation
           //理货开始时间/理货结束时间表单
-          this.control=res.data.declaration.control;
+          this.control = res.data.declaration.control
           //理货公司代码
-          this.submitter=res.data.declaration.submitter;
+          this.submitter = res.data.declaration.submitter
           //理货责任人名称
-          this.contact=res.data.declaration.contact;
+          this.contact = res.data.declaration.contact
           //备注表单
-          this.additionalInformation=res.data.declaration.additionalInformation;
+          this.additionalInformation = res.data.declaration.additionalInformation
           //提运单信息
-          this.List=res.data.declaration.consignment;
+          this.List = res.data.declaration.consignment
           //集装箱信息
-          this.transportEquipment=res.data.declaration.borderTransportMeans.transportEquipment;
-          // this.head.unitCode=this.listInfo[0].eName;
-          console.log(this.listInfo)
+          this.transportEquipment = res.data.declaration.borderTransportMeans.transportEquipment
         }
       })
     },
     async init() {
-      // await this.depParaList()
       //  企业代码
       listInfo().then((data) => {
-        this.listInfo = data.rows;
-        console.log(data);
-      });
+        this.listInfo = data.rows
+      })
       // 运输方式
       this.getDicts('station_transport_fashion').then((response) => {
         this.businessTypeOptions = response.data
@@ -578,63 +592,63 @@ export default {
 
     //托架/拖挂车类型 翻译
     PackageTypeCodeFormat(row, column) {
-      return this.selectDictLabel(this.PaymentMethodCode, row.wrapType);
+      return this.selectDictLabel(this.PaymentMethodCode, row.wrapType)
     },
 
     // 提运单新增
     billLading() {
-      this.List.push(this.consignment);
+      this.List.push(this.consignment)
       this.consignment = {
         grossVolumeMeasure: undefined,
         totalPackageQuantity: undefined,
         wrapType: undefined,
         transportContractDocument: {
-          transportcontractdocumentId: undefined,
+          transportcontractdocumentId: undefined
         },
         goodsMeasure: {
-          grossMassMeasure: undefined,
-        },
-      };
-      console.log(this.List);
+          grossMassMeasure: undefined
+        }
+      }
+      console.log(this.List)
     },
 
     // 集装箱新增
     containerAdd() {
-      this.transportEquipment.push(this.transportEquipmentForm);
+      this.transportEquipment.push(this.transportEquipmentForm)
       this.transportEquipmentForm = {
         transportequipmentId: undefined,
         additionalInformation: {
-          content: undefined,
-        },
-      };
+          content: undefined
+        }
+      }
       // console.log(this.transportEquipmentForm)
     },
     // 暂存 = 整体新增
     handleSave() {
       this.form.head = this.listInfo.find(
         (el) => el.deptId === this.head.unitCode
-      );
-      this.form.head.messageType = "MT5402";
-      this.form.head.functionCode = "2";
-      this.declaration.mtHeadId=this.ids;
-      this.form.declaration = this.declaration;
-      this.form.declaration.borderTransportMeans = this.borderTransportMeans;
-      this.form.declaration.unloadingLocation = this.unloadingLocation;
-      this.form.declaration.control = this.control;
-      this.form.declaration.submitter = this.submitter;
-      this.form.declaration.contact = this.contact;
-      this.form.declaration.additionalInformation = this.additionalInformation;
-      this.form.declaration.borderTransportMeans.transportEquipment = this.transportEquipment;
-      this.form.declaration.consignment = this.List;
+      )
+      this.form.head.messageType = 'MT5402'
+      this.form.head.functionCode = '2'
+      this.declaration.mtHeadId = this.ids
+      this.form.declaration = this.declaration
+      this.form.declaration.borderTransportMeans = this.borderTransportMeans
+      this.form.declaration.unloadingLocation = this.unloadingLocation
+      this.form.declaration.control = this.control
+      this.form.declaration.submitter = this.submitter
+      this.form.declaration.contact = this.contact
+      this.form.declaration.additionalInformation = this.additionalInformation
+      this.form.declaration.borderTransportMeans.transportEquipment = this.transportEquipment
+      this.form.declaration.consignment = this.List
       add(this.form).then((response) => {
         if (response.code === 200) {
-          this.msgSuccess("新增成功");
-          console.log(JSON.stringify(this.form));
+          this.msgSuccess('新增成功')
+          console.log(JSON.stringify(this.form))
         } else {
-          this.msgError(response.msg);
+          this.msgError(response.msg)
         }
-      });
-      this.reset();
+      })
+      this.reset()
     },
     reset() {
       (this.declaration = {}),
@@ -649,90 +663,99 @@ export default {
           totalPackageQuantity: undefined,
           wrapType: undefined,
           transportContractDocument: {
-            transportcontractdocumentId: undefined,
+            transportcontractdocumentId: undefined
           },
           goodsMeasure: {
-            grossMassMeasure: undefined,
-          },
+            grossMassMeasure: undefined
+          }
         }),
         (this.transportEquipmentForm = {
           transportequipmentId: undefined,
           additionalInformation: {
-            content: undefined,
-          },
+            content: undefined
+          }
         }),
         (this.List = []),
-        (this.transportEquipment = []);
+        (this.transportEquipment = [])
     },
     // 删除
-    handleDelete() {},
-    handleAdd() {},
+    handleDelete() {
+    },
+    handleAdd() {
+    },
     // 申报
-    handleReport() {},
+    handleReport() {
+    },
     // 复制
-    handleCopy() {},
+    handleCopy() {
+    },
     // 刷新
-    handleRefresh() {},
+    handleRefresh() {
+    },
     // 翻页
     currentChange(page) {
       // console.log(page);
     },
     // 组件选择
     choose(row) {
-      this.queryParams.postCode = row.codeName;
-      this.declaration.declarationOfficeID = row.codeName;
-      this.dialogTableVisible = false;
+      this.queryParams.postCode = row.codeName
+      this.declaration.declarationOfficeID = row.codeName
+      this.dialogTableVisible = false
     },
     // 关闭组件
     close() {
-      this.dialogTableVisible = false;
+      this.dialogTableVisible = false
     },
     choose2(row) {
-      this.queryParams.postCode = row.codeName;
-      this.dialogTableVisible2 = false;
+      this.queryParams.postCode = row.codeName
+      this.dialogTableVisible2 = false
     },
     close2() {
-      this.dialogTableVisible2 = false;
+      this.dialogTableVisible2 = false
     },
-    handleSelectionChange() {},
+    handleSelectionChange() {
+    },
     numFun() {
       // console.log(123);
     },
     /** 申报按钮*/
-    updateStatementCode(){},
-    /** 回显防范*/
+    updateStatementCode() {
+    },
+    /** 回显方法*/
     onChange(id) {
       const data = this.listInfo.find(el => el.deptId === id)
       console.log(data)
       const code = data.customsMaster
       this.unloadingLocation.unloadinglocationId = code
-      this.submitter.submitterId=data.contractorCodeScc
+      this.submitter.submitterId = data.contractorCodeScc
     },
     // 请求接口
     depParaList() {
       return new Promise((resolve) => {
         this.$store
-          .dispatch("originalManifest/depParaList", {
-            tableName: "CUS_CUSTOMS",
-            rowNum: 5000,
+          .dispatch('originalManifest/depParaList', {
+            tableName: 'CUS_CUSTOMS',
+            rowNum: 5000
           })
           .then((data) => {
-            resolve(data);
-          });
-      });
-    },
-  },
-};
+            resolve(data)
+          })
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scope>
 .right {
   text-align: right;
 }
+
 .datePicker {
   width: 100% !important;
 }
-.el-select{
+
+.el-select {
   width: 100%;
 }
 </style>

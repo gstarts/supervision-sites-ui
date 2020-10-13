@@ -671,7 +671,8 @@ export default {
       // 表头信息表单
       declaration:{
         declarationOfficeID: undefined,
-        declarationId: undefined ,
+        declarationId: undefined,
+        mtHeadId:undefined,
         carrier:{
           carrierId: undefined,
         },
@@ -762,6 +763,15 @@ export default {
     }
     if(id){
       this.query(id);
+    }
+  },
+  //反填
+  watch:{
+    'submitter.submitterId':{
+      handler: function(newVal) {
+        const data = this.listInfo.find(el => el.contractorCodeScc === newVal)
+        this.head.unitCode = data.eName
+      }
     }
   },
   created() {
