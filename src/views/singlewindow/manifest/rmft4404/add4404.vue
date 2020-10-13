@@ -431,12 +431,14 @@ export default {
   watch: {
     'representativePerson.name': {      
       handler: function(newVal) {     
-        const data = this.enterpriseOptions.find(el => el.stationPersonName === newVal)        
-        this.form.head.contractorcodescc = data.contractorCodeScc,
-        this.head.customsMaster = data.customsMaster,
-        this.head = data,
-        this.head.functionCode = '2',
-        this.head.messageType = 'MT4404'
+        const data = this.enterpriseOptions.find(el => el.stationPersonName === newVal)       
+        if(data != undefined) {
+          this.form.head.contractorcodescc = data.contractorCodeScc,
+          this.head.customsMaster = data.customsMaster,
+          this.head = data,
+          this.head.functionCode = '2',
+          this.head.messageType = 'MT4404'
+        }         
       }
     }
   },
@@ -449,13 +451,13 @@ export default {
         //  this.headList = res.data.headList;        
         this.declaration = res.data.declaration
         this.declaration.mtHeadId = res.data.declaration.mtHeadId
-        console.log(111111)
+        // console.log(111111)
         this.additionalInformation = res.data.declaration.additionalInformation
         this.carrier = res.data.declaration.carrier        
         this.representativePerson = res.data.declaration.representativePerson
         this.borderTransportMeans = res.data.declaration.consignment.borderTransportMeans
         this.headList = res.data.declaration.consignment.borderTransportMeans.transportEquipment
-        console.log(res.data)
+        // console.log(res.data)
        }
       })
     },
@@ -557,7 +559,7 @@ export default {
       add(this.form).then((response) => {
         if (response.code === 200) {
           this.msgSuccess("新增成功");
-          console.log(JSON.stringify(this.form));
+          // console.log(JSON.stringify(this.form));
         } else {
           this.msgError(response.msg);
         }

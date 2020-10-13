@@ -559,12 +559,14 @@ export default {
   watch: {
     'representativePerson.name': {      
       handler: function(newVal) {     
-        const data = this.enterpriseOptions.find(el => el.stationPersonName === newVal)  
-        this.form.head.contractorcodescc = data.contractorCodeScc
-        this.head.customsMaster = data.customsMaster
-        this.head = data
-        this.head.functionCode = '2'
-        this.head.messageType = 'MT4403'
+        const data = this.enterpriseOptions.find(el => el.stationPersonName === newVal)
+        if(data != undefined){
+          this.form.head.contractorcodescc = data.contractorCodeScc
+          this.head.customsMaster = data.customsMaster
+          this.head = data
+          this.head.functionCode = '2'
+          this.head.messageType = 'MT4403'
+        }          
       }
     }
   },
