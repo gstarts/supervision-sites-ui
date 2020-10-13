@@ -7,18 +7,21 @@
         icon="el-icon-plus"
         size="mini"
         @click="handleAdd"
+        :disabled="btnDisable"
       >新增</el-button>
       <el-button
         type="success"
         icon="el-icon-edit"
         size="mini"
         @click="AllSave"
+        :disabled="btnDisable"
       >暂存</el-button>
       <el-button
         type="danger"
         icon="el-icon-delete"
         size="mini"
         @click="handleDelete"
+        :disabled="btnDisable"
       >删除</el-button>
       <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode" v-hasPermi="['waybill:declare:declare']" style="float:right" disabled>申报</el-button>
       <!--      <el-button-->
@@ -132,21 +135,21 @@
             type="primary"
             icon="el-icon-plus"
             size="mini"
-            :disabled="btnDisable.addBtn"
+            :disabled="btnDisable"
             @click="transportMeansAdd"
           >新增</el-button>
           <el-button
             type="success"
             icon="el-icon-edit"
             size="mini"
-            :disabled="btnDisable.saveBtn"
+            :disabled="btnDisable"
             @click="handleSave"
           >暂存</el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
             size="mini"
-            :disabled="btnDisable.delBtn"
+            :disabled="btnDisable"
             @click="handleDelete"
           >删除</el-button>
 <!--          <el-button-->
@@ -322,18 +325,21 @@
             icon="el-icon-plus"
             size="mini"
             @click="trailerAdd"
+            :disabled="btnDisable"
           >新增</el-button>
           <el-button
             type="success"
             icon="el-icon-edit"
             size="mini"
             @click="handleSave"
+            :disabled="btnDisable"
           >暂存</el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
             size="mini"
             @click="handleDelete"
+            :disabled="btnDisable"
           >删除</el-button>
 <!--          <el-button-->
 <!--            type="danger"-->
@@ -430,42 +436,42 @@
             type="primary"
             icon="el-icon-plus"
             size="mini"
-            :disabled="btnDisable.addBtn"
+            :disabled="btnDisable"
             @click="containerAdd"
           >新增</el-button>
           <el-button
             type="success"
             icon="el-icon-edit"
             size="mini"
-            :disabled="btnDisable.saveBtn"
+            :disabled="btnDisable"
             @click="handleSave"
           >暂存</el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
             size="mini"
-            :disabled="btnDisable.delBtn"
+            :disabled="btnDisable"
             @click="handleDelete"
           >删除</el-button>
 <!--          <el-button-->
 <!--            type="danger"-->
 <!--            icon="el-icon-thumb"-->
 <!--            size="mini"-->
-<!--            :disabled="btnDisable.repBtn"-->
+<!--            :disabled="btnDisable"-->
 <!--            @click="handleReport"-->
 <!--          >申报</el-button>-->
 <!--          <el-button-->
 <!--            type="primary"-->
 <!--            icon="el-icon-document-copy"-->
 <!--            size="mini"-->
-<!--            :disabled="btnDisable.copyBtn"-->
+<!--            :disabled="btnDisable"-->
 <!--            @click="handleCopy"-->
 <!--          >复制</el-button>-->
 <!--          <el-button-->
 <!--            type="primary"-->
 <!--            icon="el-icon-refresh"-->
 <!--            size="mini"-->
-<!--            :disabled="btnDisable.refBtn"-->
+<!--            :disabled="btnDisable"-->
 <!--            @click="handleRefresh"-->
 <!--          >刷新</el-button>-->
         </el-col>
@@ -611,7 +617,7 @@ import dangerousInfo from "./dangerousInfo.vue";
 import consignorInfo from "./consignorInfo.vue";
 // 收货人信息
 import receivingInfo from "./receivingInfo.vue";
-import { add } from "@/api/manifest/rmft5402_3402_4401/head";
+import { add,queryById } from "@/api/manifest/rmft5402_3402_4401/head";
 import { listInfo } from '@/api/basis/enterpriseInfo'
 
 export default {
@@ -645,14 +651,7 @@ export default {
       dialogTableVisible2: false,
       businessTypeOptions:[],
       // 按钮禁用状态
-      btnDisable: {
-        addBtn: false,
-        saveBtn: false,
-        delBtn: false,
-        repBtn: true,
-        copyBtn: false,
-        refBtn: false,
-      },
+      btnDisable:false,
       // 查询参数
       queryParams: {
         postCode: undefined,
@@ -662,10 +661,8 @@ export default {
         head:{},
         declaration:{
           consignmentVO_4401:{
-
             transportEquipment:[],
           },
-
         },
       },
 
@@ -755,8 +752,15 @@ export default {
   mounted() {
     // 初始化
     this.init(
-
     );
+    const id=this.$route.query.id;
+    const flag=this.$route.query.flag;
+    if(flag){
+      this.btnDisable=true;
+    }
+    if(id){
+      this.query(id);
+    }
   },
   created() {
     //挂车类型字典翻译
@@ -781,6 +785,22 @@ export default {
     });
   },
   methods: {
+    //详情页查询方法
+    query(id){
+      queryById(id).then(res=>{
+        if(res.code === 200){
+          this.declaration=res.data.declaration;
+          // this.declaration.representativePerson=res.data.declaration.representativePerson;
+          // this.declaration.additionalInformation=res.data.declaration.additionalInformation;
+            this.borderTransportMeansList.push(res.data.declaration.consignmentVO_4401.borderTransportMeans)
+          this.trailerList=res.data.declaration.consignmentVO_4401.borderTransportMeans.transportEquipment;
+            this.transportEquipmentList=res.data.declaration.consignmentVO_4401.transportEquipment;
+          this.head.unitCode=this.listInfo[0].eName;
+
+
+        }
+      })
+    },
     async init() {
       // await this.depParaList()
       //  企业代码
@@ -817,6 +837,8 @@ export default {
       this.form.declaration = this.declaration;
       this.form.declaration.consignmentVO_4401 = this.AForm;
       this.form.declaration.consignmentVO_4401.transportEquipment = this.transportEquipmentList;
+      console.log("--------------------")
+      console.log(JSON.stringify(this.form));
       add(this.form).then((response) => {
         if (response.code === 200) {
           this.msgSuccess("新增成功");
@@ -844,14 +866,22 @@ export default {
     },
     // 拖挂车新增
     trailerAdd() {
-      this.trailerList.push(this.trailer);
-      this.AForm.borderTransportMeans.transportEquipment = this.trailerList;
-      this.trailer = {}
+      if (this.borderTransportMeansList.length < 1){
+        this.msgError("请先添加运输工具信息");
+      }else {
+        this.trailerList.push(this.trailer);
+        this.AForm.borderTransportMeans.transportEquipment = this.trailerList;
+        this.trailer = {}
+      }
     },
     // 集装箱新增
     containerAdd() {
-      this.transportEquipmentList.push(this.transportEquipment);
-      this.transportEquipment = {}
+      if (this.borderTransportMeansList.length < 1){
+        this.msgError("请先添加运输工具信息");
+      }else {
+        this.transportEquipmentList.push(this.transportEquipment);
+        this.transportEquipment = {}
+      }
     },
 
     // 表单清空
