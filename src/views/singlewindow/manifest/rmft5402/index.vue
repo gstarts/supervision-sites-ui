@@ -23,7 +23,7 @@
         icon="el-icon-delete"
         size="mini"
         :disabled="btnDisable"
-        @click="handleDelete"
+        @click="handleDelete($event,'body')"
       >删除
       </el-button>
       <el-button type="danger" icon="el-icon-thumb" size="mini" @click="updateStatementCode"
@@ -183,19 +183,19 @@
             @click="billLading"
           >新增
           </el-button>
-          <!-- <el-button
+           <el-button
             type="success"
             icon="el-icon-edit"
             size="mini"
             :disabled="btnDisable"
-            @click="handleSave"
-          >暂存</el-button> -->
+            @click="handleChange($event,'body')"
+          >修改</el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
             size="mini"
             :disabled="btnDisable"
-            @click="handleDelete"
+            @click="handleDelete($event,'body')"
           >删除
           </el-button>
           <!--          <el-button-->
@@ -227,6 +227,8 @@
         :data="List"
         tooltip-effect="dark"
         style="width: 100%"
+        @row-click='bodyFormClick'
+        :row-class-name="tableRowClassName"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55"/>
@@ -319,19 +321,19 @@
             @click="containerAdd"
           >新增
           </el-button>
-          <!-- <el-button
+          <el-button
             type="success"
             icon="el-icon-edit"
             size="mini"
             :disabled="btnDisable"
-            @click="handleSave"
-          >暂存</el-button> -->
+            @click="containerChange($event,'body')"
+          >修改</el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
             size="mini"
             :disabled="btnDisable"
-            @click="handleDelete"
+            @click="containerDelete($event,'body')"
           >删除
           </el-button>
           <!--          <el-button-->
@@ -363,7 +365,9 @@
         :data="transportEquipment"
         tooltip-effect="dark"
         style="width: 100%"
+        @row-click='containerFormClick'
         @selection-change="handleSelectionChange"
+        :row-class-name="tableRowClassName"
       >
         <el-table-column type="selection" min-width="55" align="center"/>
         <el-table-column type="index" prop="num" label="序号" align="center"/>
@@ -420,6 +424,10 @@ export default {
   components: { depParaListJson, depParaList, depParaList2, add },
   data() {
     return {
+      //当前操作标体下标
+      bodyIndex:-1,
+      //选择到的数据
+      selectBodyForm:[],
       depParaVal: '',
       depParaListJson,
       gridData: [],
@@ -526,8 +534,10 @@ export default {
       PaymentMethodCode: []
     }
   },
-  mounted() {
+  created() {
+  console.log("1")
     this.init()
+    console.log("2")
     /** 包装种类代码字典 */
     this.getDicts('sw_packag_type').then((response) => {
       this.PaymentMethodCode = response.data
@@ -542,14 +552,13 @@ export default {
     if (id) {
       this.query(id)
     }
-
   },
   watch: {
-    'submitter.submitterId': {
-      handler: function(newVal) {
-        const data = this.listInfo.find(el => el.contractorCodeScc === newVal)
-        this.head.unitCode = data.deptId
-      }
+      'unloadingLocation.unloadinglocationId': {
+        handler: function(newVal) {
+          const data = this.listInfo.find(el => el.contractorCodeScc === newVal)
+          this.head.unitCode = data.deptId
+        }
     }
   },
   methods: {
@@ -678,9 +687,6 @@ export default {
         (this.List = []),
         (this.transportEquipment = [])
     },
-    // 删除
-    handleDelete() {
-    },
     handleAdd() {
     },
     // 申报
@@ -713,13 +719,62 @@ export default {
     close2() {
       this.dialogTableVisible2 = false
     },
-    handleSelectionChange() {
+    handleSelectionChange(data) {
+      this.selectBodyForm=data;
     },
     numFun() {
       // console.log(123);
     },
     /** 申报按钮*/
     updateStatementCode() {
+    },
+    // 添加index
+    tableRowClassName(data) {
+      //把每一行的索引放进row
+      data.row.rowIndex = data.rowIndex
+    },
+    //单击list反填form 提运单信息
+    bodyFormClick(row){
+      console.log(row)
+      this.bodyIndex=JSON.parse(JSON.stringify(row)).rowIndex;
+      this.consignment=JSON.parse(JSON.stringify(row));
+    },
+    //修改 提运单信息
+    handleChange(e,name){
+      if(name == 'body'){
+        if (this.bodyIndex === -1) return
+        this.List[this.bodyIndex]=JSON.parse(JSON.stringify(this.consignment))
+        this.List = JSON.parse(JSON.stringify(this.List))
+        console.log(this.List)
+        this.bodyIndex = -1
+      }
+    },
+    // 删除 提运单信息
+    handleDelete(e, name) {
+      if (name === 'body') {
+        this.List = this.List.filter(el => !this.selectBodyForm.includes(el))
+      }
+    },
+    //单击list反填form 集装箱信息
+    containerFormClick(row){
+      this.bodyIndex=JSON.parse(JSON.stringify(row)).rowIndex;
+      this.transportEquipmentForm=JSON.parse(JSON.stringify(row));
+    },
+    //修改 集装箱信息
+    containerChange(e,name){
+      if(name == 'body'){
+        if (this.bodyIndex === -1) return
+        this.transportEquipment[this.bodyIndex]=JSON.parse(JSON.stringify(this.transportEquipmentForm))
+        this.transportEquipment = JSON.parse(JSON.stringify(this.transportEquipment))
+        console.log(this.transportEquipment)
+        this.bodyIndex = -1
+      }
+    },
+    // 删除 集装箱信息
+    containerDelete(e, name) {
+      if (name === 'body') {
+        this.transportEquipment = this.List.filter(el => !this.selectBodyForm.includes(el))
+      }
     },
     /** 回显方法*/
     onChange(id) {
