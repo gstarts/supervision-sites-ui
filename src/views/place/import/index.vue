@@ -1,0 +1,530 @@
+<template>
+  <div class="app-container">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="场所" prop="placeId">
+        <el-select v-model="queryParams.placeId" placeholder="请选择场所">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
+      <!--<el-form-item label="文件桶名称" prop="bucketName">
+        <el-input
+          v-model="queryParams.bucketName"
+          placeholder="请输入文件桶名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+
+      <!--<el-form-item label="是否生成报关数据" prop="isGenReport">
+        <el-input
+          v-model="queryParams.isGenReport"
+          placeholder="请输入是否生成报关数据"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="是否生成出入库通知单" prop="isGenStoreNotice">
+        <el-input
+          v-model="queryParams.isGenStoreNotice"
+          placeholder="请输入是否生成出入库通知单"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="对象名称" prop="objectName">
+        <el-input
+          v-model="queryParams.objectName"
+          placeholder="请输入对象名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="文件路径" prop="path">
+        <el-input
+          v-model="queryParams.path"
+          placeholder="请输入文件路径"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="场所编号" prop="placeId">
+        <el-input
+          v-model="queryParams.placeId"
+          placeholder="请输入场所编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+
+      <!--<el-form-item label="文件长度" prop="fileLength">
+        <el-input
+          v-model="queryParams.fileLength"
+          placeholder="请输入文件长度"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="寄舱合同ID" prop="storeContractId">
+        <el-input
+          v-model="queryParams.storeContractId"
+          placeholder="请输入寄舱合同ID"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="寄舱客户" prop="storeCustomer">
+        <el-input
+          v-model="queryParams.storeCustomer"
+          placeholder="请输入寄舱客户"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="结算合同ID" prop="settlementContractId">
+        <el-input
+          v-model="queryParams.settlementContractId"
+          placeholder="请输入结算合同ID"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="结算客户" prop="settlementCustomer">
+        <el-input
+          v-model="queryParams.settlementCustomer"
+          placeholder="请输入结算客户"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <el-form-item label="业务编号" prop="businessNo">
+        <el-input
+          v-model="queryParams.businessNo"
+          placeholder="请输入业务编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="模板类型" prop="templateType">
+        <el-select v-model="queryParams.templateType" placeholder="请选择模板类型" clearable size="small">
+          <el-option
+            v-for="type in importTypeDic"
+            :key="type.value"
+            :label="type.label"
+            :value="type.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="文件名" prop="fileName">
+        <el-input
+          v-model="queryParams.fileName"
+          placeholder="请输入文件名"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <!--<el-form-item label=" 发货单位" prop="sendName">
+        <el-input
+          v-model="queryParams.sendName"
+          placeholder="请输入 发货单位"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="收货单位" prop="receiveName">
+        <el-input
+          v-model="queryParams.receiveName"
+          placeholder="请输入收货单位"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['place:import:add']"
+        >新增</el-button>
+      </el-col>
+      <!--<el-col :span="1.5">
+        <el-button
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="['place:import:edit']"
+        >修改</el-button>
+      </el-col>-->
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['place:import:remove']"
+        >删除</el-button>
+      </el-col>
+      <!--<el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['place:import:export']"
+        >导出</el-button>
+      </el-col>-->
+    </el-row>
+
+    <el-table v-loading="loading" :data="importList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="ID" align="center" prop="id" />
+
+      <el-table-column label="文件桶名称" align="center" prop="bucketName" />
+      <el-table-column label="文件名" align="center" prop="fileName" />
+      <el-table-column label="是否生成报关数据" align="center" prop="isGenReport" />
+      <el-table-column label="是否生成出入库通知单" align="center" prop="isGenStoreNotice" />
+      <el-table-column label="对象名称" align="center" prop="objectName" />
+      <el-table-column label="文件路径" align="center" prop="path" />
+      <el-table-column label="场所编号" align="center" prop="placeId" />
+      <el-table-column label="模板类型，1入库知单，2车辆放行单" align="center" prop="templateType" />
+      <el-table-column label="文件长度" align="center" prop="fileLength" />
+      <el-table-column label="寄舱合同ID" align="center" prop="storeContractId" />
+      <el-table-column label="寄舱客户" align="center" prop="storeCustomer" />
+      <el-table-column label="结算合同ID" align="center" prop="settlementContractId" />
+      <el-table-column label="结算客户" align="center" prop="settlementCustomer" />
+      <el-table-column label="业务编号" align="center" prop="businessNo" />
+      <el-table-column label=" 发货单位" align="center" prop="sendName" />
+      <el-table-column label="收货单位" align="center" prop="receiveName" />
+      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['place:import:edit']"
+          >修改</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['place:import:remove']"
+          >删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+
+    <!-- 添加或修改导入文件记录 对话框 -->
+    <el-dialog :title="title" :visible.sync="open"  append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-form-item label="收货单位" prop="createBy">
+          <el-input v-model="form.createBy" placeholder="请输入收货单位" />
+        </el-form-item>
+        <el-form-item label="收货单位" prop="createTime">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.createTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择收货单位">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="收货单位" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入收货单位" />
+        </el-form-item>
+        <el-form-item label="收货单位" prop="updateBy">
+          <el-input v-model="form.updateBy" placeholder="请输入收货单位" />
+        </el-form-item>
+        <el-form-item label="收货单位" prop="updateTime">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.updateTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择收货单位">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="文件桶名称" prop="bucketName">
+          <el-input v-model="form.bucketName" placeholder="请输入文件桶名称" />
+        </el-form-item>
+        <el-form-item label="文件名" prop="fileName">
+          <el-input v-model="form.fileName" placeholder="请输入文件名" />
+        </el-form-item>
+        <el-form-item label="是否生成报关数据" prop="isGenReport">
+          <el-input v-model="form.isGenReport" placeholder="请输入是否生成报关数据" />
+        </el-form-item>
+        <el-form-item label="是否生成出入库通知单" prop="isGenStoreNotice">
+          <el-input v-model="form.isGenStoreNotice" placeholder="请输入是否生成出入库通知单" />
+        </el-form-item>
+        <el-form-item label="对象名称" prop="objectName">
+          <el-input v-model="form.objectName" placeholder="请输入对象名称" />
+        </el-form-item>
+        <el-form-item label="文件路径" prop="path">
+          <el-input v-model="form.path" placeholder="请输入文件路径" />
+        </el-form-item>
+        <el-form-item label="场所编号" prop="placeId">
+          <el-input v-model="form.placeId" placeholder="请输入场所编号" />
+        </el-form-item>
+        <el-form-item label="模板类型，1入库知单，2车辆放行单">
+          <el-select v-model="form.templateType" placeholder="请选择模板类型，1入库知单，2车辆放行单">
+            <el-option label="请选择字典生成" value="" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="文件长度" prop="fileLength">
+          <el-input v-model="form.fileLength" placeholder="请输入文件长度" />
+        </el-form-item>
+        <el-form-item label="寄舱合同ID" prop="storeContractId">
+          <el-input v-model="form.storeContractId" placeholder="请输入寄舱合同ID" />
+        </el-form-item>
+        <el-form-item label="寄舱客户" prop="storeCustomer">
+          <el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" />
+        </el-form-item>
+        <el-form-item label="结算合同ID" prop="settlementContractId">
+          <el-input v-model="form.settlementContractId" placeholder="请输入结算合同ID" />
+        </el-form-item>
+        <el-form-item label="结算客户" prop="settlementCustomer">
+          <el-input v-model="form.settlementCustomer" placeholder="请输入结算客户" />
+        </el-form-item>
+        <el-form-item label="业务编号" prop="businessNo">
+          <el-input v-model="form.businessNo" placeholder="请输入业务编号" />
+        </el-form-item>
+        <el-form-item label=" 发货单位" prop="sendName">
+          <el-input v-model="form.sendName" placeholder="请输入 发货单位" />
+        </el-form-item>
+        <el-form-item label="收货单位" prop="receiveName">
+          <el-input v-model="form.receiveName" placeholder="请输入收货单位" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import { listImport, getImport, delImport, addImport, updateImport } from "@/api/place/import";
+import {getUserDepts} from "@/utils/charutils";
+
+export default {
+  name: "Import",
+  data() {
+    return {
+      // 遮罩层
+      loading: false,
+      // 选中数组
+      ids: [],
+      depts: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 总条数
+      total: 0,
+      // 导入文件记录 表格数据
+      importList: [],
+      importTypeDic: [
+        {value: '1', label: '入库通知单'},
+        {value: '0', label: '出库派车单'}
+        /*{value: '2', label: '报关数据单'}*/
+      ],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 20,
+        bucketName: undefined,
+        fileName: undefined,
+        isGenReport: undefined,
+        isGenStoreNotice: undefined,
+        objectName: undefined,
+        path: undefined,
+        placeId: undefined,
+        templateType: undefined,
+        fileLength: undefined,
+        storeContractId: undefined,
+        storeCustomer: undefined,
+        settlementContractId: undefined,
+        settlementCustomer: undefined,
+        businessNo: undefined,
+        sendName: undefined,
+        receiveName: undefined
+      },
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {
+      }
+    };
+  },
+  created() {
+    this.depts = getUserDepts('0')
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+      this.getList();
+    }
+  },
+  methods: {
+    /** 查询导入文件记录 列表 */
+    getList() {
+      this.loading = true;
+      listImport(this.queryParams).then(response => {
+        this.importList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        id: undefined,
+        createBy: undefined,
+        createTime: undefined,
+        remark: undefined,
+        updateBy: undefined,
+        updateTime: undefined,
+        bucketName: undefined,
+        fileName: undefined,
+        isGenReport: undefined,
+        isGenStoreNotice: undefined,
+        objectName: undefined,
+        path: undefined,
+        placeId: undefined,
+        templateType: undefined,
+        fileLength: undefined,
+        storeContractId: undefined,
+        storeCustomer: undefined,
+        settlementContractId: undefined,
+        settlementCustomer: undefined,
+        businessNo: undefined,
+        sendName: undefined,
+        receiveName: undefined
+      };
+      this.resetForm("form");
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id)
+      this.single = selection.length!=1
+      this.multiple = !selection.length
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "添加导入文件记录 ";
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      const id = row.id || this.ids
+      getImport(id).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改导入文件记录 ";
+      });
+    },
+    /** 提交按钮 */
+    submitForm: function() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.id != undefined) {
+            updateImport(this.form).then(response => {
+              if (response.code === 200) {
+                this.msgSuccess("修改成功");
+                this.open = false;
+                this.getList();
+              }
+            });
+          } else {
+            addImport(this.form).then(response => {
+              if (response.code === 200) {
+                this.msgSuccess("新增成功");
+                this.open = false;
+                this.getList();
+              }
+            });
+          }
+        }
+      });
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$confirm('是否确认删除导入文件记录 编号为"' + ids + '"的数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return delImport(ids);
+        }).then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        }).catch(function() {});
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      this.download('place/import/export', {
+        ...this.queryParams
+      }, `place_import.xlsx`)
+    }
+  }
+};
+</script>
