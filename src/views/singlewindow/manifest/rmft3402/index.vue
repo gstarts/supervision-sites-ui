@@ -461,7 +461,9 @@ export default {
       listInfo: [],
       // 包装种类字典
       PaymentMethodCode: [],
+      //跳转页面标识
       ids:undefined,
+      flag:undefined,
     };
   },
   mounted() {
@@ -474,6 +476,7 @@ export default {
     const id=this.$route.query.id;
     this.ids=id;
     const flag=this.$route.query.flag;
+    this.flag=flag
     if(flag){
       this.btnDisable=true;
     }
@@ -560,8 +563,15 @@ export default {
       this.form.declaration.consignment = this.List;
       add(this.form).then((response) => {
         if (response.code === 200) {
-          this.msgSuccess("新增成功");
-          console.log(JSON.stringify(this.form));
+          if(this.ids == undefined){
+            this.msgSuccess("新增成功");
+            console.log(JSON.stringify(this.form));
+          }
+          if(this.flag ==undefined && this.ids !=undefined){
+            this.msgSuccess('修改成功')
+            this.$store.dispatch('tagsView/delView', this.$route)
+            this.$router.go(-1)
+          }
         } else {
           this.msgError(response.msg);
         }
@@ -673,12 +683,36 @@ export default {
         this.List = JSON.parse(JSON.stringify(this.List))
         console.log(this.List)
         this.bodyIndex = -1
+        //修改后清空表单
+        this.consignment = {
+          grossVolumeMeasure: undefined,
+          totalPackageQuantity: undefined,
+          wrapType: undefined,
+          transportContractDocument: {
+            transportcontractdocumentId: undefined,
+          },
+          goodsMeasure: {
+            grossMassMeasure: undefined,
+          },
+        }
       }
     },
     // 删除 提运单信息
     handleDelete(e, name) {
       if (name === 'body') {
         this.List = this.List.filter(el => !this.selectBodyForm.includes(el))
+        //删除时 清空表单
+        this.consignment = {
+          grossVolumeMeasure: undefined,
+          totalPackageQuantity: undefined,
+          wrapType: undefined,
+          transportContractDocument: {
+            transportcontractdocumentId: undefined,
+          },
+          goodsMeasure: {
+            grossMassMeasure: undefined,
+          },
+        }
       }
     },
     //单击list反填form 集装箱信息
@@ -694,12 +728,16 @@ export default {
         this.transportEquipment = JSON.parse(JSON.stringify(this.transportEquipment))
         console.log(this.transportEquipment)
         this.bodyIndex = -1
+        //修改后清空form表单
+        this.transportEquipmentForm = {}
       }
     },
     // 删除 集装箱信息
     containerDelete(e, name) {
       if (name === 'body') {
         this.transportEquipment = this.List.filter(el => !this.selectBodyForm.includes(el))
+        //删除后清空form表单
+        // this.transportEquipmentForm = {}
       }
     },
   },

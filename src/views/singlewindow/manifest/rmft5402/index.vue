@@ -445,7 +445,7 @@ export default {
       queryParams: {
         postCode: undefined
       },
-      ids: undefined,
+
       form: {
         head: {},
         declaration: {
@@ -531,13 +531,14 @@ export default {
       dateTimeVal: '',
       data: [],
       // 包装种类字典
-      PaymentMethodCode: []
+      PaymentMethodCode: [],
+      //跳转页面 标识
+      flag:undefined,
+      ids: undefined,
     }
   },
   created() {
-  console.log("1")
     this.init()
-    console.log("2")
     /** 包装种类代码字典 */
     this.getDicts('sw_packag_type').then((response) => {
       this.PaymentMethodCode = response.data
@@ -545,7 +546,9 @@ export default {
     const id = this.$route.query.id
     this.ids = id
     const flag = this.$route.query.flag
-    console.log(flag)
+    this.flag=flag
+    console.log("------------------")
+    console.log(this.flag)
     if (flag) {
       this.btnDisable = true
     }
@@ -590,6 +593,7 @@ export default {
     },
     async init() {
       //  企业代码
+
       listInfo().then((data) => {
         this.listInfo = data.rows
       })
@@ -651,13 +655,21 @@ export default {
       this.form.declaration.consignment = this.List
       add(this.form).then((response) => {
         if (response.code === 200) {
-          this.msgSuccess('新增成功')
-          console.log(JSON.stringify(this.form))
+          if(this.ids==undefined){
+            this.msgSuccess('新增成功')
+            console.log(JSON.stringify(this.form))
+          }
+           if(this.flag ==undefined && this.ids !=undefined){
+            this.msgSuccess('修改成功')
+            this.$store.dispatch('tagsView/delView', this.$route)
+            this.$router.go(-1)
+          }
         } else {
           this.msgError(response.msg)
         }
       })
       this.reset()
+
     },
     reset() {
       (this.declaration = {}),
