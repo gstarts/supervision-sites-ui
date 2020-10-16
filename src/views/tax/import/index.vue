@@ -30,7 +30,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      
+
       <el-form-item label="模板类型" prop="templateType">
         <el-select v-model="queryParams.templateType" placeholder="请选择模板类型" clearable size="small">
           <el-option
@@ -55,7 +55,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-    
+
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -99,7 +99,7 @@
         </el-button>
       </el-col>-->
     </el-row>
-    
+
     <el-table v-loading="loading" :data="importList">
       <!--<af-table-column type="selection" width="55" align="center"/>-->
       <!--<af-table-column label="场所编号" align="center" prop="placeId" />-->
@@ -181,7 +181,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    
+
     <!-- 添加或修改导入文件记录对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
@@ -253,7 +253,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="寄舱客户" prop="storeCustomer" v-show="noticeType">
@@ -327,13 +327,13 @@
             <div class="el-upload__tip" slot="tip">只能上传xls/xlsx文件</div>
           </el-upload>
         </el-row>
-      
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm" :loading="uploading">导入</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    
+
     </el-dialog>
   </div>
 </template>
@@ -471,7 +471,7 @@
 				{value: '0', label: '出库通知单'},
 				{value: '2', label: '报关数据单'}
 			]
-			
+
 			listContract({'placeId': this.queryParams.placeId}).then(response => {
 				this.contractList = response.rows;
 			});
@@ -481,7 +481,6 @@
 				this.getList();
 			}
 			this.rules = this.rules1
-   
 		},
 		methods: {
 			/** 查询导入文件记录列表 */
@@ -520,7 +519,7 @@
 					objectName: undefined,
 					path: undefined,
 					placeId: undefined,
-     
+
 				};
 				this.uploading = false
 				this.resetForm("form");
