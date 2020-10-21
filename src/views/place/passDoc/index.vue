@@ -10,7 +10,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="寄舱客户" prop="checkConsumer">
+      <!-- <el-form-item label="寄舱客户" prop="checkConsumer">
         <el-input
           v-model="queryParams.checkConsumer"
           placeholder="请输入寄舱客户"
@@ -28,9 +28,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="放行量" prop="passVolumn">
+      <el-form-item label="放行量" prop="passVolume">
         <el-input
-          v-model="queryParams.passVolumn"
+          v-model="queryParams.passVolume"
           placeholder="请输入放行量"
           clearable
           size="small"
@@ -55,18 +55,18 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="已申请放行量" prop="declarePassVolumn">
+      <el-form-item label="已申请放行量" prop="declarePassVolume">
         <el-input
-          v-model="queryParams.declarePassVolumn"
+          v-model="queryParams.declarePassVolume"
           placeholder="请输入已申请放行量"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="已实际放行量" prop="realPassVolumn">
+      <el-form-item label="已实际放行量" prop="realPassVolume">
         <el-input
-          v-model="queryParams.realPassVolumn"
+          v-model="queryParams.realPassVolume"
           placeholder="请输入已实际放行量"
           clearable
           size="small"
@@ -104,15 +104,22 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="放行状态(0，初始，1放行中，2放行完成)" prop="passState">
-        <el-input
+      </el-form-item> -->
+      <el-form-item label="放行状态" prop="passState">
+        <el-select
           v-model="queryParams.passState"
-          placeholder="请输入放行状态(0，初始，1放行中，2放行完成)"
+          placeholder="请输入放行状态"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
-        />
+        >
+        <el-option
+          v-for="dict in releaseStatus"
+          :key="dict.dictValue"
+          :label="dict.dictLabel"
+          :value="dict.dictValue"
+        ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -166,20 +173,28 @@
       <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="放行单号" align="center" prop="passNo" />
       <el-table-column label="寄舱客户" align="center" prop="checkConsumer" />
-      <el-table-column label="收货单位" align="center" prop="receiveName" />
-      <el-table-column label="放行量" align="center" prop="passVolumn" />
-      <el-table-column label="合同号" align="center" prop="contractNo" />
+      <!-- <el-table-column label="收货单位" align="center" prop="receiveName" /> -->
+      <el-table-column label="放行量" align="center" prop="passVolume" />
+      <!-- <el-table-column label="合同号" align="center" prop="contractNo" />
       <el-table-column label="品名" align="center" prop="goodsName" />
-      <el-table-column label="已申请放行量" align="center" prop="declarePassVolumn" />
-      <el-table-column label="已实际放行量" align="center" prop="realPassVolumn" />
+      <el-table-column label="已申请放行量" align="center" prop="declarePassVolume" />
+      <el-table-column label="已实际放行量" align="center" prop="realPassVolume" />
       <el-table-column label="业务编号" align="center" prop="businessNo" />
       <el-table-column label="运输方式" align="center" prop="transportType" />
       <el-table-column label="运输单位" align="center" prop="transportUnit" />
-      <el-table-column label="车队" align="center" prop="carTeam" />
-      <el-table-column label="放行状态(0，初始，1放行中，2放行完成)" align="center" prop="passState" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="车队" align="center" prop="carTeam" /> -->
+      <el-table-column label="放行状态" align="center" prop="passState" :formatter="ReleaseStatusFormat"/>
+      <el-table-column label="创建时间" align="center" prop="createTime" />
+      <!-- <el-table-column label="备注" align="center" prop="remark" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-detail"
+            @click="detail(scope.row)"
+          >详情
+          </el-button>
           <el-button
             size="mini"
             type="text"
@@ -209,29 +224,53 @@
     <!-- 添加或修改放行单 对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="放行单号" prop="passNo">
-          <el-input v-model="form.passNo" placeholder="请输入放行单号" />
-        </el-form-item>
-        <el-form-item label="寄舱客户" prop="checkConsumer">
-          <el-input v-model="form.checkConsumer" placeholder="请输入寄舱客户" />
-        </el-form-item>
-        <el-form-item label="收货单位" prop="receiveName">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="放行单号" prop="passNo">
+              <el-input v-model="form.passNo" placeholder="请输入放行单号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="寄舱客户" prop="checkConsumer">
+              <el-input v-model="form.checkConsumer" placeholder="请输入寄舱客户" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- <el-form-item label="收货单位" prop="receiveName">
           <el-input v-model="form.receiveName" placeholder="请输入收货单位" />
+        </el-form-item> -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="放行量" prop="passVolume">
+              <el-input v-model.number="form.passVolume" placeholder="请输入放行量" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="合同号" prop="contractNo">
+              <el-select v-model="form.contractNo" placeholder="请输入合同号" @change="change">
+                <el-option
+                  v-for="item in contractOptions"
+                  :key="item.contractNo"
+                  :label="item.contractNo"
+                  :value="item.contractNo"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>   
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="品名" prop="goodsName">
+              <el-input v-model="form.goodsName" placeholder="请输入品名" />
+            </el-form-item>
+          </el-col>
+        </el-row>        
+        <!-- <el-form-item label="已申请放行量" prop="declarePassVolume">
+          <el-input v-model="form.declarePassVolume" placeholder="请输入已申请放行量" />
         </el-form-item>
-        <el-form-item label="放行量" prop="passVolumn">
-          <el-input v-model="form.passVolumn" placeholder="请输入放行量" />
-        </el-form-item>
-        <el-form-item label="合同号" prop="contractNo">
-          <el-input v-model="form.contractNo" placeholder="请输入合同号" />
-        </el-form-item>
-        <el-form-item label="品名" prop="goodsName">
-          <el-input v-model="form.goodsName" placeholder="请输入品名" />
-        </el-form-item>
-        <el-form-item label="已申请放行量" prop="declarePassVolumn">
-          <el-input v-model="form.declarePassVolumn" placeholder="请输入已申请放行量" />
-        </el-form-item>
-        <el-form-item label="已实际放行量" prop="realPassVolumn">
-          <el-input v-model="form.realPassVolumn" placeholder="请输入已实际放行量" />
+        <el-form-item label="已实际放行量" prop="realPassVolume">
+          <el-input v-model="form.realPassVolume" placeholder="请输入已实际放行量" />
         </el-form-item>
         <el-form-item label="业务编号" prop="businessNo">
           <el-input v-model="form.businessNo" placeholder="请输入业务编号" />
@@ -274,7 +313,7 @@
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -286,6 +325,7 @@
 
 <script>
 import { listPassDoc, getPassDoc, delPassDoc, addPassDoc, updatePassDoc } from "@/api/place/passDoc";
+import { listStoreContract } from "@/api/place/storeContract"
 
 export default {
   name: "PassDoc",
@@ -295,6 +335,10 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      // 合同列表
+      contractOptions: [],
+      // 放行状态字典
+      releaseStatus: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -314,11 +358,11 @@ export default {
         passNo: undefined,
         checkConsumer: undefined,
         receiveName: undefined,
-        passVolumn: undefined,
+        passVolume: undefined,
         contractNo: undefined,
         goodsName: undefined,
-        declarePassVolumn: undefined,
-        realPassVolumn: undefined,
+        declarePassVolume: undefined,
+        realPassVolume: undefined,
         businessNo: undefined,
         transportType: undefined,
         transportUnit: undefined,
@@ -332,11 +376,27 @@ export default {
         passNo: [
           { required: true, message: "放行单号不能为空", trigger: "blur" }
         ],
+        passVolume: [
+          { required: true, message: "请输入", trigger: "blur" },
+          { type: "number", message: "必须为数字值" }
+        ],
+        contractNo: [
+          { required: true, message: "合同号不能为空", trigger: "blur" }
+        ],
+        goodsName: [
+          { required: true, message: "品名不能为空", trigger: "blur" }
+        ],
       }
     };
   },
   created() {
+    this.contractInfo();
+    /** 放行状态字典 */
+    this.getDicts('place_release_status').then((response) => {
+      this.releaseStatus = response.data
+    })
     this.getList();
+    
   },
   methods: {
     /** 查询放行单 列表 */
@@ -347,6 +407,17 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 合同信息列表
+    contractInfo() {
+      listStoreContract(this.queryParams).then((response) => {
+        this.contractOptions = response.rows
+        console.log(this.contractOptions)
+      })
+    },
+    // 放行状态翻译
+    ReleaseStatusFormat(row, column) {
+      return this.selectDictLabel(this.releaseStatus, row.passState)
     },
     // 取消按钮
     cancel() {
@@ -360,11 +431,11 @@ export default {
         passNo: undefined,
         checkConsumer: undefined,
         receiveName: undefined,
-        passVolumn: undefined,
+        passVolume: undefined,
         contractNo: undefined,
         goodsName: undefined,
-        declarePassVolumn: undefined,
-        realPassVolumn: undefined,
+        declarePassVolume: undefined,
+        realPassVolume: undefined,
         businessNo: undefined,
         transportType: undefined,
         transportUnit: undefined,
@@ -454,7 +525,25 @@ export default {
       this.download('place/passDoc/export', {
         ...this.queryParams
       }, `place_passDoc.xlsx`)
-    }
+    },
+    /**详情按钮 */
+    detail(row) {
+      // this.reset();
+      return this.$message('功能正在完善中...')
+      // const id = row.id || this.ids
+      // const data = this.router.find(el => el.messageType === row.messageType)
+      // this.$router.push({ path: '/singlewindow' + data.path })
+    },
+    /** 点击合同赋值操作 */
+    change(event) {
+      this.contractOptions.forEach(element => {
+        // console.log(element)
+        if (element.contractNo === event) {
+          // 将得到的企业属性赋值到应用的对象中
+          this.form.checkConsumer = element.customerName
+        }
+      })
+    },
   }
 };
 </script>

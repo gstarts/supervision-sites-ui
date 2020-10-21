@@ -187,7 +187,7 @@
             <el-button @click="routingContryIdTextButton">途 径 国 家 或 地 区</el-button>
           </el-col>
         </el-row> -->
-        <el-row>          
+        <el-row>
           <el-col :span="12">
             <el-form-item label="抵境内第一目的港时间" prop="arrivalDateTime">
               <el-date-picker
@@ -395,7 +395,7 @@ export default {
       ids: [],
       idALL: undefined,
       // 非单个禁用
-      single: true,      
+      single: true,
       // 非多个禁用
       multiple: true,
       // 总条数
@@ -412,7 +412,7 @@ export default {
       customsCodeTypeOptions: [],
       // 当前操作表体数据
       bodyIndex: -1,
-      // 已选择数据      
+      // 已选择数据
       selectBodyForm: [],
       // 按钮禁用状态
       btnDisable: false,
@@ -423,7 +423,7 @@ export default {
       // 查询参数
       queryParams: {
         eType: '1'
-      },      
+      },
       Tform: {},
       // 报文功能代码/报文类型代码
       head: {
@@ -520,7 +520,7 @@ export default {
       rules: {}
     }
   },
-  mounted() {    
+  mounted() {
     // 获取企业信息列表
     this.enterpriseInfo()
     //挂车类型字典翻译
@@ -557,8 +557,8 @@ export default {
     }
   },
   watch: {
-    'representativePerson.name': {      
-      handler: function(newVal) {     
+    'representativePerson.name': {
+      handler: function(newVal) {
         const data = this.enterpriseOptions.find(el => el.stationPersonName === newVal)
         if(data != undefined){
           this.form.head.contractorcodescc = data.contractorCodeScc
@@ -566,7 +566,7 @@ export default {
           this.head = data
           this.head.functionCode = '2'
           this.head.messageType = 'MT4403'
-        }          
+        }
       }
     }
   },
@@ -576,12 +576,12 @@ export default {
       queryDetailsById(id).then(res =>{
        if(res.code ==200){
         //  this.nemsInvtHeadType = res.data.nemsInvtHeadType;
-        //  this.headList = res.data.headList;        
+        //  this.headList = res.data.headList;
         this.declaration = res.data.declaration
         this.declaration.mtHeadId = res.data.declaration.mtHeadId
         // console.log(res.data)
         this.additionalInformation = res.data.declaration.additionalInformation
-        this.carrier = res.data.declaration.carrier        
+        this.carrier = res.data.declaration.carrier
         this.representativePerson = res.data.declaration.representativePerson
         this.borderTransportMeans = res.data.declaration.consignment.borderTransportMeans
         this.headList = res.data.declaration.consignment.borderTransportMeans.transportEquipment

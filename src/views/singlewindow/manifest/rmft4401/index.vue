@@ -776,7 +776,9 @@ export default {
       ContainerSize: [],
       // 集装箱（器）重箱或者空箱标识
       ContainerSelfWeight: [],
-      ids: undefined
+      //页面跳转标识
+      ids: undefined,
+      flag:undefined,
     }
   },
   mounted() {
@@ -786,6 +788,7 @@ export default {
     const id = this.$route.query.id
     this.ids = id
     const flag = this.$route.query.flag
+    this.flag=flag
     if (flag) {
       this.btnDisable = true
     }
@@ -881,8 +884,15 @@ export default {
       console.log(JSON.stringify(this.form))
       add(this.form).then((response) => {
         if (response.code === 200) {
+        // if(ids==undefined){
           this.msgSuccess('新增成功')
           console.log(JSON.stringify(this.form))
+        // }
+        //   if(this.flag ==undefined && this.ids !=undefined){
+        //     this.msgSuccess('修改成功')
+        //     this.$store.dispatch('tagsView/delView', this.$route)
+        //     this.$router.go(-1)
+        //   }
         } else {
           this.msgError(response.msg)
         }
@@ -1048,12 +1058,32 @@ export default {
         this.borderTransportMeansList = JSON.parse(JSON.stringify(this.borderTransportMeansList))
         console.log(this.borderTransportMeansList)
         this.bodyIndex = -1
+        this.borderTransportMeans = {
+          arrivalDateTime: undefined,
+          bordertransportmeansId: undefined,
+          name: undefined,
+          typeCode: undefined,
+          master: {
+            masterId: undefined,
+            name: undefined
+          }
+        }
       }
     },
     // 删除 运输工具信息
     handleDelete(e, name) {
       if (name === 'body') {
         this.borderTransportMeansList = this.borderTransportMeansList.filter(el => !this.selectBodyForm.includes(el))
+        this.borderTransportMeans = {
+          arrivalDateTime: undefined,
+          bordertransportmeansId: undefined,
+          name: undefined,
+          typeCode: undefined,
+          master: {
+            masterId: undefined,
+            name: undefined
+          }
+        }
       }
     },
     //单击list反填form 托架/拖挂车信息
@@ -1069,12 +1099,14 @@ export default {
         this.trailerList = JSON.parse(JSON.stringify(this.trailerList))
         console.log(this.trailerList)
         this.bodyIndex = -1
+        this.trailer = {}
       }
     },
     // 删除 提运单信息
     TrailerDelete(e, name) {
       if (name === 'body') {
         this.trailerList = this.trailerList.filter(el => !this.selectBodyForm.includes(el))
+        this.trailer = {}
       }
     },
     //单击list反填form 集装箱信息
@@ -1090,12 +1122,14 @@ export default {
         this.transportEquipmentList = JSON.parse(JSON.stringify(this.transportEquipmentList))
         console.log(this.transportEquipmentList)
         this.bodyIndex = -1
+        this.transportEquipment={}
       }
     },
     // 删除 提运单信息
     containerDelete(e, name) {
       if (name === 'body') {
         this.transportEquipmentList = this.transportEquipmentList.filter(el => !this.selectBodyForm.includes(el))
+        this.transportEquipment={}
       }
     }
   }
