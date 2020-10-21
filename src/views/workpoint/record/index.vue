@@ -143,30 +143,36 @@
     <el-table v-loading="loading" :data="recordList" @selection-change="handleSelectionChange">
       <!--<el-table-column type="selection" width="55" align="center"/>-->
       <el-table-column label="ID" align="center" prop="id"/>
-      <el-table-column label="工作日期" align="center" prop="workDate" width="180">
+      <el-table-column label="作业人员" align="center" prop="worker.wname"/>
+      <el-table-column label="作业日期" align="center" prop="workDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.workDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="工人编号" align="center" prop="workerCode"/>
       <el-table-column label="工分类型" align="center" prop="pointTypeCode"/>
-      <el-table-column label="工分标准" align="center" prop="pointStandardCode"/>
-      <el-table-column label="工分值" align="center" prop="score"/>
+      <el-table-column label="工分标准" align="center" >
+        <template slot-scope="scope">
+          <span>{{ scope.row.pointStandard.name+ '('+scope.row.pointStandard.score+')'}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="作业小组" align="center" prop="group.name">
+
+      </el-table-column>
+      <el-table-column label="所获工分值" align="center" prop="score"/>
       <el-table-column label="场所" align="center" prop="placeId"/>
-      <el-table-column label="工单类型(入库单，出库单)" align="center" prop="docType"/>
-      <el-table-column label="工单编号" align="center" prop="docNo"/>
-      <el-table-column label="作业小组" align="center" prop="jobGroupCode"/>
-      <el-table-column label="业务编号(一个编号对应多个单号)" align="center" prop="businessNo"/>
+      <!--<el-table-column label="工单类型(入库单，出库单)" align="center" prop="docType"/>
+      <el-table-column label="工单编号" align="center" prop="docNo"/>-->
+     <!-- <el-table-column label="业务编号(一个编号对应多个单号)" align="center" prop="businessNo"/>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
-          <el-button
+          <!--<el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['workpoint:record:edit']"
           >修改
-          </el-button>
+          </el-button>-->
           <el-button
             size="mini"
             type="text"
@@ -330,7 +336,9 @@ export default {
         docType: undefined,
         docNo: undefined,
         jobGroupCode: undefined,
-        businessNo: undefined
+        businessNo: undefined,
+        orderByColumn: 'id',
+        isAsc: 'desc'
       },
       // 表单参数
       form: {},
