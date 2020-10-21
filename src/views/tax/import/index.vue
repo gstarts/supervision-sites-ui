@@ -114,6 +114,7 @@
       <af-table-column label="寄舱客户" align="center" prop="settlementCustomer"/>
       <af-table-column label="发货单位" align="center" prop="sendName"/>
       <af-table-column label="收货单位" align="center" prop="receiveName"/>
+      <af-table-column label="运输方式" align="center" prop="transportMode"/>
       <af-table-column label="文件路径" align="center" prop="path"/>
       <af-table-column label="文件名" align="center" prop="fileName"/>
       <!--<af-table-column label="是否生成报关数据" align="center" prop="isGenReport"/>
@@ -376,6 +377,10 @@
 					{value: '0', label: '出库通知单'},
 					{value: '2', label: '报关数据单'}
 				],
+        transportModeDic: [
+          {value: '1',label: "长途货运"},
+          {value: '0',label: "短途倒装"},
+        ],
 				// 弹出层标题
 				title: "",
 				// 是否显示弹出层
@@ -496,7 +501,8 @@
 			cancel() {
 				this.open = false;
 				this.reset();
-				this.$refs.upload.$refs['upload-inner'].fileList =[]
+				//this.$refs.upload.$refs['upload-inner'].fileList =[]
+        this.$refs.upload.clearFiles()
 			},
 			// 表单重置
 			reset() {
