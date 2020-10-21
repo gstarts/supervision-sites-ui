@@ -215,29 +215,53 @@
       <el-table-column label="文件名" align="center" prop="fileName"/>
       <el-table-column label="是否生成报关数据" align="center" prop="isGenReport"/>
       <el-table-column label="是否生成出入库通知单" align="center" prop="isGenStoreNotice"/>
-      <el-table-column label="对象名称" align="center" prop="objectName"/>
-      <el-table-column label="文件路径" align="center" prop="path"/>
+<!--      <el-table-column label="对象名称" align="center" prop="objectName"/>-->
+<!--      <el-table-column label="文件路径" align="center" prop="path"/>-->
       <el-table-column label="场所编号" align="center" prop="placeId"/>
-      <el-table-column label="模板类型" align="center" prop="templateType"/>
+      <el-table-column label="模板类型" align="center" >
+      <template slot-scope="scope">
+        {{importTypeDic.find(item=> item.value ===scope.row.templateType ).label}}
+      </template>
+      </el-table-column>
       <el-table-column label="文件长度" align="center" prop="fileLength"/>
       <el-table-column label="寄舱合同ID" align="center" prop="storeContractId"/>
       <el-table-column label="寄舱客户" align="center" prop="storeCustomer"/>
-      <el-table-column label="结算合同ID" align="center" prop="settlementContractId"/>
-      <el-table-column label="结算客户" align="center" prop="settlementCustomer"/>
+<!--      <el-table-column label="结算合同ID" align="center" prop="settlementContractId"/>-->
+<!--      <el-table-column label="结算客户" align="center" prop="settlementCustomer"/>-->
       <el-table-column label="业务编号" align="center" prop="businessNo"/>
       <el-table-column label=" 发货单位" align="center" prop="sendName"/>
       <el-table-column label="收货单位" align="center" prop="receiveName"/>
-      <el-table-column label="备注" align="center" prop="remark"/>
+<!--      <el-table-column label="备注" align="center" prop="remark"/>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['place:import:edit']"
-          >修改
-          </el-button>
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['place:import:edit']"-->
+<!--          >修改-->
+<!--          </el-button>-->
+<!--          <el-button v-show="scope.row.isGenStoreNotice=='' && scope.row.templateType ==='1' "-->
+<!--                     size="mini"-->
+<!--                     type="text"-->
+<!--                     icon="el-icon-edit"-->
+<!--                     :loading="noticeGening"-->
+<!--                     @click="handleGenNotice(scope.row)"-->
+<!--                     v-hasPermi="['tax:import:genNotice']"-->
+<!--          >生成入库通知单-->
+<!--          </el-button>-->
+
+<!--          <el-button v-show="scope.row.isGenStoreNotice=='' && scope.row.templateType ==='0' "-->
+<!--                     size="mini"-->
+<!--                     type="text"-->
+<!--                     icon="el-icon-edit"-->
+<!--                     :loading="noticeGening"-->
+<!--                     @click="handleGenNotice(scope.row)"-->
+<!--                     v-hasPermi="['tax:import:genNotice']"-->
+<!--          >生成出库派车单-->
+<!--          </el-button>-->
+
           <el-button
             size="mini"
             type="text"
@@ -304,9 +328,9 @@
         <!--        <el-form-item label="文件路径" prop="path">-->
         <!--          <el-input v-model="form.path" placeholder="请输入文件路径" />-->
         <!--        </el-form-item>-->
-        <!--        <el-form-item label="场所编号" prop="placeId">-->
-        <!--          <el-input v-model="form.placeId" placeholder="请输入场所编号" />-->
-        <!--        </el-form-item>-->
+<!--                <el-form-item label="场所编号" prop="placeId">-->
+<!--                  <el-input v-model="form.placeId" placeholder="请输入场所编号" />-->
+<!--                </el-form-item>-->
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="模板类型" prop="templateType">
@@ -321,8 +345,15 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="业务编号" prop="businessNo">
-              <el-input v-model="form.businessNo" placeholder="请输入业务编号"/>
+            <el-form-item label="寄舱合同编号" prop="storeContractId">
+              <el-select v-model="form.storeContractId" placeholder="请输入寄舱合同ID" @change="change">
+              <el-option
+                v-for="type in contractList"
+                :key="type.contractNo"
+                :label="type.contractNo"
+                :value="type.contractNo"
+              />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -331,21 +362,30 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="寄舱客户" prop="storeCustomer">
-              <el-select v-model="form.storeCustomer" placeholder="请选择寄舱客户">
-                <el-option
-                  v-for="type in contractList"
-                  :key="type.id"
-                  :label="type.customerName"
-                  :value="type.customerName"
-                />
-              </el-select>
+              <el-input v-model="form.storeCustomer" placeholder="请选择寄舱客户"/>
+<!--              <el-select v-model="form.storeCustomer" placeholder="请选择寄舱客户">-->
+<!--                <el-option-->
+<!--                  v-for="type in contractList"-->
+<!--                  :key="type.id"-->
+<!--                  :label="type.customerName"-->
+<!--                  :value="type.customerName"-->
+<!--                />-->
+<!--              </el-select>-->
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="寄舱合同ID" prop="storeContractId">
-              <el-input v-model="form.storeContractId" placeholder="请输入寄舱合同"/>
+            <el-form-item label="库位号" prop="businessNo">
+              <el-select v-model="form.businessNo" placeholder="请输入库位号">
+              <el-option
+                v-for="type in storeIds"
+                :key="type.storeCode"
+                :label="type.storeCode"
+                :value="type.storeCode"
+              />
+              </el-select>
             </el-form-item>
           </el-col>
+
         </el-row>
         <!--        <el-row :gutter="10">-->
         <!--          <el-col :span="12">-->
@@ -424,6 +464,9 @@
         total: 0,
         // 导入文件记录 表格数据
         importList: [],
+        //寄仓合同id
+        storeContract:[],
+        storeIds:[],
         importTypeDic: [
           {value: '1', label: '入库通知单'},
           {value: '0', label: '出库派车单'}
@@ -496,12 +539,13 @@
     created() {
       this.depts = getUserDepts('0')
       if (this.depts.length > 0) {
-        this.queryParams.placeId = this.depts[0].deptId
+        this.queryParams.placeId = this.depts[2].deptId
         this.getList();
       }
 
       listStoreContract({'placeId': this.queryParams.placeId}).then(response => {
         this.contractList = response.rows;
+
       });
     },
     methods: {
@@ -564,11 +608,17 @@
         this.single = selection.length != 1
         this.multiple = !selection.length
       },
-      /** 新增按钮操作 */
+      /** 导入按钮操作 */
       handleAdd() {
-        this.reset();
-        this.open = true;
-        this.title = "导入模板文件";
+        if(this.queryParams.placeId == 134){
+          this.reset();
+          this.open = true;
+          this.title = "导入模板文件";
+
+        }else {
+          this.$message.info("请选择嘉亿达监管场所,其他场所功能未实现")
+        }
+
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
@@ -584,6 +634,20 @@
       uploadProcess() {
         this.uploading = true
       },
+      // 合同id取寄仓场所
+      change(event){
+        this.contractList.forEach(element => {
+          // console.log(element)
+          if (element.contractNo === event) {
+            // 将得到的企业属性赋值到应用的对象中
+            this.form.storeCustomer = element.customerName
+               this.storeIds =  element.params.contract;
+           // this.form.businessNo = element.storeIds
+          }
+        })
+      },
+
+
 
       uploadBefore(file) {
         /*alert("要上传")
