@@ -463,7 +463,7 @@
       // 0 监管场所，1保税库，2堆场，3企业
       this.depts = getUserDepts("0");
       if (this.depts.length > 0) {
-        this.queryParams.stationId = this.depts[0].deptId;
+        this.queryParams.stationId = this.depts[2].deptId;
         this.created();
       }
       //车牌号
@@ -532,7 +532,7 @@
             getNoticeByVehicle(this.queryParams.stationId, this.direction, event).then((response) => {
               if (response.code === 200) {
                 //规格型号
-                this.form.specification = response.data.businessNo;
+                this.form.remark = response.data.businessNo;
                 //货物名称
                 this.form.goodsName = response.data.goodsName;
                 //收货单位
@@ -568,6 +568,8 @@
         this.queryParams.flowDirection = "E";
         listIESheet(this.queryParams).then((response) => {
           this.sheetList = response.rows;
+          console.log("---------")
+          console.log(response)
           this.total = response.total;
           this.loading = false;
         });
@@ -596,6 +598,7 @@
       created() {
         listChnlConfig(this.queryParams).then((response) => {
           this.chnlConfigList = response.rows;
+          console.log(this.chnlConfigList)
           this.total = response.total;
         });
       },
