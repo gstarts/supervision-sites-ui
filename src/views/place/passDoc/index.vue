@@ -184,6 +184,7 @@
       <el-table-column label="运输单位" align="center" prop="transportUnit" />
       <el-table-column label="车队" align="center" prop="carTeam" /> -->
       <el-table-column label="放行状态" align="center" prop="passState" :formatter="ReleaseStatusFormat"/>
+      <el-table-column label="所属场所" align="center" prop="placeId" :formatter="corporationFormat"/>
       <el-table-column label="创建时间" align="center" prop="createTime" />
       <!-- <el-table-column label="备注" align="center" prop="remark" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
@@ -265,6 +266,18 @@
               <el-input v-model="form.goodsName" placeholder="请输入品名" />
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="所属场所" prop="placeId">
+              <el-select v-model="form.placeId" placeholder="请选择所属场所">
+                  <el-option
+                    v-for="item in companyNameOptions"
+                    :key="item.id"
+                    :label="item.eName"
+                    :value="item.id"
+                  />
+                </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>        
         <!-- <el-form-item label="已申请放行量" prop="declarePassVolume">
           <el-input v-model="form.declarePassVolume" placeholder="请输入已申请放行量" />
@@ -326,6 +339,7 @@
 <script>
 import { listPassDoc, getPassDoc, delPassDoc, addPassDoc, updatePassDoc } from "@/api/place/passDoc";
 import { listStoreContract } from "@/api/place/storeContract"
+import {listInfo} from "@/api/basis/enterpriseInfo";
 
 export default {
   name: "PassDoc",
@@ -347,6 +361,8 @@ export default {
       total: 0,
       // 放行单 表格数据
       passDocList: [],
+      // 场所名称列表
+      companyNameOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -396,9 +412,17 @@ export default {
       this.releaseStatus = response.data
     })
     this.getList();
+    this.getlistInfo();
     
   },
   methods: {
+    /** 场所名称列表 */
+    getlistInfo() {
+      this.loading = true;
+      listInfo().then(response => {
+        this.companyNameOptions = response.rows;
+      });
+    },
     /** 查询放行单 列表 */
     getList() {
       this.loading = true;
@@ -407,6 +431,16 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 场所名称翻译
+    corporationFormat(row, column) {
+      let ccCorporationName="";
+       this.companyNameOptions.forEach(element => {
+           if(element.id==row.placeId){
+            ccCorporationName = element.eName
+           }
+       });
+      return ccCorporationName;
     },
     // 合同信息列表
     contractInfo() {
