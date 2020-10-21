@@ -208,61 +208,62 @@
     </el-row>
 
     <el-table v-loading="loading" :data="importList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="ID" align="center" prop="id"/>
+      <af-table-column type="selection" width="55" align="center"/>
+      <af-table-column label="ID" align="center" prop="id"/>
 
-      <el-table-column label="文件桶名称" align="center" prop="bucketName"/>
-      <el-table-column label="文件名" align="center" prop="fileName"/>
-      <el-table-column label="是否生成报关数据" align="center" prop="isGenReport"/>
-      <el-table-column label="是否生成出入库通知单" align="center" prop="isGenStoreNotice"/>
-<!--      <el-table-column label="对象名称" align="center" prop="objectName"/>-->
-<!--      <el-table-column label="文件路径" align="center" prop="path"/>-->
-      <el-table-column label="场所编号" align="center" prop="placeId"/>
-      <el-table-column label="模板类型" align="center" >
+      <af-table-column label="文件桶名称" align="center" prop="bucketName"/>
+      <af-table-column label="文件名" align="center" prop="fileName"/>
+      <af-table-column label="是否生成报关数据" align="center" prop="isGenReport"/>
+      <af-table-column label="是否生成出入库通知单" align="center" prop="isGenStoreNotice"/>
+<!--      <af-table-column label="对象名称" align="center" prop="objectName"/>-->
+<!--      <af-table-column label="文件路径" align="center" prop="path"/>-->
+      <af-table-column label="场所编号" align="center" prop="placeId"/>
+      <af-table-column label="模板类型" align="center" >
       <template slot-scope="scope">
         {{importTypeDic.find(item=> item.value ===scope.row.templateType ).label}}
       </template>
-      </el-table-column>
-      <el-table-column label="文件长度" align="center" prop="fileLength"/>
-      <el-table-column label="寄舱合同ID" align="center" prop="storeContractId"/>
-      <el-table-column label="寄舱客户" align="center" prop="storeCustomer"/>
-<!--      <el-table-column label="结算合同ID" align="center" prop="settlementContractId"/>-->
-<!--      <el-table-column label="结算客户" align="center" prop="settlementCustomer"/>-->
-      <el-table-column label="业务编号" align="center" prop="businessNo"/>
-      <el-table-column label=" 发货单位" align="center" prop="sendName"/>
-      <el-table-column label="收货单位" align="center" prop="receiveName"/>
-<!--      <el-table-column label="备注" align="center" prop="remark"/>-->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      </af-table-column>
+      <af-table-column label="文件长度" align="center" prop="fileLength"/>
+      <af-table-column label="寄舱合同ID" align="center" prop="storeContractId"/>
+      <af-table-column label="寄舱客户" align="center" prop="storeCustomer"/>
+<!--      <af-table-column label="结算合同ID" align="center" prop="settlementContractId"/>-->
+<!--      <af-table-column label="结算客户" align="center" prop="settlementCustomer"/>-->
+      <af-table-column label="业务编号" align="center" prop="businessNo"/>
+      <af-table-column label=" 发货单位" align="center" prop="sendName"/>
+      <af-table-column label="收货单位" align="center" prop="receiveName"/>
+<!--      <af-table-column label="备注" align="center" prop="remark"/>-->
+      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleUpdate(scope.row)"-->
-<!--            v-hasPermi="['place:import:edit']"-->
-<!--          >修改-->
-<!--          </el-button>-->
-<!--          <el-button v-show="scope.row.isGenStoreNotice=='' && scope.row.templateType ==='1' "-->
-<!--                     size="mini"-->
-<!--                     type="text"-->
-<!--                     icon="el-icon-edit"-->
-<!--                     :loading="noticeGening"-->
-<!--                     @click="handleGenNotice(scope.row)"-->
-<!--                     v-hasPermi="['tax:import:genNotice']"-->
-<!--          >生成入库通知单-->
-<!--          </el-button>-->
+          <!--<el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['place:import:edit']"
+          >修改
+          </el-button>-->
+          <el-button v-show="scope.row.isGenStoreNotice ===0 && scope.row.templateType ==='1' "
+                     size="mini"
+                     type="text"
+                     icon="el-icon-edit"
+                     :loading="loading"
+                     @click="handleGenNotice(scope.row)"
+                     v-hasPermi="['tax:import:genNotice']"
+          >生成入库通知单
+          </el-button>
 
-<!--          <el-button v-show="scope.row.isGenStoreNotice=='' && scope.row.templateType ==='0' "-->
-<!--                     size="mini"-->
-<!--                     type="text"-->
-<!--                     icon="el-icon-edit"-->
-<!--                     :loading="noticeGening"-->
-<!--                     @click="handleGenNotice(scope.row)"-->
-<!--                     v-hasPermi="['tax:import:genNotice']"-->
-<!--          >生成出库派车单-->
-<!--          </el-button>-->
+          <!--<el-button v-show="scope.row.isGenStoreNotice=='' && scope.row.templateType ==='0' "
+                     size="mini"
+                     type="text"
+                     icon="el-icon-edit"
+                     :loading="noticeGening"
+                     @click="handleGenNotice(scope.row)"
+                     v-hasPermi="['tax:import:genNotice']"
+          >生成出库派车单
+          </el-button>-->
 
           <el-button
+            v-show="scope.row.isGenStoreNotice === 0 && scope.row.templateType ==='1' "
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -271,7 +272,7 @@
           >删除
           </el-button>
         </template>
-      </el-table-column>
+      </af-table-column>
     </el-table>
 
     <pagination
@@ -446,6 +447,7 @@
   import {getUserDepts} from "@/utils/charutils";
   import {listStoreContract} from '@/api/place/storeContract'
   import {getToken} from '@/utils/auth'
+  import {genNotice} from "@/api/place/import";
 
   export default {
     name: "Import",
@@ -742,7 +744,32 @@
         this.download('place/import/export', {
           ...this.queryParams
         }, `place_import.xlsx`)
-      }
+      },
+      //生成出入库通知单
+      handleGenNotice(row) {
+        this.$confirm('生成通知单前请确认文件格式正确无误?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          genNotice(row.id).then(response => {
+            this.loading = false
+            if (response.code === 200) {
+              this.msgSuccess("通知单生成成功");
+              row.isGenStoreNotice = 1
+            } else {
+              this.msgError("通知单生成失败");
+            }
+          }).catch(err => {
+            this.loading = false
+            console.log("取消生成通知单")
+          })
+        }).catch((err) => {
+          this.loading = false
+          console.log("取消生成通知单")
+        });
+      },
     }
   };
 </script>

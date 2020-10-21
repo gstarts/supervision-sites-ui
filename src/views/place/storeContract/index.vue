@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="场所" prop="placeId">
-        <el-select
+        <el-select @change="handleQuery"
           v-model="queryParams.placeId" placeholder="请选择场所" size="small">
           <el-option
             v-for="dept in depts"
@@ -151,37 +151,37 @@
     </el-row>
 
     <el-table v-loading="loading" :data="storeContractList">
-      <el-table-column label="ID" align="center" prop="id"/>
-      <el-table-column label="场所ID" align="center" prop="placeId"/>
-      <el-table-column label="合同编号" align="center" prop="contractNo"/>
-      <el-table-column label="客户名称" align="center" prop="customerName"/>
-      <el-table-column label="品名" align="center" prop="goodsName"/>
-      <el-table-column label="散货库位" align="center" width="150px">
+      <af-table-column label="ID" align="center" prop="id"/>
+      <af-table-column label="场所ID" align="center" prop="placeId"/>
+      <af-table-column label="合同编号" align="center" prop="contractNo"/>
+      <af-table-column label="客户名称" align="center" prop="customerName"/>
+      <af-table-column label="品名" align="center" prop="goodsName"/>
+      <af-table-column label="散货库位" align="center" width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.params.contract.map(item => item.storeCode) }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="计费方式" align="center" prop="chargeMethod"/>
-      <el-table-column label="计费方式" align="center" prop="chargeMode"/>
-      <el-table-column label="计费周期" align="center" prop="chargePeriod"/>
-      <el-table-column label="失效日期" align="center" prop="endDate" width="180">
+      </af-table-column>
+      <af-table-column label="计费方式" align="center" prop="chargeMethod"/>
+      <af-table-column label="计费方式" align="center" prop="chargeMode"/>
+      <af-table-column label="计费周期" align="center" prop="chargePeriod"/>
+      <af-table-column label="失效日期" align="center" prop="endDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.endDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="结算周期" align="center" prop="settlementPeriod"/>
-      <el-table-column label="签订日期" align="center" prop="signDate" width="180">
+      </af-table-column>
+      <af-table-column label="结算周期" align="center" prop="settlementPeriod"/>
+      <af-table-column label="签订日期" align="center" prop="signDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.signDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="生效日期" align="center" prop="startDate" width="180">
+      </af-table-column>
+      <af-table-column label="生效日期" align="center" prop="startDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      </af-table-column>
+      <af-table-column label="备注" align="center" prop="remark"/>
+      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -200,7 +200,7 @@
           >删除
           </el-button>
         </template>
-      </el-table-column>
+      </af-table-column>
     </el-table>
 
     <pagination
