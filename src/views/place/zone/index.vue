@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="监管场所" prop="placeId">
+      <el-form-item label="场所" prop="placeId">
         <el-select
-          v-model="queryParams.placeId" placeholder="请选择场所" clearable size="small">
+          v-model="queryParams.placeId" placeholder="请选择场所" size="small">
           <el-option
             v-for="dept in depts"
             :key="dept.deptId"
@@ -68,7 +68,7 @@
         >修改
         </el-button>
       </el-col>
-      <!--<el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="danger"
           icon="el-icon-delete"
@@ -78,7 +78,7 @@
           v-hasPermi="['place:zone:remove']"
         >删除
         </el-button>
-      </el-col>-->
+      </el-col>
       <!--<el-col :span="1.5">
         <el-button
           type="warning"
@@ -98,6 +98,7 @@
       <el-table-column label="区域类型" align="center" prop="zoneType" :formatter="zoneTypeFormat"/>
       <el-table-column label="区域名称" align="center" prop="zoneName"/>
       <el-table-column label="区域代码" align="center" prop="zoneCode"/>
+      <el-table-column label="区域别名" align="center" prop="zoneAlias"/>
       <el-table-column label="区域长" align="center" prop="zoneLength"/>
       <el-table-column label="区域宽" align="center" prop="zoneWidth"/>
       <el-table-column label="区域面积(㎡)" align="center" prop="zoneArea"/>
@@ -482,7 +483,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除堆场分区信息编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('删除区域，区域下的库位及库存都将被删除，是否确认?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

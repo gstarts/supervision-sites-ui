@@ -42,3 +42,12 @@ export function delZone(id) {
     method: 'delete'
   })
 }
+
+///zoneCode/{placeId}/{zoneType}
+// 获取zoneCode列表
+export function getZoneList(placeId,zoneType) {
+  return request({
+    url: '/place/zone/zoneCode/'+placeId+'/'+zoneType,
+    method: 'get'
+  })
+}
