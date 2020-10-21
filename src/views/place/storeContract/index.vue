@@ -411,6 +411,20 @@ export default {
         placeId: [
           {required: true, message: "场所ID不能为空", trigger: "blur"}
         ],
+        contractNo: [
+          {required: true, message: "合同编号不能为空", trigger: "blur"}
+        ],
+
+        customerName: [
+          {required: true, message: "客户名称不能为空", trigger: "blur"}
+        ],
+        goodsName: [
+          {required: true, message: "品名不能为空", trigger: "blur"}
+        ],
+        storeIds: [
+          {required: true, message: "散杂库位不能为空", trigger: "blur"}
+        ],
+
       },
       zoneCodeList: [],
       storeList: [],
