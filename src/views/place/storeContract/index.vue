@@ -505,7 +505,7 @@ export default {
         if (valid) {
           this.idList = this.form.storeIds
           let ids = ''
-          for (let id in this.idList) {
+          for (let id of this.idList) {
             ids += id + ","
           }
           ids = ids.substring(0, ids.length - 1)
@@ -580,7 +580,7 @@ export default {
     getStoreCodeName(contract) {
       console.log(contract)
       let storeList = []
-      for (let store in contract.params.contract) {
+      for (let store of contract.params.contract) {
         storeList.push(store.storeCode)
       }
       return storeList
