@@ -112,15 +112,26 @@
     <!-- 添加或修改工人名单 对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="人员姓名" prop="wname">
-          <el-input v-model="form.wname" placeholder="请输入工作人员姓名" />
-        </el-form-item>
-        <el-form-item label="人员编号" prop="wcode">
-          <el-input v-model="form.wcode" placeholder="请输入人员编号" />
-        </el-form-item>
-        <el-form-item label="场所ID" prop="placeId">
-          <el-input v-model="form.placeId" placeholder="请输入场所ID" />
-        </el-form-item>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="人员姓名" prop="wname">
+              <el-input v-model="form.wname" placeholder="请输入工作人员姓名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="人员编号" prop="wcode">
+              <el-input v-model="form.wcode" placeholder="请输入人员编号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="场所ID" prop="placeId">
+              <el-input v-model="form.placeId" placeholder="请输入场所ID" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12"></el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -169,6 +180,9 @@ export default {
       rules: {
         wname: [
           { type:"string", required: true, message: "人员姓名不能为空", trigger: "blur"}
+        ],
+        wcode: [
+          { type:"string", required: true, message: "人员编号不能为空", trigger: "blur"}
         ]
       }
     };

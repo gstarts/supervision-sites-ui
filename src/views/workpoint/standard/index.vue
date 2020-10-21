@@ -1,6 +1,18 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="场所" prop="placeId">
+        <el-select
+          @change="handleQuery"
+          v-model="queryParams.placeId" placeholder="请选择场所" clearable size="small">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -10,10 +22,19 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="代码" prop="code">
+      <!--<el-form-item label="代码" prop="code">
         <el-input
           v-model="queryParams.code"
           placeholder="请输入代码"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <el-form-item label="工分类型" prop="pointCode">
+        <el-input
+          v-model="queryParams.pointCode"
+          placeholder="请输入工分类型"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -28,16 +49,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="工分类型" prop="pointCode">
-        <el-input
-          v-model="queryParams.pointCode"
-          placeholder="请输入工分类型"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="场所ID" prop="placeId">
+
+      <!--<el-form-item label="场所ID" prop="placeId">
         <el-input
           v-model="queryParams.placeId"
           placeholder="请输入场所ID"
@@ -45,15 +58,23 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="状态" prop="state">
-        <el-input
+        <el-select clearable
           v-model="queryParams.state"
           placeholder="请输入状态"
-          clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          @change="handleQuery"
+        >
+          <el-option
+            v-for="dept in stateList"
+            :key="dept.key"
+            :label="dept.value"
+            :value="dept.key"
+          />
+        </el-select>
+
+
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -130,7 +151,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -171,6 +192,7 @@
 
 <script>
 import { listStandard, getStandard, delStandard, addStandard, updateStandard } from "@/api/workpoint/standard";
+import {getUserDepts} from "@/utils/charutils";
 
 export default {
   name: "Standard",
@@ -180,6 +202,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      depts: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -203,6 +226,10 @@ export default {
         placeId: undefined,
         state: undefined
       },
+      stateList: [
+        {'key':'1',value:'启用'},
+        {'key':'0',value:'停用'},
+      ],
       // 表单参数
       form: {},
       // 表单校验
@@ -211,6 +238,7 @@ export default {
     };
   },
   created() {
+    this.depts = getUserDepts('')
     this.getList();
   },
   methods: {

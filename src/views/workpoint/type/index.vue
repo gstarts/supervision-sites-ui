@@ -112,15 +112,26 @@
     <!-- 添加或修改 工分类型对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="代码" prop="code">
-          <el-input v-model="form.code" placeholder="请输入代码" />
-        </el-form-item>
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入名称" />
-        </el-form-item>
-        <el-form-item label="英文含义" prop="ename">
-          <el-input v-model="form.ename" placeholder="请输入英文含义" />
-        </el-form-item>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="代码" prop="code">
+              <el-input v-model="form.code" placeholder="请输入代码" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入名称" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="英文含义" prop="ename">
+              <el-input v-model="form.ename" placeholder="请输入英文含义" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12"></el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
