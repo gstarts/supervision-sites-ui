@@ -54,7 +54,11 @@
 <!--          @click="handleExport"-->
 <!--          v-hasPermi="['place:clearance:export']"-->
 <!--        >导入</el-button>-->
-        <el-button @click="handleImport"
+        <el-button
+          size="mini"
+          icon="el-icon-download"
+          type="info"
+          @click="handleImport"
         >导入
         </el-button>
       </el-col>
@@ -127,7 +131,7 @@
 <!--        :data="form.ccCorporation"-->
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">
-          将申报车辆文件拖到此处，或
+          将通关单申报文件拖到此处，或
           <em>点击上传</em>
         </div>
 
@@ -343,7 +347,7 @@ export default {
     },
     /** 导入按钮操作 */
     handleImport() {
-      this.upload.title = "申报车辆导入";
+      this.upload.title = "通关单申报导入";
       this.upload.open = true;
       this.reset();
     },
