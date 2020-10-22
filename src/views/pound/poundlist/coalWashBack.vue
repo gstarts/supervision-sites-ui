@@ -488,8 +488,16 @@
       this.rulesAll = this.rules
     },
     methods: {
+      //2020.10.22 修改 虎神
       handleClick(tab, event) {
-        this.getListE();
+        if("进场记录"==tab.label){
+          console.log("进场记录")
+          this.getListI();
+        }
+        if("已完成"==tab.label){
+          console.log("已完成")
+          this.getListE();
+        }
       },
       //车号Change
       CarNumberChange(event) {
