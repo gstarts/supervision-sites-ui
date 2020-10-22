@@ -54,7 +54,11 @@
 <!--          @click="handleExport"-->
 <!--          v-hasPermi="['place:clearance:export']"-->
 <!--        >导入</el-button>-->
-        <el-button @click="handleImport"
+        <el-button
+          size="mini"
+          icon="el-icon-download"
+          type="info"
+          @click="handleImport"
         >导入
         </el-button>
       </el-col>
@@ -62,7 +66,6 @@
 
     <el-table v-loading="loading" :data="clearanceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" type="index" />
       <el-table-column label="通关单号" align="center" prop="customsNo" />
       <el-table-column label="运输批次号" align="center" prop="batchNo" />
       <el-table-column label="提煤单号" align="center" prop="coalBillNo" />
@@ -122,12 +125,10 @@
         :on-success="handleFileSuccess"
         :auto-upload="false"
         drag
-
       >
-<!--        :data="form.ccCorporation"-->
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">
-          将申报车辆文件拖到此处，或
+          将通关单申报文件拖到此处，或
           <em>点击上传</em>
         </div>
 
@@ -176,13 +177,10 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
-
       // 弹出层标题
       title: "",
-
       // 是否显示弹出层
       open: false,
-
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -343,7 +341,7 @@ export default {
     },
     /** 导入按钮操作 */
     handleImport() {
-      this.upload.title = "申报车辆导入";
+      this.upload.title = "通关单申报导入";
       this.upload.open = true;
       this.reset();
     },
@@ -361,9 +359,6 @@ export default {
     },
     // 提交上传文件
     submitFileForm() {
-      // this.form.coalBillNo = parseInt((this.form.dvCorporation));
-      // alert(this.form.ccCorporation)
-      //     console.log(typeof(this.form.dvCorporation));
       if (this.form.coalBillNo) {
         this.$refs.upload.submit();
       } else {

@@ -17,7 +17,7 @@ export function getImport(id) {
   })
 }
 
-// 新增导入文件记录 
+// 新增导入文件记录
 export function addImport(data) {
   return request({
     url: '/place/import',
@@ -26,7 +26,7 @@ export function addImport(data) {
   })
 }
 
-// 修改导入文件记录 
+// 修改导入文件记录
 export function updateImport(data) {
   return request({
     url: '/place/import',
@@ -35,10 +35,17 @@ export function updateImport(data) {
   })
 }
 
-// 删除导入文件记录 
+// 删除导入文件记录
 export function delImport(id) {
   return request({
     url: '/place/import/' + id,
     method: 'delete'
+  })
+}
+
+export function genNotice(id) {
+  return request({
+    url: '/place/import/genNotice/'+id,
+    method: 'post'
   })
 }

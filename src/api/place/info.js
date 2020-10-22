@@ -50,7 +50,7 @@ export function getNoticeByVehicle(placeId, direction, vehicleNo) {
 		'vehicleNo': vehicleNo,
 	}
 	return request({
-		url: '/place/pound/getNoticeInfo',
+		url: '/place/notice/getNoticeInfo',
 		method: 'post',
 		data: data
 	})
