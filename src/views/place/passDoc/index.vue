@@ -170,7 +170,7 @@
 
     <el-table v-loading="loading" :data="passDocList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
+      <!-- <el-table-column label="ID" align="center" prop="id" /> -->
       <el-table-column label="放行单号" align="center" prop="passNo" />
       <el-table-column label="寄舱客户" align="center" prop="checkConsumer" />
       <!-- <el-table-column label="收货单位" align="center" prop="receiveName" /> -->
