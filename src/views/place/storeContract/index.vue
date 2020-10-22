@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="场所" prop="placeId">
         <el-select @change="handleQuery"
-          v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+                   v-model="queryParams.placeId" placeholder="请选择场所" size="small">
           <el-option
             v-for="dept in depts"
             :key="dept.deptId"
@@ -172,12 +172,17 @@
       <af-table-column label="结算周期" align="center" prop="settlementPeriod"/>
       <af-table-column label="签订日期" align="center" prop="signDate" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.signDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+          <span>{{ parseTime(scope.row.signDate, '{y}-{m}-{d}') }}</span>
         </template>
       </af-table-column>
       <af-table-column label="生效日期" align="center" prop="startDate" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.startDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+          <span>{{ parseTime(scope.row.startDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </af-table-column>
+      <af-table-column label="状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <span>{{ scope.row.status === '1' ? '有效' : '无效' }}</span>
         </template>
       </af-table-column>
       <af-table-column label="备注" align="center" prop="remark"/>
@@ -334,7 +339,19 @@
           </el-col>
         </el-row>
         <el-row :gutter="10">
-          <el-col :span="12"></el-col>
+          <el-col :span="12">
+            <el-form-item label="状态" prop="status">
+              <el-select
+                v-model="form.status" placeholder="请选择状态" size="small">
+                <el-option
+                  v-for="dept in statusList"
+                  :key="dept.key"
+                  :label="dept.value"
+                  :value="dept.key"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="12"></el-col>
         </el-row>
         <el-row :gutter="10">
@@ -424,11 +441,15 @@ export default {
         storeIds: [
           {required: true, message: "散杂库位不能为空", trigger: "blur"}
         ],
+        status: [
+          {required: true, message: "状态不能为空", trigger: "change"}
+        ]
 
       },
       zoneCodeList: [],
       storeList: [],
-      idList: []
+      idList: [],
+      statusList: [{'key': '1', 'value': '有效'}, {'key': '0', 'value': '无效'}]
     };
   },
   created() {
@@ -471,7 +492,8 @@ export default {
         startDate: undefined,
         remark: undefined,
         zoneCode: undefined,
-        storeIds: undefined
+        storeIds: undefined,
+        status: undefined
       };
       this.resetForm("form");
     },
@@ -495,7 +517,8 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加仓储合同 "
+      this.title = "添加仓储合同"
+      this.form.status = '1'
       this.getStoreList()
     },
     /** 修改按钮操作 */
@@ -510,6 +533,12 @@ export default {
         this.form.storeIds = response.data.params.contract.map(item => item.storeId)
         this.open = true;
         this.title = "修改仓储合同 ";
+        let contractList = response.data.params.contract
+        for(let store of contractList){
+          if( !this.storeList.find(item => item.id === store.storeId)){
+              this.storeList.push({"id":store.storeId,'storeCode':store.storeCode})
+          }
+        }
       });
       //this.getZoneCode()
     },
@@ -582,10 +611,15 @@ export default {
       //区域类型变化时，获取对应场所的id，区域类型，返回对应区域内的区域编号
     },
     getStoreList() {
-      let params = {'placeId': this.form.placeId, 'zoneType': '2'}
+      this.storeList = []
+      let params = {'placeId': this.form.placeId, 'zoneType': '2', 'storeState': '0'}//取空闲
       listStore(params).then(response => {
         if (response.code === 200) {
-          this.storeList = response.rows
+          if(this.storeList.length === 0){ //如果没有值，
+            this.storeList = response.rows
+          }else {
+            this.storeList.concat(response.rows)
+          }
         } else {
           this.$message.warning("此区域下无库位")
         }
