@@ -229,8 +229,8 @@
 <!--      <el-table-column label="结算合同ID" align="center" prop="settlementContractId"/>-->
 <!--      <el-table-column label="结算客户" align="center" prop="settlementCustomer"/>-->
       <el-table-column label="业务编号" align="center" prop="businessNo"/>
-      <el-table-column label=" 发货单位" align="center" prop="sendName"/>
-      <el-table-column label="收货单位" align="center" prop="receiveName"/>
+<!--      <el-table-column label=" 发货单位" align="center" prop="sendName"/>-->
+<!--      <el-table-column label="收货单位" align="center" prop="receiveName"/>-->
 <!--      <el-table-column label="备注" align="center" prop="remark"/>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
@@ -349,7 +349,7 @@
               <el-select v-model="form.storeContractId" placeholder="请输入寄舱合同ID" @change="change">
               <el-option
                 v-for="type in contractList"
-                :key="type.contractNo"
+                :key="type.id"
                 :label="type.contractNo"
                 :value="type.contractNo"
               />
