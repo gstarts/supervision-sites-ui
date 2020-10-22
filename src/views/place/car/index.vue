@@ -1,15 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <!--      <el-form-item label="提煤单号" prop="coalBillNo">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.coalBillNo"-->
-      <!--          placeholder="请输入提煤单号"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
       <el-form-item label="车牌号" prop="plateNo">
         <el-input
           v-model="queryParams.plateNo"
@@ -19,62 +10,11 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!--      <el-form-item label="净重" prop="netWeight">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.netWeight"-->
-      <!--          placeholder="请输入净重"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="载重" prop="load">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.load"-->
-      <!--          placeholder="请输入载重"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="运输次数" prop="transportNum">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.transportNum"-->
-      <!--          placeholder="请输入运输次数"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="分配状态 1、可分配，2、不可分配" prop="status">-->
-      <!--        <el-select v-model="queryParams.status" placeholder="请选择分配状态 1、可分配，2、不可分配" clearable size="small">-->
-      <!--          <el-option label="请选择字典生成" value="" />-->
-      <!--        </el-select>-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="分配次数" prop="allocationNum">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.allocationNum"-->
-      <!--          placeholder="请输入分配次数"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="乐观锁" prop="revision">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.revision"-->
-      <!--          placeholder="请输入乐观锁"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -109,48 +49,32 @@
         </el-button>
       </el-col>
       <el-col :span="1.5">
+        <!--        <el-button-->
+        <!--          type="warning"-->
+        <!--          icon="el-icon-download"-->
+        <!--          size="mini"-->
+        <!--          @click="handleExport"-->
+        <!--          v-hasPermi="['place:car:export']"-->
+        <!--        >导出-->
+        <!--        </el-button>-->
         <el-button
-          type="warning"
           icon="el-icon-download"
           size="mini"
-          @click="handleExport"
-          v-hasPermi="['place:car:export']"
-        >导出
+          type="info"
+          @click="handleImport">
+          导入
         </el-button>
       </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="carList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <!--      <el-table-column label="ID" align="center" prop="id" />-->
-
       <el-table-column label="车牌号" align="center" prop="plateNo"/>
       <el-table-column label="净重" align="center" prop="netWeight"/>
       <el-table-column label="载重" align="center" prop="load"/>
       <el-table-column label="运输次数" align="center" prop="transportNum"/>
-      <!--      <el-table-column label="分配状态 1、可分配，2、不可分配" align="center" prop="status" />-->
       <el-table-column label="分配次数" align="center" prop="allocationNum"/>
       <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>
-      <!--      <el-table-column label="备注" align="center" prop="remark" />-->
-      <!--      <el-table-column label="乐观锁" align="center" prop="revision" />-->
-      <!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
-      <!--        <template slot-scope="scope">-->
-      <!--          <el-button-->
-      <!--            size="mini"-->
-      <!--            type="text"-->
-      <!--            icon="el-icon-edit"-->
-      <!--            @click="handleUpdate(scope.row)"-->
-      <!--            v-hasPermi="['place:car:edit']"-->
-      <!--          >修改</el-button>-->
-      <!--          <el-button-->
-      <!--            size="mini"-->
-      <!--            type="text"-->
-      <!--            icon="el-icon-delete"-->
-      <!--            @click="handleDelete(scope.row)"-->
-      <!--            v-hasPermi="['place:car:remove']"-->
-      <!--          >删除</el-button>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -186,54 +110,61 @@
         <el-form-item label="运输次数" prop="transportNum">
           <el-input v-model="form.transportNum" placeholder="请输入运输次数"/>
         </el-form-item>
-        <!--        <el-form-item label="分配状态 1、可分配，2、不可分配">-->
-        <!--          <el-radio-group v-model="form.status">-->
-        <!--            <el-radio label="1">请选择字典生成</el-radio>-->
-        <!--          </el-radio-group>-->
-        <!--        </el-form-item>-->
-        <!--        <el-form-item label="分配次数" prop="allocationNum">-->
-        <!--          <el-input v-model="form.allocationNum" placeholder="请输入分配次数" />-->
-        <!--        </el-form-item>-->
-        <!--        <el-form-item label="创建人" prop="createBy">-->
-        <!--          <el-input v-model="form.createBy" placeholder="请输入创建人" />-->
-        <!--        </el-form-item>-->
-        <!--        <el-form-item label="创建时间" prop="createTime">-->
-        <!--          <el-date-picker clearable size="small" style="width: 200px"-->
-        <!--            v-model="form.createTime"-->
-        <!--            type="date"-->
-        <!--            value-format="yyyy-MM-dd"-->
-        <!--            placeholder="选择创建时间">-->
-        <!--          </el-date-picker>-->
-        <!--        </el-form-item>-->
-        <!--        <el-form-item label="更新人" prop="updateBy">-->
-        <!--          <el-input v-model="form.updateBy" placeholder="请输入更新人" />-->
-        <!--        </el-form-item>-->
-        <!--        <el-form-item label="更新时间" prop="updateTime">-->
-        <!--          <el-date-picker clearable size="small" style="width: 200px"-->
-        <!--            v-model="form.updateTime"-->
-        <!--            type="date"-->
-        <!--            value-format="yyyy-MM-dd"-->
-        <!--            placeholder="选择更新时间">-->
-        <!--          </el-date-picker>-->
-        <!--        </el-form-item>-->
-        <!--        <el-form-item label="备注" prop="remark">-->
-        <!--          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />-->
-        <!--        </el-form-item>-->
-        <!--        <el-form-item label="乐观锁" prop="revision">-->
-        <!--          <el-input v-model="form.revision" placeholder="请输入乐观锁" />-->
-        <!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <!--  货车导入弹出框  -->
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px">
+      <el-upload
+        ref="upload"
+        :limit="1"
+        accept=".xlsx, .xls"
+        :headers="upload.headers"
+        :action="upload.url+'?coalBillNo=' +form.coalBillNo+''"
+        :disabled="upload.isUploading"
+        :on-progress="handleFileUploadProgress"
+        :on-success="handleFileSuccess"
+        :auto-upload="false"
+        drag
+      >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">
+          将申报车辆文件拖到此处，或
+          <em>点击上传</em>
+        </div>
+        <div class="el-upload__tip" slot="tip">
+          <el-link type="info" style="font-size:12px" @click="importTemplate">下载模板</el-link>
+        </div>
+        <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
+      </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitFileForm">确 定</el-button>
+        <el-button @click="upload.open = false">取 消</el-button>
+      </div>
+      <el-form ref="form" :model="form">
+        <el-form-item label="提煤单号" prop="coalBillNo">
+          <el-select v-model="form.coalBillNo" placeholder="请选择提煤单号">
+            <el-option
+              v-for="item in BigList"
+              :key="item.coalBillNo"
+              :label="item.coalBillNo"
+              :value="item.coalBillNo"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import { listCar, getCar, delCar, addCar, updateCar } from '@/api/place/car'
 import { selectCoalBillNo } from '@/api/place/big'
+import { getToken } from '@/utils/auth'
 
 export default {
   name: 'Car',
@@ -273,7 +204,22 @@ export default {
       // 表单校验
       rules: {},
       //提煤单号
-      BigList: []
+      BigList: [],
+      //文件导入参数
+      upload: {
+        // 是否显示弹出层（用户导入）
+        open: false,
+        // 弹出层标题（用户导入）
+        title: '',
+        // 是否禁用上传
+        isUploading: false,
+        // 是否更新已经存在的用户数据
+        updateSupport: 0,
+        // 设置上传的请求头部
+        headers: { Authorization: 'Bearer ' + getToken() },
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + '/place/car/importData'
+      }
     }
   },
   created() {
@@ -395,7 +341,38 @@ export default {
       this.download('place/car/export', {
         ...this.queryParams
       }, `place_car.xlsx`)
-    }
+    },
+    /** 导入按钮操作 */
+    handleImport() {
+      this.upload.title = '申报车辆导入'
+      this.upload.open = true
+      this.reset()
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.upload.open = false
+      this.upload.isUploading = false
+      this.$refs.upload.clearFiles()
+      this.$alert(response.msg, '导入结果', { dangerouslyUseHTMLString: true })
+      this.getList()
+    },
+    // 提交上传文件
+    submitFileForm() {
+      if (this.form.coalBillNo) {
+        this.$refs.upload.submit()
+      } else {
+        this.$alert('请选择提煤单号')
+      }
+    },
+    /** 下载模板操作 */
+    //货运车辆
+    importTemplate() {
+      window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=file&objectName=manifest/货运车辆导入模板.xlsx'
+    },
   }
 }
 </script>

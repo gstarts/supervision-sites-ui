@@ -153,7 +153,7 @@
             type="text"
             icon="el-icon-plus"
             size="mini"
-            @click="handleImport"
+            @click="handleImport(scope.row)"
             v-hasPermi="['place:big:add']"
             >导入
           </el-button>
@@ -275,60 +275,51 @@
     </el-dialog>
 
     <!-- 添加或修改导入文件记录 对话框 -->
-    <el-dialog
-      :title="title"
-      :visible.sync="openImport"
-      append-to-body
-      width="500px"
-    >
-      <el-form ref="form" :model="form" :rules="rules" label-width="50px">
-        <el-form-item label="类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择类型">
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px">
+      <el-upload
+        ref="upload"
+        :limit="1"
+        accept=".xlsx, .xls"
+        :headers="upload.headers"
+        :data="form"
+        :action="upload.url"
+        :disabled="upload.isUploading"
+        :on-progress="handleFileUploadProgress"
+        :on-success="handleFileSuccess"
+        :auto-upload="false"
+        drag
+      >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">
+          将通关单申报文件拖到此处，或
+          <em>点击上传</em>
+        </div>
+
+        <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
+      </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitFileForm">确 定</el-button>
+        <el-button @click="upload.open = false">取 消</el-button>
+      </div>
+      <el-form ref="form" :model="form">
+        <el-form-item label="数据类型" prop="type">
+          <el-select v-model="form.type" placeholder="请选择提煤单号">
             <el-option
               v-for="item in typeList"
               :key="item.value"
               :label="item.label"
-              :value="item.value"
-            />
+              :value="item.value">
+            </el-option>
           </el-select>
         </el-form-item>
-        <el-row :gutter="10" style="text-align: center">
-          <el-upload
-            class="upload-demo"
-            ref="upload"
-            :limit="1"
-            accept=".xlsx,.xls,.xlsm"
-            drag
-            :action="uploadAction"
-            :headers="headers"
-            :on-progress="uploadProcess"
-            :on-success="uploadSuccess"
-            :on-error="uploadError"
-            :before-upload="uploadBefore"
-            :disabled="uploading"
-            :file-list="fileList"
-            :auto-upload="false"
-          >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">
-              将文件拖到此处，或<em>点击选择文件</em>
-            </div>
-            <div class="el-upload__tip" slot="tip">
-              只能上传xls/xlsx/xlsm文件
-            </div>
-          </el-upload>
-        </el-row>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancelImport">取 消</el-button>
-      </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { listBig, getBig, delBig, addBig, updateBig } from "@/api/place/big";
+import { getToken } from '@/utils/auth'
 
 export default {
   name: "Big",
@@ -378,6 +369,21 @@ export default {
       uploading: false,
       fileList: [],
       headers: {},
+      // 文件导入参数
+      upload: {
+        // 是否显示弹出层（用户导入）
+        open: false,
+        // 弹出层标题（用户导入）
+        title: "",
+        // 是否禁用上传
+        isUploading: false,
+        // 是否更新已经存在的用户数据
+        updateSupport: 0,
+        // 设置上传的请求头部
+        headers: { Authorization: "Bearer " + getToken() },
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "/place/big/importData"
+      },
     };
   },
   created() {
@@ -445,10 +451,13 @@ export default {
       this.title = "添加大提煤单 大提煤单";
     },
     /** 导入按钮操作 */
-    handleImport() {
-      this.reset();
-      this.openImport = true;
-      this.title = "导入模板文件";
+    handleImport(row) {
+      debugger
+      console.log(row)
+      // 当前行的 提煤单号
+      this.form.coalBillNo = row.coalBillNo;
+      this.upload.open = true;
+      this.upload.title = "导入数据文件";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -516,6 +525,14 @@ export default {
           this.msgSuccess("删除成功");
         })
         .catch(function () {});
+    },
+    /** 提交上传文件 */
+    submitFileForm() {
+      if (this.form.type) {
+        this.$refs.upload.submit();
+      } else {
+        this.$alert("请选择上传文件类型");
+      }
     },
     /** 导出按钮操作 */
     handleExport() {
