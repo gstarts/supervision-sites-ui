@@ -350,7 +350,7 @@
               <el-select v-model="form.storeContractId" placeholder="请输入寄舱合同ID" @change="change">
               <el-option
                 v-for="type in contractList"
-                :key="type.contractNo"
+                :key="type.id"
                 :label="type.contractNo"
                 :value="type.contractNo"
               />
