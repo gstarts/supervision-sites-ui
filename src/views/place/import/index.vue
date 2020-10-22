@@ -248,7 +248,7 @@
                      icon="el-icon-edit"
                      :loading="loading"
                      @click="handleGenNotice(scope.row)"
-                     v-hasPermi="['tax:import:genNotice']"
+                     v-hasPermi="['place:import:genNotice']"
           >生成入库通知单
           </el-button>
 
@@ -258,7 +258,7 @@
                      icon="el-icon-edit"
                      :loading="noticeGening"
                      @click="handleGenNotice(scope.row)"
-                     v-hasPermi="['tax:import:genNotice']"
+                     v-hasPermi="['place:import:genNotice']"
           >生成出库派车单
           </el-button>-->
 
@@ -363,7 +363,7 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="寄舱客户" prop="storeCustomer">
-              <el-input v-model="form.storeCustomer" placeholder="请选择寄舱客户"/>
+              <el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户"/>
               <!--              <el-select v-model="form.storeCustomer" placeholder="请选择寄舱客户">-->
               <!--                <el-option-->
               <!--                  v-for="type in contractList"-->
