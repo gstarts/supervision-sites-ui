@@ -9,6 +9,15 @@ export function listHead(query) {
   })
 }
 
+// 查询【请填写功能名称】列表
+export function detailsHead(query) {
+  return request({
+    url: '/place/head/details',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询【请填写功能名称】详细
 export function getHead(id) {
   return request({

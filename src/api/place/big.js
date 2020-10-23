@@ -9,6 +9,15 @@ export function listBig(query) {
   })
 }
 
+// 查询大提煤单详情页 大提煤单列表
+export function detailsBig(query) {
+  return request({
+    url: '/place/big/details',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询大提煤单 大提煤单详细
 export function getBig(id) {
   return request({
