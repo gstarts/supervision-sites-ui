@@ -75,10 +75,12 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
+        >搜索
+        </el-button
         >
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
+        >重置
+        </el-button
         >
       </el-form-item>
     </el-form>
@@ -91,7 +93,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['place:big:add']"
-          >新增</el-button
+        >新增
+        </el-button
         >
       </el-col>
       <el-col :span="1.5">
@@ -102,7 +105,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['place:big:edit']"
-          >修改</el-button
+        >修改
+        </el-button
         >
       </el-col>
       <el-col :span="1.5">
@@ -113,7 +117,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['place:big:remove']"
-          >删除</el-button
+        >删除
+        </el-button
         >
       </el-col>
       <!-- <el-col :span="1.5">
@@ -132,14 +137,14 @@
       :data="bigList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center"/>
       <!-- <el-table-column label="主键" align="center" prop="id" /> -->
-      <el-table-column label="提煤单号" align="center" prop="coalBillNo" />
-      <el-table-column label="合同编号" align="center" prop="contractNo" />
-      <el-table-column label="提煤重量" align="center" prop="coalWeight" />
-      <el-table-column label="货物名称" align="center" prop="goodsName" />
-      <el-table-column label="收货单位" align="center" prop="receiveName" />
-      <el-table-column label="客户名称" align="center" prop="customerName" />
+      <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>
+      <el-table-column label="合同编号" align="center" prop="contractNo"/>
+      <el-table-column label="提煤重量" align="center" prop="coalWeight"/>
+      <el-table-column label="货物名称" align="center" prop="goodsName"/>
+      <el-table-column label="收货单位" align="center" prop="receiveName"/>
+      <el-table-column label="客户名称" align="center" prop="customerName"/>
       <!-- <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="乐观锁" align="center" prop="revision" /> -->
       <el-table-column
@@ -163,7 +168,7 @@
             size="mini"
             @click="handleImport(scope.row)"
             v-hasPermi="['place:big:add']"
-            >导入
+          >导入
           </el-button>
           <el-button
             size="mini"
@@ -171,7 +176,8 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['place:big:edit']"
-            >修改</el-button
+          >修改
+          </el-button
           >
           <el-button
             size="mini"
@@ -179,7 +185,8 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['place:big:remove']"
-            >删除</el-button
+          >删除
+          </el-button
           >
         </template>
       </el-table-column>
@@ -225,7 +232,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="货物名称" prop="goodsName">
-              <el-input v-model="form.goodsName" placeholder="请输入货物名称" />
+              <el-input v-model="form.goodsName" placeholder="请输入货物名称"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -292,7 +299,6 @@
         :data="form"
         :action="upload.url"
         :disabled="upload.isUploading"
-        :on-progress="handleFileUploadProgress"
         :on-success="handleFileSuccess"
         :auto-upload="false"
         drag
@@ -326,11 +332,11 @@
 </template>
 
 <script>
-import { listBig, getBig, delBig, addBig, updateBig } from "@/api/place/big";
+import { listBig, getBig, delBig, addBig, updateBig } from '@/api/place/big'
 import { getToken } from '@/utils/auth'
 
 export default {
-  name: "Big",
+  name: 'Big',
   data() {
     return {
       // 遮罩层
@@ -347,11 +353,11 @@ export default {
       bigList: [],
       // 通关单类型与车辆信息
       typeList: [
-        { value: "0", label: "通关单信息" },
-        { value: "1", label: "车辆信息" },
+        { value: '0', label: '通关单信息' },
+        { value: '1', label: '车辆信息' }
       ],
       // 弹出层标题
-      title: "",
+      title: '',
       // 是否显示弹出层
       open: false,
       // 是否显示弹出层
@@ -366,13 +372,13 @@ export default {
         goodsName: undefined,
         receiveName: undefined,
         customerName: undefined,
-        revision: undefined,
+        revision: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {},
-      uploadAction: process.env.VUE_APP_BASE_API + "/place/big",
+      uploadAction: process.env.VUE_APP_BASE_API + '/place/big',
       uploadData: {},
       uploading: false,
       fileList: [],
@@ -382,19 +388,20 @@ export default {
         // 是否显示弹出层（用户导入）
         open: false,
         // 弹出层标题（用户导入）
-        title: "",
+        title: '',
         // 是否禁用上传
         isUploading: false,
         // 是否更新已经存在的用户数据
         updateSupport: 0,
         // 设置上传的请求头部
-        headers: { Authorization: "Bearer " + getToken() },
+        headers: { Authorization: 'Bearer ' + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/place/big/importData"
-      },
-    };
+        url: process.env.VUE_APP_BASE_API + '/place/big/importData'
+      }
+    }
   },
   created() {
+<<<<<<< HEAD
     this.getList();
     const { tableId } = this.$route.query;
     if (tableId) {
@@ -406,26 +413,29 @@ export default {
         this.queryParams.contractNo = undefined;
       });      
     }
+=======
+    this.getList()
+>>>>>>> 076ffc7ebe42e88f94cd91663acce27db04caa20
   },
   methods: {
     /** 查询大提煤单 大提煤单列表 */
     getList() {
-      this.loading = true;
+      this.loading = true
       listBig(this.queryParams).then((response) => {
-        this.bigList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+        this.bigList = response.rows
+        this.total = response.total
+        this.loading = false
+      })
     },
     // 导入取消按钮
     cancelImport() {
-      this.openImport = false;
-      this.reset();
+      this.openImport = false
+      this.reset()
     },
     // 取消按钮
     cancel() {
-      this.open = false;
-      this.reset();
+      this.open = false
+      this.reset()
     },
     // 表单重置
     reset() {
@@ -442,31 +452,31 @@ export default {
         updateBy: undefined,
         updateTime: undefined,
         remark: undefined,
-        revision: undefined,
-      };
-      this.resetForm("form");
+        revision: undefined
+      }
+      this.resetForm('form')
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.id);
-      this.single = selection.length != 1;
-      this.multiple = !selection.length;
+      this.ids = selection.map((item) => item.id)
+      this.single = selection.length != 1
+      this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加大提煤单 大提煤单";
+      this.reset()
+      this.open = true
+      this.title = '添加大提煤单 大提煤单'
     },
     /**详情按钮 */
     detail(row) {
@@ -476,98 +486,107 @@ export default {
     },
     /** 导入按钮操作 */
     handleImport(row) {
-      debugger
-      console.log(row)
       // 当前行的 提煤单号
-      this.form.coalBillNo = row.coalBillNo;
-      this.upload.open = true;
-      this.upload.title = "导入数据文件";
+      this.form.coalBillNo = row.coalBillNo
+      this.upload.open = true
+      this.upload.title = '导入数据文件'
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids;
+      this.reset()
+      const id = row.id || this.ids
       getBig(id).then((response) => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改大提煤单 大提煤单";
-      });
+        this.form = response.data
+        this.open = true
+        this.title = '修改大提煤单 大提煤单'
+      })
     },
     uploadProcess() {
-      this.uploading = true;
+      this.uploading = true
     },
     uploadError(err) {
-      this.uploading = false;
-      console.log(err);
-      this.$message.error("文件上传失败");
+      this.uploading = false
+      this.$message.error('文件上传失败')
     },
 
-    uploadSuccess(response) {},
+    uploadSuccess(response) {
+    },
 
-    uploadBefore(file) {},
+    uploadBefore(file) {
+    },
     /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate((valid) => {
+    submitForm: function() {
+      this.$refs['form'].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
             updateBig(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
+                this.msgSuccess('修改成功')
+                this.open = false
+                this.getList()
               }
-            });
+            })
           } else {
             addBig(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
+                this.msgSuccess('新增成功')
+                this.open = false
+                this.getList()
               }
-            });
+            })
           }
         }
-      });
+      })
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const ids = row.id || this.ids;
+      const ids = row.id || this.ids
       this.$confirm(
         '是否确认删除大提煤单 大提煤单编号为"' + ids + '"的数据项?',
-        "警告",
+        '警告',
         {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         }
       )
-        .then(function () {
-          return delBig(ids);
+        .then(function() {
+          return delBig(ids)
         })
         .then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
+          this.getList()
+          this.msgSuccess('删除成功')
         })
-        .catch(function () {});
+        .catch(function() {
+        })
     },
     /** 提交上传文件 */
     submitFileForm() {
       if (this.form.type) {
-        this.$refs.upload.submit();
+        this.$refs.upload.submit()
+        this.reset()
       } else {
-        this.$alert("请选择上传文件类型");
+        this.$alert('请选择上传文件类型')
       }
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.upload.open = false;
+      this.upload.isUploading = false;
+      this.$refs.upload.clearFiles();
+      this.$alert(response.msg, "导入结果", { dangerouslyUseHTMLString: true });
+      this.getList();
     },
     /** 导出按钮操作 */
     handleExport() {
       this.download(
-        "place/big/export",
+        'place/big/export',
         {
-          ...this.queryParams,
+          ...this.queryParams
         },
         `place_big.xlsx`
-      );
-    },
-  },
-};
+      )
+    }
+  }
+}
 </script>
