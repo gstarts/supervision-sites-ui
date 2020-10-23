@@ -58,3 +58,12 @@ export function getStoreUsable(placeId) {
 		method: 'post'
 	})
 }
+
+// 查询堆场库存信息
+export function getStoreByIds(ids) {
+  return request({
+    url: '/place/store/getByIds?ids='+ids,
+    method: 'post',
+  })
+}
+
