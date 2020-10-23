@@ -506,6 +506,17 @@ export default {
   },
   created() {
     this.getList();
+    const { tableId } = this.$route.query;
+    if (tableId) {
+      //将表头id 保存
+      this.queryParams.contractNo = tableId;
+      // 获取表详细信息
+      listBig(this.queryParams).then((response) => {
+        this.bigList = response.rows;
+        this.total = response.total;
+        this.queryParams.contractNo = undefined;
+      });      
+    }
   },
   methods: {
     /** 查询大提煤单 大提煤单列表 */

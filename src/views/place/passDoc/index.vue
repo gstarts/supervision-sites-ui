@@ -194,6 +194,7 @@
             type="text"
             icon="el-icon-detail"
             @click="detail(scope.row)"
+            v-hasPermi="['place:passDoc:query']"
           >详情
           </el-button>
           <el-button
@@ -446,7 +447,7 @@ export default {
     contractInfo() {
       listStoreContract(this.queryParams).then((response) => {
         this.contractOptions = response.rows
-        console.log(this.contractOptions)
+        // console.log(this.contractOptions)
       })
     },
     // 放行状态翻译
@@ -562,11 +563,9 @@ export default {
     },
     /**详情按钮 */
     detail(row) {
-      // this.reset();
-      return this.$message('功能正在完善中...')
-      // const id = row.id || this.ids
-      // const data = this.router.find(el => el.messageType === row.messageType)
-      // this.$router.push({ path: '/singlewindow' + data.path })
+      this.reset();
+      const id = row.contractNo;
+      this.$router.push({ path: "/place/big", query: { tableId: id } });
     },
     /** 点击合同赋值操作 */
     change(event) {

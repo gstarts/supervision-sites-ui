@@ -150,6 +150,14 @@
       >
         <template slot-scope="scope">
           <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-detail"
+            @click="detail(scope.row)"
+            v-hasPermi="['place:big:query']"
+          >详情
+          </el-button>
+          <el-button
             type="text"
             icon="el-icon-plus"
             size="mini"
@@ -388,6 +396,16 @@ export default {
   },
   created() {
     this.getList();
+    const { tableId } = this.$route.query;
+    if (tableId) {
+      this.queryParams.contractNo = tableId;
+      // 获取表详细信息
+      listBig(this.queryParams).then((response) => {
+        this.bigList = response.rows;
+        this.total = response.total;
+        this.queryParams.contractNo = undefined;
+      });      
+    }
   },
   methods: {
     /** 查询大提煤单 大提煤单列表 */
@@ -449,6 +467,12 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加大提煤单 大提煤单";
+    },
+    /**详情按钮 */
+    detail(row) {
+      this.reset();
+      const id = row.contractNo;
+      this.$router.push({ path: "/place/big/Selectbig", query: { tableId: id } });
     },
     /** 导入按钮操作 */
     handleImport(row) {
