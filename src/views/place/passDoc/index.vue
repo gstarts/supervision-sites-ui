@@ -405,27 +405,11 @@ export default {
     },
     // 场所名称翻译
     corporationFormat(row, column) {
-<<<<<<< HEAD
-      let ccCorporationName="";
-       this.companyNameOptions.forEach(element => {
-           if(element.id==row.placeId){
-            ccCorporationName = element.eName
-           }
-       });
-      return ccCorporationName;
-    },
-    // 合同信息列表
-    contractInfo() {
-      listStoreContract(this.queryParams).then((response) => {
-        this.contractOptions = response.rows
-        // console.log(this.contractOptions)
-=======
       let ccCorporationName = ''
       this.depts.forEach(element => {
         if (element.deptId == row.placeId) {
           ccCorporationName = element.deptName
         }
->>>>>>> 076ffc7ebe42e88f94cd91663acce27db04caa20
       })
       return ccCorporationName
     },

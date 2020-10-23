@@ -401,7 +401,6 @@ export default {
     }
   },
   created() {
-<<<<<<< HEAD
     this.getList();
     const { tableId } = this.$route.query;
     if (tableId) {
@@ -413,9 +412,6 @@ export default {
         this.queryParams.contractNo = undefined;
       });      
     }
-=======
-    this.getList()
->>>>>>> 076ffc7ebe42e88f94cd91663acce27db04caa20
   },
   methods: {
     /** 查询大提煤单 大提煤单列表 */
