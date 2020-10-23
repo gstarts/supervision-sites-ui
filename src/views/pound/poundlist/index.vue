@@ -672,8 +672,18 @@
 								if (response.code === 200) {
 									this.msgSuccess("出场成功");
                   this.getListE();
+                  let params = {
+                    'placeId':this.queryParams.stationId,
+                    'direction':1,
+                    'noticeNo':this.form.noticeNo,
+                    'storeCode':this.form.locationNumber,
+                    'netWeight':this.form.netWeight,
+                    'tareWeight': this.form.tare,
+                    'roughWeight': this.form.grossWeight
+                  }
 									if (this.PoundForm.stationViaType === '01') {//重进空出 生成入库单
-										genStoreDoc(this.queryParams.stationId, 1, this.form.noticeNo, this.form.locationNumber, 0).then(response => {
+                    params.direction = 1
+										genStoreDoc(params).then(response => {
 											if (response.code === 200) {
 												this.msgSuccess("入库成功");
 												//更新一下库位
@@ -684,7 +694,8 @@
 										})
 									}
 									if (this.PoundForm.stationViaType === '02') {//空进重出，生成出库单
-										genStoreDoc(this.queryParams.stationId, 0, this.form.noticeNo, this.form.locationNumber, this.form.netWeight).then(response => {
+									  params.direction = 0
+										genStoreDoc(params).then(response => {
 											if (response.code === 200) {
 												this.msgSuccess("出库成功");
 											} else {
