@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询堆场库存明细 列表
+// 查询库库位
 export function listStore(query) {
   return request({
     url: '/place/store/list',

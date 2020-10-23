@@ -63,7 +63,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            
+
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="收货单位" prop="receivingUnit">
@@ -81,7 +81,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            
+
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="货物名称" prop="goodsName">
@@ -94,7 +94,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            
+
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="规格型号" prop="specification">
@@ -107,7 +107,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            
+
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="备注" prop="remark">
@@ -497,7 +497,14 @@
 		},
 		methods: {
 			handleClick(tab, event) {
-				this.getListE()
+			  if("进场记录"==tab.label){
+			    console.log("进场记录")
+        this.getListI();
+			  }
+			  if("已完成"==tab.label){
+			      console.log("已完成")
+          this.getListE();
+        }
 			},
 			//车号Change
 			CarNumberChange(event) {
@@ -871,11 +878,11 @@
   .el-select {
     width: 100%;
   }
-  
+
   @page {
     margin: 8mm;
   }
-  
+
   .Pound {
     font-size: 60px;
     width: 100%;
@@ -884,13 +891,13 @@
     text-align: center;
     padding: 15px;
   }
-  
+
   #dayin {
     height: 500px;
     width: 1200px;
     /*border: 1px solid ;*/
   }
-  
+
   #nowDataStyle {
     width: 300px;
     height: 40px;
@@ -901,7 +908,7 @@
     font-size: 20px;
     /*border: 1px solid ;*/
   }
-  
+
   #nowTimeStyle {
     width: 300px;
     height: 40px;
@@ -911,12 +918,12 @@
     font-size: 20px;
     /*border: 1px solid ;*/
   }
-  
+
   #poundtotal {
     width: 300px;
     height: 10px;
   }
-  
+
   #areaLeftstyle {
     width: 600px;
     height: 40px;
@@ -937,7 +944,7 @@
   /*  margin-top: 10px;*/
 
   /*}*/
-  
+
   #areaRightStyle {
     height: 40px;
     width: 300px;
@@ -947,7 +954,7 @@
     padding-left: 0.8cm;
     /*border: 1px solid ;*/
   }
-  
+
   #remarkStyle {
     width: 800px;
     height: 40px;
@@ -958,7 +965,7 @@
     padding-left: 3.5cm;
     /*border: 1px solid ;*/
   }
-  
+
   /*.area-in-style {*/
   /*  padding-left: 3cm;*/
   /*  margin-top: 10px;*/
@@ -999,7 +1006,7 @@
     text-align: right;
   }
 
-  
+
   /*.poundTotal11 {*/
   /*  font-size: 20px;*/
   /*  padding-left: 280px;*/

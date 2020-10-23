@@ -106,7 +106,7 @@
       <el-table-column label="存放列数" align="center" prop="storageColumns"/>
       <el-table-column label="货位层数" align="center" prop="storeLevel"/>
       <el-table-column label="货位数量" align="center" prop="storeCount"/>
-      <el-table-column label="货位容量(KG)" align="center" prop="storeCapacity"/>
+      <!--<el-table-column label="货位容量(KG)" align="center" prop="storeCapacity"/>-->
       <el-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
@@ -221,12 +221,12 @@
         <el-row :gutter="10">
           <el-col :span="8">
             <el-form-item label="区域长" prop="zoneLength">
-              <el-input v-model="form.zoneLength" placeholder="请输入区域长"/>
+              <el-input v-model.number="form.zoneLength" type="number" placeholder="请输入区域长"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="区域宽" prop="zoneWidth">
-              <el-input v-model="form.zoneWidth" placeholder="请输入区域宽"/>
+              <el-input v-model.number="form.zoneWidth" type="number" placeholder="请输入区域宽"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -238,13 +238,13 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="货位数量" prop="storeCount">
-              <el-input v-model="form.storeCount" placeholder="请输入货位数量"/>
+              <el-input v-model.number="form.storeCount"  type="number" placeholder="请输入货位数量"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="货位容量(KG)" prop="storeCapacity">
+            <!--<el-form-item label="货位容量(KG)" prop="storeCapacity">
               <el-input v-model="form.storeCapacity" placeholder="请输入货位容量(KG)"/>
-            </el-form-item>
+            </el-form-item>-->
           </el-col>
         </el-row>
         <el-form-item label="备注" prop="remark">
@@ -303,52 +303,52 @@ export default {
       form: {},
       rules: {
         placeId: [
-          {required: true, message: "场所不能为空", trigger: "change",type:"number"}
+          {required: true, message: "场所不能为空", trigger: "change", type: "number"}
         ],
         zoneType: [
-          {required: true, message: "区域类型不能为空", trigger: "change",type:"string"}
+          {required: true, message: "区域类型不能为空", trigger: "change", type: "string"}
         ],
       },
       selBulk: false,
       // 表单校验
       rulesContainer: { //集装箱规则
         placeId: [
-          {type:"number",required: true, message: "场所不能为空", trigger: "change"}
+          {type: "number", required: true, message: "场所不能为空", trigger: "change"}
         ],
         zoneType: [
-          {type:"string",required: true, message: "区域类型不能为空", trigger: "change"}
+          {type: "string", required: true, message: "区域类型不能为空", trigger: "change"}
         ],
         zoneName: [
-          {type:"string",required: true, message: "区域名称不能为空", trigger: "change"}
+          {type: "string", required: true, message: "区域名称不能为空", trigger: "change"}
         ],
         zoneCode: [
-          {type:"number",required: true, message: "区域代码不能为空", trigger: "change"}
+          {type: "number", required: true, message: "区域代码不能为空", trigger: "change"}
         ],
         storageRows: [
-          {type:"number",min: 1,required: true, message: "存放行数不能为空", trigger: "blur"}
+          {type: "number", min: 1, required: true, message: "存放行数不能为空", trigger: "blur"}
         ],
         storageColumns: [
-          {type:"number",min: 1,required: true, message: "存放列数不能为空", trigger: "blur"}
+          {type: "number", min: 1, required: true, message: "存放列数不能为空", trigger: "blur"}
         ],
         storeLevel: [
-          {type:"number",min: 1,required: true, message: "货位层数不能为空", trigger: "blur"}
+          {type: "number", min: 1, required: true, message: "货位层数不能为空", trigger: "blur"}
         ],
       },
       rulesBulk: { //散杂货规则
         placeId: [
-          {type:"number",required: true, message: "场所不能为空", trigger: "blur"}
+          {type: "number", required: true, message: "场所不能为空", trigger: "blur"}
         ],
         zoneType: [
-          {type:"string",required: true, message: "区域类型不能为空", trigger: "change"}
+          {type: "string", required: true, message: "区域类型不能为空", trigger: "change"}
         ],
         zoneName: [
-          {type:"string",required: true, message: "区域名称不能为空", trigger: "blur"}
+          {type: "string", required: true, message: "区域名称不能为空", trigger: "blur"}
         ],
         zoneCode: [
-          {type:"number",required: true, message: "区域代码不能为空", trigger: "blur"}
+          {type: "number", required: true, message: "区域代码不能为空", trigger: "blur"}
         ],
         storageRows: [
-          {type:"number",min: 1,required: true, message: "存放行数不能为空", trigger: "blur"}
+          {type: "number", min: 1, required: true, message: "存放行数不能为空", trigger: "blur"}
         ],
       },
 
@@ -360,8 +360,8 @@ export default {
       deep: true,
       handler(val, oldValue) {
         //console.log('form:'+ val.zoneLength,val.zoneWidth)
-        val.zoneArea = val.zoneLength * val.zoneWidth
-        val.storeCount = val.storageRows * val.storageColumns * val.storeLevel
+        val.zoneArea = (val.zoneLength && val.zoneWidth) ? val.zoneLength * val.zoneWidth : ''
+        val.storeCount = (val.storageRows && val.storageColumns && val.storeLevel) ? val.storageRows * val.storageColumns * val.storeLevel : ''
         //console.log(val.storeCount)
       }
     }
