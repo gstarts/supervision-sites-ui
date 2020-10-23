@@ -259,7 +259,7 @@
 </template>
 
 <script>
-import { listHead, getHead, delHead, addHead, updateHead } from "@/api/place/head";
+import { listHead, detailsHead, getHead, delHead, addHead, updateHead } from "@/api/place/head";
 import { listBody, addBody, updateBody, delBody, getBody } from "@/api/place/body";
 
 export default {
@@ -292,6 +292,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 20,
+        coalBillNo: undefined,
         plateNo: undefined,
         IEFlag: undefined,
         rdCode: undefined,
@@ -304,19 +305,26 @@ export default {
       form: {},
       // 表体参数
       bodyForm: {},
-      // 假数据
-      bodyId:{
-        headId:undefined
-      },
       // 表单校验
       rules: {
       }
     };
   },
-  created() {
-    const bodyId = 2;
-    this.bodyId.headId = bodyId;
-    this.getList();
+  created() {    
+    const { tableId } = this.$route.query;
+    if (tableId) {
+      //将表头id 保存
+      this.queryParams.id = tableId;
+      // 获取表详细信息
+      this.loading = true;
+      detailsHead(this.queryParams).then((response) => {
+        this.headList = response.data.body;
+        this.form = response.data.head;
+        this.loading = false;
+      });      
+    }else{
+      this.getList();
+    }
     this.getDicts('station_IE_flag').then(response => {
       this.importExitOptions = response.data
     }),
@@ -326,12 +334,13 @@ export default {
     this.getDicts('station_declear_status').then(response => {
       this.declearStatusOptions = response.data
     })
+    
   },
   methods: {
     /** 查询【请填写功能名称】列表 */
     getList() {
       this.loading = true;
-      listBody(this.bodyId).then(response => {
+      listBody(this.queryParams).then(response => {
         this.headList = response.rows;
         this.total = response.total;
         this.loading = false;

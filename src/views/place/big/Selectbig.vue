@@ -268,13 +268,16 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center"/>
-      <!-- <el-table-column label="主键" align="center" prop="id" /> -->
+      <!-- <el-table-column label="主键" align="center" prop="id" /> 
       <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>
       <el-table-column label="合同编号" align="center" prop="contractNo"/>
       <el-table-column label="提煤重量" align="center" prop="coalWeight"/>
       <el-table-column label="货物名称" align="center" prop="goodsName"/>
-      <el-table-column label="收货单位" align="center" prop="receiveName"/>
-      <el-table-column label="客户名称" align="center" prop="customerName"/>
+      <el-table-column label="收货单位" align="center" prop="receiveName"/>-->
+      <el-table-column label="车牌号" align="center" prop="plateNo"/>
+      <el-table-column label="回执状态" align="center" prop="feedback"/>
+      <el-table-column label="回执说明" align="center" prop="feedbackMsg"/>
+      <el-table-column label="唯一编号" align="center" prop="sureId"/>
       <!-- <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="乐观锁" align="center" prop="revision" /> -->
       <el-table-column
@@ -284,6 +287,14 @@
         fixed="right"
       >
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-detail"
+            @click="detail(scope.row)"
+            v-hasPermi="['place:head:query']"
+          >详情
+          </el-button>
           <el-button
             type="text"
             icon="el-icon-plus"
@@ -437,7 +448,7 @@
 </template>
 
 <script>
-import {listBig, getBig, delBig, addBig, updateBig} from "@/api/place/big";
+import {listBig, detailsBig, getBig, delBig, addBig, updateBig} from "@/api/place/big";
 
 export default {
   name: "Big",
@@ -511,10 +522,11 @@ export default {
       //将表头id 保存
       this.queryParams.contractNo = tableId;
       // 获取表详细信息
-      listBig(this.queryParams).then((response) => {
-        this.bigList = response.rows;
-        this.total = response.total;
-        this.queryParams.contractNo = undefined;
+      detailsBig(this.queryParams).then((response) => {
+        this.form = response.data.head;
+        this.bigList = response.data.body;
+        // this.total = response.total;
+        this.loading = false;
       });      
     }
   },
@@ -522,9 +534,10 @@ export default {
     /** 查询大提煤单 大提煤单列表 */
     getList() {
       this.loading = true;
-      listBig(this.queryParams).then((response) => {
-        this.bigList = response.rows;
-        this.total = response.total;
+      detailsBig(this.queryParams).then((response) => {
+        this.form = response.data.head;
+        this.bigList = response.data.body;
+        // this.total = response.total;
         this.loading = false;
       });
     },
@@ -532,6 +545,13 @@ export default {
     cancelImport() {
       this.openImport = false;
       this.reset();
+    },
+    /**详情按钮 */
+    detail(row) {
+      this.reset();
+      const id = row.id || this.ids;
+      console.log(id)
+      this.$router.push({ path: "/place/head", query: { tableId: id } });
     },
     // 取消按钮
     cancel() {
