@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="通关单号" prop="customsNo">
+      <el-form-item label="提运单号" prop="customsNo">
         <el-input
           v-model="queryParams.customsNo"
-          placeholder="请输入通关单号"
+          placeholder="请输入提运单号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -66,10 +66,10 @@
 
     <el-table v-loading="loading" :data="clearanceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="通关单号" align="center" prop="customsNo" />
+      <el-table-column label="提运单号" align="center" prop="customsNo" />
       <el-table-column label="运输批次号" align="center" prop="batchNo" />
       <el-table-column label="提煤单号" align="center" prop="coalBillNo" />
-      <el-table-column label="通关单重量" align="center" prop="wieght" />
+      <el-table-column label="提运单重量" align="center" prop="wieght" />
       <el-table-column label="已使用重量" align="center" prop="oldWieght">
         <template slot-scope="scope">
           <span>{{scope.row.wieght-scope.row.lastWieght}}</span>
@@ -85,7 +85,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改通关单 对话框 -->
+    <!-- 添加或修改提运单 对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="提煤单号" prop="coalBillNo">
@@ -98,14 +98,14 @@
             </el-option>
           </el-select>
       </el-form-item>
-        <el-form-item label="通关单号" prop="customsNo">
-          <el-input v-model="form.customsNo" placeholder="请输入通关单号" />
+        <el-form-item label="提运单号" prop="customsNo">
+          <el-input v-model="form.customsNo" placeholder="请输入提运单号" />
         </el-form-item>
         <el-form-item label="运输批次号" prop="batchNo">
           <el-input v-model="form.batchNo" placeholder="请输入运输批次号" />
         </el-form-item>
-        <el-form-item label="通关单重量" prop="wieght">
-          <el-input v-model="form.wieght" placeholder="请输入通关单重量" />
+        <el-form-item label="提运单重量" prop="wieght">
+          <el-input v-model="form.wieght" placeholder="请输入提运单重量" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -128,7 +128,7 @@
       >
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">
-          将通关单申报文件拖到此处，或
+          将提运单申报文件拖到此处，或
           <em>点击上传</em>
         </div>
 
@@ -229,7 +229,7 @@ export default {
     });
   },
   methods: {
-    /** 查询通关单 列表 */
+    /** 查询提运单 列表 */
     getList() {
       this.loading = true;
       listClearance(this.queryParams).then(response => {
@@ -283,7 +283,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加通关单 ";
+      this.title = "添加提运单 ";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -292,7 +292,7 @@ export default {
       getClearance(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改通关单 ";
+        this.title = "修改提运单 ";
       });
     },
     /** 提交按钮 */
@@ -322,7 +322,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除通关单 编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除提运单 编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
@@ -341,7 +341,7 @@ export default {
     },
     /** 导入按钮操作 */
     handleImport() {
-      this.upload.title = "通关单申报导入";
+      this.upload.title = "提运单申报导入";
       this.upload.open = true;
       this.reset();
     },

@@ -88,28 +88,58 @@
     <!-- 添加或修改外调车 对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="提煤单号" prop="coalBillNo">
-          <el-select v-model="form.coalBillNo" filterable placeholder="请选择提煤单号">
-            <el-option
-              v-for="item in BigList"
-              :key="item.coalBillNo"
-              :label="item.coalBillNo"
-              :value="item.coalBillNo">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="车牌号" prop="plateNo">
-          <el-input v-model="form.plateNo" placeholder="请输入车牌号"/>
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="提煤单号" prop="coalBillNo">
+              <el-select v-model="form.coalBillNo" filterable placeholder="请选择提煤单号">
+                <el-option
+                  v-for="item in BigList"
+                  :key="item.coalBillNo"
+                  :label="item.coalBillNo"
+                  :value="item.coalBillNo">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="车牌号" prop="plateNo">
+              <el-input v-model="form.plateNo" placeholder="请输入车牌号"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+       <el-row>
+         <el-col :span="12">
         <el-form-item label="净重" prop="netWeight">
           <el-input v-model="form.netWeight" placeholder="请输入净重"/>
         </el-form-item>
+         </el-col>
+         <el-col :span="12">
         <el-form-item label="载重" prop="load">
           <el-input v-model="form.load" placeholder="请输入载重"/>
         </el-form-item>
-        <el-form-item label="运输次数" prop="transportNum">
-          <el-input v-model="form.transportNum" placeholder="请输入运输次数"/>
-        </el-form-item>
+         </el-col>
+       </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="运输次数" prop="transportNum">
+              <el-input v-model="form.transportNum" placeholder="请输入运输次数"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="车辆类型" prop="transportNum">
+              <el-select v-model="form.type" filterable placeholder="请选择提煤单号">
+                <el-option
+                  v-for="item in types"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -201,8 +231,32 @@ export default {
       },
       // 表单参数
       form: {},
+      // 车辆类型
+      types:[
+        {value:"S",label:"散杂货"},
+        {value:"C",label:"集装箱"},
+      ],
       // 表单校验
-      rules: {},
+      rules: {
+        coalBillNo: [
+          { required: true, message: '请选择提煤单', trigger: 'blur' }
+        ],
+        netWeight: [
+          { required: true, message: '请输入', trigger: 'blur' },
+          { type: 'number', message: '必须为数字值' }
+        ],
+        load:[
+          { required: true, message: '请输入', trigger: 'blur' },
+          { type: 'number', message: '必须为数字值' }
+        ],
+        plateNo: [
+          { required: true, message: '车牌号不能为空', trigger: 'blur' }
+        ],
+        transportNum: [
+          { required: true, message: '运输次数不能为空', trigger: 'blur' }
+        ]
+
+      },
       //提煤单号
       BigList: [],
       //文件导入参数
