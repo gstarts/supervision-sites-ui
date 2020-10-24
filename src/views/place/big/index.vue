@@ -377,7 +377,14 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        contractNo:[{required: true, message: '合同编号不可为空', trigger: 'blur' }],
+        coalBillNo:[{required: true, message: '提煤单号不可为空', trigger: 'blur' }],
+        coalWeight:[{required: true, message: '提煤重量不可为空', trigger: 'blur' }],
+        goodsName:[{required: true, message: '货物名称不可为空', trigger: 'blur' }],
+        receiveName:[{required: true, message: '收货单位不可为空', trigger: 'blur' }],
+        customerName:[{required: true, message: '客户名称不可为空', trigger: 'blur' }],
+      },
       uploadAction: process.env.VUE_APP_BASE_API + '/place/big',
       uploadData: {},
       uploading: false,
@@ -410,7 +417,7 @@ export default {
         this.bigList = response.rows;
         this.total = response.total;
         this.queryParams.contractNo = undefined;
-      });      
+      });
     }
   },
   methods: {
@@ -477,8 +484,7 @@ export default {
     /**详情按钮 */
     detail(row) {
       this.reset();
-      const id = row.contractNo;
-      this.$router.push({ path: "/place/big/Selectbig", query: { tableId: id } });
+      this.$router.push({ path: "/place/big/Selectbig", query: { "coalBillNo": row.coalBillNo } });
     },
     /** 导入按钮操作 */
     handleImport(row) {
