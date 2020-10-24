@@ -114,7 +114,11 @@
       <af-table-column label="寄舱客户" align="center" prop="settlementCustomer"/>
       <af-table-column label="发货单位" align="center" prop="sendName"/>
       <af-table-column label="收货单位" align="center" prop="receiveName"/>
-      <af-table-column label="运输方式" align="center" prop="transportMode"/>
+      <af-table-column label="运输方式" align="center" prop="transportMode">
+        <template slot-scope="scope">
+          {{ (scope.row.transportMode && scope.row.transportMode==='2')?'短倒':'长途' }}
+        </template>
+      </af-table-column>
       <af-table-column label="文件路径" align="center" prop="path"/>
       <af-table-column label="文件名" align="center" prop="fileName"/>
       <!--<af-table-column label="是否生成报关数据" align="center" prop="isGenReport"/>
@@ -307,6 +311,20 @@
               </el-form-item>
           </el-col>
         </el-row>
+        <el-row :gutter="10" v-show="transType">
+          <el-col :span="12">
+            <el-form-item label="运输方式" prop="transportMode">
+              <el-select v-model="form.transportMode" placeholder="请选择寄舱客户">
+                <el-option
+                  v-for="type in transportModeList"
+                  :key="type.key"
+                  :label="type.value"
+                  :value="type.key"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row :gutter="10" style="text-align: center">
           <el-upload
             class="upload-demo"
@@ -377,10 +395,6 @@
 					{value: '0', label: '出库通知单'},
 					{value: '2', label: '报关数据单'}
 				],
-        transportModeDic: [
-          {value: '1',label: "长途货运"},
-          {value: '0',label: "短途倒装"},
-        ],
 				// 弹出层标题
 				title: "",
 				// 是否显示弹出层
@@ -412,6 +426,7 @@
           receiveName: ''
 				},
 				noticeType: true,
+        transType: false,
 				rules: {},
 				// 表单校验
 				rules1: {
@@ -454,7 +469,10 @@
 					],
 					receiveName: [
 						{type:"string",required: true, message: "收货单位不能为空", trigger: "change"}
-					]
+					],
+          transportMode: [
+            {type:"string",required: true, message: "运输方式不能为空", trigger: "change"}
+          ]
 				},
 				uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/tax/upload',
 				uploadData: {},
@@ -467,6 +485,10 @@
 					'bucketName': ''
 				},
         fileList: [],
+        transportModeList: [
+          {'key':'1','value':'长途'},
+          {'key':'2','value':'短倒'},
+        ]
 			};
 		},
 		created() {
@@ -735,9 +757,11 @@
 				if (this.form.templateType === '1' ){
 					this.rules = this.rules1
 					this.noticeType = true
+          this.transType = false
 				} else if(this.form.templateType === '0') {
 					this.rules = this.rules3
 					this.noticeType = true
+          this.transType = true
 				}else{
 					this.form.businessNo = ''
 					this.form.settlementCustomer = ''
@@ -748,7 +772,8 @@
           this.form.sendName = ''
           this.form.receiveName = ''
 					this.noticeType = false
-				}
+          this.transType = false
+        }
 			},
       // 收发货单位建议
 			nameSearch(queryString,cb){
