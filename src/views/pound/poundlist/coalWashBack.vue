@@ -666,6 +666,14 @@
                         this.msgError(response.msg);
                       }
                     })
+                    //入库调用接口传 毛皮净重量
+                    TestWeight(this.form.grossWeight,this.form.tare,form.netWeight).then(res=>{
+                        if(res.code === 200){
+                          this.msgSuccess("重量传输成功")
+                        }else{
+                          this.msgError(res.msg);
+                        }
+                    });
                   }
                   if(this.PoundForm.stationViaType === '02'){//空进重出，生成出库单
                     genStoreDoc(this.queryParams.stationId, 0, this.form.noticeNo, this.form.locationNumber, this.form.netWeight).then(response=>{
@@ -675,6 +683,14 @@
                         this.msgError(response.msg);
                       }
                     })
+                    //出库调用接口传 毛皮净重量
+                    TestWeight(this.form.grossWeight,this.form.tare,form.netWeight).then(res=>{
+                      if(res.code === 200){
+                        this.msgSuccess("重量传输成功")
+                      }else{
+                        this.msgError(res.msg);
+                      }
+                    });
                   }
                   this.getListI();
                 } else {
