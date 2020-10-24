@@ -109,28 +109,28 @@
             </el-row>
 
             <el-row type="flex">
-              <el-col :span="12">
+              <el-col :span="24">
                 <el-form-item label="备注" prop="remark">
                   <el-input v-model="form.remark" placeholder="请输入备注" clearable></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="12"> <!--v-show="showStore"-->
-                <el-form-item label="库位号" prop="locationNumber">
-                  <el-select
-                    v-model="form.locationNumber"
-                    placeholder="请选择库位号"
-                    prop="locationNumber"
-                    filterable
-                  >
-                    <el-option
-                      v-for="dict in storeList"
-                      :key="dict.value"
-                      :label="dict.key"
-                      :value="dict.value"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
+<!--              <el-col :span="12"> &lt;!&ndash;v-show="showStore"&ndash;&gt;-->
+<!--                <el-form-item label="库位号" prop="locationNumber">-->
+<!--                  <el-select-->
+<!--                    v-model="form.locationNumber"-->
+<!--                    placeholder="请选择库位号"-->
+<!--                    prop="locationNumber"-->
+<!--                    filterable-->
+<!--                  >-->
+<!--                    <el-option-->
+<!--                      v-for="dict in storeList"-->
+<!--                      :key="dict.value"-->
+<!--                      :label="dict.key"-->
+<!--                      :value="dict.value"-->
+<!--                    ></el-option>-->
+<!--                  </el-select>-->
+<!--                </el-form-item>-->
+<!--              </el-col>-->
             </el-row>
             <span style="display: none"> 单号：{{form.noticeNo}}</span>
           </el-form>
