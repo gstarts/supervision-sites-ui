@@ -113,6 +113,11 @@
           <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </af-table-column>-->
+      <af-table-column label="运输方式" align="center" prop="transportMode" >
+        <template slot-scope="scope">
+          {{ scope.row.transportMode && scope.row.transportMode==='2'?'短倒':'长途' }}
+        </template>
+      </af-table-column>
       <af-table-column label="状态" align="center" prop="state" />
       <af-table-column label="库位号" align="center" prop="storeCode" />
       <!--<af-table-column label="理货员" align="center" prop="tallyClerk" />
