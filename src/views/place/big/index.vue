@@ -410,7 +410,7 @@ export default {
         this.bigList = response.rows;
         this.total = response.total;
         this.queryParams.contractNo = undefined;
-      });      
+      });
     }
   },
   methods: {
@@ -477,8 +477,7 @@ export default {
     /**详情按钮 */
     detail(row) {
       this.reset();
-      const id = row.contractNo;
-      this.$router.push({ path: "/place/big/Selectbig", query: { tableId: id } });
+      this.$router.push({ path: "/place/big/Selectbig", query: { "coalBillNo": row.coalBillNo } });
     },
     /** 导入按钮操作 */
     handleImport(row) {

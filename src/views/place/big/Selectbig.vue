@@ -73,18 +73,18 @@
           <el-form :model="parameterForm" ref="parameterForm" label-width="85px">
             <el-row>
               <el-col :span="12">
-                <el-form-item label="已提重量" prop="parameterForm.MentionedWeight">
+                <el-form-item label="已提重量" prop="parameterForm.mentionedWeight">
                   <el-input
-                    v-model="parameterForm.MentionedWeight"
+                    v-model="parameterForm.mentionedWeight"
                     placeholder="请输入已提重量"
                     disabled
                   />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="未提" prop="parameterForm.NotMentionedWeight">
+                <el-form-item label="未提" prop="parameterForm.notMentionedWeight">
                   <el-input
-                    v-model="parameterForm.NotMentionedWeight"
+                    v-model="parameterForm.notMentionedWeight"
                     placeholder="请输入未提重量"
                     disabled
                   />
@@ -102,9 +102,9 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="已提车数" prop="parameterForm.Mentioned">
+                <el-form-item label="已提车数" prop="parameterForm.mentioned">
                   <el-input
-                    v-model="parameterForm.Mentioned"
+                    v-model="parameterForm.mentioned"
                     placeholder="请输入已提车数"
                     disabled
                   />
@@ -113,18 +113,18 @@
             </el-row>
             <el-row>
               <el-col :span="12">
-                <el-form-item label="未提车数" prop="parameterForm.NotMentioned">
+                <el-form-item label="未提车数" prop="parameterForm.notMentioned">
                   <el-input
-                    v-model="parameterForm.NotMentioned"
+                    v-model="parameterForm.notMentioned"
                     placeholder="请输入未提车数"
                     disabled
                   />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="作废车数" prop="parameterForm.Void">
+                <el-form-item label="作废车数" prop="parameterForm.void">
                   <el-input
-                    v-model="parameterForm.Void"
+                    v-model="parameterForm.void"
                     placeholder="请输入作废车数"
                     disabled
                   />
@@ -268,7 +268,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center"/>
-      <!-- <el-table-column label="主键" align="center" prop="id" /> 
+      <!-- <el-table-column label="主键" align="center" prop="id" />
       <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>
       <el-table-column label="合同编号" align="center" prop="contractNo"/>
       <el-table-column label="提煤重量" align="center" prop="coalWeight"/>
@@ -448,7 +448,7 @@
 </template>
 
 <script>
-import {listBig, detailsBig, getBig, delBig, addBig, updateBig} from "@/api/place/big";
+import { addBig, delBig, detailsBig, getBig, updateBig } from '@/api/place/big'
 
 export default {
   name: "Big",
@@ -495,17 +495,17 @@ export default {
       // 表单校验
       parameterForm:{
         //已提重量
-        MentionedWeight:0,
+        mentionedWeight:0,
         //未提
-        NotMentionedWeight:0,
+        notMentionedWeight:0,
         //有效车数
         effective:0,
         //已提车数
-        Mentioned:0,
+        mentioned:0,
         //未提车数
-        NotMentioned:0,
+        notMentioned:0,
         //作废车数
-        Void:0,
+        void:0,
       },
       rules: {},
       uploadAction: process.env.VUE_APP_BASE_API + "/place/big",
@@ -517,17 +517,18 @@ export default {
   },
   created() {
     this.getList();
-    const { tableId } = this.$route.query;
-    if (tableId) {
+    const  {coalBillNo}  = this.$route.query;
+
+    if (coalBillNo) {
       //将表头id 保存
-      this.queryParams.contractNo = tableId;
+      this.queryParams.coalBillNo = coalBillNo;
       // 获取表详细信息
       detailsBig(this.queryParams).then((response) => {
         this.form = response.data.head;
         this.bigList = response.data.body;
-        // this.total = response.total;
+        this.parameterForm = response.data.calculation;
         this.loading = false;
-      });      
+      });
     }
   },
   methods: {
