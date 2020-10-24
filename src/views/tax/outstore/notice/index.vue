@@ -275,7 +275,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-    
+
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -320,7 +320,7 @@
         </el-button>
       </el-col>
     </el-row>
-    
+
     <el-table v-loading="loading" :data="outstore_noticeList">
       <!-- <af-table-column type="selection" width="55" align="center" />-->
       <!--<af-table-column label="ID" align="center" prop="id" />-->
@@ -340,7 +340,11 @@
           <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </af-table-column>-->
-      <!--<af-table-column label="车队名称" align="center" prop="fleetName" />-->
+      <af-table-column label="运输方式" align="center" prop="transportMode" >
+        <template slot-scope="scope">
+          {{ scope.row.transportMode && scope.row.transportMode==='2'?'短倒':'长途' }}
+        </template>
+      </af-table-column>
       <af-table-column label="生成时间" align="center" prop="genTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.genTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
@@ -365,7 +369,7 @@
       <!--<af-table-column label="嘉友司机" align="center" prop="jyDriver" />
       <af-table-column label="机械号" align="center" prop="mechanicalNo" />
       <af-table-column label="机械员" align="center" prop="mechanicalPerson" />
-     
+
       <af-table-column label="场所ID" align="center" prop="placeId" />-->
       <af-table-column label="车牌号" align="center" prop="vehicleNo"/>
       <af-table-column label="车板号" align="center" prop="trailerNo"/>
@@ -430,7 +434,7 @@
         </template>
       </af-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -438,7 +442,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    
+
     <!-- 添加或修改出库通知单对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
@@ -448,14 +452,14 @@
               <el-input v-model="form.outNoticeNo" placeholder="请输入出库通知单号"/>
             </el-form-item>
           </el-col>
-          
+
           <el-col :span="12">
             <el-form-item label="批次号" prop="batchNo">
               <el-input v-model="form.batchNo" placeholder="请输入批次号"/>
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="业务编号" prop="businessNo">
@@ -467,7 +471,7 @@
               <el-input v-model="form.soNo" placeholder="请输入订单号"/>
             </el-form-item>
           </el-col>
-         
+
         </el-row>
         <el-row type="flex">
           <el-col :span="12">
@@ -503,16 +507,16 @@
             </el-form-item>
           </el-col>-->
         </el-row>
-        
+
         <el-row type="flex">
-          
+
           <!--<el-col :span="12">
             <el-form-item label="车牌号" prop="vehicleNo">
               <el-input v-model="form.vehicleNo" placeholder="请输入车牌号"/>
             </el-form-item>
           </el-col>-->
         </el-row>
-        
+
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="车头号" prop="primeMoverNo">
@@ -525,7 +529,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="销售合同号" prop="saleContractNo">
@@ -538,7 +542,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row type="flex">
           <!--<el-col :span="12">
             <el-form-item label="状态" prop="state">
@@ -569,7 +573,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="总毛重" prop="totalRoughWeight">
@@ -581,9 +585,9 @@
               <el-input v-model="form.receiveName" placeholder="请输入客户"/>
             </el-form-item>
           </el-col>
-        
+
         </el-row>
-      
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
