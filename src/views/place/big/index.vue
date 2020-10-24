@@ -168,6 +168,7 @@
             size="mini"
             @click="handleImport(scope.row)"
             v-hasPermi="['place:big:add']"
+            v-show="scope.row.status != '1'"
           >导入
           </el-button>
           <el-button
@@ -176,6 +177,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['place:big:edit']"
+            v-show="scope.row.status != '1'"
           >修改
           </el-button
           >
@@ -185,6 +187,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['place:big:remove']"
+            v-show="scope.row.status != '1'"
           >删除
           </el-button
           >
@@ -305,7 +308,7 @@
       >
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">
-          将通关单申报文件拖到此处，或
+          将提运单申报文件拖到此处，或
           <em>点击上传</em>
         </div>
 
@@ -317,7 +320,7 @@
       </div>
       <el-form ref="form" :model="form">
         <el-form-item label="数据类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择提煤单号">
+          <el-select v-model="form.type" placeholder="请选择数据类型">
             <el-option
               v-for="item in typeList"
               :key="item.value"
@@ -351,9 +354,9 @@ export default {
       total: 0,
       // 大提煤单 大提煤单表格数据
       bigList: [],
-      // 通关单类型与车辆信息
+      // 提运单类型与车辆信息
       typeList: [
-        { value: '0', label: '通关单信息' },
+        { value: '0', label: '提运单信息' },
         { value: '1', label: '车辆信息' }
       ],
       // 弹出层标题
@@ -472,7 +475,7 @@ export default {
     handleAdd() {
       this.reset()
       this.open = true
-      this.title = '添加大提煤单 大提煤单'
+      this.title = '添加大提煤单'
     },
     /**详情按钮 */
     detail(row) {
@@ -493,7 +496,7 @@ export default {
       getBig(id).then((response) => {
         this.form = response.data
         this.open = true
-        this.title = '修改大提煤单 大提煤单'
+        this.title = '修改大提煤单'
       })
     },
     uploadProcess() {

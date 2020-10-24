@@ -69,8 +69,8 @@
           </el-form-item>
         </el-col>        
         <el-col :span="6">
-          <el-form-item label="进出口标志" prop="IEFlag">
-            <el-select v-model="form.IEFlag" placeholder="请选择进出口方式">
+          <el-form-item label="进出口标志" prop="ieflag">
+            <el-select v-model="form.ieflag" placeholder="请选择进出口方式">
                 <el-option
                   v-for="dict in importExitOptions"
                   :key="dict.dictValue"
@@ -206,8 +206,8 @@
         <el-form-item label="车牌号" prop="plateNo">
           <el-input v-model="form.plateNo" placeholder="请输入车牌号" />
         </el-form-item>
-        <el-form-item label="进出口标志(I-进口,E-出口)" prop="IEFlag">
-          <el-input v-model="form.IEFlag" placeholder="请输入进出口标志(I-进口,E-出口)" />
+        <el-form-item label="进出口标志(I-进口,E-出口)" prop="ieflag">
+          <el-input v-model="form.ieflag" placeholder="请输入进出口标志(I-进口,E-出口)" />
         </el-form-item>
         <el-form-item label="业务类型" prop="rdCode">
           <el-input v-model="form.rdCode" placeholder="请输入业务类型" />
@@ -294,7 +294,7 @@ export default {
         pageSize: 20,
         coalBillNo: undefined,
         plateNo: undefined,
-        IEFlag: undefined,
+        ieflag: undefined,
         rdCode: undefined,
         sureId: undefined,
         feedback: undefined,
@@ -320,6 +320,7 @@ export default {
       detailsHead(this.queryParams).then((response) => {
         this.headList = response.data.body;
         this.form = response.data.head;
+        console.log(this.form)
         this.loading = false;
       });      
     }else{
@@ -371,7 +372,7 @@ export default {
       this.form = {
         id: undefined,
         plateNo: undefined,
-        IEFlag: undefined,
+        ieflag: undefined,
         rdCode: undefined,
         sureId: undefined,
         feedback: undefined,
