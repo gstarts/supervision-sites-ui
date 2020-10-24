@@ -547,10 +547,10 @@ export default {
       this.getList();
     }
 
-    listStoreContract({'placeId': this.queryParams.placeId}).then(response => {
+    //查找合同
+    /*listStoreContract({'placeId': this.queryParams.placeId}).then(response => {
       this.contractList = response.rows;
-
-    });
+    });*/
   },
   methods: {
     /** 查询导入文件记录 列表 */
@@ -584,7 +584,7 @@ export default {
         isGenStoreNotice: undefined,
         objectName: undefined,
         path: undefined,
-        placeId: undefined,
+        placeId: this.queryParams.placeId,
         templateType: undefined,
         fileLength: undefined,
         storeContractId: undefined,
@@ -615,14 +615,15 @@ export default {
     },
     /** 导入按钮操作 */
     handleAdd() {
-      if (this.queryParams.placeId == 134) {
-        this.reset();
-        this.open = true;
-        this.title = "导入模板文件";
+      //if (this.queryParams.placeId == 134) {
+      this.reset();
+      this.open = true;
+      this.title = "导入模板文件";
+      this.getContract(this.queryParams.placeId)
 
-      } else {
+      /*} else {
         this.$message.info("请选择嘉亿达监管场所,其他场所功能未实现")
-      }
+      }*/
 
     },
     /** 修改按钮操作 */
@@ -772,6 +773,12 @@ export default {
         console.log("取消生成通知单")
       });
     },
+    getContract(placeId) {
+      //查找合同
+      listStoreContract({'placeId': placeId}).then(response => {
+        this.contractList = response.rows;
+      });
+    }
   }
 };
 </script>
