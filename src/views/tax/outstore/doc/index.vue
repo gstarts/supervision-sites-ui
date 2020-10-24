@@ -48,7 +48,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-     
+
       <el-form-item label="车牌号" prop="vehicleNo">
         <el-input
           v-model="queryParams.vehicleNo"
@@ -117,7 +117,9 @@
       <af-table-column label="库位号" align="center" prop="storeCode" />
       <!--<af-table-column label="理货员" align="center" prop="tallyClerk" />
       <af-table-column label="捆扎加固人员" align="center" prop="tieUpPerson" />-->
-      <af-table-column label="总毛重" align="center" prop="totalRoughWeight" />
+      <af-table-column label="净重(含袋)" align="center" prop="realRoughWeight" />
+      <af-table-column label="毛重" align="center" prop="totalRoughWeight" />
+      <af-table-column label="皮重" align="center" prop="tareWeight" />
       <af-table-column label="车板号" align="center" prop="trailerNo" />
       <af-table-column label="装卸组" align="center" prop="unloadGroup" />
       <af-table-column label="车牌号" align="center" prop="vehicleNo" />
@@ -155,7 +157,7 @@
         </template>
       </af-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -163,7 +165,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    
+
   </div>
 </template>
 

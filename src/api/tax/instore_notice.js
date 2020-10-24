@@ -81,18 +81,18 @@ export function getNoticeByVehicle(placeId, direction, vehicleNo) {
 //生成出库通知单
 //重进空出，生成入库单 storeCode 和noticeNo
 //空进重出，生成出库单  需要 noticeNo weight
-export function genStoreDoc(placeId, direction, noticeNo, storeCode, weight) {
-	let data = {
+export function genStoreDoc(params) {
+	/*let data = {
 		'placeId': placeId,
 		'direction': direction,
 		'noticeNo': noticeNo,
 		'storeCode': storeCode,
 		'weight': weight
-	}
+	}*/
 	return request({
 		url: '/tax/notice/doc',
 		method: 'post',
-		data: data
+		data: params
 	})
 }
 

@@ -30,7 +30,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      
+
       <!--<el-form-item label="预订库位号" prop="bookStoreCode">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.bookStoreCode"
@@ -136,7 +136,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      
+
       <!--<el-form-item label="机械号" prop="mechanicalNo">
         <el-input
           v-model="queryParams.mechanicalNo"
@@ -258,7 +258,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-    
+
     <el-row :gutter="10" class="mb8">
       <!-- <el-col :span="1.5">
          <el-button
@@ -300,7 +300,7 @@
         </el-button>
       </el-col>
     </el-row>
-    
+
     <el-table v-loading="loading" :data="instore_docList" @selection-change="handleSelectionChange">
       <!--<af-table-column type="selection" width="55" align="center" />-->
       <!--<af-table-column label="ID" align="center" prop="id" />-->
@@ -341,7 +341,10 @@
         </template>
       </af-table-column>-->
       <!--<af-table-column label="理货员" align="center" prop="tallyClerk"/>-->
-      <af-table-column label="总毛重" align="center" prop="totalRoughWeight"/>
+      <af-table-column label="蒙方总毛重" align="center" prop="totalRoughWeight"/>
+      <af-table-column label="净重(含袋)" align="center" prop="poundNetWeight"/>
+      <af-table-column label="皮重" align="center" prop="poundTareWeight"/>
+      <af-table-column label="总重" align="center" prop="poundRoughWeight"/>
       <af-table-column label="车板号" align="center" prop="trailerNo"/>
       <!--<af-table-column label="装卸组" align="center" prop="unloadGroup"/>-->
       <!--<af-table-column label="工组人员" align="center" prop="workGroup"/>-->
@@ -366,7 +369,7 @@
         </template>
       </af-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -374,7 +377,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    
+
     <!-- 添加或修改入库单对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
