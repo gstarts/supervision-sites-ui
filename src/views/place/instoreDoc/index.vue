@@ -471,6 +471,10 @@
       <af-table-column label="皮重" align="center" prop="tareWeight" />
       <af-table-column label="毛重" align="center" prop="roughWeight" />
      <!-- <af-table-column label="备注" align="center" prop="remark" />-->
+      <af-table-column label="库位号1" align="center" prop="storeCode" />
+      <af-table-column label="库位号2" align="center" prop="storeCode2" />
+      <af-table-column label="库位号3" align="center" prop="storeCode3" />
+      <af-table-column label="库位号4" align="center" prop="storeCode4" />
       <af-table-column label="生成时间" align="center" prop="genTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.genTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
@@ -485,9 +489,7 @@
       <!--<af-table-column label="磅单号" align="center" prop="poundNo" />-->
       <af-table-column label="批次号" align="center" prop="batchNo" />
       <!--<af-table-column label="提运单号" align="center" prop="loadingBillNo" />-->
-      <!--<af-table-column label="库位号2" align="center" prop="storeCode2" />
-      <af-table-column label="库位号3" align="center" prop="storeCode3" />
-      <af-table-column label="库位号4" align="center" prop="storeCode4" />-->
+
       <af-table-column label="生成舱单" align="center" prop="hasManifest" />
       <af-table-column label="生成集报清单" align="center" prop="hasDeclare" />
       <af-table-column label="生成进境确报" align="center" prop="hasTransit" />
