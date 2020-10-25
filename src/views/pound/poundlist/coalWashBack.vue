@@ -109,28 +109,28 @@
             </el-row>
 
             <el-row type="flex">
-              <el-col :span="12">
+              <el-col :span="24">
                 <el-form-item label="备注" prop="remark">
                   <el-input v-model="form.remark" placeholder="请输入备注" clearable></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="12"> <!--v-show="showStore"-->
-                <el-form-item label="库位号" prop="locationNumber">
-                  <el-select
-                    v-model="form.locationNumber"
-                    placeholder="请选择库位号"
-                    prop="locationNumber"
-                    filterable
-                  >
-                    <el-option
-                      v-for="dict in storeList"
-                      :key="dict.value"
-                      :label="dict.key"
-                      :value="dict.value"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
+<!--              <el-col :span="12"> &lt;!&ndash;v-show="showStore"&ndash;&gt;-->
+<!--                <el-form-item label="库位号" prop="locationNumber">-->
+<!--                  <el-select-->
+<!--                    v-model="form.locationNumber"-->
+<!--                    placeholder="请选择库位号"-->
+<!--                    prop="locationNumber"-->
+<!--                    filterable-->
+<!--                  >-->
+<!--                    <el-option-->
+<!--                      v-for="dict in storeList"-->
+<!--                      :key="dict.value"-->
+<!--                      :label="dict.key"-->
+<!--                      :value="dict.value"-->
+<!--                    ></el-option>-->
+<!--                  </el-select>-->
+<!--                </el-form-item>-->
+<!--              </el-col>-->
             </el-row>
             <span style="display: none"> 单号：{{form.noticeNo}}</span>
           </el-form>
@@ -666,6 +666,14 @@
                         this.msgError(response.msg);
                       }
                     })
+                    //入库调用接口传 毛皮净重量
+                    TestWeight(this.form.grossWeight,this.form.tare,form.netWeight).then(res=>{
+                        if(res.code === 200){
+                          this.msgSuccess("重量传输成功")
+                        }else{
+                          this.msgError(res.msg);
+                        }
+                    });
                   }
                   if(this.PoundForm.stationViaType === '02'){//空进重出，生成出库单
                     genStoreDoc(this.queryParams.stationId, 0, this.form.noticeNo, this.form.locationNumber, this.form.netWeight).then(response=>{
@@ -675,6 +683,14 @@
                         this.msgError(response.msg);
                       }
                     })
+                    //出库调用接口传 毛皮净重量
+                    TestWeight(this.form.grossWeight,this.form.tare,form.netWeight).then(res=>{
+                      if(res.code === 200){
+                        this.msgSuccess("重量传输成功")
+                      }else{
+                        this.msgError(res.msg);
+                      }
+                    });
                   }
                   this.getListI();
                 } else {

@@ -24,51 +24,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!-- <el-form-item label="提煤重量" prop="coalWeight">
-        <el-input
-          v-model="queryParams.coalWeight"
-          placeholder="请输入提煤重量"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="货物名称" prop="goodsName">
-        <el-input
-          v-model="queryParams.goodsName"
-          placeholder="请输入货物名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="收货单位" prop="receiveName">
-        <el-input
-          v-model="queryParams.receiveName"
-          placeholder="请输入收货单位"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="客户名称" prop="customerName">
-        <el-input
-          v-model="queryParams.customerName"
-          placeholder="请输入客户名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="乐观锁" prop="revision">
-        <el-input
-          v-model="queryParams.revision"
-          placeholder="请输入乐观锁"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
       <el-form-item>
         <el-button
           type="primary"
@@ -168,6 +123,7 @@
             size="mini"
             @click="handleImport(scope.row)"
             v-hasPermi="['place:big:add']"
+            v-show="scope.row.status != '1'"
           >导入
           </el-button>
           <el-button
@@ -176,6 +132,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['place:big:edit']"
+            v-show="scope.row.status != '1'"
           >修改
           </el-button
           >
@@ -185,6 +142,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['place:big:remove']"
+            v-show="scope.row.status != '1'"
           >删除
           </el-button
           >
@@ -199,95 +157,6 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
-    <!-- 添加或修改大提煤单 大提煤单对话框 -->
-    <el-dialog :title="title" :visible.sync="open" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="提煤单号" prop="coalBillNo">
-              <el-input
-                v-model="form.coalBillNo"
-                placeholder="请输入提煤单号"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="合同编号" prop="contractNo">
-              <el-input
-                v-model="form.contractNo"
-                placeholder="请输入合同编号"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="提煤重量" prop="coalWeight">
-              <el-input
-                v-model="form.coalWeight"
-                placeholder="请输入提煤重量"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="货物名称" prop="goodsName">
-              <el-input v-model="form.goodsName" placeholder="请输入货物名称"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="收货单位" prop="receiveName">
-              <el-input
-                v-model="form.receiveName"
-                placeholder="请输入收货单位"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="客户名称" prop="customerName">
-              <el-input
-                v-model="form.customerName"
-                placeholder="请输入客户名称"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <!-- <el-form-item label="创建人" prop="createBy">
-          <el-input v-model="form.createBy" placeholder="请输入创建人" />
-        </el-form-item>
-        <el-form-item label="创建时间" prop="createTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.createTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择创建时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="更新人" prop="updateBy">
-          <el-input v-model="form.updateBy" placeholder="请输入更新人" />
-        </el-form-item>
-        <el-form-item label="更新时间" prop="updateTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.updateTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择更新时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="乐观锁" prop="revision">
-          <el-input v-model="form.revision" placeholder="请输入乐观锁" />
-        </el-form-item> -->
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
 
     <!-- 添加或修改导入文件记录 对话框 -->
     <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px">
@@ -328,12 +197,103 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog :title="title" :visible.sync="open" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" size="mini" label-width="120px">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="提煤单号" prop="coalBillNo">
+              <el-input v-model="form.coalBillNo" placeholder="请输入放行单号"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="所属场所" prop="placeId">
+              <el-select v-model="form.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
+                <el-option
+                  v-for="dept in depts"
+                  :key="dept.deptId"
+                  :label="dept.deptName"
+                  :value="dept.deptId"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="合同号" prop="contractNo">
+              <el-select v-model="form.contractNo" placeholder="请输入合同号" @change="((val)=>{change(val, 'contractNo')})">
+                <el-option
+                  v-for="item in contractOptions"
+                  :key="item.contractNo"
+                  :label="item.contractNo"
+                  :value="item.contractNo"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="客户名称" prop="customerName">
+              <el-input v-model="form.customerName" placeholder="请选择客户" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="库位号" prop="businessNo">
+              <el-select v-model="form.businessNo" placeholder="请输入库位号" @change="((val)=>{change(val, 'businessNo')})">
+                <el-option
+                  v-for="type in storeIds"
+                  :key="type.storeCode"
+                  :label="type.storeCode"
+                  :value="type.storeCode"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="库存量" prop="storeCapacity">
+              <el-input v-model="form.storeCapacity" disabled/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="货物名称" prop="goodsName">
+              <el-input v-model="form.goodsName" placeholder="请输入品名"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="提煤重量" prop="coalWeight">
+              <el-input v-model.number="form.coalWeight" placeholder="请输入放行量"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="收货单位" prop="receiveName">
+              <el-input
+                v-model="form.receiveName"
+                placeholder="请输入收货单位"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { listBig, getBig, delBig, addBig, updateBig } from '@/api/place/big'
 import { getToken } from '@/utils/auth'
+import { listStoreContract } from '@/api/place/storeContract'
+import { getStoreByIds } from '@/api/place/store'
+import { getUserDepts } from '@/utils/charutils'
 
 export default {
   name: 'Big',
@@ -353,7 +313,7 @@ export default {
       bigList: [],
       // 通关单类型与车辆信息
       typeList: [
-        { value: '0', label: '通关单信息' },
+        { value: '0', label: '提运单信息' },
         { value: '1', label: '车辆信息' }
       ],
       // 弹出层标题
@@ -377,14 +337,13 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-        contractNo:[{required: true, message: '合同编号不可为空', trigger: 'blur' }],
-        coalBillNo:[{required: true, message: '提煤单号不可为空', trigger: 'blur' }],
-        coalWeight:[{required: true, message: '提煤重量不可为空', trigger: 'blur' }],
-        goodsName:[{required: true, message: '货物名称不可为空', trigger: 'blur' }],
-        receiveName:[{required: true, message: '收货单位不可为空', trigger: 'blur' }],
-        customerName:[{required: true, message: '客户名称不可为空', trigger: 'blur' }],
-      },
+      rules: {},
+      // 场所名称列表
+      depts: [],
+      // 合同
+      contractOptions:[],
+      // 库位号
+      storeIds:[],
       uploadAction: process.env.VUE_APP_BASE_API + '/place/big',
       uploadData: {},
       uploading: false,
@@ -408,20 +367,22 @@ export default {
     }
   },
   created() {
-    this.getList();
-    const { tableId } = this.$route.query;
+    // 获取场所
+    this.depts = getUserDepts('0')
+    this.getList()
+    const { tableId } = this.$route.query
     if (tableId) {
-      this.queryParams.contractNo = tableId;
+      this.queryParams.contractNo = tableId
       // 获取表详细信息
       listBig(this.queryParams).then((response) => {
-        this.bigList = response.rows;
-        this.total = response.total;
-        this.queryParams.contractNo = undefined;
-      });
+        this.bigList = response.rows
+        this.total = response.total
+        this.queryParams.contractNo = undefined
+      })
     }
   },
   methods: {
-    /** 查询大提煤单 大提煤单列表 */
+    /** 查询大提煤单列表 */
     getList() {
       this.loading = true
       listBig(this.queryParams).then((response) => {
@@ -479,12 +440,12 @@ export default {
     handleAdd() {
       this.reset()
       this.open = true
-      this.title = '添加大提煤单 大提煤单'
+      this.title = '添加大提煤单'
     },
     /**详情按钮 */
     detail(row) {
-      this.reset();
-      this.$router.push({ path: "/place/big/Selectbig", query: { "coalBillNo": row.coalBillNo } });
+      this.reset()
+      this.$router.push({ path: '/place/big/Selectbig', query: { 'coalBillNo': row.coalBillNo } })
     },
     /** 导入按钮操作 */
     handleImport(row) {
@@ -500,7 +461,7 @@ export default {
       getBig(id).then((response) => {
         this.form = response.data
         this.open = true
-        this.title = '修改大提煤单 大提煤单'
+        this.title = '修改大提煤单'
       })
     },
     uploadProcess() {
@@ -520,6 +481,9 @@ export default {
     submitForm: function() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
+          if (this.form.coalWeight > this.form.storeCapacity) {
+            return this.msgError('库存容量不足!')
+          }
           if (this.form.id != undefined) {
             updateBig(this.form).then((response) => {
               if (response.code === 200) {
@@ -573,11 +537,47 @@ export default {
     },
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
-      this.upload.open = false;
-      this.upload.isUploading = false;
-      this.$refs.upload.clearFiles();
-      this.$alert(response.msg, "导入结果", { dangerouslyUseHTMLString: true });
-      this.getList();
+      this.upload.open = false
+      this.upload.isUploading = false
+      this.$refs.upload.clearFiles()
+      this.$alert(response.msg, '导入结果', { dangerouslyUseHTMLString: true })
+      this.getList()
+    },
+    // 下拉列表改变时激活
+    change(val, name) {
+      // 场所
+      if (name === 'placeId') {
+        this.queryParams.placeId = val
+        listStoreContract(this.queryParams).then((response) => {
+          this.contractOptions = response.rows
+        })
+      }
+
+      // 合同
+      if (name === 'contractNo') {
+        this.contractOptions.forEach(element => {
+          if (element.contractNo === val) {
+            // 将得到的企业属性赋值到应用的对象中
+            this.form.customerName = element.customerName
+            // 客户id
+            // this.form.customerId= element.customerId
+            this.storeIds = element.params.contract
+            const ids = element.storeIds
+            getStoreByIds(ids).then(response => {
+              this.storeIds = response.data
+            })
+          }
+        })
+      }
+
+      // 库位
+      if (name === 'businessNo') {
+        this.storeIds.forEach(element => {
+          if (element.storeCode === val) {
+            this.form.storeCapacity = element.storeCapacity
+          }
+        })
+      }
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -592,3 +592,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.el-select{
+  width: 100%;
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row class="mb8">
-      <el-button type="primary" @click="submitForm">确 定</el-button>
+      <el-button type="primary" @click="updateForm">执行完毕</el-button>
     </el-row>
 
     <el-row :gutter="10">
@@ -10,7 +10,12 @@
           <el-row>
             <el-form :model="queryParams" ref="queryForm" label-width="85px">
               <el-row>
-                <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+                <el-form
+                  ref="form"
+                  :model="form"
+                  :rules="rules"
+                  label-width="120px"
+                >
                   <el-row>
                     <el-col :span="12">
                       <el-form-item label="提煤单号" prop="coalBillNo">
@@ -40,7 +45,10 @@
                     </el-col>
                     <el-col :span="12">
                       <el-form-item label="货物名称" prop="goodsName">
-                        <el-input v-model="form.goodsName" placeholder="请输入货物名称"/>
+                        <el-input
+                          v-model="form.goodsName"
+                          placeholder="请输入货物名称"
+                        />
                       </el-form-item>
                     </el-col>
                   </el-row>
@@ -70,10 +78,17 @@
       </el-col>
       <el-col :span="10">
         <el-card class="mb20">
-          <el-form :model="parameterForm" ref="parameterForm" label-width="85px">
+          <el-form
+            :model="parameterForm"
+            ref="parameterForm"
+            label-width="85px"
+          >
             <el-row>
               <el-col :span="12">
-                <el-form-item label="已提重量" prop="parameterForm.mentionedWeight">
+                <el-form-item
+                  label="已提重量"
+                  prop="parameterForm.mentionedWeight"
+                >
                   <el-input
                     v-model="parameterForm.mentionedWeight"
                     placeholder="请输入已提重量"
@@ -82,7 +97,10 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="未提" prop="parameterForm.notMentionedWeight">
+                <el-form-item
+                  label="未提"
+                  prop="parameterForm.notMentionedWeight"
+                >
                   <el-input
                     v-model="parameterForm.notMentionedWeight"
                     placeholder="请输入未提重量"
@@ -113,7 +131,10 @@
             </el-row>
             <el-row>
               <el-col :span="12">
-                <el-form-item label="未提车数" prop="parameterForm.notMentioned">
+                <el-form-item
+                  label="未提车数"
+                  prop="parameterForm.notMentioned"
+                >
                   <el-input
                     v-model="parameterForm.notMentioned"
                     placeholder="请输入未提车数"
@@ -214,7 +235,7 @@
     <!--      </el-form-item>-->
     <!--    </el-form>-->
 
-    <el-row :gutter="10" class="mb8">
+    <!--<el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -223,9 +244,8 @@
           @click="handleAdd"
           :disabled="single"
           v-hasPermi="['place:big:add']"
-        >新增
-        </el-button
-        >
+          >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -235,9 +255,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['place:big:edit']"
-        >修改
-        </el-button
-        >
+          >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -247,11 +266,10 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['place:big:remove']"
-        >删除
-        </el-button
-        >
+          >删除
+        </el-button>
       </el-col>
-      <!-- <el-col :span="1.5">
+       <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -259,25 +277,36 @@
           @click="handleExport"
           v-hasPermi="['place:big:export']"
         >导出</el-button>
-      </el-col> -->
-    </el-row>
+      </el-col> 
+    </el-row>-->
 
     <el-table
       v-loading="loading"
       :data="bigList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="主键" align="center" prop="id" />
       <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>
       <el-table-column label="合同编号" align="center" prop="contractNo"/>
       <el-table-column label="提煤重量" align="center" prop="coalWeight"/>
       <el-table-column label="货物名称" align="center" prop="goodsName"/>
       <el-table-column label="收货单位" align="center" prop="receiveName"/>-->
-      <el-table-column label="车牌号" align="center" prop="plateNo"/>
-      <el-table-column label="回执状态" align="center" prop="feedback"/>
-      <el-table-column label="回执说明" align="center" prop="feedbackMsg"/>
-      <el-table-column label="唯一编号" align="center" prop="sureId"/>
+      <el-table-column label="车牌号" align="center" prop="plateNo" />
+      <el-table-column
+        label="回执状态"
+        align="center"
+        prop="feedback"
+        :formatter="DeclearStatusFormat"
+      />
+      <el-table-column label="回执说明" align="center" prop="feedbackMsg" />
+      <el-table-column
+        label="车辆状态"
+        align="center"
+        prop="status"
+        :formatter="CarStatusFormat"
+      />
+      <el-table-column label="唯一编号" align="center" prop="sureId" />
       <!-- <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="乐观锁" align="center" prop="revision" /> -->
       <el-table-column
@@ -293,9 +322,18 @@
             icon="el-icon-detail"
             @click="detail(scope.row)"
             v-hasPermi="['place:head:query']"
-          >详情
+            >详情
           </el-button>
           <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-warning"
+            @click="voidUpdate(scope.row)"
+            v-hasPermi="['place:big:edit']"
+            v-show="form.status != '1'"
+            >作废
+          </el-button>
+          <!-- <el-button
             type="text"
             icon="el-icon-plus"
             size="mini"
@@ -320,7 +358,7 @@
             v-hasPermi="['place:big:remove']"
           >删除
           </el-button
-          >
+          > -->
         </template>
       </el-table-column>
     </el-table>
@@ -365,7 +403,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="货物名称" prop="goodsName">
-              <el-input v-model="form.goodsName" placeholder="请输入货物名称"/>
+              <el-input v-model="form.goodsName" placeholder="请输入货物名称" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -448,7 +486,8 @@
 </template>
 
 <script>
-import { addBig, delBig, detailsBig, getBig, updateBig } from '@/api/place/big'
+import { addBig, delBig, detailsBig, getBig, updateBig } from "@/api/place/big";
+import { updateHead } from "@/api/place/head";
 
 export default {
   name: "Big",
@@ -458,6 +497,8 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      // 回执状态
+      declearStatus: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -468,8 +509,13 @@ export default {
       bigList: [],
       // 通关单类型与车辆信息
       typeList: [
-        {value: "0", label: "通关单信息"},
-        {value: "1", label: "车辆信息"},
+        { value: "0", label: "通关单信息" },
+        { value: "1", label: "车辆信息" },
+      ],
+      // 车辆状态
+      carStatus: [
+        { dictValue: "0", dictLabel: "无效" },
+        { dictValue: "1", dictLabel: "有效" },
       ],
       // 弹出层标题
       title: "",
@@ -493,19 +539,19 @@ export default {
       form: {},
       //计算参数
       // 表单校验
-      parameterForm:{
+      parameterForm: {
         //已提重量
-        mentionedWeight:0,
+        mentionedWeight: 0,
         //未提
-        notMentionedWeight:0,
+        notMentionedWeight: 0,
         //有效车数
-        effective:0,
+        effective: 0,
         //已提车数
-        mentioned:0,
+        mentioned: 0,
         //未提车数
-        notMentioned:0,
+        notMentioned: 0,
         //作废车数
-        void:0,
+        void: 0,
       },
       rules: {},
       uploadAction: process.env.VUE_APP_BASE_API + "/place/big",
@@ -516,8 +562,12 @@ export default {
     };
   },
   created() {
+    /** 放行状态字典 */
+    this.getDicts("station_declear_status").then((response) => {
+      this.declearStatus = response.data;
+    });
     this.getList();
-    const  {coalBillNo}  = this.$route.query;
+    const { coalBillNo } = this.$route.query;
 
     if (coalBillNo) {
       //将表头id 保存
@@ -549,10 +599,22 @@ export default {
     },
     /**详情按钮 */
     detail(row) {
+      console.log(row);
       this.reset();
       const id = row.id || this.ids;
-      console.log(id)
       this.$router.push({ path: "/place/head", query: { tableId: id } });
+    },
+    // 执行完毕按钮
+    updateForm() {
+      if (this.form.id != undefined) {
+        this.form.status = "1"
+        updateBig(this.form).then((response) => {
+          if (response.code === 200) {
+            this.msgSuccess("修改成功");
+            this.getList();
+          }
+        });
+      }
     },
     // 取消按钮
     cancel() {
@@ -600,6 +662,18 @@ export default {
       this.open = true;
       this.title = "添加大提煤单 大提煤单";
     },
+    /** 作废状态更改 */
+    voidUpdate(row) {
+      if (row.id != undefined) {
+        row.status = "0";
+        updateHead(row).then((response) => {
+          if (response.code === 200) {
+            this.msgSuccess("修改成功");
+            this.getList();
+          }
+        });
+      }
+    },
     /** 导入按钮操作 */
     handleImport() {
       this.reset();
@@ -616,6 +690,14 @@ export default {
         this.title = "修改大提煤单 大提煤单";
       });
     },
+    // 回执状态翻译
+    DeclearStatusFormat(row, column) {
+      return this.selectDictLabel(this.declearStatus, row.feedback);
+    },
+    // 车辆状态翻译
+    CarStatusFormat(row, column) {
+      return this.selectDictLabel(this.carStatus, row.status);
+    },
     uploadProcess() {
       this.uploading = true;
     },
@@ -625,11 +707,9 @@ export default {
       this.$message.error("文件上传失败");
     },
 
-    uploadSuccess(response) {
-    },
+    uploadSuccess(response) {},
 
-    uploadBefore(file) {
-    },
+    uploadBefore(file) {},
     /** 提交按钮 */
     submitForm: function () {
       this.$refs["form"].validate((valid) => {
@@ -673,8 +753,7 @@ export default {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function () {
-        });
+        .catch(function () {});
     },
     /** 导出按钮操作 */
     handleExport() {

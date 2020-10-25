@@ -7,6 +7,7 @@ const user = {
 		refreshToken: getRefreshToken(),
 		name: '',
 		avatar: '',
+    nickName: '',
 		roles: [],
 		permissions: [],
 		dept:[] //保存用户所在部门
@@ -16,6 +17,9 @@ const user = {
 		SET_TOKEN: (state, token) => {
 			state.token = token
 		},
+    SET_NICKNAME: (state, nickName) => {
+      state.nickName = nickName
+    },
 		SET_EXPIRES_IN: (state, time) => {
 			state.expires_in = time
 		},
@@ -76,7 +80,7 @@ const user = {
 					}
 					commit('SET_NAME', user.userName)
 					commit('SET_AVATAR', avatar)
-
+          commit('SET_NICKNAME',user.nickName)
 					commit('SET_DEPT', user.dept)
 					resolve(res)
 				}).catch(error => {
