@@ -55,17 +55,10 @@ export function getNoticeByVehicle(placeId, direction, vehicleNo) {
 		data: data
 	})
 }
-export function genStoreDoc(placeId, direction, noticeNo, storeCode, weight) {
-	let data = {
-		'placeId': placeId,
-		'direction': direction,
-		'noticeNo': noticeNo,
-		'storeCode': storeCode,
-		'weight': weight
-	}
+export function genStoreDoc(params) {
 	return request({
-		url: '/place/pound/doc',
+		url: '/place/notice/doc',
 		method: 'post',
-		data: data
+		data: params
 	})
 }
