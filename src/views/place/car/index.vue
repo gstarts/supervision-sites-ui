@@ -87,7 +87,7 @@
 
     <!-- 添加或修改外调车 对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+      <el-form ref="form" :model="form" :rules="rules" number label-width="120px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="提煤单号" prop="coalBillNo">
@@ -111,12 +111,12 @@
        <el-row>
          <el-col :span="12">
         <el-form-item label="净重" prop="netWeight">
-          <el-input v-model="form.netWeight" placeholder="请输入净重"/>
+          <el-input v-model.number="form.netWeight" placeholder="请输入净重"/>
         </el-form-item>
          </el-col>
          <el-col :span="12">
         <el-form-item label="载重" prop="load">
-          <el-input v-model="form.load" placeholder="请输入载重"/>
+          <el-input v-model.number="form.load" placeholder="请输入载重"/>
         </el-form-item>
          </el-col>
        </el-row>
