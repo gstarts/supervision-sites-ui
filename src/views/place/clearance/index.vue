@@ -59,6 +59,7 @@
           icon="el-icon-download"
           type="info"
           @click="handleImport"
+          v-hasPermi="['place:clearance:Import']"
         >导入
         </el-button>
       </el-col>

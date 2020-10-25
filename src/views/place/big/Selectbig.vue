@@ -277,7 +277,7 @@
           @click="handleExport"
           v-hasPermi="['place:big:export']"
         >导出</el-button>
-      </el-col> 
+      </el-col>
     </el-row>-->
 
     <el-table
@@ -329,7 +329,7 @@
             type="text"
             icon="el-icon-warning"
             @click="voidUpdate(scope.row)"
-            v-hasPermi="['place:big:edit']"
+            v-hasPermi="['place:head:edit']"
             v-show="form.status != '1'"
             >作废
           </el-button>

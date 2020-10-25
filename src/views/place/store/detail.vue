@@ -136,7 +136,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-    
+
     <el-row :gutter="10" class="mb8">
       <!--<el-col :span="1.5">
         <el-button
@@ -173,12 +173,12 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['place:store_detail:export']"
+          v-hasPermi="['place:detail:export']"
         >导出
         </el-button>
       </el-col>
     </el-row>
-    
+
     <el-table v-loading="loading" :data="store_detailList">
       <!--<el-table-column type="selection" width="55" align="center" />-->
       <!--<el-table-column label="ID" align="center" prop="id" />-->
@@ -228,7 +228,7 @@
         </template>
       </el-table-column>-->
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -290,7 +290,7 @@
 			//接收参数
 			let queryPlaceId = this.$route.query.placeId
 			let queryStoreCode = this.$route.query.storeCode
-   
+
 			this.getDicts("yard_store_state").then(response => {
 				this.storeStateOptions = response.data;
 			})

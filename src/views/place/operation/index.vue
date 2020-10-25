@@ -70,7 +70,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-    
+
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -78,7 +78,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['place:operation:add']"
+          v-hasPermi="['place:operation_detail:add']"
         >新增
         </el-button>
       </el-col>
@@ -110,12 +110,12 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['place:operation:export']"
+          v-hasPermi="['place:operation_detail:export']"
         >导出
         </el-button>
       </el-col>
     </el-row>
-    
+
     <el-table v-loading="loading" :data="operation_subList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="作业单号" align="center" prop="operationId"/>
@@ -158,7 +158,7 @@
         </template>
       </el-table-column>-->
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -166,7 +166,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    
+
     <!-- 添加或修改作业子单对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rulesIf" label-width="120px">
@@ -208,7 +208,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          
+
           <el-col :span="12">
             <el-form-item label="作业类型" prop="operationType">
               <el-select v-model="form.operationType" placeholder="请选择作业类型" :disabled="true">

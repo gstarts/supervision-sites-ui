@@ -122,7 +122,7 @@
             icon="el-icon-plus"
             size="mini"
             @click="handleImport(scope.row)"
-            v-hasPermi="['place:big:add']"
+            v-hasPermi="['place:big:Import']"
             v-show="scope.row.status != '1'"
           >导入
           </el-button>

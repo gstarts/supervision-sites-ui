@@ -61,6 +61,7 @@
           icon="el-icon-download"
           size="mini"
           type="info"
+          v-hasPermi="['place:car:Import']"
           @click="handleImport">
           导入
         </el-button>
