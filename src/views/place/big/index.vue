@@ -560,7 +560,7 @@ export default {
             // 将得到的企业属性赋值到应用的对象中
             this.form.customerName = element.customerName
             // 客户id
-            // this.form.customerId= element.customerId
+            this.form.customerId= element.customerId
             this.storeIds = element.params.contract
             const ids = element.storeIds
             getStoreByIds(ids).then(response => {
