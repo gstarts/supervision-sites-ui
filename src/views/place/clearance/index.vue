@@ -59,6 +59,7 @@
           icon="el-icon-download"
           type="info"
           @click="handleImport"
+          v-hasPermi="['place:clearance:Import']"
         >导入
         </el-button>
       </el-col>
@@ -105,7 +106,7 @@
           <el-input v-model="form.batchNo" placeholder="请输入运输批次号" />
         </el-form-item>
         <el-form-item label="提运单重量" prop="wieght">
-          <el-input v-model="form.wieght" placeholder="请输入提运单重量" />
+          <el-input v-model.number="form.wieght" placeholder="请输入提运单重量" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -213,6 +214,19 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        coalBillNo: [
+          { required: true, message: '请选择提煤单', trigger: 'blur' }
+        ],
+        customsNo: [
+          { required: true, message: '请选择提运单号', trigger: 'blur' }
+        ],
+        batchNo: [
+          { required: true, message: '请选择运输批次号', trigger: 'blur' }
+        ],
+        wieght: [
+          { required: true, message: '请输入', trigger: 'blur' },
+          { type: 'number', message: '必须为数字值' }
+        ],
       },
       //提煤单号
       BigList:[],

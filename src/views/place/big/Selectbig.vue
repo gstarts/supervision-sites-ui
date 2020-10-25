@@ -341,7 +341,7 @@
             type="text"
             icon="el-icon-warning"
             @click="voidUpdate(scope.row)"
-            v-hasPermi="['place:big:edit']"
+            v-hasPermi="['place:head:edit']"
             v-show="form.status != '1'"
             >作废
           </el-button>
