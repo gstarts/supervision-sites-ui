@@ -240,8 +240,8 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="库位号" prop="businessNo">
-              <el-select v-model="form.businessNo" placeholder="请输入库位号" @change="((val)=>{change(val, 'businessNo')})">
+            <el-form-item label="库位号" prop="storeCode">
+              <el-select v-model="form.storeCode" placeholder="请输入库位号" @change="((val)=>{change(val, 'storeCode')})">
                 <el-option
                   v-for="type in storeIds"
                   :key="type.storeCode"
@@ -571,7 +571,7 @@ export default {
       }
 
       // 库位
-      if (name === 'businessNo') {
+      if (name === 'storeCode') {
         this.storeIds.forEach(element => {
           if (element.storeCode === val) {
             this.form.storeCapacity = element.storeCapacity
