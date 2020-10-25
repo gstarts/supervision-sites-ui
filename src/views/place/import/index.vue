@@ -271,6 +271,14 @@
             v-hasPermi="['place:import:remove']"
           >删除
           </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-download"
+            @click="handleDownload(scope.row)"
+            v-hasPermi="['place:import:download']"
+          >下载
+          </el-button>
         </template>
       </af-table-column>
     </el-table>
@@ -359,7 +367,6 @@
           </el-col>
         </el-row>
 
-
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="寄舱客户" prop="storeCustomer">
@@ -411,6 +418,7 @@
         <!--          <el-input v-model="form.settlementContractId" placeholder="请输入结算合同ID" />-->
         <!--        </el-form-item>-->
         <el-row :gutter="10" style="text-align: center">
+          <a href="#" type="text">模板下载</a>
           <el-upload
             class="upload-demo"
             ref="upload"
@@ -428,7 +436,15 @@
             :auto-upload="false">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击选择文件</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传xls/xlsx/xlsm文件</div>
+            <div class="el-upload__tip" slot="tip">只能上传xls/xlsx/xlsm文件
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-download"
+                @click="templateDownload"
+              >模板下载
+              </el-button>
+            </div>
           </el-upload>
         </el-row>
 
@@ -547,10 +563,10 @@ export default {
       this.getList();
     }
 
-    listStoreContract({'placeId': this.queryParams.placeId}).then(response => {
+    //查找合同
+    /*listStoreContract({'placeId': this.queryParams.placeId}).then(response => {
       this.contractList = response.rows;
-
-    });
+    });*/
   },
   methods: {
     /** 查询导入文件记录 列表 */
@@ -584,7 +600,7 @@ export default {
         isGenStoreNotice: undefined,
         objectName: undefined,
         path: undefined,
-        placeId: undefined,
+        placeId: this.queryParams.placeId,
         templateType: undefined,
         fileLength: undefined,
         storeContractId: undefined,
@@ -615,14 +631,15 @@ export default {
     },
     /** 导入按钮操作 */
     handleAdd() {
-      if (this.queryParams.placeId == 134) {
-        this.reset();
-        this.open = true;
-        this.title = "导入模板文件";
+      //if (this.queryParams.placeId == 134) {
+      this.reset();
+      this.open = true;
+      this.title = "导入模板文件";
+      this.getContract(this.queryParams.placeId)
 
-      } else {
+      /*} else {
         this.$message.info("请选择嘉亿达监管场所,其他场所功能未实现")
-      }
+      }*/
 
     },
     /** 修改按钮操作 */
@@ -772,6 +789,19 @@ export default {
         console.log("取消生成通知单")
       });
     },
+    getContract(placeId) {
+      //查找合同
+      listStoreContract({'placeId': placeId}).then(response => {
+        this.contractList = response.rows;
+      });
+    },
+    //下载
+    handleDownload(row) {
+      window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=' + row.bucketName + '&objectName=' + row.objectName
+    },
+    templateDownload(){
+      window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=place&objectName=普通场所入库通知单模板.xlsx'
+    }
   }
 };
 </script>
