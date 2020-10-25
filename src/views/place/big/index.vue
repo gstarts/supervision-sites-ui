@@ -123,6 +123,7 @@
             size="mini"
             @click="handleImport(scope.row)"
             v-hasPermi="['place:big:add']"
+            v-show="scope.row.status != '1'"
           >导入
           </el-button>
           <el-button
@@ -131,6 +132,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['place:big:edit']"
+            v-show="scope.row.status != '1'"
           >修改
           </el-button
           >
@@ -140,6 +142,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['place:big:remove']"
+            v-show="scope.row.status != '1'"
           >删除
           </el-button
           >
