@@ -251,7 +251,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <!-- <el-col :span="12">
             <el-form-item label="合同号" prop="contractNo">
               <el-select v-model="form.contractNo" placeholder="请输入合同号" @change="((val)=>{change(val, 'contractNo')})">
                 <el-option
@@ -263,14 +263,27 @@
                 </el-option>
               </el-select>
             </el-form-item>
+          </el-col> -->
+          <el-col :span="12">
+            <el-form-item label="品名" prop="goodsName">
+              <el-input v-model="form.goodsName" placeholder="请输入品名"/>
+            </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="寄舱客户" prop="checkConsumer">
-              <el-input v-model="form.checkConsumer" placeholder="请输入寄舱客户" :disabled="true"/>
+              <el-select
+                v-model="form.checkConsumer" placeholder="请选择寄舱客户" @change="((val)=>{change(val, 'eName')})">
+                <el-option
+                  v-for="dict in clientNameList"
+                  :key="dict.eName"
+                  :label="dict.eName"
+                  :value="dict.eName"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <!-- <el-row>
           <el-col :span="12">
             <el-form-item label="库位号" prop="businessNo">
               <el-select v-model="form.businessNo" placeholder="请输入库位号" @change="((val)=>{change(val, 'businessNo')})">
@@ -288,19 +301,13 @@
               <el-input v-model="form.storeCapacity" disabled/>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="品名" prop="goodsName">
-              <el-input v-model="form.goodsName" placeholder="请输入品名"/>
-            </el-form-item>
-          </el-col>
+        </el-row> -->
+        <el-row>          
           <el-col :span="12">
             <el-form-item label="放行量" prop="passVolume">
               <el-input v-model.number="form.passVolume" placeholder="请输入放行量"/>
             </el-form-item>
           </el-col>
-
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -316,6 +323,7 @@ import { addPassDoc, delPassDoc, getPassDoc, listPassDoc, updatePassDoc } from '
 import { listStoreContract } from '@/api/place/storeContract'
 import { getUserDepts } from '@/utils/charutils'
 import { getStoreByIds } from '@/api/place/store'
+import { listInfo } from "@/api/basis/enterpriseInfo";
 
 export default {
   name: 'PassDoc',
@@ -329,6 +337,8 @@ export default {
       contractOptions: [],
       // 放行状态字典
       releaseStatus: [],
+      // 客户名称列表
+      clientNameList: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -385,6 +395,7 @@ export default {
     }
   },
   created() {
+    this.getListInfo();
     // 获取场所
     this.depts = getUserDepts('0')
     /** 放行状态字典 */
@@ -402,6 +413,14 @@ export default {
         this.total = response.total
         this.loading = false
       })
+    },
+    getListInfo(){ 
+      this.loading = true;
+      let info = {"eType" : '2'}
+      listInfo(info).then(response => {
+          this.clientNameList = response.rows;
+          this.loading = false;
+      });
     },
     // 场所名称翻译
     corporationFormat(row, column) {
@@ -567,6 +586,15 @@ export default {
         this.storeIds.forEach(element => {
           if (element.storeCode === val) {
             this.form.storeCapacity = element.storeCapacity
+          }
+        })
+      }
+
+      // 客户名称->寄舱客户id
+      if (name === 'eName') {
+        this.clientNameList.forEach(element => {
+          if (element.eName === val) {
+            this.form.customerId = element.id
           }
         })
       }

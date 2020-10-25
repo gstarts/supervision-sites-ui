@@ -243,12 +243,12 @@
           <el-col :span="12">
             <el-form-item label="客户名称" prop="customerName">
               <el-select
-                v-model="form.customerName" placeholder="请选择客户名称" size="small" @change="((val)=>{change(val, 'id')})">
+                v-model="form.customerName" placeholder="请选择客户名称" size="small" @change="((val)=>{change(val, 'eName')})">
                 <el-option
                   v-for="dict in clientNameList"
-                  :key="dict.id"
+                  :key="dict.eName"
                   :label="dict.eName"
-                  :value="dict.id"
+                  :value="dict.eName"
                 />
               </el-select>
             </el-form-item>
@@ -413,10 +413,6 @@ export default {
       storeContractList: [],
       // 客户名称列表
       clientNameList: [],
-      // // 企业信息备案表
-      // info:{
-      //   eType: undefined
-      // },
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -660,9 +656,9 @@ export default {
     // 下拉列表改变时激活
     change(val, name) {
       // 客户名称->寄舱客户id
-      if (name === 'id') {
+      if (name === 'eName') {
         this.clientNameList.forEach(element => {
-          if (element.id === val) {
+          if (element.eName === val) {
             this.form.customerId = element.id
           }
         })
