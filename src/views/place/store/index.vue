@@ -72,7 +72,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['yard:store:add']"
+          v-hasPermi="['place:store:add']"
         >新增
         </el-button>
       </el-col>
@@ -83,7 +83,7 @@
            size="mini"
            :disabled="single"
            @click="handleUpdate"
-           v-hasPermi="['yard:store:edit']"
+           v-hasPermi="['place:store:edit']"
          >修改
          </el-button>
        </el-col>-->
@@ -94,7 +94,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['yard:store:remove']"
+          v-hasPermi="['place:store:remove']"
         >删除
         </el-button>
       </el-col>-->
@@ -104,7 +104,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['yard:store:export']"
+          v-hasPermi="['place:store:export']"
         >导出
         </el-button>
       </el-col>
