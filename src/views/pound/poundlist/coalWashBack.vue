@@ -675,6 +675,7 @@ export default {
               let params = {
                 'placeId': this.queryParams.stationId,
                 'direction': 1,
+                'vehicleNo':this.form.plateNum,
                 'noticeNo': this.form.noticeNo,
                 'storeCode': this.form.locationNumber,
                 'netWeight': this.form.netWeight,
