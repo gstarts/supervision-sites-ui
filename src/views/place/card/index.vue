@@ -1,159 +1,160 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="序号" prop="no">
-        <el-input
-          v-model="queryParams.no"
-          placeholder="请输入序号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="日期" prop="date">
-        <el-input
-          v-model="queryParams.date"
-          placeholder="请输入日期"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="客户单位" prop="customer">
-        <el-input
-          v-model="queryParams.customer"
-          placeholder="请输入客户单位"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="合同号" prop="contractNo">
-        <el-input
-          v-model="queryParams.contractNo"
-          placeholder="请输入合同号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="煤种" prop="coalType">
-        <el-select v-model="queryParams.coalType" placeholder="请选择煤种" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="车号" prop="plateNo">
-        <el-input
-          v-model="queryParams.plateNo"
-          placeholder="请输入车号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="提煤单号" prop="coalBillNo">
-        <el-input
-          v-model="queryParams.coalBillNo"
-          placeholder="请输入提煤单号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="承运单位" prop="carriage">
-        <el-input
-          v-model="queryParams.carriage"
-          placeholder="请输入承运单位"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="装货地点" prop="loading">
-        <el-input
-          v-model="queryParams.loading"
-          placeholder="请输入装货地点"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="收货单位" prop="receipt">
-        <el-input
-          v-model="queryParams.receipt"
-          placeholder="请输入收货单位"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="开单员 打印时候获取" prop="operator">
-        <el-input
-          v-model="queryParams.operator"
-          placeholder="请输入开单员 打印时候获取"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="乐观锁" prop="revision">
-        <el-input
-          v-model="queryParams.revision"
-          placeholder="请输入乐观锁"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态 状态备用" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态 状态备用" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+<!--      <el-form-item label="序号" prop="no">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.no"-->
+<!--          placeholder="请输入序号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="日期" prop="date">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.date"-->
+<!--          placeholder="请输入日期"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="客户单位" prop="customer">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.customer"-->
+<!--          placeholder="请输入客户单位"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="合同号" prop="contractNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.contractNo"-->
+<!--          placeholder="请输入合同号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="煤种" prop="coalType">-->
+<!--        <el-select v-model="queryParams.coalType" placeholder="请选择煤种" clearable size="small">-->
+<!--          <el-option label="请选择字典生成" value="" />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="车号" prop="plateNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.plateNo"-->
+<!--          placeholder="请输入车号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="提煤单号" prop="coalBillNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.coalBillNo"-->
+<!--          placeholder="请输入提煤单号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="承运单位" prop="carriage">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.carriage"-->
+<!--          placeholder="请输入承运单位"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="装货地点" prop="loading">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.loading"-->
+<!--          placeholder="请输入装货地点"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="收货单位" prop="receipt">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.receipt"-->
+<!--          placeholder="请输入收货单位"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="开单员 打印时候获取" prop="operator">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.operator"-->
+<!--          placeholder="请输入开单员 打印时候获取"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="乐观锁" prop="revision">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.revision"-->
+<!--          placeholder="请输入乐观锁"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="状态 状态备用" prop="status">-->
+<!--        <el-select v-model="queryParams.status" placeholder="请选择状态 状态备用" clearable size="small">-->
+<!--          <el-option label="请选择字典生成" value="" />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+<!--      </el-form-item>-->
     </el-form>
 
     <el-row :gutter="10" class="mb8">
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          icon="el-icon-plus"-->
+<!--          size="mini"-->
+<!--          @click="handleAdd"-->
+<!--          v-hasPermi="['place:card:add']"-->
+<!--        >新增</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['place:card:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="danger"-->
+<!--          icon="el-icon-delete"-->
+<!--          size="mini"-->
+<!--          :disabled="multiple"-->
+<!--          @click="handleDelete"-->
+<!--          v-hasPermi="['place:card:remove']"-->
+<!--        >删除</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          icon="el-icon-plus"
+          type="info"
+          class="fa fa-print"
           size="mini"
-          @click="handleAdd"
-          v-hasPermi="['place:card:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['place:card:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['place:card:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
+          v-print="'#dayin'"
+          @click="print"
           v-hasPermi="['place:card:export']"
-        >导出</el-button>
+        >打印</el-button>
       </el-col>
     </el-row>
 
@@ -170,30 +171,30 @@
       <el-table-column label="承运单位" align="center" prop="carriage" />
       <el-table-column label="装货地点" align="center" prop="loading" />
       <el-table-column label="收货单位" align="center" prop="receipt" />
-      <el-table-column label="开单员 打印时候获取" align="center" prop="operator" />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="乐观锁" align="center" prop="revision" />
-      <el-table-column label="状态 状态备用" align="center" prop="status" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['place:card:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['place:card:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="开单员 打印时候获取" align="center" prop="operator" />-->
+<!--      <el-table-column label="备注" align="center" prop="remark" />-->
+<!--      <el-table-column label="乐观锁" align="center" prop="revision" />-->
+<!--      <el-table-column label="状态 状态备用" align="center" prop="status" />-->
+<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['place:card:edit']"-->
+<!--          >修改</el-button>-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['place:card:remove']"-->
+<!--          >删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -201,6 +202,35 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+
+    <!--打印区域-->
+    <div id="dayin"  v-show="show">
+      <div v-for="(item,index) in printList" id="all">
+        <div :id="gennerateId(index)"></div>
+        <div id="headRow">{{item.no}}</div>
+        <div id="firstRow">
+          <span>{{item.date}}</span>
+        <span id="contractNoStyle">{{item.contractNo}}</span>
+        <span id="coalBillNoStyle">{{item.coalBillNo}}</span></div>
+
+        <div id="secondRow">
+          <span id="customerStyle">{{item.customer}}</span>
+        <span id="carriageStyle">{{item.carriage}}</span></div>
+
+        <div id="thirdRow">
+          <span>{{item.coalType}}</span>
+        <span id="loadingStyle">{{item.loading}}</span></div>
+
+        <div id="fourRow">
+          <span>{{item.plateNo}}</span>
+        <span id="receiptStyle">{{item.receipt}}</span></div>
+        <div id="fiveRow">
+          <span>{{biller}}</span>
+        </div>
+        <div id="nouse"></div>
+      </div>
+
+    </div>
 
     <!-- 添加或修改入门证 对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
@@ -301,8 +331,13 @@ export default {
       total: 0,
       // 入门证 表格数据
       cardList: [],
+      show : false,
+      // 打印数据list
+      printList:[],
       // 弹出层标题
       title: "",
+      //开单员
+      biller: "",
       // 是否显示弹出层
       open: false,
       // 查询参数
@@ -373,6 +408,28 @@ export default {
       };
       this.resetForm("form");
     },
+    // 打印操作，生成divID
+    gennerateId:function (index) {
+      return "printDiv"+index
+    },
+    print(){
+      this.biller  = this.$store.state.user.nickName
+      this.show = true;
+      clearTimeout(this.timer);
+      //清除延迟执行
+      this.timer = setTimeout(() => {
+        //设置延迟执行
+        //this.reset();
+        this.show = false;
+      }, 2000);
+    },
+
+
+
+      //销毁前清除定时器
+    beforeDestroy() {
+      clearInterval(this.timer1);
+    },
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -385,6 +442,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
+      this.printList = selection
       this.ids = selection.map(item => item.id)
       this.single = selection.length!=1
       this.multiple = !selection.length
@@ -452,3 +510,112 @@ export default {
   }
 };
 </script>
+
+<style>
+
+  @page {
+    size: auto;
+    margin: 3mm;
+  }
+
+  /*html {*/
+  /*  background-color: #ffffff;*/
+  /*  margin: 0px;*/
+  /*}*/
+
+  /*body {*/
+  /*  margin: 10mm 15mm 10mm 15mm;*/
+  /*}*/
+  #all {
+    height:1638px;
+    width: 1150px;
+    /*border: 1px solid ;*/
+    /*margin-top: 1cm;*/
+  }
+  #headRow{
+    height: 40px;
+    width: 1000px;
+    padding-left: 3.5cm;
+    /*border: 1px solid ;*/
+    padding-top: 10px;
+    margin-top: 2.5cm;
+  }
+  #firstRow{
+    height: 40px;
+    width: 1000px;
+    padding-left: 4cm;
+    /*border: 1px solid ;*/
+    padding-top: 10px;
+    margin-top: 1cm;
+
+
+  }
+  #contractNoStyle{
+    margin-left: 4cm;
+  }
+
+  #coalBillNoStyle{
+    margin-left: 4cm;
+  }
+
+  #secondRow{
+    height: 40px;
+    width: 1000px;
+    padding-left: 4cm;
+    /*border: 1px solid ;*/
+    padding-top: 10px;
+
+  }
+
+  #thirdRow{
+    height: 40px;
+    width: 1000px;
+    padding-left: 4cm;
+    /*border: 1px solid ;*/
+    padding-top: 10px;
+  }
+
+  #fourRow{
+    height: 40px;
+    width: 1000px;
+    padding-left: 4cm;
+    /*border: 1px solid ;*/
+    padding-top: 10px;
+  }
+
+  /*#customerStyle{*/
+  /*  margin-left: 4cm;*/
+  /*}*/
+
+  #carriageStyle{
+    margin-left: 4cm;
+  }
+
+  #loadingStyle{
+    margin-left: 4cm;
+  }
+  #receiptStyle{
+    margin-left: 4cm;
+  }
+
+  #fiveRow{
+    height: 40px;
+    width: 1000px;
+    padding-left: 4cm;
+    /*border: 1px solid ;*/
+    padding-top: 10px;
+    margin-top: 1cm;
+  }
+
+  #nouse{
+    height: 100px;
+    width: 1000px;
+    /*border: 1px solid*/
+
+  }
+
+
+
+
+
+</style>
