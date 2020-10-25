@@ -242,7 +242,15 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="客户名称" prop="customerName">
-              <el-input v-model="form.customerName" placeholder="请输入客户名称"/>
+              <el-select
+                v-model="form.customerName" placeholder="请选择客户名称" size="small" @change="((val)=>{change(val, 'id')})">
+                <el-option
+                  v-for="dict in clientNameList"
+                  :key="dict.id"
+                  :label="dict.eName"
+                  :value="dict.id"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -384,6 +392,7 @@ import {
 import {getUserDepts} from "@/utils/charutils";
 import {getZoneList} from "@/api/place/zone";
 import {listStore} from "@/api/place/store";
+import { listInfo } from "@/api/basis/enterpriseInfo";
 
 export default {
   name: "StoreContract",
@@ -402,6 +411,12 @@ export default {
       total: 0,
       // 仓储合同 表格数据
       storeContractList: [],
+      // 客户名称列表
+      clientNameList: [],
+      // // 企业信息备案表
+      // info:{
+      //   eType: undefined
+      // },
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -452,7 +467,8 @@ export default {
       statusList: [{'key': '1', 'value': '有效'}, {'key': '0', 'value': '无效'}]
     };
   },
-  created() {
+  created() {   
+    this.getListInfo();
     // 0 监管场所，1保税库，2堆场，3企业
     this.depts = getUserDepts('0')
     if (this.depts.length > 0) {
@@ -469,6 +485,14 @@ export default {
         this.storeContractList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    getListInfo(){ 
+      this.loading = true;
+      let info = {"eType" : '2'}
+      listInfo(info).then(response => {
+          this.clientNameList = response.rows;
+          this.loading = false;
       });
     },
     // 取消按钮
@@ -632,6 +656,17 @@ export default {
         storeList.push(store.storeCode)
       }
       return storeList
+    },
+    // 下拉列表改变时激活
+    change(val, name) {
+      // 客户名称->寄舱客户id
+      if (name === 'id') {
+        this.clientNameList.forEach(element => {
+          if (element.id === val) {
+            this.form.customerId = element.id
+          }
+        })
+      }
     }
   }
 };
