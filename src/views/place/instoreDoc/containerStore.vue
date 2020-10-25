@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="48px">
       <el-form-item label="场所" prop="placeId">
         <el-select @change="handleQuery"
                    v-model="queryParams.placeId" placeholder="请选择场所" size="small">
@@ -9,6 +9,17 @@
             :key="dept.deptId"
             :label="dept.deptName"
             :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="进/出库" prop="direction" label-width="70px">
+        <el-select @change="handleQuery"
+                   v-model="queryParams.direction" placeholder="请选择进/出库" size="small">
+          <el-option
+            v-for="dept in directionDic"
+            :key="dept.key"
+            :label="dept.label"
+            :value="dept.key"
           />
         </el-select>
       </el-form-item>
@@ -212,7 +223,11 @@ export default {
         ],
       },
       vehicleList: [],
-      storeList: []
+      storeList: [],
+      directionDic: [
+        {'key':'1',label:'入库'},
+        {'key':'0',label:'出库'},
+      ]
     };
   },
   created() {
