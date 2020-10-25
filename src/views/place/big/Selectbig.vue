@@ -18,55 +18,61 @@
                 >
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="提煤单号" prop="coalBillNo">
-                        <el-input
+                      <el-form-item label="提煤单号:" prop="coalBillNo">
+                        <!-- <el-input
                           v-model="form.coalBillNo"
                           placeholder="请输入提煤单号"
-                        />
+                        /> -->
+                        <span>{{form.coalBillNo}}</span>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                      <el-form-item label="合同编号" prop="contractNo">
-                        <el-input
+                      <el-form-item label="合同编号:" prop="contractNo">
+                        <!-- <el-input
                           v-model="form.contractNo"
                           placeholder="请输入合同编号"
-                        />
+                        /> -->
+                        <span>{{form.contractNo}}</span>
                       </el-form-item>
                     </el-col>
                   </el-row>
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="提煤重量" prop="coalWeight">
-                        <el-input
+                      <el-form-item label="提煤重量:" prop="coalWeight">
+                        <!-- <el-input
                           v-model="form.coalWeight"
                           placeholder="请输入提煤重量"
-                        />
+                        /> -->
+                        <span>{{form.coalWeight}}</span>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                      <el-form-item label="货物名称" prop="goodsName">
-                        <el-input
+                      <el-form-item label="货物名称:" prop="goodsName">
+                        <!-- <el-input
                           v-model="form.goodsName"
                           placeholder="请输入货物名称"
-                        />
+                        /> -->
+                        <span>{{form.goodsName}}</span>
                       </el-form-item>
                     </el-col>
                   </el-row>
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="收货单位" prop="receiveName">
-                        <el-input
+                      <el-form-item label="收货单位:" prop="receiveName">
+                        <!-- <el-input
                           v-model="form.receiveName"
                           placeholder="请输入收货单位"
-                        />
+                        /> -->
+                        <span>{{form.receiveName}}</span>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                      <el-form-item label="客户名称" prop="customerName">
-                        <el-input
+                      <el-form-item label="客户名称:" prop="customerName">
+                        <!-- <el-input
                           v-model="form.customerName"
                           placeholder="请输入客户名称"
-                        />
+                        /> -->
+                        <span>{{form.customerName}}</span>
                       </el-form-item>
                     </el-col>
                   </el-row>
@@ -86,46 +92,50 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item
-                  label="已提重量"
+                  label="已提重量:"
                   prop="parameterForm.mentionedWeight"
                 >
-                  <el-input
+                  <!-- <el-input
                     v-model="parameterForm.mentionedWeight"
                     placeholder="请输入已提重量"
                     disabled
-                  />
+                  /> -->
+                  <span>{{parameterForm.mentionedWeight}}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item
-                  label="未提"
+                  label="未提重量:"
                   prop="parameterForm.notMentionedWeight"
                 >
-                  <el-input
+                  <!-- <el-input
                     v-model="parameterForm.notMentionedWeight"
                     placeholder="请输入未提重量"
                     disabled
-                  />
+                  /> -->
+                  <span>{{parameterForm.notMentionedWeight}}</span>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="12">
-                <el-form-item label="有效车数" prop="parameterForm.effective">
-                  <el-input
+                <el-form-item label="有效车数:" prop="parameterForm.effective">
+                  <!-- <el-input
                     v-model="parameterForm.effective"
                     placeholder="请输入有效车数"
                     disabled
-                  />
+                  /> -->
+                  <span>{{parameterForm.effective}}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="已提车数" prop="parameterForm.mentioned">
-                  <el-input
+                <el-form-item label="已提车数:" prop="parameterForm.mentioned">
+                  <!-- <el-input
                     v-model="parameterForm.mentioned"
                     placeholder="请输入已提车数"
                     disabled
-                  />
+                  /> -->
+                  <span>{{parameterForm.effective}}</span>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -135,20 +145,22 @@
                   label="未提车数"
                   prop="parameterForm.notMentioned"
                 >
-                  <el-input
+                  <!-- <el-input
                     v-model="parameterForm.notMentioned"
                     placeholder="请输入未提车数"
                     disabled
-                  />
+                  /> -->
+                  <span>{{parameterForm.notMentioned}}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="作废车数" prop="parameterForm.void">
-                  <el-input
+                  <!-- <el-input
                     v-model="parameterForm.void"
                     placeholder="请输入作废车数"
                     disabled
-                  />
+                  /> -->
+                  <span>{{parameterForm.void}}</span>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -277,7 +289,7 @@
           @click="handleExport"
           v-hasPermi="['place:big:export']"
         >导出</el-button>
-      </el-col> 
+      </el-col>
     </el-row>-->
 
     <el-table
