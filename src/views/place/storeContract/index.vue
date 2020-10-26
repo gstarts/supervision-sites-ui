@@ -274,7 +274,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="散货库位" prop="storeIds">
-              <el-select v-model="form.storeIds" multiple placeholder="请选择散货库位" style="width:700px">
+              <el-select v-model="form.storeIds" multiple placeholder="请选择散货库位" style="width: 100%" >
                 <el-option
                   v-for="store in storeList"
                   :key="store.id"
@@ -315,7 +315,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="签订日期" prop="signDate">
-              <el-date-picker clearable size="small" style="width: 200px"
+              <el-date-picker clearable size="small" style="width: 100%"
                               v-model="form.signDate"
                               type="date"
                               value-format="yyyy-MM-dd"
@@ -327,7 +327,7 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="生效日期" prop="startDate">
-              <el-date-picker clearable size="small" style="width: 200px"
+              <el-date-picker clearable size="small" style="width: 100%"
                               v-model="form.startDate"
                               type="date"
                               value-format="yyyy-MM-dd"
@@ -337,7 +337,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="失效日期" prop="endDate">
-              <el-date-picker clearable size="small" style="width: 200px"
+              <el-date-picker clearable size="small" style="width: 100%"
                               v-model="form.endDate"
                               type="date"
                               value-format="yyyy-MM-dd"
@@ -463,7 +463,7 @@ export default {
       statusList: [{'key': '1', 'value': '有效'}, {'key': '0', 'value': '无效'}]
     };
   },
-  created() {   
+  created() {
     this.getListInfo();
     // 0 监管场所，1保税库，2堆场，3企业
     this.depts = getUserDepts('0')
@@ -483,7 +483,7 @@ export default {
         this.loading = false;
       });
     },
-    getListInfo(){ 
+    getListInfo(){
       this.loading = true;
       let info = {"eType" : '2'}
       listInfo(info).then(response => {

@@ -587,14 +587,6 @@
 				});
 			},
 
-      getListE1() {
-        this.queryParams.flowDirection = "E";
-        listIESheet(this.queryParams).then((response) => {
-          this.sheetList = response.rows;
-          this.total = response.total;
-
-        });
-      },
 			//初始化页面 查询进场纪录
 			getListI() {
 				this.loading = true;
@@ -658,7 +650,6 @@
 									this.msgSuccess("进场成功");
 									this.reset();
 									this.getListI();
-
 								} else {
 									this.msgError(response.msg);
 								}
@@ -668,10 +659,10 @@
 							//this.form.noticeNo = this.noticeNo;
 							//return false
 							//出场修改按钮
-							updateSheet(this.form).then((response) => {
-								if (response.code === 200) {
-									this.msgSuccess("出场成功");
-                  this.getListE();
+							//updateSheet(this.form).then((response) => {
+								//if (response.code === 200) {
+									//this.msgSuccess("出场成功");
+                  //this.getListE();
                   let params = {
                     'placeId':this.queryParams.stationId,
                     'direction':1,
@@ -688,26 +679,38 @@
 												this.msgSuccess("入库成功");
 												//更新一下库位
 												this.getStoreCode(this.queryParams.stationId)
+                        updateSheet(this.form).then((response) => {
+                          if(response.code === 200){
+                            this.msgSuccess("出场成功");
+                            this.getListE();
+                          }else {
+                            this.msgError(response.msg);
+                          }
+                        })
 											} else {
 												this.msgError(response.msg);
 											}
 										})
-									}
+									//}
 									if (this.PoundForm.stationViaType === '02') {//空进重出，生成出库单
 									  params.direction = 0
 										genStoreDoc(params).then(response => {
 											if (response.code === 200) {
 												this.msgSuccess("出库成功");
+                        updateSheet(this.form).then((response) => {
+                          if(response.code === 200){
+                            this.msgSuccess("出场成功");
+                            this.getListE();
+                          }else {
+                            this.msgError(response.msg);
+                          }
+                        })
 											} else {
 												this.msgError(response.msg);
 											}
 										})
 									}
-									this.getListI();
-								} else {
-									this.msgError(response.msg);
 								}
-							})
 						}
 					}
 				});

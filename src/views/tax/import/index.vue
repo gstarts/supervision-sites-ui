@@ -111,7 +111,7 @@
       </af-table-column>
       <af-table-column label="业务编号" align="center" prop="businessNo"/>
       <af-table-column label="寄舱客户" align="center" prop="storeCustomer"/>
-      <af-table-column label="寄舱客户" align="center" prop="settlementCustomer"/>
+      <af-table-column label="结算客户" align="center" prop="settlementCustomer"/>
       <af-table-column label="发货单位" align="center" prop="sendName"/>
       <af-table-column label="收货单位" align="center" prop="receiveName"/>
       <af-table-column label="运输方式" align="center" prop="transportMode">
