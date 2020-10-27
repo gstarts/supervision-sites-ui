@@ -242,7 +242,7 @@
             v-hasPermi="['place:import:edit']"
           >修改
           </el-button>-->
-          <el-button v-show="scope.row.isGenStoreNotice ===0 && scope.row.templateType ==='1' "
+          <el-button v-show="scope.row.isGenStoreNotice === 0 && scope.row.templateType ==='1' "
                      size="mini"
                      type="text"
                      icon="el-icon-edit"
@@ -354,12 +354,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="寄舱合同编号" prop="storeContractId">
+            <el-form-item label="寄舱合同" prop="storeContractId">
               <el-select v-model="form.storeContractId" placeholder="请选择寄舱合同" @change="changeContract">
                 <el-option
                   v-for="type in contractList"
                   :key="type.id"
-                  :label="type.contractNo"
+                  :label="type.contractNo+' ['+type.customerName+']'"
                   :value="type.id"
                 />
               </el-select>
@@ -370,7 +370,7 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="寄舱客户" prop="storeCustomer">
-              <el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户"/>
+              <el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>
               <!--              <el-select v-model="form.storeCustomer" placeholder="请选择寄舱客户">-->
               <!--                <el-option-->
               <!--                  v-for="type in contractList"-->
