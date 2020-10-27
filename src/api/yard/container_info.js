@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询集装箱基本信息列表
 export function listContainer_info(query) {
   return request({
-    url: '/yard/container/info/list',
+    url: '/container/info/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listContainer_info(query) {
 // 查询集装箱基本信息详细
 export function getContainer_info(id) {
   return request({
-    url: '/yard/container/info/' + id,
+    url: '/container/info/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getContainer_info(id) {
 // 新增集装箱基本信息
 export function addContainer_info(data) {
   return request({
-    url: '/yard/container/info',
+    url: '/container/info',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addContainer_info(data) {
 // 修改集装箱基本信息
 export function updateContainer_info(data) {
   return request({
-    url: '/yard/container/info',
+    url: '/container/info',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateContainer_info(data) {
 // 删除集装箱基本信息
 export function delContainer_info(id) {
   return request({
-    url: '/yard/container/info/' + id,
+    url: '/container/info/' + id,
     method: 'delete'
   })
 }
