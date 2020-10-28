@@ -58,3 +58,11 @@ export function selectCoalBillNo(query){
     params:query
   })
 }
+// 获取校验重量
+export function getReleaseWeight(query){
+  return request({
+    url:'/place/big/checkWeight',
+    method:'get',
+    params:query
+  })
+}

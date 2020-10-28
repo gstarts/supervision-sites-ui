@@ -252,20 +252,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="库存量" prop="storeCapacity">
-              <el-input v-model="form.storeCapacity" disabled/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="货物名称" prop="goodsName">
-              <el-input v-model="form.goodsName" placeholder="请输入品名"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="提煤重量" prop="coalWeight">
-              <el-input v-model.number="form.coalWeight" placeholder="请输入放行量"/>
+            <el-form-item label="库存量" prop="netWeight">
+              <el-input v-model="form.netWeight" disabled/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -276,6 +264,23 @@
                 v-model="form.receiveName"
                 placeholder="请输入收货单位"
               />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="可分配重量" prop="distribution">
+              <el-input v-model="form.distribution" disabled/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="提煤重量" prop="coalWeight">
+              <el-input v-model.number="form.coalWeight" placeholder="请输入放行量"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="货物名称" prop="goodsName">
+              <el-input v-model="form.goodsName" disabled/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -289,7 +294,7 @@
 </template>
 
 <script>
-import { listBig, getBig, delBig, addBig, updateBig } from '@/api/place/big'
+import { listBig, getBig, delBig, addBig, updateBig, getReleaseWeight } from '@/api/place/big'
 import { getToken } from '@/utils/auth'
 import { listStoreContract } from '@/api/place/storeContract'
 import { getStoreByIds } from '@/api/place/store'
@@ -336,14 +341,33 @@ export default {
       },
       // 表单参数
       form: {},
+      // 校验重量
+      weightParams: {
+        goodsName: undefined,
+        id: undefined
+      },
       // 表单校验
-      rules: {},
+      rules: {
+        coalBillNo: [
+          { required: true, message: '提煤单号不能为空', trigger: 'blur' }
+        ],
+        coalWeight: [
+          { required: true, message: '请输入', trigger: 'blur' },
+          { type: 'number', message: '必须为数字值' }
+        ],
+        contractNo: [
+          { required: true, message: '合同号不能为空', trigger: 'blur' }
+        ],
+        goodsName: [
+          { required: true, message: '品名不能为空', trigger: 'blur' }
+        ]
+      },
       // 场所名称列表
       depts: [],
       // 合同
-      contractOptions:[],
+      contractOptions: [],
       // 库位号
-      storeIds:[],
+      storeIds: [],
       uploadAction: process.env.VUE_APP_BASE_API + '/place/big',
       uploadData: {},
       uploading: false,
@@ -454,6 +478,14 @@ export default {
       this.upload.open = true
       this.upload.title = '导入数据文件'
     },
+    /** 校验重量*/
+    checkWeight() {
+      getReleaseWeight(this.weightParams).then(response => {
+        if (response.code === 200) {
+          this.form.distribution = response.data.distribution
+        }
+      })
+    },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
@@ -481,8 +513,11 @@ export default {
     submitForm: function() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          if (this.form.coalWeight > this.form.storeCapacity) {
+          if (this.form.coalWeight > this.form.netWeight) {
             return this.msgError('库存容量不足!')
+          }
+          if(this.form.coalWeight>this.form.distribution){
+            return this.msgError("超出可分配重量")
           }
           if (this.form.id != undefined) {
             updateBig(this.form).then((response) => {
@@ -560,7 +595,12 @@ export default {
             // 将得到的企业属性赋值到应用的对象中
             this.form.customerName = element.customerName
             // 客户id
-            this.form.customerId= element.customerId
+            this.form.customerId = element.customerId
+            this.weightParams.id = element.customerId
+            // 品名
+            this.weightParams.goodsName = element.goodsName
+            this.form.goodsName = element.goodsName
+            this.checkWeight()
             this.storeIds = element.params.contract
             const ids = element.storeIds
             getStoreByIds(ids).then(response => {
@@ -568,13 +608,14 @@ export default {
             })
           }
         })
+
       }
 
       // 库位
       if (name === 'storeCode') {
         this.storeIds.forEach(element => {
           if (element.storeCode === val) {
-            this.form.storeCapacity = element.storeCapacity
+            this.form.netWeight = element.netWeight
           }
         })
       }
@@ -593,7 +634,7 @@ export default {
 }
 </script>
 <style scoped>
-.el-select{
+.el-select {
   width: 100%;
 }
 </style>

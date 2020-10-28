@@ -251,22 +251,15 @@
           </el-col>
         </el-row>
         <el-row>
-          <!-- <el-col :span="12">
-            <el-form-item label="合同号" prop="contractNo">
-              <el-select v-model="form.contractNo" placeholder="请输入合同号" @change="((val)=>{change(val, 'contractNo')})">
-                <el-option
-                  v-for="item in contractOptions"
-                  :key="item.contractNo"
-                  :label="item.contractNo"
-                  :value="item.contractNo"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col> -->
           <el-col :span="12">
             <el-form-item label="品名" prop="goodsName">
-              <el-input v-model="form.goodsName" placeholder="请输入品名"/>
+              <el-select v-model="form.goodsName" placeholder="请选择煤种" @change="((val)=>{change(val, 'coalType')})">
+                <el-option
+                  v-for="dict in coalTypeOptions"
+                  :key="dict.dictLabel"
+                  :label="dict.dictLabel"
+                  :value="dict.dictLabel"/>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -274,7 +267,7 @@
               <el-select
                 v-model="form.checkConsumer" placeholder="请选择寄舱客户" @change="((val)=>{change(val, 'eName')})">
                 <el-option
-                  v-for="dict in clientNameList"
+                  v-for="dict in consumerOptions"
                   :key="dict.eName"
                   :label="dict.eName"
                   :value="dict.eName"
@@ -283,29 +276,15 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!-- <el-row>
-          <el-col :span="12">
-            <el-form-item label="库位号" prop="businessNo">
-              <el-select v-model="form.businessNo" placeholder="请输入库位号" @change="((val)=>{change(val, 'businessNo')})">
-                <el-option
-                  v-for="type in storeIds"
-                  :key="type.storeCode"
-                  :label="type.storeCode"
-                  :value="type.storeCode"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="库存量" prop="storeCapacity">
-              <el-input v-model="form.storeCapacity" disabled/>
-            </el-form-item>
-          </el-col>
-        </el-row> -->
-        <el-row>          
+        <el-row>
           <el-col :span="12">
             <el-form-item label="放行量" prop="passVolume">
               <el-input v-model.number="form.passVolume" placeholder="请输入放行量"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="可放行量" prop="release">
+              <el-input v-model.number="form.release" disabled/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -323,7 +302,8 @@ import { addPassDoc, delPassDoc, getPassDoc, listPassDoc, updatePassDoc } from '
 import { listStoreContract } from '@/api/place/storeContract'
 import { getUserDepts } from '@/utils/charutils'
 import { getStoreByIds } from '@/api/place/store'
-import { listInfo } from "@/api/basis/enterpriseInfo";
+import { listInfo } from '@/api/basis/enterpriseInfo'
+import { getReleaseWeight } from '@/api/place/big'
 
 export default {
   name: 'PassDoc',
@@ -338,7 +318,7 @@ export default {
       // 放行状态字典
       releaseStatus: [],
       // 客户名称列表
-      clientNameList: [],
+      consumerOptions: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -372,10 +352,15 @@ export default {
         carTeam: undefined,
         passState: undefined
       },
+      // 校验重量
+      weightParams: {
+        goodsName: undefined,
+        id: undefined
+      },
       // 表单参数
       form: {},
-      // 库位
-      storeIds: [],
+      // 煤种
+      coalTypeOptions: [],
       // 表单校验
       rules: {
         passNo: [
@@ -395,12 +380,15 @@ export default {
     }
   },
   created() {
-    this.getListInfo();
     // 获取场所
     this.depts = getUserDepts('0')
     /** 放行状态字典 */
     this.getDicts('place_release_status').then((response) => {
       this.releaseStatus = response.data
+    })
+    /** 煤种类型*/
+    this.getDicts('coal_type').then(response => {
+      this.coalTypeOptions = response.data
     })
     this.getList()
   },
@@ -414,13 +402,12 @@ export default {
         this.loading = false
       })
     },
-    getListInfo(){ 
-      this.loading = true;
-      let info = {"eType" : '2'}
-      listInfo(info).then(response => {
-          this.clientNameList = response.rows;
-          this.loading = false;
-      });
+    /** 客户信息列表 */
+    getConsumerInfo(placeId) {
+      let consumerParams = { eType: '2',deptId:placeId }
+      listInfo(consumerParams).then(response => {
+        this.consumerOptions = response.rows
+      })
     },
     // 场所名称翻译
     corporationFormat(row, column) {
@@ -441,7 +428,8 @@ export default {
     cancel() {
       this.open = false
       this.reset()
-      this.contractOptions = []
+      this.form = {}
+      this.consumerOptions=[]
       this.storeIds = []
     },
     // 表单重置
@@ -485,6 +473,10 @@ export default {
       this.ids = selection.map(item => item.id)
       this.single = selection.length != 1
       this.multiple = !selection.length
+    },
+    /** 校验重量*/
+    checkWeight() {
+
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -552,52 +544,49 @@ export default {
     },
     /**详情按钮 */
     detail(row) {
-      this.reset();
-      const id = row.contractNo;
-      this.$router.push({ path: "/place/big", query: { tableId: id } });
+      this.reset()
+      const id = row.contractNo
+      this.$router.push({ path: '/place/big', query: { tableId: id } })
     },
     // 下拉列表改变时激活
     change(val, name) {
+      debugger
       // 场所
       if (name === 'placeId') {
         this.queryParams.placeId = val
+        this.getConsumerInfo(val)
         listStoreContract(this.queryParams).then((response) => {
           this.contractOptions = response.rows
         })
       }
-
-      // 合同
-      if (name === 'contractNo') {
-        this.contractOptions.forEach(element => {
-          if (element.contractNo === val) {
-            // 将得到的企业属性赋值到应用的对象中
-            this.form.checkConsumer = element.customerName
-            this.storeIds = element.params.contract
-            const ids = element.storeIds
-            getStoreByIds(ids).then(response => {
-              this.storeIds = response.data
-            })
-          }
-        })
-      }
-
-      // 库位
-      if (name === 'businessNo') {
-        this.storeIds.forEach(element => {
-          if (element.storeCode === val) {
-            this.form.storeCapacity = element.storeCapacity
+      // 煤种
+      if (name === 'coalType') {
+        this.coalTypeOptions.forEach(element => {
+          if (element.dictLabel === val) {
+            // 查询可放行量
+            this.weightParams.goodsName = val
           }
         })
       }
 
       // 客户名称->寄舱客户id
       if (name === 'eName') {
-        this.clientNameList.forEach(element => {
+        this.consumerOptions.forEach(element => {
           if (element.eName === val) {
             this.form.customerId = element.id
+            this.weightParams.id=element.id
           }
         })
       }
+
+      if(this.weightParams.goodsName&&this.weightParams.id){
+        getReleaseWeight(this.weightParams).then(response => {
+          if (response.code === 200) {
+            this.form.release = response.data.release
+          }
+        })
+      }
+
     }
   }
 }
