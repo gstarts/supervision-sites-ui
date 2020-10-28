@@ -309,7 +309,7 @@ export default {
         netWeight: undefined,
         load: undefined,
         transportNum: undefined,
-        status: '0',
+        status: '1',
         allocationNum: undefined,
         createBy: undefined,
         createTime: undefined,
