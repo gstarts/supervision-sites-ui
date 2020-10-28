@@ -254,7 +254,7 @@
           <el-col :span="12">
             <el-form-item label="寄舱客户" prop="checkConsumer">
               <el-select
-                v-model="form.checkConsumer" placeholder="请选择寄舱客户" @change="((val)=>{change(val, 'eName')})">
+                v-model="form.checkConsumer" placeholder="请选择寄舱客户" filterable @change="((val)=>{change(val, 'eName')})">
                 <el-option
                   v-for="dict in consumerOptions"
                   :key="dict.eName"
