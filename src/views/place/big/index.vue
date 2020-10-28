@@ -423,6 +423,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false
+      this.storeIds=[]
       this.reset()
     },
     // 表单重置
@@ -483,6 +484,7 @@ export default {
       getReleaseWeight(this.weightParams).then(response => {
         if (response.code === 200) {
           this.form.distribution = response.data.distribution
+          this.$forceUpdate()
         }
       })
     },

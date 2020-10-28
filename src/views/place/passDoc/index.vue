@@ -284,8 +284,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="可放行量" prop="release">
-
-              <el-input v-model="form.release" disabled/>
+              <el-input v-model="form.release" :disabled="true" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -431,7 +430,10 @@ export default {
       this.form = {}
       this.consumerOptions=[]
       this.storeIds = []
-      this.weightParams=[]
+      this.weightParams={
+        id: '',
+        coalType: ''
+      }
     },
     // 表单重置
     reset() {
@@ -560,12 +562,12 @@ export default {
         this.coalTypeOptions.forEach(element => {
           if (element.dictLabel === val) {
             this.weightParams.coalType = val
-            if(this.weightParams.coalType&&this.weightParams.id){
-              getReleaseWeight(this.weightParams).then(response => {
-                this.form.release = response.data.release
-
-              })
-            }
+            // if(this.weightParams.coalType&&this.weightParams.id){
+            //   getReleaseWeight(this.weightParams).then(response => {
+            //     this.form.release = response.data.release
+            //
+            //   })
+            // }
           }
         })
       }
@@ -575,18 +577,16 @@ export default {
           if (element.eName === val) {
             this.form.customerId = element.id
             this.weightParams.id=element.id
-            if(this.weightParams.coalType&&this.weightParams.id){
-              getReleaseWeight(this.weightParams).then(response => {
-                this.form.release = response.data.release
 
-              })
-            }
           }
         })
       }
-      // 可放行量
-
-
+      if(this.weightParams.coalType&&this.weightParams.id){
+        getReleaseWeight(this.weightParams).then(response => {
+          this.form.release = response.data.release
+          this.$forceUpdate()
+        })
+      }
     }
   }
 }
