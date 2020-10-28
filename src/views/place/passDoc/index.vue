@@ -284,7 +284,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="可放行量" prop="release">
-              <el-input v-model.number="form.release" disabled/>
+
+              <el-input v-model="form.release" disabled/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -301,7 +302,6 @@
 import { addPassDoc, delPassDoc, getPassDoc, listPassDoc, updatePassDoc } from '@/api/place/passDoc'
 import { listStoreContract } from '@/api/place/storeContract'
 import { getUserDepts } from '@/utils/charutils'
-import { getStoreByIds } from '@/api/place/store'
 import { listInfo } from '@/api/basis/enterpriseInfo'
 import { getReleaseWeight } from '@/api/place/big'
 
@@ -431,6 +431,7 @@ export default {
       this.form = {}
       this.consumerOptions=[]
       this.storeIds = []
+      this.weightParams=[]
     },
     // 表单重置
     reset() {
@@ -474,10 +475,6 @@ export default {
       this.single = selection.length != 1
       this.multiple = !selection.length
     },
-    /** 校验重量*/
-    checkWeight() {
-
-    },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
@@ -498,8 +495,8 @@ export default {
     submitForm: function() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          if (this.form.passVolume > this.form.storeCapacity) {
-            return this.msgError('库存容量不足! 放行量请小于库存量')
+          if (this.form.passVolume > this.form.release) {
+            return this.msgError('可放行量不足！请联系客户')
           }
           if (this.form.id != undefined) {
             updatePassDoc(this.form).then(response => {
@@ -550,7 +547,6 @@ export default {
     },
     // 下拉列表改变时激活
     change(val, name) {
-      debugger
       // 场所
       if (name === 'placeId') {
         this.queryParams.placeId = val
@@ -568,7 +564,6 @@ export default {
           }
         })
       }
-
       // 客户名称->寄舱客户id
       if (name === 'eName') {
         this.consumerOptions.forEach(element => {
@@ -578,7 +573,7 @@ export default {
           }
         })
       }
-
+      // 可放行量
       if(this.weightParams.goodsName&&this.weightParams.id){
         getReleaseWeight(this.weightParams).then(response => {
           if (response.code === 200) {
