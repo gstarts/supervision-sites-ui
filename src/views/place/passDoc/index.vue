@@ -354,8 +354,8 @@ export default {
       },
       // 校验重量
       weightParams: {
-        goodsName: undefined,
-        id: undefined
+        id: '',
+        coalType: ''
       },
       // 表单参数
       form: {},
@@ -559,8 +559,13 @@ export default {
       if (name === 'coalType') {
         this.coalTypeOptions.forEach(element => {
           if (element.dictLabel === val) {
-            // 查询可放行量
-            this.weightParams.goodsName = val
+            this.weightParams.coalType = val
+            if(this.weightParams.coalType&&this.weightParams.id){
+              getReleaseWeight(this.weightParams).then(response => {
+                this.form.release = response.data.release
+
+              })
+            }
           }
         })
       }
@@ -570,17 +575,17 @@ export default {
           if (element.eName === val) {
             this.form.customerId = element.id
             this.weightParams.id=element.id
+            if(this.weightParams.coalType&&this.weightParams.id){
+              getReleaseWeight(this.weightParams).then(response => {
+                this.form.release = response.data.release
+
+              })
+            }
           }
         })
       }
       // 可放行量
-      if(this.weightParams.goodsName&&this.weightParams.id){
-        getReleaseWeight(this.weightParams).then(response => {
-          if (response.code === 200) {
-            this.form.release = response.data.release
-          }
-        })
-      }
+
 
     }
   }
