@@ -252,17 +252,6 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="品名" prop="goodsName">
-              <el-select v-model="form.goodsName" placeholder="请选择煤种" @change="((val)=>{change(val, 'coalType')})">
-                <el-option
-                  v-for="dict in coalTypeOptions"
-                  :key="dict.dictLabel"
-                  :label="dict.dictLabel"
-                  :value="dict.dictLabel"/>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
             <el-form-item label="寄舱客户" prop="checkConsumer">
               <el-select
                 v-model="form.checkConsumer" placeholder="请选择寄舱客户" @change="((val)=>{change(val, 'eName')})">
@@ -272,6 +261,17 @@
                   :label="dict.eName"
                   :value="dict.eName"
                 />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="品名" prop="goodsName">
+              <el-select v-model="form.goodsName" placeholder="请选择煤种" @change="((val)=>{change(val, 'coalType')})">
+                <el-option
+                  v-for="dict in contractOptions"
+                  :key="dict.id"
+                  :label="dict.goodsName"
+                  :value="dict.goodsName"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -339,6 +339,7 @@ export default {
         placeId: undefined,
         passNo: undefined,
         checkConsumer: undefined,
+        customerId:undefined,
         receiveName: undefined,
         passVolume: undefined,
         contractNo: undefined,
@@ -553,21 +554,12 @@ export default {
       if (name === 'placeId') {
         this.queryParams.placeId = val
         this.getConsumerInfo(val)
-        listStoreContract(this.queryParams).then((response) => {
-          this.contractOptions = response.rows
-        })
       }
       // 煤种
       if (name === 'coalType') {
-        this.coalTypeOptions.forEach(element => {
-          if (element.dictLabel === val) {
+        this.contractOptions.forEach(element => {
+          if (element.goodsName === val) {
             this.weightParams.coalType = val
-            // if(this.weightParams.coalType&&this.weightParams.id){
-            //   getReleaseWeight(this.weightParams).then(response => {
-            //     this.form.release = response.data.release
-            //
-            //   })
-            // }
           }
         })
       }
@@ -577,7 +569,10 @@ export default {
           if (element.eName === val) {
             this.form.customerId = element.id
             this.weightParams.id=element.id
-
+            this.queryParams.customerId=element.id
+            listStoreContract(this.queryParams).then((response) => {
+              this.contractOptions = response.rows
+            })
           }
         })
       }
