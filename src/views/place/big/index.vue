@@ -343,7 +343,7 @@ export default {
       form: {},
       // 校验重量
       weightParams: {
-        goodsName: undefined,
+        coalType: undefined,
         id: undefined
       },
       // 表单校验
@@ -600,7 +600,7 @@ export default {
             this.form.customerId = element.customerId
             this.weightParams.id = element.customerId
             // 品名
-            this.weightParams.goodsName = element.goodsName
+            this.weightParams.coalType = element.goodsName
             this.form.goodsName = element.goodsName
             this.checkWeight()
             this.storeIds = element.params.contract
