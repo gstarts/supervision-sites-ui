@@ -1,6 +1,19 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+
+      <el-form-item label="场所" prop="deptId">
+        <el-select
+          v-model="queryParams.deptId" placeholder="请选择场所" size="small" @change="getList">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="公司名称" prop="eName">
         <el-input
           v-model="queryParams.eName"
@@ -330,7 +343,6 @@ export default {
         opUserId: undefined,
         senderId: undefined,
         receiverId: undefined,
-        version: "1.0",
         deptId:undefined,
       },
       // 表单参数
@@ -392,13 +404,13 @@ export default {
           { required: true, message: "法人电话不能为空", trigger: "blur" },
         ],
 
-        
+
       },
     };
   },
   created() {
     	// 0 监管场所，1保税库，2堆场，3企业
-      this.depts = getUserDepts('0')
+      this.depts = getUserDepts('')
       console.log(this.depts)
 			if (this.depts.length > 0) {
 				this.queryParams.deptId = this.depts[0].deptId

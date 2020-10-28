@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="场所ID" prop="placeId">
+      <el-form-item label="场所" prop="placeId">
         <el-select
           v-model="queryParams.placeId" placeholder="请选择场所" size="small" @change="getList">
           <el-option
@@ -30,7 +30,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      
+
       <el-form-item label="车辆类型" prop="vehicleType">
         <el-select v-model="queryParams.vehicleType" placeholder="请选择车辆类型" clearable size="small">
           <el-option
@@ -46,7 +46,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-    
+
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -91,7 +91,7 @@
         </el-button>
       </el-col>
     </el-row>
-    
+
     <el-table v-loading="loading" :data="vehicle_infoList">
      <!-- <el-table-column type="selection" width="55" align="center"/>-->
       <el-table-column label="ID" align="center" prop="id"/>
@@ -130,7 +130,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -138,7 +138,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    
+
     <!-- 添加或修改vehicle对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
@@ -161,7 +161,7 @@
            </el-form-item>
          </el-col>
         </el-row>
-  
+
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="电子车牌" prop="vehicleElecNo">

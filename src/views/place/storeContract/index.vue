@@ -243,7 +243,8 @@
           <el-col :span="12">
             <el-form-item label="客户名称" prop="customerName">
               <el-select
-                v-model="form.customerName" placeholder="请选择客户名称" size="small" @change="((val)=>{change(val, 'eName')})">
+                v-model="form.customerName" placeholder="请选择客户名称" size="small"
+                @change="((val)=>{change(val, 'eName')})">
                 <el-option
                   v-for="dict in clientNameList"
                   :key="dict.eName"
@@ -255,7 +256,14 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="品名" prop="goodsName">
-              <el-input v-model="form.goodsName" placeholder="请输入品名"/>
+              <!-- <el-input v-model="form.goodsName" placeholder="请输入品名"/>-->
+              <el-select v-model="form.goodsName" placeholder="请选择品名">
+                <el-option
+                  v-for="dict in coalTypeOptions"
+                  :key="dict.dictLabel"
+                  :label="dict.dictLabel"
+                  :value="dict.dictLabel"/>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -274,7 +282,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="散货库位" prop="storeIds">
-              <el-select v-model="form.storeIds" multiple placeholder="请选择散货库位" style="width: 100%" >
+              <el-select v-model="form.storeIds" multiple placeholder="请选择散货库位" style="width: 100%">
                 <el-option
                   v-for="store in storeList"
                   :key="store.id"
@@ -392,7 +400,7 @@ import {
 import {getUserDepts} from "@/utils/charutils";
 import {getZoneList} from "@/api/place/zone";
 import {listStore} from "@/api/place/store";
-import { listInfo } from "@/api/basis/enterpriseInfo";
+import {listInfo} from "@/api/basis/enterpriseInfo";
 
 export default {
   name: "StoreContract",
@@ -460,17 +468,24 @@ export default {
       zoneCodeList: [],
       storeList: [],
       idList: [],
+      coalTypeOptions: [], //煤种
       statusList: [{'key': '1', 'value': '有效'}, {'key': '0', 'value': '无效'}]
     };
   },
   created() {
-    this.getListInfo();
+
     // 0 监管场所，1保税库，2堆场，3企业
     this.depts = getUserDepts('0')
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId
       this.getList();
+      this.getListInfo();
     }
+
+    //煤种类型
+    this.getDicts("coal_type").then(response => {
+      this.coalTypeOptions = response.data;
+    });
   },
   methods: {
     /** 查询仓储合同 列表 */
@@ -483,12 +498,12 @@ export default {
         this.loading = false;
       });
     },
-    getListInfo(){
+    getListInfo() {
       this.loading = true;
-      let info = {"eType" : '2'}
+      let info = {"eType": '2','deptId': this.queryParams.placeId}
       listInfo(info).then(response => {
-          this.clientNameList = response.rows;
-          this.loading = false;
+        this.clientNameList = response.rows;
+        this.loading = false;
       });
     },
     // 取消按钮
@@ -521,6 +536,7 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.getList();
+      this.getListInfo();
     },
     /** 重置按钮操作 */
     resetQuery() {
@@ -554,9 +570,9 @@ export default {
         this.open = true;
         this.title = "修改仓储合同 ";
         let contractList = response.data.params.contract
-        for(let store of contractList){
-          if( !this.storeList.find(item => item.id === store.storeId)){
-              this.storeList.push({"id":store.storeId,'storeCode':store.storeCode})
+        for (let store of contractList) {
+          if (!this.storeList.find(item => item.id === store.storeId)) {
+            this.storeList.push({"id": store.storeId, 'storeCode': store.storeCode})
           }
         }
       });
@@ -635,9 +651,9 @@ export default {
       let params = {'placeId': this.form.placeId, 'zoneType': '2', 'storeState': '0'}//取空闲
       listStore(params).then(response => {
         if (response.code === 200) {
-          if(this.storeList.length === 0){ //如果没有值，
+          if (this.storeList.length === 0) { //如果没有值，
             this.storeList = response.rows
-          }else {
+          } else {
             this.storeList.concat(response.rows)
           }
         } else {
