@@ -328,9 +328,8 @@ import {genTimeCode} from "@/utils/common";
 import {poundSelect} from "@/api/pound/poundlist";
 import {listChnlConfig} from "@/api/basis/chnlConfig";
 import {getUserDepts} from "@/utils/charutils";
-import {genStoreDoc, getNoticeByVehicle} from "@/api/place/info";
+import {genStoreDoc, getNoticeByVehicle, getVehicleList, updateDocTime} from "@/api/place/info";
 import {getStoreUsable} from '@/api/place/store'
-import {getVehicleList} from "@/api/place/car";
 
 export default {
   name: "Client",
@@ -658,7 +657,7 @@ export default {
     AllADD() {
       //以下为重量赋值逻辑
       //进场
-      if (this.isStable == "1") {
+      //if (this.isStable == "1") {
         if (this.PoundForm.flowDirection == "I") {
           //重进空出 进场
           if (this.PoundForm.stationViaType == "01" || this.PoundForm.stationViaType == "02") {
@@ -696,11 +695,12 @@ export default {
           }
         } else {
           this.msgError("流向不可为空,请选择");
+          return false
         }
-      } else {
+      /*} else {
         this.msgError("地磅数值未稳定,请稍候....");
         return false;
-      }
+      }*/
       //以下为新增 逻辑
       //通道号赋值
       this.form.channelNumber = this.PoundForm.channelNumber;
@@ -722,6 +722,9 @@ export default {
                   this.msgError(response.msg);
                 }
               });
+              //this.queryParams.stationId, this.PoundForm.stationViaType,this.form.noticeNo
+              //更新单证入场时间
+              this.updateDocTime()
             } else if (this.PoundForm.flowDirection == "E") {
               this.form.flowDirection = this.PoundForm.flowDirection;
               //this.form.noticeNo = this.noticeNo;
@@ -808,11 +811,9 @@ export default {
         this.poundTotal = "";
         this.reset()
       }, 2000);
-    }
-    ,
+    },
     endCallback() {
-    }
-    ,
+    },
     print1() {
       this.Explicit = true;
       var aData = new Date();
@@ -825,13 +826,11 @@ export default {
       this.nowTime =
         aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
       this.poundTotal = "铜精粉磅单";
-    }
-    ,
+    },
 //销毁前清除定时器
     beforeDestroy() {
       clearInterval(this.timer1);
-    }
-    ,
+    },
 // 表单重置
     reset() {
       this.form = {
@@ -866,8 +865,7 @@ export default {
         //出库/入库 标识  进 1  出0
         direction: undefined,
       };
-    }
-    ,
+    },
 //查询可用的库位
     getStoreCode(placeId) {
       getStoreUsable(placeId).then(response => {
@@ -876,8 +874,7 @@ export default {
           this.storeList = response.data
         }
       })
-    }
-    ,
+    },
     vehicleChange() {
       this.flowCheck()
       console.log(this.PoundForm.flowDirection)
@@ -889,8 +886,7 @@ export default {
         this.form.locationNumber = undefined;
       }
       this.getVehicleList() //加载车辆
-    }
-    ,
+    },
     flowCheck() {
       if (this.PoundForm.flowDirection === 'I' || this.PoundForm.flowDirection === undefined) {//如果是进场
         if (this.PoundForm.stationViaType === '01' || this.PoundForm.stationViaType == undefined) {//重进空出
@@ -909,8 +905,7 @@ export default {
           this.rulesAll = {}
         }
       }
-    }
-    ,
+    },
     changePlace() {
       this.created() //更新通道号
       this.PoundForm.channelNumber = '' // 通道号当前值设为空
@@ -927,12 +922,22 @@ export default {
       if (this.queryParams.stationId && this.PoundForm.stationViaType) {
         this.form.plateNum = ''
         //条件具备，加载对应单子的车辆列表
-        console.log({'placeId': this.queryParams.stationId, 'type': this.PoundForm.stationViaType})
-
-        getVehicleList(this.queryParams.stationId,this.PoundForm.stationViaType).then((response) => {
+        // console.log({'placeId': this.queryParams.stationId, 'type': this.PoundForm.stationViaType})
+        getVehicleList(this.queryParams.stationId, this.PoundForm.stationViaType).then((response) => {
           this.plateNumOptions = response.data;
         });
       }
+    },
+
+    //更新单证入场时间
+    updateDocTime() {
+      let data = {
+        'placeId': this.queryParams.stationId,
+        'type': this.PoundForm.stationViaType,
+        'noticeNo': this.form.noticeNo
+      }
+      console.log(data)
+      updateDocTime(data)
     }
   },
 }

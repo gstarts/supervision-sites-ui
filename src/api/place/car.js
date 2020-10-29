@@ -42,10 +42,3 @@ export function delCar(id) {
     method: 'delete'
   })
 }
-
-export function getVehicleList(placeId, type) {
-  return request({
-    url: '/place/notice/vehicleNo/' + placeId + '/' + type,
-    method: 'get'
-  })
-}

@@ -62,3 +62,18 @@ export function genStoreDoc(params) {
 		data: params
 	})
 }
+
+export function getVehicleList(placeId, type) {
+  return request({
+    url: '/place/notice/vehicleNo/' + placeId + '/' + type,
+    method: 'get'
+  })
+}
+
+export function updateDocTime(params) {
+  return request({
+    url: '/place/notice/updateDocTime',
+    method: 'post',
+    data: params
+  })
+}
