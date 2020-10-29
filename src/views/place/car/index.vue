@@ -176,8 +176,8 @@
         <el-button @click="upload.open = false">取 消</el-button>
       </div>
       <el-form ref="form" :model="form">
-        <el-form-item label="提煤单号" prop="coalBillNo">
-          <el-select v-model="form.coalBillNo" placeholder="请选择提煤单号">
+        <el-form-item label="提煤单号" prop="coalBillNo" >
+          <el-select v-model="form.coalBillNo" placeholder="请选择提煤单号" filterable>
             <el-option
               v-for="item in BigList"
               :key="item.coalBillNo"
