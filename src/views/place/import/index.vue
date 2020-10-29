@@ -229,8 +229,8 @@
       <!--      <af-table-column label="结算合同ID" align="center" prop="settlementContractId"/>-->
       <!--      <af-table-column label="结算客户" align="center" prop="settlementCustomer"/>-->
       <!--<af-table-column label="业务编号" align="center" prop="businessNo"/>-->
-      <af-table-column label=" 发货单位" align="center" prop="sendName"/>
-      <af-table-column label="收货单位" align="center" prop="receiveName"/>
+      <!-- <af-table-column label=" 发货单位" align="center" prop="sendName"/>
+      <af-table-column label="收货单位" align="center" prop="receiveName"/>-->
       <!--      <af-table-column label="备注" align="center" prop="remark"/>-->
       <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
@@ -794,8 +794,13 @@ export default {
         genNotice(row.id).then(response => {
           this.loading = false
           if (response.code === 200) {
-            this.msgSuccess("通知单生成成功");
-            row.isGenStoreNotice = 1
+            if (response.data === 1) {
+              this.msgSuccess(response.msg);
+              row.isGenStoreNotice = 1
+            } else {
+              this.$message.error(response.msg)
+            }
+            //row.isGenStoreNotice = 1
           } else {
             this.msgError("通知单生成失败");
           }
