@@ -91,56 +91,56 @@
 
     <!-- 添加或修改提运单 对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body :before-close="closeDialog">
-      <el-form ref=" form
-    " :model="form" :rules="rules" label-width="120px">
-    <!-- 所属场所 -->
-    <el-form-item label="所属场所" prop="placeId">
-      <el-select v-model="form.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
-        <el-option
-          v-for="dept in depts"
-          :key="dept.deptId"
-          :label="dept.deptName"
-          :value="dept.deptId"
-        />
-      </el-select>
-    </el-form-item>
-    <el-form-item label="提煤单号" prop="coalBillNo">
-      <el-select v-model="form.coalBillNo" filterable placeholder="请选择提煤单号">
-        <el-option
-          v-for="item in BigList"
-          :key="item.coalBillNo"
-          :label="item.coalBillNo"
-          :value="item.coalBillNo">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="提运单号" prop="customsNo">
-      <el-input v-model="form.customsNo" placeholder="请输入提运单号"/>
-    </el-form-item>
-    <el-form-item label="运输批次号" prop="batchNo">
-      <el-input v-model="form.batchNo" placeholder="请输入运输批次号"/>
-    </el-form-item>
-    <el-form-item label="提运单重量" prop="wieght">
-      <el-input v-model.number="form.wieght" placeholder="请输入提运单重量"/>
-    </el-form-item>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="cancel">取 消</el-button>
-    </div>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px" size="mini">
+        <!-- 所属场所 -->
+        <el-form-item label="所属场所" prop="placeId">
+          <el-select v-model="form.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
+            <el-option
+              v-for="dept in depts"
+              :key="dept.deptId"
+              :label="dept.deptName"
+              :value="dept.deptId"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="提煤单号" prop="coalBillNo">
+          <el-select v-model="form.coalBillNo" filterable placeholder="请选择提煤单号">
+            <el-option
+              v-for="item in BigList"
+              :key="item.coalBillNo"
+              :label="item.coalBillNo"
+              :value="item.coalBillNo">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="提运单号" prop="customsNo">
+          <el-input v-model="form.customsNo" placeholder="请输入提运单号"/>
+        </el-form-item>
+        <el-form-item label="运输批次号" prop="batchNo">
+          <el-input v-model="form.batchNo" placeholder="请输入运输批次号"/>
+        </el-form-item>
+        <el-form-item label="提运单重量" prop="wieght">
+          <el-input v-model.number="form.wieght" placeholder="请输入提运单重量"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
     </el-dialog>
 
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px">
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" :before-close="closeDialog">
       <el-upload
         ref="upload"
         :limit="1"
         accept=".xlsx, .xls"
         :headers="upload.headers"
-        :action="upload.url + '?coalBillNo=' + form.coalBillNo+''"
+        :action="upload.url "
         :disabled="upload.isUploading"
         :on-progress="handleFileUploadProgress"
         :on-success="handleFileSuccess"
         :auto-upload="false"
+        :data="form"
         drag
       >
         <i class="el-icon-upload"></i>
@@ -187,12 +187,10 @@
 </template>
 
 <script>
-import { listClearance, getClearance, delClearance, addClearance, updateClearance } from '@/api/place/clearance'
+import { addClearance, delClearance, getClearance, listClearance, updateClearance } from '@/api/place/clearance'
 import { selectCoalBillNo } from '@/api/place/big'
 import { getToken } from '@/utils/auth'
-import { importTemplate } from '@/api/bulkgoods/waybill/vehicle'
 import { getUserDepts } from '@/utils/charutils'
-import { listStoreContract } from '@/api/place/storeContract'
 
 export default {
   name: 'Clearance',
@@ -208,6 +206,7 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
+      left: 'left',
       // 弹出层标题
       title: '',
       //场所列表
@@ -405,10 +404,10 @@ export default {
     },
     // 提交上传文件
     submitFileForm() {
-      if (this.form.coalBillNo) {
+      if (this.form.coalBillNo&&this.form.placeId) {
         this.$refs.upload.submit()
       } else {
-        this.$alert('请选择提煤单号')
+        this.$alert('请选择场所和提煤单号')
       }
     },
     change(val, name) {
@@ -416,14 +415,15 @@ export default {
       if (name === 'placeId') {
         //查询场所下的大提煤单中的所有提煤单号
         let placeId = val
-        console.log(val)
+        this.form.coalBillNo = undefined
         selectCoalBillNo({ 'placeId': placeId }).then(response => {
           this.BigList = response.rows
         })
       }
     },
     closeDialog() {
-      this.open = false,
+        this.open = false,
+        this.upload.open = false,
         this.cancel()
     },
     /** 下载模板操作 */

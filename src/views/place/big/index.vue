@@ -184,9 +184,9 @@
         <el-button type="primary" @click="submitFileForm">确 定</el-button>
         <el-button @click="upload.open = false">取 消</el-button>
       </div>
-      <el-form ref="form" :model="form">
+      <el-form ref="form" :model="form" :label-position="left" size="mini">
         <el-form-item label="数据类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择提煤单号">
+          <el-select v-model="form.type" placeholder="请选择类型">
             <el-option
               v-for="item in typeList"
               :key="item.value"
@@ -221,12 +221,21 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="客户名称" prop="customerName">
-              <el-input v-model="form.customerName" placeholder="请选择客户" :disabled="false"/>
+              <el-select
+                v-model="form.customerName" placeholder="请选择寄舱客户" filterable @change="((val)=>{change(val, 'eName')})">
+                <el-option
+                  v-for="dict in consumerOptions"
+                  :key="dict.eName"
+                  :label="dict.eName"
+                  :value="dict.eName"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="合同号" prop="contractNo">
-              <el-select v-model="form.contractNo" placeholder="请输入合同号" filterable @change="((val)=>{change(val, 'contractNo')})">
+              <el-select v-model="form.contractNo" placeholder="请输入合同号" filterable
+                         @change="((val)=>{change(val, 'contractNo')})">
                 <el-option
                   v-for="item in contractOptions"
                   :key="item.contractNo"
@@ -242,7 +251,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="库位号" prop="storeCode">
-              <el-select v-model="form.storeCode" placeholder="请输入库位号" filterable @change="((val)=>{change(val, 'storeCode')})">
+              <el-select v-model="form.storeCode" placeholder="请输入库位号" @change="((val)=>{change(val, 'storeCode')})">
                 <el-option
                   v-for="type in storeIds"
                   :key="type.storeCode"
@@ -300,6 +309,7 @@ import { getToken } from '@/utils/auth'
 import { listStoreContract } from '@/api/place/storeContract'
 import { getStoreByIds } from '@/api/place/store'
 import { getUserDepts } from '@/utils/charutils'
+import { listInfo } from '@/api/basis/enterpriseInfo'
 
 export default {
   name: 'Big',
@@ -315,6 +325,7 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
+      left: 'left',
       // 大提煤单 大提煤单表格数据
       bigList: [],
       // 通关单类型与车辆信息
@@ -347,6 +358,8 @@ export default {
         coalType: undefined,
         id: undefined
       },
+      // 客户名称列表
+      consumerOptions: [],
       // 表单校验
       rules: {
         coalBillNo: [
@@ -416,6 +429,13 @@ export default {
         this.loading = false
       })
     },
+    /** 客户信息列表 */
+    getConsumerInfo(placeId) {
+      let consumerParams = { eType: '2', deptId: placeId }
+      listInfo(consumerParams).then(response => {
+        this.consumerOptions = response.rows
+      })
+    },
     // 导入取消按钮
     cancelImport() {
       this.openImport = false
@@ -424,13 +444,14 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false
-      this.storeIds=[]
+      this.storeIds = []
       this.contractOptions = [],
+        this.consumerOptions = []
       this.reset()
     },
-    closeDialog(){
-      this.open = false,
-      this.contractOptions = []
+    closeDialog() {
+      this.open = false
+      this.cancel()
     },
     // 表单重置
     reset() {
@@ -482,6 +503,7 @@ export default {
     handleImport(row) {
       // 当前行的 提煤单号
       this.form.coalBillNo = row.coalBillNo
+      this.form.placeId = row.placeId
       this.upload.open = true
       this.upload.title = '导入数据文件'
     },
@@ -524,8 +546,8 @@ export default {
           if (this.form.coalWeight > this.form.netWeight) {
             return this.msgError('库存容量不足!')
           }
-          if(this.form.coalWeight>this.form.distribution){
-            return this.msgError("超出可分配重量")
+          if (this.form.coalWeight > this.form.distribution) {
+            return this.msgError('超出可分配重量')
           }
           if (this.form.id != undefined) {
             updateBig(this.form).then((response) => {
@@ -591,20 +613,32 @@ export default {
       // 场所
       if (name === 'placeId') {
         this.queryParams.placeId = val
-        listStoreContract(this.queryParams).then((response) => {
-          this.contractOptions = response.rows
+        this.form.customerName = undefined
+        this.form.contractNo = undefined
+        this.form.storeCode = undefined
+        this.storeIds = []
+        this.contractOptions = []
+        this.getConsumerInfo(val)
+      }
+      // 客户
+      if (name === 'eName') {
+        this.form.contractNo = undefined
+        this.consumerOptions.forEach(element => {
+          if (element.eName === val) {
+            this.form.customerId = element.id
+            this.weightParams.id = element.id
+            this.queryParams.customerId = element.id
+            listStoreContract(this.queryParams).then((response) => {
+              this.contractOptions = response.rows
+            })
+          }
         })
       }
-
       // 合同
       if (name === 'contractNo') {
+        this.form.storeCode = undefined
         this.contractOptions.forEach(element => {
           if (element.contractNo === val) {
-            // 将得到的企业属性赋值到应用的对象中
-            this.form.customerName = element.customerName
-            // 客户id
-            this.form.customerId = element.customerId
-            this.weightParams.id = element.customerId
             // 品名
             this.weightParams.coalType = element.goodsName
             this.form.goodsName = element.goodsName
@@ -616,14 +650,13 @@ export default {
             })
           }
         })
-
       }
-
       // 库位
       if (name === 'storeCode') {
         this.storeIds.forEach(element => {
           if (element.storeCode === val) {
             this.form.netWeight = element.netWeight
+            this.$forceUpdate()
           }
         })
       }

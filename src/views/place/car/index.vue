@@ -87,9 +87,20 @@
     />
 
     <!-- 添加或修改外调车 对话框 -->
-    <el-dialog :title="title" :visible.sync="open" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" number label-width="120px">
+    <el-dialog :title="title" :visible.sync="open" append-to-body :before-close="closeDialog">
+      <el-form ref="form" :model="form" :rules="rules" number label-width="120px" size="mini">
         <el-row>
+          <!-- 所属场所 -->
+          <el-form-item label="所属场所" prop="placeId">
+            <el-select v-model="form.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
+              <el-option
+                v-for="dept in depts"
+                :key="dept.deptId"
+                :label="dept.deptName"
+                :value="dept.deptId"
+              />
+            </el-select>
+          </el-form-item>
           <el-col :span="12">
             <el-form-item label="提煤单号" prop="coalBillNo">
               <el-select v-model="form.coalBillNo" filterable placeholder="请选择提煤单号">
@@ -109,18 +120,18 @@
           </el-col>
         </el-row>
 
-       <el-row>
-         <el-col :span="12">
-        <el-form-item label="净重" prop="netWeight">
-          <el-input v-model.number="form.netWeight" placeholder="请输入净重"/>
-        </el-form-item>
-         </el-col>
-         <el-col :span="12">
-        <el-form-item label="载重" prop="load">
-          <el-input v-model.number="form.load" placeholder="请输入载重"/>
-        </el-form-item>
-         </el-col>
-       </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="净重" prop="netWeight">
+              <el-input v-model.number="form.netWeight" placeholder="请输入净重"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="载重" prop="load">
+              <el-input v-model.number="form.load" placeholder="请输入载重"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="运输次数" prop="transportNum">
@@ -148,17 +159,18 @@
       </div>
     </el-dialog>
     <!--  货车导入弹出框  -->
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px">
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" :before-close="closeDialog">
       <el-upload
         ref="upload"
         :limit="1"
         accept=".xlsx, .xls"
         :headers="upload.headers"
-        :action="upload.url+'?coalBillNo=' +form.coalBillNo+''"
+        :action="upload.url"
         :disabled="upload.isUploading"
         :on-progress="handleFileUploadProgress"
         :on-success="handleFileSuccess"
         :auto-upload="false"
+        :data="form"
         drag
       >
         <i class="el-icon-upload"></i>
@@ -175,8 +187,18 @@
         <el-button type="primary" @click="submitFileForm">确 定</el-button>
         <el-button @click="upload.open = false">取 消</el-button>
       </div>
-      <el-form ref="form" :model="form">
-        <el-form-item label="提煤单号" prop="coalBillNo" >
+      <el-form ref="form" :model="form" :label-position="left" label-width="80px" size="mini">
+        <el-form-item label="所属场所" prop="placeId">
+          <el-select v-model="form.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
+            <el-option
+              v-for="dept in depts"
+              :key="dept.deptId"
+              :label="dept.deptName"
+              :value="dept.deptId"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="提煤单号" prop="coalBillNo">
           <el-select v-model="form.coalBillNo" placeholder="请选择提煤单号" filterable>
             <el-option
               v-for="item in BigList"
@@ -193,9 +215,10 @@
 </template>
 
 <script>
-import { listCar, getCar, delCar, addCar, updateCar } from '@/api/place/car'
+import { addCar, delCar, getCar, listCar, updateCar } from '@/api/place/car'
 import { selectCoalBillNo } from '@/api/place/big'
 import { getToken } from '@/utils/auth'
+import { getUserDepts } from '@/utils/charutils'
 
 export default {
   name: 'Car',
@@ -215,6 +238,7 @@ export default {
       carList: [],
       // 弹出层标题
       title: '',
+      left: 'left',
       // 是否显示弹出层
       open: false,
       // 查询参数
@@ -232,13 +256,18 @@ export default {
       },
       // 表单参数
       form: {},
+      //场所列表
+      depts: [],
       // 车辆类型
-      types:[
-        {value:"S",label:"散杂货"},
-        {value:"C",label:"集装箱"},
+      types: [
+        { value: 'S', label: '散杂货' },
+        { value: 'C', label: '集装箱' }
       ],
       // 表单校验
       rules: {
+        placeId: [
+          { required: true, message: '请选择提煤单', trigger: 'blur' }
+        ],
         coalBillNo: [
           { required: true, message: '请选择提煤单', trigger: 'blur' }
         ],
@@ -246,7 +275,7 @@ export default {
           { required: true, message: '请输入', trigger: 'blur' },
           { type: 'number', message: '必须为数字值' }
         ],
-        load:[
+        load: [
           { required: true, message: '请输入', trigger: 'blur' },
           { type: 'number', message: '必须为数字值' }
         ],
@@ -278,12 +307,10 @@ export default {
     }
   },
   created() {
+    // 获取场所
+    this.depts = getUserDepts('0')
     this.getList()
-    //查询大提煤单中的所有提煤单号
-    selectCoalBillNo().then(response => {
-      this.BigList = response.rows
-      console.log(this.BigList)
-    })
+
   },
   methods: {
     /** 查询外调车 列表 */
@@ -299,6 +326,7 @@ export default {
     cancel() {
       this.open = false
       this.reset()
+      this.BigList = []
     },
     // 表单重置
     reset() {
@@ -417,17 +445,33 @@ export default {
     },
     // 提交上传文件
     submitFileForm() {
-      if (this.form.coalBillNo) {
+      if (this.form.coalBillNo&&this.form.placeId) {
         this.$refs.upload.submit()
       } else {
-        this.$alert('请选择提煤单号')
+        this.$alert('请选择场所和提煤单号')
       }
+    },
+    change(val, name) {
+      // 场所
+      if (name === 'placeId') {
+        //查询场所下的大提煤单中的所有提煤单号
+        let placeId = val
+        this.form.coalBillNo = undefined
+        selectCoalBillNo({ 'placeId': placeId }).then(response => {
+          this.BigList = response.rows
+        })
+      }
+    },
+    closeDialog() {
+        this.open = false,
+        this.upload.open = false,
+        this.cancel()
     },
     /** 下载模板操作 */
     //货运车辆
     importTemplate() {
       window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=file&objectName=manifest/货运车辆导入模板.xlsx'
-    },
+    }
   }
 }
 </script>

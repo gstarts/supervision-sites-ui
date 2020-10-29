@@ -10,101 +10,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!-- <el-form-item label="寄舱客户" prop="checkConsumer">
-        <el-input
-          v-model="queryParams.checkConsumer"
-          placeholder="请输入寄舱客户"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="收货单位" prop="receiveName">
-        <el-input
-          v-model="queryParams.receiveName"
-          placeholder="请输入收货单位"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="放行量" prop="passVolume">
-        <el-input
-          v-model="queryParams.passVolume"
-          placeholder="请输入放行量"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="合同号" prop="contractNo">
-        <el-input
-          v-model="queryParams.contractNo"
-          placeholder="请输入合同号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="品名" prop="goodsName">
-        <el-input
-          v-model="queryParams.goodsName"
-          placeholder="请输入品名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="已申请放行量" prop="declarePassVolume">
-        <el-input
-          v-model="queryParams.declarePassVolume"
-          placeholder="请输入已申请放行量"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="已实际放行量" prop="realPassVolume">
-        <el-input
-          v-model="queryParams.realPassVolume"
-          placeholder="请输入已实际放行量"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="业务编号" prop="businessNo">
-        <el-input
-          v-model="queryParams.businessNo"
-          placeholder="请输入业务编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="运输方式" prop="transportType">
-        <el-select v-model="queryParams.transportType" placeholder="请选择运输方式" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="运输单位" prop="transportUnit">
-        <el-input
-          v-model="queryParams.transportUnit"
-          placeholder="请输入运输单位"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="车队" prop="carTeam">
-        <el-input
-          v-model="queryParams.carTeam"
-          placeholder="请输入车队"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
       <el-form-item label="放行状态" prop="passState">
         <el-select
           v-model="queryParams.passState"
@@ -174,23 +79,12 @@
 
     <el-table v-loading="loading" :data="passDocList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <!-- <el-table-column label="ID" align="center" prop="id"/> -->
       <el-table-column label="放行单号" align="center" prop="passNo"/>
       <el-table-column label="寄舱客户" align="center" prop="checkConsumer"/>
-      <!-- <el-table-column label="收货单位" align="center" prop="receiveName" /> -->
       <el-table-column label="放行量" align="center" prop="passVolume"/>
-      <!-- <el-table-column label="合同号" align="center" prop="contractNo" />
-      <el-table-column label="品名" align="center" prop="goodsName" />
-      <el-table-column label="已申请放行量" align="center" prop="declarePassVolume" />
-      <el-table-column label="已实际放行量" align="center" prop="realPassVolume" />
-      <el-table-column label="业务编号" align="center" prop="businessNo" />
-      <el-table-column label="运输方式" align="center" prop="transportType" />
-      <el-table-column label="运输单位" align="center" prop="transportUnit" />
-      <el-table-column label="车队" align="center" prop="carTeam" /> -->
       <el-table-column label="放行状态" align="center" prop="passState" :formatter="ReleaseStatusFormat"/>
       <el-table-column label="所属场所" align="center" prop="placeId" :formatter="corporationFormat"/>
       <el-table-column label="创建时间" align="center" prop="createTime"/>
-      <!-- <el-table-column label="备注" align="center" prop="remark" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
