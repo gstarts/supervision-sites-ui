@@ -3,7 +3,7 @@
     <!-- 按钮组 -->
     <div class="mb20">
       <el-button type="primary" icon="el-icon-plus" size="small" @click="AllADD">暂存</el-button>
-      <el-button type="success" icon="el-icon-edit" size="small" @click="generateAdd">生成</el-button>
+<!--      <el-button type="success" icon="el-icon-edit" size="small" @click="generateAdd">生成</el-button>-->
       <el-button type="warning" icon="el-icon-refresh-right" size="small" @click="cancel">清空</el-button>
       <!-- <el-button
          type="primary"
@@ -76,7 +76,6 @@
                     v-model.number="form.grossWeight"
                     placeholder="请输入毛重"
                     clearable
-                    disabled
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -90,7 +89,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="皮重" prop="tare">
-                  <el-input v-model.number="form.tare" placeholder="请输入皮重" clearable disabled></el-input>
+                  <el-input v-model.number="form.tare" placeholder="请输入皮重" clearable ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -103,7 +102,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="净重" prop="netWeight">
-                  <el-input v-model.number="form.netWeight" placeholder="请输入净重" clearable disabled></el-input>
+                  <el-input v-model.number="form.netWeight" placeholder="请输入净重" clearable ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -434,9 +433,9 @@ export default {
       rulesAll: {},
       // 重量类型效验
       rules: {
-        grossWeight: [{type: "number", message: "毛重需为数字", trigger: "blur"}],
-        tare: [{type: "number", message: "请输入数字", trigger: "blur"}],
-        netWeight: [{type: "number", message: "请输入数字", trigger: "blur"}],
+        grossWeight: [{required: true, message: "毛重不可为空", trigger: "change"},{type: "number", message: "毛重需为数字", trigger: "blur"}],
+        tare: [{required: true, message: "皮重不可为空", trigger: "change"},{type: "number", message: "皮重需为数字", trigger: "blur"}],
+        netWeight: [{required: true, message: "净重不可为空", trigger: "change"},{type: "number", message: "净重需为数字", trigger: "blur"}],
         plateNum: [{type: "string", required: true, message: "不可为空", trigger: "change"}],
         locationNumber: [{type: "string", message: "库位号不可为空", trigger: "change"}]
       },
@@ -645,6 +644,52 @@ export default {
     },
     /** 暂存按钮 */
     AllADD() {
+      //以下为重量赋值逻辑
+      //进场
+      if (this.isStable == "1") {
+        if (this.PoundForm.flowDirection == "I") {
+          //重进空出 进场
+          if (this.PoundForm.stationViaType == "01" || this.PoundForm.stationViaType == "02") {
+            //通过车辆类型 赋值毛重或皮重
+            this.PoundForm.stationViaType == "01" ? (this.form.grossWeight = this.Poundweight) : (this.form.tare = this.Poundweight);
+          } else {
+            this.msgError("车辆类型不可为空或选择错误,请检查");
+          }
+          //出场
+        } else if (this.PoundForm.flowDirection == "E") {
+          //重进空出 出场
+          if (this.PoundForm.stationViaType == "01") {
+            //皮重
+            this.form.tare = this.Poundweight;
+            //判断出场时毛重是否未填写
+            if (this.form.grossWeight != 0 && this.form.grossWeight !=null) {
+              //计算净重
+              this.form.netWeight = this.form.grossWeight - this.form.tare;
+            } else {
+              this.msgError("净重计算失败,毛重不可为0或空");
+            }
+            //空进重出 出场
+          } else if (this.PoundForm.stationViaType == "02") {
+            //毛重
+            this.form.grossWeight = this.Poundweight;
+            //判断出场时皮重是否未填写
+            if (this.form.tare != 0 && this.form.tare !=null) {
+              //计算净重
+              this.form.netWeight = this.form.grossWeight - this.form.tare;
+            } else {
+              this.msgError("净重计算失败,皮重不可为0或空");
+            }
+          } else {
+            this.msgError("车辆类型不可为空或选择错误,请检查");
+          }
+        } else {
+          this.msgError("流向不可为空,请选择");
+        }
+      } else {
+        this.msgError("地磅数值未稳定,请稍候....");
+        return false;
+      }
+      //以下为新增 逻辑
       //通道号赋值
       this.form.channelNumber = this.PoundForm.channelNumber;
       //场站ID赋值
@@ -692,6 +737,7 @@ export default {
                       if (response.code === 200) {
                         this.msgSuccess("出场成功");
                         this.getListI();
+                        this.reset();
                       }
                     })
                   } else {
@@ -728,49 +774,7 @@ export default {
     },
 // 生成按钮
     generateAdd() {
-      //进场
-      if (this.isStable == "1") {
-        if (this.PoundForm.flowDirection == "I") {
-          //重进空出 进场
-          if (this.PoundForm.stationViaType == "01" || this.PoundForm.stationViaType == "02") {
-            //通过车辆类型 赋值毛重或皮重
-            this.PoundForm.stationViaType == "01" ? (this.form.grossWeight = this.Poundweight) : (this.form.tare = this.Poundweight);
-          } else {
-            this.msgError("车辆类型不可为空或选择错误,请检查");
-          }
-          //出场
-        } else if (this.PoundForm.flowDirection == "E") {
-          //重进空出 出场
-          if (this.PoundForm.stationViaType == "01") {
-            //皮重
-            this.form.tare = this.Poundweight;
-            //判断出场时毛重是否未填写
-            if (this.form.grossWeight >= 0) {
-              //计算净重
-              this.form.netWeight = this.form.grossWeight - this.form.tare;
-            } else {
-              this.msgError("净重计算失败,毛重不可为空");
-            }
-            //空进重出 出场
-          } else if (this.PoundForm.stationViaType == "02") {
-            //毛重
-            this.form.grossWeight = this.Poundweight;
-            //判断出场时皮重是否未填写
-            if (this.form.tare >= 0) {
-              //计算净重
-              this.form.netWeight = this.form.grossWeight - this.form.tare;
-            } else {
-              this.msgError("净重计算失败,皮重不可为空");
-            }
-          } else {
-            this.msgError("车辆类型不可为空或选择错误,请检查");
-          }
-        } else {
-          this.msgError("流向不可为空,请选择");
-        }
-      } else {
-        this.msgError("地磅数值未稳定,请稍候....");
-      }
+
     }
     ,
 // 清空按钮
