@@ -284,7 +284,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="散货库位" prop="storeIds">
-              <el-select v-model="form.storeIds" multiple placeholder="请选择散货库位" style="width: 100%">
+              <el-select v-model="form.storeIds" filterable multiple placeholder="请选择散货库位" style="width: 100%">
                 <el-option
                   v-for="store in storeList"
                   :key="store.id"
@@ -533,6 +533,7 @@ export default {
         status: undefined
       };
       this.resetForm("form");
+      this.storeList = []
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -564,7 +565,7 @@ export default {
       this.reset();
       const id = row.id || this.ids
       this.form.placeId = row.placeId
-      //this.getStoreList()
+      this.getStoreList()
 
       getStoreContract(id).then(response => {
         console.log(response)
@@ -579,7 +580,7 @@ export default {
             this.storeList.push({"id": store.storeId, 'storeCode': store.storeCode})
           }
         }
-        this.getStoreList()
+        //this.getStoreList()
       });
       //this.getZoneCode()
     },
@@ -652,7 +653,7 @@ export default {
       //区域类型变化时，获取对应场所的id，区域类型，返回对应区域内的区域编号
     },
     getStoreList() {
-      //this.storeList = []
+      this.storeList = []
       let params = {'placeId': this.form.placeId, 'zoneType': '2', 'storeState': '0'}//取空闲
       listStore(params).then(response => {
         if (response.code === 200) {
@@ -660,8 +661,6 @@ export default {
             this.storeList = response.rows
           } else {
             this.storeList = this.storeList.concat(response.rows)
-            debugger
-            console.log(this.storeList)
           }
         } else {
           this.$message.warning("此区域下无库位")
