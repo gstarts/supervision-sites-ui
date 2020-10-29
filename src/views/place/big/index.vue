@@ -197,7 +197,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="open" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body :before-close="closeDialog">
       <el-form ref="form" :model="form" :rules="rules" size="mini" label-width="120px">
         <el-row>
           <el-col :span="12">
@@ -220,8 +220,13 @@
         </el-row>
         <el-row>
           <el-col :span="12">
+            <el-form-item label="客户名称" prop="customerName">
+              <el-input v-model="form.customerName" placeholder="请选择客户" :disabled="false"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="合同号" prop="contractNo">
-              <el-select v-model="form.contractNo" placeholder="请输入合同号" @change="((val)=>{change(val, 'contractNo')})">
+              <el-select v-model="form.contractNo" placeholder="请输入合同号" filterable @change="((val)=>{change(val, 'contractNo')})">
                 <el-option
                   v-for="item in contractOptions"
                   :key="item.contractNo"
@@ -232,16 +237,12 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="客户名称" prop="customerName">
-              <el-input v-model="form.customerName" placeholder="请选择客户" :disabled="true"/>
-            </el-form-item>
-          </el-col>
+
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="库位号" prop="storeCode">
-              <el-select v-model="form.storeCode" placeholder="请输入库位号" @change="((val)=>{change(val, 'storeCode')})">
+              <el-select v-model="form.storeCode" placeholder="请输入库位号" filterable @change="((val)=>{change(val, 'storeCode')})">
                 <el-option
                   v-for="type in storeIds"
                   :key="type.storeCode"
@@ -424,7 +425,12 @@ export default {
     cancel() {
       this.open = false
       this.storeIds=[]
+      this.contractOptions = [],
       this.reset()
+    },
+    closeDialog(){
+      this.open = false,
+      this.contractOptions = []
     },
     // 表单重置
     reset() {
