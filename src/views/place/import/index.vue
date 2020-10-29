@@ -839,6 +839,7 @@ export default {
     changeCustomer(event) { //改变客户时
       //从合同列表中，把对应公司名字的合同都提取出来
       this.form.storeContractId = ''
+      this.form.businessNo = ''
       this.contractSubList = this.contractList.filter(item => item.customerName === event)
       //并将第一个值指给定合同编号的默认值
       /*if (this.contractSubList.length > 0) {

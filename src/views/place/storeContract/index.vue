@@ -564,7 +564,8 @@ export default {
       this.reset();
       const id = row.id || this.ids
       this.form.placeId = row.placeId
-      this.getStoreList()
+      //this.getStoreList()
+
       getStoreContract(id).then(response => {
         console.log(response)
         this.form = response.data;
@@ -572,11 +573,13 @@ export default {
         this.open = true;
         this.title = "修改仓储合同 ";
         let contractList = response.data.params.contract
+        //把合同上的库位号给放到用户的库位号属性里
         for (let store of contractList) {
           if (!this.storeList.find(item => item.id === store.storeId)) {
             this.storeList.push({"id": store.storeId, 'storeCode': store.storeCode})
           }
         }
+        this.getStoreList()
       });
       //this.getZoneCode()
     },
@@ -649,14 +652,16 @@ export default {
       //区域类型变化时，获取对应场所的id，区域类型，返回对应区域内的区域编号
     },
     getStoreList() {
-      this.storeList = []
+      //this.storeList = []
       let params = {'placeId': this.form.placeId, 'zoneType': '2', 'storeState': '0'}//取空闲
       listStore(params).then(response => {
         if (response.code === 200) {
           if (this.storeList.length === 0) { //如果没有值，
             this.storeList = response.rows
           } else {
-            this.storeList.concat(response.rows)
+            this.storeList = this.storeList.concat(response.rows)
+            debugger
+            console.log(this.storeList)
           }
         } else {
           this.$message.warning("此区域下无库位")
