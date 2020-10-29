@@ -243,6 +243,8 @@
           <el-col :span="12">
             <el-form-item label="客户名称" prop="customerName">
               <el-select
+                filterable
+                clearable
                 v-model="form.customerName" placeholder="请选择客户名称" size="small"
                 @change="((val)=>{change(val, 'eName')})">
                 <el-option

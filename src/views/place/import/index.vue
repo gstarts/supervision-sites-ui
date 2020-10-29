@@ -357,9 +357,9 @@
             <el-form-item label="寄舱合同" prop="storeContractId">
               <el-select v-model="form.storeContractId" placeholder="请选择寄舱合同" @change="changeContract">
                 <el-option
-                  v-for="type in contractList"
+                  v-for="type in contractSubList"
                   :key="type.id"
-                  :label="type.contractNo+' ['+type.customerName+']'"
+                  :label="type.contractNo"
                   :value="type.id"
                 />
               </el-select>
@@ -370,16 +370,27 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="寄舱客户" prop="storeCustomer">
-              <el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>
-              <!--              <el-select v-model="form.storeCustomer" placeholder="请选择寄舱客户">-->
-              <!--                <el-option-->
-              <!--                  v-for="type in contractList"-->
-              <!--                  :key="type.id"-->
-              <!--                  :label="type.customerName"-->
-              <!--                  :value="type.customerName"-->
-              <!--                />-->
-              <!--              </el-select>-->
+              <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>-->
+              <el-select
+                filterable
+                clearable
+                v-model="form.storeCustomer" placeholder="请选择寄舱客户" @change="changeCustomer">
+                <el-option
+                  v-for="type in customerList"
+                  :key="type.customerName"
+                  :label="type.customerName"
+                  :value="type.customerName"
+                />
+              </el-select>
             </el-form-item>
+            <!--              <el-select v-model="form.storeCustomer" placeholder="请选择寄舱客户">-->
+            <!--                <el-option-->
+            <!--                  v-for="type in contractList"-->
+            <!--                  :key="type.id"-->
+            <!--                  :label="type.customerName"-->
+            <!--                  :value="type.customerName"-->
+            <!--                />-->
+            <!--              </el-select>-->
           </el-col>
           <el-col :span="12">
             <el-form-item label="库位号" prop="businessNo">
@@ -533,13 +544,13 @@ export default {
           {type: "string", required: true, message: "模板类型不能为空", trigger: "change"}
         ],
         businessNo: [
-          {type: "string", required: true, message: "业务编号不能为空", trigger: "change"}
+          {type: "string", required: true, message: "库位号不能为空", trigger: "change"}
         ],
         storeCustomer: [
           {type: "string", required: true, message: "寄舱客户不能为空", trigger: "change"}
         ],
         storeContractId: [
-          {required: true, message: "寄舱合同ID不能为空", trigger: "change"}
+          {required: true, message: "寄舱合同不能为空", trigger: "change"}
         ],
 
       },
@@ -554,6 +565,8 @@ export default {
         'bucketName': ''
       },
       fileList: [],
+      customerList: [],//寄舱客户列表
+      contractSubList: [] //合同子集，在选定寄舱客户时，从合同表里取出对应客户的合同放入到这个集合中
     };
   },
   created() {
@@ -612,6 +625,8 @@ export default {
         receiveName: undefined
       };
       this.resetForm("form");
+      this.contractSubList = []
+      this.customerList = []
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -635,7 +650,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "导入模板文件";
-      this.getContract(this.queryParams.placeId)
+      this.getContract(this.queryParams.placeId, '1') //加载这个场所下的合同
 
       /*} else {
         this.$message.info("请选择嘉亿达监管场所,其他场所功能未实现")
@@ -658,17 +673,22 @@ export default {
     },
     // 合同id取寄仓场所
     changeContract(event) {
-      this.contractList.forEach(element => {
+      this.storeIds = []
+      this.form.businessNo = '' //库位号对应的表单项
+      this.contractSubList.forEach(element => {
         if (element.id === event) {
           //将得到的企业属性赋值到应用的对象中
-          this.form.storeCustomer = element.customerName
+          //this.form.storeCustomer = element.customerName
           this.storeIds = element.params.contract;
+          if (this.storeIds.length > 0) {
+
+          } else {
+            this.$message.warning("此合同没有指定库位")
+          }
           // this.form.businessNo = element.storeIds
         }
       })
     },
-
-
     uploadBefore(file) {
       /*alert("要上传")
               console.log(file)
@@ -789,18 +809,43 @@ export default {
         console.log("取消生成通知单")
       });
     },
-    getContract(placeId) {
+    //获取场所下有效的合同 列表
+    getContract(placeId, status) {
       //查找合同
-      listStoreContract({'placeId': placeId}).then(response => {
-        this.contractList = response.rows;
+      listStoreContract({'placeId': placeId, 'status': status}).then(response => {
+        if (response.code === 200) {
+          this.contractList = response.rows;
+          if (this.contractList.length === 0) {
+            this.$message.warning('此场所没有有效的合同')
+          } else {
+            //重新给客户列表 赋值
+            this.customerList = []
+            for (let contract of this.contractList) {
+              if (!this.customerList.find(cus => cus.customerId === contract.customerId)) {
+                this.customerList.push(contract)
+              }
+            }
+          }
+        }
       });
     },
     //下载
     handleDownload(row) {
       window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=' + row.bucketName + '&objectName=' + row.objectName
     },
-    templateDownload(){
+    templateDownload() {
       window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=place&objectName=普通场所入库通知单模板.xlsx'
+    },
+    changeCustomer(event) { //改变客户时
+      //从合同列表中，把对应公司名字的合同都提取出来
+      this.form.storeContractId = ''
+      this.contractSubList = this.contractList.filter(item => item.customerName === event)
+      //并将第一个值指给定合同编号的默认值
+      /*if (this.contractSubList.length > 0) {
+        this.form.storeContractId = this.contractSubList[0].id
+      } else {
+        this.form.storeContractId = ''
+      }*/
     }
   }
 };
