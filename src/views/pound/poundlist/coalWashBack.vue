@@ -3,7 +3,7 @@
     <!-- 按钮组 -->
     <div class="mb20">
       <el-button type="primary" icon="el-icon-plus" size="small" @click="AllADD">暂存</el-button>
-<!--      <el-button type="success" icon="el-icon-edit" size="small" @click="generateAdd">生成</el-button>-->
+      <!--      <el-button type="success" icon="el-icon-edit" size="small" @click="generateAdd">生成</el-button>-->
       <el-button type="warning" icon="el-icon-refresh-right" size="small" @click="cancel">清空</el-button>
       <!-- <el-button
          type="primary"
@@ -89,7 +89,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="皮重" prop="tare">
-                  <el-input v-model.number="form.tare" placeholder="请输入皮重" clearable ></el-input>
+                  <el-input v-model.number="form.tare" placeholder="请输入皮重" clearable></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -102,7 +102,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="净重" prop="netWeight">
-                  <el-input v-model.number="form.netWeight" placeholder="请输入净重" clearable ></el-input>
+                  <el-input v-model.number="form.netWeight" placeholder="请输入净重" clearable></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -323,7 +323,6 @@ import {
   getSheet,
   listIESheet,
 } from "@/api/pound/poundlist";
-import {listVehicleNoList} from "@/api/system/vehicle_info";
 import {genTimeCode} from "@/utils/common";
 //获取实时重量
 import {poundSelect} from "@/api/pound/poundlist";
@@ -331,6 +330,7 @@ import {listChnlConfig} from "@/api/basis/chnlConfig";
 import {getUserDepts} from "@/utils/charutils";
 import {genStoreDoc, getNoticeByVehicle} from "@/api/place/info";
 import {getStoreUsable} from '@/api/place/store'
+import {getVehicleList} from "@/api/place/car";
 
 export default {
   name: "Client",
@@ -433,9 +433,21 @@ export default {
       rulesAll: {},
       // 重量类型效验
       rules: {
-        grossWeight: [{required: true, message: "毛重不可为空", trigger: "change"},{type: "number", message: "毛重需为数字", trigger: "blur"}],
-        tare: [{required: true, message: "皮重不可为空", trigger: "change"},{type: "number", message: "皮重需为数字", trigger: "blur"}],
-        netWeight: [{required: true, message: "净重不可为空", trigger: "change"},{type: "number", message: "净重需为数字", trigger: "blur"}],
+        grossWeight: [{required: true, message: "毛重不可为空", trigger: "change"}, {
+          type: "number",
+          message: "毛重需为数字",
+          trigger: "blur"
+        }],
+        tare: [{required: true, message: "皮重不可为空", trigger: "change"}, {
+          type: "number",
+          message: "皮重需为数字",
+          trigger: "blur"
+        }],
+        netWeight: [{required: true, message: "净重不可为空", trigger: "change"}, {
+          type: "number",
+          message: "净重需为数字",
+          trigger: "blur"
+        }],
         plateNum: [{type: "string", required: true, message: "不可为空", trigger: "change"}],
         locationNumber: [{type: "string", message: "库位号不可为空", trigger: "change"}]
       },
@@ -482,10 +494,10 @@ export default {
       this.queryParams.stationId = this.depts[0].deptId;
       this.created();
     }
-    //车牌号
+    /*//车牌号
     listVehicleNoList(this.queryParams.stationId).then((response) => {
       this.plateNumOptions = response.data;
-    });
+    });*/
     //过卡车辆类型
     this.getDicts("station_via_type").then((response) => {
       this.stationViaTypeOptions = response.data;
@@ -662,7 +674,7 @@ export default {
             //皮重
             this.form.tare = this.Poundweight;
             //判断出场时毛重是否未填写
-            if (this.form.grossWeight != 0 && this.form.grossWeight !=null) {
+            if (this.form.grossWeight != 0 && this.form.grossWeight != null) {
               //计算净重
               this.form.netWeight = this.form.grossWeight - this.form.tare;
             } else {
@@ -673,7 +685,7 @@ export default {
             //毛重
             this.form.grossWeight = this.Poundweight;
             //判断出场时皮重是否未填写
-            if (this.form.tare != 0 && this.form.tare !=null) {
+            if (this.form.tare != 0 && this.form.tare != null) {
               //计算净重
               this.form.netWeight = this.form.grossWeight - this.form.tare;
             } else {
@@ -720,7 +732,7 @@ export default {
               let params = {
                 'placeId': this.queryParams.stationId,
                 'direction': 1,
-                'vehicleNo':this.form.plateNum,
+                'vehicleNo': this.form.plateNum,
                 'noticeNo': this.form.noticeNo,
                 'storeCode': this.form.locationNumber,
                 'netWeight': this.form.netWeight,
@@ -876,6 +888,7 @@ export default {
         this.showStore = false
         this.form.locationNumber = undefined;
       }
+      this.getVehicleList() //加载车辆
     }
     ,
     flowCheck() {
@@ -900,12 +913,26 @@ export default {
     ,
     changePlace() {
       this.created() //更新通道号
-      listVehicleNoList(this.queryParams.stationId).then((response) => {
-        this.plateNumOptions = response.data;
-      });
       this.PoundForm.channelNumber = '' // 通道号当前值设为空
       //进场记录
       this.getListI();
+
+      //判断场所和车辆类型的是否全了
+      this.getVehicleList()
+
+    },
+    //获取车号列表
+    getVehicleList() {
+      //场所ID 和车辆类型，
+      if (this.queryParams.stationId && this.PoundForm.stationViaType) {
+        this.form.plateNum = ''
+        //条件具备，加载对应单子的车辆列表
+        console.log({'placeId': this.queryParams.stationId, 'type': this.PoundForm.stationViaType})
+
+        getVehicleList(this.queryParams.stationId,this.PoundForm.stationViaType).then((response) => {
+          this.plateNumOptions = response.data;
+        });
+      }
     }
   },
 }

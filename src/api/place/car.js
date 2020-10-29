@@ -17,7 +17,7 @@ export function getCar(id) {
   })
 }
 
-// 新增外调车 
+// 新增外调车
 export function addCar(data) {
   return request({
     url: '/place/car',
@@ -26,7 +26,7 @@ export function addCar(data) {
   })
 }
 
-// 修改外调车 
+// 修改外调车
 export function updateCar(data) {
   return request({
     url: '/place/car',
@@ -35,10 +35,17 @@ export function updateCar(data) {
   })
 }
 
-// 删除外调车 
+// 删除外调车
 export function delCar(id) {
   return request({
     url: '/place/car/' + id,
     method: 'delete'
+  })
+}
+
+export function getVehicleList(placeId, type) {
+  return request({
+    url: '/place/notice/vehicleNo/' + placeId + '/' + type,
+    method: 'get'
   })
 }
