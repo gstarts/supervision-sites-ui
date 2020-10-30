@@ -223,25 +223,25 @@
             :row-style="green"
             @row-dblclick="dbRow"
           >
-            <el-table-column label="车号" align="center" prop="plateNum" width='100px'  fixed />
-            <el-table-column label="毛重" align="center" prop="grossWeight" width='100px'/>
-            <el-table-column label="皮重" align="center" prop="tare" width='100px' />
-            <el-table-column label="净重" align="center" prop="netWeight" width='100px'/>
-            <el-table-column label="发货单位" align="center" prop="deliveryUnit" :show-overflow-tooltip="true"/>
-            <el-table-column label="收货单位" align="center" prop="receivingUnit" :show-overflow-tooltip="true"/>
-            <el-table-column label="货物名称" align="center" prop="goodsName" :show-overflow-tooltip="true"/>
-            <el-table-column label="规格型号" align="center" prop="specification"/>
-            <el-table-column label="进场时间" align="center" prop="createTime" width="180">
+            <af-table-column label="车号" align="center" prop="plateNum" width='100px'  fixed />
+            <af-table-column label="毛重" align="center" prop="grossWeight" width='100px'/>
+            <af-table-column label="皮重" align="center" prop="tare" width='100px' />
+            <af-table-column label="净重" align="center" prop="netWeight" width='100px'/>
+            <af-table-column label="发货单位" align="center" prop="deliveryUnit" :show-overflow-tooltip="true"/>
+            <af-table-column label="收货单位" align="center" prop="receivingUnit" :show-overflow-tooltip="true"/>
+            <af-table-column label="货物名称" align="center" prop="goodsName" :show-overflow-tooltip="true"/>
+            <af-table-column label="规格型号" align="center" prop="specification"/>
+            <af-table-column label="进场时间" align="center" prop="createTime" width="180">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.createTime) }}</span>
               </template>
-            </el-table-column>
-            <el-table-column label="出场时间" align="center" prop="createTime" width="180">
+            </af-table-column>
+            <af-table-column label="出场时间" align="center" prop="createTime" width="180">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.updateTime) }}</span>
               </template>
-            </el-table-column>
-            <el-table-column label="库位号" align="center" prop="locationNumber"/>
+            </af-table-column>
+            <af-table-column label="库位号" align="center" prop="locationNumber"/>
           </el-table>
           <pagination
             v-show="total>0"
@@ -252,7 +252,7 @@
           />
         </el-tab-pane>
         <el-tab-pane  name="end">
-          <span slot="label">{{"已完成("+this.total+")"}}</span>
+          <span slot="label">{{"已完成("+this.total1+")"}}</span>
           <el-table
             class="mb20"
             ref="sheetList"
@@ -263,25 +263,25 @@
             :row-style="green"
             @row-dblclick="dbRow"
           >
-            <el-table-column label="车号" align="center" prop="plateNum" width='100px'  fixed />
-            <el-table-column label="毛重" align="center" prop="grossWeight" width='100px'/>
-            <el-table-column label="皮重" align="center" prop="tare" width='100px' />
-            <el-table-column label="净重" align="center" prop="netWeight" width='100px'/>
-            <el-table-column label="发货单位" align="center" prop="deliveryUnit" :show-overflow-tooltip="true"/>
-            <el-table-column label="收货单位" align="center" prop="receivingUnit" :show-overflow-tooltip="true"/>
-            <el-table-column label="货物名称" align="center" prop="goodsName" :show-overflow-tooltip="true"/>
-            <el-table-column label="规格型号" align="center" prop="specification"/>
-            <el-table-column label="进场时间" align="center" prop="createTime" width="180">
+            <af-table-column label="车号" align="center" prop="plateNum" width='100px'  fixed />
+            <af-table-column label="毛重" align="center" prop="grossWeight" width='100px'/>
+            <af-table-column label="皮重" align="center" prop="tare" width='100px' />
+            <af-table-column label="净重" align="center" prop="netWeight" width='100px'/>
+            <af-table-column label="发货单位" align="center" prop="deliveryUnit" :show-overflow-tooltip="true"/>
+            <af-table-column label="收货单位" align="center" prop="receivingUnit" :show-overflow-tooltip="true"/>
+            <af-table-column label="货物名称" align="center" prop="goodsName" :show-overflow-tooltip="true"/>
+            <af-table-column label="规格型号" align="center" prop="specification"/>
+            <af-table-column label="进场时间" align="center" prop="createTime" width="180">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.createTime) }}</span>
               </template>
-            </el-table-column>
-            <el-table-column label="出场时间" align="center" prop="createTime" width="180">
+            </af-table-column>
+            <af-table-column label="出场时间" align="center" prop="createTime" width="180">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.updateTime) }}</span>
               </template>
-            </el-table-column>
-            <el-table-column label="库位号" align="center" prop="locationNumber"/>
+            </af-table-column>
+            <af-table-column label="库位号" align="center" prop="locationNumber"/>
           </el-table>
           <pagination
             v-show="total>0"
@@ -364,7 +364,7 @@ export default {
       //地磅返回重量
       Poundweight: 0,
       // 遮罩层
-      loading: true,
+      loading: false,
       // 选中数组
       ids: [],
       // 通道配置表格数据
@@ -382,6 +382,7 @@ export default {
       timer1: "",
       // 总条数
       total: 0,
+      total1: 0,
       green:{'color':'green'},
       nowData: "",
       nowTime: "",
@@ -628,7 +629,7 @@ export default {
         this.sheetList = response.rows;
         console.log("---------")
         console.log(response)
-        this.total = response.total;
+        this.total1 = response.total;
         this.loading = false;
       });
     },
@@ -657,7 +658,7 @@ export default {
       listChnlConfig(this.queryParams).then((response) => {
         this.chnlConfigList = response.rows;
         console.log(this.chnlConfigList)
-        this.total = response.total;
+        //this.total = response.total;
       });
     },
     //选择通道号定时反添重量方法
@@ -688,6 +689,7 @@ export default {
             this.PoundForm.stationViaType == "01" ? (this.form.grossWeight = this.Poundweight) : (this.form.tare = this.Poundweight);
           } else {
             this.msgError("车辆类型不可为空或选择错误,请检查");
+            return false
           }
           //出场
         } else if (this.PoundForm.flowDirection == "E") {
@@ -701,6 +703,7 @@ export default {
               this.form.netWeight = this.form.grossWeight - this.form.tare;
             } else {
               this.msgError("净重计算失败,毛重不可为0或空");
+              return false
             }
             //空进重出 出场
           } else if (this.PoundForm.stationViaType == "02") {
@@ -712,9 +715,11 @@ export default {
               this.form.netWeight = this.form.grossWeight - this.form.tare;
             } else {
               this.msgError("净重计算失败,皮重不可为0或空");
+              return false
             }
           } else {
             this.msgError("车辆类型不可为空或选择错误,请检查");
+            return false
           }
         } else {
           this.msgError("流向不可为空,请选择");
@@ -807,6 +812,7 @@ export default {
               }
             } else {
               this.msgError("流向参数错误");
+              return false
             }
             //})
           }
