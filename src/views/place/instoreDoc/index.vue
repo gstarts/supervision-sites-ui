@@ -386,15 +386,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item label="放行单号" prop="passNo">
-        <el-input
-          v-model="queryParams.passNo"
-          placeholder="请输入放行单号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+      <!-- <el-form-item label="放行单号" prop="passNo">
+         <el-input
+           v-model="queryParams.passNo"
+           placeholder="请输入放行单号"
+           clearable
+           size="small"
+           @keyup.enter.native="handleQuery"
+         />
+       </el-form-item>-->
       <!-- <el-form-item label="乐观锁" prop="revision">
         <el-input
           v-model="queryParams.revision"
@@ -410,14 +410,11 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
+        >搜索
+        </el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -426,10 +423,11 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['place:instoreDoc:add']"
-          >新增</el-button
+        >新增
+        </el-button
         >
       </el-col>
-      <el-col :span="1.5">
+      <!--<el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -450,7 +448,7 @@
           v-hasPermi="['place:instoreDoc:remove']"
           >删除</el-button
         >
-      </el-col>
+      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -458,7 +456,8 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['place:instoreDoc:export']"
-          >导出</el-button
+        >导出
+        </el-button
         >
       </el-col>
     </el-row>
@@ -469,123 +468,78 @@
       @selection-change="handleSelectionChange"
     >
       <!--<af-table-column type="selection" width="55" align="center" />-->
-      <af-table-column label="ID" align="center" prop="id" />
-      <af-table-column label="场所编号" align="center" prop="placeId" />
-      <af-table-column label="通知单号" align="center" prop="docNo" />
+      <af-table-column label="ID" align="center" prop="id"/>
+      <!--<af-table-column label="场所编号" align="center" prop="placeId"/>-->
+      <af-table-column label="通知单号" align="center" prop="docNo"/>
       <!--<af-table-column label="业务编号" align="center" prop="storeCode" />-->
-      <af-table-column label="发货客户" align="center" prop="sendName" />
-      <af-table-column label="寄舱客户" align="center" prop="checkConsumer" />
-      <af-table-column
-        label="寄舱合同号"
-        align="center"
-        prop="checkContractNo"
-      />
-      <af-table-column label="品名" align="center" prop="goodsName" />
-      <af-table-column label="库位号" align="center" prop="storeCode" />
+      <!-- <af-table-column label="发货客户" align="center" prop="sendName"/>-->
+      <af-table-column label="寄舱客户" align="center" prop="checkConsumer"/>
+      <af-table-column label="寄舱合同号" align="center" prop="checkContractNo"/>
+      <af-table-column label="品名" align="center" prop="goodsName"/>
+      <!--<af-table-column label="库位号" align="center" prop="storeCode"/>-->
       <!--<af-table-column label="蒙方磅单号" align="center" prop="mongoliaBillNo" />-->
-      <af-table-column label="车号" align="center" prop="vehicleNo" />
+      <af-table-column label="车号" align="center" prop="vehicleNo"/>
       <!--<af-table-column label="挂车号1 挂车号1" align="center" prop="trailerNo1" />
       <af-table-column label="挂车号2 挂车号2" align="center" prop="trailerNo2" />-->
-      <af-table-column label="车队名" align="center" prop="vehicleTeam" />
+      <af-table-column label="车队名" align="center" prop="vehicleTeam"/>
       <!-- <af-table-column label="蒙古磅毛重" align="center" prop="mongoliaRoughWeight" />-->
-      <af-table-column
-        label="蒙方皮重"
-        align="center"
-        prop="mongoliaTareWeight"
-      />
-      <af-table-column
-        label="蒙方净重"
-        align="center"
-        prop="mongoliaNetWeight"
-      />
+      <af-table-column label="蒙方皮重" align="center" prop="mongoliaTareWeight"/>
+      <af-table-column label="蒙方净重" align="center" prop="mongoliaNetWeight"/>
       <!--<af-table-column label="车辆数量" align="center" prop="vehicleCount" />-->
-      <af-table-column label="司机姓名" align="center" prop="driverName" />
-      <af-table-column
-        label="车队联系人"
-        align="center"
-        prop="vehicleTeamContact"
-      />
-      <af-table-column
-        label="车队联系电话"
-        align="center"
-        prop="vehicleTeamTel"
-      />
-      <af-table-column
-        label="车型(双挂，单挂)"
-        align="center"
-        prop="vehicleType"
-      />
-      <af-table-column
-        label="计量单位(KG)"
-        align="center"
-        prop="measuringUnit"
-      />
+      <af-table-column label="司机姓名" align="center" prop="driverName"/>
+      <af-table-column label="车队联系人" align="center" prop="vehicleTeamContact"/>
+      <af-table-column label="车队联系电话" align="center" prop="vehicleTeamTel"/>
+      <!--<af-table-column label="车型(双挂，单挂)" align="center" prop="vehicleType"/>-->
+      <af-table-column label="计量单位(KG)" align="center" prop="measuringUnit"/>
       <af-table-column label="包装方式" align="center" prop="packMode">
         <template slot-scope="scope">
           <span>{{ scope.row.packMode === "1" ? "集装箱" : "散装" }}</span>
         </template>
       </af-table-column>
-      <af-table-column label="集装箱号1" align="center" prop="containerNo1" />
-      <af-table-column label="集装箱号2" align="center" prop="containerNo2" />
-      <af-table-column label="集装箱号3" align="center" prop="containerNo3" />
-      <af-table-column label="集装箱号4" align="center" prop="containerNo4" />
-      <af-table-column label="净重" align="center" prop="netWeight" />
-      <af-table-column label="皮重" align="center" prop="tareWeight" />
-      <af-table-column label="毛重" align="center" prop="roughWeight" />
+      <af-table-column label="集装箱号1" align="center" prop="containerNo1"/>
+      <af-table-column label="集装箱号2" align="center" prop="containerNo2"/>
+      <af-table-column label="集装箱号3" align="center" prop="containerNo3"/>
+      <af-table-column label="集装箱号4" align="center" prop="containerNo4"/>
+      <af-table-column label="净重" align="center" prop="netWeight"/>
+      <af-table-column label="皮重" align="center" prop="tareWeight"/>
+      <af-table-column label="毛重" align="center" prop="roughWeight"/>
       <!-- <af-table-column label="备注" align="center" prop="remark" />-->
-      <af-table-column label="库位号1" align="center" prop="storeCode" />
-      <af-table-column label="库位号2" align="center" prop="storeCode2" />
-      <af-table-column label="库位号3" align="center" prop="storeCode3" />
-      <af-table-column label="库位号4" align="center" prop="storeCode4" />
-      <af-table-column
-        label="生成时间"
-        align="center"
-        prop="genTime"
-        width="180"
-      >
+      <af-table-column label="库位号" align="center" prop="storeCode"/>
+      <af-table-column label="库位号2" align="center" prop="storeCode2"/>
+      <af-table-column label="库位号3" align="center" prop="storeCode3"/>
+      <af-table-column label="库位号4" align="center" prop="storeCode4"/>
+      <af-table-column label="生成时间" align="center" prop="genTime" width="180">
         <template slot-scope="scope">
           <span>{{
-            parseTime(scope.row.genTime, "{y}-{m}-{d} {hh}:{mm}:{ss}")
-          }}</span>
+              parseTime(scope.row.genTime, "{y}-{m}-{d} {hh}:{mm}:{ss}")
+            }}</span>
         </template>
       </af-table-column>
-      <af-table-column label="生成人" align="center" prop="genBy" />
-      <af-table-column
-        label="磅单打印时间"
-        align="center"
-        prop="poundTime"
-        width="180"
-      >
+      <af-table-column label="生成人" align="center" prop="genBy"/>
+      <af-table-column label="磅单打印时间" align="center" prop="poundTime" width="180">
         <template slot-scope="scope">
           <span>{{
-            parseTime(scope.row.poundTime, "{y}-{m}-{d} {hh}:{mm}:{ss}")
-          }}</span>
+              parseTime(scope.row.poundTime, "{y}-{m}-{d} {hh}:{mm}:{ss}")
+            }}</span>
         </template>
       </af-table-column>
       <!--<af-table-column label="磅单号" align="center" prop="poundNo" />-->
-      <af-table-column label="批次号" align="center" prop="batchNo" />
+      <af-table-column label="批次号" align="center" prop="batchNo"/>
       <!--<af-table-column label="提运单号" align="center" prop="loadingBillNo" />-->
-
-      <af-table-column label="生成舱单" align="center" prop="hasManifest" />
-      <af-table-column label="生成集报清单" align="center" prop="hasDeclare" />
-      <af-table-column label="生成进境确报" align="center" prop="hasTransit" />
+      <af-table-column label="生成舱单" align="center" prop="hasManifest"/>
+      <af-table-column label="生成集报清单" align="center" prop="hasDeclare"/>
+      <af-table-column label="生成进境确报" align="center" prop="hasTransit"/>
       <af-table-column label="状态" align="center" prop="storeState">
         <template slot-scope="scope">
           {{
-            storeStateDic.find((item) => item.key === scope.row.storeState)
-              .label
+            storeStateDic.find((item) => item.key === scope.row.storeState).label
           }}
         </template>
       </af-table-column>
       <!--<af-table-column label="文件ID" align="center" prop="fileId" />-->
-      <af-table-column label="放行单号" align="center" prop="passNo" />
+      <!--<af-table-column label="放行单号" align="center" prop="passNo"/>-->
       <!-- <af-table-column label="乐观锁" align="center" prop="revision" />-->
-      <af-table-column
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-        fixed="right"
-      >
+      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
             v-show="scope.row.storeState === '0'"
@@ -593,18 +547,16 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['place:instoreDoc:edit']"
-            >修改</el-button
-          >
+            v-hasPermi="['place:instoreDoc:edit']">修改
+          </el-button>
           <el-button
             v-show="scope.row.storeState === '0'"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['place:instoreDoc:remove']"
-            >删除</el-button
-          >
+            v-hasPermi="['place:instoreDoc:remove']">删除
+          </el-button>
         </template>
       </af-table-column>
     </el-table>
@@ -666,9 +618,9 @@
               >
                 <el-option
                   v-for="type in contractSubList"
-                  :key="type.id"
+                  :key="type.contractNo"
                   :label="type.contractNo"
-                  :value="type.id"
+                  :value="type.contractNo"
                 />
               </el-select>
             </el-form-item>
@@ -690,7 +642,7 @@
         <el-row :gutter="10">
           <el-col :span="11">
             <el-form-item label="车号" prop="vehicleNo">
-              <el-input v-model="form.vehicleNo" placeholder="请输入车号" />
+              <el-input v-model="form.vehicleNo" placeholder="请输入车号"/>
             </el-form-item>
           </el-col>
           <!-- 蒙文键盘 -->
@@ -718,7 +670,7 @@
         </el-row>
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="蒙方净重 " prop="mongoliaNetWeight">
+            <el-form-item label="蒙方净重(KG)" prop="mongoliaNetWeight">
               <el-input
                 v-model.number="form.mongoliaNetWeight"
                 placeholder="请输入蒙方净重"
@@ -726,10 +678,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="蒙方皮重" prop="mongoliaTareWeight">
+            <el-form-item label="蒙方皮重(KG)" prop="mongoliaTareWeight">
               <el-input
                 v-model.number="form.mongoliaTareWeight"
-                placeholder="请输入蒙方皮重 "
+                placeholder="请输入蒙方皮重"
               />
             </el-form-item>
           </el-col>
@@ -811,12 +763,15 @@
         </el-row>
         <el-row :gutter="10" v-show="form.packMode === '1'">
           <el-col :span="12"
-            ><el-form-item label="集装箱号3" prop="containerNo3">
+          >
+            <el-form-item label="集装箱号3" prop="containerNo3">
               <el-input
                 v-model="form.containerNo3"
                 placeholder="请输入集装箱号3"
-              /> </el-form-item
-          ></el-col>
+              />
+            </el-form-item
+            >
+          </el-col>
           <el-col :span="12">
             <el-form-item label="集装箱号4" prop="containerNo4">
               <el-input
@@ -836,12 +791,12 @@
         <el-form-item label="毛重" prop="roughWeight">
           <el-input v-model="form.roughWeight" placeholder="请输入毛重" />
         </el-form-item>-->
-        <!-- <el-row :gutter="10">          
+        <!-- <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="备注" prop="remark">
               <el-input v-model="form.remark" placeholder="请输入备注" />
             </el-form-item>
-          </el-col>          
+          </el-col>
         </el-row> -->
 
         <!--<el-form-item label="生成时间" prop="genTime">
@@ -944,8 +899,8 @@ import {
   addInstoreDoc,
   updateInstoreDoc,
 } from "@/api/place/instoreDoc";
-import { getUserDepts } from "@/utils/charutils";
-import { listStoreContract } from "@/api/place/storeContract";
+import {getUserDepts} from "@/utils/charutils";
+import {listStoreContract} from "@/api/place/storeContract";
 import SimpleKeyboard from "@/components/SimpleKeyboard/SimpleKeyboard";
 
 export default {
@@ -969,8 +924,8 @@ export default {
       // 入库通知单表格数据
       instoreDocList: [],
       importTypeDic: [
-        { value: "1", label: "入库通知单" },
-        { value: "0", label: "出库派车单" },
+        {value: "1", label: "入库通知单"},
+        {value: "0", label: "出库派车单"},
       ],
       storeIds: [],
       customerList: [], //寄舱客户列表
@@ -985,7 +940,7 @@ export default {
         pageSize: 20,
         placeId: undefined,
         docNo: undefined,
-        storeCode: undefined,
+        //storeCode: undefined,
         checkConsumer: undefined,
         checkContractNo: undefined,
         mongoliaBillNo: undefined,
@@ -1035,7 +990,7 @@ export default {
       // 表单校验
       rules: {
         docNo: [
-          { required: true, message: "通知单号不能为空", trigger: "blur" },
+          {required: true, message: "通知单号不能为空", trigger: "blur"},
         ],
         storeCode: [
           {
@@ -1054,26 +1009,25 @@ export default {
           },
         ],
         checkContractNo: [
-          { required: true, message: "寄舱合同不能为空", trigger: "change" },
+          {required: true, message: "寄舱合同不能为空", trigger: "change"},
         ],
         vehicleNo: [
-          { required: true, message: "车号不能为空", trigger: "blur" },
-          { min: 7, max: 7, message: "请输入7位有效车号", trigger: "blur" }
+          {required: true, message: "车号不能为空", trigger: "blur"},
+          {min: 7, max: 7, message: "请输入7位有效车号", trigger: "blur"}
         ],
         mongoliaNetWeight: [
-          { required: true, message: "蒙方净重不能为空", trigger: "blur" },
-          { type: "number", message: "请输入数字", trigger: "blur" },
+          {required: true, message: "蒙方净重不能为空", trigger: "blur"},
+          {type: "number", message: "请输入数字", trigger: "blur"},
         ],
         mongoliaTareWeight: [
-          { required: true, message: "蒙方皮重不能为空", trigger: "blur" },
-          { type: "number", message: "请输入数字", trigger: "blur" },
+          {required: true, message: "蒙方皮重不能为空", trigger: "blur"},
+          {type: "number", message: "请输入数字", trigger: "blur"},
         ],
       },
       storeStateDic: [
-        { key: "0", label: "待入库" },
-        { key: "1", label: "已入库" },
-        { key: "2", label: "可放行" },
-        { key: "3", label: "已生成放行单" },
+        {key: "0", label: "未进场"},
+        {key: "2", label: "已进场"},
+        {key: "1", label: "已入库"},
       ],
     };
   },
@@ -1082,6 +1036,7 @@ export default {
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId;
       this.getList();
+      this.getContract(this.queryParams.placeId, "1");
     }
   },
   methods: {
@@ -1103,9 +1058,9 @@ export default {
     reset() {
       this.form = {
         id: undefined,
-        placeId: undefined,
+        placeId: this.queryParams.placeId,
         docNo: undefined,
-        storeCode: undefined,
+        //storeCode: undefined,
         checkConsumer: undefined,
         checkContractNo: undefined,
         mongoliaBillNo: undefined,
@@ -1154,12 +1109,15 @@ export default {
       };
       this.resetForm("form");
       this.contractSubList = [];
-      this.customerList = [];
+      //this.customerList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      this.form.placeId = this.queryParams.placeId
       this.getList();
+      this.getContract(this.queryParams.placeId, "1"); //加载这个场所下的合同
+
     },
     /** 重置按钮操作 */
     resetQuery() {
@@ -1177,7 +1135,7 @@ export default {
       this.storeIds = [];
       this.form.storeCode = ""; //库位号对应的表单项
       this.contractSubList.forEach((element) => {
-        if (element.id === event) {
+        if (element.contractNo === event) {
           //将得到的企业属性赋值到应用的对象中
           //this.form.checkConsumer = element.customerName
           this.storeIds = element.params.contract;
@@ -1192,21 +1150,16 @@ export default {
     //获取场所下有效的合同 列表
     getContract(placeId, status) {
       //查找合同
-      listStoreContract({ placeId: placeId, status: status }).then(
-        (response) => {
+      listStoreContract({placeId: placeId, status: status}).then((response) => {
           if (response.code === 200) {
             this.contractList = response.rows;
             if (this.contractList.length === 0) {
-              this.$message.warning("此场所没有有效的合同");
+              //this.$message.warning("此场所没有有效的合同");
             } else {
               //重新给客户列表 赋值
               this.customerList = [];
               for (let contract of this.contractList) {
-                if (
-                  !this.customerList.find(
-                    (cus) => cus.customerId === contract.customerId
-                  )
-                ) {
+                if (!this.customerList.find((cus) => cus.customerId === contract.customerId)) {
                   this.customerList.push(contract);
                 }
               }
@@ -1229,7 +1182,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加入库通知单";
-      this.getContract(this.queryParams.placeId, "1"); //加载这个场所下的合同
+      //this.getContract(this.queryParams.placeId, "1"); //加载这个场所下的合同
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -1239,7 +1192,24 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改入库通知单";
+
+        this.contractSubList = this.contractList.filter((item) => item.customerName === this.form.checkConsumer);
+        //this.changeContract(this.form.contractId)
+        this.contractSubList.forEach((element) => {
+          if (element.contractNo === this.form.checkContractNo) {
+            //将得到的企业属性赋值到应用的对象中
+            //this.form.checkConsumer = element.customerName
+            this.storeIds = element.params.contract;
+            if (this.storeIds.length > 0) {
+            } else {
+              this.$message.warning("此合同没有指定库位");
+            }
+            // this.form.storeCode = element.storeIds
+          }
+        });
       });
+
+      //this.getContract(this.queryParams.placeId, "1"); //加载这个场所下的合同
     },
     /** 提交按钮 */
     submitForm: function () {
@@ -1253,10 +1223,10 @@ export default {
                 this.getList();
               }
             });
-          } else {
+          } else { //新增
             this.form.templateType = "1";
             this.form.placeId = this.queryParams.placeId;
-            console.log(this.form)
+            //console.log(this.form)
             addInstoreDoc(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
@@ -1287,7 +1257,8 @@ export default {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function () {});
+        .catch(function () {
+        });
     },
     /** 导出按钮操作 */
     handleExport() {
