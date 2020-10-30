@@ -765,13 +765,14 @@ export default {
                 'storeCode': this.form.locationNumber,
                 'netWeight': this.form.netWeight,
                 'tareWeight': this.form.tare,
-                'roughWeight': this.form.grossWeight
+                'roughWeight': this.form.grossWeight,
+                'channelNo': this.form.channelNumber
               }
               if (this.PoundForm.stationViaType === '01') {//重进空出 生成入库单
                 params.direction = 1
                 genStoreDoc(params).then(response => {
                   if (response.code === 200) {
-                    this.msgSuccess("入库成功");
+                    this.msgSuccess(response.msg);
                     //更新出厂记录
                     updateSheet(this.form).then(response => {
                       if (response.code === 200) {
@@ -974,7 +975,9 @@ export default {
       let data = {
         'placeId': this.queryParams.stationId,
         'type': this.PoundForm.stationViaType,
-        'noticeNo': this.form.noticeNo
+        'noticeNo': this.form.noticeNo,
+        'channelNo': this.form.channelNumber,
+        'vehicleNo': this.form.plateNum
       }
       console.log(data)
       updateDocTime(data)

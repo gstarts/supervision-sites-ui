@@ -465,8 +465,7 @@
     <el-table
       v-loading="loading"
       :data="instoreDocList"
-      @selection-change="handleSelectionChange"
-    >
+      @selection-change="handleSelectionChange">
       <!--<af-table-column type="selection" width="55" align="center" />-->
       <af-table-column label="ID" align="center" prop="id"/>
       <!--<af-table-column label="场所编号" align="center" prop="placeId"/>-->
