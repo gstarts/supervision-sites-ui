@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="场所" prop="placeId">
-        <el-select v-model="queryParams.placeId" placeholder="请选择场所">
+        <el-select v-model="queryParams.placeId" placeholder="请选择场所" @change="handleQuery">
           <el-option
             v-for="dept in depts"
             :key="dept.deptId"
@@ -56,7 +56,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="报关单号" prop="declarationNo">
+     <!-- <el-form-item label="报关单号" prop="declarationNo">
         <el-input
           v-model="queryParams.declarationNo"
           placeholder="请输入报关单号"
@@ -64,22 +64,23 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="业务类型" prop="businessType">
-        <el-input
-          v-model="queryParams.businessType"
-          placeholder="请输入业务类型进出移"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.businessType" placeholder="请选择业务类型" @change="handleQuery" clearable>
+          <el-option
+                     v-for="dept in businessTypeDic"
+                     :key="dept.key"
+                     :label="dept.label"
+                     :value="dept.key"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="更新时间" prop="updateTime">
+      <el-form-item label="时间" prop="createTime">
         <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.updateTime"
+          v-model="queryParams.createTime"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="选择更新时间">
+          placeholder="选择时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -113,20 +114,24 @@
       <el-table-column label="空重状态" align="center" prop="isHeavy" />
       <el-table-column label="货物批次号" align="center" prop="goodsBatchNo" />
       <el-table-column label="货物名称" align="center" prop="goodsName" />
-      <el-table-column label="货物种类" align="center" prop="goodsType" />
-      <el-table-column label="件数单位" align="center" prop="countUnit" />
-      <el-table-column label="毛重(KG)" align="center" prop="roughWight" />
-      <el-table-column label="净重(KG)" align="center" prop="netWight" />
-      <el-table-column label="货物标识码" align="center" prop="goodsIdentificationCode" />
-      <el-table-column label="数量单位" align="center" prop="numUnit" />
-      <el-table-column label="报关单号" align="center" prop="declarationNo" />
+      <!--<el-table-column label="货物种类" align="center" prop="goodsType" />-->
+      <!--<el-table-column label="件数单位" align="center" prop="countUnit" />-->
+      <!--<el-table-column label="毛重(KG)" align="center" prop="roughWeight" />-->
+      <el-table-column label="净重(KG)" align="center" prop="netWeight" />
+      <!--<el-table-column label="货物标识码" align="center" prop="goodsIdentificationCode" />-->
+      <el-table-column label="计量单位" align="center" prop="numUnit" />
+     <!-- <el-table-column label="报关单号" align="center" prop="declarationNo" />-->
       <el-table-column label="业务编号" align="center" prop="businessNo" />
-      <el-table-column label="业务类型" align="center" prop="businessType" />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="更新人" align="center" prop="updateBy" />
-      <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
+      <el-table-column label="业务类型" align="center" prop="businessType" >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime) }}</span>
+          {{scope.row.businessType === '1' ?'入库':'出库'}}
+        </template>
+      </el-table-column>
+      <!--<el-table-column label="备注" align="center" prop="remark" />-->
+      <!--<el-table-column label="更新人" align="center" prop="updateBy" />-->
+      <el-table-column label="时间" align="center" prop="createTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -173,15 +178,19 @@ export default {
         goodsName: undefined,
         goodsType: undefined,
         countUnit: undefined,
-        roughWight: undefined,
-        netWight: undefined,
+        roughWeight: undefined,
+        netWeight: undefined,
         goodsIdentificationCode: undefined,
         numUnit: undefined,
         declarationNo: undefined,
         businessNo: undefined,
         businessType: undefined,
-        updateTime: undefined
+        createTime: undefined
       },
+      businessTypeDic: [
+        {'key':'1',label:'入库'},
+        {'key':'0',label:'出库'},
+      ],
     };
   },
   created() {
@@ -202,7 +211,7 @@ export default {
         this.loading = false;
       });
     },
-   
+
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
