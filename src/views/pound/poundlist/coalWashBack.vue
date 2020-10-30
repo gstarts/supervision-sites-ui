@@ -211,7 +211,8 @@
     </el-row>
     <el-card>
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="进场记录" name="Approach">
+        <el-tab-pane label="进场记录"  name="Approach" >
+
           <el-table
             class="mb20"
             ref="ApproachList"
@@ -222,16 +223,25 @@
             :row-style="green"
             @row-dblclick="dbRow"
           >
-            <el-table-column type="selection" width="55" align="center"/>
-            <el-table-column label="车号" align="center" prop="plateNum"/>
-            <el-table-column label="毛重" align="center" prop="grossWeight"/>
-            <el-table-column label="皮重" align="center" prop="tare"/>
-            <el-table-column label="净重" align="center" prop="netWeight"/>
-            <el-table-column label="库位号" align="center" prop="locationNumber"/>
-            <el-table-column label="发货单位" align="center" prop="deliveryUnit"/>
-            <el-table-column label="收货单位" align="center" prop="receivingUnit"/>
-            <el-table-column label="货物名称" align="center" prop="goodsName"/>
+            <el-table-column label="车号" align="center" prop="plateNum" width='100px'  fixed />
+            <el-table-column label="毛重" align="center" prop="grossWeight" width='100px'/>
+            <el-table-column label="皮重" align="center" prop="tare" width='100px' />
+            <el-table-column label="净重" align="center" prop="netWeight" width='100px'/>
+            <el-table-column label="发货单位" align="center" prop="deliveryUnit" :show-overflow-tooltip="true"/>
+            <el-table-column label="收货单位" align="center" prop="receivingUnit" :show-overflow-tooltip="true"/>
+            <el-table-column label="货物名称" align="center" prop="goodsName" :show-overflow-tooltip="true"/>
             <el-table-column label="规格型号" align="center" prop="specification"/>
+            <el-table-column label="进场时间" align="center" prop="createTime" width="180">
+              <template slot-scope="scope">
+                <span>{{ parseTime(scope.row.createTime) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="出场时间" align="center" prop="createTime" width="180">
+              <template slot-scope="scope">
+                <span>{{ parseTime(scope.row.updateTime) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="库位号" align="center" prop="locationNumber"/>
           </el-table>
           <pagination
             v-show="total>0"
@@ -251,16 +261,25 @@
             style="width: 100%"
             @row-dblclick="dbRow"
           >
-            <el-table-column type="selection" width="55" align="center"/>
-            <el-table-column label="车号" align="center" prop="plateNum"/>
-            <el-table-column label="毛重" align="center" prop="grossWeight"/>
-            <el-table-column label="皮重" align="center" prop="tare"/>
-            <el-table-column label="净重" align="center" prop="netWeight"/>
-            <el-table-column label="库位号" align="center" prop="locationNumber"/>
-            <el-table-column label="发货单位" align="center" prop="deliveryUnit"/>
-            <el-table-column label="收货单位" align="center" prop="receivingUnit"/>
-            <el-table-column label="货物名称" align="center" prop="goodsName"/>
+            <el-table-column label="车号" align="center" prop="plateNum" width='100px'  fixed />
+            <el-table-column label="毛重" align="center" prop="grossWeight" width='100px'/>
+            <el-table-column label="皮重" align="center" prop="tare" width='100px' />
+            <el-table-column label="净重" align="center" prop="netWeight" width='100px'/>
+            <el-table-column label="发货单位" align="center" prop="deliveryUnit" :show-overflow-tooltip="true"/>
+            <el-table-column label="收货单位" align="center" prop="receivingUnit" :show-overflow-tooltip="true"/>
+            <el-table-column label="货物名称" align="center" prop="goodsName" :show-overflow-tooltip="true"/>
             <el-table-column label="规格型号" align="center" prop="specification"/>
+            <el-table-column label="进场时间" align="center" prop="createTime" width="180">
+              <template slot-scope="scope">
+                <span>{{ parseTime(scope.row.createTime) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="出场时间" align="center" prop="createTime" width="180">
+              <template slot-scope="scope">
+                <span>{{ parseTime(scope.row.updateTime) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="库位号" align="center" prop="locationNumber"/>
           </el-table>
           <pagination
             v-show="total>0"
@@ -709,6 +728,9 @@ export default {
       //场站ID赋值
       this.form.stationId = this.queryParams.stationId;
       this.form.updateTime = genTimeCode(new Date(), "YYYY-MM-DD HH:mm:ss");
+      // 将空进重出 或重进空出 保存
+      this.form.viaType=this.PoundForm.stationViaType
+
       this.$refs["form"].validate((valid) => {
           if (valid) {
             if (this.PoundForm.flowDirection == "I") {
@@ -888,6 +910,21 @@ export default {
         this.form.locationNumber = undefined;
       }
       this.getVehicleList() //加载车辆
+
+       console.log("调用")
+      /*** 调用获取进出场列表 */
+      let queryParams={
+        stationId: this.queryParams.stationId,
+        flowDirection:this.PoundForm.flowDirection ,
+        viaType:this.PoundForm.stationViaType
+      }
+      console.log(queryParams)
+      listIESheet(queryParams).then((response) => {
+        this.ApproachList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+      /*** 调用获取进出场列表 */
     },
     flowCheck() {
       if (this.PoundForm.flowDirection === 'I' || this.PoundForm.flowDirection === undefined) {//如果是进场
@@ -1024,4 +1061,9 @@ export default {
   font-size: 20px;
   padding-left: 280px;
 }
+.el-tooltip_popper{
+  font-size: 15px;
+  max-width: 20%;
+}
+
 </style>
