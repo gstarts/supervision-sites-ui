@@ -211,8 +211,8 @@
     </el-row>
     <el-card>
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="进场记录"  name="Approach" >
-
+        <el-tab-pane   name="Approach" >
+          <span slot="label">{{"进场记录("+this.total+")"}}</span>
           <el-table
             class="mb20"
             ref="ApproachList"
@@ -251,7 +251,8 @@
             @pagination="getListI"
           />
         </el-tab-pane>
-        <el-tab-pane label="已完成" name="end">
+        <el-tab-pane  name="end">
+          <span slot="label">{{"已完成("+this.total+")"}}</span>
           <el-table
             class="mb20"
             ref="sheetList"
