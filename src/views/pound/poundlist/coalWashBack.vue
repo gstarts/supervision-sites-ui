@@ -259,6 +259,7 @@
             v-loading="loading"
             tooltip-effect="dark"
             style="width: 100%"
+            :row-style="green"
             @row-dblclick="dbRow"
           >
             <el-table-column label="车号" align="center" prop="plateNum" width='100px'  fixed />
