@@ -219,6 +219,7 @@
             v-loading="loading"
             tooltip-effect="dark"
             style="width: 100%"
+            :row-style="green"
             @row-dblclick="dbRow"
           >
             <el-table-column type="selection" width="55" align="center"/>
@@ -360,6 +361,7 @@ export default {
       timer1: "",
       // 总条数
       total: 0,
+      green:{'color':'green'},
       nowData: "",
       nowTime: "",
       // 终端表格数据
