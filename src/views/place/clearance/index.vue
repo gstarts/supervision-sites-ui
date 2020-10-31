@@ -72,7 +72,7 @@
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="提运单号" align="center" prop="customsNo"/>
       <el-table-column label="运输批次号" align="center" prop="batchNo"/>
-      <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>
+<!--      <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>-->
       <el-table-column label="提运单重量" align="center" prop="wieght"/>
       <el-table-column label="已使用重量" align="center" prop="oldWieght">
         <template slot-scope="scope">
@@ -104,7 +104,7 @@
           </el-select>
         </el-form-item>
        <!-- 应急需求变更       -->
-        <el-form-item label="寄舱客户" prop="coalBillNo">
+        <el-form-item label="寄舱客户" prop="customsId">
           <el-select v-model="form.customsId" filterable placeholder="请选择寄舱客户">
             <el-option
               v-for="item in consumerOptions"
