@@ -535,6 +535,22 @@
           }}
         </template>
       </af-table-column>
+      <af-table-column label="进场时间" align="center" prop="inTime">
+        <template slot-scope="scope">
+          <span>{{
+              parseTime(scope.row.inTime, "{y}-{m}-{d} {hh}:{mm}:{ss}")
+            }}</span>
+        </template>
+      </af-table-column>
+      <af-table-column label="进场通道" align="center" prop="inChannel"/>
+      <af-table-column label="出场时间" align="center" prop="outTime">
+        <template slot-scope="scope">
+          <span>{{
+              parseTime(scope.row.outTime, "{y}-{m}-{d} {hh}:{mm}:{ss}")
+            }}</span>
+        </template>
+      </af-table-column>
+      <af-table-column label="出场通道" align="center" prop="outChannel"/>
       <!--<af-table-column label="文件ID" align="center" prop="fileId" />-->
       <!--<af-table-column label="放行单号" align="center" prop="passNo"/>-->
       <!-- <af-table-column label="乐观锁" align="center" prop="revision" />-->
