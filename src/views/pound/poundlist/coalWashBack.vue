@@ -236,7 +236,7 @@
                 <span>{{ parseTime(scope.row.createTime) }}</span>
               </template>
             </af-table-column>
-            <af-table-column label="出场时间" align="center" prop="createTime" width="180">
+            <af-table-column label="出场时间" align="center" prop="updateTime" width="180">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.updateTime) }}</span>
               </template>
@@ -284,10 +284,10 @@
             <af-table-column label="库位号" align="center" prop="locationNumber"/>
           </el-table>
           <pagination
-            v-show="total>0"
-            :total="total"
-            :page.sync="queryParams.pageNum"
-            :limit.sync="queryParams.pageSize"
+            v-show="total1>0"
+            :total="total1"
+            :page.sync="queryParams1.pageNum"
+            :limit.sync="queryParams1.pageSize"
             @pagination="getListE"
           />
         </el-tab-pane>
@@ -400,7 +400,14 @@ export default {
       // 是否显示弹出层
       open: false,
       // 查询参数
-      queryParams: {
+      queryParams: { //进场记录的查询条件
+        //pageNum: 1,
+        //pageSize: 10,
+        clientId: undefined,
+        stationId: undefined,
+        flowDirection: undefined,
+      },
+      queryParams1: { //已完成的查询条件
         //pageNum: 1,
         //pageSize: 10,
         clientId: undefined,
@@ -624,8 +631,8 @@ export default {
     //初始化页面 查询出场记录
     getListE() {
       this.loading = true;
-      this.queryParams.flowDirection = "E";
-      listIESheet(this.queryParams).then((response) => {
+      this.queryParams1.flowDirection = "E";
+      listIESheet(this.queryParams1).then((response) => {
         this.sheetList = response.rows;
         console.log("---------")
         console.log(response)
@@ -734,7 +741,8 @@ export default {
       this.form.channelNumber = this.PoundForm.channelNumber;
       //场站ID赋值
       this.form.stationId = this.queryParams.stationId;
-      this.form.updateTime = genTimeCode(new Date(), "YYYY-MM-DD HH:mm:ss");
+      //不要update时间
+      //this.form.updateTime = genTimeCode(new Date(), "YYYY-MM-DD HH:mm:ss");
       // 将空进重出 或重进空出 保存
       this.form.viaType=this.PoundForm.stationViaType
 
@@ -922,17 +930,25 @@ export default {
 
        console.log("调用")
       /*** 调用获取进出场列表 */
-      let queryParams={
+      this.queryParams={
         stationId: this.queryParams.stationId,
         flowDirection:this.PoundForm.flowDirection ,
         viaType:this.PoundForm.stationViaType
       }
-      console.log(queryParams)
-      listIESheet(queryParams).then((response) => {
+      this.queryParams1={
+        stationId: this.queryParams.stationId,
+        flowDirection:this.PoundForm.flowDirection ,
+        viaType:this.PoundForm.stationViaType
+      }
+      //console.log(queryParams)
+      /*listIESheet(queryParams).then((response) => {
         this.ApproachList = response.rows;
         this.total = response.total;
         this.loading = false;
-      });
+      });*/
+      //进场 和 已完成，都查询
+      this.getListI()
+      this.getListE()
       /*** 调用获取进出场列表 */
     },
     flowCheck() {
@@ -959,6 +975,7 @@ export default {
       this.PoundForm.channelNumber = '' // 通道号当前值设为空
       //进场记录
       this.getListI();
+      this.getListE();
 
       //判断场所和车辆类型的是否全了
       this.getVehicleList()
