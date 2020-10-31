@@ -103,13 +103,15 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="提煤单号" prop="coalBillNo">
-          <el-select v-model="form.coalBillNo" filterable placeholder="请选择提煤单号">
+       <!-- 应急需求变更       -->
+        <el-form-item label="寄舱客户" prop="coalBillNo">
+          <el-select v-model="form.coalBillNo" filterable placeholder="请选择寄舱客户">
             <el-option
-              v-for="item in BigList"
-              :key="item.coalBillNo"
-              :label="item.coalBillNo"
-              :value="item.coalBillNo">
+              v-for="item in consumerOptions"
+              :key="item.id"
+              :label="item.eName"
+              :value="item.id"
+            >
             </el-option>
           </el-select>
         </el-form-item>
@@ -171,13 +173,13 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="提煤单号" prop="coalBillNo">
-          <el-select v-model="form.coalBillNo" placeholder="请选择提煤单号" filterable>
+        <el-form-item label="寄舱客户" prop="coalBillNo">
+          <el-select v-model="form.coalBillNo" filterable placeholder="请选择寄舱客户">
             <el-option
-              v-for="item in BigList"
-              :key="item.coalBillNo"
-              :label="item.coalBillNo"
-              :value="item.coalBillNo">
+              v-for="item in consumerOptions"
+              :key="item.id"
+              :label="item.eName"
+              :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -191,6 +193,7 @@ import { addClearance, delClearance, getClearance, listClearance, updateClearanc
 import { selectCoalBillNo } from '@/api/place/big'
 import { getToken } from '@/utils/auth'
 import { getUserDepts } from '@/utils/charutils'
+import { listInfo } from '@/api/basis/enterpriseInfo'
 
 export default {
   name: 'Clearance',
@@ -213,6 +216,8 @@ export default {
       depts: [],
       // 是否显示弹出层
       open: false,
+      // 寄舱客户
+      consumerOptions:[],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -328,6 +333,8 @@ export default {
       this.reset()
       this.open = true
       this.title = '添加提运单 '
+      this.form.placeId=this.depts[0].deptId
+      this.getConsumerInfo(this.form.placeId)
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -389,6 +396,8 @@ export default {
       this.upload.title = '提运单申报导入'
       this.upload.open = true
       this.reset()
+      this.form.placeId=this.depts[0].deptId
+      this.getConsumerInfo(this.form.placeId)
     },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
@@ -410,15 +419,20 @@ export default {
         this.$alert('请选择场所和提煤单号')
       }
     },
+    /** 客户信息列表 */
+    getConsumerInfo(placeId) {
+      let consumerParams = { eType: '2',deptId:placeId }
+      listInfo(consumerParams).then(response => {
+        this.consumerOptions = response.rows
+        console.log( this.consumerOptions )
+      })
+    },
     change(val, name) {
       // 场所
       if (name === 'placeId') {
         //查询场所下的大提煤单中的所有提煤单号
-        let placeId = val
-        this.form.coalBillNo = undefined
-        selectCoalBillNo({ 'placeId': placeId }).then(response => {
-          this.BigList = response.rows
-        })
+        this.getConsumerInfo(val)
+
       }
     },
     closeDialog() {

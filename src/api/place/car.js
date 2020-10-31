@@ -42,3 +42,10 @@ export function delCar(id) {
     method: 'delete'
   })
 }
+// 获取外调车车牌号列表
+export function getCarInfo() {
+  return request({
+    url: '/place/car/info',
+    method: 'get'
+  })
+}

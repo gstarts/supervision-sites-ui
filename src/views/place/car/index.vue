@@ -1,6 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="提煤单号" prop="coalBillNo">
+        <el-input
+          v-model="queryParams.coalBillNo"
+          placeholder="请输入提煤单号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="车牌号" prop="plateNo">
         <el-input
           v-model="queryParams.plateNo"
@@ -115,20 +124,28 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="车牌号" prop="plateNo">
-              <el-input v-model="form.plateNo" placeholder="请输入车牌号"/>
+              <el-autocomplete
+                class="inline-input"
+                v-model="form.plateNo"
+                :fetch-suggestions="nameSearch"
+                placeholder="请输入车牌号"
+                @select="handleSelect"
+                style="width: 100%"
+                clearable
+              ></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="净重" prop="netWeight">
-              <el-input v-model.number="form.netWeight" placeholder="请输入净重"/>
+            <el-form-item label="皮重" prop="load">
+              <el-input v-model.number="form.load" placeholder="请输入载重"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="载重" prop="load">
-              <el-input v-model.number="form.load" placeholder="请输入载重"/>
+            <el-form-item label="净重" prop="netWeight">
+              <el-input v-model.number="form.netWeight" placeholder="请输入净重"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -215,7 +232,7 @@
 </template>
 
 <script>
-import { addCar, delCar, getCar, listCar, updateCar } from '@/api/place/car'
+import { addCar, delCar, getCar, getCarInfo, listCar, updateCar } from '@/api/place/car'
 import { selectCoalBillNo } from '@/api/place/big'
 import { getToken } from '@/utils/auth'
 import { getUserDepts } from '@/utils/charutils'
@@ -258,6 +275,8 @@ export default {
       form: {},
       //场所列表
       depts: [],
+      // 车牌号列表
+      plateNoList:[],
       // 车辆类型
       types: [
         { value: 'S', label: '散杂货' },
@@ -310,7 +329,8 @@ export default {
     // 获取场所
     this.depts = getUserDepts('0')
     this.getList()
-
+    // 外调车车牌号列表
+    this.getPlateNoList()
   },
   methods: {
     /** 查询外调车 列表 */
@@ -320,6 +340,11 @@ export default {
         this.carList = response.rows
         this.total = response.total
         this.loading = false
+      })
+    },
+    getPlateNoList(){
+      getCarInfo().then(res=>{
+        this.plateNoList = res.data
       })
     },
     // 取消按钮
@@ -336,7 +361,7 @@ export default {
         plateNo: undefined,
         netWeight: undefined,
         load: undefined,
-        transportNum: undefined,
+        transportNum: 1,
         status: '1',
         allocationNum: undefined,
         createBy: undefined,
@@ -344,7 +369,8 @@ export default {
         updateBy: undefined,
         updateTime: undefined,
         remark: undefined,
-        revision: undefined
+        revision: undefined,
+        type:'S'
       }
       this.resetForm('form')
     },
@@ -367,6 +393,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
+      this.form.placeId = this.depts[0].deptId
       this.open = true
       this.title = '添加外调车 '
     },
@@ -427,9 +454,10 @@ export default {
     },
     /** 导入按钮操作 */
     handleImport() {
+      this.reset()
       this.upload.title = '申报车辆导入'
       this.upload.open = true
-      this.reset()
+      this.form.placeId = this.depts[0].deptId
     },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
@@ -461,6 +489,28 @@ export default {
           this.BigList = response.rows
         })
       }
+    },
+    // 收发货单位建议
+    nameSearch(queryString,cb){
+      console.log("1")
+      let results = queryString?this.plateNoList.filter(this.createFilter(queryString)):this.plateNoList
+      for (let item of results) {
+        item.value=item.plateNo
+      }
+      console.log(results);
+      cb(results)
+    },
+
+    createFilter(queryString) {
+
+      return (item) => {
+        return (item.plateNo.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    handleSelect(item) {
+      this.form.plateNo = item.plateNo
+      this.form.netWeight=item.netWeight
+      this.form.load=item.form.load
     },
     closeDialog() {
         this.open = false,
