@@ -1,6 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="提煤单号" prop="coalBillNo">
+        <el-input
+          v-model="queryParams.coalBillNo"
+          placeholder="请输入提煤单号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="车牌号" prop="plateNo">
         <el-input
           v-model="queryParams.plateNo"
