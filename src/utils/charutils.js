@@ -31,6 +31,7 @@ export function getUserDepts(deptType){
     let depts = []
     let dept = store.getters.dept
     //debugger
+    console.log('部门')
     console.log(dept)
 
     // 0 监管场所，1保税库，2堆场，3企业
