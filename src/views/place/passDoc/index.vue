@@ -176,10 +176,23 @@
               <el-input v-model.number="form.passVolume" placeholder="请输入放行量"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="10">
             <el-form-item label="可放行量" prop="release">
               <el-input v-model="form.release" :disabled="true" />
             </el-form-item>
+          </el-col>
+          <el-col :span="2">
+            <el-upload
+              action="uploadAction"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :on-success="uploadSuccess"
+              :before-remove="beforeRemove"
+              :limit="1"
+              :on-exceed="handleExceed"
+              :file-list="fileList">
+              <el-button size="mini">上传附件</el-button>
+            </el-upload>
           </el-col>
         </el-row>
       </el-form>
@@ -197,6 +210,7 @@ import { listStoreContract } from '@/api/place/storeContract'
 import { getUserDepts } from '@/utils/charutils'
 import { listInfo } from '@/api/basis/enterpriseInfo'
 import { getReleaseWeight } from '@/api/place/big'
+import { getToken } from '@/utils/auth'
 
 export default {
   name: 'PassDoc',
@@ -255,6 +269,18 @@ export default {
       form: {},
       // 煤种
       coalTypeOptions: [],
+      /***上传参数start ***/
+      uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/place/upload',
+      uploadData: {},
+      uploading: false,
+      fileList: [],
+      headers: {
+        'Authorization': '',
+        'placeId': '',
+        'bucketName': '',
+        'filename':''
+      },
+      /***上传参数end ***/
       // 表单校验
       rules: {
         passNo: [
@@ -390,6 +416,17 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function() {
+
+      // if (this.$refs.upload.$refs['upload-inner'].fileList.length === 1) {
+      //   this.uploading = true
+      //   this.headers.Authorization = 'Bearer ' + getToken()
+      //   this.headers.placeId = this.queryParams.placeId
+      //   console.log('this.form.templateType=' + this.form.templateType)
+      //   this.headers.templateType = this.form.templateType
+      //   this.headers.bucketName = 'place'
+      //   this.$refs.upload.submit();
+      // }
+
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.passVolume > this.form.release) {
@@ -442,6 +479,26 @@ export default {
       const id = row.contractNo
       this.$router.push({ path: '/place/big', query: { tableId: id } })
     },
+    /***上传start ***/
+
+    handleRemove(){
+
+    },
+    handlePreview(){
+
+    },
+    // 文件上传成功
+    uploadSuccess(){
+
+    },
+    beforeRemove(){
+
+    },
+    handleExceed(){
+
+    },
+    /***上传end ***/
+
     // 下拉列表改变时激活
     change(val, name) {
       // 场所
