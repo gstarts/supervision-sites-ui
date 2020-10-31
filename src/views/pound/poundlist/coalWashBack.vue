@@ -401,15 +401,15 @@ export default {
       open: false,
       // 查询参数
       queryParams: { //进场记录的查询条件
-        //pageNum: 1,
-        //pageSize: 10,
+        pageNum: 1,
+        pageSize: 10,
         clientId: undefined,
         stationId: undefined,
         flowDirection: undefined,
       },
       queryParams1: { //已完成的查询条件
-        //pageNum: 1,
-        //pageSize: 10,
+        pageNum: 1,
+        pageSize: 10,
         clientId: undefined,
         stationId: undefined,
         flowDirection: undefined,
@@ -931,11 +931,15 @@ export default {
        console.log("调用")
       /*** 调用获取进出场列表 */
       this.queryParams={
+        pageNum: 1,
+        pageSize: 10,
         stationId: this.queryParams.stationId,
         flowDirection:this.PoundForm.flowDirection ,
         viaType:this.PoundForm.stationViaType
       }
       this.queryParams1={
+        pageNum: 1,
+        pageSize: 10,
         stationId: this.queryParams.stationId,
         flowDirection:this.PoundForm.flowDirection ,
         viaType:this.PoundForm.stationViaType

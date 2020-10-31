@@ -77,3 +77,12 @@ export function updateDocTime(params) {
     data: params
   })
 }
+
+export function statistics(params) {
+  return request({
+    url: '/place/notice/statistics',
+    method: 'post',
+    data: params
+  })
+}
+

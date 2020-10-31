@@ -1,170 +1,145 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="堆场ID" prop="yardId">
-        <el-input
-          v-model="queryParams.yardId"
-          placeholder="请输入堆场ID"
+    <el-row>
+      <el-form-item label="场所名称" prop="placeId">
+        <el-select @change="changePlace"
+                   v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="统计方式" prop="statisticsMode">
+        <el-select
+          v-model="queryParams.statisticsMode" placeholder="请选择统计方式">
+          <el-option
+            v-for="type in statisticsModeDic"
+            :key="type.key"
+            :label="type.value"
+            :value="type.key"
+          />
+        </el-select>
+      </el-form-item>
+    </el-row>
+      <el-row>
+
+        <el-form-item label="进/出库" prop="direction">
+          <el-select
+            v-model="queryParams.direction" placeholder="请选择进出场类型">
+            <el-option
+              v-for="type in directionDic"
+              :key="type.key"
+              :label="type.value"
+              :value="type.key"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="寄舱客户" prop="storeCustomer">
+          <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>-->
+          <el-select
+            filterable
+            clearable
+            v-model="queryParams.customerName" placeholder="请选择寄舱客户">
+            <el-option
+              v-for="type in customerList"
+              :key="type.customerName"
+              :label="type.customerName"
+              :value="type.customerName"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="时间" prop="startTime">
+          <el-date-picker
+            v-model="dateRange"
+            type="daterange"
+            value-format="yyyy-MM-dd"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        </el-form-item>
+
+      <!--<el-form-item label="寄舱合同" prop="storeContractId">
+        <el-select v-model="form.storeContractId" placeholder="请选择寄舱合同" @change="changeContract">
+          <el-option
+            v-for="type in contractSubList"
+            :key="type.id"
+            :label="type.contractNo"
+            :value="type.id"
+          />
+        </el-select>
+      </el-form-item>-->
+
+      <!--<el-form-item label="品名" prop="goodsName">
+        &lt;!&ndash;<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>&ndash;&gt;
+        <el-select
+          filterable
           clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          v-model="queryParams.goodsName" placeholder="请选择品名">
+          <el-option
+            v-for="type in customerList"
+            :key="type.customerName"
+            :label="type.customerName"
+            :value="type.customerName"
+          />
+        </el-select>
+      </el-form-item>-->
+
+      <el-form-item label="货物类型" prop="packMode">
+        <el-select
+          v-model="queryParams.packMode" placeholder="请选择货物类型">
+          <el-option
+            v-for="type in packModeDic"
+            :key="type.key"
+            :label="type.value"
+            :value="type.key"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
+      </el-row>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['yard:report:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['yard:report:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['yard:report:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['yard:report:export']"
-        >导出</el-button>
-      </el-col>
-    </el-row>
-
-    <el-table v-loading="loading" :data="reportList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
-      <el-table-column label="堆场ID" align="center" prop="yardId" />
-      <el-table-column label="集装箱库位总量" align="center" prop="containerStoreCount" />
-      <el-table-column label="场内集装箱总量" align="center" prop="containerTotal" />
-      <el-table-column label="空箱总量" align="center" prop="emptyTotal" />
-      <el-table-column label="重箱总量" align="center" prop="fullTotal" />
-      <el-table-column label="散杂货库位总量" align="center" prop="goodsStoreCount" />
-      <el-table-column label="场内散杂货库位总量" align="center" prop="goodsCount" />
-      <el-table-column label="散杂货总重量" align="center" prop="goodsWeightTotal" />
-      <el-table-column label="场内散杂货总重" align="center" prop="goodsCurrentWeight" />
-      <el-table-column label="报表类型" align="center" prop="reportType" :formatter="reportTypeFormat" />
-      <el-table-column label="日期/月份" align="center" prop="reportDate" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['yard:report:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['yard:report:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+    <el-table v-loading="loading" :data="reportList">
+      <af-table-column label="客户" align="center" prop="checkConsumer"/>
+      <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
+      <af-table-column label="煤种" align="center" prop="goodsName"/>
+      <af-table-column label="车数" align="center" prop="vehicleNo"/>
+      <af-table-column label="毛重" align="center" prop="roughWeight"/>
+      <af-table-column label="皮重" align="center" prop="tareWeight"/>
+      <af-table-column label="净重" align="center" prop="netWeight"/>
     </el-table>
-    
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
-
-    <!-- 添加或修改堆场报表对话框 -->
-    <el-dialog :title="title" :visible.sync="open"  append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="堆场ID" prop="yardId">
-          <el-input v-model="form.yardId" placeholder="请输入堆场ID" />
-        </el-form-item>
-        <el-form-item label="集装箱库位总量" prop="containerStoreCount">
-          <el-input v-model="form.containerStoreCount" placeholder="请输入集装箱库位总量" />
-        </el-form-item>
-        <el-form-item label="场内集装箱总量" prop="containerTotal">
-          <el-input v-model="form.containerTotal" placeholder="请输入场内集装箱总量" />
-        </el-form-item>
-        <el-form-item label="空箱总量" prop="emptyTotal">
-          <el-input v-model="form.emptyTotal" placeholder="请输入空箱总量" />
-        </el-form-item>
-        <el-form-item label="重箱总量" prop="fullTotal">
-          <el-input v-model="form.fullTotal" placeholder="请输入重箱总量" />
-        </el-form-item>
-        <el-form-item label="散杂货库位总量" prop="goodsStoreCount">
-          <el-input v-model="form.goodsStoreCount" placeholder="请输入散杂货库位总量" />
-        </el-form-item>
-        <el-form-item label="场内散杂货库位总量" prop="goodsCount">
-          <el-input v-model="form.goodsCount" placeholder="请输入场内散杂货库位总量" />
-        </el-form-item>
-        <el-form-item label="散杂货总重量" prop="goodsWeightTotal">
-          <el-input v-model="form.goodsWeightTotal" placeholder="请输入散杂货总重量" />
-        </el-form-item>
-        <el-form-item label="场内散杂货总重" prop="goodsCurrentWeight">
-          <el-input v-model="form.goodsCurrentWeight" placeholder="请输入场内散杂货总重" />
-        </el-form-item>
-        <el-form-item label="报表类型">
-          <el-select v-model="form.reportType" placeholder="请选择报表类型">
-            <el-option
-              v-for="dict in reportTypeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="日期/月份" prop="reportDate">
-          <el-input v-model="form.reportDate" placeholder="请输入日期/月份" />
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
+    <el-row class="countRow" v-show="reportList.length>0">
+      <span v-show="vehicleCount>0">总车数:{{ vehicleCount }}</span>
+      <span>毛重合计:{{ totalRoughWeight }}</span>
+      <span>皮重合计:{{ totalTareWeight }}</span>
+      <span>净重合计:{{ totalNetWeight }}</span>
+    </el-row>
   </div>
 </template>
 
 <script>
-import { listReport, getReport, delReport, addReport, updateReport } from "@/api/yard/report";
+import {getUserDepts} from "@/utils/charutils";
+import {listStoreContract} from "@/api/place/storeContract";
+import {statistics} from "@/api/place/info";
 
 export default {
   name: "Report",
   data() {
     return {
       // 遮罩层
-      loading: true,
+      loading: false,
+      dateRange: ['', ''],
       // 选中数组
       ids: [],
+      depts: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -177,39 +152,65 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      // 报表类型字典
-      reportTypeOptions: [],
+      directionDic: [
+        {'key': 1, 'value': '入库'},
+        {'key': 0, 'value': '出库'},
+      ],
+      statisticsModeDic: [
+        {'key': 1, 'value': '寄舱客户汇总'},
+        {'key': 2, 'value': '寄舱客户明细'}
+      ],
+      packModeDic: [
+        {'key': 1, 'value': '集装箱'},
+        {'key': 2, 'value': '散货'}
+      ],
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 20,
-        yardId: undefined,
+        placeId: undefined,
+        direction: 1,
+        customerName: undefined,
+        startTime: undefined,
+        endTime: undefined,
+        statisticsMode: 1,
+        packMode: 2
       },
+      totalNetWeight: 0,
+      totalRoughWeight: 0,
+      totalTareWeight: 0,
+      vehicleCount: 0,
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         yardId: [
-          { required: true, message: "堆场ID不能为空", trigger: "blur" }
+          {required: true, message: "堆场ID不能为空", trigger: "blur"}
         ],
-      }
+      },
+      customerList: [],
+      contractSubList: [],
+      result: {}
     };
   },
   created() {
-    this.getList();
-    this.getDicts("reporting_period").then(response => {
-      this.reportTypeOptions = response.data;
-    });
+    this.dateRange = ['', '']
+    this.queryParams.startTime = this.dateRange[0]
+    this.queryParams.endTime = this.dateRange[1]
+    // 0 监管场所，1保税库，2堆场，3企业
+    this.depts = getUserDepts('0')
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+      this.getContract(this.queryParams.placeId, '1')
+    }
   },
   methods: {
     /** 查询堆场报表列表 */
     getList() {
-      this.loading = true;
-      listReport(this.queryParams).then(response => {
+      //this.loading = true;
+      /*listReport(this.queryParams).then(response => {
         this.reportList = response.rows;
         this.total = response.total;
         this.loading = false;
-      });
+      });*/
     },
     // 报表类型字典翻译
     reportTypeFormat(row, column) {
@@ -245,73 +246,60 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      //先判断条件，再查询
+      this.queryParams.startTime = this.dateRange[0]
+      this.queryParams.endTime = this.dateRange[1]
+
+      console.log(this.queryParams)
+      this.getInfo();
     },
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
-      this.multiple = !selection.length
+
+    getInfo() {
+      this.loading = true
+      this.reportList = []
+      statistics(this.queryParams).then(response => {
+        this.loading = false
+        //this.result = response
+        if (response.code === 200) {
+          this.reportList = response.data.list
+          //console.log(this.reportList)
+          this.vehicleCount = response.data.vehicleCount
+          this.totalNetWeight = response.data.totalNetWeight
+          this.totalRoughWeight = response.data.totalRoughWeight
+          this.totalTareWeight = response.data.totalTareWeight
+        }
+      })
     },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加堆场报表";
+
+    //场所改变时，去查对应场所的
+    changePlace(event) {
+      this.getContract(event, '1')
     },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids
-      getReport(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改堆场报表";
-      });
-    },
-    /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != undefined) {
-            updateReport(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              }
-            });
+
+    //场所变化 获取对应场所的合同
+    getContract(placeId, status) {
+      //查找合同
+      listStoreContract({'placeId': placeId, 'status': status}).then(response => {
+        if (response.code === 200) {
+          this.contractList = response.rows;
+          if (this.contractList.length === 0) {
+            //this.$message.warning('此场所没有有效的合同')
           } else {
-            addReport(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
+            //重新给客户列表 赋值
+            this.customerList = []
+            for (let contract of this.contractList) {
+              if (!this.customerList.find(cus => cus.customerId === contract.customerId)) {
+                this.customerList.push(contract)
               }
-            });
+            }
           }
         }
       });
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$confirm('是否确认删除堆场报表编号为"' + ids + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delReport(ids);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        }).catch(function() {});
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -322,3 +310,9 @@ export default {
   }
 };
 </script>
+<style scoped>
+.countRow {
+  margin-top: 8px;
+}
+.countRow span{margin-right: 10px;font-size: 14px;}
+</style>
