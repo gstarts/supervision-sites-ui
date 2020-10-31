@@ -105,7 +105,7 @@
         </el-form-item>
        <!-- 应急需求变更       -->
         <el-form-item label="寄舱客户" prop="coalBillNo">
-          <el-select v-model="form.coalBillNo" filterable placeholder="请选择寄舱客户">
+          <el-select v-model="form.customsId" filterable placeholder="请选择寄舱客户">
             <el-option
               v-for="item in consumerOptions"
               :key="item.id"
@@ -173,13 +173,15 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="寄舱客户" prop="coalBillNo">
-          <el-select v-model="form.coalBillNo" filterable placeholder="请选择寄舱客户">
+        <el-form-item label="寄舱客户" prop="customsId">
+<!--          应急-->
+          <el-select v-model="form.customsId" filterable placeholder="请选择寄舱客户" @change="((val)=>{change(val, 'customs')})">
             <el-option
               v-for="item in consumerOptions"
               :key="item.id"
               :label="item.eName"
-              :value="item.id">
+              :value="item.id"
+            >
             </el-option>
           </el-select>
         </el-form-item>
@@ -416,7 +418,7 @@ export default {
       if (this.form.coalBillNo&&this.form.placeId) {
         this.$refs.upload.submit()
       } else {
-        this.$alert('请选择场所和提煤单号')
+        this.$alert('请选择场所和寄舱客户')
       }
     },
     /** 客户信息列表 */
@@ -433,6 +435,9 @@ export default {
         //查询场所下的大提煤单中的所有提煤单号
         this.getConsumerInfo(val)
 
+      }
+      if(name==='customs'){
+        this.form.coalBillNo =val
       }
     },
     closeDialog() {
