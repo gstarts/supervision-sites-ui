@@ -174,28 +174,27 @@
       >
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">
-          将通关单申报文件拖到此处，或
+          将车辆信息文件拖到此处，或
           <em>点击上传</em>
         </div>
-
         <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitFileForm">确 定</el-button>
         <el-button @click="upload.open = false">取 消</el-button>
       </div>
-      <el-form ref="form" :model="form" :label-position="left" size="mini">
-        <el-form-item label="数据类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择类型">
-            <el-option
-              v-for="item in typeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
+<!--      <el-form ref="form" :model="form" :label-position="left" size="mini">-->
+<!--        <el-form-item label="数据类型" prop="type">-->
+<!--          <el-select v-model="form.type" placeholder="请选择类型">-->
+<!--            <el-option-->
+<!--              v-for="item in typeList"-->
+<!--              :key="item.value"-->
+<!--              :label="item.label"-->
+<!--              :value="item.value">-->
+<!--            </el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+<!--      </el-form>-->
     </el-dialog>
     <el-dialog :title="title" :visible.sync="open" append-to-body :before-close="closeDialog">
       <el-form ref="form" :model="form" :rules="rules" size="mini" label-width="120px">
@@ -593,6 +592,7 @@ export default {
     },
     /** 提交上传文件 */
     submitFileForm() {
+      this.form.type="1"
       if (this.form.type) {
         this.$refs.upload.submit()
         this.reset()
