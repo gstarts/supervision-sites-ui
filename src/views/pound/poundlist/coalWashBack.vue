@@ -350,47 +350,48 @@
         <span class="area-in-style">{{ form.remark }}</span>
         <br/>
       </div>
-    </div>
-    <div id="dayin" v-show="Explicit1" v-if="true">
-      <div style="align-content: center;">
-        <span class="poundTotal11">{{ poundTotal }}</span>
-      </div>
-      <div id="area">
-        <span class="area-in-style">{{ nowData }}</span>
-      </div>
-      <div id="areadate">
-        <span>{{ nowTime }}</span>
-      </div>
-      <div id="area-style">
-        <span class="area-in-style">{{ form.deliveryUnit }}</span>
-      </div>
-      <div id="area-right-style">
-        <span>{{ form.plateNum }}</span>
-      </div>
-      <br/>
-      <div id="area-style">
-        <span class="area-in-style">{{ form.receivingUnit }}</span>
-      </div>
-      <div id="area-right-style">
-        <span>{{ form.grossWeight }}</span>
-      </div>
-      <div id="area-style">
-        <span class="area-in-style">{{ form.goodsName }}</span>
-      </div>
-      <div id="area-right-style">
-        <span>{{ form.tare }}</span>
+        <!--   v-if判断 车辆类型是否为重进空出  标识为01   -->
+      <div id="dayin1"  v-if="this.PoundForm.stationViaType=='01'">
+        <div style="align-content: center;">
+          <span class="poundTotal111">{{ poundTotal }}</span>
+        </div>
+        <div id="area1">
+          <span class="area-in-style">{{ nowData }}</span>
+        </div>
+        <div id="areadate1">
+          <span>{{ nowTime }}</span>
+        </div>
+        <div id="area-style1">
+          <span class="area-in-style">{{ form.deliveryUnit }}</span>
+        </div>
+        <div id="area-right-style1">
+          <span>{{ form.plateNum }}</span>
+        </div>
         <br/>
-      </div>
-      <div id="area-style">
-        <span class="area-in-style">{{ form.specification }}</span>
-      </div>
-      <div id="area-right-style">
-        <span>{{ form.netWeight }}</span>
-        <br/>
-      </div>
-      <div id="area-all-style">
-        <span class="area-in-style">{{ form.remark }}</span>
-        <br/>
+        <div id="area-style1">
+          <span class="area-in-style">{{ form.receivingUnit }}</span>
+        </div>
+        <div id="area-right-style1">
+          <span>{{ form.grossWeight }}</span>
+        </div>
+        <div id="area-style1">
+          <span class="area-in-style">{{ form.goodsName }}</span>
+        </div>
+        <div id="area-right-style1">
+          <span>{{ form.tare }}</span>
+          <br/>
+        </div>
+        <div id="area-style1">
+          <span class="area-in-style">{{ form.specification }}</span>
+        </div>
+        <div id="area-right-style1">
+          <span>{{ form.netWeight }}</span>
+          <br/>
+        </div>
+        <div id="area-all-style1">
+          <span class="area-in-style">{{ form.remark }}</span>
+          <br/>
+        </div>
       </div>
     </div>
   </div>
@@ -434,7 +435,6 @@ export default {
       ApproachList: [],
       //隐藏域
       Explicit: false,
-      Explicit2: false,
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -938,7 +938,7 @@ export default {
         //设置延迟执行
         //this.reset();
         this.Explicit = false;
-        this.Explicit2=false;
+
         this.nowData = "";
         this.nowTime = "";
         this.poundTotal = "";
@@ -948,8 +948,9 @@ export default {
     endCallback() {
     },
     print1() {
+
       this.Explicit = true;
-      this.Explicit2=true;
+
       var aData = new Date();
       this.nowData =
         aData.getFullYear() +
@@ -959,7 +960,7 @@ export default {
         aData.getDate();
       this.nowTime =
         aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
-      this.poundTotal = "洗精煤磅单";
+      // this.poundTotal = "洗精煤磅单";
     },
 //销毁前清除定时器
     beforeDestroy() {
@@ -1160,7 +1161,12 @@ export default {
   height: 500px;
   width: 1200px;
 }
-
+/*第二页*/
+#dayin1 {
+  margin-top: 800px;
+  height: 500px;
+  width: 1200px;
+}
 #area {
   width: 300px;
   height: 10px;
@@ -1168,7 +1174,14 @@ export default {
   float: left;
   font-size: 25px;
 }
-
+/*第二页*/
+#area1 {
+  width: 300px;
+  height: 10px;
+  margin-left: 20px;
+  /*float: left;*/
+  font-size: 25px;
+}
 #areadate {
   width: 300px;
   height: 10px;
@@ -1178,21 +1191,36 @@ export default {
   margin-left: 15px;
   font-size: 25px;
 }
-
-#poundtotal {
-  width: 300px;
+/*第二页*/
+#areadate1 {
+  width: 400px;
   height: 10px;
+
+  padding-left: 340px;
+  /*float: left;*/
+  margin-left: 15px;
+  font-size: 25px;
 }
+/*#poundtotal {*/
+/*  width: 300px;*/
+/*  height: 10px;*/
+/*}*/
 
 #area-style {
   width: 600px;
   height: 30px;
   font-size: 20px;
   margin-top: 30px;
-
   float: left;
 }
-
+/*第二页*/
+#area-style1 {
+  width: 600px;
+  height: 30px;
+  font-size: 20px;
+  margin-top: 30px;
+  float: left;
+}
 #area-right-style {
   height: 35px;
   width: 350px;
@@ -1201,7 +1229,15 @@ export default {
   margin-left: 40px;
   float: left;
 }
-
+/*第二页*/
+#area-right-style1 {
+  height: 35px;
+  width: 350px;
+  font-size: 20px;
+  margin-top: 28px;
+  margin-left: 40px;
+  float: left;
+}
 #area-all-style {
   width: 800px;
   height: 40px;
@@ -1209,7 +1245,14 @@ export default {
   float: left;
   margin-top: 10px;
 }
-
+/*第二页*/
+#area-all-style1 {
+  width: 800px;
+  height: 40px;
+  font-size: 20px;
+  float: left;
+  margin-top: 10px;
+}
 .area-in-style {
   padding-left: 3cm;
   margin-top: 10px;
@@ -1219,7 +1262,12 @@ export default {
   font-size: 35px;
   padding-left: 240px;
 }
-
+/*第二页*/
+.poundTotal111 {
+  padding-top: 1500px;
+  font-size: 35px;
+  padding-left: 240px;
+}
 .el-tooltip_popper {
   font-size: 15px;
   max-width: 20%;
