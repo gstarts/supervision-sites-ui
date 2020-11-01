@@ -293,7 +293,49 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
-    <div id="dayin" v-show="Explicit ">
+    <div id="dayin" v-show="Explicit">
+      <div style="align-content: center;">
+        <span class="poundTotal11">{{ poundTotal }}</span>
+      </div>
+      <div id="area">
+        <span class="area-in-style">{{ nowData }}</span>
+      </div>
+      <div id="areadate">
+        <span>{{ nowTime }}</span>
+      </div>
+      <div id="area-style">
+        <span class="area-in-style">{{ form.deliveryUnit }}</span>
+      </div>
+      <div id="area-right-style">
+        <span>{{ form.plateNum }}</span>
+      </div>
+      <br/>
+      <div id="area-style">
+        <span class="area-in-style">{{ form.receivingUnit }}</span>
+      </div>
+      <div id="area-right-style">
+        <span>{{ form.grossWeight }}</span>
+      </div>
+      <div id="area-style">
+        <span class="area-in-style">{{ form.goodsName }}</span>
+      </div>
+      <div id="area-right-style">
+        <span>{{ form.tare }}</span>
+        <br/>
+      </div>
+      <div id="area-style">
+        <span class="area-in-style">{{ form.specification }}</span>
+      </div>
+      <div id="area-right-style">
+        <span>{{ form.netWeight }}</span>
+        <br/>
+      </div>
+      <div id="area-all-style">
+        <span class="area-in-style">{{ form.remark }}</span>
+        <br/>
+      </div>
+    </div>
+    <div id="dayin" v-show="Explicit1" v-if="true">
       <div style="align-content: center;">
         <span class="poundTotal11">{{ poundTotal }}</span>
       </div>
@@ -375,6 +417,7 @@ export default {
       ApproachList: [],
       //隐藏域
       Explicit: false,
+      Explicit2: false,
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -847,6 +890,7 @@ export default {
         //设置延迟执行
         //this.reset();
         this.Explicit = false;
+        this.Explicit2=false;
         this.nowData = "";
         this.nowTime = "";
         this.poundTotal = "";
@@ -857,6 +901,7 @@ export default {
     },
     print1() {
       this.Explicit = true;
+      this.Explicit2=true;
       var aData = new Date();
       this.nowData =
         aData.getFullYear() +
@@ -866,7 +911,7 @@ export default {
         aData.getDate();
       this.nowTime =
         aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
-      this.poundTotal = "铜精粉磅单";
+      this.poundTotal = "洗精煤磅单";
     },
 //销毁前清除定时器
     beforeDestroy() {
@@ -1039,18 +1084,20 @@ export default {
 
 #area {
   width: 300px;
-  height: 40px;
-  margin-top: 40px;
+  height: 10px;
+  margin-top: 60px;
   float: left;
+  font-size: 25px;
 }
 
 #areadate {
   width: 300px;
-  height: 40px;
-  margin-top: 40px;
+  height: 10px;
+  margin-top: 60px;
   padding-left: 40px;
   float: left;
-  margin-left: 20px;
+  margin-left: 15px;
+  font-size: 25px;
 }
 
 #poundtotal {
@@ -1060,20 +1107,20 @@ export default {
 
 #area-style {
   width: 600px;
-  height: 40px;
+  height: 30px;
   font-size: 20px;
-  margin-top: 10px;
+  margin-top: 30px;
 
   float: left;
 }
 
 #area-right-style {
-  height: 40px;
+  height: 35px;
   width: 350px;
   font-size: 20px;
-  margin-top: 10px;
-  margin-left: 100px;
-  float: right;
+  margin-top: 28px;
+  margin-left: 40px;
+  float: left;
 }
 
 #area-all-style {
@@ -1090,8 +1137,8 @@ export default {
 }
 
 .poundTotal11 {
-  font-size: 20px;
-  padding-left: 280px;
+  font-size: 35px;
+  padding-left: 240px;
 }
 .el-tooltip_popper{
   font-size: 15px;
