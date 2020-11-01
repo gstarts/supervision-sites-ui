@@ -1,30 +1,30 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-    <el-row>
-      <el-form-item label="场所名称" prop="placeId">
-        <el-select @change="changePlace"
-                   v-model="queryParams.placeId" placeholder="请选择场所" size="small">
-          <el-option
-            v-for="dept in depts"
-            :key="dept.deptId"
-            :label="dept.deptName"
-            :value="dept.deptId"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="统计方式" prop="statisticsMode">
-        <el-select
-          v-model="queryParams.statisticsMode" placeholder="请选择统计方式">
-          <el-option
-            v-for="type in statisticsModeDic"
-            :key="type.key"
-            :label="type.value"
-            :value="type.key"
-          />
-        </el-select>
-      </el-form-item>
-    </el-row>
+      <el-row>
+        <el-form-item label="场所名称" prop="placeId">
+          <el-select @change="changePlace"
+                     v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+            <el-option
+              v-for="dept in depts"
+              :key="dept.deptId"
+              :label="dept.deptName"
+              :value="dept.deptId"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="统计方式" prop="statisticsMode">
+          <el-select @change="changeStatistics"
+            v-model="queryParams.statisticsMode" placeholder="请选择统计方式">
+            <el-option
+              v-for="type in statisticsModeDic"
+              :key="type.key"
+              :label="type.value"
+              :value="type.key"
+            />
+          </el-select>
+        </el-form-item>
+      </el-row>
       <el-row>
 
         <el-form-item label="进/出库" prop="direction">
@@ -52,6 +52,20 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item label="品名" prop="goodsName">
+          <el-select
+            clearable
+            v-model="queryParams.goodsName"
+            placeholder="请选择品名"
+            size="small">
+            <el-option
+              v-for="dict in goodsNameList"
+              :key="dict.dictLabel"
+              :label="dict.dictLabel"
+              :value="dict.dictLabel"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="时间" prop="startTime">
           <el-date-picker
             v-model="dateRange"
@@ -63,47 +77,47 @@
           </el-date-picker>
         </el-form-item>
 
-      <!--<el-form-item label="寄舱合同" prop="storeContractId">
-        <el-select v-model="form.storeContractId" placeholder="请选择寄舱合同" @change="changeContract">
-          <el-option
-            v-for="type in contractSubList"
-            :key="type.id"
-            :label="type.contractNo"
-            :value="type.id"
-          />
-        </el-select>
-      </el-form-item>-->
+        <!--<el-form-item label="寄舱合同" prop="storeContractId">
+          <el-select v-model="form.storeContractId" placeholder="请选择寄舱合同" @change="changeContract">
+            <el-option
+              v-for="type in contractSubList"
+              :key="type.id"
+              :label="type.contractNo"
+              :value="type.id"
+            />
+          </el-select>
+        </el-form-item>-->
 
-      <!--<el-form-item label="品名" prop="goodsName">
-        &lt;!&ndash;<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>&ndash;&gt;
-        <el-select
-          filterable
-          clearable
-          v-model="queryParams.goodsName" placeholder="请选择品名">
-          <el-option
-            v-for="type in customerList"
-            :key="type.customerName"
-            :label="type.customerName"
-            :value="type.customerName"
-          />
-        </el-select>
-      </el-form-item>-->
+        <!--<el-form-item label="品名" prop="goodsName">
+          &lt;!&ndash;<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>&ndash;&gt;
+          <el-select
+            filterable
+            clearable
+            v-model="queryParams.goodsName" placeholder="请选择品名">
+            <el-option
+              v-for="type in customerList"
+              :key="type.customerName"
+              :label="type.customerName"
+              :value="type.customerName"
+            />
+          </el-select>
+        </el-form-item>-->
 
-      <el-form-item label="货物类型" prop="packMode">
-        <el-select
-          v-model="queryParams.packMode" placeholder="请选择货物类型">
-          <el-option
-            v-for="type in packModeDic"
-            :key="type.key"
-            :label="type.value"
-            :value="type.key"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+        <el-form-item label="货物类型" prop="packMode">
+          <el-select
+            v-model="queryParams.packMode" placeholder="请选择货物类型">
+            <el-option
+              v-for="type in packModeDic"
+              :key="type.key"
+              :label="type.value"
+              :value="type.key"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        </el-form-item>
       </el-row>
     </el-form>
 
@@ -188,7 +202,8 @@ export default {
       },
       customerList: [],
       contractSubList: [],
-      result: {}
+      result: {},
+      goodsNameList: []
     };
   },
   created() {
@@ -201,6 +216,10 @@ export default {
       this.queryParams.placeId = this.depts[0].deptId
       this.getContract(this.queryParams.placeId, '1')
     }
+    //煤种 品名
+    this.getDicts("coal_type").then(response => {
+      this.goodsNameList = response.data;
+    });
   },
   methods: {
     /** 查询堆场报表列表 */
@@ -249,6 +268,20 @@ export default {
       //先判断条件，再查询
       this.queryParams.startTime = this.dateRange[0]
       this.queryParams.endTime = this.dateRange[1]
+
+      if (!this.queryParams.startTime || !this.queryParams.endTime) {
+        this.$message.warning('请选择时间范围')
+        return false
+      }
+
+      //统计方式
+      if (this.queryParams.statisticsMode === 2) {
+        //判断时间
+        if (this.queryParams.customerName === undefined || this.queryParams.customerName === '') {
+          this.$message.warning('请选择寄舱客户')
+          return false
+        }
+      }
 
       console.log(this.queryParams)
       this.getInfo();
@@ -306,6 +339,11 @@ export default {
       this.download('yard/report/export', {
         ...this.queryParams
       }, `yard_report.xlsx`)
+    },
+    changeStatistics(event){
+      if(event === 1){
+        this.queryParams.customerName = ''
+      }
     }
   }
 };
@@ -314,5 +352,9 @@ export default {
 .countRow {
   margin-top: 8px;
 }
-.countRow span{margin-right: 10px;font-size: 14px;}
+
+.countRow span {
+  margin-right: 10px;
+  font-size: 14px;
+}
 </style>

@@ -580,17 +580,17 @@ export default {
     //2020.10.22 修改 虎神
     handleClick(tab, event) {
       if ("进场记录" == tab.label) {
-        console.log("进场记录")
+        //console.log("进场记录")
         this.getListI();
       }
       if ("已完成" == tab.label) {
-        console.log("已完成")
+        //console.log("已完成")
         this.getListE();
       }
     },
     //车号Change
     CarNumberChange(event) {
-      console.log(event)
+      //console.log(event)
       //进场 调用接口 连带数据赋值给input
       this.form.grossWeight = 0
       this.form.tare = 0
@@ -684,7 +684,7 @@ export default {
     //双击列表赋值form表单
     dbRow(row, column) {
       this.form = row;
-      console.log(this.form)
+      //console.log(this.form)
       this.form
     },
     // 打印按钮
@@ -695,7 +695,7 @@ export default {
     created() {
       listChnlConfig(this.queryParams).then((response) => {
         this.chnlConfigList = response.rows;
-        console.log(this.chnlConfigList)
+        //console.log(this.chnlConfigList)
         //初始值不给通道号了 页面刷新有问题
         //this.PoundForm.channelNumber = this.chnlConfigList[0].cChnlNo
         //this.total = response.total;
@@ -711,7 +711,7 @@ export default {
           this.isStable = response.data.isStable;
           //}
         });
-      }, 1000);
+      }, 1500);
       //离开当前页面定时器停止
       this.$once("hook:beforeDestroy", () => {
         clearInterval(this.ChannelNumberTimer);
@@ -719,8 +719,6 @@ export default {
     },
     /** 暂存按钮 */
     AllADD() {
-
-
       //以下为重量赋值逻辑
       //进场
       //if (this.isStable == "1") {
@@ -873,19 +871,16 @@ export default {
             //})
           }
         }
-      )
-      ;
+      );
     },
 // 生成按钮
     generateAdd() {
 
-    }
-    ,
+    },
 // 清空按钮
     cancel() {
       this.reset();
-    }
-    ,
+    },
 //打印功能
     print() {
       this.print1();
@@ -901,11 +896,10 @@ export default {
         this.reset()
       }, 2000);
     },
-    endCallback() {
-    },
+    endCallback() {},
     print1() {
       this.Explicit = true;
-      var aData = new Date();
+      let aData = new Date();
       this.nowData =
         aData.getFullYear() +
         "-" +
@@ -959,7 +953,7 @@ export default {
 //查询可用的库位
     getStoreCode(placeId) {
       getStoreUsable(placeId).then(response => {
-        console.log(response)
+        //console.log(response)
         if (response.code === 200) {
           this.storeList = response.data
         }
@@ -1061,7 +1055,7 @@ export default {
         'channelNo': this.form.channelNumber,
         'vehicleNo': this.form.plateNum
       }
-      console.log(data)
+      //console.log(data)
       updateDocTime(data)
     },
     //翻译通道号
