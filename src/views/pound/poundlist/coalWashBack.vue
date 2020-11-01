@@ -389,7 +389,7 @@
           <br/>
         </div>
         <div id="area-all-style1">
-          <span class="area-in-style">{{ form.remark }}</span>
+          <span class="area-in-style">{{ form.remark+"补" }}</span>
           <br/>
         </div>
       </div>
@@ -1163,7 +1163,7 @@ export default {
 }
 /*第二页*/
 #dayin1 {
-  margin-top: 800px;
+  margin-top: 520px;
   height: 500px;
   width: 1200px;
 }
