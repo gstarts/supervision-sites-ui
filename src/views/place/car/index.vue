@@ -279,8 +279,8 @@ export default {
       plateNoList:[],
       // 车辆类型
       types: [
-        { value: 'S', label: '散杂货' },
-        { value: 'C', label: '集装箱' }
+        { value: '2', label: '散杂货' },
+        { value: '1', label: '集装箱' }
       ],
       // 表单校验
       rules: {
@@ -328,9 +328,18 @@ export default {
   created() {
     // 获取场所
     this.depts = getUserDepts('0')
+    if (this.depts.length > 0) {
+      this.form.placeId = this.depts[0].deptId;
+      //提煤单
+      selectCoalBillNo({ 'placeId': this.form.placeId }).then(response => {
+        this.BigList = response.rows
+      })
+    }
+
     this.getList()
     // 外调车车牌号列表
     this.getPlateNoList()
+
   },
   methods: {
     /** 查询外调车 列表 */
