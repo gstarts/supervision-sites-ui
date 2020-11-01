@@ -211,8 +211,8 @@
     </el-row>
     <el-card>
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane   name="Approach" >
-          <span slot="label">{{"进场记录("+this.total+")"}}</span>
+        <el-tab-pane name="Approach">
+          <span slot="label">{{ "进场记录(" + this.total + ")" }}</span>
           <el-table
             class="mb20"
             ref="ApproachList"
@@ -223,9 +223,9 @@
             :row-style="green"
             @row-dblclick="dbRow"
           >
-            <af-table-column label="车号" align="center" prop="plateNum" width='100px'  fixed />
+            <af-table-column label="车号" align="center" prop="plateNum" width='100px' fixed/>
             <af-table-column label="毛重" align="center" prop="grossWeight" width='100px'/>
-            <af-table-column label="皮重" align="center" prop="tare" width='100px' />
+            <af-table-column label="皮重" align="center" prop="tare" width='100px'/>
             <af-table-column label="净重" align="center" prop="netWeight" width='100px'/>
             <af-table-column label="发货单位" align="center" prop="deliveryUnit" :show-overflow-tooltip="true"/>
             <af-table-column label="收货单位" align="center" prop="receivingUnit" :show-overflow-tooltip="true"/>
@@ -236,12 +236,18 @@
                 <span>{{ parseTime(scope.row.createTime) }}</span>
               </template>
             </af-table-column>
-            <af-table-column label="出场时间" align="center" prop="updateTime" width="180">
+            <af-table-column label="出场时间" align="center" prop="updateTime1" width="180"></af-table-column>
+            <af-table-column label="库位号" align="center" prop="locationNumber"/>
+            <af-table-column label="通道号" align="center" prop="channelNumber">
               <template slot-scope="scope">
-                <span>{{ parseTime(scope.row.updateTime) }}</span>
+                {{ parseChannelName(scope.row.channelNumber) }}
               </template>
             </af-table-column>
-            <af-table-column label="库位号" align="center" prop="locationNumber"/>
+            <af-table-column label="操作员" align="center" prop="createBy">
+               <template slot-scope="scope">
+                 {{parseUserName(scope.row.createBy)}}
+               </template>
+            </af-table-column>
           </el-table>
           <pagination
             v-show="total>0"
@@ -251,8 +257,8 @@
             @pagination="getListI"
           />
         </el-tab-pane>
-        <el-tab-pane  name="end">
-          <span slot="label">{{"已完成("+this.total1+")"}}</span>
+        <el-tab-pane name="end">
+          <span slot="label">{{ "已完成(" + this.total1 + ")" }}</span>
           <el-table
             class="mb20"
             ref="sheetList"
@@ -263,9 +269,9 @@
             :row-style="green"
             @row-dblclick="dbRow"
           >
-            <af-table-column label="车号" align="center" prop="plateNum" width='100px'  fixed />
+            <af-table-column label="车号" align="center" prop="plateNum" width='100px' fixed/>
             <af-table-column label="毛重" align="center" prop="grossWeight" width='100px'/>
-            <af-table-column label="皮重" align="center" prop="tare" width='100px' />
+            <af-table-column label="皮重" align="center" prop="tare" width='100px'/>
             <af-table-column label="净重" align="center" prop="netWeight" width='100px'/>
             <af-table-column label="发货单位" align="center" prop="deliveryUnit" :show-overflow-tooltip="true"/>
             <af-table-column label="收货单位" align="center" prop="receivingUnit" :show-overflow-tooltip="true"/>
@@ -282,6 +288,16 @@
               </template>
             </af-table-column>
             <af-table-column label="库位号" align="center" prop="locationNumber"/>
+            <af-table-column label="通道号" align="center" prop="channelNumber">
+              <template slot-scope="scope">
+                {{ parseChannelName(scope.row.蒙L57133) }}
+              </template>
+            </af-table-column>
+            <af-table-column label="操作员" align="center" prop="updateBy">
+              <template slot-scope="scope">
+                {{parseUserName(scope.row.updateBy)}}
+              </template>
+            </af-table-column>
           </el-table>
           <pagination
             v-show="total1>0"
@@ -352,6 +368,7 @@ import {listChnlConfig} from "@/api/basis/chnlConfig";
 import {getUserDepts} from "@/utils/charutils";
 import {genStoreDoc, getNoticeByVehicle, getVehicleList, updateDocTime} from "@/api/place/info";
 import {getStoreUsable} from '@/api/place/store'
+import {listUser} from "@/api/system/user";
 
 export default {
   name: "Client",
@@ -383,7 +400,7 @@ export default {
       // 总条数
       total: 0,
       total1: 0,
-      green:{'color':'green'},
+      green: {'color': 'green'},
       nowData: "",
       nowTime: "",
       // 终端表格数据
@@ -406,6 +423,7 @@ export default {
         clientId: undefined,
         stationId: undefined,
         flowDirection: undefined,
+        viaType: undefined
       },
       queryParams1: { //已完成的查询条件
         pageNum: 1,
@@ -413,6 +431,7 @@ export default {
         clientId: undefined,
         stationId: undefined,
         flowDirection: undefined,
+        viaType: undefined
       },
       // 是否新增
       isAdd: false,
@@ -450,6 +469,7 @@ export default {
         stationId: undefined,
         //出库/入库 标识  进 1  出0
         direction: undefined,
+        viaType: undefined
       },
       //通道配置
       PoundForm: {
@@ -514,7 +534,8 @@ export default {
       },
       storeList: [], //保存库位号.
       showStore: false,
-      noticeNo: ''
+      noticeNo: '',
+      userList: [],
     };
   },
   created() {
@@ -522,6 +543,7 @@ export default {
     this.depts = getUserDepts("0");
     if (this.depts.length > 0) {
       this.queryParams.stationId = this.depts[0].deptId;
+      this.queryParams1.stationId = this.depts[0].deptId;
       this.created();
     }
     /*//车牌号
@@ -531,10 +553,19 @@ export default {
     //过卡车辆类型
     this.getDicts("station_via_type").then((response) => {
       this.stationViaTypeOptions = response.data;
+      //车辆类型初始化
+      this.PoundForm.stationViaType = this.stationViaTypeOptions[0].dictValue
+      this.queryParams.viaType = this.stationViaTypeOptions[0].dictValue
+      this.queryParams1.viaType = this.stationViaTypeOptions[0].dictValue
+
     });
     /**流向  */
     this.getDicts("station_IO_flag").then((response) => {
       this.flowDirectionOptions = response.data;
+      //流向默认值
+      this.PoundForm.flowDirection = this.flowDirectionOptions[0].dictValue
+      this.queryParams1.flowDirection = this.flowDirectionOptions[0].dictValue
+      this.queryParams.flowDirection = this.flowDirectionOptions[0].dictValue
     });
 
     //进场记录
@@ -634,8 +665,8 @@ export default {
       this.queryParams1.flowDirection = "E";
       listIESheet(this.queryParams1).then((response) => {
         this.sheetList = response.rows;
-        console.log("---------")
-        console.log(response)
+        //console.log("---------")
+        //console.log(response)
         this.total1 = response.total;
         this.loading = false;
       });
@@ -665,6 +696,8 @@ export default {
       listChnlConfig(this.queryParams).then((response) => {
         this.chnlConfigList = response.rows;
         console.log(this.chnlConfigList)
+        //初始值不给通道号了 页面刷新有问题
+        //this.PoundForm.channelNumber = this.chnlConfigList[0].cChnlNo
         //this.total = response.total;
       });
     },
@@ -686,52 +719,59 @@ export default {
     },
     /** 暂存按钮 */
     AllADD() {
+
+
       //以下为重量赋值逻辑
       //进场
       //if (this.isStable == "1") {
-        if (this.PoundForm.flowDirection == "I") {
-          //重进空出 进场
-          if (this.PoundForm.stationViaType == "01" || this.PoundForm.stationViaType == "02") {
-            //通过车辆类型 赋值毛重或皮重
-            this.PoundForm.stationViaType == "01" ? (this.form.grossWeight = this.Poundweight) : (this.form.tare = this.Poundweight);
+      if (this.PoundForm.flowDirection == "I") {
+        //重进空出 进场
+        if (this.PoundForm.stationViaType == "01" || this.PoundForm.stationViaType == "02") {
+          //通过车辆类型 赋值毛重或皮重
+          this.PoundForm.stationViaType == "01" ? (this.form.grossWeight = this.Poundweight) : (this.form.tare = this.Poundweight);
+        } else {
+          this.msgError("车辆类型不可为空或选择错误,请检查");
+          return false
+        }
+        //出场
+      } else if (this.PoundForm.flowDirection == "E") {
+        //重进空出 出场
+        if (this.PoundForm.stationViaType == "01") {
+          //皮重
+          this.form.tare = this.Poundweight;
+          //判断出场时毛重是否未填写
+          if (this.form.grossWeight != 0 && this.form.grossWeight != null) {
+            //计算净重
+            this.form.netWeight = this.form.grossWeight - this.form.tare;
           } else {
-            this.msgError("车辆类型不可为空或选择错误,请检查");
+            this.msgError("净重计算失败,毛重不可为0或空");
             return false
           }
-          //出场
-        } else if (this.PoundForm.flowDirection == "E") {
-          //重进空出 出场
-          if (this.PoundForm.stationViaType == "01") {
-            //皮重
-            this.form.tare = this.Poundweight;
-            //判断出场时毛重是否未填写
-            if (this.form.grossWeight != 0 && this.form.grossWeight != null) {
-              //计算净重
-              this.form.netWeight = this.form.grossWeight - this.form.tare;
-            } else {
-              this.msgError("净重计算失败,毛重不可为0或空");
-              return false
-            }
-            //空进重出 出场
-          } else if (this.PoundForm.stationViaType == "02") {
-            //毛重
-            this.form.grossWeight = this.Poundweight;
-            //判断出场时皮重是否未填写
-            if (this.form.tare != 0 && this.form.tare != null) {
-              //计算净重
-              this.form.netWeight = this.form.grossWeight - this.form.tare;
-            } else {
-              this.msgError("净重计算失败,皮重不可为0或空");
-              return false
-            }
+          //空进重出 出场
+        } else if (this.PoundForm.stationViaType == "02") {
+          //毛重
+          this.form.grossWeight = this.Poundweight;
+          //判断出场时皮重是否未填写
+          if (this.form.tare != 0 && this.form.tare != null) {
+            //计算净重
+            this.form.netWeight = this.form.grossWeight - this.form.tare;
           } else {
-            this.msgError("车辆类型不可为空或选择错误,请检查");
+            this.msgError("净重计算失败,皮重不可为0或空");
             return false
           }
         } else {
-          this.msgError("流向不可为空,请选择");
+          this.msgError("车辆类型不可为空或选择错误,请检查");
           return false
         }
+      } else {
+        this.msgError("流向不可为空,请选择");
+        return false
+      }
+
+      if(!this.PoundForm.channelNumber){
+        this.msgError("请选择通道号");
+        return false
+      }
       /*} else {
         this.msgError("地磅数值未稳定,请稍候....");
         return false;
@@ -742,21 +782,24 @@ export default {
       //场站ID赋值
       this.form.stationId = this.queryParams.stationId;
       //不要update时间
-      //this.form.updateTime = genTimeCode(new Date(), "YYYY-MM-DD HH:mm:ss");
+      this.form.updateTime = genTimeCode(new Date(), "YYYY-MM-DD HH:mm:ss");
       // 将空进重出 或重进空出 保存
-      this.form.viaType=this.PoundForm.stationViaType
+      this.form.viaType = this.PoundForm.stationViaType
 
       this.$refs["form"].validate((valid) => {
           if (valid) {
             if (this.PoundForm.flowDirection == "I") {
               this.form.flowDirection = this.PoundForm.flowDirection;
+              this.form.viaType = this.PoundForm.stationViaType
               //this.form.noticeNo = this.noticeNo;
               //进场 新增
               addSheet(this.form).then((response) => {
                 if (response.code === 200) {
                   this.msgSuccess("进场成功");
+                  this.getListI(); //进场记录更新
+                  this.getListE(); //完成记录更新
+                  this.getVehicleList() //重新加载车辆
                   this.reset();
-                  this.getListI();
                 } else {
                   this.msgError(response.msg);
                 }
@@ -791,8 +834,10 @@ export default {
                     updateSheet(this.form).then(response => {
                       if (response.code === 200) {
                         this.msgSuccess("出场成功");
-                        this.getListI();
-                        this.reset();
+                        this.getListI()
+                        this.getListE()
+                        this.getVehicleList()
+                        //this.reset()
                       }
                     })
                   } else {
@@ -810,7 +855,10 @@ export default {
                     updateSheet(this.form).then(response => {
                       if (response.code === 200) {
                         this.msgSuccess("出场成功");
-                        this.getListI();
+                        this.getListI()
+                        this.getListE()
+                        this.getVehicleList()
+                        //this.reset()
                       }
                     })
                   } else {
@@ -905,6 +953,7 @@ export default {
         stationId: undefined,
         //出库/入库 标识  进 1  出0
         direction: undefined,
+        viaType: undefined
       };
     },
 //查询可用的库位
@@ -928,21 +977,21 @@ export default {
       }
       this.getVehicleList() //加载车辆
 
-       console.log("调用")
+      console.log("调用")
       /*** 调用获取进出场列表 */
-      this.queryParams={
+      this.queryParams = {
         pageNum: 1,
         pageSize: 10,
         stationId: this.queryParams.stationId,
-        flowDirection:this.PoundForm.flowDirection ,
-        viaType:this.PoundForm.stationViaType
+        flowDirection: this.PoundForm.flowDirection,
+        viaType: this.PoundForm.stationViaType
       }
-      this.queryParams1={
+      this.queryParams1 = {
         pageNum: 1,
         pageSize: 10,
         stationId: this.queryParams.stationId,
-        flowDirection:this.PoundForm.flowDirection ,
-        viaType:this.PoundForm.stationViaType
+        flowDirection: this.PoundForm.flowDirection,
+        viaType: this.PoundForm.stationViaType
       }
       //console.log(queryParams)
       /*listIESheet(queryParams).then((response) => {
@@ -984,12 +1033,17 @@ export default {
       //判断场所和车辆类型的是否全了
       this.getVehicleList()
 
+      this.getUserList()//更新用户列表
+
     },
     //获取车号列表
     getVehicleList() {
       //场所ID 和车辆类型，
       if (this.queryParams.stationId && this.PoundForm.stationViaType) {
-        this.form.plateNum = ''
+
+        if (this.PoundForm.flowDirection != "E") {
+          this.form.plateNum = '' //如果流向不是出场，就清空当前车号
+        }
         //条件具备，加载对应单子的车辆列表
         // console.log({'placeId': this.queryParams.stationId, 'type': this.PoundForm.stationViaType})
         getVehicleList(this.queryParams.stationId, this.PoundForm.stationViaType).then((response) => {
@@ -1009,6 +1063,31 @@ export default {
       }
       console.log(data)
       updateDocTime(data)
+    },
+    //翻译通道号
+    parseChannelName(channel) {
+      let no = this.chnlConfigList.find(item => item.cChnlNo === channel)
+      if (no) {
+        return no.cChnlName
+      } else {
+        return ''
+      }
+    },
+    //翻译用户名
+    parseUserName(user) {
+      let u = this.userList.find(item => item.userName === user)
+      if (u) {
+        return u.nickName
+      } else {
+        return user
+      }
+    },
+    getUserList() {
+      listUser({'deptId': this.queryParams.stationId}).then(response => {
+        if (response.code === 200) {
+          this.userList = response.rows
+        }
+      });
     }
   },
 }
@@ -1093,7 +1172,8 @@ export default {
   font-size: 20px;
   padding-left: 280px;
 }
-.el-tooltip_popper{
+
+.el-tooltip_popper {
   font-size: 15px;
   max-width: 20%;
 }
