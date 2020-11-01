@@ -279,8 +279,8 @@ export default {
       plateNoList:[],
       // 车辆类型
       types: [
-        { value: 'S', label: '散杂货' },
-        { value: 'C', label: '集装箱' }
+        { value: '2', label: '散杂货' },
+        { value: '1', label: '集装箱' }
       ],
       // 表单校验
       rules: {
