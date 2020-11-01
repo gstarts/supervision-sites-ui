@@ -51,8 +51,7 @@
                     prop="plateNum"
                     filterable
                     clearable
-                    @change="CarNumberChange"
-                  >
+                    @change="CarNumberChange">
                     <el-option
                       v-for="dict in plateNumOptions"
                       :key="dict.value"
@@ -244,9 +243,9 @@
               </template>
             </af-table-column>
             <af-table-column label="操作员" align="center" prop="createBy">
-               <template slot-scope="scope">
-                 {{parseUserName(scope.row.createBy)}}
-               </template>
+              <template slot-scope="scope">
+                {{ parseUserName(scope.row.createBy) }}
+              </template>
             </af-table-column>
           </el-table>
           <pagination
@@ -295,7 +294,7 @@
             </af-table-column>
             <af-table-column label="操作员" align="center" prop="updateBy">
               <template slot-scope="scope">
-                {{parseUserName(scope.row.updateBy)}}
+                {{ parseUserName(scope.row.updateBy) }}
               </template>
             </af-table-column>
           </el-table>
@@ -309,7 +308,7 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
-    <div id="dayin" v-show="Explicit ">
+    <div id="dayin" v-show="Explicit">
       <div style="align-content: center;">
         <span class="poundTotal11">{{ poundTotal }}</span>
       </div>
@@ -349,6 +348,49 @@
       <div id="area-all-style">
         <span class="area-in-style">{{ form.remark }}</span>
         <br/>
+      </div>
+      <!--   v-if判断 车辆类型是否为重进空出  标识为01   -->
+      <div id="dayin1" v-if="this.PoundForm.stationViaType=='01'">
+        <div style="align-content: center;">
+          <span class="poundTotal111">{{ poundTotal }}</span>
+        </div>
+        <div id="area1">
+          <span class="area-in-style">{{ nowData }}</span>
+        </div>
+        <div id="areadate1">
+          <span>{{ nowTime }}</span>
+        </div>
+        <div id="area-style1">
+          <span class="area-in-style">{{ form.deliveryUnit }}</span>
+        </div>
+        <div id="area-right-style1">
+          <span>{{ form.plateNum }}</span>
+        </div>
+        <br/>
+        <div id="area-style1">
+          <span class="area-in-style">{{ form.receivingUnit }}</span>
+        </div>
+        <div id="area-right-style1">
+          <span>{{ form.grossWeight }}</span>
+        </div>
+        <div id="area-style1">
+          <span class="area-in-style">{{ form.goodsName }}</span>
+        </div>
+        <div id="area-right-style1">
+          <span>{{ form.tare }}</span>
+          <br/>
+        </div>
+        <div id="area-style1">
+          <span class="area-in-style">{{ form.specification }}</span>
+        </div>
+        <div id="area-right-style1">
+          <span>{{ form.netWeight }}</span>
+          <br/>
+        </div>
+        <div id="area-all-style1">
+          <span class="area-in-style">{{ form.remark + "补" }}</span>
+          <br/>
+        </div>
       </div>
     </div>
   </div>
@@ -579,18 +621,22 @@ export default {
   methods: {
     //2020.10.22 修改 虎神
     handleClick(tab, event) {
-      if ("进场记录" == tab.label) {
-        //console.log("进场记录")
+      //console.log(this.activeName)
+      if (this.activeName === 'Approach') {
         this.getListI();
       }
-      if ("已完成" == tab.label) {
+      /*if ("进场记录" == tab.label) {
+        console.log("进场记录")
+      }*/
+      if (this.activeName === 'end') {
+        //if ("已完成" == tab.label) {
         //console.log("已完成")
         this.getListE();
       }
     },
     //车号Change
     CarNumberChange(event) {
-      //console.log(event)
+      console.log(event)
       //进场 调用接口 连带数据赋值给input
       this.form.grossWeight = 0
       this.form.tare = 0
@@ -684,8 +730,8 @@ export default {
     //双击列表赋值form表单
     dbRow(row, column) {
       this.form = row;
-      //console.log(this.form)
-      this.form
+      console.log(this.form)
+      //this.form
     },
     // 打印按钮
     headHandleAdd() {
@@ -695,7 +741,7 @@ export default {
     created() {
       listChnlConfig(this.queryParams).then((response) => {
         this.chnlConfigList = response.rows;
-        //console.log(this.chnlConfigList)
+        console.log(this.chnlConfigList)
         //初始值不给通道号了 页面刷新有问题
         //this.PoundForm.channelNumber = this.chnlConfigList[0].cChnlNo
         //this.total = response.total;
@@ -719,6 +765,8 @@ export default {
     },
     /** 暂存按钮 */
     AllADD() {
+
+
       //以下为重量赋值逻辑
       //进场
       //if (this.isStable == "1") {
@@ -766,7 +814,7 @@ export default {
         return false
       }
 
-      if(!this.PoundForm.channelNumber){
+      if (!this.PoundForm.channelNumber) {
         this.msgError("请选择通道号");
         return false
       }
@@ -794,8 +842,21 @@ export default {
               addSheet(this.form).then((response) => {
                 if (response.code === 200) {
                   this.msgSuccess("进场成功");
-                  this.getListI(); //进场记录更新
-                  this.getListE(); //完成记录更新
+                  //更新
+                  //console.log(response.data)
+                  //进场列表中添加新值
+                  //this.ApproachList.unshift(response.data)
+                  //this.total += 1
+                  if (this.activeName === 'Approach') {
+                    this.getListI();
+                  }
+                  if (this.activeName === 'end') {
+                    //if ("已完成" == tab.label) {
+                    //console.log("已完成")
+                    this.getListE();
+                  }
+                  //this.getListI(); //进场记录更新
+                  //this.getListE(); //完成记录更新
                   this.getVehicleList() //重新加载车辆
                   this.reset();
                 } else {
@@ -832,8 +893,14 @@ export default {
                     updateSheet(this.form).then(response => {
                       if (response.code === 200) {
                         this.msgSuccess("出场成功");
-                        this.getListI()
-                        this.getListE()
+                        if (this.activeName === 'Approach') {
+                          this.getListI();
+                        }
+                        if (this.activeName === 'end') {
+                          this.getListE();
+                        }
+                        //this.getListI()
+                        //this.getListE()
                         this.getVehicleList()
                         //this.reset()
                       }
@@ -853,8 +920,14 @@ export default {
                     updateSheet(this.form).then(response => {
                       if (response.code === 200) {
                         this.msgSuccess("出场成功");
-                        this.getListI()
-                        this.getListE()
+                        if (this.activeName === 'Approach') {
+                          this.getListI();
+                        }
+                        if (this.activeName === 'end') {
+                          this.getListE();
+                        }
+                        //this.getListI()
+                        //this.getListE()
                         this.getVehicleList()
                         //this.reset()
                       }
@@ -874,13 +947,12 @@ export default {
       );
     },
 // 生成按钮
-    generateAdd() {
-
-    },
+    generateAdd() {},
 // 清空按钮
     cancel() {
       this.reset();
-    },
+    }
+    ,
 //打印功能
     print() {
       this.print1();
@@ -890,16 +962,20 @@ export default {
         //设置延迟执行
         //this.reset();
         this.Explicit = false;
+
         this.nowData = "";
         this.nowTime = "";
         this.poundTotal = "";
         this.reset()
       }, 2000);
     },
-    endCallback() {},
+    endCallback() {
+    },
     print1() {
+
       this.Explicit = true;
-      let aData = new Date();
+
+      var aData = new Date();
       this.nowData =
         aData.getFullYear() +
         "-" +
@@ -908,7 +984,7 @@ export default {
         aData.getDate();
       this.nowTime =
         aData.getHours() + ":" + aData.getMinutes() + ":" + aData.getSeconds();
-      this.poundTotal = "铜精粉磅单";
+      // this.poundTotal = "洗精煤磅单";
     },
 //销毁前清除定时器
     beforeDestroy() {
@@ -953,7 +1029,7 @@ export default {
 //查询可用的库位
     getStoreCode(placeId) {
       getStoreUsable(placeId).then(response => {
-        //console.log(response)
+        console.log(response)
         if (response.code === 200) {
           this.storeList = response.data
         }
@@ -1055,7 +1131,7 @@ export default {
         'channelNo': this.form.channelNumber,
         'vehicleNo': this.form.plateNum
       }
-      //console.log(data)
+      console.log(data)
       updateDocTime(data)
     },
     //翻译通道号
@@ -1110,46 +1186,102 @@ export default {
   width: 1200px;
 }
 
+/*第二页*/
+#dayin1 {
+  margin-top: 520px;
+  height: 500px;
+  width: 1200px;
+}
+
 #area {
   width: 300px;
-  height: 40px;
-  margin-top: 40px;
+  height: 10px;
+  margin-top: 60px;
   float: left;
+  font-size: 25px;
+}
+
+/*第二页*/
+#area1 {
+  width: 300px;
+  height: 10px;
+  margin-left: 20px;
+  /*float: left;*/
+  font-size: 25px;
 }
 
 #areadate {
   width: 300px;
-  height: 40px;
-  margin-top: 40px;
+  height: 10px;
+  margin-top: 60px;
   padding-left: 40px;
   float: left;
-  margin-left: 20px;
+  margin-left: 15px;
+  font-size: 25px;
 }
 
-#poundtotal {
-  width: 300px;
+/*第二页*/
+#areadate1 {
+  width: 400px;
   height: 10px;
+
+  padding-left: 340px;
+  /*float: left;*/
+  margin-left: 15px;
+  font-size: 25px;
 }
+
+/*#poundtotal {*/
+/*  width: 300px;*/
+/*  height: 10px;*/
+/*}*/
 
 #area-style {
   width: 600px;
-  height: 40px;
+  height: 30px;
   font-size: 20px;
-  margin-top: 10px;
+  margin-top: 30px;
+  float: left;
+}
 
+/*第二页*/
+#area-style1 {
+  width: 600px;
+  height: 30px;
+  font-size: 20px;
+  margin-top: 30px;
   float: left;
 }
 
 #area-right-style {
-  height: 40px;
+  height: 35px;
   width: 350px;
   font-size: 20px;
-  margin-top: 10px;
-  margin-left: 100px;
-  float: right;
+  margin-top: 28px;
+  margin-left: 40px;
+  float: left;
+}
+
+/*第二页*/
+#area-right-style1 {
+  height: 35px;
+  width: 350px;
+  font-size: 20px;
+  margin-top: 28px;
+  margin-left: 40px;
+  float: left;
 }
 
 #area-all-style {
+  width: 800px;
+  height: 40px;
+  font-size: 20px;
+  float: left;
+  margin-top: 10px;
+}
+
+/*第二页*/
+#area-all-style1 {
   width: 800px;
   height: 40px;
   font-size: 20px;
@@ -1163,8 +1295,15 @@ export default {
 }
 
 .poundTotal11 {
-  font-size: 20px;
-  padding-left: 280px;
+  font-size: 35px;
+  padding-left: 240px;
+}
+
+/*第二页*/
+.poundTotal111 {
+  padding-top: 1500px;
+  font-size: 35px;
+  padding-left: 240px;
 }
 
 .el-tooltip_popper {
