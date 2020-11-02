@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 按钮组 -->
     <div class="mb20">
-      <el-button type="primary" icon="el-icon-plus" size="small" @click="AllADD">暂存</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="small" @click="AllADD">保存</el-button>
       <!--      <el-button type="success" icon="el-icon-edit" size="small" @click="generateAdd">生成</el-button>-->
       <el-button type="warning" icon="el-icon-refresh-right" size="small" @click="cancel">清空</el-button>
       <!-- <el-button
@@ -757,7 +757,7 @@ export default {
           this.isStable = response.data.isStable;
           //}
         });
-      }, 1500);
+      }, 3000);
       //离开当前页面定时器停止
       this.$once("hook:beforeDestroy", () => {
         clearInterval(this.ChannelNumberTimer);
@@ -847,17 +847,16 @@ export default {
                   //进场列表中添加新值
                   //this.ApproachList.unshift(response.data)
                   //this.total += 1
+                  //如果是进进场激活，刷新列表
                   if (this.activeName === 'Approach') {
                     this.getListI();
                   }
-                  if (this.activeName === 'end') {
-                    //if ("已完成" == tab.label) {
-                    //console.log("已完成")
+                  /*if (this.activeName === 'end') {
                     this.getListE();
-                  }
+                  }*/
                   //this.getListI(); //进场记录更新
                   //this.getListE(); //完成记录更新
-                  this.getVehicleList() //重新加载车辆
+                  //this.getVehicleList() //重新加载车辆
                   this.reset();
                 } else {
                   this.msgError(response.msg);
@@ -928,7 +927,7 @@ export default {
                         }
                         //this.getListI()
                         //this.getListE()
-                        this.getVehicleList()
+                        //this.getVehicleList()
                         //this.reset()
                       }
                     })
