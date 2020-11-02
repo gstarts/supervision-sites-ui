@@ -293,6 +293,21 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row style="margin-left: 120px">
+          <el-col :span="12">
+            <el-upload
+              action="uploadAction"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :on-success="uploadSuccess"
+              :before-remove="beforeRemove"
+              :limit="1"
+              :on-exceed="handleExceed"
+              :file-list="fileList">
+              <el-button size="mini" style="background: #91eae4">上传附件</el-button>
+            </el-upload>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -352,6 +367,17 @@ export default {
       },
       // 表单参数
       form: {},
+      //上传参数
+      uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/place/upload',
+      uploadData: {},
+      uploading: false,
+      fileList: [],
+      headers: {
+        'Authorization': '',
+        'placeId': '',
+        'bucketName': '',
+        'filename':''
+      },
       // 校验重量
       weightParams: {
         coalType: undefined,
@@ -600,6 +626,26 @@ export default {
         this.$alert('请选择上传文件类型')
       }
     },
+
+    /***上传start ***/
+
+    handleRemove(){
+
+    },
+    handlePreview(){
+
+    },
+    // 文件上传成功
+    uploadSuccess(){
+
+    },
+    beforeRemove(){
+
+    },
+    handleExceed(){
+
+    },
+    /***上传end ***/
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
       this.upload.open = false
@@ -634,6 +680,9 @@ export default {
           }
         })
       }
+
+
+
       // 合同
       if (name === 'contractNo') {
         this.form.storeCode = undefined
