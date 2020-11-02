@@ -1077,7 +1077,7 @@ export default {
         ],
         vehicleNo: [
           {required: true, message: "车号不能为空", trigger: "blur"},
-          {min: 8, max: 8, message: "请输入7位有效车号", trigger: "blur"}
+          {min: 7, max: 8, message: "请输入7位有效车号", trigger: "blur"}
         ],
         mongoliaNetWeight: [
           {required: true, message: "蒙方净重不能为空", trigger: "blur"},
