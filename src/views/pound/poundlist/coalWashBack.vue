@@ -289,7 +289,7 @@
             <af-table-column label="库位号" align="center" prop="locationNumber"/>
             <af-table-column label="通道号" align="center" prop="channelNumber">
               <template slot-scope="scope">
-                {{ parseChannelName(scope.row.蒙L57133) }}
+                {{ parseChannelName(scope.row.channelNumber) }}
               </template>
             </af-table-column>
             <af-table-column label="操作员" align="center" prop="updateBy">
@@ -411,6 +411,7 @@ import {getUserDepts} from "@/utils/charutils";
 import {genStoreDoc, getNoticeByVehicle, getVehicleList, updateDocTime} from "@/api/place/info";
 import {getStoreUsable} from '@/api/place/store'
 import {listUser} from "@/api/system/user";
+import {getToken} from "@/utils/auth";
 
 export default {
   name: "Client",
@@ -600,6 +601,7 @@ export default {
       this.queryParams.viaType = this.stationViaTypeOptions[0].dictValue
       this.queryParams1.viaType = this.stationViaTypeOptions[0].dictValue
 
+      this.getVehicleList(); // stationId  和 viaType 有了，刷新车辆列表
     });
     /**流向  */
     this.getDicts("station_IO_flag").then((response) => {
@@ -641,7 +643,7 @@ export default {
       this.form.grossWeight = 0
       this.form.tare = 0
       this.form.netWeight = 0
-      //this.form.locationNumber = ''
+      this.form.locationNumber = ''
       this.form.remark = ''
       //规格型号
       this.form.specification = ''
@@ -655,7 +657,7 @@ export default {
       this.noticeNo = ''
       this.form.noticeNo = ''
       if (!event || event === '') return
-      if (this.PoundForm.flowDirection == "I") {
+      if (this.PoundForm.flowDirection === "I") {
         /**
          * 通过车号查出入库通知单
          * @param this.queryParams.stationId  场所ID
@@ -663,15 +665,15 @@ export default {
          * @param event  车牌号
          */
         //通过车辆类型判断 是入库还是出库
-        if (this.PoundForm.stationViaType == "01") {
+        if (this.PoundForm.stationViaType === "01") {
           this.direction = 1;
-        } else if (this.PoundForm.stationViaType == "02") {
+        } else if (this.PoundForm.stationViaType === "02") {
           this.direction = 0;
         } else {
           this.msgError("车辆类型不可为空或选择不正确");
           this.form.plateNum = undefined;
         }
-        if (this.PoundForm.stationViaType == "01" || this.PoundForm.stationViaType == "02") {
+        if (this.PoundForm.stationViaType === "01" || this.PoundForm.stationViaType === "02") {
           getNoticeByVehicle(this.queryParams.stationId, this.direction, event).then((response) => {
             if (response.code === 200) {
               //规格型号
@@ -685,13 +687,14 @@ export default {
               //单号 从保税库接口中返回的
               this.noticeNo = response.data.noticeNo;
               this.form.noticeNo = response.data.noticeNo;
+              this.form.locationNumber = response.data.storeCode;
             } else {
               this.msgError(response.msg);
             }
           });
         }
         //出场 调用自己的接口 查询数据库里的数据赋值给input。
-      } else if (this.PoundForm.flowDirection == "E") {
+      } else if (this.PoundForm.flowDirection === "E") {
         //调用后台查询API 通过选择的车号反添数据
         getSheet(event, this.queryParams.stationId).then((response) => {
           if (response.code === 200) {
@@ -709,6 +712,7 @@ export default {
     getListE() {
       this.loading = true;
       this.queryParams1.flowDirection = "E";
+      this.queryParams1.stationId = this.queryParams.stationId
       listIESheet(this.queryParams1).then((response) => {
         this.sheetList = response.rows;
         //console.log("---------")
@@ -765,28 +769,47 @@ export default {
     },
     /** 暂存按钮 */
     AllADD() {
-
-
       //以下为重量赋值逻辑
+      if (!this.PoundForm.channelNumber) {
+        this.msgError("请选择通道号");
+        return false
+      }
       //进场
       //if (this.isStable == "1") {
-      if (this.PoundForm.flowDirection == "I") {
-        //重进空出 进场
-        if (this.PoundForm.stationViaType == "01" || this.PoundForm.stationViaType == "02") {
+      if (this.PoundForm.flowDirection === "I") {
+        //重进空出的进场  算毛重
+        if (this.PoundForm.stationViaType === "01") {
+          this.form.grossWeight = this.Poundweight
+          if (this.form.grossWeight <= 0) {
+            this.msgError("进场毛重不能为空或为0");
+            return false
+          }
+          //空进重出的进场 算 皮重
+        } else if (this.PoundForm.stationViaType === "02") {
+          this.form.tare = this.Poundweight
+          if (this.form.tare <= 0) {
+            this.msgError("进场皮重不能为空或为0");
+            return false
+          }
+        } else {
+          this.msgError("车辆类型不可为空或选择错误,请检查");
+          return false
+        }
+        /*if (this.PoundForm.stationViaType == "01" || this.PoundForm.stationViaType == "02") {
           //通过车辆类型 赋值毛重或皮重
           this.PoundForm.stationViaType == "01" ? (this.form.grossWeight = this.Poundweight) : (this.form.tare = this.Poundweight);
         } else {
           this.msgError("车辆类型不可为空或选择错误,请检查");
           return false
-        }
+        }*/
         //出场
-      } else if (this.PoundForm.flowDirection == "E") {
+      } else if (this.PoundForm.flowDirection === "E") {
         //重进空出 出场
-        if (this.PoundForm.stationViaType == "01") {
+        if (this.PoundForm.stationViaType === "01") {
           //皮重
           this.form.tare = this.Poundweight;
           //判断出场时毛重是否未填写
-          if (this.form.grossWeight != 0 && this.form.grossWeight != null) {
+          if (this.form.tare > 0 && this.form.grossWeight > this.form.tare) {
             //计算净重
             this.form.netWeight = this.form.grossWeight - this.form.tare;
           } else {
@@ -794,11 +817,11 @@ export default {
             return false
           }
           //空进重出 出场
-        } else if (this.PoundForm.stationViaType == "02") {
+        } else if (this.PoundForm.stationViaType === "02") {
           //毛重
           this.form.grossWeight = this.Poundweight;
           //判断出场时皮重是否未填写
-          if (this.form.tare != 0 && this.form.tare != null) {
+          if ( this.form.tare > 0 && this.form.grossWeight > this.form.tare) {
             //计算净重
             this.form.netWeight = this.form.grossWeight - this.form.tare;
           } else {
@@ -813,15 +836,11 @@ export default {
         this.msgError("流向不可为空,请选择");
         return false
       }
-
-      if (!this.PoundForm.channelNumber) {
-        this.msgError("请选择通道号");
-        return false
-      }
       /*} else {
         this.msgError("地磅数值未稳定,请稍候....");
         return false;
       }*/
+
       //以下为新增 逻辑
       //通道号赋值
       this.form.channelNumber = this.PoundForm.channelNumber;
@@ -834,7 +853,7 @@ export default {
 
       this.$refs["form"].validate((valid) => {
           if (valid) {
-            if (this.PoundForm.flowDirection == "I") {
+            if (this.PoundForm.flowDirection === "I") {
               this.form.flowDirection = this.PoundForm.flowDirection;
               this.form.viaType = this.PoundForm.stationViaType
               //this.form.noticeNo = this.noticeNo;
@@ -865,8 +884,9 @@ export default {
               //this.queryParams.stationId, this.PoundForm.stationViaType,this.form.noticeNo
               //更新单证入场时间
               this.updateDocTime()
-            } else if (this.PoundForm.flowDirection == "E") {
+            } else if (this.PoundForm.flowDirection === "E") {
               this.form.flowDirection = this.PoundForm.flowDirection;
+              this.form.channelNumber = this.PoundForm.channelNumber;
               //this.form.noticeNo = this.noticeNo;
               //return false
               //出场修改按钮
@@ -927,7 +947,8 @@ export default {
                         }
                         //this.getListI()
                         //this.getListE()
-                        //this.getVehicleList()
+                        //todo 外调车出场是否要更新列表
+                        this.getVehicleList()
                         //this.reset()
                       }
                     })
@@ -946,7 +967,8 @@ export default {
       );
     },
 // 生成按钮
-    generateAdd() {},
+    generateAdd() {
+    },
 // 清空按钮
     cancel() {
       this.reset();
@@ -1037,13 +1059,13 @@ export default {
     vehicleChange() {
       this.flowCheck()
       console.log(this.PoundForm.flowDirection)
-      if (this.PoundForm.stationViaType === '01' && this.PoundForm.flowDirection === 'E') { //重进空出
+      /*if (this.PoundForm.stationViaType === '01' && this.PoundForm.flowDirection === 'E') { //重进空出
         this.showStore = true
         this.form.locationNumber = undefined;
       } else {
         this.showStore = false
         this.form.locationNumber = undefined;
-      }
+      }*/
       this.getVehicleList() //加载车辆
 
       console.log("调用")
@@ -1093,6 +1115,7 @@ export default {
       }
     },
     changePlace() {
+      this.queryParams1.stationId = this.queryParams.stationId
       this.created() //更新通道号
       this.PoundForm.channelNumber = '' // 通道号当前值设为空
       //进场记录
@@ -1110,7 +1133,7 @@ export default {
       //场所ID 和车辆类型，
       if (this.queryParams.stationId && this.PoundForm.stationViaType) {
 
-        if (this.PoundForm.flowDirection != "E") {
+        if (this.PoundForm.flowDirection !== "E") {
           this.form.plateNum = '' //如果流向不是出场，就清空当前车号
         }
         //条件具备，加载对应单子的车辆列表
