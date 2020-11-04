@@ -44,28 +44,29 @@ export function delplace_info(id) {
 }
 
 export function getNoticeByVehicle(placeId, direction, vehicleNo) {
-	let data = {
-		'placeId': placeId,
-		'direction': direction,
-		'vehicleNo': vehicleNo,
-	}
-	return request({
-		url: '/place/notice/getNoticeInfo',
-		method: 'post',
-		data: data
-	})
-}
-export function genStoreDoc(params) {
-	return request({
-		url: '/place/notice/doc',
-		method: 'post',
-		data: params
-	})
+  let data = {
+    'placeId': placeId,
+    'direction': direction,
+    'vehicleNo': vehicleNo,
+  }
+  return request({
+    url: '/place/notice/getNoticeInfo',
+    method: 'post',
+    data: data
+  })
 }
 
-export function getVehicleList(placeId, type) {
+export function genStoreDoc(params) {
   return request({
-    url: '/place/notice/vehicleNo/' + placeId + '/' + type,
+    url: '/place/notice/doc',
+    method: 'post',
+    data: params
+  })
+}
+
+export function getVehicleList(placeId, type, direction) {
+  return request({
+    url: '/place/notice/vehicleNo/' + placeId + '/' + type + '/' + direction,
     method: 'get'
   })
 }

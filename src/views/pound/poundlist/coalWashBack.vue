@@ -2,9 +2,9 @@
   <div class="app-container">
     <!-- 按钮组 -->
     <div class="mb20">
-      <el-button type="primary" icon="el-icon-plus" size="small" @click="AllADD">保存</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="small" @click="AllADD">保存 (F2)</el-button>
       <!--      <el-button type="success" icon="el-icon-edit" size="small" @click="generateAdd">生成</el-button>-->
-      <el-button type="warning" icon="el-icon-refresh-right" size="small" @click="cancel">清空</el-button>
+      <el-button type="warning" icon="el-icon-refresh-right" size="small" @click="cancel">清空 (R)</el-button>
       <!-- <el-button
          type="primary"
          icon="el-icon-plus"
@@ -27,11 +27,21 @@
         type="info"
         size="small"
         v-print="'#dayin'"
-        @click="print">
+        @click="print"
+      >
         <!-- v-show="this.form.netWeight !== undefined && this.form.netWeight !== '' &&  this.form.plateNum !== undefined && this.form.plateNum !==''
          && this.form.locationNumber !== undefined &&  this.form.locationNumber !=='' && this.PoundForm.stationViaType ==='01'"-->
-        <i class="fa fa-print" aria-hidden="true">&nbsp;&nbsp;打印</i>
+        <i class="fa fa-print" aria-hidden="true">&nbsp;&nbsp;打印 (P)</i>
       </el-button>
+
+      <el-switch
+        @change="changPrint"
+        :active-text="autoPrintText"
+        inactive-text=""
+        v-model="autoPrint"
+        active-color="#13ce66"
+        inactive-color="#999">
+      </el-switch>
     </div>
     <el-row :gutter="10">
       <el-col :span="15">
@@ -220,8 +230,7 @@
             tooltip-effect="dark"
             style="width: 100%"
             :row-style="green"
-            @row-dblclick="dbRow"
-          >
+            @row-dblclick="dbRow">
             <af-table-column label="车号" align="center" prop="plateNum" width='100px' fixed/>
             <af-table-column label="毛重" align="center" prop="grossWeight" width='100px'/>
             <af-table-column label="皮重" align="center" prop="tare" width='100px'/>
@@ -417,6 +426,8 @@ export default {
   name: "Client",
   data() {
     return {
+      autoPrint: false,
+      autoPrintText: '手动打印',
       //标签页
       activeName: 'Approach',
       //稳定标识
@@ -582,6 +593,10 @@ export default {
     };
   },
   created() {
+    //监听键盘事件
+    document.addEventListener('keydown', this.handleKeyDown)
+    document.addEventListener('keyup', this.handleKeyUp)
+
     // 0 监管场所，1保税库，2堆场，3企业
     this.depts = getUserDepts("0");
     if (this.depts.length > 0) {
@@ -617,8 +632,11 @@ export default {
 
     //库位号
     //this.getStoreCode(this.queryParams.stationId)
-
     this.rulesAll = this.rules
+  },
+  destroyed() {
+    document.removeEventListener('keydown', this.handleKeyDown)
+    document.removeEventListener('keyup', this.handleKeyUp)
   },
   methods: {
     //2020.10.22 修改 虎神
@@ -627,12 +645,7 @@ export default {
       if (this.activeName === 'Approach') {
         this.getListI();
       }
-      /*if ("进场记录" == tab.label) {
-        console.log("进场记录")
-      }*/
       if (this.activeName === 'end') {
-        //if ("已完成" == tab.label) {
-        //console.log("已完成")
         this.getListE();
       }
     },
@@ -657,6 +670,7 @@ export default {
       this.noticeNo = ''
       this.form.noticeNo = ''
       if (!event || event === '') return
+      //如果是进场
       if (this.PoundForm.flowDirection === "I") {
         /**
          * 通过车号查出入库通知单
@@ -821,7 +835,7 @@ export default {
           //毛重
           this.form.grossWeight = this.Poundweight;
           //判断出场时皮重是否未填写
-          if ( this.form.tare > 0 && this.form.grossWeight > this.form.tare) {
+          if (this.form.tare > 0 && this.form.grossWeight > this.form.tare) {
             //计算净重
             this.form.netWeight = this.form.grossWeight - this.form.tare;
           } else {
@@ -846,10 +860,14 @@ export default {
       this.form.channelNumber = this.PoundForm.channelNumber;
       //场站ID赋值
       this.form.stationId = this.queryParams.stationId;
-      //不要update时间
+      //update时间
       this.form.updateTime = genTimeCode(new Date(), "YYYY-MM-DD HH:mm:ss");
       // 将空进重出 或重进空出 保存
       this.form.viaType = this.PoundForm.stationViaType
+
+      if (this.autoPrint) {
+        this.print()
+      }
 
       this.$refs["form"].validate((valid) => {
           if (valid) {
@@ -875,7 +893,7 @@ export default {
                   }*/
                   //this.getListI(); //进场记录更新
                   //this.getListE(); //完成记录更新
-                  //this.getVehicleList() //重新加载车辆
+                  this.getVehicleList() //重新加载车辆
                   this.reset();
                 } else {
                   this.msgError(response.msg);
@@ -926,6 +944,7 @@ export default {
                     })
                   } else {
                     this.msgError(response.msg);
+                    return false
                   }
                 })
               }
@@ -945,8 +964,6 @@ export default {
                         if (this.activeName === 'end') {
                           this.getListE();
                         }
-                        //this.getListI()
-                        //this.getListE()
                         //todo 外调车出场是否要更新列表
                         this.getVehicleList()
                         //this.reset()
@@ -1066,7 +1083,7 @@ export default {
         this.showStore = false
         this.form.locationNumber = undefined;
       }*/
-      this.getVehicleList() //加载车辆
+
 
       console.log("调用")
       /*** 调用获取进出场列表 */
@@ -1093,6 +1110,7 @@ export default {
       //进场 和 已完成，都查询
       this.getListI()
       this.getListE()
+      this.getVehicleList() //加载车辆
       /*** 调用获取进出场列表 */
     },
     flowCheck() {
@@ -1113,6 +1131,7 @@ export default {
           this.rulesAll = {}
         }
       }
+      this.getVehicleList()//加载车辆列表
     },
     changePlace() {
       this.queryParams1.stationId = this.queryParams.stationId
@@ -1131,14 +1150,14 @@ export default {
     //获取车号列表
     getVehicleList() {
       //场所ID 和车辆类型，
-      if (this.queryParams.stationId && this.PoundForm.stationViaType) {
+      if (this.queryParams.stationId && this.PoundForm.stationViaType && this.PoundForm.flowDirection) {
 
         if (this.PoundForm.flowDirection !== "E") {
           this.form.plateNum = '' //如果流向不是出场，就清空当前车号
         }
         //条件具备，加载对应单子的车辆列表
         // console.log({'placeId': this.queryParams.stationId, 'type': this.PoundForm.stationViaType})
-        getVehicleList(this.queryParams.stationId, this.PoundForm.stationViaType).then((response) => {
+        getVehicleList(this.queryParams.stationId, this.PoundForm.stationViaType, this.PoundForm.flowDirection).then((response) => {
           this.plateNumOptions = response.data;
         });
       }
@@ -1180,6 +1199,37 @@ export default {
           this.userList = response.rows
         }
       });
+    },
+    handleKeyDown(e) {
+      let key = window.event.keyCode ? window.event.keyCode : window.event.which
+      if (key === 13) {
+
+        e.preventDefault() //取消浏览器原有的ctrl+s操作
+      }
+    },
+    handleKeyUp(e) {
+      // enter
+      let key = window.event.keyCode ? window.event.keyCode : window.event.which
+      console.log(key)
+      if (key === 113) {//F2
+        e.preventDefault()
+        this.AllADD()
+      }
+      if(key === 82){
+        e.preventDefault()
+        this.clear()
+      }
+      if(key === 80){
+        e.preventDefault()
+        this.print()
+      }
+    },
+    changPrint(){
+      if(this.autoPrint===true){
+        this.autoPrintText = '自动打印'
+      }else{
+        this.autoPrintText = '手动打印'
+      }
     }
   },
 }
