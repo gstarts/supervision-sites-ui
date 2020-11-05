@@ -2,9 +2,12 @@
   <div class="app-container">
     <!-- 按钮组 -->
     <div class="mb20">
-      <el-button type="primary" icon="el-icon-plus" size="small" @click="AllADD">保存 (F2)</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="small" :loading="dataLoading" @click="AllADD">保存 (F2)
+      </el-button>
       <!--      <el-button type="success" icon="el-icon-edit" size="small" @click="generateAdd">生成</el-button>-->
-      <el-button type="warning" icon="el-icon-refresh-right" size="small" @click="cancel">清空 (F6)</el-button>
+      <el-button type="warning" icon="el-icon-refresh-right" size="small" :loading="dataLoading" @click="cancel">清空
+        (F6)
+      </el-button>
       <!-- <el-button
          type="primary"
          icon="el-icon-plus"
@@ -426,6 +429,7 @@ export default {
   name: "Client",
   data() {
     return {
+      dataLoading: false,
       autoPrint: false,
       autoPrintText: '手动打印',
       //标签页
@@ -553,7 +557,10 @@ export default {
           trigger: "blur"
         }],
         plateNum: [{type: "string", required: true, message: "不可为空", trigger: "change"}],
-        locationNumber: [{type: "string", message: "库位号不可为空", trigger: "change"}]
+        //locationNumber: [{type: "string", message: "库位号不可为空", trigger: "change"}],
+        deliveryUnit: [{type: "string",required: true, message: "发货单位不可为空", trigger: "blur"}],
+        receivingUnit: [{type: "string",required: true, message: "收货单位不可为空", trigger: "blur"}],
+        goodsName: [{type: "string",required: true, message: "货物名称不可为空", trigger: "blur"}]
       },
       rulesIn1: { //进场 重进空出
         grossWeight: [{required: true, type: "number", message: "毛重需为数字", trigger: "blur"}],
@@ -688,6 +695,8 @@ export default {
           this.form.plateNum = undefined;
         }
         if (this.PoundForm.stationViaType === "01" || this.PoundForm.stationViaType === "02") {
+
+          this.dataLoading = true
           getNoticeByVehicle(this.queryParams.stationId, this.direction, event).then((response) => {
             if (response.code === 200) {
               //规格型号
@@ -702,9 +711,13 @@ export default {
               this.noticeNo = response.data.noticeNo;
               this.form.noticeNo = response.data.noticeNo;
               this.form.locationNumber = response.data.storeCode;
+              this.dataLoading = false
             } else {
               this.msgError(response.msg);
+              this.dataLoading = false
             }
+          }).catch(err => {
+            this.dataLoading = false
           });
         }
         //出场 调用自己的接口 查询数据库里的数据赋值给input。
@@ -878,6 +891,11 @@ export default {
               this.form.flowDirection = this.PoundForm.flowDirection;
               this.form.viaType = this.PoundForm.stationViaType
               //this.form.noticeNo = this.noticeNo;
+              //判断 提交的参数
+              if (this.form.locationNumber == null || this.form.locationNumber === '' || this.form.noticeNo == null || this.form.noticeNo === '') {
+                this.msgError("此单未关联库位号 或 提煤单号");
+                return false
+              }
               //进场 新增
               addSheet(this.form).then((response) => {
                 if (response.code === 200) {
@@ -958,6 +976,7 @@ export default {
                 genStoreDoc(params).then(response => {
                   if (response.code === 200) {
                     this.msgSuccess("出库成功");
+
                     updateSheet(this.form).then(response => {
                       if (response.code === 200) {
                         this.msgSuccess("出场成功");
