@@ -4,7 +4,7 @@
     <div class="mb20">
       <el-button type="primary" icon="el-icon-plus" size="small" @click="AllADD">保存 (F2)</el-button>
       <!--      <el-button type="success" icon="el-icon-edit" size="small" @click="generateAdd">生成</el-button>-->
-      <el-button type="warning" icon="el-icon-refresh-right" size="small" @click="cancel">清空 (R)</el-button>
+      <el-button type="warning" icon="el-icon-refresh-right" size="small" @click="cancel">清空 (F6)</el-button>
       <!-- <el-button
          type="primary"
          icon="el-icon-plus"
@@ -31,7 +31,7 @@
       >
         <!-- v-show="this.form.netWeight !== undefined && this.form.netWeight !== '' &&  this.form.plateNum !== undefined && this.form.plateNum !==''
          && this.form.locationNumber !== undefined &&  this.form.locationNumber !=='' && this.PoundForm.stationViaType ==='01'"-->
-        <i class="fa fa-print" aria-hidden="true">&nbsp;&nbsp;打印 (P)</i>
+        <i class="fa fa-print" aria-hidden="true">&nbsp;&nbsp;打印</i>
       </el-button>
 
       <el-switch
@@ -773,6 +773,9 @@ export default {
           //if(response.data !== null){
           this.Poundweight = response.data.weight;
           this.isStable = response.data.isStable;
+          if (this.plateNumOptions.length === 0) {
+            this.getVehicleList()
+          }
           //}
         });
       }, 3000);
@@ -894,7 +897,7 @@ export default {
                   //this.getListI(); //进场记录更新
                   //this.getListE(); //完成记录更新
                   this.getVehicleList() //重新加载车辆
-                  this.reset();
+                  //this.reset();
                 } else {
                   this.msgError(response.msg);
                 }
@@ -1149,12 +1152,13 @@ export default {
     },
     //获取车号列表
     getVehicleList() {
+
       //场所ID 和车辆类型，
       if (this.queryParams.stationId && this.PoundForm.stationViaType && this.PoundForm.flowDirection) {
-
-        if (this.PoundForm.flowDirection !== "E") {
-          this.form.plateNum = '' //如果流向不是出场，就清空当前车号
-        }
+        this.cancel()//清form
+        /* if (this.PoundForm.flowDirection !== "E") {
+           this.form.plateNum = '' //如果流向不是出场，就清空当前车号
+         }*/
         //条件具备，加载对应单子的车辆列表
         // console.log({'placeId': this.queryParams.stationId, 'type': this.PoundForm.stationViaType})
         getVehicleList(this.queryParams.stationId, this.PoundForm.stationViaType, this.PoundForm.flowDirection).then((response) => {
@@ -1215,19 +1219,19 @@ export default {
         e.preventDefault()
         this.AllADD()
       }
-      if(key === 82){
+      if (key === 117) {
         e.preventDefault()
-        this.clear()
+        this.cancel()
       }
-      if(key === 80){
-        e.preventDefault()
-        this.print()
-      }
+      /* if(key === 80){
+         e.preventDefault()
+         this.print()
+       }*/
     },
-    changPrint(){
-      if(this.autoPrint===true){
+    changPrint() {
+      if (this.autoPrint === true) {
         this.autoPrintText = '自动打印'
-      }else{
+      } else {
         this.autoPrintText = '手动打印'
       }
     }

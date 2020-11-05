@@ -379,7 +379,7 @@ export default {
         updateTime: undefined,
         remark: undefined,
         revision: undefined,
-        type:'S'
+        type:'2' //散货
       }
       this.resetForm('form')
     },
