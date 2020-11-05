@@ -49,7 +49,7 @@
     <el-row :gutter="10">
       <el-col :span="15">
         <el-card class="mb20">
-          <el-form :model="form" ref="form" :rules="rulesAll" label-width="160px">
+          <el-form :model="form" ref="form" :rules="rules" label-width="160px">
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="发货单位" prop="deliveryUnit">
@@ -538,7 +538,7 @@ export default {
         //过卡车辆类型
         stationViaType: undefined,
       },
-      rulesAll: {},
+      //rulesAll: {},
       // 重量类型效验
       rules: {
         grossWeight: [{required: true, message: "毛重不可为空", trigger: "change"}, {
@@ -639,7 +639,7 @@ export default {
 
     //库位号
     //this.getStoreCode(this.queryParams.stationId)
-    this.rulesAll = this.rules
+    //this.rulesAll = this.rules
   },
   destroyed() {
     document.removeEventListener('keydown', this.handleKeyDown)
@@ -1136,7 +1136,7 @@ export default {
       /*** 调用获取进出场列表 */
     },
     flowCheck() {
-      if (this.PoundForm.flowDirection === 'I' || this.PoundForm.flowDirection === undefined) {//如果是进场
+      /*if (this.PoundForm.flowDirection === 'I' || this.PoundForm.flowDirection === undefined) {//如果是进场
         if (this.PoundForm.stationViaType === '01' || this.PoundForm.stationViaType == undefined) {//重进空出
           this.rulesAll = this.rulesIn1
         } else if (this.PoundForm.stationViaType === '02' || this.PoundForm.stationViaType == undefined) {//空进重出
@@ -1152,7 +1152,7 @@ export default {
         } else {
           this.rulesAll = {}
         }
-      }
+      }*/
       this.getVehicleList()//加载车辆列表
     },
     changePlace() {
