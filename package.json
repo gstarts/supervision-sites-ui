@@ -1,7 +1,7 @@
 {
   "name": "supervision-sites-ui",
   "version": "1.0.0",
-  "description": "监管场所管理系统",
+  "description": "仓储管理系统",
   "author": "龙航智能",
   "license": "private",
   "scripts": {
