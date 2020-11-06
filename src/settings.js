@@ -1,5 +1,5 @@
 module.exports = {
-  title: '监管场所管理系统',
+  title: '仓储管理系统',
 
   /**
    * 是否系统布局配置

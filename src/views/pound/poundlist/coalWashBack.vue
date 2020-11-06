@@ -31,8 +31,7 @@
         type="info"
         size="small"
         v-print="printObj"
-        @click="print"
-      >
+        @click="print">
         <!-- v-show="this.form.netWeight !== undefined && this.form.netWeight !== '' &&  this.form.plateNum !== undefined && this.form.plateNum !==''
          && this.form.locationNumber !== undefined &&  this.form.locationNumber !=='' && this.PoundForm.stationViaType ==='01'"-->
         <i class="fa fa-print" aria-hidden="true">&nbsp;&nbsp;打印</i>
@@ -58,20 +57,22 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="车号" prop="plateNum">
-                  <el-select ref="vehicleNo"
+                <el-form-item label="车号" prop="plateNum" class="coalPageSelect">
+                  <el-select ref="vehicleNo" class="coalPageSelect"
                              v-model="form.plateNum"
                              placeholder="请选择车号"
                              prop="plateNum"
                              filterable
                              clearable
                              @change="CarNumberChange">
-                    <el-option
+                    <el-option class="coalPageSelect"
                       v-for="dict in plateNumOptions"
                       :key="dict.value"
                       :label="dict.key"
                       :value="dict.value"
-                    ></el-option>
+                    >
+                      <span style=" font-size: 20px">{{ dict.value }}</span>
+                    </el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -681,7 +682,7 @@ export default {
     },
     //车号Change
     CarNumberChange(event) {
-      console.log(event)
+      //console.log(event)
       //进场 调用接口 连带数据赋值给input
       this.form.grossWeight = 0
       this.form.tare = 0
@@ -1467,6 +1468,16 @@ export default {
 .el-tooltip_popper {
   font-size: 15px;
   max-width: 20%;
+}
+/*改变车号字体大小的样式*/
+.coalPageSelect /deep/ .el-form-item__label {
+  font-size: 20px;
+}
+.coalPageSelect /deep/ .el-input__inner {
+  font-size: 20px;
+}
+ .coalPageSelect /deep/ .el-select-dropdown__item{
+  font-size: 20px !important;
 }
 
 </style>

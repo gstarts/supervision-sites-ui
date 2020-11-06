@@ -6,7 +6,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || '监管场所管理系统' // 标题
+const name = defaultSettings.title || '仓储管理系统' // 标题
 
 const port = process.env.port || process.env.npm_config_port || 8800 // 端口
 
@@ -35,9 +35,9 @@ module.exports = {
       [process.env.VUE_APP_BASE_API]: {
         // target: `http://localhost:9090`,
         // 本地
-	      target: `http://192.168.11.199:9090`,
+	      //target: `http://192.168.11.199:9090`,
         // 华方
-	      // target: `http://10.0.130.51:9090`,
+        target: `http://10.0.130.51:9090`,
 	      // target: `http://39.105.36.197:9090`,
         changeOrigin: true,
         pathRewrite: {
