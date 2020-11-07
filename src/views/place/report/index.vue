@@ -67,13 +67,24 @@
           </el-select>
         </el-form-item>
         <el-form-item label="时间" prop="startTime">
+<!--          <el-date-picker-->
+<!--            v-model="dateRange"-->
+<!--            type="datetimerange"-->
+<!--            value-format="yyyy-MM-dd"-->
+<!--            range-separator="至"-->
+<!--            start-placeholder="开始日期"-->
+<!--            end-placeholder="结束日期"-->
+<!--          :default-time="['06:00:00','06:00:00']">-->
+<!--          </el-date-picker>-->
+
           <el-date-picker
             v-model="dateRange"
-            type="daterange"
-            value-format="yyyy-MM-dd"
-            range-separator="至"
+            type="datetimerange"
+            align="right"
             start-placeholder="开始日期"
-            end-placeholder="结束日期">
+            end-placeholder="结束日期"
+            :default-time="['06:00:00', '06:00:00']"
+            value-format="yyyy-MM-dd HH:mm:ss">
           </el-date-picker>
         </el-form-item>
 
@@ -117,11 +128,39 @@
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          <el-button type="info" icon="fa fa-print" v-print="'#print'" @click="print" v-show="show"> 打印
+          </el-button>
         </el-form-item>
       </el-row>
+      <download-excel
+        class = "export-excel-wrapper"
+        :data = "reportList"
+        :fields = "json_fields"
+        :title="titleList"
+        :footer="excelFooter"
+        :default-value="defaultValue"
+        name = "内蒙古嘉易达矿业有限公司统计报表.xls">
+        <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
+        <el-button type="primary" size="mini" @click="importExcel" v-show="showImport">导出EXCEL</el-button>
+      </download-excel>
     </el-form>
+    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1000px;padding-left: 1px ;padding-top:50px" id="print">
+      <div v-show="printSmallTitle">
+      <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">
+        <span>{{this.prinTtitle}}</span><br>
+      </div>
+      <div>
+        <span>{{timeTitle}}</span>
+      </div>
+      <div>
+        <span>{{shipper}}</span>
+      </div>
+      </div>
 
-    <el-table v-loading="loading" :data="reportList">
+    <el-table v-loading="loading" :data="reportList" id="analyouttable"
+              :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'16px',padding:'3 -3px',margin:'-3'}"
+              :cell-style="{border:'solid .5px black',fontSize:'18px',padding:'12px 0',color:'black'}"
+              style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
       <af-table-column label="客户" align="center" prop="checkConsumer"/>
       <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
       <af-table-column label="煤种" align="center" prop="goodsName"/>
@@ -136,7 +175,14 @@
       <span>皮重合计:{{ totalTareWeight }}</span>
       <span>净重合计:{{ totalNetWeight }}</span>
     </el-row>
+
+
+
+    </div>
+
   </div>
+
+
 </template>
 
 <script>
@@ -150,8 +196,51 @@ export default {
     return {
       // 遮罩层
       loading: false,
+      // 控件日期时间
       dateRange: ['', ''],
+      // 初始化时间
+      nowDate:'',
+      nextDate:'',
+      //打印按钮显示隐藏
+      show:false,
+      // 导出按钮显示隐藏
+      showImport:false,
+      // 导出标题集合
+      titleList:[
+      ],
+
+      printSmallTitle:false,
+
+      //发货单位
+      shipper:'发货单位=嘉易达',
+      // 导出格式
+      json_meta: [
+        [
+          {
+            " key ": " charset ",
+            " value ": " utf- 8 "
+          }
+        ]
+      ],
+      // 导出Excel 字段
+      json_fields: {
+        "客户": "checkConsumer",    //常规字段
+        "煤种": "goodsName", //支持嵌套属性
+        "车数":"vehicleNo",
+        "毛重":"roughWeight",
+        "皮重":"tareWeight",
+        "净重":"netWeight",
+
+      },
+      // 默认值
+      defaultValue:'0',
+      // Excel 页脚
+      excelFooter:'',
       // 选中数组
+      // 打印标题
+      prinTtitle:'内蒙古嘉易达矿业有限公司统计报表',
+      // 标题时间
+      timeTitle:'',
       ids: [],
       depts: [],
       // 非单个禁用
@@ -207,9 +296,31 @@ export default {
     };
   },
   created() {
+    this.titleList.push(this.prinTtitle);
+    // 页面初始化获取时间0
     this.dateRange = ['', '']
+    var aData = new Date();
+    this.nowDate =
+      aData.getFullYear() +
+      "-" +
+      (aData.getMonth() + 1) +
+      "-" +
+      (aData.getDate())+' '+'06:00:00';
+    this.dateRange[0] = this.nowDate;
+    this.nextDate =
+      aData.getFullYear() +
+      "-" +
+      (aData.getMonth() + 1) +
+      "-" +
+      (aData.getDate()+1)+' '+'06:00:00';
+    this.dateRange[1] = this.nextDate;
+    // this.dateRange[0]至{{this.dateRange[1]}}
     this.queryParams.startTime = this.dateRange[0]
+
     this.queryParams.endTime = this.dateRange[1]
+    this.timeTitle = this.dateRange[0]+'至'+this.dateRange[1]+'按客户统计'
+    this.titleList.push(this.timeTitle)
+    this.titleList.push(this.shipper);
     // 0 监管场所，1保税库，2堆场，3企业
     this.depts = getUserDepts('0')
     if (this.depts.length > 0) {
@@ -240,6 +351,33 @@ export default {
       this.open = false;
       this.reset();
     },
+    // 打印按钮
+    print(){
+      this.printSmallTitle = true;
+      clearTimeout(this.timer1);
+      this.timer1 = setTimeout(() => {
+        //设置延迟执行
+        //this.reset();
+        this.printSmallTitle = false;
+      }, 2000);
+
+    },
+
+    importExcel(){
+
+    },
+
+    // //合并单元格
+    // arraySpanMethod({row, column, rowIndex, columnIndex}) {
+    //   if ((rowIndex === 21 || rowIndex === 22) && columnIndex === 1) {
+    //     return {
+    //       rowspan: 1,
+    //       colspan: 6
+    //     }
+    //   }
+    // },
+
+
     // 表单重置
     reset() {
       this.form = {
@@ -283,7 +421,7 @@ export default {
         }
       }
 
-      console.log(this.queryParams)
+      console.log(this.queryParams+111111111111111111)
       this.getInfo();
     },
     /** 重置按钮操作 */
@@ -305,6 +443,25 @@ export default {
           this.totalNetWeight = response.data.totalNetWeight
           this.totalRoughWeight = response.data.totalRoughWeight
           this.totalTareWeight = response.data.totalTareWeight
+          if(this.reportList.length>0){
+            this.showImport = true;
+            if (this.reportList.length>20) {
+              this.$message.info('亲，数据量有点大，请你先导出在打印')
+              this.show = false;
+
+            }else{
+              this.show = true;
+            }
+
+          } else{
+            this.show = false;
+            this.showImport = false;
+
+          }
+          this.excelFooter = '总车数'+':' + this.vehicleCount+"    " +'毛重合计' +':'+
+            this.totalRoughWeight+"  "+'皮重合计'+':'+this.totalRoughWeight+"  "+'净重合计'+':'+this.totalTareWeight
+
+          console.log(this.titleList+1111111112222222)
         }
       })
     },
@@ -356,5 +513,8 @@ export default {
 .countRow span {
   margin-right: 10px;
   font-size: 14px;
+}
+@page {
+  margin: 6mm;
 }
 </style>
