@@ -42,6 +42,15 @@ export function addSheet(data) {
   })
 }
 
+//磅单查询页 API
+export function queryPoundStatisticsList(data) {
+  return request({
+    url: '/pound/measurement/sheet//queryPoundStatisticsList',
+    method: 'post',
+    data: data
+  })
+}
+//111
 // 修改计量单
 export function updateSheet(data) {
   return request({
