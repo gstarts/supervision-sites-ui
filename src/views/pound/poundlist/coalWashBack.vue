@@ -178,8 +178,7 @@
                          filterable
                          v-model="PoundForm.channelNumber"
                          placeholder="请选择通道号"
-                         @change="ChannelNumberChange"
-              >
+                         @change="ChannelNumberChange">
                 <el-option
                   v-for="dept in chnlConfigList"
                   :key="dept.cChnlNo"
@@ -239,6 +238,18 @@
             <af-table-column label="操作员" align="center" prop="createBy">
               <template slot-scope="scope">
                 {{ parseUserName(scope.row.createBy) }}
+              </template>
+            </af-table-column>
+            <af-table-column label="操作" align="center" prop="createBy" class-name="small-padding fixed-width" fixed="right">
+              <template slot-scope="scope">
+                <el-button
+                  v-show="scope.row.status === '0'"
+                  size="mini"
+                  type="text"
+                  icon="el-icon-edit"
+                  @click="handlerModify(scope.row)"
+                  v-hasPermi="['place:pound:modify']">申请修改
+                </el-button>
               </template>
             </af-table-column>
           </el-table>
@@ -1329,10 +1340,16 @@ export default {
       } else {
         this.autoPrintText = '手动打印'
       }
+    },
+    handlerModify(row){
+      //弹出对话框，修改磅单
+      console.log(row.id)
+
+
     }
-  },
+  }
 }
-;
+
 </script>
 <style scoped>
 .el-select {
