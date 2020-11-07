@@ -12,6 +12,7 @@ const getters = {
   permissions: state => state.user.permissions,
   permission_routes: state => state.permission.routes,
 	dept: state => state.user.dept,
-	refresh_token: state=> state.refresh_token
+	refresh_token: state=> state.refresh_token,
+  poundConfig: state=> state.user.poundConfig
 }
 export default getters

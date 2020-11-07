@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: '监管场所管理系统',
+      title: '仓储管理系统',
       logo: logoImg
     }
   }

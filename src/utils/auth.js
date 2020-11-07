@@ -5,6 +5,8 @@ const RefreshTokenKey = 'Admin-Refresh-Token'
 
 const ExpiresInKey = 'Admin-Expires-In'
 
+const PoundConfigKey = 'Pound-Config-Key'
+
 export function getToken() {
 	return Cookies.get(TokenKey)
 }
@@ -39,4 +41,12 @@ export function setExpiresIn(time) {
 
 export function removeExpiresIn() {
 	return Cookies.remove(ExpiresInKey)
+}
+
+export function setPoundConfig(poundConfig){
+  return Cookies.set(PoundConfigKey,poundConfig)
+
+}
+export function getPoundConfig(){
+  return Cookies.get(PoundConfigKey) || ``
 }
