@@ -30,6 +30,9 @@ Vue.use(AFTableColumn)
 //打印
 import Print from 'vue-print-nb'
 Vue.use(Print);
+
+import JsonExcel from 'vue-json-excel'
+Vue.component('downloadExcel', JsonExcel);
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
 Vue.prototype.getConfigKey = getConfigKey
