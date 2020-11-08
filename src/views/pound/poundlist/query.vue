@@ -102,7 +102,7 @@
         </el-card>
       </el-col>
       <el-card class="mb5">
-        <el-table  v-loading="loading" :data="sheetList" v-show="conditionLogo">
+        <el-table  v-loading="loading" :data="sheetList" >
           <el-table-column label="收货单位" align="center" prop="receivingUnit" v-if="this.SelectPoundForm.sort =='receiving_unit'"/>
           <el-table-column label="车牌号" align="center" prop="plateNum" v-if="this.SelectPoundForm.sort =='plate_num'"/>
           <el-table-column label="车数" align="center" prop="countPlateNum" />
@@ -126,7 +126,7 @@
           :total="total"
           :page.sync="SelectPoundForm.pageNum"
           :limit.sync="SelectPoundForm.pageSize"
-          @pagination="sheetList"
+          @pagination="getList"
         />
       </el-card>
     </div>
@@ -265,7 +265,7 @@ export default {
     /** 查询计量单列表 */
     getList() {
       this.loading = true;
-      queryPoundStatisticsList(this.addDateRange(this.SelectPoundForm, this.dateRange)).then(response => {
+      queryPoundStatisticsList(this.addDateRange(this.SelectPoundForm,this.dateRange)).then(response => {
         this.sheetList = response.rows;
         this.total = response.total;
         this.loading = false;
