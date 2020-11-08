@@ -178,8 +178,7 @@
                          filterable
                          v-model="PoundForm.channelNumber"
                          placeholder="请选择通道号"
-                         @change="ChannelNumberChange"
-              >
+                         @change="ChannelNumberChange">
                 <el-option
                   v-for="dept in chnlConfigList"
                   :key="dept.cChnlNo"
@@ -236,11 +235,25 @@
                 {{ parseChannelName(scope.row.channelNumber) }}
               </template>
             </af-table-column>
-            <af-table-column label="操作员" align="center" prop="createBy">
+            <af-table-column label="司磅员" align="center" prop="createBy">
               <template slot-scope="scope">
                 {{ parseUserName(scope.row.createBy) }}
               </template>
             </af-table-column>
+            <!--不在磅单页面做磅单修改的申请了-->
+            <!--<af-table-column label="操作" align="center" prop="createBy" class-name="small-padding fixed-width"
+                             fixed="right">
+              <template slot-scope="scope">
+                <el-button
+                  v-show="scope.row.status === '0'"
+                  size="mini"
+                  type="text"
+                  icon="el-icon-edit"
+                  @click="handlerModify(scope.row)"
+                  v-hasPermi="['place:pound:modify']">申请修改
+                </el-button>
+              </template>
+            </af-table-column>-->
           </el-table>
           <pagination
             v-show="total>0"
@@ -286,9 +299,9 @@
                 {{ parseChannelName(scope.row.channelNumber) }}
               </template>
             </af-table-column>
-            <af-table-column label="操作员" align="center" prop="updateBy">
+            <af-table-column label="司磅员" align="center" prop="measurer">
               <template slot-scope="scope">
-                {{ parseUserName(scope.row.updateBy) }}
+                {{ parseUserName(scope.row.measurer) }}
               </template>
             </af-table-column>
           </el-table>
@@ -390,6 +403,126 @@
         </div>
       </div>
     </div>
+
+    <!--磅单申请的弹出框-->
+    <!--<el-dialog :title="title" :visible.sync="modifyOpen" append-to-body>
+      <el-form ref="formModify" :model="poundModify" :rules="rulesModify" label-width="120px">
+        <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
+          <el-col :span="8" :offset="2">
+            车号：{{ poundModify.vehicleNo }}
+            &lt;!&ndash;<el-form-item label="车号" prop="vehicleNo">
+              <el-input v-model="poundModify.vehicleNo" placeholder="请输入车牌" disabled/>
+            </el-form-item>&ndash;&gt;
+          </el-col>
+          <el-col :span="12">
+            磅单状态：{{ poundModify.poundState === '0' ? '正常' : '申请修改' }}
+            &lt;!&ndash; <el-form-item label="磅单状态" prop="poundState">
+               <el-input v-model="poundModify.poundState" placeholder="请输入磅单状态" disabled/>
+             </el-form-item>&ndash;&gt;
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="11">
+            <el-form-item label="皮重" prop="tareWeight">
+              <el-input-number v-model="poundModify.tareWeight" placeholder="请输入修改前皮重" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2">修改为</el-col>
+          <el-col :span="11">
+            <el-form-item label="皮重" prop="modifyTareWeight">
+              <el-input-number :min="0" :step="1" v-model="poundModify.modifyTareWeight" placeholder="请输入修改后皮重"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="11">
+            <el-form-item label="毛重" prop="roughWeight">
+              <el-input-number v-model="poundModify.roughWeight" placeholder="请输入修改前毛重" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2">修改为</el-col>
+          <el-col :span="11">
+            <el-form-item label="毛重" prop="modifyRoughWeight">
+              <el-input-number :min="0" :step="1" v-model="poundModify.modifyRoughWeight" placeholder="请输入修改后毛重"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="11">
+            <el-form-item label="净重" prop="netWeight">
+              <el-input-number v-model="poundModify.netWeight" placeholder="请输入修改前净重" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2">修改为</el-col>
+          <el-col :span="11">
+            <el-form-item label="净重" prop="modifyNetWeight">
+              <el-input-number :min="0" :step="1" v-model="poundModify.modifyNetWeight" placeholder="请输入修改后净重" disabled/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-show="selectPound.packMode === '1'">
+        <el-row :gutter="10">
+          <el-col :span="11">
+            <el-form-item label="集装箱号1" prop="containerNo1">
+              <el-input v-model="poundModify.containerNo1" placeholder="请输入集装号1" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" style="padding-top:10px;">修改为</el-col>
+          <el-col :span="11">
+            <el-form-item label="集装箱号1" prop="modifyContainerNo1">
+              <el-input v-model="poundModify.modifyContainerNo1" placeholder="请输入修改后集装箱号1"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="11">
+            <el-form-item label="集装箱号2" prop="containerNo2">
+              <el-input v-model="poundModify.containerNo2" placeholder="请输入集装号2" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" style="padding-top:10px;">修改为</el-col>
+          <el-col :span="11">
+            <el-form-item label="集装箱号2" prop="modifyContainerNo2">
+              <el-input v-model="poundModify.modifyContainerNo2" placeholder="请输入修改后集装箱号2"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="11">
+            <el-form-item label="集装箱号3" prop="containerNo3">
+              <el-input v-model="poundModify.containerNo3" placeholder="请输入集装号3" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" style="padding-top:10px;">修改为</el-col>
+          <el-col :span="11">
+            <el-form-item label="集装箱号3" prop="modifyContainerNo3">
+              <el-input v-model="poundModify.modifyContainerNo3" placeholder="请输入修改后集装箱号3"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="11">
+            <el-form-item label="集装箱号4" prop="containerNo4">
+              <el-input v-model="poundModify.containerNo4" placeholder="请输入集装号4" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" style="padding-top:10px;">修改为</el-col>
+          <el-col :span="11">
+            <el-form-item label="集装箱号4" prop="modifyContainerNo4">
+              <el-input v-model="poundModify.modifyContainerNo4" placeholder="请输入修改后集装箱号4"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        </el-row>
+        <el-form-item label="修改原因" prop="applyReason">
+          <el-input v-model="poundModify.applyReason" type="textarea" placeholder="请输入修改原因"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitModify">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>-->
   </div>
 </template>
 
@@ -410,6 +543,7 @@ import {getStoreUsable} from '@/api/place/store'
 import {listUser} from "@/api/system/user";
 import store from '@/store/index'
 import {getPoundConfig, setPoundConfig} from "@/utils/auth";
+import {addModify} from "@/api/place/modify";
 
 export default {
   name: "Client",
@@ -418,10 +552,13 @@ export default {
       printObj: {
         id: '#dayin',
         endCallback: (err => {
-          console.log('打完了')
-          console.log(err)
+          console.log('印完成')
         })
       },
+      poundState: [
+        {'key': 0, 'label': '正常'},
+        {'key': 1, 'label': '申请修改'},
+      ],
       dataLoading: false,
       //自动打印按钮，和文字显示设置
       autoPrint: true,
@@ -522,6 +659,8 @@ export default {
         //出库/入库 标识  进 1  出0
         direction: undefined,
         viaType: undefined,
+        //包装方式 ，1集装箱，2散货
+        packMode: undefined,
       },
       //通道配置
       PoundForm: {
@@ -587,11 +726,48 @@ export default {
       ruless: {
         flowDirection: [{type: "string", required: true, message: "请选择流向", trigger: "change"}],
       },
+      rulesModify: {
+        tareWeight: [{type: 'number',required: true,message:'皮重不能为空',trigger:'blur'}],
+        roughWeight: [{type: 'number',required: true,message:'毛重不能为空',trigger:'blur'}],
+        netWeight: [{type: 'number',required: true,message:'净重不能为空',trigger:'blur'}],
+        modifyTareWeight: [{type: 'number',required: true,message:'皮重不能为空',trigger:'blur'}],
+        modifyRoughWeight: [{type: 'number',required: true,message:'毛重不能为空',trigger:'blur'}],
+        modifyNetWeight: [{type: 'number',required: true,message:'净重不能为空',trigger:'blur'}],
+        applyReason: [{type: 'string',required: true,message:'修改原因不能为空',trigger:'blur'}],
+      },
       storeList: [], //保存库位号.
       showStore: false,
       noticeNo: '',
       userList: [],
-    };
+      //磅单修改页面的变量
+      modifyOpen: false,
+      /*poundModify: {
+        poundId: undefined,
+        poundState: undefined,
+        tareWeight: 0,
+        roughWeight: 0,
+        netWeight: 0,
+        modifyTareWeight: 0,
+        modifyRoughWeight: 0,
+        modifyNetWeight: 0,
+        modifyReason: '',
+        applyReason: '',
+        vehicleNo: '',
+        packMode: '',
+        containerNo1: '',
+        containerNo2: '',
+        containerNo3: '',
+        containerNo4: '',
+        noticeNo: '',
+        doc_id:'',
+        modifyContainerNo1: '',
+        modifyContainerNo2: '',
+        modifyContainerNo3: '',
+        modifyContainerNo4: '',
+      },*/
+      //当前选中的磅单
+      selectPound: {}
+    }
   },
   watch: {//监听值的变化
     //三个值的变化
@@ -608,27 +784,9 @@ export default {
     }
   },
   created() {
-    //获取用户保存睥磅单配置信息
-    /*this.poundConfig = this.PoundForm
-    let storePoundConfig = store.getters.poundConfig
-    //let storePoundConfigUser = store.getters.user.pound_config
-    if (storePoundConfig && storePoundConfig !== '') {
-      this.PoundForm = {...storePoundConfig}
-    }
-    console.log(storePoundConfig)
-    console.log('config')*/
-    //console.log(storePoundConfigUser)
-    //this.$store.dispatch("SetPoundConfig", this.poundConfig)
-
-
-    /* let date = parseTime(new Date())
-     this.nowDate = date.substring(0,10)
-     this.nowTime = date.substring(10,19)*/
-
     //监听键盘事件
     document.addEventListener('keydown', this.handleKeyDown)
     document.addEventListener('keyup', this.handleKeyUp)
-
     // 0 监管场所，1保税库，2堆场，3企业
     this.depts = getUserDepts("0");
     if (this.depts.length > 0) {
@@ -655,23 +813,18 @@ export default {
         //this.PoundForm.flowDirection = this.flowDirectionOptions[0].dictValue
         this.queryParams1.flowDirection = this.flowDirectionOptions[0].dictValue
         this.queryParams.flowDirection = this.flowDirectionOptions[0].dictValue
-
         this.getVehicleList(); // stationId  和 viaType 有了，刷新车辆列表
       });
     });
     //进场记录
     this.getListI();
-
-
     //库位号
     //this.getStoreCode(this.queryParams.stationId)
-    //this.rulesAll = this.rules
   },
   mounted() {
     this.$nextTick(() => {
       this.$refs['vehicleNo'].focus()
       //this.poundConfig = this.PoundForm
-
       let storePoundConfig = store.getters.poundConfig
       //let storePoundConfigUser = store.getters.user.pound_config
       if (storePoundConfig && storePoundConfig !== '') {
@@ -702,7 +855,6 @@ export default {
     },
     //车号Change
     CarNumberChange(event) {
-      //console.log(event)
       //进场 调用接口 连带数据赋值给input
       this.form.grossWeight = 0
       this.form.tare = 0
@@ -720,6 +872,7 @@ export default {
       //单号 从保税库接口中返回的
       this.noticeNo = ''
       this.form.noticeNo = ''
+      this.form.packMode = '2' //默认散货
       if (!event || event === '') return
       //如果是进场
       if (this.PoundForm.flowDirection === "I") {
@@ -1329,10 +1482,36 @@ export default {
       } else {
         this.autoPrintText = '手动打印'
       }
-    }
-  },
+    },
+    /*handlerModify(row) {
+      //弹出对话框，修改磅单
+      this.selectPound = row
+      console.log(row)
+      this.modifyOpen = true
+      this.poundModify.poundId = row.id
+      this.poundModify.tareWeight = row.tare
+      this.poundModify.roughWeight = row.grossWeight
+      this.poundModify.netWeight = row.netWeight
+      this.poundModify.vehicleNo = row.plateNum
+      this.poundModify.poundState = row.status
+    },*/
+    /*submitModify() {
+      console.log('提交')
+      //加验证，提交
+      this.$refs["formModify"].validate((valid) => {
+        if (valid) {
+          addModify(this.poundModify).then(response => {
+            if (response.code === 200) {
+              this.$message.success(response.msg)
+              //把磅单状态变成1
+            }
+          })
+        }
+      })
+    },*/
+  }
 }
-;
+
 </script>
 <style scoped>
 .el-select {

@@ -1,6 +1,16 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="场所" prop="placeId">
+        <el-select v-model="queryParams.placeId" placeholder="请选择场所" @change="handleQuery">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <!-- <el-form-item label="磅单ID" prop="poundId">
         <el-input
           v-model="queryParams.poundId"
@@ -218,7 +228,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -285,50 +295,11 @@
         <el-form-item label="审批说明" prop="auditReason">
           <el-input v-model="form.auditReason" placeholder="请输入审批说明" />
         </el-form-item>
-        <el-form-item label="审批人2" prop="auditUser2">
-          <el-input v-model="form.auditUser2" placeholder="请输入审批人2" />
-        </el-form-item>
-        <el-form-item label="审批时间2" prop="auditTime2">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.auditTime2"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择审批时间2">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="审批结果2 1同意0不同意" prop="auditResult2">
-          <el-input v-model="form.auditResult2" placeholder="请输入审批结果2 1同意0不同意" />
-        </el-form-item>
-        <el-form-item label="审批说明2" prop="auditReason2">
-          <el-input v-model="form.auditReason2" placeholder="请输入审批说明2" />
-        </el-form-item>
-        <el-form-item label="创建时间" prop="createTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.createTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择创建时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="创建人" prop="createBy">
-          <el-input v-model="form.createBy" placeholder="请输入创建人" />
-        </el-form-item>
-        <el-form-item label="更新人" prop="updateBy">
-          <el-input v-model="form.updateBy" placeholder="请输入更新人" />
-        </el-form-item>
-        <el-form-item label="更新时间" prop="updateTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.updateTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择更新时间">
-          </el-date-picker>
-        </el-form-item>
+
+
+
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="乐观锁" prop="revision">
-          <el-input v-model="form.revision" placeholder="请输入乐观锁" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -341,6 +312,7 @@
 
 <script>
 import { listModify, getModify, delModify, addModify, updateModify } from "@/api/place/modify";
+import {getUserDepts} from "@/utils/charutils";
 
 export default {
   name: "Modify",
@@ -350,6 +322,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      depts: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -410,7 +383,12 @@ export default {
     };
   },
   created() {
-    this.getList();
+    this.depts = getUserDepts('0')
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+      this.getList();
+    }
+    //this.getList();
   },
   methods: {
     /** 查询磅单修改记录 列表 */
