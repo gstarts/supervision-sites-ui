@@ -107,7 +107,7 @@
         </el-card>
       </el-col>
       <el-card class="mb5">
-        <el-table  v-loading="loading" :data="sheetList" @selection-change="handleSelectionChange" v-show="DetailLogo">
+        <el-table  v-loading="loading" :data="sheetList" v-show="DetailLogo">
           <el-table-column type="selection" width="55" align="center" />
           <el-table-column label="收货单位" align="center" prop="receivingUnit" v-if="this.SelectPoundForm.sort =='receiving_unit'"/>
           <el-table-column label="车牌号" align="center" prop="plateNum" v-if="this.SelectPoundForm.sort =='plate_num'"/>
@@ -127,7 +127,14 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-table  v-loading="loading" :data="sheetList" @selection-change="handleSelectionChange" v-show="conditionLogo">
+        <pagination
+          v-show="DetailLogo"
+          :total="total"
+          :page.sync="SelectPoundForm.pageNum"
+          :limit.sync="SelectPoundForm.pageSize"
+          @pagination="sheetList"
+        />
+        <el-table  v-loading="loading" :data="sheetList" v-show="conditionLogo">
           <el-table-column type="selection" width="55" align="center" />
           <el-table-column label="车牌号" align="center" prop="plateNum"/>
           <el-table-column label="发货单位" align="center" prop="deliveryUnit" />
@@ -150,13 +157,20 @@
             </template>
           </el-table-column>
         </el-table>
+        <pagination
+          v-show="DetailLogo"
+          :total="total"
+          :page.sync="SelectPoundForm.pageNum"
+          :limit.sync="SelectPoundForm.pageSize"
+          @pagination="sheetList"
+        />
       </el-card>
     </div>
   </el-row>
 </template>
 
 <script>
-import { listSheet, getSheet, delSheet, addSheet, updateSheet,analysis,queryPoundStatisticsList } from "@/api/pound/poundlist";
+import { listSheet, getSheet, delSheet, addSheet, updateSheet,analysis,queryPoundStatisticsList,queryPoundStatisticsList1 } from "@/api/pound/poundlist";
 
 export default {
   name: "Sheet",
@@ -213,7 +227,7 @@ export default {
       form: {},
       //磅单查询条件
       SelectPoundForm:{
-        pageNum: 0,
+        pageNum: 1,
         pageSize: 10,
         //车牌号
         plateNum:'',
@@ -294,15 +308,23 @@ export default {
         this.loading = false;
       });
     },
+    getList1(){
+      this.loading = true;
+      queryPoundStatisticsList1(this.addDateRange(this.SelectPoundForm, this.dateRange)).then(response => {
+        this.sheetList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
     /**统计分析 */
     analysis(){
-        this.show=false
-        const form ={}
-        analysis(form).then(response=>{
-            this.analysisList= response.rows
-          console.log(response.rows)
-        })
-  },
+      this.show=false
+      const form ={}
+      analysis(form).then(response=>{
+        this.analysisList= response.rows
+        console.log(response.rows)
+      })
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -313,43 +335,42 @@ export default {
       this. SelectPoundForm={
         //车牌号
         plateNum:'',
-          //发货单位
-          deliveryUnit:'',
-          //收货单位
-          receivingUnit:'',
-          //承运单位
-          Carrier:'',
-          //货物名称
-          goodsName:'',
-          //合同号
-          ContractNo:'',
-          //货物规格
-          specification:'',
-          //流向
-          flowDirection:'',
-          //提煤单号
-          coalBillNum:'',
-          //以下为查询条件
-          //统计方式
-          statistics:'',
-          //排序方式
-          sort:'',
-          //排序方向
-          direction:'',
+        //发货单位
+        deliveryUnit:'',
+        //收货单位
+        receivingUnit:'',
+        //承运单位
+        Carrier:'',
+        //货物名称
+        goodsName:'',
+        //合同号
+        ContractNo:'',
+        //货物规格
+        specification:'',
+        //流向
+        flowDirection:'',
+        //提煤单号
+        coalBillNum:'',
+        //以下为查询条件
+        //统计方式
+        statistics:'',
+        //排序方式
+        sort:'',
+        //排序方向
+        direction:'',
       };
       this.dateRange=[];
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      // this.show=true
-      // this.queryParams.pageNum = 1;
+      this.SelectPoundForm.pageNum = 1
       if(this.SelectPoundForm.statistics=='02'){
         this.conditionLogo=false;
         this.DetailLogo=true;
-      if(this.SelectPoundForm.sort==''){
-        this.msgError("排序方式不可为空")
-        return false;
-      }
+        if(this.SelectPoundForm.sort==''){
+          this.msgError("排序方式不可为空")
+          return false;
+        }
         this.getList();
       }else if(this.SelectPoundForm.statistics=='01'){
         this.DetailLogo=false;
@@ -358,7 +379,7 @@ export default {
           this.msgError("排序方式不可为空")
           return false;
         }
-        this.getList();
+        this.getList1();
       }else{
         this.msgError("统计方式不可为空");
       }
@@ -369,36 +390,36 @@ export default {
       // this.handleQuery();
     },
     // 磅单翻译
-      poundStatusFormat(row, column) {
+    poundStatusFormat(row, column) {
       return this.selectDictLabel(this.poundStatusOptions, row.status);
     },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
-      this.multiple = !selection.length
-    },
+    // // 多选框选中数据
+    // handleSelectionChange(selection) {
+    //   this.ids = selection.map(item => item.id)
+    //   this.single = selection.length!=1
+    //   this.multiple = !selection.length
+    // },
 
     /** 申请作废按钮 */
     abolition(row) {
       const ids = row.id || this.ids;
       if(row.status !='1'){
-          this.$confirm('是否确认申请作废', "警告", {
+        this.$confirm('是否确认申请作废', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-            const form={
-                id:ids,
-                status:'1'}
+          const form={
+            id:ids,
+            status:'1'}
           return updateSheet(form);
         }).then(() => {
           this.getList();
           this.msgSuccess("申请成功");
         }).catch(function() {});
-        }else{
-            this.msgSuccess("申请中... 请稍后")
-        }
+      }else{
+        this.msgSuccess("申请中... 请稍后")
+      }
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -406,7 +427,8 @@ export default {
         ...this.queryParams
       }, `pound_sheet.xlsx`)
     }
-  }
+    },
+
 };
 </script>
 <style scoped>

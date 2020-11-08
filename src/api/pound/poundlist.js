@@ -42,10 +42,18 @@ export function addSheet(data) {
   })
 }
 
-//磅单查询页 API
+//磅单查询页(根据明细查询)
 export function queryPoundStatisticsList(data) {
   return request({
-    url: '/pound/measurement/sheet//queryPoundStatisticsList',
+    url: '/pound/measurement/sheet/queryPoundStatisticsList',
+    method: 'post',
+    data: data
+  })
+}
+//磅单查询页(根据条件查询)
+export function queryPoundStatisticsList1(data) {
+  return request({
+    url: '/pound/measurement/sheet/queryPoundStatisticsList1',
     method: 'post',
     data: data
   })
