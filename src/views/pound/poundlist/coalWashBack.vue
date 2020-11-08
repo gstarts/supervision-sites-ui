@@ -405,20 +405,20 @@
     </div>
 
     <!--磅单申请的弹出框-->
-    <el-dialog :title="title" :visible.sync="modifyOpen" append-to-body>
+    <!--<el-dialog :title="title" :visible.sync="modifyOpen" append-to-body>
       <el-form ref="formModify" :model="poundModify" :rules="rulesModify" label-width="120px">
         <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
           <el-col :span="8" :offset="2">
             车号：{{ poundModify.vehicleNo }}
-            <!--<el-form-item label="车号" prop="vehicleNo">
+            &lt;!&ndash;<el-form-item label="车号" prop="vehicleNo">
               <el-input v-model="poundModify.vehicleNo" placeholder="请输入车牌" disabled/>
-            </el-form-item>-->
+            </el-form-item>&ndash;&gt;
           </el-col>
           <el-col :span="12">
             磅单状态：{{ poundModify.poundState === '0' ? '正常' : '申请修改' }}
-            <!-- <el-form-item label="磅单状态" prop="poundState">
+            &lt;!&ndash; <el-form-item label="磅单状态" prop="poundState">
                <el-input v-model="poundModify.poundState" placeholder="请输入磅单状态" disabled/>
-             </el-form-item>-->
+             </el-form-item>&ndash;&gt;
           </el-col>
         </el-row>
         <el-row :gutter="10">
@@ -522,7 +522,7 @@
         <el-button type="primary" @click="submitModify">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog>-->
   </div>
 </template>
 
@@ -741,7 +741,7 @@ export default {
       userList: [],
       //磅单修改页面的变量
       modifyOpen: false,
-      poundModify: {
+      /*poundModify: {
         poundId: undefined,
         poundState: undefined,
         tareWeight: 0,
@@ -764,7 +764,7 @@ export default {
         modifyContainerNo2: '',
         modifyContainerNo3: '',
         modifyContainerNo4: '',
-      },
+      },*/
       //当前选中的磅单
       selectPound: {}
     }
@@ -1483,7 +1483,7 @@ export default {
         this.autoPrintText = '手动打印'
       }
     },
-    handlerModify(row) {
+    /*handlerModify(row) {
       //弹出对话框，修改磅单
       this.selectPound = row
       console.log(row)
@@ -1494,8 +1494,8 @@ export default {
       this.poundModify.netWeight = row.netWeight
       this.poundModify.vehicleNo = row.plateNum
       this.poundModify.poundState = row.status
-    },
-    submitModify() {
+    },*/
+    /*submitModify() {
       console.log('提交')
       //加验证，提交
       this.$refs["formModify"].validate((valid) => {
@@ -1504,12 +1504,11 @@ export default {
             if (response.code === 200) {
               this.$message.success(response.msg)
               //把磅单状态变成1
-
             }
           })
         }
       })
-    }
+    },*/
   }
 }
 
