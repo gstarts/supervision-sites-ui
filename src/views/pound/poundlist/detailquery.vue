@@ -7,36 +7,36 @@
             <span>排序条件:</span>
           </el-col>
           <el-form :model="SelectPoundForm"  ref="SelectPoundForm" :inline="true" label-width="68px">
-          <el-form-item label="统计方式" prop="statistics">
-            <el-select v-model="SelectPoundForm.statistics" placeholder="请选择统计方式">
-              <el-option
-                v-for="dept in PoundInquireStatisticsOptions"
-                :key="dept.dictValue"
-                :label="dept.dictLabel"
-                :value="dept.dictValue"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="排序方式" prop="sort">
-            <el-select v-model="SelectPoundForm.sort" placeholder="请选择排序方式">
-              <el-option
-                v-for="dept in PoundInquireSortOptions"
-                :key="dept.dictValue"
-                :label="dept.dictLabel"
-                :value="dept.dictValue"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="排序方向" prop="direction">
-            <el-select v-model="SelectPoundForm.direction" placeholder="请选择排序方向">
-              <el-option
-                v-for="dept in PoundInquireDirectionOptions"
-                :key="dept.dictValue"
-                :label="dept.dictLabel"
-                :value="dept.dictValue"
-              />
-            </el-select>
-          </el-form-item>
+            <el-form-item label="统计方式" prop="statistics">
+              <el-select v-model="SelectPoundForm.statistics" placeholder="请选择统计方式">
+                <el-option
+                  v-for="dept in PoundInquireStatisticsOptions"
+                  :key="dept.dictValue"
+                  :label="dept.dictLabel"
+                  :value="dept.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="排序方式" prop="sort">
+              <el-select v-model="SelectPoundForm.sort" placeholder="请选择排序方式">
+                <el-option
+                  v-for="dept in PoundInquireSortOptions"
+                  :key="dept.dictValue"
+                  :label="dept.dictLabel"
+                  :value="dept.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="排序方向" prop="SelectPoundForm.direction">
+              <el-select v-model="SelectPoundForm.direction" placeholder="请选择排序方向">
+                <el-option
+                  v-for="dept in PoundInquireDirectionOptions"
+                  :key="dept.dictValue"
+                  :label="dept.dictLabel"
+                  :value="dept.dictValue"
+                />
+              </el-select>
+            </el-form-item>
             <el-button type="primary" icon="el-icon-search" size="small"  @click="handleQuery">搜索</el-button>
             <el-button type="warning" icon="el-icon-refresh" size="small"  @click="resetQuery">重置</el-button>
           </el-form>
@@ -48,22 +48,22 @@
           <el-form :model="SelectPoundForm" ref="SelectPoundForm" :inline="true" label-width="68px">
             <el-col :span="24">
             </el-col>
-            <el-form-item label="车牌号码" prop="plateNum">
+            <el-form-item label="车牌号码" prop="SelectPoundForm.plateNum">
               <el-input v-model="SelectPoundForm.plateNum" placeholder="流水车号" clearable></el-input>
             </el-form-item>
-            <el-form-item label="发货单位" prop="deliveryUnit">
+            <el-form-item label="发货单位" prop="SelectPoundForm.deliveryUnit">
               <el-input v-model="SelectPoundForm.deliveryUnit" placeholder="流水车号" clearable></el-input>
             </el-form-item>
-            <el-form-item label="收货单位" prop="receivingUnit">
+            <el-form-item label="收货单位" prop="SelectPoundForm.receivingUnit">
               <el-input v-model="SelectPoundForm.receivingUnit" placeholder="流水车号" clearable></el-input>
             </el-form-item>
-            <el-form-item label="货物名称" prop="goodsName">
+            <el-form-item label="货物名称" prop="SelectPoundForm.goodsName">
               <el-input v-model="SelectPoundForm.goodsName" placeholder="流水车号" clearable></el-input>
             </el-form-item>
-            <el-form-item label="货物规格" prop="specification">
+            <el-form-item label="货物规格" prop="SelectPoundForm.specification">
               <el-input v-model="SelectPoundForm.specification" placeholder="流水车号" clearable></el-input>
             </el-form-item>
-            <el-form-item label="流向" prop="flowDirection">
+            <el-form-item label="流向" prop="SelectPoundForm.flowDirection">
               <el-select v-model="SelectPoundForm.flowDirection" placeholder="请选择流向">
                 <el-option
                   v-for="dept in stationIOFlagOptions"
@@ -73,7 +73,7 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="出入库" prop="viaType">
+            <el-form-item label="出入库" prop="SelectPoundForm.viaType">
               <el-select v-model="SelectPoundForm.viaType" placeholder="请选择流向">
                 <el-option
                   v-for="dept in stationViaTypeOptions"
@@ -83,7 +83,7 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="提煤单号" prop="coalBillNum">
+            <el-form-item label="提煤单号" prop="SelectPoundForm.coalBillNum">
               <el-input v-model="SelectPoundForm.coalBillNum" placeholder="流水车号" clearable></el-input>
             </el-form-item>
             <el-form-item label="日期" prop="keeper" >
@@ -95,20 +95,24 @@
                 value-format="yyyy-MM-dd HH:mm:ss"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
-                :default-time="['06:00:00']"
+                :default-time="['00:00:00']"
               ></el-date-picker>
             </el-form-item>
           </el-form>
         </el-card>
       </el-col>
       <el-card class="mb5">
-        <el-table  v-loading="loading" :data="sheetList" v-show="conditionLogo">
-          <el-table-column label="收货单位" align="center" prop="receivingUnit" v-if="this.SelectPoundForm.sort =='receiving_unit'"/>
-          <el-table-column label="车牌号" align="center" prop="plateNum" v-if="this.SelectPoundForm.sort =='plate_num'"/>
-          <el-table-column label="车数" align="center" prop="countPlateNum" />
+        <el-table  v-loading="loading" :data="sheetList" v-show="DetailLogo">
+          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column label="车牌号" align="center" prop="plateNum"/>
+          <el-table-column label="发货单位" align="center" prop="deliveryUnit" />
+          <el-table-column label="收货单位" align="center" prop="receivingUnit"/>
+          <el-table-column label="货物名称" align="center" prop="goodsName" />
           <el-table-column label="毛重" align="center" prop="grossWeight" />
           <el-table-column label="皮重" align="center" prop="tare" />
           <el-table-column label="净重" align="center" prop="netWeight" />
+          <el-table-column label="进场时间" align="center" prop="createTime" />
+          <el-table-column label="出场时间" align="center" prop="updateTime" />
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
             <template slot-scope="scope">
               <el-button
@@ -122,7 +126,7 @@
           </el-table-column>
         </el-table>
         <pagination
-          v-show="conditionLogo"
+          v-show="DetailLogo"
           :total="total"
           :page.sync="SelectPoundForm.pageNum"
           :limit.sync="SelectPoundForm.pageSize"
@@ -134,8 +138,7 @@
 </template>
 
 <script>
-import { listSheet, getSheet, delSheet, addSheet, updateSheet,analysis,queryPoundStatisticsList} from "@/api/pound/poundlist";
-
+import { listSheet, getSheet, delSheet, addSheet, updateSheet,analysis,queryPoundStatisticsList,queryPoundStatisticsList1 } from "@/api/pound/poundlist";
 export default {
   name: "Sheet",
   data() {
@@ -237,10 +240,10 @@ export default {
   },
   created() {
     //磅单状态
-       this.getDicts("pound_measurement_status").then(response => {
+    this.getDicts("pound_measurement_status").then(response => {
       this.poundStatusOptions = response.data;
     });
-       //流向
+    //流向
     this.getDicts("station_IO_flag").then(response => {
       this.stationIOFlagOptions = response.data;
     });
@@ -249,7 +252,7 @@ export default {
       this.stationViaTypeOptions = response.data;
     });
     //统计方式
-    this.getDicts("Pound_Inquire_statistics").then(response => {
+    this.getDicts("Pound_Inquire_detail_statistics").then(response => {
       this.PoundInquireStatisticsOptions = response.data;
     });
     //排序方式
@@ -263,9 +266,10 @@ export default {
   },
   methods: {
     /** 查询计量单列表 */
-    getList() {
+
+    getList1(){
       this.loading = true;
-      queryPoundStatisticsList(this.addDateRange(this.SelectPoundForm, this.dateRange)).then(response => {
+      queryPoundStatisticsList1(this.addDateRange(this.SelectPoundForm, this.dateRange)).then(response => {
         this.sheetList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -319,17 +323,15 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.SelectPoundForm.pageNum = 1
-      if(this.SelectPoundForm.statistics=='02'){
-        this.conditionLogo=true;
-        this.DetailLogo=false;
+if(this.SelectPoundForm.statistics=='01'){
+        this.DetailLogo=true;
         if(this.SelectPoundForm.sort==''){
           this.msgError("排序方式不可为空")
           return false;
         }
-        this.getList();
+        this.getList1();
       }else{
-        this.msgError("统计方式不可为空")
-        return false;
+        this.msgError("统计方式不可为空");
       }
     },
     /** 重置按钮操作 */
@@ -362,7 +364,7 @@ export default {
             status:'1'}
           return updateSheet(form);
         }).then(() => {
-          this.getList();
+          this.getList1();
           this.msgSuccess("申请成功");
         }).catch(function() {});
       }else{
@@ -375,7 +377,7 @@ export default {
         ...this.queryParams
       }, `pound_sheet.xlsx`)
     }
-    },
+  },
 
 };
 </script>
