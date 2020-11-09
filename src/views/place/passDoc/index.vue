@@ -111,6 +111,13 @@
             v-hasPermi="['place:passDoc:remove']"
           >删除
           </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDownload(scope.row)"
+          >下载
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -183,7 +190,10 @@
           </el-col>
           <el-col :span="2">
             <el-upload
-              action="uploadAction"
+              ref="upload"
+              style="width: 100%"
+              :action=uploadAction
+              :headers="headers"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :on-success="uploadSuccess"
@@ -270,15 +280,16 @@ export default {
       // 煤种
       coalTypeOptions: [],
       /***上传参数start ***/
-      uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/place/upload',
+      uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/place/upload/anyFile',
       uploadData: {},
       uploading: false,
       fileList: [],
       headers: {
         'Authorization': '',
         'placeId': '',
-        'bucketName': '',
-        'filename':''
+        'bucketName': 'place',
+        'mode':'pass',
+        'filename':'pass'
       },
       /***上传参数end ***/
       // 表单校验
@@ -416,41 +427,32 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function() {
-
-      // if (this.$refs.upload.$refs['upload-inner'].fileList.length === 1) {
-      //   this.uploading = true
-      //   this.headers.Authorization = 'Bearer ' + getToken()
-      //   this.headers.placeId = this.queryParams.placeId
-      //   console.log('this.form.templateType=' + this.form.templateType)
-      //   this.headers.templateType = this.form.templateType
-      //   this.headers.bucketName = 'place'
-      //   this.$refs.upload.submit();
-      // }
-
-      this.$refs['form'].validate(valid => {
-        if (valid) {
-          if (this.form.passVolume > this.form.release) {
-            return this.msgError('可放行量不足！请联系客户')
+      console.log(this.form)
+        this.$refs['form'].validate(valid => {
+          if (valid) {
+            if (this.form.passVolume > this.form.release) {
+              return this.msgError('可放行量不足！请联系客户')
+            }
+            if (this.form.id != undefined) {
+              updatePassDoc(this.form).then(response => {
+                if (response.code === 200) {
+                  this.msgSuccess('修改成功')
+                  this.open = false
+                  this.getList()
+                }
+              })
+            } else {
+              addPassDoc(this.form).then(response => {
+                if (response.code === 200) {
+                  this.msgSuccess('新增成功')
+                  this.open = false
+                  this.getList()
+                }
+              })
+            }
           }
-          if (this.form.id != undefined) {
-            updatePassDoc(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess('修改成功')
-                this.open = false
-                this.getList()
-              }
-            })
-          } else {
-            addPassDoc(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess('新增成功')
-                this.open = false
-                this.getList()
-              }
-            })
-          }
-        }
-      })
+        })
+
     },
     /** 删除按钮操作 */
     handleDelete(row) {
@@ -488,8 +490,25 @@ export default {
 
     },
     // 文件上传成功
-    uploadSuccess(){
-
+    uploadSuccess(response){
+      if (response.code !== 200) {
+        this.$message.error(response.msg)
+        this.uploading = false
+        return false
+      }
+      this.$message.success("上传成功")
+      this.uploading = true
+      this.$refs.upload.clearFiles()
+      // 路径+文件名
+      this.form.minObjectName = response.data.objectName
+      // 文件名
+      this.form.minFileName = response.data.name
+      // 文件长度
+      this.form.minFileLength = response.data.length
+      // 桶名
+      this.form.minBucketName = response.data.bucketName
+      // 路径
+      this.form.minPath=response.data.path
     },
     beforeRemove(){
 
@@ -497,8 +516,17 @@ export default {
     handleExceed(){
 
     },
+    uploadError(err) {
+      this.uploading = false
+      console.log(err)
+      this.$message.error('文件上传失败')
+    },
     /***上传end ***/
 
+    /** 文件下载 */
+    handleDownload(row) {
+      window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=' + row.minBucketName + '&objectName=' + row.minObjectName
+    },
     // 下拉列表改变时激活
     change(val, name) {
       // 场所
