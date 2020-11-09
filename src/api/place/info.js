@@ -87,3 +87,63 @@ export function statistics(params) {
   })
 }
 
+export function statisticsMonth(params) {
+  return request({
+    url: '/place/notice/statisticsMonth',
+    method: 'post',
+    data: params
+  })
+}
+
+export function statisticsDay(params) {
+  return request({
+    url: '/place/notice/statisticsDay',
+    method: 'post',
+    data: params
+  })
+}
+
+export function statisticsThree(params) {
+  return request({
+    url: '/place/notice/statisticsThree',
+    method: 'post',
+    data: params
+  })
+}
+
+export function statisticsFour(params) {
+  return request({
+    url: '/place/notice/statisticsFour',
+    method: 'post',
+    data: params
+  })
+}
+export function statisticsFive(params) {
+  return request({
+    url: '/place/notice/statisticsFive',
+    method: 'post',
+    data: params
+  })
+}
+
+
+export function statisticsSix(params) {
+  return request({
+    url: '/place/notice/statisticsSix',
+    method: 'post',
+    data: params
+  })
+}
+
+export function statisticsSeven(params) {
+  return request({
+    url: '/place/notice/statisticsSeven',
+    method: 'post',
+    data: params
+  })
+}
+
+
+
+
+
