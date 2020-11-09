@@ -17,7 +17,7 @@ export function getModify(id) {
   })
 }
 
-// 新增磅单修改记录 
+// 新增磅单修改记录
 export function addModify(data) {
   return request({
     url: '/place/modify',
@@ -26,7 +26,15 @@ export function addModify(data) {
   })
 }
 
-// 修改磅单修改记录 
+export function applyModify(data) {
+  return request({
+    url: '/place/modify/apply',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改磅单修改记录
 export function updateModify(data) {
   return request({
     url: '/place/modify',
@@ -35,7 +43,15 @@ export function updateModify(data) {
   })
 }
 
-// 删除磅单修改记录 
+export function auditModify(data) {
+  return request({
+    url: '/place/modify/audit',
+    method: 'put',
+    data: data
+  })
+}
+
+// 删除磅单修改记录
 export function delModify(id) {
   return request({
     url: '/place/modify/' + id,
