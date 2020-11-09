@@ -135,15 +135,6 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['place:modify:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="success"
           icon="el-icon-edit"
           size="mini"
@@ -211,20 +202,13 @@
       <el-table-column label="乐观锁" align="center" prop="revision" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
-          <el-button
+          <el-button v-show="scope.row.auditState === '0'"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['place:modify:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['place:modify:remove']"
-          >删除</el-button>
+            v-hasPermi="['place:modify:audit']"
+          >审批</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -240,7 +224,10 @@
     <!-- 添加或修改磅单修改记录 对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="磅单ID" prop="poundId">
+
+        {{selectModify}}
+        <!--显示磅单相关信息-->
+       <!-- <el-form-item label="磅单ID" prop="poundId">
           <el-input v-model="form.poundId" placeholder="请输入磅单ID" />
         </el-form-item>
         <el-form-item label="磅单状态 I进场，E出场" prop="poundState">
@@ -277,8 +264,8 @@
         </el-form-item>
         <el-form-item label="申请说明" prop="applyReason">
           <el-input v-model="form.applyReason" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="审批人" prop="auditUser">
+        </el-form-item>-->
+       <!-- <el-form-item label="审批人" prop="auditUser">
           <el-input v-model="form.auditUser" placeholder="请输入审批人" />
         </el-form-item>
         <el-form-item label="审批时间" prop="auditTime">
@@ -288,18 +275,19 @@
             value-format="yyyy-MM-dd"
             placeholder="选择审批时间">
           </el-date-picker>
-        </el-form-item>
-        <el-form-item label="审批状态 0申请中，1通过，2不通过" prop="auditState">
-          <el-input v-model="form.auditState" placeholder="请输入审批状态 0申请中，1通过，2不通过" />
+        </el-form-item>-->
+        <el-form-item label="审批" prop="auditState">
+          <el-select v-model="form.auditState" placeholder="请选择审批结果">
+            <el-option
+              v-for="dept in auditStateFormDic"
+              :key="dept.key"
+              :label="dept.value"
+              :value="dept.key"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="审批说明" prop="auditReason">
-          <el-input v-model="form.auditReason" placeholder="请输入审批说明" />
-        </el-form-item>
-
-
-
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.auditReason" type="textarea" placeholder="请输入审批说明" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -311,7 +299,7 @@
 </template>
 
 <script>
-import { listModify, getModify, delModify, addModify, updateModify } from "@/api/place/modify";
+import {listModify, getModify, delModify, addModify, updateModify, auditModify} from "@/api/place/modify";
 import {getUserDepts} from "@/utils/charutils";
 
 export default {
@@ -358,13 +346,16 @@ export default {
         auditTime2: undefined,
         auditResult2: undefined,
         auditReason2: undefined,
-        revision: undefined
+        revision: undefined,
+        orderByColumn: 'id',
+        isAsc: 'desc'
       },
+      selectModify: {},
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        poundId: [
+       /* poundId: [
           { required: true, message: "磅单ID不能为空", trigger: "blur" }
         ],
         modifyTareWeight: [
@@ -378,8 +369,19 @@ export default {
         ],
         applyUser: [
           { required: true, message: "申请用户不能为空", trigger: "blur" }
-        ],
-      }
+        ],*/
+        auditState: [{ required: true, message: "审批结果不能为空", trigger: "change" }],
+        auditReason: [{ required: true, message: "审批说明不能为空", trigger: "blur" }]
+      },
+      auditStateTopDic: [
+        {'key':'0','value':'申请中'},
+        {'key':'1','value':'审批通过'},
+        {'key':'2','value':'审批不通过'},
+      ],
+      auditStateFormDic: [
+        {'key':'1','value':'通过'},
+        {'key':'2','value':'不通过'},
+      ]
     };
   },
   created() {
@@ -433,7 +435,6 @@ export default {
         updateBy: undefined,
         updateTime: undefined,
         remark: undefined,
-        revision: undefined
       };
       this.resetForm("form");
     },
@@ -463,10 +464,13 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
+      this.selectModify = row
       getModify(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改磅单修改记录 ";
+        this.title = "审批磅单修改申请";
+        this.form.auditState = '1' //默认给通过状态
+
       });
     },
     /** 提交按钮 */
@@ -474,9 +478,9 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateModify(this.form).then(response => {
+            auditModify(this.form).then(response => {
               if (response.code === 200) {
-                this.msgSuccess("修改成功");
+                this.msgSuccess("审批完成");
                 this.open = false;
                 this.getList();
               }

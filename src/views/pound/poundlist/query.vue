@@ -14,6 +14,7 @@
                 :key="dept.dictValue"
                 :label="dept.dictLabel"
                 :value="dept.dictValue"
+                value-key="dept[0].dictValue"
               />
             </el-select>
           </el-form-item>
@@ -251,6 +252,7 @@ export default {
     //统计方式
     this.getDicts("Pound_Inquire_statistics").then(response => {
       this.PoundInquireStatisticsOptions = response.data;
+      this.SelectPoundForm.statistics=this.PoundInquireStatisticsOptions[0].dictLabel;
     });
     //排序方式
     this.getDicts("Pound_Inquire_sort").then(response => {
@@ -319,7 +321,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.SelectPoundForm.pageNum = 1
-      if(this.SelectPoundForm.statistics=='02'){
+      if(this.SelectPoundForm.statistics=='02' || this.SelectPoundForm.statistics == '按条件统计'){
         this.conditionLogo=true;
         this.DetailLogo=false;
         if(this.SelectPoundForm.sort==''){
