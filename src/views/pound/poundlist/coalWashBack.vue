@@ -432,7 +432,7 @@ export default {
   name: "Client",
   data() {
     return {
-      isProduct: true,
+      isProduct: true,//开发时可以设置为false
       printObj: {
         id: '#dayin',
         endCallback: (err => {
@@ -660,8 +660,8 @@ export default {
         //保存 form中的三个值
         this.$store.dispatch('SetPoundConfig', this.PoundForm)
         setPoundConfig(JSON.stringify(this.PoundForm))
-        console.log('保存this.PoundForm')
-        console.log(this.PoundForm)
+        //console.log('保存this.PoundForm')
+        //console.log(this.PoundForm)
       },
       deep: true,
       immediate: false
@@ -714,8 +714,8 @@ export default {
       if (storePoundConfig && storePoundConfig !== '') {
         this.PoundForm = {...storePoundConfig}
       }
-      console.log(this.PoundForm)
-      console.log('config')
+      //console.log(this.PoundForm)
+      //console.log('config')
       if (this.PoundForm.channelNumber && this.PoundForm.channelNumber !== '') {
         //this.$refs['channelNo'].change()
         this.ChannelNumberChange(this.PoundForm.channelNumber)
@@ -842,7 +842,7 @@ export default {
     //双击列表赋值form表单
     dbRow(row, column) {
       this.form = row;
-      console.log(this.form)
+      //console.log(this.form)
       //this.form
     },
     // 打印按钮
@@ -853,7 +853,7 @@ export default {
     created() {
       listChnlConfig(this.queryParams).then((response) => {
         this.chnlConfigList = response.rows;
-        console.log(this.chnlConfigList)
+        //console.log(this.chnlConfigList)
         //初始值不给通道号了 页面刷新有问题
         //this.PoundForm.channelNumber = this.chnlConfigList[0].cChnlNo
         //this.total = response.total;
@@ -981,7 +981,7 @@ export default {
                 if (response.code === 200) {
                   this.msgSuccess("进场成功");
                   //更新单证入场时间
-                  console.log(response)
+                  //console.log(response)
                   this.updateDocTime(response.data.poundId)
                   this.dataLoading = false
                   //更新
@@ -1207,7 +1207,7 @@ export default {
 //查询可用的库位
     getStoreCode(placeId) {
       getStoreUsable(placeId).then(response => {
-        console.log(response)
+        //console.log(response)
         if (response.code === 200) {
           this.storeList = response.data
         }
@@ -1215,7 +1215,7 @@ export default {
     },
     vehicleChange() {
       this.flowCheck()
-      console.log(this.PoundForm.flowDirection)
+      //console.log(this.PoundForm.flowDirection)
       /*if (this.PoundForm.stationViaType === '01' && this.PoundForm.flowDirection === 'E') { //重进空出
         this.showStore = true
         this.form.locationNumber = undefined;
@@ -1225,7 +1225,7 @@ export default {
       }*/
 
 
-      console.log("调用")
+      //console.log("调用")
       /*** 调用获取进出场列表 */
       this.queryParams = {
         pageNum: 1,
@@ -1317,7 +1317,7 @@ export default {
         'vehicleNo': this.form.plateNum,
         'poundId': poundId
       }
-      console.log(data)
+      //console.log(data)
       updateDocTime(data)
     },
     //翻译通道号
@@ -1348,7 +1348,6 @@ export default {
     handleKeyDown(e) {
       let key = window.event.keyCode ? window.event.keyCode : window.event.which
       if (key === 13) {
-
         e.preventDefault() //取消浏览器原有的ctrl+s操作
       }
     },
@@ -1360,7 +1359,7 @@ export default {
         e.preventDefault()
         this.AllADD()
       }
-      if (key === 115) {
+      if (key === 115) {//F4
         e.preventDefault()
         this.cancel()
       }
@@ -1377,7 +1376,6 @@ export default {
       }
     },
     tableRowClassName({row, rowIndex}) {
-      console.log(row)
       if (row.status !== '0') {
         return 'warning-row';
       }
