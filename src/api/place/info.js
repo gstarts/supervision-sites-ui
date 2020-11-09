@@ -44,28 +44,29 @@ export function delplace_info(id) {
 }
 
 export function getNoticeByVehicle(placeId, direction, vehicleNo) {
-	let data = {
-		'placeId': placeId,
-		'direction': direction,
-		'vehicleNo': vehicleNo,
-	}
-	return request({
-		url: '/place/notice/getNoticeInfo',
-		method: 'post',
-		data: data
-	})
-}
-export function genStoreDoc(params) {
-	return request({
-		url: '/place/notice/doc',
-		method: 'post',
-		data: params
-	})
+  let data = {
+    'placeId': placeId,
+    'direction': direction,
+    'vehicleNo': vehicleNo,
+  }
+  return request({
+    url: '/place/notice/getNoticeInfo',
+    method: 'post',
+    data: data
+  })
 }
 
-export function getVehicleList(placeId, type) {
+export function genStoreDoc(params) {
   return request({
-    url: '/place/notice/vehicleNo/' + placeId + '/' + type,
+    url: '/place/notice/doc',
+    method: 'post',
+    data: params
+  })
+}
+
+export function getVehicleList(placeId, type, direction) {
+  return request({
+    url: '/place/notice/vehicleNo/' + placeId + '/' + type + '/' + direction,
     method: 'get'
   })
 }
@@ -85,4 +86,64 @@ export function statistics(params) {
     data: params
   })
 }
+
+export function statisticsMonth(params) {
+  return request({
+    url: '/place/notice/statisticsMonth',
+    method: 'post',
+    data: params
+  })
+}
+
+export function statisticsDay(params) {
+  return request({
+    url: '/place/notice/statisticsDay',
+    method: 'post',
+    data: params
+  })
+}
+
+export function statisticsThree(params) {
+  return request({
+    url: '/place/notice/statisticsThree',
+    method: 'post',
+    data: params
+  })
+}
+
+export function statisticsFour(params) {
+  return request({
+    url: '/place/notice/statisticsFour',
+    method: 'post',
+    data: params
+  })
+}
+export function statisticsFive(params) {
+  return request({
+    url: '/place/notice/statisticsFive',
+    method: 'post',
+    data: params
+  })
+}
+
+
+export function statisticsSix(params) {
+  return request({
+    url: '/place/notice/statisticsSix',
+    method: 'post',
+    data: params
+  })
+}
+
+export function statisticsSeven(params) {
+  return request({
+    url: '/place/notice/statisticsSeven',
+    method: 'post',
+    data: params
+  })
+}
+
+
+
+
 

@@ -4,15 +4,13 @@
       :model="queryParams"
       ref="queryForm"
       :inline="true"
-      label-width="68px"
-    >
+      label-width="68px">
       <el-form-item label="场所" prop="placeId">
         <el-select
-          @change="handleQuery"
+          @change="placeChange"
           v-model="queryParams.placeId"
           placeholder="请选择场所"
-          size="small"
-        >
+          size="small">
           <el-option
             v-for="dept in depts"
             :key="dept.deptId"
@@ -40,22 +38,46 @@
         />
       </el-form-item>-->
       <el-form-item label="寄舱客户" prop="checkConsumer">
-        <el-input
+        <el-select clearable
           v-model="queryParams.checkConsumer"
-          placeholder="请输入寄舱客户"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          placeholder="请选择寄舱客户"
+          size="small">
+          <el-option
+            v-for="dept in customerList"
+            :key="dept.customerName"
+            :label="dept.customerName"
+            :value="dept.customerName"
+          />
+        </el-select>
+
       </el-form-item>
       <el-form-item label="寄舱合同" prop="checkContractNo">
-        <el-input
+        <el-select clearable
           v-model="queryParams.checkContractNo"
-          placeholder="请输入寄舱合同号"
+          placeholder="请选择寄舱合同"
+          size="small">
+          <el-option
+            v-for="dept in contractList"
+            :key="dept.contractNo"
+            :label="dept.contractNo"
+            :value="dept.contractNo"
+          />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="品名" prop="goodsName">
+        <el-select
           clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          v-model="queryParams.goodsName"
+          placeholder="请选择品名"
+          size="small">
+          <el-option
+            v-for="dict in goodsNameList"
+            :key="dict.dictLabel"
+            :label="dict.dictLabel"
+            :value="dict.dictLabel"
+          />
+        </el-select>
       </el-form-item>
       <!--<el-form-item label="蒙方磅单号" prop="mongoliaBillNo">
         <el-input
@@ -71,9 +93,7 @@
           v-model="queryParams.vehicleNo"
           placeholder="请输入车号"
           clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          size="small"/>
       </el-form-item>
       <!--<el-form-item label="挂车号1 挂车号1" prop="trailerNo1">
         <el-input
@@ -242,7 +262,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item label="生成时间" prop="genTime">
+      <!--<el-form-item label="生成时间" prop="genTime">
         <el-date-picker
           clearable
           size="small"
@@ -253,7 +273,7 @@
           placeholder="选择生成时间"
         >
         </el-date-picker>
-      </el-form-item>
+      </el-form-item>-->
       <!-- <el-form-item label="生成人" prop="genBy">
         <el-input
           v-model="queryParams.genBy"
@@ -304,7 +324,6 @@
           placeholder="请输入库位号"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <!--<el-form-item label="库位号2" prop="storeCode2">
@@ -363,7 +382,6 @@
       </el-form-item>-->
       <el-form-item label="状态" prop="storeState">
         <el-select
-          @change="handleQuery"
           clearable
           v-model="queryParams.storeState"
           placeholder="请选择状态"
@@ -377,6 +395,30 @@
           />
         </el-select>
       </el-form-item>
+
+      <!--<el-form-item label="时间" prop="timeType">
+        <el-select
+          @change="setTime"
+          clearable
+          v-model="queryParams.remark"
+          placeholder="请选择时间"
+          size="small">
+          <el-option
+            v-for="time in timeDic"
+            :key="time.key"
+            :label="time.value"
+            :value="time.key"
+          />
+        </el-select>
+        <el-date-picker
+          v-model="dateRange"
+          type="daterange"
+          value-format="yyyy-MM-dd"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期">
+        </el-date-picker>
+      </el-form-item>-->
       <!--<el-form-item label="文件ID" prop="fileId">
         <el-input
           v-model="queryParams.fileId"
@@ -613,8 +655,7 @@
                 clearable
                 v-model="form.checkConsumer"
                 placeholder="请选择寄舱客户"
-                @change="changeCustomer"
-              >
+                @change="changeCustomer">
                 <el-option
                   v-for="type in customerList"
                   :key="type.customerName"
@@ -653,7 +694,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-
         <el-row :gutter="10">
           <el-col :span="11">
             <el-form-item label="车号" prop="vehicleNo">
@@ -925,6 +965,11 @@ export default {
   },
   data() {
     return {
+      dateRange: ['',''],
+      timeDic: [
+        {'key':'1','value':'进场时间'},
+        {'key':'0','value':'出场时间'}
+      ],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -943,6 +988,7 @@ export default {
         {value: "0", label: "出库派车单"},
       ],
       storeIds: [],
+      contractList: [],
       customerList: [], //寄舱客户列表
       contractSubList: [], //合同子集，在选定寄舱客户时，从合同表里取出对应客户的合同放入到这个集合中
       // 弹出层标题
@@ -955,7 +1001,7 @@ export default {
         pageSize: 20,
         placeId: undefined,
         docNo: undefined,
-        //storeCode: undefined,
+        remark: undefined,
         checkConsumer: undefined,
         checkContractNo: undefined,
         mongoliaBillNo: undefined,
@@ -997,11 +1043,14 @@ export default {
         fileId: undefined,
         passNo: undefined,
         revision: undefined,
+        beginTime: undefined,
+        endTime: undefined,
         orderByColumn: "id",
         isAsc: "desc",
       },
       // 表单参数
       form: {},
+      goodsNameList: [],
       // 表单校验
       rules: {
         docNo: [
@@ -1028,7 +1077,7 @@ export default {
         ],
         vehicleNo: [
           {required: true, message: "车号不能为空", trigger: "blur"},
-          {min: 7, max: 7, message: "请输入7位有效车号", trigger: "blur"}
+          {min: 7, max: 8, message: "请输入7位有效车号", trigger: "blur"}
         ],
         mongoliaNetWeight: [
           {required: true, message: "蒙方净重不能为空", trigger: "blur"},
@@ -1047,17 +1096,35 @@ export default {
     };
   },
   created() {
+    this.dateRange = ['','']
+    //this.queryParams.beginTime = this.dateRange[0]
+    //this.queryParams.endTime = this.dateRange[1]
     this.depts = getUserDepts("0");
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId;
       this.getList();
       this.getContract(this.queryParams.placeId, "1");
     }
+    //煤种 品名
+    this.getDicts("coal_type").then(response => {
+      this.goodsNameList = response.data;
+    });
   },
   methods: {
     /** 查询入库通知单列表 */
     getList() {
       this.loading = true;
+
+      if(this.queryParams.remark && this.queryParams.remark !== '' ){
+          if(this.dateRange[0] !=='' && this.dateRange[1]!== ''){
+            this.queryParams.beginTime = this.dateRange[0]
+            this.queryParams.endTime = this.dateRange[1]
+          }else{
+            this.queryParams.remark = undefined
+            this.queryParams.beginTime = undefined
+            this.queryParams.endTime = undefined
+          }
+      }
       listInstoreDoc(this.queryParams).then((response) => {
         this.instoreDocList = response.rows;
         this.total = response.total;
@@ -1131,8 +1198,7 @@ export default {
       this.queryParams.pageNum = 1;
       this.form.placeId = this.queryParams.placeId
       this.getList();
-      this.getContract(this.queryParams.placeId, "1"); //加载这个场所下的合同
-
+      //this.getContract(this.queryParams.placeId, "1"); //加载这个场所下的合同
     },
     /** 重置按钮操作 */
     resetQuery() {
@@ -1288,6 +1354,16 @@ export default {
     mengwenInput(input) {
       this.form.vehicleNo = input;
     },
+    setTime(event){
+      console.log(event)
+      if(event==''){
+        this.dateRange = ['','']
+      }
+    },
+    placeChange(){
+      this.getContract()
+      this.getList()
+    }
   },
 };
 </script>

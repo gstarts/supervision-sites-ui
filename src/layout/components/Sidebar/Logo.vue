@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: '监管场所管理系统',
+      title: '仓储管理系统',
       logo: logoImg
     }
   }
@@ -57,10 +57,11 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       vertical-align: middle;
       margin-right: 12px;
+      margin-top: -2px;
     }
 
     & .sidebar-title {

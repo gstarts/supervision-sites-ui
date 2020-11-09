@@ -168,6 +168,20 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="是否申报海关" prop="reportType">
+              <el-select v-model="form.reportType" filterable placeholder="请选择是否申报海关">
+                <el-option
+                  v-for="item in reportTypes"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -225,6 +239,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+            <el-form-item label="申报海关" prop="reportType">
+              <el-select v-model="form.reportType" filterable placeholder="请选择是否申报海关">
+                <el-option
+                  v-for="item in reportTypes"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
       </el-form>
     </el-dialog>
 
@@ -282,6 +306,11 @@ export default {
         { value: '2', label: '散杂货' },
         { value: '1', label: '集装箱' }
       ],
+      // 是否申报海关
+      reportTypes: [
+        { value: '0', label: '不申报' },
+        { value: '1', label: '申报' }
+      ],
       // 表单校验
       rules: {
         placeId: [
@@ -300,6 +329,9 @@ export default {
         ],
         plateNo: [
           { required: true, message: '车牌号不能为空', trigger: 'blur' }
+        ],
+        reportType: [
+          { required: true, message: '是否申报海关不能为空', trigger: 'blur' }
         ],
         transportNum: [
           { required: true, message: '运输次数不能为空', trigger: 'blur' }
@@ -379,7 +411,7 @@ export default {
         updateTime: undefined,
         remark: undefined,
         revision: undefined,
-        type:'S'
+        type:'2' //散货
       }
       this.resetForm('form')
     },
@@ -482,10 +514,10 @@ export default {
     },
     // 提交上传文件
     submitFileForm() {
-      if (this.form.coalBillNo&&this.form.placeId) {
+      if (this.form.coalBillNo&&this.form.placeId&&this.form.reportType) {
         this.$refs.upload.submit()
       } else {
-        this.$alert('请选择场所和提煤单号')
+        this.$alert('请选择场所和提煤单号和是否申报海关')
       }
     },
     change(val, name) {

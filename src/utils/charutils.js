@@ -19,8 +19,6 @@ export function genNumChar(start,end,prefix){
         }else{
         numArr.push({'key':i,'value': i<10?+'0'+i:i})
         }
-
-
     }
     return numArr
 }
@@ -31,9 +29,6 @@ export function getUserDepts(deptType){
     let depts = []
     let dept = store.getters.dept
     //debugger
-    console.log('部门')
-    console.log(dept)
-
     // 0 监管场所，1保税库，2堆场，3企业
     //如果所属部门是堆场，加入列表
     if(dept.deptType == deptType){

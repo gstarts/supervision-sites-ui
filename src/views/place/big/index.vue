@@ -200,11 +200,6 @@
       <el-form ref="form" :model="form" :rules="rules" size="mini" label-width="120px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="提煤单号" prop="coalBillNo">
-              <el-input v-model="form.coalBillNo" placeholder="请输入放行单号"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
             <el-form-item label="所属场所" prop="placeId">
               <el-select v-model="form.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
                 <el-option
@@ -216,10 +211,8 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="12">
-            <el-form-item label="客户名称" prop="customerName">
+            <el-form-item label="寄仓客户" prop="customerName">
               <el-select
                 v-model="form.customerName" placeholder="请选择寄舱客户" filterable @change="((val)=>{change(val, 'eName')})">
                 <el-option
@@ -231,9 +224,16 @@
               </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="12">
-            <el-form-item label="合同号" prop="contractNo">
-              <el-select v-model="form.contractNo" placeholder="请输入合同号" filterable
+            <el-form-item label="提煤单号" prop="coalBillNo">
+              <el-input v-model="form.coalBillNo" placeholder="请输入提煤单号"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="仓储合同" prop="contractNo">
+              <el-select v-model="form.contractNo" placeholder="请输入仓储合同" filterable
                          @change="((val)=>{change(val, 'contractNo')})">
                 <el-option
                   v-for="item in contractOptions"
@@ -268,10 +268,10 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="收货单位" prop="receiveName">
+            <el-form-item label="客户名称" prop="receiveName">
               <el-input
                 v-model="form.receiveName"
-                placeholder="请输入收货单位"
+                placeholder="请输入客户名称"
               />
             </el-form-item>
           </el-col>
@@ -283,14 +283,64 @@
         </el-row>
         <el-row>
           <el-col :span="12">
+            <el-form-item label="承运单位" prop="carrier">
+              <el-input
+                v-model="form.carrier"
+                placeholder="请输入承运单位"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="运输方式" prop="transportType">
+              <el-select v-model="form.transportType">
+                <el-option
+                  v-for="type in transportOptions"
+                  :key="type.dictValue"
+                  :label="type.dictLabel"
+                  :value="type.dictValue"
+                />
+              </el-select>
+
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
             <el-form-item label="提煤重量" prop="coalWeight">
-              <el-input v-model.number="form.coalWeight" placeholder="请输入放行量"/>
+              <el-input v-model.number="form.coalWeight" placeholder="请输入重量"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="货物名称" prop="goodsName">
               <el-input v-model="form.goodsName" disabled/>
             </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="销售合同" prop="salesContract">
+              <el-input v-model.number="form.salesContract" placeholder="请输入销售合同号"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="app用户" prop="phone">
+              <el-input v-model="form.phone"  placeholder="app用户"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row style="margin-left: 120px">
+          <el-col :span="12">
+            <el-upload
+              action="uploadAction"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :on-success="uploadSuccess"
+              :before-remove="beforeRemove"
+              :limit="1"
+              :on-exceed="handleExceed"
+              :file-list="fileList">
+              <el-button size="mini" style="background: #91eae4">上传附件</el-button>
+            </el-upload>
           </el-col>
         </el-row>
       </el-form>
@@ -352,6 +402,17 @@ export default {
       },
       // 表单参数
       form: {},
+      //上传参数
+      // uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/place/upload',
+      // uploadData: {},
+      // uploading: false,
+      // fileList: [],
+      // headers: {
+      //   'Authorization': '',
+      //   'placeId': '',
+      //   'bucketName': '',
+      //   'filename':''
+      // },
       // 校验重量
       weightParams: {
         coalType: undefined,
@@ -359,8 +420,20 @@ export default {
       },
       // 客户名称列表
       consumerOptions: [],
+      //运输方式
+      transportOptions:[],
+
       // 表单校验
       rules: {
+
+
+
+        placeId: [
+          { required: true, message: '请选择场所', trigger: 'blur' }
+        ],
+        customerName: [
+          { required: true, message: '请选择寄仓客户', trigger: 'blur' }
+        ],
         coalBillNo: [
           { required: true, message: '提煤单号不能为空', trigger: 'blur' }
         ],
@@ -369,11 +442,26 @@ export default {
           { type: 'number', message: '必须为数字值' }
         ],
         contractNo: [
-          { required: true, message: '合同号不能为空', trigger: 'blur' }
+          { required: true, message: '仓储合同不能为空', trigger: 'blur' }
         ],
         goodsName: [
           { required: true, message: '品名不能为空', trigger: 'blur' }
-        ]
+        ],
+        carrier: [
+          { required: true, message: '承运单位不能为空', trigger: 'blur' }
+        ],
+        transportType: [
+          { required: true, message: '请选择运输方式', trigger: 'blur' }
+        ],
+        salesContract: [
+          { required: true, message: '请输入销售合同', trigger: 'blur' }
+        ],
+        receiveName: [
+          { required: true, message: '请输入客户名称', trigger: 'blur' }
+        ],
+        storeCode: [
+          { required: true, message: '请选择库位', trigger: 'blur' }
+        ],
       },
       // 场所名称列表
       depts: [],
@@ -406,6 +494,11 @@ export default {
   created() {
     // 获取场所
     this.depts = getUserDepts('0')
+    // 运输方式
+    this.getDicts('place_transport_type').then(response => {
+      this.transportOptions = response.data
+    })
+
     this.getList()
     const { tableId } = this.$route.query
     if (tableId) {
@@ -600,6 +693,26 @@ export default {
         this.$alert('请选择上传文件类型')
       }
     },
+
+    /***上传start ***/
+
+    handleRemove(){
+
+    },
+    handlePreview(){
+
+    },
+    // 文件上传成功
+    uploadSuccess(){
+
+    },
+    beforeRemove(){
+
+    },
+    handleExceed(){
+
+    },
+    /***上传end ***/
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
       this.upload.open = false
@@ -634,6 +747,9 @@ export default {
           }
         })
       }
+
+
+
       // 合同
       if (name === 'contractNo') {
         this.form.storeCode = undefined

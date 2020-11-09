@@ -9,6 +9,15 @@ export function listSheet(query) {
   })
 }
 
+
+export function listSheetLike(query) {
+  return request({
+    url: '/pound/measurement/sheet/listLike',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询计量单列表
 export function listIESheet(query) {
 	return request({
@@ -42,6 +51,23 @@ export function addSheet(data) {
   })
 }
 
+//磅单查询页(根据条件查询)
+export function queryPoundStatisticsList(query) {
+  return request({
+    url: '/pound/measurement/sheet/queryPoundStatisticsList',
+    method: 'get',
+    params: query
+  })
+}
+//磅单查询页(根据明细查询)
+export function queryPoundStatisticsList1(query) {
+  return request({
+    url: '/pound/measurement/sheet/queryPoundStatisticsList1',
+    method: 'get',
+    params: query
+  })
+}
+//111
 // 修改计量单
 export function updateSheet(data) {
   return request({
