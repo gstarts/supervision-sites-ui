@@ -316,11 +316,53 @@
             磅单状态：{{ selectPound.status === '0' ? '正常' : '申请修改' }}
           </el-col>
         </el-row>
-        <el-row>
-          <el-col>
-            {{ selectPound }}
+        <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
+          <el-col :span="7" :offset="2">
+            收货单位:{{selectPound.deliveryUnit}}
+          </el-col>
+          <el-col :span="5" :offset="1">
+            发货单位:{{selectPound.receivingUnit}}
+          </el-col>
+          <el-col :span="6" :offset="3">
+            流向:{{selectPound.flowDirection =='E'?'出场':'进场'}}
+          </el-col>
+
+        </el-row>
+        <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
+
+          <el-col :span="6" :offset="2">
+            入场时间:{{selectPound.createTime}}
+          </el-col>
+          <el-col :span="6" :offset="2">
+            进场时间:{{selectPound.updateTime}}
+          </el-col>
+          <el-col :span="6" :offset="2">
+            库位号:{{selectPound.locationNumber}}
+          </el-col>
+
+        </el-row>
+        <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
+          <el-col :span="6" :offset="2">
+            货物名称:{{selectPound.goodsName}}
+          </el-col>
+          <el-col :span="6" :offset="2">
+            包装方式:{{selectPound.packMode == '1'?'集装箱':'散装'}}
+          </el-col>
+          <el-col :span="6" :offset="2">
+            车辆类型:{{selectPound.viaType== '01'?'蒙煤车':'外调车'}}
+          </el-col>
+
+        </el-row>
+        <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
+          <el-col :span="24" :offset="2">
+            备注:{{selectPound.remark}}
           </el-col>
         </el-row>
+<!--        <el-row>-->
+<!--          <el-col>-->
+<!--            {{ selectPound }}-->
+<!--          </el-col>-->
+<!--        </el-row>-->
         <el-row :gutter="10">
           <el-col :span="11">
             <el-form-item label="皮重" prop="tareWeight">
@@ -330,7 +372,7 @@
           <el-col :span="2">修改为</el-col>
           <el-col :span="11">
             <el-form-item label="皮重" prop="modifyTareWeight">
-              <el-input-number :min="0" :step="1" v-model="poundModify.modifyTareWeight" placeholder="请输入修改后皮重"/>
+              <el-input :min="0" :step="1" v-model.number="poundModify.modifyTareWeight" placeholder="请输入修改后皮重"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -343,7 +385,7 @@
           <el-col :span="2">修改为</el-col>
           <el-col :span="11">
             <el-form-item label="毛重" prop="modifyRoughWeight">
-              <el-input-number :min="0" :step="1" v-model="poundModify.modifyRoughWeight" placeholder="请输入修改后毛重"/>
+              <el-input :min="0" :step="1" v-model.number="poundModify.modifyRoughWeight" placeholder="请输入修改后毛重"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -356,7 +398,7 @@
           <el-col :span="2">修改为</el-col>
           <el-col :span="11">
             <el-form-item label="净重" prop="modifyNetWeight">
-              <el-input-number :min="0" :step="1" v-model="poundModify.modifyNetWeight" placeholder="请输入修改后净重"
+              <el-input :min="0" :step="1" v-model.number="poundModify.modifyNetWeight" placeholder="请输入修改后净重"
                                disabled/>
             </el-form-item>
           </el-col>
@@ -494,9 +536,12 @@ export default {
         tareWeight: [{type: 'number', required: true, message: '皮重不能为空', trigger: 'blur'}],
         roughWeight: [{type: 'number', required: true, message: '毛重不能为空', trigger: 'blur'}],
         netWeight: [{type: 'number', required: true, message: '净重不能为空', trigger: 'blur'}],
-        modifyTareWeight: [{type: 'number', required: true, message: '皮重不能为空', trigger: 'blur'}],
-        modifyRoughWeight: [{type: 'number', required: true, message: '毛重不能为空', trigger: 'blur'}],
-        modifyNetWeight: [{type: 'number', required: true, message: '净重不能为空', trigger: 'blur'}],
+        modifyTareWeight: [{ required: true, message: '皮重不能为空', trigger: 'blur'},
+          {type: "number", message: "皮重需为数字", trigger: "blur"}],
+        modifyRoughWeight: [{required: true, message: '毛重不能为空', trigger: 'blur'},
+          {type: "number", message: "毛重需为数字", trigger: "blur"}],
+        modifyNetWeight: [{required: true, message: '净重不能为空', trigger: 'blur'},
+          {type: "number", message: "毛重需为数字", trigger: "blur"}],
         applyReason: [{type: 'string', required: true, message: '修改原因不能为空', trigger: 'blur'}],
       },
       poundModify: {
@@ -547,6 +592,17 @@ export default {
       coalTypeOptions: [], //煤种
     };
   },
+  computed:{
+    //毛重监听
+    modifyRoughWeightWatch(){
+      return this.poundModify.modifyRoughWeight;
+    },
+    //皮重监听
+    modifyTareWeightWatch01(){
+     return  this.poundModify.modifyTareWeight
+    }
+
+  },
   created() {
     this.depts = getUserDepts('0')
     if (this.depts.length > 0) {
@@ -557,6 +613,25 @@ export default {
     this.getDicts("coal_type").then(response => {
       this.coalTypeOptions = response.data;
     });
+  },
+  watch:{
+    //毛重监听
+    modifyRoughWeightWatch(val){
+      if(this.selectPound.viaType =='01'){
+        this.poundModify.modifyNetWeight=this.poundModify.modifyRoughWeight-this.poundModify.modifyTareWeight;
+      }else{
+        this.poundModify.modifyNetWeight=this.poundModify.modifyTareWeight-this.poundModify.modifyRoughWeight;
+      }
+    },
+    //皮重监听
+    modifyTareWeightWatch01(val){
+      if(this.selectPound.viaType =='01'){
+        this.poundModify.modifyNetWeight=this.poundModify.modifyRoughWeight-this.poundModify.modifyTareWeight;
+      }else{
+        this.poundModify.modifyNetWeight=this.poundModify.modifyTareWeight-this.poundModify.modifyRoughWeight;
+
+      }
+    },
   },
   methods: {
     /** 查询计量单列表 */
@@ -643,9 +718,7 @@ export default {
       this.poundModify.placeId = row.stationId
       this.poundModify.flow = row.floatPrecision
       this.poundModify.docId = row.noticeNo
-
       console.log(this.poundModify)
-
     },
 
     /** 提交按钮 */
