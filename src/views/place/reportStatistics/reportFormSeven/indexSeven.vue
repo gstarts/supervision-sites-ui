@@ -183,7 +183,7 @@
 <!--      <div>-->
 <!--        <span>{{shipper}}</span>-->
 <!--      </div>-->
-      </div>
+<!--      </div>-->
 
     <el-table v-loading="loading" :data="reportList" id="analyouttable" show-summary
               :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
