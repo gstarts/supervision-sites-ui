@@ -14,6 +14,7 @@
                 :key="dept.dictValue"
                 :label="dept.dictLabel"
                 :value="dept.dictValue"
+                value-key="dept[0].dictValue"
               />
             </el-select>
           </el-form-item>
@@ -251,6 +252,7 @@ export default {
     //统计方式
     this.getDicts("Pound_Inquire_statistics").then(response => {
       this.PoundInquireStatisticsOptions = response.data;
+      this.SelectPoundForm.statistics=this.PoundInquireStatisticsOptions[0].dictLabel;
     });
     //排序方式
     this.getDicts("Pound_Inquire_sort").then(response => {
