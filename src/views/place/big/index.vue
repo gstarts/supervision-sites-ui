@@ -331,14 +331,17 @@
         <el-row style="margin-left: 120px">
           <el-col :span="12">
             <el-upload
-              action="uploadAction"
+              ref="uploadTwo"
+              style="width: 100%"
+              :action=uploadActionTwo
+              :headers="headersTwo"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :on-success="uploadSuccess"
               :before-remove="beforeRemove"
               :limit="1"
               :on-exceed="handleExceed"
-              :file-list="fileList">
+              :file-list="fileListT">
               <el-button size="mini" style="background: #91eae4">上传附件</el-button>
             </el-upload>
           </el-col>
@@ -403,16 +406,17 @@ export default {
       // 表单参数
       form: {},
       //上传参数
-      // uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/place/upload',
-      // uploadData: {},
+      // 第二个
+      uploadActionTwo: process.env.VUE_APP_BASE_API + '/minio/files/place/upload/anyFile',
+      uploadDataTwo: {},
       // uploading: false,
-      // fileList: [],
-      // headers: {
-      //   'Authorization': '',
-      //   'placeId': '',
-      //   'bucketName': '',
-      //   'filename':''
-      // },
+      fileListT: [],
+      headersTwo: {
+        'Authorization': '',
+        'placeId': '',
+        'bucketName': 'big',
+        'filename':''
+      },
       // 校验重量
       weightParams: {
         coalType: undefined,
@@ -475,6 +479,8 @@ export default {
       fileList: [],
       headers: {},
       // 文件导入参数
+
+      // 文件上传第一个
       upload: {
         // 是否显示弹出层（用户导入）
         open: false,
@@ -626,10 +632,15 @@ export default {
       this.$message.error('文件上传失败')
     },
 
-    uploadSuccess(response) {
-    },
+
 
     uploadBefore(file) {
+    },
+
+    uploadError(err) {
+      this.uploading = false
+      console.log(err)
+      this.$message.error('文件上传失败')
     },
     /** 提交按钮 */
     submitForm: function() {
@@ -703,8 +714,25 @@ export default {
 
     },
     // 文件上传成功
-    uploadSuccess(){
-
+    uploadSuccess(response) {
+      if (response.code !== 200) {
+        this.$message.error(response.msg)
+        this.uploading = false
+        return false
+      }
+      this.$message.success("上传成功")
+      this.uploading = true
+      this.$refs.uploadTwo.clearFiles()
+      // 路径+文件名
+      this.form.minObjectName = response.data.objectName
+      // 文件名
+      this.form.minFileName = response.data.name
+      // 文件长度
+      this.form.minFileLength = response.data.length
+      // 桶名
+      this.form.minBucketName = response.data.bucketName
+      // 路径
+      this.form.minPath=response.data.path
     },
     beforeRemove(){
 
@@ -713,7 +741,7 @@ export default {
 
     },
     /***上传end ***/
-    // 文件上传成功处理
+    // 文件上传成功处理（第一个）
     handleFileSuccess(response, file, fileList) {
       this.upload.open = false
       this.upload.isUploading = false
