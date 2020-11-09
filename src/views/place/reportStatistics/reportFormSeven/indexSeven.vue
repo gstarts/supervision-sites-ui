@@ -189,11 +189,11 @@
               :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
               :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
               style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
-      <af-table-column label="寄仓客户" align="center" prop="column1"/>
+      <af-table-column label="寄仓客户" align="center" width="120%" prop="column1"/>
       <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
-      <af-table-column label="合同号" align="center" prop="column2"/>
+      <af-table-column label="合同号" align="center"width="130%" prop="column2"/>
 
-      <af-table-column label="提煤单号" align="center" pr op="column3"/>
+      <af-table-column label="提煤单号" align="center" width="130%" prop="column3"/>
       <af-table-column label="提煤单重量" align="center" prop="column4"/>
       <af-table-column label="已分配未完成车辆" align="center" prop="column5"/>
       <af-table-column label="已分配未提离重量" align="center" prop="column6"/>
@@ -322,6 +322,8 @@ export default {
     };
   },
   created() {
+
+    this.getInfo()
     // this.titleList.push(this.prinTtitle);
     // 页面初始化获取时间0
     this.dateRange = ['', '']

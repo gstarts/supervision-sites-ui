@@ -149,25 +149,25 @@
     </el-form>
     <div class="box-card" style="margin: 0 auto;font-size:15px;width:1100px;padding-left: 1px ;padding-top:50px"
          id="print">
-      <div v-show="printSmallTitle">
-        <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">
-          <span>{{this.prinTtitle}}</span><br>
-        </div>
-        <div>
-          <span>{{timeTitle}}</span>
-        </div>
+<!--      <div v-show="printSmallTitle">-->
+<!--        <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">-->
+<!--          <span>{{this.prinTtitle}}</span><br>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <span>{{timeTitle}}</span>-->
+<!--        </div>-->
         <!--      <div>-->
         <!--        <span>{{shipper}}</span>-->
         <!--      </div>-->
-      </div>
+<!--      </div>-->
 
       <el-table v-loading="loading" :data="reportList" id="analyouttable" show-summary
                 :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
                 :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
                 style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
-        <af-table-column label="单位名称" align="center" prop="column1"/>
+        <af-table-column label="单位名称" align="center"width="120%" prop="column1"/>
         <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
-        <af-table-column label="合同" align="center" prop="column2"/>
+        <af-table-column label="合同" align="center" width="120%" prop="column2"/>
 
         <af-table-column label="煤种" align="center" prop="column3"/>
         <af-table-column label="期初库存(t)" align="center" prop="column4"/>
