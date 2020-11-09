@@ -321,7 +321,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.SelectPoundForm.pageNum = 1
-      if(this.SelectPoundForm.statistics=='02'){
+      if(this.SelectPoundForm.statistics=='02' || this.SelectPoundForm.statistics == '按条件统计'){
         this.conditionLogo=true;
         this.DetailLogo=false;
         if(this.SelectPoundForm.sort==''){
