@@ -231,10 +231,136 @@
 
     <!-- 添加或修改磅单修改记录 对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        {{selectPound}}<br/>
-        ----------------<br/>
-        {{ selectModify }}
+      <el-form ref="selectModify" :model="selectModify" :rules="rules" label-width="120px">
+        <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
+          <el-col :span="8" :offset="2">
+            车号：{{ selectPound.vehicleNo }}
+          </el-col>
+          <el-col :span="12">
+            磅单状态：{{ selectPound.status === '0' ? '正常' : '申请修改' }}
+          </el-col>
+        </el-row>
+        <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
+          <el-col :span="7" :offset="2">
+            收货单位:{{ selectPound.deliveryUnit }}
+          </el-col>
+          <el-col :span="6" :offset="1">
+            发货单位:{{ selectPound.receivingUnit }}
+          </el-col>
+          <el-col :span="5" :offset="3">
+            流向:{{ selectPound.flowDirection == 'E' ? '出场' : '进场' }}
+          </el-col>
+        </el-row>
+        <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
+          <el-col :span="6" :offset="2">
+            入场时间:{{ selectPound.createTime }}
+          </el-col>
+          <el-col :span="6" :offset="2">
+            进场时间:{{ selectPound.updateTime }}
+          </el-col>
+          <el-col :span="5" :offset="3">
+            库位号:{{ selectPound.locationNumber }}
+          </el-col>
+        </el-row>
+        <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
+          <el-col :span="6" :offset="2">
+            货物名称:{{ selectPound.goodsName }}
+          </el-col>
+          <el-col :span="6" :offset="2">
+            包装方式:{{ selectPound.packMode == '1' ? '集装箱' : '散装' }}
+          </el-col>
+          <el-col :span="5" :offset="3">
+            车辆类型:{{ selectPound.viaType == '01' ? '蒙煤车' : '外调车' }}
+          </el-col>
+        </el-row>
+        <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
+          <el-col :span="24" :offset="2">
+            备注:{{ selectPound.remark }}
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="10">
+          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            皮重:{{ selectModify.tareWeight }}
+          </el-col>
+          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
+          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            皮重:{{ selectModify.modifyTareWeight }}
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            毛重:{{ selectModify.roughWeight }}
+          </el-col>
+          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
+          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            毛重:{{ selectModify.modifyRoughWeight }}
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            净重:{{ selectModify.netWeight }}
+          </el-col>
+          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
+          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            净重:{{ selectModify.modifyNetWeight }}
+          </el-col>
+        </el-row>
+        <el-row v-show="selectPound.packMode === '1'">
+          <el-row :gutter="10">
+            <el-col :span="11">
+              <el-form-item label="集装箱号1" prop="containerNo1">
+                <el-input v-model="selectModify.containerNo1" placeholder="请输入集装号1" disabled/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" style="padding-top:10px;">修改为</el-col>
+            <el-col :span="11">
+              <el-form-item label="集装箱号1" prop="modifyContainerNo1">
+                <el-input v-model="selectModify.modifyContainerNo1" placeholder="请输入修改后集装箱号1"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="11">
+              <el-form-item label="集装箱号2" prop="containerNo2">
+                <el-input v-model="selectModify.containerNo2" placeholder="请输入集装号2" disabled/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" style="padding-top:10px;">修改为</el-col>
+            <el-col :span="11">
+              <el-form-item label="集装箱号2" prop="modifyContainerNo2">
+                <el-input v-model="selectModify.modifyContainerNo2" placeholder="请输入修改后集装箱号2"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="11">
+              <el-form-item label="集装箱号3" prop="containerNo3">
+                <el-input v-model="selectModify.containerNo3" placeholder="请输入集装号3" disabled/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" style="padding-top:10px;">修改为</el-col>
+            <el-col :span="11">
+              <el-form-item label="集装箱号3" prop="modifyContainerNo3">
+                <el-input v-model="selectModify.modifyContainerNo3" placeholder="请输入修改后集装箱号3"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="11">
+              <el-form-item label="集装箱号4" prop="containerNo4">
+                <el-input v-model="selectModify.containerNo4" placeholder="请输入集装号4" disabled/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" style="padding-top:10px;">修改为</el-col>
+            <el-col :span="11">
+              <el-form-item label="集装箱号4" prop="modifyContainerNo4">
+                <el-input v-model="selectModify.modifyContainerNo4" placeholder="请输入修改后集装箱号4"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-row>
+
         <!--显示磅单相关信息-->
         <!-- <el-form-item label="磅单ID" prop="poundId">
            <el-input v-model="form.poundId" placeholder="请输入磅单ID" />
@@ -360,12 +486,23 @@ export default {
         orderByColumn: 'id',
         isAsc: 'desc'
       },
-      selectModify: {},
+      selectModify: {
+        modifyTareWeight: undefined,
+        modifyRoughWeight: undefined,
+        modifyNetWeight: undefined,
+      },
       selectPound: {},
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        modifyTareWeight: [{required: true, message: '皮重不能为空', trigger: 'blur'},
+          {type: "number", message: "皮重需为数字", trigger: "blur"}],
+        modifyRoughWeight: [{required: true, message: '毛重不能为空', trigger: 'blur'},
+          {type: "number", message: "毛重需为数字", trigger: "blur"}],
+        modifyNetWeight: [{required: true, message: '净重不能为空', trigger: 'blur'},
+          {type: "number", message: "净重需为数字", trigger: "blur"}],
+
         /* poundId: [
            { required: true, message: "磅单ID不能为空", trigger: "blur" }
          ],

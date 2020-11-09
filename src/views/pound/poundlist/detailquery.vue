@@ -541,7 +541,7 @@ export default {
         modifyRoughWeight: [{required: true, message: '毛重不能为空', trigger: 'blur'},
           {type: "number", message: "毛重需为数字", trigger: "blur"}],
         modifyNetWeight: [{required: true, message: '净重不能为空', trigger: 'blur'},
-          {type: "number", message: "毛重需为数字", trigger: "blur"}],
+          {type: "number", message: "净重需为数字", trigger: "blur"}],
         applyReason: [{type: 'string', required: true, message: '修改原因不能为空', trigger: 'blur'}],
       },
       poundModify: {
