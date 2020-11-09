@@ -20,12 +20,13 @@ export function listSheetLike(query) {
 
 // 查询计量单列表
 export function listIESheet(query) {
-	return request({
-		url: '/pound/measurement/sheet/IElist',
-		method: 'get',
-		params: query
-	})
+  return request({
+    url: '/pound/measurement/sheet/IElist',
+    method: 'get',
+    params: query
+  })
 }
+
 //统计分析数据
 export function analysis(query) {
   return request({
@@ -34,10 +35,11 @@ export function analysis(query) {
     params: query
   })
 }
+
 // 通过车号查询数据
-export function getSheet(event,stationId) {
+export function getSheet(event, stationId) {
   return request({
-    url: '/pound/measurement/sheet/inrecord?vehicleNo=' + event+'&stationId='+stationId,
+    url: '/pound/measurement/sheet/inrecord?vehicleNo=' + event + '&stationId=' + stationId,
     method: 'get'
   })
 }
@@ -59,6 +61,7 @@ export function queryPoundStatisticsList(query) {
     params: query
   })
 }
+
 //磅单查询页(根据明细查询)
 export function queryPoundStatisticsList1(query) {
   return request({
@@ -67,6 +70,7 @@ export function queryPoundStatisticsList1(query) {
     params: query
   })
 }
+
 //111
 // 修改计量单
 export function updateSheet(data) {
@@ -93,10 +97,20 @@ export function exportSheet(query) {
     params: query
   })
 }
-//redis获取实时地磅重量
-export function poundSelect(event){
+
+export function getSheetById(id) {
   return request({
-    url: '/pound/poundInfo/getWeight/'+event,
+    url: '/pound/measurement/sheet//byId/' + id,
     method: 'get',
   })
 }
+
+//redis获取实时地磅重量
+export function poundSelect(event) {
+  return request({
+    url: '/pound/poundInfo/getWeight/' + event,
+    method: 'get',
+  })
+}
+
+

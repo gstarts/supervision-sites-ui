@@ -213,7 +213,7 @@
             v-loading="loading"
             tooltip-effect="dark"
             style="width: 100%"
-            :row-style="green"
+            :row-class-name="tableRowClassName"
             @row-dblclick="dbRow">
             <af-table-column label="车号" align="center" prop="plateNum" width='100px' fixed/>
             <af-table-column label="毛重" align="center" prop="grossWeight" width='100px'/>
@@ -272,7 +272,8 @@
             v-loading="loading"
             tooltip-effect="dark"
             style="width: 100%"
-            :row-style="green"
+
+            :row-class-name="tableRowClassName"
             @row-dblclick="dbRow"
           >
             <af-table-column label="车号" align="center" prop="plateNum" width='100px' fixed/>
@@ -609,13 +610,13 @@ export default {
         flowDirection: [{type: "string", required: true, message: "请选择流向", trigger: "change"}],
       },
       rulesModify: {
-        tareWeight: [{type: 'number',required: true,message:'皮重不能为空',trigger:'blur'}],
-        roughWeight: [{type: 'number',required: true,message:'毛重不能为空',trigger:'blur'}],
-        netWeight: [{type: 'number',required: true,message:'净重不能为空',trigger:'blur'}],
-        modifyTareWeight: [{type: 'number',required: true,message:'皮重不能为空',trigger:'blur'}],
-        modifyRoughWeight: [{type: 'number',required: true,message:'毛重不能为空',trigger:'blur'}],
-        modifyNetWeight: [{type: 'number',required: true,message:'净重不能为空',trigger:'blur'}],
-        applyReason: [{type: 'string',required: true,message:'修改原因不能为空',trigger:'blur'}],
+        tareWeight: [{type: 'number', required: true, message: '皮重不能为空', trigger: 'blur'}],
+        roughWeight: [{type: 'number', required: true, message: '毛重不能为空', trigger: 'blur'}],
+        netWeight: [{type: 'number', required: true, message: '净重不能为空', trigger: 'blur'}],
+        modifyTareWeight: [{type: 'number', required: true, message: '皮重不能为空', trigger: 'blur'}],
+        modifyRoughWeight: [{type: 'number', required: true, message: '毛重不能为空', trigger: 'blur'}],
+        modifyNetWeight: [{type: 'number', required: true, message: '净重不能为空', trigger: 'blur'}],
+        applyReason: [{type: 'string', required: true, message: '修改原因不能为空', trigger: 'blur'}],
       },
       storeList: [], //保存库位号.
       showStore: false,
@@ -978,6 +979,9 @@ export default {
               addSheet(this.form).then((response) => {
                 if (response.code === 200) {
                   this.msgSuccess("进场成功");
+                  //更新单证入场时间
+                  console.log(response)
+                  this.updateDocTime(response.data.poundId)
                   this.dataLoading = false
                   //更新
                   //console.log(response.data)
@@ -1001,9 +1005,8 @@ export default {
                 }
               });
               //this.queryParams.stationId, this.PoundForm.stationViaType,this.form.noticeNo
-              //更新单证入场时间
-              this.updateDocTime()
-            } else if (this.PoundForm.flowDirection === "E") {
+
+            } else if (this.PoundForm.flowDirection === "E") {//如果是出场
               this.form.flowDirection = this.PoundForm.flowDirection;
               this.form.channelNumber = this.PoundForm.channelNumber;
               //this.form.noticeNo = this.noticeNo;
@@ -1020,7 +1023,8 @@ export default {
                 'netWeight': this.form.netWeight,
                 'tareWeight': this.form.tare,
                 'roughWeight': this.form.grossWeight,
-                'channelNo': this.form.channelNumber
+                'channelNo': this.form.channelNumber,
+                'poundId': this.form.id,
               }
               if (this.PoundForm.stationViaType === '01') {//重进空出 生成入库单
                 params.direction = 1
@@ -1040,14 +1044,12 @@ export default {
                         }
                         //this.getListI()
                         //this.getListE()
-
                         if (this.autoPrint) {
                           this.$refs['printBtn'].$el.click()
                           //阻塞操作
                         } else {
                           this.getVehicleList()
                         }
-
                         //this.reset()
                       }
                     }).catch(err => {
@@ -1058,6 +1060,10 @@ export default {
                     this.dataLoading = false
                     return false
                   }
+                }).catch(err => {
+                  //this.msgError(response.msg);
+                  this.dataLoading = false
+                  return false
                 })
               }
 
@@ -1091,11 +1097,14 @@ export default {
                       this.dataLoading = false
                     })
                   } else {
-
                     this.msgError(response.msg);
                     this.dataLoading = false
                     return false
                   }
+                }).catch(err => {
+                  //this.msgError(response.msg);
+                  this.dataLoading = false
+                  return false
                 })
               }
             } else {
@@ -1298,13 +1307,14 @@ export default {
     },
 
     //更新单证入场时间
-    updateDocTime() {
+    updateDocTime(poundId) {
       let data = {
         'placeId': this.queryParams.stationId,
         'type': this.PoundForm.stationViaType,
         'noticeNo': this.form.noticeNo,
         'channelNo': this.form.channelNumber,
-        'vehicleNo': this.form.plateNum
+        'vehicleNo': this.form.plateNum,
+        'poundId': poundId
       }
       console.log(data)
       updateDocTime(data)
@@ -1364,6 +1374,13 @@ export default {
       } else {
         this.autoPrintText = '手动打印'
       }
+    },
+    tableRowClassName({row, rowIndex}) {
+      console.log(row)
+      if (row.status !== '0') {
+        return 'warning-row';
+      }
+      return 'success-row';
     },
     /*handlerModify(row) {
       //弹出对话框，修改磅单
@@ -1566,5 +1583,15 @@ export default {
 .coalPageSelect /deep/ .el-select-dropdown__item {
   font-size: 30px !important;
 }
+</style>
+<style>
+.el-table .warning-row {
+  color: red;
+}
 
+.el-table .success-row {
+  background: #fff;
+  color: green;
+}
+/**-- :row-style="green"  **/
 </style>
