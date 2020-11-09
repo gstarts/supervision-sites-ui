@@ -290,7 +290,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handlePrint(scope.row)"
-            v-hasPermi="['place:sheet:remove']"
+            v-hasPermi="['place:sheet:print']"
           >{{scope.row.printState === '0'?'打印':'补打'}}
           </el-button>
         </template>
