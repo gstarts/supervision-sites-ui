@@ -33,7 +33,7 @@
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="发货单位" prop="deliveryUnit">
-                  <el-input v-model="form.deliveryUnit" placeholder="请输入发货单位" clearable></el-input>
+                  <el-input v-model="form.deliveryUnit" placeholder="请输入发货单位" clearable :disabled="isProduct"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -61,7 +61,7 @@
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="收货单位" prop="receivingUnit">
-                  <el-input v-model="form.receivingUnit" placeholder="请输入收货单位" clearable></el-input>
+                  <el-input v-model="form.receivingUnit" placeholder="请输入收货单位" clearable :disabled="isProduct"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -78,7 +78,7 @@
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="货物名称" prop="goodsName">
-                  <el-input v-model="form.goodsName" placeholder="请输入货物名称" clearable></el-input>
+                  <el-input v-model="form.goodsName" placeholder="请输入货物名称" clearable :disabled="isProduct"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -432,6 +432,7 @@ export default {
   name: "Client",
   data() {
     return {
+      isProduct: true,
       printObj: {
         id: '#dayin',
         endCallback: (err => {
