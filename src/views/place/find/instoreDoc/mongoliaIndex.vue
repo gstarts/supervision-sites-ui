@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="场所编号 场所编号" prop="placeId">
+      <!-- <el-form-item label="场所编号 场所编号" prop="placeId">
         <el-input
           v-model="queryParams.placeId"
           placeholder="请输入场所编号 场所编号"
@@ -9,17 +9,17 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="通知单号 通知单号" prop="docNo">
+      </el-form-item> -->
+      <el-form-item label="通知单号" prop="docNo">
         <el-input
           v-model="queryParams.docNo"
-          placeholder="请输入通知单号 通知单号"
+          placeholder="请输入通知单号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="业务编号" prop="businessNo">
+      <!-- <el-form-item label="业务编号" prop="businessNo">
         <el-input
           v-model="queryParams.businessNo"
           placeholder="请输入业务编号"
@@ -27,7 +27,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="寄舱客户" prop="checkConsumer">
         <el-input
           v-model="queryParams.checkConsumer"
@@ -37,7 +37,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="寄舱合同号" prop="checkContractNo">
+      <!-- <el-form-item label="寄舱合同号" prop="checkContractNo">
         <el-input
           v-model="queryParams.checkContractNo"
           placeholder="请输入寄舱合同号"
@@ -45,26 +45,26 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="蒙方磅单号 蒙方磅单号" prop="mongoliaBillNo">
+      </el-form-item> -->
+      <el-form-item label="蒙方磅单" prop="mongoliaBillNo">
         <el-input
           v-model="queryParams.mongoliaBillNo"
-          placeholder="请输入蒙方磅单号 蒙方磅单号"
+          placeholder="请输入蒙方磅单"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="车号 车号" prop="vehicleNo">
+      <el-form-item label="车号" prop="vehicleNo">
         <el-input
           v-model="queryParams.vehicleNo"
-          placeholder="请输入车号 车号"
+          placeholder="请输入车号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="挂车号1 挂车号1" prop="trailerNo1">
+      <!-- <el-form-item label="挂车号1 挂车号1" prop="trailerNo1">
         <el-input
           v-model="queryParams.trailerNo1"
           placeholder="请输入挂车号1 挂车号1"
@@ -282,7 +282,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="库位号" prop="storeCode">
         <el-input
           v-model="queryParams.storeCode"
@@ -292,7 +292,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="库位号2" prop="storeCode2">
+      <!-- <el-form-item label="库位号2" prop="storeCode2">
         <el-input
           v-model="queryParams.storeCode2"
           placeholder="请输入库位号2"
@@ -598,7 +598,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -648,30 +648,26 @@
 
     <el-table v-loading="loading" :data="instoreDocList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID 逻辑主键" align="center" prop="id" />
-      <el-table-column label="场所编号 场所编号" align="center" prop="placeId" />
-      <el-table-column label="通知单号 通知单号" align="center" prop="docNo" />
+      <el-table-column label="ID" align="center" prop="id" />
+      <el-table-column label="场所编号" align="center" prop="placeId" />
+      <el-table-column label="通知单号" align="center" prop="docNo" />
       <el-table-column label="业务编号" align="center" prop="businessNo" />
       <el-table-column label="寄舱客户" align="center" prop="checkConsumer" />
       <el-table-column label="寄舱合同号" align="center" prop="checkContractNo" />
-      <el-table-column label="蒙方磅单号 蒙方磅单号" align="center" prop="mongoliaBillNo" />
-      <el-table-column label="车号 车号" align="center" prop="vehicleNo" />
-      <el-table-column label="挂车号1 挂车号1" align="center" prop="trailerNo1" />
-      <el-table-column label="挂车号2 挂车号2" align="center" prop="trailerNo2" />
-      <el-table-column label="车队名 车队名" align="center" prop="vehicleTeam" />
-      <el-table-column label="蒙古磅净重 净重" align="center" prop="mongoliaNetWeight" />
-      <el-table-column label="蒙古磅皮重 皮重" align="center" prop="mongoliaTareWeight" />
-      <el-table-column label="车辆数量 车辆数量" align="center" prop="vehicleCount" />
-      <el-table-column label="司机姓名 司机名称" align="center" prop="driverName" />
-      <el-table-column label="车队联系人 车队联系人" align="center" prop="vehicleTeamContact" />
+      <el-table-column label="蒙方磅单号" align="center" prop="mongoliaBillNo" />
+      <el-table-column label="车号" align="center" prop="vehicleNo" />
+      <el-table-column label="挂车号" align="center" prop="trailerNo1" />
+      <el-table-column label="车队名" align="center" prop="vehicleTeam" />
+      <el-table-column label="蒙古磅净重" align="center" prop="mongoliaNetWeight" />
+      <el-table-column label="蒙古磅皮重" align="center" prop="mongoliaTareWeight" />
+      <el-table-column label="车辆数量" align="center" prop="vehicleCount" />
+      <el-table-column label="司机姓名" align="center" prop="driverName" />
+      <el-table-column label="车队联系人" align="center" prop="vehicleTeamContact" />
       <el-table-column label="车队联系电话" align="center" prop="vehicleTeamTel" />
-      <el-table-column label="车型(双挂，单挂)" align="center" prop="vehicleType" />
-      <el-table-column label="计量单位(KG)" align="center" prop="measuringUnit" />
-      <el-table-column label="包装方式(集装箱，散装)" align="center" prop="packMode" />
-      <el-table-column label="集装箱号1" align="center" prop="containerNo1" />
-      <el-table-column label="集装箱号2" align="center" prop="containerNo2" />
-      <el-table-column label="集装箱号3" align="center" prop="containerNo3" />
-      <el-table-column label="集装箱号4" align="center" prop="containerNo4" />
+      <el-table-column label="车型" align="center" prop="vehicleType" />
+      <el-table-column label="计量单位" align="center" prop="measuringUnit" />
+      <el-table-column label="包装方式" align="center" prop="packMode" />
+      <el-table-column label="集装箱号" align="center" prop="containerNo1" />
       <el-table-column label="净重" align="center" prop="netWeight" />
       <el-table-column label="皮重" align="center" prop="tareWeight" />
       <el-table-column label="毛重" align="center" prop="roughWeight" />
@@ -691,17 +687,11 @@
       <el-table-column label="批次号" align="center" prop="batchNo" />
       <el-table-column label="提运单号" align="center" prop="loadingBillNo" />
       <el-table-column label="库位号" align="center" prop="storeCode" />
-      <el-table-column label="库位号2" align="center" prop="storeCode2" />
-      <el-table-column label="库位号3" align="center" prop="storeCode3" />
-      <el-table-column label="库位号4" align="center" prop="storeCode4" />
-      <el-table-column label="生成舱单(0未生成，1已生成)" align="center" prop="hasManifest" />
+      <el-table-column label="生成舱单" align="center" prop="hasManifest" />
       <el-table-column label="生成集报清单" align="center" prop="hasDeclare" />
       <el-table-column label="生成进境确报" align="center" prop="hasTransit" />
-      <el-table-column label="状态(0,待入库，1已入库，2可放行，3已生成放行单)" align="center" prop="storeState" />
-      <el-table-column label="文件ID" align="center" prop="fileId" />
+      <el-table-column label="状态)" align="center" prop="storeState" />
       <el-table-column label="放行单号" align="center" prop="passNo" />
-      <el-table-column label="乐观锁" align="center" prop="revision" />
-      <el-table-column label="文件中的备注" align="center" prop="memo" />
       <el-table-column label="蒙古毛重" align="center" prop="mongoliaRoughWeight" />
       <el-table-column label="货物名称" align="center" prop="goodsName" />
       <el-table-column label="发货方" align="center" prop="sendName" />
