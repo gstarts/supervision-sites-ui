@@ -278,11 +278,11 @@
       <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button v-show="scope.row.status === '0'"
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleApply(scope.row)"
-            v-hasPermi="['place:modify:apply']"
+                     size="mini"
+                     type="text"
+                     icon="el-icon-edit"
+                     @click="handleApply(scope.row)"
+                     v-hasPermi="['place:modify:apply']"
           >申请修改
           </el-button>
           <el-button
@@ -291,7 +291,7 @@
             icon="el-icon-delete"
             @click="handlePrint(scope.row)"
             v-hasPermi="['place:sheet:print']"
-          >{{scope.row.printState === '0'?'打印':'补打'}}
+          >{{ scope.row.printState === '0' ? '打印' : '补打' }}
           </el-button>
         </template>
       </af-table-column>
@@ -318,51 +318,73 @@
         </el-row>
         <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
           <el-col :span="7" :offset="2">
-            收货单位:{{selectPound.deliveryUnit}}
+            收货单位:{{ selectPound.deliveryUnit }}
           </el-col>
           <el-col :span="5" :offset="1">
-            发货单位:{{selectPound.receivingUnit}}
+            发货单位:{{ selectPound.receivingUnit }}
           </el-col>
           <el-col :span="6" :offset="3">
-            流向:{{selectPound.flowDirection =='E'?'出场':'进场'}}
+            流向:{{ selectPound.flowDirection == 'E' ? '出场' : '进场' }}
           </el-col>
 
         </el-row>
         <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
 
           <el-col :span="6" :offset="2">
-            入场时间:{{selectPound.createTime}}
+            入场时间:{{ selectPound.createTime }}
           </el-col>
           <el-col :span="6" :offset="2">
-            进场时间:{{selectPound.updateTime}}
+            进场时间:{{ selectPound.updateTime }}
           </el-col>
           <el-col :span="6" :offset="2">
-            库位号:{{selectPound.locationNumber}}
+            库位号:{{ selectPound.locationNumber }}
           </el-col>
 
         </el-row>
         <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
           <el-col :span="6" :offset="2">
-            货物名称:{{selectPound.goodsName}}
+            货物名称:{{ selectPound.goodsName }}
           </el-col>
           <el-col :span="6" :offset="2">
-            包装方式:{{selectPound.packMode == '1'?'集装箱':'散装'}}
+            包装方式:{{ selectPound.packMode == '1' ? '集装箱' : '散装' }}
           </el-col>
           <el-col :span="6" :offset="2">
-            车辆类型:{{selectPound.viaType== '01'?'蒙煤车':'外调车'}}
+            车辆类型:{{ selectPound.viaType == '01' ? '蒙煤车' : '外调车' }}
           </el-col>
-
         </el-row>
-        <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
+        <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold"
+                v-show="selectPound.viaType === '02' && selectPound.flowDirection ==='I'">
           <el-col :span="24" :offset="2">
-            备注:{{selectPound.remark}}
+            提煤单号:{{ selectPound.remark }}
           </el-col>
         </el-row>
-<!--        <el-row>-->
-<!--          <el-col>-->
-<!--            {{ selectPound }}-->
-<!--          </el-col>-->
-<!--        </el-row>-->
+        <!--外调车时，显示 可以改提煤单号-->
+        <el-row :gutter="10" v-show="selectPound.viaType === '02' && selectPound.flowDirection ==='E'">
+          <el-col :span="11">
+            <el-form-item label="提煤单号" prop="coalBillNo">
+              <el-input v-model="poundModify.coalBillNo" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2">修改为</el-col>
+          <el-col :span="11">
+            <!-- <el-input v-model="poundModify.modifyCoalBillNo" disabled></el-input>-->
+            <el-form-item label="提煤单号" prop="modifyCoalBillNo">
+              <el-select v-model="poundModify.modifyCoalBillNo" filterable placeholder="请选择提煤单号">
+                <el-option
+                  v-for="item in BigList"
+                  :key="item.coalBillNo"
+                  :label="item.coalBillNo"
+                  :value="item.coalBillNo">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!--        <el-row>-->
+        <!--          <el-col>-->
+        <!--            {{ selectPound }}-->
+        <!--          </el-col>-->
+        <!--        </el-row>-->
         <el-row :gutter="10">
           <el-col :span="11">
             <el-form-item label="皮重" prop="tareWeight">
@@ -399,7 +421,7 @@
           <el-col :span="11">
             <el-form-item label="净重" prop="modifyNetWeight">
               <el-input :min="0" :step="1" v-model.number="poundModify.modifyNetWeight" placeholder="请输入修改后净重"
-                               disabled/>
+                        disabled/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -474,6 +496,7 @@
 import {listSheetLike, getSheet, delSheet, addSheet, updateSheet} from "@/api/pound/poundlist";
 import {getUserDepts} from "@/utils/charutils";
 import {addModify, applyModify} from "@/api/place/modify";
+import {selectCoalBillNo} from "@/api/place/big";
 
 export default {
   name: "Sheet",
@@ -491,6 +514,7 @@ export default {
       total: 0,
       // 计量单表格数据
       sheetList: [],
+      BigList: [],//提煤单列表
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -536,7 +560,7 @@ export default {
         tareWeight: [{type: 'number', required: true, message: '皮重不能为空', trigger: 'blur'}],
         roughWeight: [{type: 'number', required: true, message: '毛重不能为空', trigger: 'blur'}],
         netWeight: [{type: 'number', required: true, message: '净重不能为空', trigger: 'blur'}],
-        modifyTareWeight: [{ required: true, message: '皮重不能为空', trigger: 'blur'},
+        modifyTareWeight: [{required: true, message: '皮重不能为空', trigger: 'blur'},
           {type: "number", message: "皮重需为数字", trigger: "blur"}],
         modifyRoughWeight: [{required: true, message: '毛重不能为空', trigger: 'blur'},
           {type: "number", message: "毛重需为数字", trigger: "blur"}],
@@ -570,6 +594,8 @@ export default {
         modifyContainerNo2: undefined,
         modifyContainerNo3: undefined,
         modifyContainerNo4: undefined,
+        coalBillNo: undefined,
+        modifyCoalBillNo: undefined
       },
       //当前选中的磅单
       selectPound: {},
@@ -592,14 +618,14 @@ export default {
       coalTypeOptions: [], //煤种
     };
   },
-  computed:{
+  computed: {
     //毛重监听
-    modifyRoughWeightWatch(){
+    modifyRoughWeightWatch() {
       return this.poundModify.modifyRoughWeight;
     },
     //皮重监听
-    modifyTareWeightWatch01(){
-     return  this.poundModify.modifyTareWeight
+    modifyTareWeightWatch01() {
+      return this.poundModify.modifyTareWeight
     }
 
   },
@@ -614,23 +640,14 @@ export default {
       this.coalTypeOptions = response.data;
     });
   },
-  watch:{
+  watch: {
     //毛重监听
-    modifyRoughWeightWatch(val){
-      if(this.selectPound.viaType =='01'){
-        this.poundModify.modifyNetWeight=this.poundModify.modifyRoughWeight-this.poundModify.modifyTareWeight;
-      }else{
-        this.poundModify.modifyNetWeight=this.poundModify.modifyTareWeight-this.poundModify.modifyRoughWeight;
-      }
+    modifyRoughWeightWatch(val) {
+      this.poundModify.modifyNetWeight = this.poundModify.modifyRoughWeight - this.poundModify.modifyTareWeight;
     },
     //皮重监听
-    modifyTareWeightWatch01(val){
-      if(this.selectPound.viaType =='01'){
-        this.poundModify.modifyNetWeight=this.poundModify.modifyRoughWeight-this.poundModify.modifyTareWeight;
-      }else{
-        this.poundModify.modifyNetWeight=this.poundModify.modifyTareWeight-this.poundModify.modifyRoughWeight;
-
-      }
+    modifyTareWeightWatch01(val) {
+      this.poundModify.modifyNetWeight = this.poundModify.modifyRoughWeight - this.poundModify.modifyTareWeight;
     },
   },
   methods: {
@@ -676,6 +693,8 @@ export default {
         modifyContainerNo2: undefined,
         modifyContainerNo3: undefined,
         modifyContainerNo4: undefined,
+        coalBillNo: undefined,
+        modifyCoalBillNo: undefined
       };
       this.resetForm("formModify");
     },
@@ -683,6 +702,7 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.getList();
+      this.getCoalBillList()
     },
     /** 重置按钮操作 */
     resetQuery() {
@@ -708,22 +728,34 @@ export default {
       this.poundModify.tareWeight = row.tare
       this.poundModify.roughWeight = row.grossWeight
       this.poundModify.netWeight = row.netWeight
+      this.poundModify.modifyTareWeight = row.tare
+      this.poundModify.modifyRoughWeight = row.grossWeight
+      this.poundModify.modifyNetWeight = row.netWeight
       this.poundModify.vehicleNo = row.plateNum
       this.poundModify.packMode = row.packMode
       this.poundModify.containerNo1 = row.containerNum
       this.poundModify.containerNo2 = row.containerNum2
       this.poundModify.containerNo3 = row.containerNum3
       this.poundModify.containerNo4 = row.containerNum4
+      this.poundModify.modifyContainerNo1 = row.containerNum
+      this.poundModify.modifyContainerNo2 = row.containerNum2
+      this.poundModify.modifyContainerNo3 = row.containerNum3
+      this.poundModify.modifyContainerNo4 = row.containerNum4
       this.poundModify.viaType = row.viaType
       this.poundModify.placeId = row.stationId
-      this.poundModify.flow = row.floatPrecision
+      this.poundModify.flow = row.flowDirection
       this.poundModify.docId = row.noticeNo
-      console.log(this.poundModify)
+      this.poundModify.coalBillNo = row.coalBillNum
+      this.poundModify.modifyCoalBillNo = row.coalBillNum
+     /* console.log(this.poundModify)
+      console.log("--------------")
+      console.log(this.selectPound)*/
+
     },
 
     /** 提交按钮 */
     submitForm: function () {
-      if(this.poundModify.modifyNetWeight>0){
+      if (this.poundModify.modifyNetWeight > 0) {
         this.$refs["formModify"].validate(valid => {
           if (valid) {
             applyModify(this.poundModify).then(response => {
@@ -736,8 +768,8 @@ export default {
             });
           }
         });
-      }else{
-        this.msgError("净重不可为负数,请检查！")
+      } else {
+        this.msgError("净重必须大于0,请检查！")
       }
 
     },
@@ -752,6 +784,12 @@ export default {
       this.download('place/sheet/export', {
         ...this.queryParams
       }, `place_sheet.xlsx`)
+    },
+    //获取大提煤单列表
+    getCoalBillList() {
+      selectCoalBillNo({'placeId': this.queryParams.stationId}).then(response => {
+        this.BigList = response.rows
+      })
     }
   }
 };
