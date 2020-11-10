@@ -755,7 +755,7 @@ export default {
 
     /** 提交按钮 */
     submitForm: function () {
-      if (this.poundModify.modifyNetWeight >= 0) {
+     // if (this.poundModify.modifyNetWeight >= 0) {
         this.$refs["formModify"].validate(valid => {
           if (valid) {
             applyModify(this.poundModify).then(response => {
@@ -768,9 +768,9 @@ export default {
             });
           }
         });
-      } else {
-        this.msgError("净重不能小于0,请检查！")
-      }
+      //} else {
+      //  this.msgError("净重不能小于0,请检查！")
+      //}
     },
     /** 删除按钮操作 */
     handlePrint(row) {

@@ -171,6 +171,7 @@
       <!--<af-table-column type="selection" width="55" align="center"/>-->
       <!-- <af-table-column label="ID" align="center" prop="id" /> -->
       <af-table-column label="磅单ID" align="center" prop="poundId"/>
+      <af-table-column label="车号" align="center" prop="vehicleNo"/>
       <af-table-column label="车辆类型" align="center" prop="viaType"/>
       <af-table-column label="修改前皮重" align="center" prop="tareWeight"/>
       <af-table-column label="修改前毛重" align="center" prop="roughWeight"/>
@@ -231,10 +232,10 @@
 
     <!-- 添加或修改磅单修改记录 对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
-      <el-form ref="selectModify" :model="selectModify" :rules="rules" label-width="120px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
           <el-col :span="8" :offset="2">
-            车号：{{ selectPound.vehicleNo }}
+            车号：{{ selectPound.plateNum }}
           </el-col>
           <el-col :span="12">
             磅单状态：{{ selectPound.status === '0' ? '正常' : '申请修改' }}
@@ -275,10 +276,19 @@
         </el-row>
         <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
           <el-col :span="24" :offset="2">
-            备注:{{ selectPound.remark }}
+            提煤单号:{{ selectPound.coalBillNo }}
           </el-col>
         </el-row>
 
+        <el-row :gutter="10">
+          <el-col :span="6" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            提煤单号:{{ selectModify.coalBillNo }}
+          </el-col>
+          <el-col :span="3"  :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
+          <el-col :span="10" :offset="0" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            提煤单号:{{ selectModify.modifyCoalBillNo }}
+          </el-col>
+        </el-row>
         <el-row :gutter="10">
           <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
             皮重:{{ selectModify.tareWeight }}
@@ -477,10 +487,16 @@ export default {
         modifyTareWeight: undefined,
         modifyRoughWeight: undefined,
         modifyNetWeight: undefined,
+        auditState: undefined,
+        auditReason: undefined,
       },
       selectPound: {},
       // 表单参数
-      form: {},
+      form: {
+        auditState: undefined,
+        auditReason: undefined,
+
+      },
       // 表单校验
       rules: {
         modifyTareWeight: [{required: true, message: '皮重不能为空', trigger: 'blur'},

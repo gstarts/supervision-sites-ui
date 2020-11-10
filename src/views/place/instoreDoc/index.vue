@@ -952,7 +952,7 @@ import {
   getInstoreDoc,
   delInstoreDoc,
   addInstoreDoc,
-  updateInstoreDoc,
+  updateInstoreDoc, listInstoreDocLike,
 } from "@/api/place/instoreDoc";
 import {getUserDepts} from "@/utils/charutils";
 import {listStoreContract} from "@/api/place/storeContract";
@@ -1125,7 +1125,7 @@ export default {
             this.queryParams.endTime = undefined
           }
       }
-      listInstoreDoc(this.queryParams).then((response) => {
+      listInstoreDocLike(this.queryParams).then((response) => {
         this.instoreDocList = response.rows;
         this.total = response.total;
         this.loading = false;

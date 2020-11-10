@@ -875,7 +875,7 @@ export default {
           //定时重量赋值到相应毛重 皮重 净重上 11.10修改 虎神
           //流向 进场  车辆类型 蒙煤车 有车牌号 反添毛重
           if(this.PoundForm.flowDirection =='I' && this.PoundForm.stationViaType == '01'&& this.form.plateNum !=undefined){
-            //赋值毛重
+           //赋值毛重
             this.form.grossWeight=this.Poundweight;
 
             //流向 出场  车辆类型 蒙煤车 有车牌号 反添皮重 计算净重
@@ -885,12 +885,12 @@ export default {
             //计算净重
             this.form.netWeight=this.form.grossWeight-this.form.tare;
 
-            //流向 进场  车辆类型 外调车 有车牌号 反添皮重
+          //流向 进场  车辆类型 外调车 有车牌号 反添皮重
           }else if(this.PoundForm.flowDirection =='I' && this.PoundForm.stationViaType == '02'&& this.form.plateNum !=undefined){
             //赋值皮重
             this.form.tare=this.Poundweight;
 
-            //流向 出场  车辆类型 外调车 有车牌号 反添毛重 计算净重
+          //流向 出场  车辆类型 外调车 有车牌号 反添毛重 计算净重
           }else if(this.PoundForm.flowDirection =='E' && this.PoundForm.stationViaType == '02'&& this.form.plateNum !=undefined){
             //赋值毛重
             this.form.grossWeight=this.Poundweight;
