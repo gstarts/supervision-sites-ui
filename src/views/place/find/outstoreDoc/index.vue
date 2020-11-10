@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form :inline="true">
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="90px">
       <el-form-item label="场所编号" prop="placeId">
         <el-input
           v-model="queryParams.placeId"
@@ -46,621 +52,617 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="客户id" prop="receiveId">
-        <el-input
-          v-model="queryParams.receiveId"
-          placeholder="请输入客户id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="客户名称" prop="receiveName">
-        <el-input
-          v-model="queryParams.receiveName"
-          placeholder="请输入客户名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="寄舱合同号" prop="checkContractNo">
-        <el-input
-          v-model="queryParams.checkContractNo"
-          placeholder="请输入寄舱合同号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="蒙方磅单号 蒙方磅单号" prop="mongoliaBillNo">
-        <el-input
-          v-model="queryParams.mongoliaBillNo"
-          placeholder="请输入蒙方磅单号 蒙方磅单号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="车号 " prop="vehicleNo">
-        <el-input
-          v-model="queryParams.vehicleNo"
-          placeholder="请输入车号 "
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="挂车号1 " prop="trailerNo1">
-        <el-input
-          v-model="queryParams.trailerNo1"
-          placeholder="请输入挂车号1 "
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="挂车号2" prop="trailerNo2">
-        <el-input
-          v-model="queryParams.trailerNo2"
-          placeholder="请输入挂车号2"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="车队名 " prop="vehicleTeam">
-        <el-input
-          v-model="queryParams.vehicleTeam"
-          placeholder="请输入车队名 "
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="蒙古磅净重 净重" prop="mongoliaNetWeight">
-        <el-input
-          v-model="queryParams.mongoliaNetWeight"
-          placeholder="请输入蒙古磅净重 净重"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="蒙古磅皮重 皮重" prop="mongoliaTareWeight">
-        <el-input
-          v-model="queryParams.mongoliaTareWeight"
-          placeholder="请输入蒙古磅皮重 皮重"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="车辆数量 " prop="vehicleCount">
-        <el-input
-          v-model="queryParams.vehicleCount"
-          placeholder="请输入车辆数量 "
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="司机姓名 " prop="driverName">
-        <el-input
-          v-model="queryParams.driverName"
-          placeholder="请输入司机姓名 "
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="车队联系人 " prop="vehicleTeamContact">
-        <el-input
-          v-model="queryParams.vehicleTeamContact"
-          placeholder="请输入车队联系人 "
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="车队联系电话" prop="vehicleTeamTel">
-        <el-input
-          v-model="queryParams.vehicleTeamTel"
-          placeholder="请输入车队联系电话"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="车型(双挂，单挂)" prop="vehicleType">
-        <el-select v-model="queryParams.vehicleType" placeholder="请选择车型(双挂，单挂)" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="计量单位(KG)" prop="measuringUnit">
-        <el-input
-          v-model="queryParams.measuringUnit"
-          placeholder="请输入计量单位(KG)"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="包装方式(集装箱，散装)" prop="packMode">
-        <el-input
-          v-model="queryParams.packMode"
-          placeholder="请输入包装方式(集装箱，散装)"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="集装箱号1" prop="containerNo1">
-        <el-input
-          v-model="queryParams.containerNo1"
-          placeholder="请输入集装箱号1"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="集装箱号2" prop="containerNo2">
-        <el-input
-          v-model="queryParams.containerNo2"
-          placeholder="请输入集装箱号2"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="集装箱号3" prop="containerNo3">
-        <el-input
-          v-model="queryParams.containerNo3"
-          placeholder="请输入集装箱号3"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="集装箱号4" prop="containerNo4">
-        <el-input
-          v-model="queryParams.containerNo4"
-          placeholder="请输入集装箱号4"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="净重" prop="netWeight">
-        <el-input
-          v-model="queryParams.netWeight"
-          placeholder="请输入净重"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="皮重" prop="tareWeight">
-        <el-input
-          v-model="queryParams.tareWeight"
-          placeholder="请输入皮重"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="毛重" prop="roughWeight">
-        <el-input
-          v-model="queryParams.roughWeight"
-          placeholder="请输入毛重"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="生成时间" prop="genTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.genTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择生成时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="生成人" prop="genBy">
-        <el-input
-          v-model="queryParams.genBy"
-          placeholder="请输入生成人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="磅单打印时间" prop="poundTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.poundTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择磅单打印时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="磅单号" prop="poundNo">
-        <el-input
-          v-model="queryParams.poundNo"
-          placeholder="请输入磅单号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="批次号" prop="batchNo">
-        <el-input
-          v-model="queryParams.batchNo"
-          placeholder="请输入批次号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="提运单号" prop="loadingBillNo">
-        <el-input
-          v-model="queryParams.loadingBillNo"
-          placeholder="请输入提运单号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="库位号" prop="storeCode">
-        <el-input
-          v-model="queryParams.storeCode"
-          placeholder="请输入库位号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="库位号2" prop="storeCode2">
-        <el-input
-          v-model="queryParams.storeCode2"
-          placeholder="请输入库位号2"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="库位号3" prop="storeCode3">
-        <el-input
-          v-model="queryParams.storeCode3"
-          placeholder="请输入库位号3"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="库位号4" prop="storeCode4">
-        <el-input
-          v-model="queryParams.storeCode4"
-          placeholder="请输入库位号4"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="生成舱单(0未生成，1已生成)" prop="hasManifest">
-        <el-input
-          v-model="queryParams.hasManifest"
-          placeholder="请输入生成舱单(0未生成，1已生成)"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="生成集报清单" prop="hasDeclare">
-        <el-input
-          v-model="queryParams.hasDeclare"
-          placeholder="请输入生成集报清单"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="生成进境确报" prop="hasTransit">
-        <el-input
-          v-model="queryParams.hasTransit"
-          placeholder="请输入生成进境确报"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态(0,待入场，2已入场，1已出场" prop="storeState">
-        <el-input
-          v-model="queryParams.storeState"
-          placeholder="请输入状态(0,待入场，2已入场，1已出场"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="文件ID" prop="fileId">
-        <el-input
-          v-model="queryParams.fileId"
-          placeholder="请输入文件ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="放行单号" prop="passNo">
-        <el-input
-          v-model="queryParams.passNo"
-          placeholder="请输入放行单号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="乐观锁" prop="revision">
-        <el-input
-          v-model="queryParams.revision"
-          placeholder="请输入乐观锁"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="文件中的备注" prop="memo">
-        <el-input
-          v-model="queryParams.memo"
-          placeholder="请输入文件中的备注"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="蒙古毛重" prop="mongoliaRoughWeight">
-        <el-input
-          v-model="queryParams.mongoliaRoughWeight"
-          placeholder="请输入蒙古毛重"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="货物名称" prop="goodsName">
-        <el-input
-          v-model="queryParams.goodsName"
-          placeholder="请输入货物名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="发货方" prop="sendName">
-        <el-input
-          v-model="queryParams.sendName"
-          placeholder="请输入发货方"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="进场时间" prop="inTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.inTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择进场时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="出场时间" prop="outTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.outTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择出场时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="预留1" prop="reserved1">
-        <el-input
-          v-model="queryParams.reserved1"
-          placeholder="请输入预留1"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="预留1" prop="reserved2">
-        <el-input
-          v-model="queryParams.reserved2"
-          placeholder="请输入预留1"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="预留1" prop="reserved3">
-        <el-input
-          v-model="queryParams.reserved3"
-          placeholder="请输入预留1"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="预留1" prop="reserved4">
-        <el-input
-          v-model="queryParams.reserved4"
-          placeholder="请输入预留1"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="通道号(进场)" prop="chnlNoI">
-        <el-input
-          v-model="queryParams.chnlNoI"
-          placeholder="请输入通道号(进场)"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="出场通道号" prop="chnlNoE">
-        <el-input
-          v-model="queryParams.chnlNoE"
-          placeholder="请输入出场通道号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="库位别名" prop="locationAlias">
-        <el-input
-          v-model="queryParams.locationAlias"
-          placeholder="请输入库位别名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="销售合同号" prop="salesContractNo">
-        <el-input
-          v-model="queryParams.salesContractNo"
-          placeholder="请输入销售合同号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="提煤单号" prop="coalBillNo">
-        <el-input
-          v-model="queryParams.coalBillNo"
-          placeholder="请输入提煤单号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="运输方式" prop="transportMode">
-        <el-input
-          v-model="queryParams.transportMode"
-          placeholder="请输入运输方式"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="运输单位" prop="transportUnit">
-        <el-input
-          v-model="queryParams.transportUnit"
-          placeholder="请输入运输单位"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="派车单号" prop="dispatchNo">
-        <el-input
-          v-model="queryParams.dispatchNo"
-          placeholder="请输入派车单号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="APP用户名" prop="appUser">
-        <el-input
-          v-model="queryParams.appUser"
-          placeholder="请输入APP用户名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="数据来源" prop="dataSources">
-        <el-input
-          v-model="queryParams.dataSources"
-          placeholder="请输入数据来源"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="作废原因" prop="voidReason">
-        <el-input
-          v-model="queryParams.voidReason"
-          placeholder="请输入作废原因"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="司机手机号" prop="driverMobileNo">
-        <el-input
-          v-model="queryParams.driverMobileNo"
-          placeholder="请输入司机手机号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="制单人" prop="makerBy">
-        <el-input
-          v-model="queryParams.makerBy"
-          placeholder="请输入制单人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="箱皮重" prop="boxTareWeight">
-        <el-input
-          v-model="queryParams.boxTareWeight"
-          placeholder="请输入箱皮重"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="作废日期" prop="voidDate">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.voidDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择作废日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="制单时间" prop="makerTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.makerTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择制单时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="入场司磅员" prop="inUser">
-        <el-input
-          v-model="queryParams.inUser"
-          placeholder="请输入入场司磅员"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="出场司磅员" prop="outUser">
-        <el-input
-          v-model="queryParams.outUser"
-          placeholder="请输入出场司磅员"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+<!--      <el-form-item label="客户id" prop="receiveId">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.receiveId"-->
+<!--          placeholder="请输入客户id"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="客户名称" prop="receiveName">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.receiveName"-->
+<!--          placeholder="请输入客户名称"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="寄舱合同号" prop="checkContractNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.checkContractNo"-->
+<!--          placeholder="请输入寄舱合同号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="蒙方磅单号 蒙方磅单号" prop="mongoliaBillNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.mongoliaBillNo"-->
+<!--          placeholder="请输入蒙方磅单号 蒙方磅单号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="车号 " prop="vehicleNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.vehicleNo"-->
+<!--          placeholder="请输入车号 "-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="挂车号1 " prop="trailerNo1">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.trailerNo1"-->
+<!--          placeholder="请输入挂车号1 "-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="挂车号2" prop="trailerNo2">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.trailerNo2"-->
+<!--          placeholder="请输入挂车号2"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="车队名 " prop="vehicleTeam">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.vehicleTeam"-->
+<!--          placeholder="请输入车队名 "-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="蒙古磅净重 净重" prop="mongoliaNetWeight">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.mongoliaNetWeight"-->
+<!--          placeholder="请输入蒙古磅净重 净重"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="蒙古磅皮重 皮重" prop="mongoliaTareWeight">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.mongoliaTareWeight"-->
+<!--          placeholder="请输入蒙古磅皮重 皮重"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="车辆数量 " prop="vehicleCount">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.vehicleCount"-->
+<!--          placeholder="请输入车辆数量 "-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="司机姓名 " prop="driverName">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.driverName"-->
+<!--          placeholder="请输入司机姓名 "-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="车队联系人 " prop="vehicleTeamContact">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.vehicleTeamContact"-->
+<!--          placeholder="请输入车队联系人 "-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="车队联系电话" prop="vehicleTeamTel">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.vehicleTeamTel"-->
+<!--          placeholder="请输入车队联系电话"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="车型(双挂，单挂)" prop="vehicleType">-->
+<!--        <el-select v-model="queryParams.vehicleType" placeholder="请选择车型(双挂，单挂)" clearable size="small">-->
+<!--          <el-option label="请选择字典生成" value="" />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="计量单位(KG)" prop="measuringUnit">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.measuringUnit"-->
+<!--          placeholder="请输入计量单位(KG)"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="包装方式(集装箱，散装)" prop="packMode">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.packMode"-->
+<!--          placeholder="请输入包装方式(集装箱，散装)"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="集装箱号1" prop="containerNo1">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.containerNo1"-->
+<!--          placeholder="请输入集装箱号1"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="集装箱号2" prop="containerNo2">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.containerNo2"-->
+<!--          placeholder="请输入集装箱号2"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="集装箱号3" prop="containerNo3">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.containerNo3"-->
+<!--          placeholder="请输入集装箱号3"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="集装箱号4" prop="containerNo4">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.containerNo4"-->
+<!--          placeholder="请输入集装箱号4"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="净重" prop="netWeight">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.netWeight"-->
+<!--          placeholder="请输入净重"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="皮重" prop="tareWeight">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.tareWeight"-->
+<!--          placeholder="请输入皮重"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="毛重" prop="roughWeight">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.roughWeight"-->
+<!--          placeholder="请输入毛重"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="生成时间" prop="genTime">-->
+<!--        <el-date-picker clearable size="small" style="width: 200px"-->
+<!--          v-model="queryParams.genTime"-->
+<!--          type="date"-->
+<!--          value-format="yyyy-MM-dd"-->
+<!--          placeholder="选择生成时间">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="生成人" prop="genBy">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.genBy"-->
+<!--          placeholder="请输入生成人"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="磅单打印时间" prop="poundTime">-->
+<!--        <el-date-picker clearable size="small" style="width: 200px"-->
+<!--          v-model="queryParams.poundTime"-->
+<!--          type="date"-->
+<!--          value-format="yyyy-MM-dd"-->
+<!--          placeholder="选择磅单打印时间">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="磅单号" prop="poundNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.poundNo"-->
+<!--          placeholder="请输入磅单号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="批次号" prop="batchNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.batchNo"-->
+<!--          placeholder="请输入批次号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="提运单号" prop="loadingBillNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.loadingBillNo"-->
+<!--          placeholder="请输入提运单号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="库位号" prop="storeCode">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.storeCode"-->
+<!--          placeholder="请输入库位号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="库位号2" prop="storeCode2">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.storeCode2"-->
+<!--          placeholder="请输入库位号2"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="库位号3" prop="storeCode3">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.storeCode3"-->
+<!--          placeholder="请输入库位号3"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="库位号4" prop="storeCode4">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.storeCode4"-->
+<!--          placeholder="请输入库位号4"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="生成舱单(0未生成，1已生成)" prop="hasManifest">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.hasManifest"-->
+<!--          placeholder="请输入生成舱单(0未生成，1已生成)"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="生成集报清单" prop="hasDeclare">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.hasDeclare"-->
+<!--          placeholder="请输入生成集报清单"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="生成进境确报" prop="hasTransit">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.hasTransit"-->
+<!--          placeholder="请输入生成进境确报"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="状态(0,待入场，2已入场，1已出场" prop="storeState">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.storeState"-->
+<!--          placeholder="请输入状态(0,待入场，2已入场，1已出场"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="文件ID" prop="fileId">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.fileId"-->
+<!--          placeholder="请输入文件ID"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="放行单号" prop="passNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.passNo"-->
+<!--          placeholder="请输入放行单号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="乐观锁" prop="revision">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.revision"-->
+<!--          placeholder="请输入乐观锁"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="文件中的备注" prop="memo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.memo"-->
+<!--          placeholder="请输入文件中的备注"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="蒙古毛重" prop="mongoliaRoughWeight">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.mongoliaRoughWeight"-->
+<!--          placeholder="请输入蒙古毛重"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="货物名称" prop="goodsName">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.goodsName"-->
+<!--          placeholder="请输入货物名称"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="发货方" prop="sendName">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.sendName"-->
+<!--          placeholder="请输入发货方"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="进场时间" prop="inTime">-->
+<!--        <el-date-picker clearable size="small" style="width: 200px"-->
+<!--          v-model="queryParams.inTime"-->
+<!--          type="date"-->
+<!--          value-format="yyyy-MM-dd"-->
+<!--          placeholder="选择进场时间">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="出场时间" prop="outTime">-->
+<!--        <el-date-picker clearable size="small" style="width: 200px"-->
+<!--          v-model="queryParams.outTime"-->
+<!--          type="date"-->
+<!--          value-format="yyyy-MM-dd"-->
+<!--          placeholder="选择出场时间">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="预留1" prop="reserved1">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.reserved1"-->
+<!--          placeholder="请输入预留1"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="预留1" prop="reserved2">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.reserved2"-->
+<!--          placeholder="请输入预留1"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="预留1" prop="reserved3">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.reserved3"-->
+<!--          placeholder="请输入预留1"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="预留1" prop="reserved4">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.reserved4"-->
+<!--          placeholder="请输入预留1"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="通道号(进场)" prop="chnlNoI">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.chnlNoI"-->
+<!--          placeholder="请输入通道号(进场)"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="出场通道号" prop="chnlNoE">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.chnlNoE"-->
+<!--          placeholder="请输入出场通道号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="库位别名" prop="locationAlias">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.locationAlias"-->
+<!--          placeholder="请输入库位别名"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="销售合同号" prop="salesContractNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.salesContractNo"-->
+<!--          placeholder="请输入销售合同号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="提煤单号" prop="coalBillNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.coalBillNo"-->
+<!--          placeholder="请输入提煤单号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="运输方式" prop="transportMode">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.transportMode"-->
+<!--          placeholder="请输入运输方式"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="运输单位" prop="transportUnit">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.transportUnit"-->
+<!--          placeholder="请输入运输单位"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="派车单号" prop="dispatchNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.dispatchNo"-->
+<!--          placeholder="请输入派车单号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="APP用户名" prop="appUser">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.appUser"-->
+<!--          placeholder="请输入APP用户名"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="数据来源" prop="dataSources">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.dataSources"-->
+<!--          placeholder="请输入数据来源"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="作废原因" prop="voidReason">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.voidReason"-->
+<!--          placeholder="请输入作废原因"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="司机手机号" prop="driverMobileNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.driverMobileNo"-->
+<!--          placeholder="请输入司机手机号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="制单人" prop="makerBy">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.makerBy"-->
+<!--          placeholder="请输入制单人"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="箱皮重" prop="boxTareWeight">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.boxTareWeight"-->
+<!--          placeholder="请输入箱皮重"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="作废日期" prop="voidDate">-->
+<!--        <el-date-picker clearable size="small" style="width: 200px"-->
+<!--          v-model="queryParams.voidDate"-->
+<!--          type="date"-->
+<!--          value-format="yyyy-MM-dd"-->
+<!--          placeholder="选择作废日期">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="制单时间" prop="makerTime">-->
+<!--        <el-date-picker clearable size="small" style="width: 200px"-->
+<!--          v-model="queryParams.makerTime"-->
+<!--          type="date"-->
+<!--          value-format="yyyy-MM-dd"-->
+<!--          placeholder="选择制单时间">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="入场司磅员" prop="inUser">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.inUser"-->
+<!--          placeholder="请输入入场司磅员"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="出场司磅员" prop="outUser">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.outUser"-->
+<!--          placeholder="请输入出场司磅员"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -825,7 +827,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -1126,7 +1128,7 @@
 </template>
 
 <script>
-import { listOutstoreDoc, getOutstoreDoc, delOutstoreDoc, addOutstoreDoc, updateOutstoreDoc } from "@/api/place/outstoreDoc";
+import { listOutstoreDoc,listOutstoreDocLike, getOutstoreDoc, delOutstoreDoc, addOutstoreDoc, updateOutstoreDoc } from "@/api/place/outstoreDoc";
 
 export default {
   name: "OutstoreDoc",
@@ -1253,7 +1255,7 @@ export default {
     /** 查询出库明细单列表 */
     getList() {
       this.loading = true;
-      listOutstoreDoc(this.queryParams).then(response => {
+      listOutstoreDocLike(this.queryParams).then(response => {
         this.outstoreDocList = response.rows;
         this.total = response.total;
         this.loading = false;
