@@ -867,13 +867,40 @@ export default {
         poundSelect(event).then((response) => {
           //if(response.data !== null){
           this.Poundweight = response.data.weight;
+
+          //定时重量赋值到相应毛重 皮重 净重上 11.10修改 虎神
+          //流向 进场  车辆类型 蒙煤车 有车牌号 反添毛重
+          if(this.PoundForm.flowDirection =='I' && this.PoundForm.stationViaType == '01'&& this.form.plateNum !=undefined){
+           //赋值毛重
+            this.form.grossWeight=this.Poundweight;
+
+            //流向 出场  车辆类型 蒙煤车 有车牌号 反添皮重 计算净重
+          }else if(this.PoundForm.flowDirection =='E' && this.PoundForm.stationViaType == '01'&& this.form.plateNum !=undefined){
+            //赋值皮重
+            this.form.tare=this.Poundweight;
+            //计算净重
+            this.form.netWeight=this.form.grossWeight-this.form.tare;
+
+          //流向 进场  车辆类型 外调车 有车牌号 反添皮重
+          }else if(this.PoundForm.flowDirection =='I' && this.PoundForm.stationViaType == '02'&& this.form.plateNum !=undefined){
+            //赋值皮重
+            this.form.tare=this.Poundweight;
+
+          //流向 出场  车辆类型 外调车 有车牌号 反添毛重 计算净重
+          }else if(this.PoundForm.flowDirection =='E' && this.PoundForm.stationViaType == '02'&& this.form.plateNum !=undefined){
+            //赋值毛重
+            this.form.grossWeight=this.Poundweight;
+            //计算净重
+            this.form.netWeight=this.form.grossWeight-this.form.tare;
+          };
+
           this.isStable = response.data.isStable;
           if (this.plateNumOptions.length === 0) {
             this.getVehicleList()
           }
           //}
         });
-      }, 3000);
+      }, 2000);
       //离开当前页面定时器停止
       this.$once("hook:beforeDestroy", () => {
         clearInterval(this.ChannelNumberTimer);
