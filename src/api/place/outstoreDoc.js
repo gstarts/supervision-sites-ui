@@ -9,6 +9,15 @@ export function listOutstoreDoc(query) {
   })
 }
 
+// 查询出库明细单列表
+export function listOutstoreDocLike(query) {
+  return request({
+    url: '/place/outstoreDoc/listLike',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询出库明细单详细
 export function getOutstoreDoc(id) {
   return request({
