@@ -1,6 +1,17 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <!-- 所属场所 -->
+      <el-form-item label="所属场所" prop="placeId">
+        <el-select v-model="queryParams.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="提煤单号" prop="coalBillNo">
         <el-input
           v-model="queryParams.coalBillNo"
@@ -99,17 +110,6 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body :before-close="closeDialog">
       <el-form ref="form" :model="form" :rules="rules" number label-width="120px" size="mini">
         <el-row>
-          <!-- 所属场所 -->
-          <el-form-item label="所属场所" prop="placeId">
-            <el-select v-model="form.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
-              <el-option
-                v-for="dept in depts"
-                :key="dept.deptId"
-                :label="dept.deptName"
-                :value="dept.deptId"
-              />
-            </el-select>
-          </el-form-item>
           <el-col :span="12">
             <el-form-item label="提煤单号" prop="coalBillNo">
               <el-select v-model="form.coalBillNo" filterable placeholder="请选择提煤单号">
@@ -293,7 +293,8 @@ export default {
         transportNum: undefined,
         status: undefined,
         allocationNum: undefined,
-        revision: undefined
+        revision: undefined,
+        placeId:undefined
       },
       // 表单参数
       form: {},
@@ -361,10 +362,11 @@ export default {
     // 获取场所
     this.depts = getUserDepts('0')
     if (this.depts.length > 0) {
-      this.form.placeId = this.depts[0].deptId;
+      this.queryParams.placeId = this.depts[0].deptId;
       //提煤单
-      selectCoalBillNo({ 'placeId': this.form.placeId }).then(response => {
+      selectCoalBillNo({ 'placeId': this.queryParams.placeId }).then(response => {
         this.BigList = response.rows
+
       })
     }
 
@@ -392,7 +394,8 @@ export default {
     cancel() {
       this.open = false
       this.reset()
-      this.BigList = []
+      //清空提煤单号
+      // this.BigList = []
     },
     // 表单重置
     reset() {

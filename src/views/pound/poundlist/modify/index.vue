@@ -308,55 +308,42 @@
         </el-row>
         <el-row v-show="selectPound.packMode === '1'">
           <el-row :gutter="10">
-            <el-col :span="11">
-              <el-form-item label="集装箱号1" prop="containerNo1">
-                <el-input v-model="selectModify.containerNo1" placeholder="请输入集装号1" disabled/>
-              </el-form-item>
+            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+              集装箱号1:{{ selectModify.containerNo1 }}
             </el-col>
-            <el-col :span="2" style="padding-top:10px;">修改为</el-col>
-            <el-col :span="11">
-              <el-form-item label="集装箱号1" prop="modifyContainerNo1">
-                <el-input v-model="selectModify.modifyContainerNo1" placeholder="请输入修改后集装箱号1"/>
-              </el-form-item>
+            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
+            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+              集装箱号1:{{ selectModify.modifyContainerNo1 }}
             </el-col>
           </el-row>
+
           <el-row :gutter="10">
-            <el-col :span="11">
-              <el-form-item label="集装箱号2" prop="containerNo2">
-                <el-input v-model="selectModify.containerNo2" placeholder="请输入集装号2" disabled/>
-              </el-form-item>
+            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+              集装箱号2:{{ selectModify.containerNo2 }}
             </el-col>
-            <el-col :span="2" style="padding-top:10px;">修改为</el-col>
-            <el-col :span="11">
-              <el-form-item label="集装箱号2" prop="modifyContainerNo2">
-                <el-input v-model="selectModify.modifyContainerNo2" placeholder="请输入修改后集装箱号2"/>
-              </el-form-item>
+            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
+            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+              集装箱号2:{{ selectModify.modifyContainerNo2 }}
             </el-col>
           </el-row>
+
           <el-row :gutter="10">
-            <el-col :span="11">
-              <el-form-item label="集装箱号3" prop="containerNo3">
-                <el-input v-model="selectModify.containerNo3" placeholder="请输入集装号3" disabled/>
-              </el-form-item>
+            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+              集装箱号3:{{ selectModify.containerNo3 }}
             </el-col>
-            <el-col :span="2" style="padding-top:10px;">修改为</el-col>
-            <el-col :span="11">
-              <el-form-item label="集装箱号3" prop="modifyContainerNo3">
-                <el-input v-model="selectModify.modifyContainerNo3" placeholder="请输入修改后集装箱号3"/>
-              </el-form-item>
+            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
+            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+              集装箱号3:{{ selectModify.modifyContainerNo3 }}
             </el-col>
           </el-row>
+
           <el-row :gutter="10">
-            <el-col :span="11">
-              <el-form-item label="集装箱号4" prop="containerNo4">
-                <el-input v-model="selectModify.containerNo4" placeholder="请输入集装号4" disabled/>
-              </el-form-item>
+            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+              集装箱号4:{{ selectModify.containerNo4 }}
             </el-col>
-            <el-col :span="2" style="padding-top:10px;">修改为</el-col>
-            <el-col :span="11">
-              <el-form-item label="集装箱号4" prop="modifyContainerNo4">
-                <el-input v-model="selectModify.modifyContainerNo4" placeholder="请输入修改后集装箱号4"/>
-              </el-form-item>
+            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
+            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+              集装箱号4:{{ selectModify.modifyContainerNo4 }}
             </el-col>
           </el-row>
         </el-row>

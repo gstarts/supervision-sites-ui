@@ -16,6 +16,7 @@
         @click="print">
         <i class="fa fa-print" aria-hidden="true">&nbsp;&nbsp;打印</i>
       </el-button>
+      <el-button type="success" @click="getVehicleList">刷车号(F7)</el-button>
       <!--自动打印按钮-->
       <el-switch
         @change="changPrint"
@@ -1389,6 +1390,10 @@ export default {
       if (key === 115) {//F4
         e.preventDefault()
         this.cancel()
+      }
+      if (key === 118) {
+        e.preventDefault()
+        this.getVehicleList()
       }
       /* if(key === 80){
          e.preventDefault()
