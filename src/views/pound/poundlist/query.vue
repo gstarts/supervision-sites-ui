@@ -110,7 +110,7 @@
           <el-table-column label="毛重" align="center" prop="grossWeight" />
           <el-table-column label="皮重" align="center" prop="tare" />
           <el-table-column label="净重" align="center" prop="netWeight" />
-          <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+          <!--<el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -120,7 +120,7 @@
                 v-hasPermi="['pound:sheet:edit']"
               >作废申请</el-button>
             </template>
-          </el-table-column>
+          </el-table-column>-->
         </el-table>
         <pagination
           v-show="conditionLogo"

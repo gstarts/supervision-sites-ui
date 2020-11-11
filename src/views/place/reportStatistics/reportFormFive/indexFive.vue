@@ -166,7 +166,7 @@
       <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
       <af-table-column label="合同" align="center" prop="column2"/>
 
-      <af-table-column label="入库总量" align="center" prop="column3"/>
+      <af-table-column label="入库总量" align="center" prop="column6"/>
       <af-table-column label="现有放行量" align="center" prop="column4"/>
       <af-table-column label="可申请放行量" align="center" prop="column5"/>
 

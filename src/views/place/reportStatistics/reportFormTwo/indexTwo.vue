@@ -169,7 +169,7 @@
         <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
         <af-table-column label="合同" align="center" prop="column2"/>
 
-        <af-table-column label="入库" align="center" prop="column3"/>
+        <af-table-column label="入库" align="center" prop="column6"/>
         <af-table-column label="出库" align="center" prop="column4"/>
         <af-table-column label="结余" align="center" prop="column5"/>
 

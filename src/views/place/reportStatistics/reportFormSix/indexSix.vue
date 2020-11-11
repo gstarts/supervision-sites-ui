@@ -166,10 +166,10 @@
       <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
       <af-table-column label="合同" align="center" prop="column2"/>
 
-      <af-table-column label="放行单总量" align="center" prop="column3"/>
+      <af-table-column label="放行单总量" align="center" prop="column6"/>
       <af-table-column label="已占用" align="center" prop="column4"/>
       <af-table-column label="可分配提煤单总量" align="center" prop="column5"/>
-      
+
 
     </el-table>
 

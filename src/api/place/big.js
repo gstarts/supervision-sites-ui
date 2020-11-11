@@ -43,6 +43,13 @@ export function updateBig(data) {
     data: data
   })
 }
+export function updateVoidCar(data) {
+  return request({
+    url: '/place/big/void',
+    method: 'post',
+    data: data
+  })
+}
 
 // 删除大提煤单 大提煤单
 export function delBig(id) {

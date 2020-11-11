@@ -108,7 +108,7 @@ export function exportSheet(query) {
 
 export function getSheetById(id) {
   return request({
-    url: '/pound/measurement/sheet//byId/' + id,
+    url: '/pound/measurement/sheet/byId/' + id,
     method: 'get',
   })
 }
