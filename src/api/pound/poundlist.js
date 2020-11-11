@@ -53,6 +53,14 @@ export function addSheet(data) {
   })
 }
 
+export function addSheetPlace(data) {
+  return request({
+    url: '/place/measurement/sheet',
+    method: 'post',
+    data: data
+  })
+}
+
 //磅单查询页(根据条件查询)
 export function queryPoundStatisticsList(query) {
   return request({
