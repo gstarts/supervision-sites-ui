@@ -665,109 +665,64 @@
 <!--      </el-form-item>-->
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['place:outstoreDoc:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['place:outstoreDoc:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['place:outstoreDoc:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['place:outstoreDoc:export']"
-        >导出</el-button>
-      </el-col>
-    </el-row>
+<!--    <el-row :gutter="10" class="mb8">-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          icon="el-icon-plus"-->
+<!--          size="mini"-->
+<!--          @click="handleAdd"-->
+<!--          v-hasPermi="['place:outstoreDoc:add']"-->
+<!--        >新增</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['place:outstoreDoc:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="danger"-->
+<!--          icon="el-icon-delete"-->
+<!--          size="mini"-->
+<!--          :disabled="multiple"-->
+<!--          @click="handleDelete"-->
+<!--          v-hasPermi="['place:outstoreDoc:remove']"-->
+<!--        >删除</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['place:outstoreDoc:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
+<!--    </el-row>-->
 
     <el-table v-loading="loading" :data="outstoreDocList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID 逻辑主键" align="center" prop="id" />
-      <el-table-column label="场所编号" align="center" prop="placeId" />
-      <el-table-column label="提煤单号" align="center" prop="docNo" />
-      <el-table-column label="放行单号" align="center" prop="businessNo" />
-      <el-table-column label="寄舱客户" align="center" prop="customerName" />
-      <el-table-column label="寄舱客户ID" align="center" prop="customerId" />
-      <el-table-column label="客户id" align="center" prop="receiveId" />
-      <el-table-column label="客户名称" align="center" prop="receiveName" />
-      <el-table-column label="寄舱合同号" align="center" prop="checkContractNo" />
-      <el-table-column label="蒙方磅单号 蒙方磅单号" align="center" prop="mongoliaBillNo" />
+<!--      <el-table-column type="selection" width="55" align="center" />-->
+<!--      <el-table-column label="ID 逻辑主键" align="center" prop="id" />-->
+<!--      <el-table-column label="场所编号" align="center" prop="placeId" />-->
+      <el-table-column label="出库单号" align="center" prop="docNo" />
+      <el-table-column label="发料仓库" align="center" prop="sendName" />
+      <el-table-column label="品名" align="center" prop="goodsName" />
+      <el-table-column label="提煤客户" align="center" prop="customerName" />
+      <el-table-column label="销售合同号" align="center" prop="salesContractNo" />
+      <el-table-column label="提煤单号" align="center" prop="coalBillNo" />
+      <el-table-column label="运输方式" align="center" prop="transportMode" />
+      <el-table-column label="运输单位" align="center" prop="transportUnit" />
+      <el-table-column label="车队" align="center" prop="vehicleTeam" />
+      <el-table-column label="派车单号" align="center" prop="dispatchNo" />
       <el-table-column label="车号 " align="center" prop="vehicleNo" />
-      <el-table-column label="挂车号1 " align="center" prop="trailerNo1" />
-      <el-table-column label="挂车号2" align="center" prop="trailerNo2" />
-      <el-table-column label="车队名 " align="center" prop="vehicleTeam" />
-      <el-table-column label="蒙古磅净重 净重" align="center" prop="mongoliaNetWeight" />
-      <el-table-column label="蒙古磅皮重 皮重" align="center" prop="mongoliaTareWeight" />
-      <el-table-column label="车辆数量 " align="center" prop="vehicleCount" />
-      <el-table-column label="司机姓名 " align="center" prop="driverName" />
-      <el-table-column label="车队联系人 " align="center" prop="vehicleTeamContact" />
-      <el-table-column label="车队联系电话" align="center" prop="vehicleTeamTel" />
-      <el-table-column label="车型(双挂，单挂)" align="center" prop="vehicleType" />
-      <el-table-column label="计量单位(KG)" align="center" prop="measuringUnit" />
-      <el-table-column label="包装方式(集装箱，散装)" align="center" prop="packMode" />
+      <el-table-column label="车型" align="center" prop="vehicleType" />
       <el-table-column label="集装箱号1" align="center" prop="containerNo1" />
-      <el-table-column label="集装箱号2" align="center" prop="containerNo2" />
-      <el-table-column label="集装箱号3" align="center" prop="containerNo3" />
-      <el-table-column label="集装箱号4" align="center" prop="containerNo4" />
-      <el-table-column label="净重" align="center" prop="netWeight" />
-      <el-table-column label="皮重" align="center" prop="tareWeight" />
-      <el-table-column label="毛重" align="center" prop="roughWeight" />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="生成时间" align="center" prop="genTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.genTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="生成人" align="center" prop="genBy" />
-      <el-table-column label="磅单打印时间" align="center" prop="poundTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.poundTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="磅单号" align="center" prop="poundNo" />
-      <el-table-column label="批次号" align="center" prop="batchNo" />
-      <el-table-column label="提运单号" align="center" prop="loadingBillNo" />
-      <el-table-column label="库位号" align="center" prop="storeCode" />
-      <el-table-column label="库位号2" align="center" prop="storeCode2" />
-      <el-table-column label="库位号3" align="center" prop="storeCode3" />
-      <el-table-column label="库位号4" align="center" prop="storeCode4" />
-      <el-table-column label="生成舱单(0未生成，1已生成)" align="center" prop="hasManifest" />
-      <el-table-column label="生成集报清单" align="center" prop="hasDeclare" />
-      <el-table-column label="生成进境确报" align="center" prop="hasTransit" />
-      <el-table-column label="状态(0,待入场，2已入场，1已出场" align="center" prop="storeState" />
-      <el-table-column label="文件ID" align="center" prop="fileId" />
-      <el-table-column label="放行单号" align="center" prop="passNo" />
-      <el-table-column label="乐观锁" align="center" prop="revision" />
-      <el-table-column label="文件中的备注" align="center" prop="memo" />
-      <el-table-column label="蒙古毛重" align="center" prop="mongoliaRoughWeight" />
-      <el-table-column label="货物名称" align="center" prop="goodsName" />
-      <el-table-column label="发货方" align="center" prop="sendName" />
       <el-table-column label="进场时间" align="center" prop="inTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.inTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
@@ -778,36 +733,100 @@
           <span>{{ parseTime(scope.row.outTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="预留1" align="center" prop="reserved1" />
-      <el-table-column label="预留1" align="center" prop="reserved2" />
-      <el-table-column label="预留1" align="center" prop="reserved3" />
-      <el-table-column label="预留1" align="center" prop="reserved4" />
-      <el-table-column label="通道号(进场)" align="center" prop="chnlNoI" />
-      <el-table-column label="出场通道号" align="center" prop="chnlNoE" />
-      <el-table-column label="库位别名" align="center" prop="locationAlias" />
-      <el-table-column label="销售合同号" align="center" prop="salesContractNo" />
-      <el-table-column label="提煤单号" align="center" prop="coalBillNo" />
-      <el-table-column label="运输方式" align="center" prop="transportMode" />
-      <el-table-column label="运输单位" align="center" prop="transportUnit" />
-      <el-table-column label="派车单号" align="center" prop="dispatchNo" />
-      <el-table-column label="APP用户名" align="center" prop="appUser" />
-      <el-table-column label="数据来源" align="center" prop="dataSources" />
-      <el-table-column label="作废原因" align="center" prop="voidReason" />
-      <el-table-column label="司机手机号" align="center" prop="driverMobileNo" />
-      <el-table-column label="制单人" align="center" prop="makerBy" />
+      <el-table-column label="皮重" align="center" prop="tareWeight" />
       <el-table-column label="箱皮重" align="center" prop="boxTareWeight" />
-      <el-table-column label="作废日期" align="center" prop="voidDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.voidDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="制单时间" align="center" prop="makerTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.makerTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="毛重" align="center" prop="roughWeight" />
+      <el-table-column label="净重" align="center" prop="netWeight" />
+      <el-table-column label="计量单位(KG)" align="center" prop="measuringUnit" />
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="入场司磅员" align="center" prop="inUser" />
       <el-table-column label="出场司磅员" align="center" prop="outUser" />
+<!--      <el-table-column label="放行单号" align="center" prop="businessNo" />-->
+
+<!--      <el-table-column label="寄舱客户ID" align="center" prop="customerId" />-->
+<!--      <el-table-column label="客户id" align="center" prop="receiveId" />-->
+<!--      <el-table-column label="客户名称" align="center" prop="receiveName" />-->
+<!--      <el-table-column label="寄舱合同号" align="center" prop="checkContractNo" />-->
+<!--      <el-table-column label="蒙方磅单号 蒙方磅单号" align="center" prop="mongoliaBillNo" />-->
+
+<!--      <el-table-column label="挂车号1 " align="center" prop="trailerNo1" />-->
+<!--      <el-table-column label="挂车号2" align="center" prop="trailerNo2" />-->
+
+<!--      <el-table-column label="蒙古磅净重 净重" align="center" prop="mongoliaNetWeight" />-->
+<!--      <el-table-column label="蒙古磅皮重 皮重" align="center" prop="mongoliaTareWeight" />-->
+<!--      <el-table-column label="车辆数量 " align="center" prop="vehicleCount" />-->
+<!--      <el-table-column label="司机姓名 " align="center" prop="driverName" />-->
+<!--      <el-table-column label="车队联系人 " align="center" prop="vehicleTeamContact" />-->
+<!--      <el-table-column label="车队联系电话" align="center" prop="vehicleTeamTel" />-->
+
+
+<!--      <el-table-column label="包装方式(集装箱，散装)" align="center" prop="packMode" />-->
+
+<!--      <el-table-column label="集装箱号2" align="center" prop="containerNo2" />-->
+<!--      <el-table-column label="集装箱号3" align="center" prop="containerNo3" />-->
+<!--      <el-table-column label="集装箱号4" align="center" prop="containerNo4" />-->
+
+
+
+<!--      <el-table-column label="生成时间" align="center" prop="genTime" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.genTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="生成人" align="center" prop="genBy" />-->
+<!--      <el-table-column label="磅单打印时间" align="center" prop="poundTime" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.poundTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="磅单号" align="center" prop="poundNo" />-->
+<!--      <el-table-column label="批次号" align="center" prop="batchNo" />-->
+<!--      <el-table-column label="提运单号" align="center" prop="loadingBillNo" />-->
+<!--      <el-table-column label="库位号" align="center" prop="storeCode" />-->
+<!--      <el-table-column label="库位号2" align="center" prop="storeCode2" />-->
+<!--      <el-table-column label="库位号3" align="center" prop="storeCode3" />-->
+<!--      <el-table-column label="库位号4" align="center" prop="storeCode4" />-->
+<!--      <el-table-column label="生成舱单(0未生成，1已生成)" align="center" prop="hasManifest" />-->
+<!--      <el-table-column label="生成集报清单" align="center" prop="hasDeclare" />-->
+<!--      <el-table-column label="生成进境确报" align="center" prop="hasTransit" />-->
+<!--      <el-table-column label="状态(0,待入场，2已入场，1已出场" align="center" prop="storeState" />-->
+<!--      <el-table-column label="文件ID" align="center" prop="fileId" />-->
+<!--      <el-table-column label="放行单号" align="center" prop="passNo" />-->
+<!--      <el-table-column label="乐观锁" align="center" prop="revision" />-->
+<!--      <el-table-column label="文件中的备注" align="center" prop="memo" />-->
+<!--      <el-table-column label="蒙古毛重" align="center" prop="mongoliaRoughWeight" />-->
+
+
+
+
+<!--      <el-table-column label="预留1" align="center" prop="reserved1" />-->
+<!--      <el-table-column label="预留1" align="center" prop="reserved2" />-->
+<!--      <el-table-column label="预留1" align="center" prop="reserved3" />-->
+<!--      <el-table-column label="预留1" align="center" prop="reserved4" />-->
+<!--      <el-table-column label="通道号(进场)" align="center" prop="chnlNoI" />-->
+<!--      <el-table-column label="出场通道号" align="center" prop="chnlNoE" />-->
+<!--      <el-table-column label="库位别名" align="center" prop="locationAlias" />-->
+
+
+
+
+<!--      <el-table-column label="APP用户名" align="center" prop="appUser" />-->
+<!--      <el-table-column label="数据来源" align="center" prop="dataSources" />-->
+<!--      <el-table-column label="作废原因" align="center" prop="voidReason" />-->
+<!--      <el-table-column label="司机手机号" align="center" prop="driverMobileNo" />-->
+<!--      <el-table-column label="制单人" align="center" prop="makerBy" />-->
+
+<!--      <el-table-column label="作废日期" align="center" prop="voidDate" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.voidDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="制单时间" align="center" prop="makerTime" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.makerTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
