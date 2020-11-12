@@ -8,7 +8,7 @@
       <el-button type="warning" icon="el-icon-refresh-right" size="small" :loading="dataLoading" @click="cancel">清空
         (F4)
       </el-button>
-      <el-button type="primary" @click="getVehicleList" size="small">刷车号(F7)</el-button>
+      <el-button type="primary" @click="getVehicleList" size="small">刷车号(F9)</el-button>
       <el-button
         ref="printBtn"
         type="info"
@@ -1406,7 +1406,7 @@ export default {
         e.preventDefault()
         this.cancel()
       }
-      if (key === 118) {
+      if (key === 120) {//F9
         e.preventDefault()
         this.getVehicleList()
       }
