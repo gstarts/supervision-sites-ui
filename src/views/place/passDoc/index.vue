@@ -320,10 +320,10 @@ export default {
   created() {
     // 获取场所
     this.depts = getUserDepts('0')
-
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId
       this.getList()
+      this.getConsumerInfo(this.queryParams.placeId)
     }
 
     /** 放行状态字典 */
