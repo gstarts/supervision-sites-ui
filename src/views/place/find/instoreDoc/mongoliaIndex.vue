@@ -1,55 +1,19 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <!-- <el-form-item label="场所编号 场所编号" prop="placeId">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+      <el-form-item label="采购合同号" prop="purchaseContractNumber">
         <el-input
-          v-model="queryParams.placeId"
-          placeholder="请输入场所编号 场所编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
-      <el-form-item label="通知单号" prop="docNo">
-        <el-input
-          v-model="queryParams.docNo"
-          placeholder="请输入通知单号"
+          v-model="queryParams.purchaseContractNumber"
+          placeholder="请输入采购合同号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!-- <el-form-item label="业务编号" prop="businessNo">
+      <el-form-item label="品名" prop="goodsName">
         <el-input
-          v-model="queryParams.businessNo"
-          placeholder="请输入业务编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
-      <el-form-item label="寄舱客户" prop="checkConsumer">
-        <el-input
-          v-model="queryParams.checkConsumer"
-          placeholder="请输入寄舱客户"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <!-- <el-form-item label="寄舱合同号" prop="checkContractNo">
-        <el-input
-          v-model="queryParams.checkContractNo"
-          placeholder="请输入寄舱合同号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
-      <el-form-item label="蒙方磅单" prop="mongoliaBillNo">
-        <el-input
-          v-model="queryParams.mongoliaBillNo"
-          placeholder="请输入蒙方磅单"
+          v-model="queryParams.goodsName"
+          placeholder="请输入货物名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -64,6 +28,98 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="集装箱号" prop="containerNo1">
+        <el-input
+          v-model="queryParams.containerNo1"
+          placeholder="请输入集装箱号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="寄舱客户" prop="checkConsumer">
+        <el-input
+          v-model="queryParams.checkConsumer"
+          placeholder="请输入寄舱客户"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="库位号" prop="storeCode">
+        <el-input
+          v-model="queryParams.storeCode"
+          placeholder="请输入库位号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+<!--      <el-form-item label="境外出库日期" prop="mongolianDeliveryDate">-->
+<!--        <el-date-picker clearable size="small" style="width: 200px"-->
+<!--          v-model="queryParams.mongolianDeliveryDate"-->
+<!--          type="date"-->
+<!--          value-format="yyyy-MM-dd"-->
+<!--          placeholder="选择境外出库日期">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
+      <el-form-item label="时间" prop="startTime">
+        <el-date-picker
+          v-model="dateRange"
+          type="datetimerange"
+          align="right"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd">
+        </el-date-picker>
+      </el-form-item>
+      <!-- <el-form-item label="场所编号 场所编号" prop="placeId">
+        <el-input
+          v-model="queryParams.placeId"
+          placeholder="请输入场所编号 场所编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item> -->
+<!--      <el-form-item label="通知单号" prop="docNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.docNo"-->
+<!--          placeholder="请输入通知单号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+      <!-- <el-form-item label="业务编号" prop="businessNo">
+        <el-input
+          v-model="queryParams.businessNo"
+          placeholder="请输入业务编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item> -->
+
+      <!-- <el-form-item label="寄舱合同号" prop="checkContractNo">
+        <el-input
+          v-model="queryParams.checkContractNo"
+          placeholder="请输入寄舱合同号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item> -->
+<!--      <el-form-item label="蒙方磅单" prop="mongoliaBillNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.mongoliaBillNo"-->
+<!--          placeholder="请输入蒙方磅单"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+
       <!-- <el-form-item label="挂车号1 挂车号1" prop="trailerNo1">
         <el-input
           v-model="queryParams.trailerNo1"
@@ -168,15 +224,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="集装箱号1" prop="containerNo1">
-        <el-input
-          v-model="queryParams.containerNo1"
-          placeholder="请输入集装箱号1"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="集装箱号2" prop="containerNo2">
         <el-input
           v-model="queryParams.containerNo2"
@@ -283,15 +331,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item> -->
-      <el-form-item label="库位号" prop="storeCode">
-        <el-input
-          v-model="queryParams.storeCode"
-          placeholder="请输入库位号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <!-- <el-form-item label="库位号2" prop="storeCode2">
         <el-input
           v-model="queryParams.storeCode2"
@@ -400,15 +440,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="货物名称" prop="goodsName">
-        <el-input
-          v-model="queryParams.goodsName"
-          placeholder="请输入货物名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="发货方" prop="sendName">
         <el-input
           v-model="queryParams.sendName"
@@ -427,22 +459,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="进场时间" prop="inTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.inTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择进场时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="出场时间" prop="outTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.outTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择出场时间">
-        </el-date-picker>
-      </el-form-item>
+
       <el-form-item label="入场通道" prop="inChannel">
         <el-input
           v-model="queryParams.inChannel"
@@ -488,15 +505,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="采购合同号" prop="purchaseContractNumber">
-        <el-input
-          v-model="queryParams.purchaseContractNumber"
-          placeholder="请输入采购合同号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="库位别名" prop="locationAlias">
         <el-input
           v-model="queryParams.locationAlias"
@@ -558,14 +567,7 @@
           placeholder="选择境外发车日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="蒙方出库日期" prop="mongolianDeliveryDate">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.mongolianDeliveryDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择蒙方出库日期">
-        </el-date-picker>
-      </el-form-item>
+
       <el-form-item label="入境日期" prop="entryDate">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.entryDate"
@@ -647,55 +649,21 @@
     </el-row> -->
 
     <el-table v-loading="loading" :data="instoreDocList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
-      <el-table-column label="场所编号" align="center" prop="placeId" />
-      <el-table-column label="通知单号" align="center" prop="docNo" />
-      <el-table-column label="业务编号" align="center" prop="businessNo" />
-      <el-table-column label="寄舱客户" align="center" prop="checkConsumer" />
-      <el-table-column label="寄舱合同号" align="center" prop="checkContractNo" />
-      <el-table-column label="蒙方磅单号" align="center" prop="mongoliaBillNo" />
-      <el-table-column label="车号" align="center" prop="vehicleNo" />
-      <el-table-column label="挂车号" align="center" prop="trailerNo1" />
-      <el-table-column label="车队名" align="center" prop="vehicleTeam" />
-      <el-table-column label="蒙古磅净重" align="center" prop="mongoliaNetWeight" />
-      <el-table-column label="蒙古磅皮重" align="center" prop="mongoliaTareWeight" />
-      <el-table-column label="车辆数量" align="center" prop="vehicleCount" />
-      <el-table-column label="司机姓名" align="center" prop="driverName" />
-      <el-table-column label="车队联系人" align="center" prop="vehicleTeamContact" />
-      <el-table-column label="车队联系电话" align="center" prop="vehicleTeamTel" />
-      <el-table-column label="车型" align="center" prop="vehicleType" />
-      <el-table-column label="计量单位" align="center" prop="measuringUnit" />
-      <el-table-column label="包装方式" align="center" prop="packMode" />
-      <el-table-column label="集装箱号" align="center" prop="containerNo1" />
-      <el-table-column label="净重" align="center" prop="netWeight" />
-      <el-table-column label="皮重" align="center" prop="tareWeight" />
-      <el-table-column label="毛重" align="center" prop="roughWeight" />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="生成时间" align="center" prop="genTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.genTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
-        </template>
+<!--      <el-table-column type="selection" width="55" align="center" />-->
+      <el-table-column label="入库单号" align="center" prop="id" />
+      <af-table-column label="寄舱客户" align="center" prop="checkConsumer" />
+      <af-table-column label="寄舱合同号" align="center" prop="checkContractNo" />
+      <el-table-column label="品名" align="center" prop="goodsName" />
+      <el-table-column label="车辆信息"  align="center" >
+        <el-table-column label="车号" align="center" prop="vehicleNo" width="90"/>
+        <el-table-column label="车数" align="center" prop="vehicleNoCount"></el-table-column>
       </el-table-column>
-      <el-table-column label="生成人" align="center" prop="genBy" />
-      <el-table-column label="磅单打印时间" align="center" prop="poundTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.poundTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
-        </template>
+      <el-table-column label="场所"  align="center" >
+        <el-table-column label="毛重(KG)" align="center" prop="roughWeight" />
+        <el-table-column label="皮重(KG)" align="center" prop="tareWeight" />
+        <el-table-column label="箱皮重" align="center" prop="boxTareWeight" />
+        <el-table-column label="净重(KG)" align="center" prop="netWeight" />
       </el-table-column>
-      <el-table-column label="磅单号" align="center" prop="poundNo" />
-      <el-table-column label="批次号" align="center" prop="batchNo" />
-      <el-table-column label="提运单号" align="center" prop="loadingBillNo" />
-      <el-table-column label="库位号" align="center" prop="storeCode" />
-      <el-table-column label="生成舱单" align="center" prop="hasManifest" />
-      <el-table-column label="生成集报清单" align="center" prop="hasDeclare" />
-      <el-table-column label="生成进境确报" align="center" prop="hasTransit" />
-      <el-table-column label="状态)" align="center" prop="storeState" />
-      <el-table-column label="放行单号" align="center" prop="passNo" />
-      <el-table-column label="蒙古毛重" align="center" prop="mongoliaRoughWeight" />
-      <el-table-column label="货物名称" align="center" prop="goodsName" />
-      <el-table-column label="发货方" align="center" prop="sendName" />
-      <el-table-column label="寄舱客户ID" align="center" prop="customerId" />
       <el-table-column label="进场时间" align="center" prop="inTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.inTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
@@ -706,32 +674,24 @@
           <span>{{ parseTime(scope.row.outTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="入场通道" align="center" prop="inChannel" />
-      <el-table-column label="出场通道" align="center" prop="outChannel" />
-      <el-table-column label="入场司磅员" align="center" prop="inUser" />
-      <el-table-column label="出场司磅员" align="center" prop="outUser" />
+      <af-table-column label="库位号" align="center" prop="storeCodeAll" />
+      <el-table-column label="蒙古磅单" align="center" >
+        <af-table-column label="蒙方磅单号" align="center" prop="mongoliaBillNo" />
+        <el-table-column label="蒙方毛重" align="center" prop="mongoliaBillNo" />
+        <af-table-column label="蒙古磅皮重" align="center" prop="mongoliaTareWeight" />
+        <af-table-column label="蒙古磅净重" align="center" prop="mongoliaNetWeight" />
+      </el-table-column>
+      <el-table-column label="集装箱号" align="center" prop="containerNoAll" />
       <el-table-column label="供应商" align="center" prop="supplier" />
-      <el-table-column label="采购合同号" align="center" prop="purchaseContractNumber" />
-      <el-table-column label="库位别名" align="center" prop="locationAlias" />
-      <el-table-column label="进口合同号" align="center" prop="importContractNumber" />
-      <el-table-column label="报关单号" align="center" prop="customsDeclarationNumber" />
-      <el-table-column label="箱皮重" align="center" prop="boxTareWeight" />
-      <el-table-column label="报关量" align="center" prop="customsWeight" />
-      <el-table-column label="国检放行日期" align="center" prop="nationalInspectionReleaseDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.nationalInspectionReleaseDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="境外发车日期" align="center" prop="overseasDepartureDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.overseasDepartureDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="蒙方出库日期" align="center" prop="mongolianDeliveryDate" width="180">
+      <af-table-column label="采购合同号" align="center" prop="purchaseContractNumber" />
+      <el-table-column label="境外出库日期" align="center" prop="mongolianDeliveryDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.mongolianDeliveryDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="运输单位" align="center" prop="vehicleTeam" />
+      <el-table-column label="计量单位" align="center" prop="measuringUnit" />
+
       <el-table-column label="入境日期" align="center" prop="entryDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.entryDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
@@ -742,12 +702,78 @@
           <span>{{ parseTime(scope.row.customsDeclarationDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="制单时间" align="center" prop="makerTime" width="180">
+      <el-table-column label="报关量" align="center" prop="customsWeight" />
+      <el-table-column label="报关单号" align="center" prop="customsDeclarationNumber" />
+      <el-table-column label="国检放行日期" align="center" prop="nationalInspectionReleaseDate" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.makerTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+          <span>{{ parseTime(scope.row.nationalInspectionReleaseDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="制单人" align="center" prop="makerBy" />
+      <el-table-column label="包装方式" align="center" prop="packMode" />
+      <el-table-column label="车型" align="center" prop="vehicleType" />
+      <el-table-column label="备注" align="center" prop="remark" />
+
+
+
+<!--      <el-table-column label="场所编号" align="center" prop="placeId" />-->
+<!--      <el-table-column label="通知单号" align="center" prop="docNo" />-->
+<!--      <el-table-column label="业务编号" align="center" prop="businessNo" />-->
+<!--      <el-table-column label="挂车号" align="center" prop="trailerNo1" />-->
+<!--      <el-table-column label="车辆数量" align="center" prop="vehicleCount" />-->
+<!--      <el-table-column label="司机姓名" align="center" prop="driverName" />-->
+<!--      <el-table-column label="车队联系人" align="center" prop="vehicleTeamContact" />-->
+<!--      <el-table-column label="车队联系电话" align="center" prop="vehicleTeamTel" />-->
+<!--      <el-table-column label="生成时间" align="center" prop="genTime" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.genTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="生成人" align="center" prop="genBy" />-->
+<!--      <el-table-column label="磅单打印时间" align="center" prop="poundTime" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.poundTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="磅单号" align="center" prop="poundNo" />-->
+<!--      <el-table-column label="批次号" align="center" prop="batchNo" />-->
+<!--      <el-table-column label="提运单号" align="center" prop="loadingBillNo" />-->
+
+<!--      <el-table-column label="生成舱单" align="center" prop="hasManifest" />-->
+<!--      <el-table-column label="生成集报清单" align="center" prop="hasDeclare" />-->
+<!--      <el-table-column label="生成进境确报" align="center" prop="hasTransit" />-->
+<!--      <el-table-column label="状态)" align="center" prop="storeState" />-->
+<!--      <el-table-column label="放行单号" align="center" prop="passNo" />-->
+<!--      <el-table-column label="蒙古毛重" align="center" prop="mongoliaRoughWeight" />-->
+
+<!--      <el-table-column label="发货方" align="center" prop="sendName" />-->
+<!--      <el-table-column label="寄舱客户ID" align="center" prop="customerId" />-->
+
+<!--      <el-table-column label="入场通道" align="center" prop="inChannel" />-->
+<!--      <el-table-column label="出场通道" align="center" prop="outChannel" />-->
+<!--      <el-table-column label="入场司磅员" align="center" prop="inUser" />-->
+<!--      <el-table-column label="出场司磅员" align="center" prop="outUser" />-->
+
+
+<!--      <el-table-column label="库位别名" align="center" prop="locationAlias" />-->
+<!--      <el-table-column label="进口合同号" align="center" prop="importContractNumber" />-->
+
+
+
+
+<!--      <el-table-column label="境外发车日期" align="center" prop="overseasDepartureDate" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.overseasDepartureDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+
+
+
+<!--      <el-table-column label="制单时间" align="center" prop="makerTime" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.makerTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="制单人" align="center" prop="makerBy" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -767,7 +793,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -1094,6 +1120,7 @@ export default {
       open: false,
       // 查询参数
       queryParams: {
+        vehicleNoCount:0,
         pageNum: 1,
         pageSize: 20,
         placeId: undefined,
@@ -1172,7 +1199,8 @@ export default {
         docNo: [
           { required: true, message: "通知单号 通知单号不能为空", trigger: "blur" }
         ],
-      }
+      },
+      dateRange:[],
     };
   },
   created() {
@@ -1182,7 +1210,8 @@ export default {
     /** 查询入库通知单 入库通知单列表 */
     getList() {
       this.loading = true;
-      listInstoreDocLike(this.queryParams).then(response => {
+      listInstoreDocLike(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
+
         this.instoreDocList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -1281,6 +1310,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.dateRange=[];
       this.handleQuery();
     },
     // 多选框选中数据
