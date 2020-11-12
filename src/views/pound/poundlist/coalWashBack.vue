@@ -143,7 +143,7 @@
           >
             <input
               class="Pound"
-              :style="this.isStable === 1?'color:green':'color:red'"
+              :style="this.isStable === 1?'color:greenyellow':'color:red'"
               v-model="this.Poundweight"
               disabled
             />
