@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="场所" prop="placeId">
-        <el-select v-model="queryParams.stationId" placeholder="请选择场所" @change="handleQuery">
+        <el-select v-model="queryParams.stationId" placeholder="请选择场所" @change="placeChange">
           <el-option
             v-for="dept in depts"
             :key="dept.deptId"
@@ -20,7 +20,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="货物名称" prop="goodsName">
+      <el-form-item label="品名" prop="goodsName">
         <el-select v-model="queryParams.goodsName" placeholder="请选择货物名称" size="small" clearable @change="handleQuery">
           <el-option
             v-for="dict in coalTypeOptions"
@@ -240,13 +240,14 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="sheetList" @selection-change="handleSelectionChange">
-      <af-table-column type="selection" width="55" align="center"/>
+    <el-table v-loading="loading" :data="sheetList">
+      <!-- <af-table-column type="selection" width="55" align="center"/>-->
       <af-table-column label="ID" align="center" prop="id"/>
       <!--<af-table-column label="末检时间" align="center" prop="finalInspectionTime"/>-->
       <!--<af-table-column label="计量号" align="center" prop="measurementNum"/>-->
       <af-table-column label="车牌号" align="center" prop="plateNum"/>
-      <af-table-column label="货物名称" align="center" prop="goodsName"/>
+      <af-table-column label="品名" align="center" prop="goodsName"/>
+      <af-table-column label="提煤单号" align="center" prop="coalBillNum"/>
       <!--<af-table-column label="规格" align="center" prop="specification"/>-->
       <!--<af-table-column label="承运人" align="center" prop="carrier"/>-->
       <af-table-column label="毛重" align="center" prop="grossWeight"/>
@@ -255,26 +256,48 @@
       <af-table-column label="净重" align="center" prop="netWeight"/>
       <af-table-column label="供货单位" align="center" prop="deliveryUnit"/>
       <af-table-column label="收货单位" align="center" prop="receivingUnit"/>
-      <af-table-column label="流向" align="center" prop="flowDirection"/>
-      <af-table-column label="状态" align="center" prop="status"/>
+      <af-table-column label="流向" align="center" prop="flowDirection">
+        <template slot-scope="scope">
+          {{ scope.row.flowDirection === 'I' ? '进场' : '出场' }}
+        </template>
+      </af-table-column>
+      <af-table-column label="状态" align="center" prop="status">
+        <template slot-scope="scope">
+          {{ scope.row.status === '0' ? '正常' : '修改' }}
+        </template>
+      </af-table-column>
       <!--<af-table-column label="提煤单号" align="center" prop="coalBillNum"/>-->
 
       <!--<af-table-column label="保管员" align="center" prop="keeper"/>-->
       <!--<af-table-column label="计量员" align="center" prop="measurer"/>-->
-      <af-table-column label="出入库单号" align="center" prop="remark"/>
+      <!--<af-table-column label="出入库单号" align="center" prop="remark"/>-->
       <af-table-column label="库位号" align="center" prop="locationNumber"/>
       <!--<af-table-column label="通道号" align="center" prop="channelNumber"/>-->
       <!--<af-table-column label="场所ID" align="center" prop="stationId"/>-->
       <af-table-column label="出入库单ID" align="center" prop="noticeNo"/>
-      <af-table-column label="车辆类型" align="center" prop="viaType"/>
-      <af-table-column label="包装类型" align="center" prop="packMode"/>
-      <af-table-column label="打印状态" align="center" prop="printState"/>
-      <af-table-column label="集装箱号1" align="center" prop="containerNum"/>
+      <af-table-column label="车辆类型" align="center" prop="viaType">
+        <template slot-scope="scope">
+          {{ scope.row.viaType === '01' ? '蒙煤车' : '外调车' }}
+        </template>
+      </af-table-column>
+      <af-table-column label="包装类型" align="center" prop="packMode">
+        <template slot-scope="scope">
+          {{ scope.row.packMode === '1' ? '集装箱' : '散装' }}
+        </template>
+      </af-table-column>
+      <af-table-column label="打印状态" align="center" prop="printState">
+        <template slot-scope="scope">
+          {{ scope.row.printState === '0' ? '未打' : '已打' }}
+        </template>
+      </af-table-column>
+      <!--<af-table-column label="集装箱号1" align="center" prop="containerNum"/>
       <af-table-column label="集装箱号2" align="center" prop="containerNum2"/>
       <af-table-column label="集装箱号3" align="center" prop="containerNum3"/>
-      <af-table-column label="集装箱号4" align="center" prop="containerNum4"/>
-      <af-table-column label="入场时间" align="center" prop="createTime"/>
-
+      <af-table-column label="集装箱号4" align="center" prop="containerNum4"/>-->
+      <af-table-column label="入场时间" align="center" prop="inTime"/>
+      <af-table-column label="入场司磅员" align="center" prop="inUser"/>
+      <af-table-column label="出场时间" align="center" prop="outTime"/>
+      <af-table-column label="出场司磅员" align="center" prop="outUser"/>
       <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button v-show="scope.row.status === '0'"
@@ -702,7 +725,6 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.getList();
-      this.getCoalBillList()
     },
     /** 重置按钮操作 */
     resetQuery() {
@@ -747,27 +769,27 @@ export default {
       this.poundModify.docId = row.noticeNo
       this.poundModify.coalBillNo = row.coalBillNum
       this.poundModify.modifyCoalBillNo = row.coalBillNum
-     /* console.log(this.poundModify)
-      console.log("--------------")
-      console.log(this.selectPound)*/
+      /* console.log(this.poundModify)
+       console.log("--------------")
+       console.log(this.selectPound)*/
 
     },
 
     /** 提交按钮 */
     submitForm: function () {
-     // if (this.poundModify.modifyNetWeight >= 0) {
-        this.$refs["formModify"].validate(valid => {
-          if (valid) {
-            applyModify(this.poundModify).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("申请成功");
-                this.open = false;
-                //可以不刷，只把 状态改了
-                this.getList();
-              }
-            });
-          }
-        });
+      // if (this.poundModify.modifyNetWeight >= 0) {
+      this.$refs["formModify"].validate(valid => {
+        if (valid) {
+          applyModify(this.poundModify).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("申请成功");
+              this.open = false;
+              //可以不刷，只把 状态改了
+              this.getList();
+            }
+          });
+        }
+      });
       //} else {
       //  this.msgError("净重不能小于0,请检查！")
       //}
@@ -789,6 +811,10 @@ export default {
       selectCoalBillNo({'placeId': this.queryParams.stationId}).then(response => {
         this.BigList = response.rows
       })
+    },
+    placeChange() {
+      this.handleQuery()
+      this.getCoalBillList()
     }
   }
 };
