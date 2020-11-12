@@ -497,7 +497,9 @@ export default {
         clientId: undefined,
         stationId: undefined,
         flowDirection: undefined,
-        viaType: undefined
+        viaType: undefined,
+        orderByColumn: 'id',
+        isAsc: 'desc'
       },
       queryParams1: { //已完成的查询条件
         pageNum: 1,
@@ -505,7 +507,9 @@ export default {
         clientId: undefined,
         stationId: undefined,
         flowDirection: undefined,
-        viaType: undefined
+        viaType: undefined,
+        orderByColumn: 'outTime',
+        isAsc: 'desc'
       },
       // 是否新增
       isAdd: false,

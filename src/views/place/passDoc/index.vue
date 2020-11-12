@@ -1,6 +1,16 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="场所" prop="placeId">
+        <el-select v-model="queryParams.placeId" placeholder="请选择所属场所" @change="placeChange">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="放行单号" prop="passNo">
         <el-input
           v-model="queryParams.passNo"
@@ -10,7 +20,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="放行状态" prop="passState">
+      <!--<el-form-item label="放行状态" prop="passState">
         <el-select
           v-model="queryParams.passState"
           placeholder="请输入放行状态"
@@ -25,7 +35,7 @@
             :value="dict.dictValue"
           ></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -131,26 +141,8 @@
     />
     <!-- 添加或修改放行单 对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" size="mini" label-width="120px">
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="放行单号" prop="passNo">
-              <el-input v-model="form.passNo" placeholder="请输入放行单号"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="所属场所" prop="placeId">
-              <el-select v-model="form.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
-                <el-option
-                  v-for="dept in depts"
-                  :key="dept.deptId"
-                  :label="dept.deptName"
-                  :value="dept.deptId"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+
         <el-row>
           <el-col :span="12">
             <el-form-item label="寄舱客户" prop="checkConsumer">
@@ -179,16 +171,25 @@
         </el-row>
         <el-row>
           <el-col :span="12">
+            <el-form-item label="放行单号" prop="passNo">
+              <el-input v-model="form.passNo" placeholder="请输入放行单号"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="放行量" prop="passVolume">
               <el-input v-model.number="form.passVolume" placeholder="请输入放行量"/>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+          </el-col>
           <el-col :span="10">
             <el-form-item label="可放行量" prop="release">
-              <el-input v-model="form.release" :disabled="true" />
+              <el-input v-model="form.release" :disabled="true"/>
             </el-form-item>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="1">
             <el-upload
               ref="upload"
               style="width: 100%"
@@ -201,7 +202,7 @@
               :limit="1"
               :on-exceed="handleExceed"
               :file-list="fileList">
-              <el-button size="mini">上传附件</el-button>
+              <el-button>上传附件</el-button>
             </el-upload>
           </el-col>
         </el-row>
@@ -215,12 +216,12 @@
 </template>
 
 <script>
-import { addPassDoc, delPassDoc, getPassDoc, listPassDoc, updatePassDoc } from '@/api/place/passDoc'
-import { listStoreContract } from '@/api/place/storeContract'
-import { getUserDepts } from '@/utils/charutils'
-import { listInfo } from '@/api/basis/enterpriseInfo'
-import { getReleaseWeight } from '@/api/place/big'
-import { getToken } from '@/utils/auth'
+import {addPassDoc, delPassDoc, getPassDoc, listPassDoc, updatePassDoc} from '@/api/place/passDoc'
+import {listStoreContract} from '@/api/place/storeContract'
+import {getUserDepts} from '@/utils/charutils'
+import {listInfo} from '@/api/basis/enterpriseInfo'
+import {getReleaseWeight} from '@/api/place/big'
+import {getToken} from '@/utils/auth'
 
 export default {
   name: 'PassDoc',
@@ -257,7 +258,7 @@ export default {
         placeId: undefined,
         passNo: undefined,
         checkConsumer: undefined,
-        customerId:undefined,
+        customerId: undefined,
         receiveName: undefined,
         passVolume: undefined,
         contractNo: undefined,
@@ -288,24 +289,30 @@ export default {
         'Authorization': '',
         'placeId': '',
         'bucketName': 'place',
-        'mode':'pass',
-        'filename':'pass'
+        'mode': 'pass',
+        'filename': 'pass'
       },
+      passStateDic: [
+        //0，初始，1放行中，2放行完成)
+        {'key': '0', 'value': '初始'},
+        {'key': '1', 'value': '放行中'},
+        {'key': '2', 'value': '放行完成'},
+      ],
       /***上传参数end ***/
       // 表单校验
       rules: {
         passNo: [
-          { required: true, message: '放行单号不能为空', trigger: 'blur' }
+          {required: true, message: '放行单号不能为空', trigger: 'blur'}
         ],
         passVolume: [
-          { required: true, message: '请输入', trigger: 'blur' },
-          { type: 'number', message: '必须为数字值' }
+          {required: true, message: '请输入', trigger: 'blur'},
+          {type: 'number', message: '必须为数字值'}
         ],
         contractNo: [
-          { required: true, message: '合同号不能为空', trigger: 'blur' }
+          {required: true, message: '合同号不能为空', trigger: 'blur'}
         ],
         goodsName: [
-          { required: true, message: '品名不能为空', trigger: 'blur' }
+          {required: true, message: '品名不能为空', trigger: 'blur'}
         ]
       }
     }
@@ -313,6 +320,12 @@ export default {
   created() {
     // 获取场所
     this.depts = getUserDepts('0')
+
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+      this.getList()
+    }
+
     /** 放行状态字典 */
     this.getDicts('place_release_status').then((response) => {
       this.releaseStatus = response.data
@@ -321,7 +334,7 @@ export default {
     this.getDicts('coal_type').then(response => {
       this.coalTypeOptions = response.data
     })
-    this.getList()
+
   },
   methods: {
     /** 查询放行单 列表 */
@@ -335,7 +348,7 @@ export default {
     },
     /** 客户信息列表 */
     getConsumerInfo(placeId) {
-      let consumerParams = { eType: '2',deptId:placeId }
+      let consumerParams = {eType: '2', deptId: placeId}
       listInfo(consumerParams).then(response => {
         this.consumerOptions = response.rows
       })
@@ -360,9 +373,9 @@ export default {
       this.open = false
       this.reset()
       this.form = {}
-      this.consumerOptions=[]
+      //this.consumerOptions = []
       this.storeIds = []
-      this.weightParams={
+      this.weightParams = {
         id: '',
         coalType: ''
       }
@@ -414,6 +427,7 @@ export default {
       this.reset()
       this.open = true
       this.title = '添加放行单 '
+      this.form.placeId = this.queryParams.placeId
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -426,32 +440,32 @@ export default {
       })
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       console.log(this.form)
-        this.$refs['form'].validate(valid => {
-          if (valid) {
-            if (this.form.passVolume > this.form.release) {
-              return this.msgError('可放行量不足！请联系客户')
-            }
-            if (this.form.id != undefined) {
-              updatePassDoc(this.form).then(response => {
-                if (response.code === 200) {
-                  this.msgSuccess('修改成功')
-                  this.open = false
-                  this.getList()
-                }
-              })
-            } else {
-              addPassDoc(this.form).then(response => {
-                if (response.code === 200) {
-                  this.msgSuccess('新增成功')
-                  this.open = false
-                  this.getList()
-                }
-              })
-            }
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          if (this.form.passVolume > this.form.release) {
+            return this.msgError('可放行量不足！请联系客户')
           }
-        })
+          if (this.form.id != undefined) {
+            updatePassDoc(this.form).then(response => {
+              if (response.code === 200) {
+                this.msgSuccess('修改成功')
+                this.open = false
+                this.getList()
+              }
+            })
+          } else {
+            addPassDoc(this.form).then(response => {
+              if (response.code === 200) {
+                this.msgSuccess('新增成功')
+                this.open = false
+                this.getList()
+              }
+            })
+          }
+        }
+      })
 
     },
     /** 删除按钮操作 */
@@ -461,12 +475,12 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function() {
+      }).then(function () {
         return delPassDoc(ids)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function() {
+      }).catch(function () {
       })
     },
     /** 导出按钮操作 */
@@ -479,18 +493,18 @@ export default {
     detail(row) {
       this.reset()
       const id = row.contractNo
-      this.$router.push({ path: '/place/big', query: { tableId: id } })
+      this.$router.push({path: '/place/big', query: {tableId: id}})
     },
     /***上传start ***/
 
-    handleRemove(){
+    handleRemove() {
 
     },
-    handlePreview(){
+    handlePreview() {
 
     },
     // 文件上传成功
-    uploadSuccess(response){
+    uploadSuccess(response) {
       if (response.code !== 200) {
         this.$message.error(response.msg)
         this.uploading = false
@@ -508,12 +522,12 @@ export default {
       // 桶名
       this.form.minBucketName = response.data.bucketName
       // 路径
-      this.form.minPath=response.data.path
+      this.form.minPath = response.data.path
     },
-    beforeRemove(){
+    beforeRemove() {
 
     },
-    handleExceed(){
+    handleExceed() {
 
     },
     uploadError(err) {
@@ -547,20 +561,25 @@ export default {
         this.consumerOptions.forEach(element => {
           if (element.eName === val) {
             this.form.customerId = element.id
-            this.weightParams.id=element.id
-            this.queryParams.customerId=element.id
+            this.weightParams.id = element.id
+            this.queryParams.customerId = element.id
             listStoreContract(this.queryParams).then((response) => {
+              this.form.goodsName = ''
               this.contractOptions = response.rows
             })
           }
         })
       }
-      if(this.weightParams.coalType&&this.weightParams.id){
+      if (this.weightParams.coalType && this.weightParams.id) {
         getReleaseWeight(this.weightParams).then(response => {
           this.form.release = response.data.release
           this.$forceUpdate()
         })
       }
+    },
+    placeChange() {
+      this.getConsumerInfo(this.queryParams.placeId)
+      this.handleQuery()
     }
   }
 }

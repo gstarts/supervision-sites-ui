@@ -632,15 +632,7 @@ export default {
       this.$message.error('文件上传失败')
     },
 
-
-
     uploadBefore(file) {
-    },
-
-    uploadError(err) {
-      this.uploading = false
-      console.log(err)
-      this.$message.error('文件上传失败')
     },
     /** 提交按钮 */
     submitForm: function() {

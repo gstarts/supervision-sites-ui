@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row class="mb8">
-      <el-button type="primary" @click="updateForm">执行完毕</el-button>
+      <el-button type="primary" v-hasPermi="['place:big:edit']" @click="updateBigForm" :disabled="form.status==='1'">执行完毕</el-button>
     </el-row>
 
     <el-row :gutter="10">
@@ -23,7 +23,7 @@
                           v-model="form.coalBillNo"
                           placeholder="请输入提煤单号"
                         /> -->
-                        <span>{{form.coalBillNo}}</span>
+                        <span>{{ form.coalBillNo }}</span>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -32,7 +32,7 @@
                           v-model="form.contractNo"
                           placeholder="请输入合同编号"
                         /> -->
-                        <span>{{form.contractNo}}</span>
+                        <span>{{ form.contractNo }}</span>
                       </el-form-item>
                     </el-col>
                   </el-row>
@@ -43,7 +43,7 @@
                           v-model="form.coalWeight"
                           placeholder="请输入提煤重量"
                         /> -->
-                        <span>{{form.coalWeight}}</span>
+                        <span>{{ form.coalWeight }}</span>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -52,7 +52,7 @@
                           v-model="form.goodsName"
                           placeholder="请输入货物名称"
                         /> -->
-                        <span>{{form.goodsName}}</span>
+                        <span>{{ form.goodsName }}</span>
                       </el-form-item>
                     </el-col>
                   </el-row>
@@ -63,7 +63,7 @@
                           v-model="form.receiveName"
                           placeholder="请输入收货单位"
                         /> -->
-                        <span>{{form.receiveName}}</span>
+                        <span>{{ form.receiveName }}</span>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -72,7 +72,7 @@
                           v-model="form.customerName"
                           placeholder="请输入客户名称"
                         /> -->
-                        <span>{{form.customerName}}</span>
+                        <span>{{ form.customerName }}</span>
                       </el-form-item>
                     </el-col>
                   </el-row>
@@ -93,27 +93,27 @@
               <el-col :span="12">
                 <el-form-item
                   label="已提重量:"
-                  prop="parameterForm.mentionedWeight"
+                  prop="mentionedWeight"
                 >
                   <!-- <el-input
                     v-model="parameterForm.mentionedWeight"
                     placeholder="请输入已提重量"
                     disabled
                   /> -->
-                  <span>{{parameterForm.mentionedWeight}}</span>
+                  <span>{{ parameterForm.mentionedWeight }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item
                   label="未提重量:"
-                  prop="parameterForm.notMentionedWeight"
+                  prop="notMentionedWeight"
                 >
                   <!-- <el-input
                     v-model="parameterForm.notMentionedWeight"
                     placeholder="请输入未提重量"
                     disabled
                   /> -->
-                  <span>{{parameterForm.notMentionedWeight}}</span>
+                  <span>{{ parameterForm.notMentionedWeight }}</span>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -125,17 +125,17 @@
                     placeholder="请输入有效车数"
                     disabled
                   /> -->
-                  <span>{{parameterForm.effective}}</span>
+                  <span>{{ parameterForm.effective }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="已提车数:" prop="parameterForm.mentioned">
+                <el-form-item label="已提车数:" prop="mentioned">
                   <!-- <el-input
                     v-model="parameterForm.mentioned"
                     placeholder="请输入已提车数"
                     disabled
                   /> -->
-                  <span>{{parameterForm.effective}}</span>
+                  <span>{{ parameterForm.mentioned }}</span>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -143,24 +143,24 @@
               <el-col :span="12">
                 <el-form-item
                   label="未提车数"
-                  prop="parameterForm.notMentioned"
+                  prop="notMentioned"
                 >
                   <!-- <el-input
                     v-model="parameterForm.notMentioned"
                     placeholder="请输入未提车数"
                     disabled
                   /> -->
-                  <span>{{parameterForm.notMentioned}}</span>
+                  <span>{{ parameterForm.notMentioned }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="作废车数" prop="parameterForm.void">
+                <el-form-item label="作废车数" prop="void">
                   <!-- <el-input
                     v-model="parameterForm.void"
                     placeholder="请输入作废车数"
                     disabled
                   /> -->
-                  <span>{{parameterForm.void}}</span>
+                  <span>{{ parameterForm.void }}</span>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -292,33 +292,23 @@
       </el-col>
     </el-row>-->
 
-    <el-table
-      v-loading="loading"
-      :data="bigList"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" width="55" align="center" />
+    <el-table v-loading="loading" :data="bigList">
+      <!--<el-table-column type="selection" width="55" align="center"/>-->
       <!-- <el-table-column label="主键" align="center" prop="id" />
       <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>
       <el-table-column label="合同编号" align="center" prop="contractNo"/>
       <el-table-column label="提煤重量" align="center" prop="coalWeight"/>
       <el-table-column label="货物名称" align="center" prop="goodsName"/>
       <el-table-column label="收货单位" align="center" prop="receiveName"/>-->
-      <el-table-column label="车牌号" align="center" prop="plateNo" />
-      <el-table-column
-        label="回执状态"
-        align="center"
-        prop="feedback"
-        :formatter="DeclearStatusFormat"
+      <el-table-column label="提煤单号" align="center" prop="docNo"/>
+      <el-table-column label="车牌号" align="center" prop="vehicleNo"/>
+      <el-table-column label="库位号" align="center" prop="storeCode"/>
+      <el-table-column label="毛重" align="center" prop="roughWeight"/>
+      <el-table-column label="皮重" align="center" prop="tareWeight"/>
+      <el-table-column label="净重" align="center" prop="netWeight"/>
+      <el-table-column label="车辆状态" align="center" prop="storeState" :formatter="CarStatusFormat"
       />
-      <el-table-column label="回执说明" align="center" prop="feedbackMsg" />
-      <el-table-column
-        label="车辆状态"
-        align="center"
-        prop="status"
-        :formatter="CarStatusFormat"
-      />
-      <el-table-column label="唯一编号" align="center" prop="sureId" />
+      <!--<el-table-column label="唯一编号" align="center" prop="sureId" />-->
       <!-- <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="乐观锁" align="center" prop="revision" /> -->
       <el-table-column
@@ -328,22 +318,20 @@
         fixed="right"
       >
         <template slot-scope="scope">
-          <el-button
+          <!--<el-button
             size="mini"
             type="text"
             icon="el-icon-detail"
             @click="detail(scope.row)"
             v-hasPermi="['place:head:query']"
             >详情
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-warning"
-            @click="voidUpdate(scope.row)"
-            v-hasPermi="['place:head:edit']"
-            v-show="form.status != '1'"
-            >作废
+          </el-button>-->
+          <el-button v-show="scope.row.storeState === '0' && form.status === '0'"
+                     size="mini"
+                     type="text"
+                     icon="el-icon-warning"
+                     @click="voidUpdate(scope.row)"
+                     v-hasPermi="['place:big:void']">作废
           </el-button>
           <!-- <el-button
             type="text"
@@ -415,7 +403,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="货物名称" prop="goodsName">
-              <el-input v-model="form.goodsName" placeholder="请输入货物名称" />
+              <el-input v-model="form.goodsName" placeholder="请输入货物名称"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -498,8 +486,9 @@
 </template>
 
 <script>
-import { addBig, delBig, detailsBig, getBig, updateBig } from "@/api/place/big";
-import { updateHead } from "@/api/place/head";
+import {addBig, delBig, detailsBig, getBig, updateBig, updateVoidCar} from "@/api/place/big";
+import {updateHead} from "@/api/place/head";
+import {delImport} from "@/api/place/import";
 
 export default {
   name: "Big",
@@ -521,13 +510,13 @@ export default {
       bigList: [],
       // 通关单类型与车辆信息
       typeList: [
-        { value: "0", label: "通关单信息" },
-        { value: "1", label: "车辆信息" },
+        {value: "0", label: "通关单信息"},
+        {value: "1", label: "车辆信息"},
       ],
       // 车辆状态
       carStatus: [
-        { dictValue: "0", dictLabel: "无效" },
-        { dictValue: "1", dictLabel: "有效" },
+        {dictValue: "0", dictLabel: "无效"},
+        {dictValue: "1", dictLabel: "有效"},
       ],
       // 弹出层标题
       title: "",
@@ -574,24 +563,40 @@ export default {
     };
   },
   created() {
+    // this.$forceUpdate()
+    let {coalBillNo} = this.$route.query;
+    console.log(coalBillNo)
+    if (coalBillNo) {
+      this.getBigInfo(coalBillNo)
+    }
+  },
+  watch: {
+    '$route': function (to, from) {
+      //执行数据更新查询
+      console.log(to)
+      console.log(from)
+      if (to.name === 'Big/Selectbig') {
+        console.log('路由变了')
+        let {coalBillNo} = this.$route.query;
+        console.log(coalBillNo)
+        if (coalBillNo) {
+          this.getBigInfo(coalBillNo)
+        }
+      }
+
+    }
+  },
+  mounted() {
+    //debugger
     /** 放行状态字典 */
     this.getDicts("station_declear_status").then((response) => {
       this.declearStatus = response.data;
     });
-    this.getList();
-    const { coalBillNo } = this.$route.query;
+    //this.getList();
+    //console.log(this.$route.query)
+    let {coalBillNo} = this.$route.query;
+    console.log(coalBillNo)
 
-    if (coalBillNo) {
-      //将表头id 保存
-      this.queryParams.coalBillNo = coalBillNo;
-      // 获取表详细信息
-      detailsBig(this.queryParams).then((response) => {
-        this.form = response.data.head;
-        this.bigList = response.data.body;
-        this.parameterForm = response.data.calculation;
-        this.loading = false;
-      });
-    }
   },
   methods: {
     /** 查询大提煤单 大提煤单列表 */
@@ -614,17 +619,38 @@ export default {
       console.log(row);
       this.reset();
       const id = row.id || this.ids;
-      this.$router.push({ path: "/place/head", query: { tableId: id } });
+      this.$router.push({path: "/place/head", query: {tableId: id}});
     },
+    updateBigForm(){
+      this.updateForm(this.form)
+    },
+
     // 执行完毕按钮
-    updateForm() {
-      if (this.form.id != undefined) {
-        this.form.status = "1"
-        updateBig(this.form).then((response) => {
-          if (response.code === 200) {
-            this.msgSuccess("修改成功");
-            this.getList();
-          }
+    updateForm(form) {
+      //console.log(this.form)
+      if (form.id != undefined && form.status === '0') {
+        this.$confirm('确认此提煤单执行完毕?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function () {
+          form.status = "1"
+          //console.log('确定了222')
+          updateBig(form).then((response) => {
+            if (response.code === 200) {
+              //console.log('确定了2221111')
+              //this.msgSuccess("修改成功");
+              //this.getList();
+            }
+          });
+        }).then(() => {
+          //console.log('确定了')
+          this.form.status = "1"
+          this.msgSuccess("执行成功");
+        }).catch(function (e) {
+          console.log(e)
+          //this.form.status = "0"
+          console.log('取消了')
         });
       }
     },
@@ -649,6 +675,7 @@ export default {
         updateTime: undefined,
         remark: undefined,
         revision: undefined,
+        type: undefined
       };
       this.resetForm("form");
     },
@@ -677,12 +704,32 @@ export default {
     /** 作废状态更改 */
     voidUpdate(row) {
       if (row.id != undefined) {
-        row.status = "0";
-        updateHead(row).then((response) => {
-          if (response.code === 200) {
-            this.msgSuccess("修改成功");
-            this.getList();
-          }
+        //row.status = "0";
+        this.$confirm('确认要作废"' + row.vehicleNo + '"的数据?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function () {
+          updateVoidCar(row).then((response) => {
+            if (response.code === 200) {
+              this.$message.success(response.msg);
+              //this.getList();
+              //row.storeState = '3'
+            }
+          })
+        }).then(() => {
+          this.msgSuccess("设置成功");
+          row.storeState = '3'
+          //有效车数
+          //this.parameterForm.effective -= 1
+          //已提车数
+          //未提车数
+          this.parameterForm.notMentioned -= 1
+          //作废车数
+          this.parameterForm.void += 1
+        }).catch(function () {
+          console.log('取消了')
+          console.log(row)
         });
       }
     },
@@ -708,7 +755,11 @@ export default {
     },
     // 车辆状态翻译
     CarStatusFormat(row, column) {
-      return this.selectDictLabel(this.carStatus, row.status);
+      if (row.storeState === '0') return '未入场'
+      if (row.storeState === '2') return '已入场'
+      if (row.storeState === '1') return '已出库'
+      if (row.storeState === '3') return '已作废'
+      // return this.selectDictLabel(this.carStatus, row.status);
     },
     uploadProcess() {
       this.uploading = true;
@@ -719,9 +770,11 @@ export default {
       this.$message.error("文件上传失败");
     },
 
-    uploadSuccess(response) {},
+    uploadSuccess(response) {
+    },
 
-    uploadBefore(file) {},
+    uploadBefore(file) {
+    },
     /** 提交按钮 */
     submitForm: function () {
       this.$refs["form"].validate((valid) => {
@@ -765,7 +818,8 @@ export default {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function () {});
+        .catch(function () {
+        });
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -777,7 +831,33 @@ export default {
         `place_big.xlsx`
       );
     },
-  },
+    getBigInfo(coalBillNo) {
+      this.loading = true;
+      //将表头id 保存
+      this.queryParams.coalBillNo = coalBillNo;
+      // 获取表详细信息
+      detailsBig(this.queryParams).then((response) => {
+        this.form = response.data.head;
+        this.bigList = response.data.body;
+        //已提重量
+        this.parameterForm.mentionedWeight = response.data.hasUse
+        //未提
+        this.parameterForm.notMentionedWeight = response.data.noUse
+        //有效车数
+        this.parameterForm.effective = response.data.validVehicleCount
+        //已提车数
+        this.parameterForm.mentioned = response.data.hasUseVehicleCount
+        //未提车数
+        this.parameterForm.notMentioned = response.data.noUseVehicleCount
+        //作废车数
+        this.parameterForm.void = response.data.badVehicleCount
+        this.loading = false
+
+      }).catch(err => {
+        this.loading = false
+      })
+    },
+  }
 };
 </script>
 <style scoped>
