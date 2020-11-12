@@ -755,9 +755,10 @@
 <!--      <el-table-column type="selection" width="55" align="center" />-->
 <!--      <el-table-column label="ID 逻辑主键" align="center" prop="id" />-->
 <!--      <el-table-column label="场所编号" align="center" prop="placeId" />-->
-      <af-table-column label="出库单号" align="center" prop="docNo" />
+      <af-table-column label="出库单号" align="center" prop="id" />
       <af-table-column label="发料仓库" align="center" prop="sendName" />
       <el-table-column label="品名" align="center" prop="goodsName" />
+      <el-table-column label="出库垛号" align="center" prop="storeCode" />
       <af-table-column label="提煤客户" align="center" prop="customerName" />
       <af-table-column label="销售合同号" align="center" prop="salesContractNo" />
       <af-table-column label="提煤单号" align="center" prop="coalBillNo" />
@@ -818,7 +819,7 @@
 <!--      <el-table-column label="磅单号" align="center" prop="poundNo" />-->
 <!--      <el-table-column label="批次号" align="center" prop="batchNo" />-->
 <!--      <el-table-column label="提运单号" align="center" prop="loadingBillNo" />-->
-<!--      <el-table-column label="库位号" align="center" prop="storeCode" />-->
+
 <!--      <el-table-column label="库位号2" align="center" prop="storeCode2" />-->
 <!--      <el-table-column label="库位号3" align="center" prop="storeCode3" />-->
 <!--      <el-table-column label="库位号4" align="center" prop="storeCode4" />-->
