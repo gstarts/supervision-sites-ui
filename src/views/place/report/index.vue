@@ -161,7 +161,9 @@
               :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'16px',padding:'3 -3px',margin:'-3'}"
               :cell-style="{border:'solid .5px black',fontSize:'18px',padding:'12px 0',color:'black'}"
               style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
-      <af-table-column label="客户" align="center" prop="checkConsumer"/>
+<!--   checkConsumer   -->
+<!--      <af-table-column label="发货单位" align="center" prop="goodsName"/>-->
+      <af-table-column label="客户" align="center" prop="'${this.queryParams.direction='I'?goodsName:checkConsumer}'"/>
       <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
       <af-table-column label="煤种" align="center" prop="goodsName"/>
       <af-table-column label="车数" align="center" prop="vehicleNo"/>
