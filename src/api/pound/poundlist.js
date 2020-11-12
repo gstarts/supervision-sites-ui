@@ -122,3 +122,31 @@ export function poundSelect(event) {
 }
 
 
+export function getNoticeByVehicle(placeId, direction, vehicleNo) {
+  let data = {
+    'placeId': placeId,
+    'direction': direction,
+    'vehicleNo': vehicleNo,
+  }
+  return request({
+    url: '/pound/measurement/sheet/getNoticeInfo',
+    method: 'post',
+    data: data
+  })
+}
+
+export function genStoreDoc(params) {
+  return request({
+    url: '/pound/measurement/sheet/doc',
+    method: 'post',
+    data: params
+  })
+}
+
+export function getVehicleList(placeId, type, direction) {
+  return request({
+    url: '/pound/measurement/sheet/vehicleNo/' + placeId + '/' + type + '/' + direction,
+    method: 'get'
+  })
+}
+

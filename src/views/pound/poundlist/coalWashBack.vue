@@ -411,23 +411,14 @@
 </template>
 
 <script>
-import {
-  addSheet,
-  updateSheet,
-  getSheet,
-  listIESheet,
-} from "@/api/pound/poundlist";
-import {genTimeCode, parseTime} from "@/utils/common";
 //获取实时重量
-import {poundSelect} from "@/api/pound/poundlist";
+import {addSheet, getSheet, listIESheet, poundSelect, updateSheet,getVehicleList,getNoticeByVehicle} from "@/api/pound/poundlist";
+import {genTimeCode, parseTime} from "@/utils/common";
 import {listChnlConfig} from "@/api/basis/chnlConfig";
 import {getUserDepts} from "@/utils/charutils";
-import {genStoreDoc, getNoticeByVehicle, getVehicleList, updateDocTime} from "@/api/place/info";
-import {getStoreUsable} from '@/api/place/store'
 import {listUser} from "@/api/system/user";
 import store from '@/store/index'
-import {getPoundConfig, setPoundConfig} from "@/utils/auth";
-import {addModify} from "@/api/place/modify";
+import {setPoundConfig} from "@/utils/auth";
 
 export default {
   name: "Client",
@@ -1020,131 +1011,45 @@ export default {
                 if (response.code === 200) {
                   this.msgSuccess("进场成功");
                   //更新单证入场时间
-                  //console.log(response)
-                  this.updateDocTime(response.data.poundId)
+                  //this.updateDocTime(response.data.poundId)
                   this.dataLoading = false
-                  //更新
-                  //console.log(response.data)
-                  //进场列表中添加新值
-                  //this.ApproachList.unshift(response.data)
-                  //this.total += 1
                   //如果是进进场激活，刷新列表
                   if (this.activeName === 'Approach') {
                     this.getListI();
                   }
-                  /*if (this.activeName === 'end') {
+                  if (this.activeName === 'end') {
                     this.getListE();
-                  }*/
-                  //this.getListI(); //进场记录更新
-                  //this.getListE(); //完成记录更新
+                  }
                   this.getVehicleList() //重新加载车辆
-                  //this.reset();
                 } else {
                   this.dataLoading = false
                   this.msgError(response.msg);
                 }
               });
-              //this.queryParams.stationId, this.PoundForm.stationViaType,this.form.noticeNo
-
             } else if (this.PoundForm.flowDirection === "E") {//如果是出场
               this.form.flowDirection = this.PoundForm.flowDirection;
               this.form.channelNumber = this.PoundForm.channelNumber;
-              //this.form.noticeNo = this.noticeNo;
-              //return false
-              //出场修改按钮
-              //updateSheet(this.form).then((response) => {
-              //
-              let params = {
-                'placeId': this.queryParams.stationId,
-                'direction': 1,
-                'vehicleNo': this.form.plateNum,
-                'noticeNo': this.form.noticeNo,
-                'storeCode': this.form.locationNumber,
-                'netWeight': this.form.netWeight,
-                'tareWeight': this.form.tare,
-                'roughWeight': this.form.grossWeight,
-                'channelNo': this.form.channelNumber,
-                'poundId': this.form.id,
-              }
-              if (this.PoundForm.stationViaType === '01') {//重进空出 生成入库单
-                params.direction = 1
-                genStoreDoc(params).then(response => {
+              if (this.PoundForm.stationViaType === '01' || this.PoundForm.stationViaType === '02') {//重进空出 生成入库单
+                updateSheet(this.form).then(response => {
                   if (response.code === 200) {
-                    this.msgSuccess(response.msg);
-                    //更新出厂记录
-                    updateSheet(this.form).then(response => {
-                      if (response.code === 200) {
-                        this.msgSuccess("出场成功");
-                        this.dataLoading = false
-                        if (this.activeName === 'Approach') {
-                          this.getListI();
-                        }
-                        if (this.activeName === 'end') {
-                          this.getListE();
-                        }
-                        //this.getListI()
-                        //this.getListE()
-                        if (this.autoPrint) {
-                          this.$refs['printBtn'].$el.click()
-                          //阻塞操作
-                        } else {
-                          this.getVehicleList()
-                        }
-                        //this.reset()
-                      }
-                    }).catch(err => {
-                      this.dataLoading = false
-                    })
-                  } else {
-                    this.msgError(response.msg);
+                    this.msgSuccess("出场成功");
                     this.dataLoading = false
-                    return false
+                    if (this.activeName === 'Approach') {
+                      this.getListI();
+                    }
+                    if (this.activeName === 'end') {
+                      this.getListE();
+                    }
+                    //自动打印
+                    if (this.autoPrint) {
+                      this.$refs['printBtn'].$el.click()
+                      //阻塞操作
+                    } else {
+                      this.getVehicleList()
+                    }
                   }
                 }).catch(err => {
-                  //this.msgError(response.msg);
                   this.dataLoading = false
-                  return false
-                })
-              }
-
-              //}
-              if (this.PoundForm.stationViaType === '02') {//空进重出，生成出库单
-                params.direction = 0
-                genStoreDoc(params).then(response => {
-                  if (response.code === 200) {
-                    this.msgSuccess("出库成功");
-
-                    updateSheet(this.form).then(response => {
-                      if (response.code === 200) {
-                        this.msgSuccess("出场成功");
-                        this.dataLoading = false
-                        if (this.activeName === 'Approach') {
-                          this.getListI();
-                        }
-                        if (this.activeName === 'end') {
-                          this.getListE();
-                        }
-                        //如果自动打印，就等打印完再加载车辆
-                        if (this.autoPrint) {
-                          this.$refs['printBtn'].$el.click()
-                          //阻塞操作
-                        } else {
-                          //todo 外调车出场是否要更新列表
-                          this.getVehicleList()
-                        }
-                      }
-                    }).catch(err => {
-                      this.dataLoading = false
-                    })
-                  } else {
-                    this.msgError(response.msg);
-                    this.dataLoading = false
-                    return false
-                  }
-                }).catch(err => {
-                  //this.msgError(response.msg);
-                  this.dataLoading = false
-                  return false
                 })
               }
             } else {
@@ -1152,7 +1057,6 @@ export default {
               this.dataLoading = false
               return false
             }
-            //})
           }
         }
       );
@@ -1243,15 +1147,15 @@ export default {
         viaType: undefined
       };
     },
-//查询可用的库位
-    getStoreCode(placeId) {
+    //查询可用的库位
+    /*getStoreCode(placeId) {
       getStoreUsable(placeId).then(response => {
         //console.log(response)
         if (response.code === 200) {
           this.storeList = response.data
         }
       })
-    },
+    },*/
     vehicleChange() {
       this.flowCheck()
       //console.log(this.PoundForm.flowDirection)
@@ -1348,20 +1252,6 @@ export default {
       } else {
         return false
       }
-    },
-
-    //更新单证入场时间
-    updateDocTime(poundId) {
-      let data = {
-        'placeId': this.queryParams.stationId,
-        'type': this.PoundForm.stationViaType,
-        'noticeNo': this.form.noticeNo,
-        'channelNo': this.form.channelNumber,
-        'vehicleNo': this.form.plateNum,
-        'poundId': poundId
-      }
-      //console.log(data)
-      updateDocTime(data)
     },
     //翻译通道号
     parseChannelName(channel) {
