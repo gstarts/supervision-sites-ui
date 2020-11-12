@@ -30,6 +30,23 @@
           />
         </el-select>
       </el-form-item>
+
+      <el-form-item label="品名" prop="goodsName">
+        <el-select
+          clearable
+          filterable
+          v-model="queryParams.goodsName"
+          placeholder="请选择品名"
+          size="small">
+          <el-option
+            v-for="dict in goodsNameList"
+            :key="dict.dictLabel"
+            :label="dict.dictLabel"
+            :value="dict.dictLabel"
+          />
+        </el-select>
+      </el-form-item>
+
       <!--        <el-form-item label="统计方式" prop="statisticsMode">-->
       <!--          <el-select @change="changeStatistics"-->
       <!--            v-model="queryParams.statisticsMode" placeholder="请选择统计方式">-->
@@ -87,7 +104,7 @@
             align="right"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            value-format="yyyy-MM-dd">
+            value-format="yyyy-MM-dd HH:mm:ss">
           </el-date-picker>
         </el-form-item>
 
@@ -102,20 +119,7 @@
           </el-select>
         </el-form-item>-->
 
-        <!--<el-form-item label="品名" prop="goodsName">
-          &lt;!&ndash;<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>&ndash;&gt;
-          <el-select
-            filterable
-            clearable
-            v-model="queryParams.goodsName" placeholder="请选择品名">
-            <el-option
-              v-for="type in customerList"
-              :key="type.customerName"
-              :label="type.customerName"
-              :value="type.customerName"
-            />
-          </el-select>
-        </el-form-item>-->
+
 
         <!--        <el-form-item label="货物类型" prop="packMode">-->
         <!--          <el-select-->
@@ -150,9 +154,10 @@
     <div class="box-card" style="margin: 0 auto;font-size:15px;width:1100px;padding-left: 1px ;padding-top:50px"
          id="print">
 <!--      <div v-show="printSmallTitle">-->
-<!--        <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">-->
-<!--          <span>{{this.prinTtitle}}</span><br>-->
-<!--        </div>-->
+        <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">
+          <span>{{this.prinTtitle}}</span><br>
+          <span>{{this.dateTime}}</span>
+        </div>
 <!--        <div>-->
 <!--          <span>{{timeTitle}}</span>-->
 <!--        </div>-->
@@ -165,18 +170,82 @@
                 :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
                 :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
                 style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
-        <af-table-column label="单位名称" align="center"width="120%" prop="column1"/>
-        <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
-        <af-table-column label="合同" align="center" width="120%" prop="column2"/>
+        <af-table-column label="寄舱客户" align="center"width="120%" prop="column1"/>
 
-        <af-table-column label="煤种" align="center" prop="column3"/>
+        <af-table-column label="寄舱合同" align="center" width="120%" prop="column2"/>
+
+        <af-table-column label="品名" align="center" prop="column3" width="80%"/>
         <af-table-column label="期初库存(t)" align="center" prop="column4"/>
-        <af-table-column label="本期入库(t)" align="center" prop="column5"/>
 
+        <el-table-column label="本期入库(t)" align="center" prop="column5">
+            <el-table-column
+              prop="column5"
+              label="车数"
+              align="center"
+              width="70%">
+            </el-table-column>
+          <el-table-column
+            prop="column5"
+            label="重量（t）"
+            align="center"
+            width="70%">
+          </el-table-column>
+        </el-table-column>
+        <el-table-column label="本期出库(t)" align="center" prop="column6">
+          <el-table-column
+            prop="column5"
+            label="车数"
+            align="center"
+            width="70%">
+          </el-table-column>
+          <el-table-column
+            prop="column5"
+            label="重量（t）"
+            align="center"
+            width="70%">
+          </el-table-column>
+        </el-table-column>
 
-        <af-table-column label="本期出库(t)" align="center" prop="column6"/>
-        <af-table-column label="本期库存(t)" align="center" prop="column7"/>
-        <af-table-column label="库存差(t)" align="center" prop="column8">
+        <el-table-column label="本期库存(t)" align="center" prop="column7">
+          <el-table-column
+            prop="column5"
+            label="调入"
+            align="center"
+            width="70%">
+            <el-table-column
+              prop="column5"
+              label="车数"
+              align="center"
+              width="70%">
+            </el-table-column>
+            <el-table-column
+              prop="column5"
+              label="重量（t）"
+              align="center"
+              width="70%">
+            </el-table-column>
+          </el-table-column>
+          <el-table-column
+            prop="column5"
+            label="调出"
+            align="center"
+            width="70%">
+            <el-table-column
+              prop="column5"
+              label="车数"
+              align="center"
+              width="70%">
+            </el-table-column>
+            <el-table-column
+              prop="column5"
+              label="重量（t）"
+              align="center"
+              width="70%">
+            </el-table-column>
+          </el-table-column>
+
+        </el-table-column>
+        <af-table-column label="库存差(t)" align="center" prop="column8" width="80%">
           <template slot-scope="scope">
             {{scope.row.column4+scope.row.column5-scope.row.column7}}
           </template>
@@ -208,6 +277,7 @@
         nextDate: '',
         //打印按钮显示隐藏
         show: false,
+        dateTime:'',
         // 导出按钮显示隐藏
         showImport: false,
         // 导出标题集合
@@ -231,6 +301,13 @@
           "煤种": "column3",
           "期初库存": "column4",
           "本期入库": "column5",
+          "本期入库1":{
+            "车数":"column5",
+            callback: (column5) => {
+              return `${column5}`;
+            },
+
+          },
           "本期出库": "column6",
           "库存差": "column7",
         },
@@ -240,7 +317,7 @@
         excelFooter: '',
         // 选中数组
         // 打印标题
-        prinTtitle: '',
+        prinTtitle:'',
         // 标题时间
         timeTitle: '',
         ids: [],
@@ -271,6 +348,7 @@
         ],
         // 查询参数
         queryParams: {
+          goodsName:undefined,
           placeId: undefined,
           customerName: undefined,
           startTime: undefined,
@@ -327,9 +405,9 @@
         this.getContract(this.queryParams.placeId, '1')
       }
       //煤种 品名
-      // this.getDicts("coal_type").then(response => {
-      //   this.goodsNameList = response.data;
-      // });
+      this.getDicts("coal_type").then(response => {
+        this.goodsNameList = response.data;
+      });
     },
     methods: {
       /** 查询堆场报表列表 */
@@ -403,10 +481,10 @@
       },
       /** 重置按钮操作 */
       resetQuery() {
-        this.resetForm("queryForm");
-        this.handleQuery();
+        this.dateRange=[];
+        this.queryParams.goodsName=undefined
+        this.queryParams.customerName= undefined
       },
-
       getInfo() {
         this.loading = true
         this.reportList = []
@@ -416,7 +494,9 @@
           if (response.code === 200) {
             this.reportList = response.data
             //console.log(this.reportList)
-            this.printTitle = '嘉易达监管场所' + this.dateRange[0] + '至' + this.dateRange[1] + '库存统计报表'
+            this.prinTtitle = '嘉易达监管场所库存统计报表';
+            this.dateTime = this.dateRange[0] + '至' + this.dateRange[1]
+            console.log(this.printTitle)
             this.titleList.push(this.printTitle)
 
 
@@ -449,6 +529,8 @@
 
       //场所改变时，去查对应场所的
       changePlace(event) {
+        console.log(this.depts+1511)
+
         this.getContract(event, '1')
       },
       // //场所变化 获取对应场所的合同
