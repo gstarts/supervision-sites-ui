@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+    <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="100px">
       <el-form-item label="采购合同号" prop="purchaseContractNumber">
         <el-input
           v-model="queryParams.purchaseContractNumber"
@@ -63,6 +63,17 @@
 <!--          placeholder="选择境外出库日期">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
+      <el-form-item label="查询时间类型" prop="queryLogo">
+        <el-select
+          v-model="queryParams.queryLogo" placeholder="请选择查询时间类型" size="small">
+          <el-option
+            v-for="dept in timeQueryTypeOption"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="时间" prop="startTime">
         <el-date-picker
           v-model="dateRange"
@@ -70,7 +81,9 @@
           align="right"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          value-format="yyyy-MM-dd">
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']">
+
         </el-date-picker>
       </el-form-item>
       <!-- <el-form-item label="场所编号 场所编号" prop="placeId">
@@ -711,9 +724,9 @@
       </el-table-column>
       <el-table-column label="包装方式" align="center" prop="packMode" />
       <el-table-column label="车型" align="center" prop="vehicleType" />
-      <el-table-column label="备注" align="center" prop="remark" />
-
-
+      <af-table-column label="备注" align="center" prop="remark" />
+<!--      <af-table-column fixed="right" align="center" label="总净重"></af-table-column>-->
+<!--      <af-table-column fixed="right" align="center" label="蒙方净重"></af-table-column>-->
 
 <!--      <el-table-column label="场所编号" align="center" prop="placeId" />-->
 <!--      <el-table-column label="通知单号" align="center" prop="docNo" />-->
@@ -774,24 +787,24 @@
 <!--        </template>-->
 <!--      </el-table-column>-->
 <!--      <el-table-column label="制单人" align="center" prop="makerBy" />-->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['place:instoreDoc:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['place:instoreDoc:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['place:instoreDoc:edit']"-->
+<!--          >修改</el-button>-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['place:instoreDoc:remove']"-->
+<!--          >删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -804,7 +817,7 @@
 
     <!-- 添加或修改入库通知单 入库通知单对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+      <el-form ref="form" :model="form"  label-width="120px">
         <el-form-item label="场所编号 场所编号" prop="placeId">
           <el-input v-model="form.placeId" placeholder="请输入场所编号 场所编号" />
         </el-form-item>
@@ -964,7 +977,7 @@
           <el-date-picker clearable size="small" style="width: 200px"
             v-model="form.updateTime"
             type="date"
-            value-format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd hh:mm:ss"
             placeholder="选择更新时间">
           </el-date-picker>
         </el-form-item>
@@ -998,7 +1011,7 @@
           <el-date-picker clearable size="small" style="width: 200px"
             v-model="form.outTime"
             type="date"
-            value-format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd "
             placeholder="选择出场时间">
           </el-date-picker>
         </el-form-item>
@@ -1114,12 +1127,15 @@ export default {
       total: 0,
       // 入库通知单 入库通知单表格数据
       instoreDocList: [],
+      //时间查询类型
+      timeQueryTypeOption:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
       // 查询参数
       queryParams: {
+        queryLogo:undefined,
         vehicleNoCount:0,
         pageNum: 1,
         pageSize: 20,
@@ -1194,17 +1210,16 @@ export default {
       },
       // 表单参数
       form: {},
-      // 表单校验
-      rules: {
-        docNo: [
-          { required: true, message: "通知单号 通知单号不能为空", trigger: "blur" }
-        ],
-      },
+      rules:{},
       dateRange:[],
     };
   },
   created() {
     this.getList();
+    this.getDicts("time_query_type").then(response => {
+      this.timeQueryTypeOption = response.data;
+      console.log(this.timeQueryTypeOption)
+    });
   },
   methods: {
     /** 查询入库通知单 入库通知单列表 */
@@ -1305,6 +1320,10 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      if(this.queryParams.queryLogo == undefined){
+        this.msgError("查询时间类型不可为空,请选择")
+        return
+      }
       this.getList();
     },
     /** 重置按钮操作 */
