@@ -661,7 +661,8 @@
       </el-col>
     </el-row> -->
 
-    <el-table v-loading="loading" :data="instoreDocList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="instoreDocList" @selection-change="handleSelectionChange"
+               show-summary :summary-method="getSummaries">
 <!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="入库单号" align="center" prop="id" />
       <af-table-column label="寄舱客户" align="center" prop="checkConsumer" />
@@ -725,6 +726,9 @@
       <el-table-column label="包装方式" align="center" prop="packMode" />
       <el-table-column label="车型" align="center" prop="vehicleType" />
       <af-table-column label="备注" align="center" prop="remark" />
+      <el-table-column>
+
+      </el-table-column>
 <!--      <af-table-column fixed="right" align="center" label="总净重"></af-table-column>-->
 <!--      <af-table-column fixed="right" align="center" label="蒙方净重"></af-table-column>-->
 
@@ -1397,6 +1401,29 @@ export default {
       this.download('place/instoreDoc/export', {
         ...this.queryParams
       }, `place_instoreDoc.xlsx`)
+    },
+    getSummaries (param) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '总重量';
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]));
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value) && index === 9) {
+              return prev + curr;
+            }
+            if (!isNaN(value) && index === 16) {
+              return prev + curr;
+            }
+          }, 0);
+        }
+      });
+      return sums;
     }
   }
 };
