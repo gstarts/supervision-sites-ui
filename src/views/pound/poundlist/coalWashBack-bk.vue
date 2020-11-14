@@ -8,7 +8,7 @@
       <el-button type="warning" icon="el-icon-refresh-right" size="small" :loading="dataLoading" @click="cancel">清空
         (F4)
       </el-button>
-      <el-button type="primary" @click="getVehicleList" size="small">刷车号(F7)</el-button>
+      <el-button type="primary" @click="getVehicleList" size="small">刷车号(F9)</el-button>
       <el-button
         ref="printBtn"
         type="info"
@@ -35,7 +35,8 @@
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="发货单位" prop="deliveryUnit">
-                  <el-input v-model="form.deliveryUnit" placeholder="请输入发货单位" clearable :disabled="isProduct"></el-input>
+                  <el-input v-model="form.deliveryUnit" placeholder="请输入发货单位" clearable
+                            :disabled="isProduct"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -62,7 +63,8 @@
             <el-row type="flex">
               <el-col :span="12">
                 <el-form-item label="收货单位" prop="receivingUnit">
-                  <el-input v-model="form.receivingUnit" placeholder="请输入收货单位" clearable :disabled="isProduct"></el-input>
+                  <el-input v-model="form.receivingUnit" placeholder="请输入收货单位" clearable
+                            :disabled="isProduct"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -141,12 +143,10 @@
           >
             <input
               class="Pound"
-              v-if="this.isStable === 1"
-              style="color:green"
+              :style="this.isStable === 1?'color:greenyellow':'color:red'"
               v-model="this.Poundweight"
               disabled
             />
-            <input class="Pound" v-else style="color:red" v-model="this.Poundweight" disabled/>
             <el-row :gutter="10">
               <el-col :span="12">
                 <el-form-item label="场所" prop="stationId">
@@ -497,7 +497,9 @@ export default {
         clientId: undefined,
         stationId: undefined,
         flowDirection: undefined,
-        viaType: undefined
+        viaType: undefined,
+        orderByColumn: 'in_time',
+        isAsc: 'desc'
       },
       queryParams1: { //已完成的查询条件
         pageNum: 1,
@@ -505,7 +507,9 @@ export default {
         clientId: undefined,
         stationId: undefined,
         flowDirection: undefined,
-        viaType: undefined
+        viaType: undefined,
+        orderByColumn: 'out_time',
+        isAsc: 'desc'
       },
       // 是否新增
       isAdd: false,
@@ -855,7 +859,10 @@ export default {
     },
     /** 查询通道配置列表 */
     created() {
-      listChnlConfig(this.queryParams).then((response) => {
+      listChnlConfig({
+        'stationId': this.queryParams.stationId,
+        'flowDirection': this.queryParams.flowDirection
+      }).then((response) => {
         this.chnlConfigList = response.rows;
         //console.log(this.chnlConfigList)
         //初始值不给通道号了 页面刷新有问题
@@ -874,29 +881,30 @@ export default {
 
           //定时重量赋值到相应毛重 皮重 净重上 11.10修改 虎神
           //流向 进场  车辆类型 蒙煤车 有车牌号 反添毛重
-          if(this.PoundForm.flowDirection =='I' && this.PoundForm.stationViaType == '01'&& this.form.plateNum !=undefined){
-           //赋值毛重
-            this.form.grossWeight=this.Poundweight;
+          if (this.PoundForm.flowDirection == 'I' && this.PoundForm.stationViaType == '01' && this.form.plateNum != undefined) {
+            //赋值毛重
+            this.form.grossWeight = this.Poundweight;
 
             //流向 出场  车辆类型 蒙煤车 有车牌号 反添皮重 计算净重
-          }else if(this.PoundForm.flowDirection =='E' && this.PoundForm.stationViaType == '01'&& this.form.plateNum !=undefined){
+          } else if (this.PoundForm.flowDirection == 'E' && this.PoundForm.stationViaType == '01' && this.form.plateNum != undefined) {
             //赋值皮重
-            this.form.tare=this.Poundweight;
+            this.form.tare = this.Poundweight;
             //计算净重
-            this.form.netWeight=this.form.grossWeight-this.form.tare;
+            this.form.netWeight = this.form.grossWeight - this.form.tare;
 
-          //流向 进场  车辆类型 外调车 有车牌号 反添皮重
-          }else if(this.PoundForm.flowDirection =='I' && this.PoundForm.stationViaType == '02'&& this.form.plateNum !=undefined){
+            //流向 进场  车辆类型 外调车 有车牌号 反添皮重
+          } else if (this.PoundForm.flowDirection == 'I' && this.PoundForm.stationViaType == '02' && this.form.plateNum != undefined) {
             //赋值皮重
-            this.form.tare=this.Poundweight;
+            this.form.tare = this.Poundweight;
 
-          //流向 出场  车辆类型 外调车 有车牌号 反添毛重 计算净重
-          }else if(this.PoundForm.flowDirection =='E' && this.PoundForm.stationViaType == '02'&& this.form.plateNum !=undefined){
+            //流向 出场  车辆类型 外调车 有车牌号 反添毛重 计算净重
+          } else if (this.PoundForm.flowDirection == 'E' && this.PoundForm.stationViaType == '02' && this.form.plateNum != undefined) {
             //赋值毛重
-            this.form.grossWeight=this.Poundweight;
+            this.form.grossWeight = this.Poundweight;
             //计算净重
-            this.form.netWeight=this.form.grossWeight-this.form.tare;
-          };
+            this.form.netWeight = this.form.grossWeight - this.form.tare;
+          }
+          ;
 
           this.isStable = response.data.isStable;
           if (this.plateNumOptions.length === 0) {
@@ -1263,14 +1271,18 @@ export default {
         pageSize: 10,
         stationId: this.queryParams.stationId,
         flowDirection: this.PoundForm.flowDirection,
-        viaType: this.PoundForm.stationViaType
+        viaType: this.PoundForm.stationViaType,
+        orderByColumn: 'in_time',
+        isAsc: 'desc'
       }
       this.queryParams1 = {
         pageNum: 1,
         pageSize: 10,
         stationId: this.queryParams.stationId,
         flowDirection: this.PoundForm.flowDirection,
-        viaType: this.PoundForm.stationViaType
+        viaType: this.PoundForm.stationViaType,
+        orderByColumn: 'out_time',
+        isAsc: 'desc'
       }
       //console.log(queryParams)
       /*listIESheet(queryParams).then((response) => {
@@ -1394,7 +1406,7 @@ export default {
         e.preventDefault()
         this.cancel()
       }
-      if (key === 118) {
+      if (key === 120) {//F9
         e.preventDefault()
         this.getVehicleList()
       }
@@ -1456,12 +1468,13 @@ export default {
 }
 
 .Pound {
-  font-size: 60px;
+  font-size: 70px;
   width: 100%;
   color: red;
   margin-bottom: 15px;
   text-align: center;
-  padding: 15px;
+  padding: 11px;
+  background: #1e1e1e;
 }
 
 #dayin {
@@ -1627,5 +1640,6 @@ export default {
   background: #fff;
   color: green;
 }
+
 /**-- :row-style="green"  **/
 </style>

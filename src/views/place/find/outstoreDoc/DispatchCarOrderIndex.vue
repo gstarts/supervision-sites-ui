@@ -1,12 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true">
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="90px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
 <!--      <el-form-item label="场所编号" prop="placeId">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.placeId"-->
@@ -45,7 +39,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="提煤客户" prop="customerName">
+      <el-form-item label="寄舱客户" prop="customerName">
 <!--        <el-input v-model="queryParams.customerName" placeholder="请输入寄舱客户" clearable size="small" @keyup.enter.native="handleQuery" />-->
         <el-select
           filterable
@@ -109,6 +103,17 @@
 <!--          placeholder="选择出场时间">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
+      <el-form-item label="查询时间类型" prop="queryLogo">
+        <el-select
+          v-model="queryParams.queryLogo" placeholder="请选择查询时间类型" size="small">
+          <el-option
+            v-for="dept in timeQueryTypeOption"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="时间" prop="startTime">
         <el-date-picker
           v-model="dateRange"
@@ -116,8 +121,14 @@
           align="right"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          value-format="yyyy-MM-dd">
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']"
+        >
         </el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
 <!--      <el-form-item label="寄舱客户ID" prop="customerId">-->
 <!--        <el-input-->
@@ -755,19 +766,24 @@
 <!--      <el-table-column type="selection" width="55" align="center" />-->
 <!--      <el-table-column label="ID 逻辑主键" align="center" prop="id" />-->
 <!--      <el-table-column label="场所编号" align="center" prop="placeId" />-->
-      <af-table-column label="出库单号" align="center" prop="docNo" />
-      <af-table-column label="发料仓库" align="center" prop="sendName" />
-      <el-table-column label="品名" align="center" prop="goodsName" />
-      <af-table-column label="提煤客户" align="center" prop="customerName" />
+      <af-table-column label="出库单号" align="center" prop="id" />
+      <af-table-column label="APP用户名" align="center" prop="appUser" />
+      <el-table-column label="数据来源" align="center" prop="dataSources" />
+      <el-table-column label="作废日期" align="center" prop="voidDate" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.voidDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="作废原因" align="center" prop="voidReason" />
+      <af-table-column label="合同签约客户" align="center" prop="customerName" />
+      <af-table-column label="提煤单客户" align="center" prop="receiveName" />
       <af-table-column label="销售合同号" align="center" prop="salesContractNo" />
-      <af-table-column label="提煤单号" align="center" prop="coalBillNo" />
-      <el-table-column label="运输方式" align="center" prop="transportMode" />
+      <af-table-column label="提运单号" align="center" prop="loadingBillNo" />
+      <el-table-column label="品名" align="center" prop="goodsName" />
       <af-table-column label="运输单位" align="center" prop="transportUnit" />
-      <el-table-column label="车队" align="center" prop="vehicleTeam" />
-      <af-table-column label="派车单号" align="center" prop="dispatchNo" />
+      <el-table-column label="运输方式" align="center" prop="transportMode" />
+      <el-table-column label="库位号" align="center" prop="storeCode" />
       <af-table-column label="车号 " align="center" prop="vehicleNo" />
-      <el-table-column label="车型" align="center" prop="vehicleType" />
-      <af-table-column label="集装箱号1" align="center" prop="containerNo1" />
       <af-table-column label="进场时间" align="center" prop="inTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.inTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
@@ -778,18 +794,31 @@
           <span>{{ parseTime(scope.row.outTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </af-table-column>
-      <el-table-column label="皮重" align="center" prop="tareWeight" />
-      <el-table-column label="箱皮重" align="center" prop="boxTareWeight" />
-      <el-table-column label="毛重" align="center" prop="roughWeight" />
       <el-table-column label="净重" align="center" prop="netWeight" />
-      <el-table-column label="计量单位(KG)" align="center" prop="measuringUnit" />
-      <af-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="入场司磅员" align="center" prop="inUser" />
-      <el-table-column label="出场司磅员" align="center" prop="outUser" />
+      <el-table-column label="车队" align="center" prop="vehicleTeam" />
+      <el-table-column label="车型" align="center" prop="vehicleType" />
+      <el-table-column label="司机姓名 " align="center" prop="driverName" />
+      <af-table-column label="司机手机号" align="center" prop="driverMobileNo" />
+      <el-table-column label="制单人" align="center" prop="makerBy" />
+      <af-table-column label="发料仓库" align="center" prop="sendName" />
+      <el-table-column label="制单时间" align="center" prop="makerTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.makerTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+        </template>
+      </el-table-column>
+<!--      <af-table-column label="派车单号" align="center" prop="dispatchNo" />-->
+<!--      <af-table-column label="集装箱号1" align="center" prop="containerNo1" />-->
+<!--      <el-table-column label="皮重" align="center" prop="tareWeight" />-->
+<!--      <el-table-column label="箱皮重" align="center" prop="boxTareWeight" />-->
+<!--      <el-table-column label="毛重" align="center" prop="roughWeight" />-->
+<!--      <el-table-column label="计量单位(KG)" align="center" prop="measuringUnit" />-->
+<!--      <af-table-column label="备注" align="center" prop="remark" />-->
+<!--      <el-table-column label="入场司磅员" align="center" prop="inUser" />-->
+<!--      <el-table-column label="出场司磅员" align="center" prop="outUser" />-->
 <!--      <el-table-column label="放行单号" align="center" prop="businessNo" />-->
 <!--      <el-table-column label="寄舱客户ID" align="center" prop="customerId" />-->
 <!--      <el-table-column label="客户id" align="center" prop="receiveId" />-->
-<!--      <el-table-column label="客户名称" align="center" prop="receiveName" />-->
+
 <!--      <el-table-column label="寄舱合同号" align="center" prop="checkContractNo" />-->
 <!--      <el-table-column label="蒙方磅单号 蒙方磅单号" align="center" prop="mongoliaBillNo" />-->
 <!--      <el-table-column label="挂车号1 " align="center" prop="trailerNo1" />-->
@@ -797,7 +826,7 @@
 <!--      <el-table-column label="蒙古磅净重 净重" align="center" prop="mongoliaNetWeight" />-->
 <!--      <el-table-column label="蒙古磅皮重 皮重" align="center" prop="mongoliaTareWeight" />-->
 <!--      <el-table-column label="车辆数量 " align="center" prop="vehicleCount" />-->
-<!--      <el-table-column label="司机姓名 " align="center" prop="driverName" />-->
+
 <!--      <el-table-column label="车队联系人 " align="center" prop="vehicleTeamContact" />-->
 <!--      <el-table-column label="车队联系电话" align="center" prop="vehicleTeamTel" />-->
 <!--      <el-table-column label="包装方式(集装箱，散装)" align="center" prop="packMode" />-->
@@ -818,7 +847,7 @@
 <!--      <el-table-column label="磅单号" align="center" prop="poundNo" />-->
 <!--      <el-table-column label="批次号" align="center" prop="batchNo" />-->
 <!--      <el-table-column label="提运单号" align="center" prop="loadingBillNo" />-->
-<!--      <el-table-column label="库位号" align="center" prop="storeCode" />-->
+
 <!--      <el-table-column label="库位号2" align="center" prop="storeCode2" />-->
 <!--      <el-table-column label="库位号3" align="center" prop="storeCode3" />-->
 <!--      <el-table-column label="库位号4" align="center" prop="storeCode4" />-->
@@ -838,21 +867,12 @@
 <!--      <el-table-column label="通道号(进场)" align="center" prop="chnlNoI" />-->
 <!--      <el-table-column label="出场通道号" align="center" prop="chnlNoE" />-->
 <!--      <el-table-column label="库位别名" align="center" prop="locationAlias" />-->
-<!--      <el-table-column label="APP用户名" align="center" prop="appUser" />-->
-<!--      <el-table-column label="数据来源" align="center" prop="dataSources" />-->
-<!--      <el-table-column label="作废原因" align="center" prop="voidReason" />-->
-<!--      <el-table-column label="司机手机号" align="center" prop="driverMobileNo" />-->
-<!--      <el-table-column label="制单人" align="center" prop="makerBy" />-->
-<!--      <el-table-column label="作废日期" align="center" prop="voidDate" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.voidDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="制单时间" align="center" prop="makerTime" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.makerTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+
+
+
+
+
+
 <!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
 <!--        <template slot-scope="scope">-->
 <!--          <el-button-->
@@ -1192,12 +1212,15 @@ export default {
       total: 0,
       // 出库明细单表格数据
       outstoreDocList: [],
+      //时间查询类型
+      timeQueryTypeOption:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
       // 查询参数
       queryParams: {
+        queryLogo:'I',
         pageNum: 1,
         pageSize: 20,
         placeId: undefined,
@@ -1305,6 +1328,10 @@ export default {
       this.queryParams.placeId = this.depts[0].deptId
       this.getContract(this.queryParams.placeId, '1')
     }
+    this.getDicts("time_query_type").then(response => {
+      this.timeQueryTypeOption = response.data;
+      console.log(this.timeQueryTypeOption)
+    });
     this.getList();
   },
   methods: {
@@ -1411,11 +1438,16 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      if(this.queryParams.queryLogo == undefined){
+        this.msgError("查询时间类型不可为空,请选择")
+        return
+      }
       this.getList();
     },
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.dateRange=[];
       this.handleQuery();
     },
     // 多选框选中数据
