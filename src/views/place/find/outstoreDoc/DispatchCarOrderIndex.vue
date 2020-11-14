@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="90px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
 <!--      <el-form-item label="场所编号" prop="placeId">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.placeId"-->
@@ -39,7 +39,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="提煤客户" prop="customerName">
+      <el-form-item label="寄舱客户" prop="customerName">
 <!--        <el-input v-model="queryParams.customerName" placeholder="请输入寄舱客户" clearable size="small" @keyup.enter.native="handleQuery" />-->
         <el-select
           filterable

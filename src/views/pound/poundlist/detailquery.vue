@@ -11,15 +11,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="车牌号" prop="plateNum">
-        <el-input
-          v-model="queryParams.plateNum"
-          placeholder="请输入车牌号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="品名" prop="goodsName">
         <el-select v-model="queryParams.goodsName" placeholder="请选择货物名称" size="small" clearable @change="handleQuery">
           <el-option
@@ -29,6 +21,44 @@
             :value="dict.dictLabel"/>
         </el-select>
       </el-form-item>
+      <el-form-item label="提煤单号" prop="remark">
+        <el-input
+          v-model="queryParams.remark"
+          placeholder="请输入提煤单号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="承运人" prop="carrier">
+        <el-input
+          v-model="queryParams.carrier"
+          placeholder="请输入承运人"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="车辆类型" prop="viaType">
+        <el-select v-model="queryParams.viaType" placeholder="请选择进出车辆类型" clearable size="small" @change="handleQuery">
+          <el-option
+            v-for="dept in viaTypeDic"
+            :key="dept.key"
+            :label="dept.value"
+            :value="dept.key"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="车牌号" prop="plateNum">
+        <el-input
+          v-model="queryParams.plateNum"
+          placeholder="请输入车牌号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+
       <!-- <el-form-item label="规格" prop="specification">
          <el-input
            v-model="queryParams.specification"
@@ -38,15 +68,7 @@
            @keyup.enter.native="handleQuery"
          />
        </el-form-item>-->
-      <!--<el-form-item label="承运人" prop="carrier">
-        <el-input
-          v-model="queryParams.carrier"
-          placeholder="请输入承运人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>-->
+
       <!--<el-form-item label="毛重" prop="grossWeight">
         <el-input
           v-model="queryParams.grossWeight"
@@ -101,16 +123,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item label="流向" prop="flowDirection">
-        <el-select v-model="queryParams.flowDirection" clearable placeholder="请选择流向" @change="handleQuery">
-          <el-option
-            v-for="dept in flowDic"
-            :key="dept.key"
-            :label="dept.value"
-            :value="dept.key"
-          />
-        </el-select>
-      </el-form-item>
+
       <el-form-item label="状态 " prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small" @change="handleQuery">
           <el-option
@@ -121,15 +134,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="提煤单号" prop="remark">
-        <el-input
-          v-model="queryParams.remark"
-          placeholder="请输入提煤单号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="箱号" prop="containerNum">
         <el-input
           v-model="queryParams.containerNum"
@@ -193,16 +198,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item label="车辆类型" prop="viaType">
-        <el-select v-model="queryParams.viaType" placeholder="请选择进出车辆类型" clearable size="small" @change="handleQuery">
-          <el-option
-            v-for="dept in viaTypeDic"
-            :key="dept.key"
-            :label="dept.value"
-            :value="dept.key"
-          />
-        </el-select>
-      </el-form-item>
+
       <el-form-item label="包装类型" prop="packMode">
         <el-select v-model="queryParams.packMode" placeholder="请选择包装类型" clearable size="small" @change="handleQuery">
           <el-option
@@ -212,6 +208,27 @@
             :value="dept.key"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="流向" prop="flowDirection">
+        <el-select v-model="queryParams.flowDirection" placeholder="请选择流向" @change="handleQuery">
+          <el-option
+            v-for="dept in flowDic"
+            :key="dept.key"
+            :label="dept.value"
+            :value="dept.key"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="时间" prop="startTime">
+        <el-date-picker
+          v-model="dateRange"
+          type="datetimerange"
+          align="right"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']">
+        </el-date-picker>
       </el-form-item>
       <!--<el-form-item label="1 已印 0 未打印" prop="printState">
         <el-input
@@ -538,6 +555,7 @@ export default {
       // 计量单表格数据
       sheetList: [],
       BigList: [],//提煤单列表
+      dateRange:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -558,7 +576,7 @@ export default {
         netWeight: undefined,
         deliveryUnit: undefined,
         receivingUnit: undefined,
-        flowDirection: undefined,
+        flowDirection: 'I',
         status: undefined,
         coalBillNum: undefined,
         containerNum: undefined,
@@ -677,7 +695,7 @@ export default {
     /** 查询计量单列表 */
     getList() {
       this.loading = true;
-      listSheetLike(this.queryParams).then(response => {
+      listSheetLike(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
         this.sheetList = response.rows;
         this.total = response.total;
         this.loading = false;
