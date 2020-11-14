@@ -672,7 +672,7 @@
     </el-row> -->
 
     <el-table v-loading="loading" :data="instoreDocList" @selection-change="handleSelectionChange"
-               show-summary :summary-method="getSummaries">
+              show-summary :summary-method="getSummaries" >
 <!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="入库单号" align="center" prop="id" />
       <af-table-column label="寄舱客户" align="center" prop="checkConsumer" />
@@ -683,10 +683,26 @@
         <el-table-column label="车数" align="center" prop="vehicleNoCount"></el-table-column>
       </el-table-column>
       <el-table-column label="场所"  align="center" >
-        <el-table-column label="毛重(KG)" align="center" prop="roughWeight" />
-        <el-table-column label="皮重(KG)" align="center" prop="tareWeight" />
-        <el-table-column label="箱皮重" align="center" prop="boxTareWeight" />
-        <el-table-column label="净重(KG)" align="center" prop="netWeight" />
+        <el-table-column label="毛重(KG)" align="center" prop="roughWeight">
+        <template slot-scope="scope">
+          <span>{{(scope.row.roughWeight/1000).toFixed(2)}}</span>
+        </template>
+        </el-table-column>
+        <el-table-column label="皮重(KG)" align="center" prop="tareWeight">
+          <template slot-scope="scope">
+            <span>{{(scope.row.tareWeight/1000).toFixed(2)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="箱皮重" align="center" prop="boxTareWeight">
+          <template slot-scope="scope">
+            <span>{{ (scope.row.boxTareWeight/1000).toFixed(2)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="净重(KG)" align="center" prop="netWeight">
+          <template slot-scope="scope">
+            <span>{{(scope.row.netWeight/1000).toFixed(2)}}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="进场时间" align="center" prop="inTime" width="180">
         <template slot-scope="scope">
@@ -701,9 +717,21 @@
       <af-table-column label="库位号" align="center" prop="storeCodeAll" />
       <el-table-column label="蒙古磅单" align="center" >
         <af-table-column label="蒙方磅单号" align="center" prop="mongoliaBillNo" />
-        <el-table-column label="蒙方毛重" align="center" prop="mongoliaBillNo" />
-        <af-table-column label="蒙古磅皮重" align="center" prop="mongoliaTareWeight" />
-        <af-table-column label="蒙古磅净重" align="center" prop="mongoliaNetWeight" />
+        <el-table-column label="蒙方毛重" align="center" prop="mongoliaBillNo">
+          <template slot-scope="scope">
+            <span>{{(scope.row.mongoliaBillNo/1000).toFixed(2)}}</span>
+          </template>
+        </el-table-column>
+        <af-table-column label="蒙古磅皮重" align="center" prop="mongoliaTareWeight">
+          <template slot-scope="scope">
+            <span>{{(scope.row.mongoliaTareWeight/1000).toFixed(2)}}</span>
+          </template>
+        </af-table-column>
+        <af-table-column label="蒙古磅净重" align="center" prop="mongoliaNetWeight">
+          <template slot-scope="scope">
+            <span>{{(scope.row.mongoliaNetWeight/1000).toFixed(2)}}</span>
+          </template>
+        </af-table-column>
       </el-table-column>
       <el-table-column label="集装箱号" align="center" prop="containerNoAll" />
       <el-table-column label="供应商" align="center" prop="supplier" />
@@ -714,7 +742,11 @@
         </template>
       </el-table-column>
       <el-table-column label="运输单位" align="center" prop="vehicleTeam" />
-      <el-table-column label="计量单位" align="center" prop="measuringUnit" />
+      <el-table-column label="计量单位" align="center" prop="measuringUnit">
+        <template>
+          <span>t</span>
+        </template>
+      </el-table-column>
 
       <el-table-column label="入境日期" align="center" prop="entryDate" width="180">
         <template slot-scope="scope">
@@ -1245,7 +1277,6 @@ export default {
     getList() {
       this.loading = true;
       listInstoreDocLike(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
-
         this.instoreDocList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -1495,7 +1526,7 @@ export default {
       const sums = [];
       columns.forEach((column, index) => {
         if (index === 0) {
-          sums[index] = '总重量';
+          sums[index] = '本页总重(KG)';
           return;
         }
         const values = data.map(item => Number(item[column.property]));
@@ -1506,6 +1537,7 @@ export default {
               return prev + curr;
             }
             if (!isNaN(value) && index === 16) {
+              //.toFixed(2)
               return prev + curr;
             }
           }, 0);
