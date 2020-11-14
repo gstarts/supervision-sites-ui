@@ -1,12 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true">
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="90px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
 <!--      <el-form-item label="场所编号" prop="placeId">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.placeId"-->
@@ -92,6 +86,17 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="查询时间类型" prop="queryLogo">
+        <el-select
+          v-model="queryParams.queryLogo" placeholder="请选择查询时间类型" size="small">
+          <el-option
+            v-for="dept in timeQueryTypeOption"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"
+          />
+        </el-select>
       </el-form-item>
 <!--      <el-form-item label="进场时间" prop="inTime">-->
 <!--        <el-date-picker clearable size="small" style="width: 200px"-->
@@ -708,6 +713,10 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
     </el-form>
 
 <!--    <el-row :gutter="10" class="mb8">-->
@@ -1193,12 +1202,15 @@ export default {
       total: 0,
       // 出库明细单表格数据
       outstoreDocList: [],
+      //时间查询类型
+      timeQueryTypeOption:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
       // 查询参数
       queryParams: {
+        queryLogo:'I',
         pageNum: 1,
         pageSize: 20,
         placeId: undefined,
@@ -1306,6 +1318,10 @@ export default {
       this.queryParams.placeId = this.depts[0].deptId
       this.getContract(this.queryParams.placeId, '1')
     }
+    this.getDicts("time_query_type").then(response => {
+      this.timeQueryTypeOption = response.data;
+      console.log(this.timeQueryTypeOption)
+    });
     this.getList();
   },
   methods: {
@@ -1407,15 +1423,99 @@ export default {
         inUser: undefined,
         outUser: undefined
       };
+      //   this.queryParams={
+      //     queryLogo:'I',
+      //     pageNum: 1,
+      //     pageSize: 20,
+      //     placeId: undefined,
+      //     docNo: undefined,
+      //     businessNo: undefined,
+      //     customerName: undefined,
+      //     customerId: undefined,
+      //     receiveId: undefined,
+      //     receiveName: undefined,
+      //     checkContractNo: undefined,
+      //     mongoliaBillNo: undefined,
+      //     vehicleNo: undefined,
+      //     trailerNo1: undefined,
+      //     trailerNo2: undefined,
+      //     vehicleTeam: undefined,
+      //     mongoliaNetWeight: undefined,
+      //     mongoliaTareWeight: undefined,
+      //     vehicleCount: undefined,
+      //     driverName: undefined,
+      //     vehicleTeamContact: undefined,
+      //     vehicleTeamTel: undefined,
+      //     vehicleType: undefined,
+      //     measuringUnit: undefined,
+      //     packMode: undefined,
+      //     containerNo1: undefined,
+      //     containerNo2: undefined,
+      //     containerNo3: undefined,
+      //     containerNo4: undefined,
+      //     netWeight: undefined,
+      //     tareWeight: undefined,
+      //     roughWeight: undefined,
+      //     genTime: undefined,
+      //     genBy: undefined,
+      //     poundTime: undefined,
+      //     poundNo: undefined,
+      //     batchNo: undefined,
+      //     loadingBillNo: undefined,
+      //     storeCode: undefined,
+      //     storeCode2: undefined,
+      //     storeCode3: undefined,
+      //     storeCode4: undefined,
+      //     hasManifest: undefined,
+      //     hasDeclare: undefined,
+      //     hasTransit: undefined,
+      //     storeState: undefined,
+      //     fileId: undefined,
+      //     passNo: undefined,
+      //     revision: undefined,
+      //     memo: undefined,
+      //     mongoliaRoughWeight: undefined,
+      //     goodsName: undefined,
+      //     sendName: undefined,
+      //     inTime: undefined,
+      //     outTime: undefined,
+      //     reserved1: undefined,
+      //     reserved2: undefined,
+      //     reserved3: undefined,
+      //     reserved4: undefined,
+      //     chnlNoI: undefined,
+      //     chnlNoE: undefined,
+      //     locationAlias: undefined,
+      //     salesContractNo: undefined,
+      //     coalBillNo: undefined,
+      //     transportMode: undefined,
+      //     transportUnit: undefined,
+      //     dispatchNo: undefined,
+      //     appUser: undefined,
+      //     dataSources: undefined,
+      //     voidReason: undefined,
+      //     driverMobileNo: undefined,
+      //     makerBy: undefined,
+      //     boxTareWeight: undefined,
+      //     voidDate: undefined,
+      //     makerTime: undefined,
+      //     inUser: undefined,
+      //     outUser: undefined
+      // };
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      if(this.queryParams.queryLogo == undefined){
+        this.msgError("查询时间类型不可为空,请选择")
+        return
+      }
       this.getList();
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.dateRange=[];
       this.resetForm("queryForm");
       this.handleQuery();
     },

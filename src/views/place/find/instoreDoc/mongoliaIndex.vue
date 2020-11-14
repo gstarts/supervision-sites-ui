@@ -1222,7 +1222,6 @@ export default {
     this.getList();
     this.getDicts("time_query_type").then(response => {
       this.timeQueryTypeOption = response.data;
-      console.log(this.timeQueryTypeOption)
     });
   },
   methods: {
