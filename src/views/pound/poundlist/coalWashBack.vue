@@ -327,6 +327,9 @@
       <div id="areadate">
         <span>{{ nowTime }}</span>
       </div>
+      <div id="serialNumber">
+        <span>aaaaa</span>
+      </div>
       <div id="area-style">
         <span class="area-in-style">{{ form.deliveryUnit }}</span>
       </div>
@@ -338,26 +341,31 @@
         <span class="area-in-style">{{ form.receivingUnit }}</span>
       </div>
       <div id="area-right-style">
-        <span>{{ form.grossWeight }}</span>
+        <span>{{ form.grossWeight }} kg</span>
       </div>
       <div id="area-style">
         <span class="area-in-style">{{ form.goodsName }}</span>
       </div>
       <div id="area-right-style">
-        <span>{{ form.tare }}</span>
+        <span>{{ form.tare }} kg</span>
         <br/>
       </div>
       <div id="area-style">
         <span class="area-in-style">{{ form.specification }}</span>
       </div>
       <div id="area-right-style">
-        <span>{{ form.netWeight }}</span>
+        <span>{{ form.netWeight }} kg</span>
         <br/>
       </div>
       <div id="area-all-style">
         <span class="area-in-style">{{ form.remark }}</span>
         <br/>
       </div>
+      <div id="user-all-style">
+        <span>{{this.UserOption[0].Value}}</span>
+        <span>{{this.UserOption[1].Value}}</span>
+      </div>
+
       <!--   v-if判断 车辆类型是否为重进空出  标识为01   -->
       <div id="dayin1" v-if="this.PoundForm.stationViaType ==='01'">
         <div style="align-content: center;">
@@ -371,7 +379,9 @@
             <span>{{ nowTime }}</span>
           </div>
         </div>
-
+        <div id="serialNumber1">
+          <span>aaaaa</span>
+        </div>
         <div id="area-style1">
           <span class="area-in-style">{{ form.deliveryUnit }}</span>
         </div>
@@ -383,25 +393,29 @@
           <span class="area-in-style">{{ form.receivingUnit }}</span>
         </div>
         <div id="area-right-style1">
-          <span>{{ form.grossWeight }}</span>
+          <span>{{ form.grossWeight }}kg</span>
         </div>
         <div id="area-style1">
           <span class="area-in-style">{{ form.goodsName }}</span>
         </div>
         <div id="area-right-style1">
-          <span>{{ form.tare }}</span>
+          <span>{{ form.tare }}kg</span>
           <br/>
         </div>
         <div id="area-style1">
           <span class="area-in-style">{{ form.specification }}</span>
         </div>
         <div id="area-right-style1">
-          <span>{{ form.netWeight }}</span>
+          <span>{{ form.netWeight }}kg</span>
           <br/>
         </div>
         <div id="area-all-style1">
           <span class="area-in-style">{{ form.remark + " 补" }}</span>
           <br/>
+        </div>
+        <div id="user-all-style1">
+          <span>{{this.UserOption[0].Value}}</span>
+          <span>{{this.UserOption[1].Value}}</span>
         </div>
       </div>
     </div>
@@ -449,6 +463,8 @@ export default {
       loading: false,
       // 选中数组
       ids: [],
+      //获取当前用户名
+      WeighmanName:'',
       // 通道配置表格数据
       chnlConfigList: [],
       //出场完结List统计列表
@@ -646,7 +662,10 @@ export default {
         modifyContainerNo4: '',
       },*/
       //当前选中的磅单
-      selectPound: {}
+      selectPound: {},
+      UserOption:[{'Key':'TigerGod','Value':'虎神'},
+                  {'Key':'xiujin','Value':'休津'}]
+
     }
   },
   watch: {//监听值的变化
@@ -664,6 +683,8 @@ export default {
     }
   },
   created() {
+    console.log("------")
+    console.log(this.$store.state.user.nickName)
     //监听键盘事件
     document.addEventListener('keydown', this.handleKeyDown)
     document.addEventListener('keyup', this.handleKeyUp)
@@ -1386,16 +1407,29 @@ export default {
   float: left;
   font-size: 25px;
 }
-
+#serialNumber {
+  width: 300px;
+  height: 10px;
+  margin-top: 10px;
+  float: left;
+  font-size: 25px;
+}
 /*第二页*/
 #area1 {
   width: 300px;
   height: 10px;
   margin-left: 20px;
-  /*float: left;*/
+  float: left;
   font-size: 25px;
 }
-
+#serialNumber1 {
+  width: 300px;
+  height: 10px;
+  margin-top: 10px;
+  margin-left: 280px;
+  float: left;
+  font-size: 25px;
+}
 #areadate {
   width: 300px;
   height: 10px;
@@ -1420,9 +1454,8 @@ export default {
 .areadate1 {
   width: 400px;
   height: 10px;
-
-  padding-left: 340px;
-  /*float: left;*/
+  /*padding-left: 340px;*/
+  float: left;
   margin-left: 15px;
   font-size: 25px;
   margin-top: -10px;
@@ -1474,6 +1507,22 @@ export default {
   height: 40px;
   font-size: 20px;
   float: left;
+  margin-top: 10px;
+}
+#user-all-style {
+  width: 800px;
+  height: 40px;
+  font-size: 20px;
+  float: left;
+  padding-left: 130px;
+  margin-top: 10px;
+}
+#user-all-style1 {
+  width: 800px;
+  height: 40px;
+  font-size: 20px;
+  float: left;
+  padding-left: 130px;
   margin-top: 10px;
 }
 
@@ -1530,6 +1579,5 @@ export default {
   background: #fff;
   color: green;
 }
-
 /**-- :row-style="green"  **/
 </style>
