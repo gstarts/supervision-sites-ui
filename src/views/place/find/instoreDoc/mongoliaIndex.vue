@@ -63,6 +63,24 @@
 <!--          placeholder="选择境外出库日期">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
+      <el-form-item label="包装方式" prop="packMode">
+<!--        <el-input-->
+<!--          v-model="queryParams.packMode"-->
+<!--          placeholder="请输入包装方式"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+        <el-select
+          v-model="queryParams.packMode" placeholder="请选择包装方式" size="small">
+          <el-option
+            v-for="dept in packModeOption"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="查询时间类型" prop="queryLogo">
         <el-select
           v-model="queryParams.queryLogo" placeholder="请选择查询时间类型" size="small">
@@ -228,15 +246,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="包装方式(集装箱，散装)" prop="packMode">
-        <el-input
-          v-model="queryParams.packMode"
-          placeholder="请输入包装方式(集装箱，散装)"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
 
       <el-form-item label="集装箱号2" prop="containerNo2">
         <el-input
@@ -723,7 +733,7 @@
           <span>{{ parseTime(scope.row.nationalInspectionReleaseDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="包装方式" align="center" prop="packMode" />
+      <el-table-column label="包装方式" align="center" prop="packMode" :formatter="packModeTypeFormat" />
       <el-table-column label="车型" align="center" prop="vehicleType" />
       <af-table-column label="备注" align="center" prop="remark" />
       <el-table-column>
@@ -1133,6 +1143,8 @@ export default {
       instoreDocList: [],
       //时间查询类型
       timeQueryTypeOption:[],
+      //包装方式字典集
+      packModeOption:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -1222,6 +1234,10 @@ export default {
     this.getList();
     this.getDicts("time_query_type").then(response => {
       this.timeQueryTypeOption = response.data;
+    });
+
+    this.getDicts("pack_mode").then(response => {
+      this.packModeOption = response.data;
     });
   },
   methods: {
@@ -1496,6 +1512,10 @@ export default {
         }
       });
       return sums;
+    },
+    //包装方式行翻译
+    packModeTypeFormat(row,column){
+      return this.selectDictLabel(this.packModeOption,row.packMode);
     }
   }
 };
