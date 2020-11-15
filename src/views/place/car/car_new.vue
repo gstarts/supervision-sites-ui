@@ -190,7 +190,7 @@
                   v-for="item in vehicleTypes"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.value">
+                  :value="item.label">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -237,7 +237,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitForm" :disabled="buttonShow==='1'">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -320,6 +320,7 @@ export default {
   name: 'Car',
   data() {
     return {
+      buttonShow: '',
       // 遮罩层
       loading: true,
       docList: [],
@@ -537,6 +538,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
+      this.buttonShow = '1'
       this.$refs['form'].validate(valid => {
         if (valid) {
           console.log(this.form)
