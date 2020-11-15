@@ -164,11 +164,22 @@
               style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
       <af-table-column label="寄仓客户" align="center" prop="column1"/>
       <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
-      <af-table-column label="合同" align="center" prop="column2"/>
-
-      <af-table-column label="放行单总量" align="center" prop="column6"/>
-      <af-table-column label="已占用" align="center" prop="column4"/>
-      <af-table-column label="可分配提煤单总量" align="center" prop="column5"/>
+      <af-table-column label="合同" align="center" prop="column2"></af-table-column>
+      <af-table-column label="放行单总量" align="center" prop="column6">
+        <template slot-scope="scope">
+          <span>{{ (scope.row.column6/1000).toFixed(2)}}</span>
+        </template>
+      </af-table-column>
+      <af-table-column label="已占用" align="center" prop="column4">
+        <template slot-scope="scope">
+          <span>{{ (scope.row.column4/1000).toFixed(2)}}</span>
+        </template>
+      </af-table-column>
+      <af-table-column label="可分配提煤单总量" align="center" prop="column5">
+        <template slot-scope="scope">
+          <span>{{ (scope.row.column5/1000).toFixed(2)}}</span>
+        </template>
+      </af-table-column>
 
 
     </el-table>
