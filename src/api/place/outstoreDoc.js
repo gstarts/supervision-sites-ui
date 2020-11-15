@@ -51,3 +51,11 @@ export function delOutstoreDoc(id) {
     method: 'delete'
   })
 }
+
+export function addOutstoreDocByCar(data, num) {
+  return request({
+    url: '/place/outstoreDoc/addCar/' + num,
+    method: 'post',
+    data: data
+  })
+}
