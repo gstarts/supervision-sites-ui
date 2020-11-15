@@ -328,7 +328,7 @@
         <span>{{ nowTime }}</span>
       </div>
       <div id="serialNumber">
-        <span>aaaaa</span>
+        <span>{{form.id}}</span>
       </div>
       <div id="area-style">
         <span class="area-in-style">{{ form.deliveryUnit }}</span>
@@ -380,7 +380,7 @@
           </div>
         </div>
         <div id="serialNumber1">
-          <span>aaaaa</span>
+          <span>{{form.id}}</span>
         </div>
         <div id="area-style1">
           <span class="area-in-style">{{ form.deliveryUnit }}</span>
@@ -532,6 +532,7 @@ export default {
       isAdd: false,
       // 地磅数据
       form: {
+        id:0,
         //车号
         plateNum: undefined,
         //皮重
@@ -1469,15 +1470,15 @@ export default {
   width: 300px;
   height: 10px;
   margin-left: 20px;
-  float: left;
+  /*float: left;*/
   font-size: 25px;
 }
 #serialNumber1 {
   width: 300px;
   height: 10px;
   margin-top: 10px;
-  margin-left: 280px;
-  float: left;
+  margin-left: 610px;
+  /*float: left;*/
   font-size: 25px;
 }
 #areadate {
@@ -1504,8 +1505,8 @@ export default {
 .areadate1 {
   width: 400px;
   height: 10px;
-  /*padding-left: 340px;*/
-  float: left;
+  padding-left: 340px;
+  /*float: left;*/
   margin-left: 15px;
   font-size: 25px;
   margin-top: -10px;
