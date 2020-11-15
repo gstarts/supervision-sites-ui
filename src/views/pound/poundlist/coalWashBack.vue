@@ -358,7 +358,7 @@
         <br/>
       </div>
       <div id="area-all-style">
-        <span class="area-in-style">{{ form.remark }}</span>
+        <span class="area-in-style">{{ form.remark+'，'+form.carrier+'，'+form.transportMode}}</span>
         <br/>
       </div>
       <div id="user-all-style">
@@ -410,7 +410,7 @@
           <br/>
         </div>
         <div id="area-all-style1">
-          <span class="area-in-style">{{ form.remark + " 补" }}</span>
+          <span class="area-in-style">{{ form.remark+'，'+form.carrier+'，'+form.transportMode+ " 补" }}</span>
           <br/>
         </div>
         <div id="user-all-style1">
@@ -559,8 +559,14 @@ export default {
         viaType: undefined,
         //包装方式 ，1集装箱，2散货
         packMode: undefined,
+        //进场司磅员
         inUser:'',
+        //出场司磅员
         outUser:'',
+        //承运人
+        transportMode:'',
+        //运输方式
+        carrier:'',
       },
       //通道配置
       PoundForm: {
@@ -1497,7 +1503,7 @@ export default {
 #area-style {
   width: 600px;
   height: 30px;
-  font-size: 20px;
+  font-size: 26px;
   margin-top: 30px;
   float: left;
 }
@@ -1506,7 +1512,7 @@ export default {
 #area-style1 {
   width: 600px;
   height: 30px;
-  font-size: 20px;
+  font-size: 26px;
   margin-top: 30px;
   float: left;
 }
