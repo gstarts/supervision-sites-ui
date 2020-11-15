@@ -672,7 +672,7 @@
     </el-row> -->
 
     <el-table v-loading="loading" :data="instoreDocList" @selection-change="handleSelectionChange"
-              show-summary :summary-method="getSummaries" >
+              show-summary :summary-method="getSummaries" height="645">
 <!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="入库单号" align="center" prop="id" />
       <af-table-column label="寄舱客户" align="center" prop="checkConsumer" />

@@ -328,7 +328,7 @@
         <span>{{ nowTime }}</span>
       </div>
       <div id="serialNumber">
-        <span>{{form.id}}</span>
+        <span>{{this.pad(this.form.id)}}</span>
       </div>
       <div id="area-style">
         <span class="area-in-style">{{ form.deliveryUnit }}</span>
@@ -380,7 +380,7 @@
           </div>
         </div>
         <div id="serialNumber1">
-          <span>{{form.id}}</span>
+          <span>{{this.pad(this.form.id)}}</span>
         </div>
         <div id="area-style1">
           <span class="area-in-style">{{ form.deliveryUnit }}</span>
@@ -1416,6 +1416,11 @@ export default {
         }
       })
     },*/
+    pad(num) {
+      var i = (num + "").length;
+      while(i++ < 8) num = "0" + num;
+      return num;
+    },
   }
 }
 

@@ -1,51 +1,58 @@
 <template>
   <div class="app-container">
-
     <!--    根据日期区间，期初库存（开始时间前的库存），当期入库，当期出库，当期库存，-->
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <!--      <el-row>-->
-      <el-form-item label="场所名称" prop="placeId">
-        <el-select @change="changePlace"
-                   v-model="queryParams.placeId" placeholder="请选择场所" size="small">
-          <el-option
-            v-for="dept in depts"
-            :key="dept.deptId"
-            :label="dept.deptName"
-            :value="dept.deptId"
-          />
-        </el-select>
-      </el-form-item>
+      <el-row>
+        <el-col :span="8">
+          <el-form-item label="场所名称" prop="placeId">
+            <el-select @change="changePlace"
+                       v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+              <el-option
+                v-for="dept in depts"
+                :key="dept.deptId"
+                :label="dept.deptName"
+                :value="dept.deptId"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
 
-      <el-form-item label="寄舱客户" prop="storeCustomer">
-        <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>-->
-        <el-select
-          filterable
-          clearable
-          v-model="queryParams.customerName" placeholder="请选择寄舱客户">
-          <el-option
-            v-for="type in customerList"
-            :key="type.customerName"
-            :label="type.customerName"
-            :value="type.customerName"
-          />
-        </el-select>
-      </el-form-item>
+        <el-col :span="8">
+          <el-form-item label="寄舱客户" prop="storeCustomer">
+            <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>-->
+            <el-select
+              filterable
+              clearable
+              v-model="queryParams.customerName" placeholder="请选择寄舱客户">
+              <el-option
+                v-for="type in customerList"
+                :key="type.customerName"
+                :label="type.customerName"
+                :value="type.customerName"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
 
-      <el-form-item label="品名" prop="goodsName">
-        <el-select
-          clearable
-          filterable
-          v-model="queryParams.goodsName"
-          placeholder="请选择品名"
-          size="small">
-          <el-option
-            v-for="dict in goodsNameList"
-            :key="dict.dictLabel"
-            :label="dict.dictLabel"
-            :value="dict.dictLabel"
-          />
-        </el-select>
-      </el-form-item>
+        <el-col :span="8">
+        <el-form-item label="品名" prop="goodsName">
+          <el-select
+            clearable
+            filterable
+            v-model="queryParams.goodsName"
+            placeholder="请选择品名"
+            size="small">
+            <el-option
+              v-for="dict in goodsNameList"
+              :key="dict.dictLabel"
+              :label="dict.dictLabel"
+              :value="dict.dictLabel"
+            />
+          </el-select>
+        </el-form-item>
+        </el-col>
+      </el-row>
+
 
       <!--        <el-form-item label="统计方式" prop="statisticsMode">-->
       <!--          <el-select @change="changeStatistics"-->
@@ -119,58 +126,70 @@
           </el-select>
         </el-form-item>-->
 
-
-
-        <!--        <el-form-item label="货物类型" prop="packMode">-->
-        <!--          <el-select-->
-        <!--            v-model="queryParams.packMode" placeholder="请选择货物类型">-->
-        <!--            <el-option-->
-        <!--              v-for="type in packModeDic"-->
-        <!--              :key="type.key"-->
-        <!--              :label="type.value"-->
-        <!--              :value="type.key"-->
-        <!--            />-->
-        <!--          </el-select>-->
-        <!--        </el-form-item>-->
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-          <el-button type="info" icon="fa fa-print" v-print="'#print' " @click="print"> 打印
-          </el-button>
+<!--          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+<!--          <el-button type="info" icon="fa fa-print" v-print="'#print' " @click="print"> 打印-->
+<!--          </el-button>-->
+          <el-row :gutter="5">
+            <el-col :span="6">
+              <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            </el-col>
+            <el-col :span="6">
+              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+            </el-col>
+            <el-col :span="6">
+              <el-button type="info" icon="fa fa-print" v-print="'#print'" size="mini" @click="print"> 打印
+              </el-button>
+            </el-col>
+            <el-col :span="6">
+              <download-excel
+                class="export-excel-wrapper"
+                :data="reportList"
+                :fields="json_fields"
+                :title="titleList"
+                :footer="excelFooter"
+                :default-value="defaultValue"
+                name="内蒙古嘉易达矿业有限公司统计报表.xls">
+                <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
+                <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
+              </download-excel>
+            </el-col>
+          </el-row>
         </el-form-item>
       </el-row>
-      <download-excel
-        class="export-excel-wrapper"
-        :data="reportList"
-        :fields="json_fields"
-        :title="titleList"
-        :footer="excelFooter"
-        :default-value="defaultValue"
-        name="嘉易达监管场所库存情况报表.xls">
-        <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
-        <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
-      </download-excel>
+<!--      <download-excel-->
+<!--        class="export-excel-wrapper"-->
+<!--        :data="reportList"-->
+<!--        :fields="json_fields"-->
+<!--        :title="titleList"-->
+<!--        :footer="excelFooter"-->
+<!--        :default-value="defaultValue"-->
+<!--        name="嘉易达监管场所库存情况报表.xls">-->
+<!--        &lt;!&ndash; 上面可以自定义自己的样式，还可以引用其他组件button &ndash;&gt;-->
+<!--        <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>-->
+<!--      </download-excel>-->
     </el-form>
     <div class="box-card" style="margin: 0 auto;font-size:15px;width:1100px;padding-left: 1px ;padding-top:50px"
          id="print">
-<!--      <div v-show="printSmallTitle">-->
-        <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">
-          <span>{{this.prinTtitle}}</span><br>
-          <span>{{this.dateTime}}</span>
-        </div>
-<!--        <div>-->
-<!--          <span>{{timeTitle}}</span>-->
-<!--        </div>-->
-        <!--      <div>-->
-        <!--        <span>{{shipper}}</span>-->
-        <!--      </div>-->
-<!--      </div>-->
+      <!--      <div v-show="printSmallTitle">-->
+      <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">
+        <span>{{this.prinTtitle}}</span><br>
+        <span>{{this.dateTime}}</span>
+      </div>
+      <!--        <div>-->
+      <!--          <span>{{timeTitle}}</span>-->
+      <!--        </div>-->
+      <!--      <div>-->
+      <!--        <span>{{shipper}}</span>-->
+      <!--      </div>-->
+      <!--      </div>-->
 
       <el-table v-loading="loading" :data="reportList" id="analyouttable" show-summary
                 :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
                 :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
                 style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
-        <af-table-column label="寄舱客户" align="center"width="120%" prop="column1"/>
+        <af-table-column label="寄舱客户" align="center" width="120%" prop="column1"/>
 
         <af-table-column label="寄舱合同" align="center" width="120%" prop="column2"/>
 
@@ -178,12 +197,12 @@
         <af-table-column label="期初库存(t)" align="center" prop="column4"/>
 
         <el-table-column label="本期入库(t)" align="center" prop="column5">
-            <el-table-column
-              prop="column5"
-              label="车数"
-              align="center"
-              width="70%">
-            </el-table-column>
+          <el-table-column
+            prop="column5"
+            label="车数"
+            align="center"
+            width="70%">
+          </el-table-column>
           <el-table-column
             prop="column5"
             label="重量（t）"
@@ -277,7 +296,7 @@
         nextDate: '',
         //打印按钮显示隐藏
         show: false,
-        dateTime:'',
+        dateTime: '',
         // 导出按钮显示隐藏
         showImport: false,
         // 导出标题集合
@@ -301,15 +320,12 @@
           "煤种": "column3",
           "期初库存": "column4",
           "本期入库": "column5",
-          "本期入库1":{
-            "车数":"column5",
-            callback: (column5) => {
-              return `${column5}`;
-            },
-
-          },
           "本期出库": "column6",
           "库存差": "column7",
+          "期初库存(t)":{
+            "车数":"column5",
+            "重量（t）":"column5",
+          }
         },
         // 默认值
         defaultValue: '0',
@@ -317,7 +333,7 @@
         excelFooter: '',
         // 选中数组
         // 打印标题
-        prinTtitle:'',
+        prinTtitle: '',
         // 标题时间
         timeTitle: '',
         ids: [],
@@ -348,7 +364,7 @@
         ],
         // 查询参数
         queryParams: {
-          goodsName:undefined,
+          goodsName: undefined,
           placeId: undefined,
           customerName: undefined,
           startTime: undefined,
@@ -481,9 +497,9 @@
       },
       /** 重置按钮操作 */
       resetQuery() {
-        this.dateRange=[];
-        this.queryParams.goodsName=undefined
-        this.queryParams.customerName= undefined
+        this.dateRange = [];
+        this.queryParams.goodsName = undefined
+        this.queryParams.customerName = undefined
       },
       getInfo() {
         this.loading = true
@@ -529,7 +545,7 @@
 
       //场所改变时，去查对应场所的
       changePlace(event) {
-        console.log(this.depts+1511)
+        console.log(this.depts + 1511)
 
         this.getContract(event, '1')
       },
