@@ -189,7 +189,7 @@
               </el-select>
             </el-form-item>
             <!-- -->
-            <el-form-item label="车辆类型" prop="stationViaType">
+            <el-form-item label="车辆类型(F10)" prop="stationViaType" label-width="120px">
               <el-select filterable v-model="PoundForm.stationViaType" placeholder="请选择车辆类型" @change="vehicleChange">
                 <el-option
                   v-for="dept in stationViaTypeOptions"
@@ -229,7 +229,7 @@
                 <span>{{ parseTime(scope.row.createTime) }}</span>
               </template>
             </af-table-column>
-            <af-table-column label="出场时间" align="center" prop="outTime" width="180"></af-table-column>
+            <!--<af-table-column label="出场时间" align="center" prop="outTime" width="180"></af-table-column>-->
             <af-table-column label="库位号" align="center" prop="locationNumber"/>
             <af-table-column label="通道号" align="center" prop="channelNumber">
               <template slot-scope="scope">
@@ -285,11 +285,11 @@
             <af-table-column label="收货单位" align="center" prop="receivingUnit" :show-overflow-tooltip="true"/>
             <af-table-column label="货物名称" align="center" prop="goodsName" :show-overflow-tooltip="true"/>
             <af-table-column label="规格型号" align="center" prop="specification"/>
-            <af-table-column label="进场时间" align="center" prop="inTime" width="180">
+            <!--<af-table-column label="进场时间" align="center" prop="inTime" width="180">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.createTime) }}</span>
               </template>
-            </af-table-column>
+            </af-table-column>-->
             <af-table-column label="出场时间" align="center" prop="outTime" width="180">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.updateTime) }}</span>
@@ -412,7 +412,15 @@
 
 <script>
 //获取实时重量
-import {addSheet, getSheet, listIESheet, poundSelect, updateSheet,getVehicleList,getNoticeByVehicle} from "@/api/pound/poundlist";
+import {
+  addSheet,
+  getSheet,
+  listIESheet,
+  poundSelect,
+  updateSheet,
+  getVehicleList,
+  getNoticeByVehicle
+} from "@/api/pound/poundlist";
 import {genTimeCode, parseTime} from "@/utils/common";
 import {listChnlConfig} from "@/api/basis/chnlConfig";
 import {getUserDepts} from "@/utils/charutils";
@@ -1300,10 +1308,18 @@ export default {
         e.preventDefault()
         this.getVehicleList()
       }
-      /* if(key === 80){
-         e.preventDefault()
-         this.print()
-       }*/
+      if (key === 121) { //C
+        e.preventDefault()
+        //切换车辆类型
+        this.$refs['vehicleNo'].blur()
+        if (this.PoundForm.stationViaType === '01') {
+          this.PoundForm.stationViaType = '02'
+        } else {
+          this.PoundForm.stationViaType = '01'
+        }
+        this.getVehicleList()
+        this.$refs['vehicleNo'].focus()
+      }
     },
     changPrint() {
       if (this.autoPrint === true) {

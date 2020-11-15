@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询企业信息备案列表
 export function listInfo(query) {
   return request({
-    url: '/system/enterprise/info/list',
+    url: '/place/enterprise/info/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listInfo(query) {
 // 查询企业信息备案详细
 export function getInfo(id) {
   return request({
-    url: '/system/enterprise/info/' + id,
+    url: '/place/enterprise/info/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getInfo(id) {
 // 新增企业信息备案
 export function addInfo(data) {
   return request({
-    url: '/system/enterprise/info',
+    url: '/place/enterprise/info',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addInfo(data) {
 // 修改企业信息备案
 export function updateInfo(data) {
   return request({
-    url: '/system/enterprise/info',
+    url: '/place/enterprise/info',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateInfo(data) {
 // 删除企业信息备案
 export function delInfo(id) {
   return request({
-    url: '/system/enterprise/info/' + id,
+    url: '/place/enterprise/info/' + id,
     method: 'delete'
   })
 }
