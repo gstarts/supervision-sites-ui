@@ -24,6 +24,18 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="时间" prop="createTime">
+        <el-date-picker
+          v-model="dateRange"
+          type="datetimerange"
+          align="right"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']">
+
+        </el-date-picker>
+      </el-form-item>
       <el-form-item>
         <el-button
           type="primary"
@@ -100,6 +112,7 @@
       <el-table-column label="货物名称" align="center" prop="goodsName"/>
       <el-table-column label="收货单位" align="center" prop="receiveName"/>
       <el-table-column label="客户名称" align="center" prop="customerName"/>
+      <el-table-column label="建单时间" align="center" prop="createTime"/>
       <!-- <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="乐观锁" align="center" prop="revision" /> -->
       <el-table-column
@@ -477,6 +490,8 @@ export default {
       uploadData: {},
       uploading: false,
       fileList: [],
+      //时间组件
+      dateRange:[],
       headers: {},
       // 文件导入参数
 
@@ -521,7 +536,7 @@ export default {
     /** 查询大提煤单列表 */
     getList() {
       this.loading = true
-      listBig(this.queryParams).then((response) => {
+      listBig(this.addDateRange(this.queryParams,this.dateRange)).then((response) => {
         this.bigList = response.rows
         this.total = response.total
         this.loading = false
