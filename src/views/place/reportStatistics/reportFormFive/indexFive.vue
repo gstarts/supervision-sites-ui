@@ -194,9 +194,21 @@
         <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
         <af-table-column label="合同" align="center" prop="column2"/>
 
-        <af-table-column label="入库总量" align="center" prop="column6"/>
-        <af-table-column label="现有放行量" align="center" prop="column4"/>
-        <af-table-column label="可申请放行量" align="center" prop="column5"/>
+        <af-table-column label="入库总量" align="center" prop="column6">
+          <template slot-scope="scope">
+            <span>{{ (scope.row.column6/1000).toFixed(2)}}</span>
+          </template>
+        </af-table-column>
+        <af-table-column label="现有放行量" align="center" prop="column4">
+          <template slot-scope="scope">
+            <span>{{ (scope.row.column4/1000).toFixed(2)}}</span>
+          </template>
+        </af-table-column>
+        <af-table-column label="可申请放行量" align="center" prop="column5">
+          <template slot-scope="scope">
+            <span>{{ (scope.row.column5/1000).toFixed(2)}}</span>
+          </template>
+        </af-table-column>
 
 
       </el-table>

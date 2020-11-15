@@ -10,6 +10,18 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="建单时间" prop="createTime">
+        <el-date-picker
+          v-model="dateRange"
+          type="datetimerange"
+          align="right"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']">
+
+        </el-date-picker>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -80,6 +92,7 @@
         </template>
       </el-table-column>
       <el-table-column label="剩余重量" align="center" prop="lastWieght"/>
+      <el-table-column label="建单时间" align="center" prop="createTime"/>
     </el-table>
     <pagination
       v-show="total>0"
@@ -214,6 +227,8 @@ export default {
       left: 'left',
       // 弹出层标题
       title: '',
+      //时间组件
+      dateRange:[],
       //场所列表
       depts: [],
       // 是否显示弹出层
@@ -276,13 +291,12 @@ export default {
     // 获取场所
     this.depts = getUserDepts('0')
     this.getList()
-
   },
   methods: {
     /** 查询提运单 列表 */
     getList() {
       this.loading = true
-      listClearance(this.queryParams).then(response => {
+      listClearance(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
         this.clearanceList = response.rows
         this.total = response.total
         this.loading = false

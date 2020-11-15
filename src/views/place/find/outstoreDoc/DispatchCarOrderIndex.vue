@@ -762,7 +762,7 @@
 <!--      </el-col>-->
 <!--    </el-row>-->
 
-    <el-table v-loading="loading" :data="outstoreDocList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="outstoreDocList" @selection-change="handleSelectionChange" height="645">
 <!--      <el-table-column type="selection" width="55" align="center" />-->
 <!--      <el-table-column label="ID 逻辑主键" align="center" prop="id" />-->
 <!--      <el-table-column label="场所编号" align="center" prop="placeId" />-->
