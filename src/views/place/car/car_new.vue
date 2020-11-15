@@ -205,7 +205,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="运输次数" prop="transportNum">
-              <el-input v-model="form.transportNum" placeholder="请输入运输次数"/>
+              <el-input v-model.number="form.transportNum" placeholder="请输入运输次数"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -389,12 +389,14 @@ export default {
           {required: true, message: '请选择提煤单', trigger: 'change'}
         ],
         vehicleGoodsNetWeight: [
-          {required: true, message: '请输入', trigger: 'blur'},
-          {type: 'number', message: '必须为数字值'}
+          {required: true, message: '货净重不能为空', trigger: 'blur'},
+          {type: 'number', message: '货净重必须是数字'},
+          { pattern: /^\+?[1-9][0-9]*$/, message: '不能为0', trigger: 'blur'}
         ],
         vehicleTareWeight: [
-          {required: true, message: '请输入', trigger: 'blur'},
-          {type: 'number', message: '必须为数字值'}
+          {required: true, message: '车皮重不能为空', trigger: 'blur'},
+          {type: 'number', message: '车皮重必须是数字'},
+          { pattern: /^\+?[1-9][0-9]*$/, message: '不能为0', trigger: 'blur'}
         ],
         vehicleNo: [
           {required: true, message: '车牌号不能为空', trigger: 'blur'}
@@ -403,7 +405,9 @@ export default {
           {required: true, message: '是否申报海关不能为空', trigger: 'blur'}
         ],
         transportNum: [
-          {required: true, message: '运输次数不能为空', trigger: 'blur'}
+          {required: true, message: '运输次数不能为空', trigger: 'blur'},
+          {type: 'number', message: '运输次数必须是数字'},
+          { pattern: /^\+?[1-9][0-9]*$/, message: '不能为0', trigger: 'blur'}
         ],
         packMode: [
           {required: true, message: '请选择包装类型', trigger: 'change'}
