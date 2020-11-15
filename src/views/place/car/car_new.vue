@@ -209,8 +209,16 @@
 
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="承运单位" prop="transportUnit">
-              <el-input v-model="form.transportUnit" placeholder="请输入承运单位"/>
+            <el-form-item label="承运单位" prop="transportUnitId">
+              <!--<el-input v-model="form.transportUnit" placeholder="请输入承运单位"/>-->
+              <el-select v-model="form.transportUnitId" filterable placeholder="请选择承运单位">
+                <el-option
+                  v-for="item in transUnitList"
+                  :key="item.id"
+                  :label="item.eName"
+                  :value="item.id">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -304,8 +312,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="承运单位" prop="transportUnit">
-          <el-input v-model="form.transportUnit" placeholder="请输入承运单位"/>
+        <el-form-item label="承运单位" prop="transportUnitId">
+          <!--<el-input v-model="form.transportUnit" placeholder="请输入承运单位"/>-->
+          <el-select v-model="form.transportUnitId" filterable placeholder="请选择承运单位">
+            <el-option
+              v-for="item in transUnitList"
+              :key="item.id"
+              :label="item.eName"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
         <!-- <el-form-item label="运输方式" prop="transportMode">
            <el-select v-model="form.transportMode" filterable placeholder="请选择运输方式">
@@ -339,6 +355,7 @@ import {selectCoalBillNo, updateVoidCar} from '@/api/place/big'
 import {getToken} from '@/utils/auth'
 import {getUserDepts} from '@/utils/charutils'
 import {addOutstoreDocByCar, listOutstoreDocLike} from "@/api/place/outstoreDoc";
+import {listInfo} from "@/api/basis/enterpriseInfo";
 
 export default {
   name: 'Car',
@@ -376,6 +393,7 @@ export default {
         isAsc: 'desc'
       },
       fileList: [],
+      transUnitList: [],//承运单位列表
       // 表单参数
       form: {},
       //场所列表
@@ -441,16 +459,16 @@ export default {
         vehicleType: [
           {required: true, message: '请选择车辆类型', trigger: 'change'}
         ],
-        /*transportUnit: [
+        transportUnitId: [
           {required: true, message: '承运单位', trigger: 'change'}
-        ],*/
+        ],
       },
       uploadRules: {
         coalBillNo: [
           {required: true, message: '请选择提煤单', trigger: 'change'}
         ],
-        transportUnit: [
-          {required: true, message: '运输方式不能为空', trigger: 'blur'}
+        transportUnitId: [
+          {required: true, message: '运输方式不能为空', trigger: 'change'}
         ],
       },
       //提煤单号
@@ -522,6 +540,7 @@ export default {
         status: '0',
         vehicleType: undefined,
         transportUnit: undefined,
+        transportUnitId: undefined,
         transportNum: undefined,
         isReportCustoms: undefined,
       }
@@ -566,6 +585,7 @@ export default {
         if (valid) {
           console.log(this.form)
           this.btnLoading = true
+          this.form.transportUnit = this.transUnitList.find(item => item.id === this.form.transportUnitId).eName
           addOutstoreDocByCar(this.form, this.form.transportNum).then(response => {
             if (response.code === 200) {
               this.msgSuccess('新增成功')
@@ -652,13 +672,13 @@ export default {
     submitFileForm() {
       this.$refs['uploadForm'].validate(valid => {
         if (valid) {
-          console.log(this.form)
-          console.log(this.$refs.upload.$refs['upload-inner'].fileList)
+          //console.log(this.form)
+         // console.log(this.$refs.upload.$refs['upload-inner'].fileList)
           if (this.$refs.upload.$refs['upload-inner'].fileList.length === 0) {
             this.$message.warning('请选择要上传的文件')
             return false
           }
-
+          this.form.transportUnit = this.transUnitList.find(item => item.id === this.form.transportUnitId).eName
           this.$refs.upload.submit()
           /*addOutstoreDocByCar(this.form, this.form.transportNum).then(response => {
             if (response.code === 200) {
@@ -691,6 +711,7 @@ export default {
           this.BigList = response.rows
         })
         this.getList()
+        this.getTransportUnitInfo()
       }
     },
     // 收发货单位建议
@@ -737,7 +758,14 @@ export default {
     isReportFormatter(row, column) {
       return this.selectDictLabel(this.reportTypes, row.isReportCustoms);
     },
-
+    getTransportUnitInfo() { //查承运单位
+      this.loading = true;
+      let info = {"eType": '2', 'deptId': this.queryParams.placeId, 'companyType': '4'}
+      listInfo(info).then(response => {
+        this.transUnitList = response.rows;
+        this.loading = false;
+      });
+    },
 
   },
 
