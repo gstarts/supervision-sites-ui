@@ -329,6 +329,7 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
+            v-print="'#dayin'"
             @click="handlePrint(scope.row)"
             v-hasPermi="['place:sheet:print']"
           >{{ scope.row.printState === '0' ? '打印' : '补打' }}
@@ -529,14 +530,68 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+      <div id="dayin" v-show="printShow">
+        <div style="align-content: center;">
+          <span class="poundTotal11">{{ this.printDate.poundTotal}}</span>
+        </div>
+        <div id="area">
+          <span class="area-in-style">{{this.printDate.nowDate}}</span>
+        </div>
+        <div id="areadate">
+          <span>{{this.printDate.nowTime}}</span>
+        </div>
+<!--        <div id="serialNumber">-->
+<!--          <span>{{this.pad(this.form.id)}}</span>-->
+<!--        </div>-->
+
+<!--        发货单位-->
+        <div id="area-style">
+          <span class="area-in-style">{{ this.printDate.deliveryUnit }}</span>
+        </div>
+        <div id="area-right-style">
+          <span>{{this.printDate.plateNum }}</span>
+        </div>
+        <br/>
+        <div id="area-style">
+          <span class="area-in-style">{{this.printDate.receivingUnit }}</span>
+        </div>
+        <div id="area-right-style">
+          <span>{{this.printDate.grossWeight }} kg</span>
+        </div>
+        <div id="area-style">
+          <span class="area-in-style">{{this.printDate.goodsName }}</span>
+        </div>
+        <div id="area-right-style">
+          <span>{{this.printDate.tare }} kg</span>
+          <br/>
+        </div>
+        <div id="area-style">
+          <span class="area-in-style">{{this.printDate.specification }}</span>
+        </div>
+        <div id="area-right-style">
+          <span>{{ this.printDate.netWeight }} kg</span>
+          <br/>
+        </div>
+        <div id="area-all-style">
+          <span class="area-in-style">{{  this.printDate.remark+' '+ this.printDate.carrier+' '+ this.printDate.transportMode}}</span>
+          <br/>
+        </div>
+        <div id="user-all-style">
+          <span>{{InUserWeighmanNameOption}}</span>
+          <span>{{this.printDate.outUser}}</span>
+        </div>
+      </div>
+
   </div>
+
 </template>
 
 <script>
-import {listSheetLike, getSheet, delSheet, addSheet, updateSheet} from "@/api/pound/poundlist";
+import {listSheetLike, getSheet, delSheet, addSheet, updateSheet,undatePrintState} from "@/api/pound/poundlist";
 import {getUserDepts} from "@/utils/charutils";
 import {addModify, applyModify} from "@/api/place/modify";
 import {selectCoalBillNo} from "@/api/place/big";
+import {genTimeCode, parseTime} from "@/utils/common";
 
 export default {
   name: "Sheet",
@@ -560,6 +615,39 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //打印区域显示隐藏
+      printShow:false,
+      printDate:{
+        poundTotal:"",
+        // 时间
+        nowDate: '',
+        nowTime: '',
+        // 发货单位
+        deliveryUnit:'',
+        //车号
+        plateNum:'',
+        //收货单位
+        receivingUnit:'',
+        grossWeight:'',
+        //货物名称
+        goodsName:'',
+        tare:'',
+        specification:'',
+        netWeight:'',
+        // 备注
+        remark:'',
+        carrier:'',
+        transportMode:'',
+        // 进场司磅员
+        inUser:'',
+        //出场司磅员
+        outUser:'',
+      },
+
+      UserOption:[{'Key':'admin','Value':'老板'},
+        {'Key':'song','Value':'宋'}
+      ],
+
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -667,7 +755,27 @@ export default {
     //皮重监听
     modifyTareWeightWatch01() {
       return this.poundModify.modifyTareWeight
-    }
+    },
+
+      //进场司磅员名称翻译
+      InUserWeighmanNameOption(){
+        this.UserOption.forEach(item =>{
+          if(item.Key == this.printDate.inUser){
+            this.printDate.inUser=item.Value
+          }
+        })
+        return this.printDate.inUser
+      },
+      // //出场司磅员名称翻译
+      // outUserWeighmanNameOption(){
+      //   this.UserOption.forEach(item =>{
+      //     if(item.Key == this.printDate.outUser){
+      //       this.printDate.outUser=item.Value
+      //     }
+      //   })
+      //   return this.printDate.outUser
+      // }
+
 
   },
   created() {
@@ -812,12 +920,43 @@ export default {
       //  this.msgError("净重不能小于0,请检查！")
       //}
     },
-    /** 删除按钮操作 */
+    /** 打印按钮操作 */
     handlePrint(row) {
-      console.log('要打印的内容')
-      console.log(row)
+      this.printShow=true
+      let date = parseTime(new Date())
+      this.printDate.nowDate = date.substring(0, 10);
+      this.printDate.nowTime = date.substring(10, 19);
+      //发货单位
+      this.printDate.deliveryUnit = row.deliveryUnit;
+      this.printDate.plateNum = row.plateNum;
+      this.printDate.receivingUnit = row.receivingUnit;
+      this.printDate.grossWeight = row.grossWeight;
+      this.printDate.goodsName = row.goodsName;
+      this.printDate.tare = row.tare;
+      this.printDate.specification = row.tare;
+      this.printDate.netWeight = row.netWeight;
+      this.printDate.remark = row.remark;
+      this.printDate.carrier = row.carrier;
+      this.printDate.transportMode = row.transportMode;
+      this.printDate.inUser = row.inUser;
+      this.printDate.outUser =  this.$store.state.user.nickName;
+
+      clearTimeout(this.timer1);
+      //清除延迟执行
+      this.timer1 = setTimeout(() => {
+        //设置延迟执行
+        this.printShow=false
+      }, 2000);
+
+      undatePrintState(row.id).then(response =>{
+          if (response.code === 200) {
+            this.getList()
+          };
+        })
 
     },
+
+
     /** 导出按钮操作 */
     handleExport() {
       this.download('place/sheet/export', {
@@ -837,3 +976,131 @@ export default {
   }
 };
 </script>
+<style scoped>
+
+@page {
+margin: 8mm;
+}
+
+/*.Pound {*/
+/*font-size: 70px;*/
+/*width: 100%;*/
+/*color: red;*/
+/*margin-bottom: 15px;*/
+/*text-align: center;*/
+/*padding: 11px;*/
+/*background: #1e1e1e;*/
+/*}*/
+
+#dayin {
+height: 500px;
+width: 1200px;
+/*border: 1px solid ;*/
+}
+/*标题*/
+.poundTotal11 {
+  font-size: 35px;
+  padding-left: 240px;
+  /*border: 1px solid ;*/
+}
+
+/*时间*/
+.area-in-style {
+  padding-left: 3cm;
+  margin-top: 10px;
+  /*border: 1px solid ;*/
+
+}
+
+#area {
+width: 300px;
+height: 10px;
+margin-top: 60px;
+float: left;
+font-size: 25px;
+/*border: 1px solid ;*/
+}
+
+#areadate {
+  width: 300px;
+  height: 10px;
+  margin-top: 60px;
+  padding-left: 40px;
+  float: left;
+  margin-left: 15px;
+  font-size: 25px;
+  /*border: 1px solid ;*/
+}
+#serialNumber {
+width: 300px;
+height: 10px;
+margin-top: 10px;
+float: left;
+font-size: 25px;
+}
+/*第二页*/
+#area1 {
+width: 300px;
+height: 10px;
+margin-left: 20px;
+/*float: left;*/
+font-size: 25px;
+}
+#serialNumber1 {
+width: 300px;
+height: 10px;
+margin-top: 10px;
+margin-left: 610px;
+/*float: left;*/
+font-size: 25px;
+}
+
+
+/*第二页*/
+#areadate1 {
+width: 400px;
+height: 10px;
+
+padding-left: 340px;
+/*float: left;*/
+margin-left: 15px;
+font-size: 25px;
+}
+
+#area-style {
+width: 600px;
+height: 30px;
+font-size: 26px;
+margin-top: 30px;
+float: left;
+}
+
+
+#area-right-style {
+height: 35px;
+width: 350px;
+font-size: 20px;
+margin-top: 28px;
+margin-left: 40px;
+float: left;
+}
+
+
+
+#area-all-style {
+width: 800px;
+height: 40px;
+font-size: 20px;
+float: left;
+margin-top: 10px;
+}
+
+#user-all-style {
+  width: 800px;
+  height: 40px;
+  font-size: 30px;
+  float: left;
+  padding-left: 130px;
+  margin-top: 10px;
+}
+</style>

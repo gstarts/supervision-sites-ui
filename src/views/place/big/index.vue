@@ -544,7 +544,7 @@ export default {
     },
     /** 客户信息列表 */
     getConsumerInfo(placeId) {
-      let consumerParams = { eType: '2', deptId: placeId }
+      let consumerParams = { eType: '2', deptId: placeId ,companyType: '2'}
       listInfo(consumerParams).then(response => {
         this.consumerOptions = response.rows
       })

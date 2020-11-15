@@ -150,3 +150,13 @@ export function getVehicleList(placeId, type, direction) {
   })
 }
 
+// 打印状态修改
+export function undatePrintState(id) {
+  return request({
+    url: '/pound/measurement/sheet/undatePrintState/' + id,
+    method: 'get',
+  })
+}
+
+
+
