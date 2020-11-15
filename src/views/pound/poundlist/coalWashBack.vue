@@ -362,8 +362,8 @@
         <br/>
       </div>
       <div id="user-all-style">
-        <span>{{this.UserOption[0].Value}}</span>
-        <span>{{this.UserOption[1].Value}}</span>
+          <span>{{InUserWeighmanNameOption}}</span>
+        <span>{{outUserWeighmanNameOption}}</span>
       </div>
 
       <!--   v-if判断 车辆类型是否为重进空出  标识为01   -->
@@ -414,8 +414,8 @@
           <br/>
         </div>
         <div id="user-all-style1">
-          <span>{{this.UserOption[0].Value}}</span>
-          <span>{{this.UserOption[1].Value}}</span>
+          <span>{{InUserWeighmanNameOption}}</span>
+          <span>{{outUserWeighmanNameOption}}</span>
         </div>
       </div>
     </div>
@@ -463,8 +463,10 @@ export default {
       loading: false,
       // 选中数组
       ids: [],
-      //获取当前用户名
-      WeighmanName:'',
+      //获取进场用户名
+      InUserWeighmanName:'',
+      //获取出场用户名
+      OutUserWeighmanName:'',
       // 通道配置表格数据
       chnlConfigList: [],
       //出场完结List统计列表
@@ -557,6 +559,8 @@ export default {
         viaType: undefined,
         //包装方式 ，1集装箱，2散货
         packMode: undefined,
+        inUser:'',
+        outUser:'',
       },
       //通道配置
       PoundForm: {
@@ -663,9 +667,30 @@ export default {
       },*/
       //当前选中的磅单
       selectPound: {},
-      UserOption:[{'Key':'TigerGod','Value':'虎神'},
-                  {'Key':'xiujin','Value':'休津'}]
+      UserOption:[{'Key':'admin','Value':'虎神'},
+                  {'Key':'xiujin','Value':'休津'}
+      ]
 
+    }
+  },
+  computed:{
+    //进场司磅员名称翻译
+    InUserWeighmanNameOption(){
+      this.UserOption.forEach(item =>{
+        if(item.Key == this.form.inUser){
+          this.InUserWeighmanName=item.Value
+        }
+      })
+      return this.InUserWeighmanName
+    },
+    //出场司磅员名称翻译
+    outUserWeighmanNameOption(){
+      this.UserOption.forEach(item =>{
+        if(item.Key == this.form.outUser){
+          this.OutUserWeighmanName=item.Value
+        }
+      })
+      return this.OutUserWeighmanName
     }
   },
   watch: {//监听值的变化
@@ -723,6 +748,7 @@ export default {
     //this.getStoreCode(this.queryParams.stationId)
   },
   mounted() {
+
     this.$nextTick(() => {
       this.$refs['vehicleNo'].focus()
       //this.poundConfig = this.PoundForm
@@ -1029,6 +1055,7 @@ export default {
               }
               //进场 新增
               addSheet(this.form).then((response) => {
+
                 if (response.code === 200) {
                   this.msgSuccess("进场成功");
                   //更新单证入场时间
@@ -1052,6 +1079,7 @@ export default {
               this.form.channelNumber = this.PoundForm.channelNumber;
               if (this.PoundForm.stationViaType === '01' || this.PoundForm.stationViaType === '02') {//重进空出 生成入库单
                 updateSheet(this.form).then(response => {
+
                   if (response.code === 200) {
                     this.msgSuccess("出场成功");
                     this.dataLoading = false
