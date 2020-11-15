@@ -502,7 +502,7 @@ export default {
     },
     getListInfo() {
       this.loading = true;
-      let info = {"eType": '2','deptId': this.queryParams.placeId}
+      let info = {"eType": '2','deptId': this.queryParams.placeId,companyType: '2'}
       listInfo(info).then(response => {
         this.clientNameList = response.rows;
         this.loading = false;
