@@ -328,7 +328,7 @@
         <span>{{ nowTime }}</span>
       </div>
       <div id="serialNumber">
-        <span>aaaaa</span>
+        <span>{{form.id}}</span>
       </div>
       <div id="area-style">
         <span class="area-in-style">{{ form.deliveryUnit }}</span>
@@ -358,12 +358,12 @@
         <br/>
       </div>
       <div id="area-all-style">
-        <span class="area-in-style">{{ form.remark }}</span>
+        <span class="area-in-style">{{ form.remark+'，'+form.carrier+'，'+form.transportMode}}</span>
         <br/>
       </div>
       <div id="user-all-style">
-        <span>{{this.UserOption[0].Value}}</span>
-        <span>{{this.UserOption[1].Value}}</span>
+          <span>{{InUserWeighmanNameOption}}</span>
+        <span>{{outUserWeighmanNameOption}}</span>
       </div>
 
       <!--   v-if判断 车辆类型是否为重进空出  标识为01   -->
@@ -380,7 +380,7 @@
           </div>
         </div>
         <div id="serialNumber1">
-          <span>aaaaa</span>
+          <span>{{form.id}}</span>
         </div>
         <div id="area-style1">
           <span class="area-in-style">{{ form.deliveryUnit }}</span>
@@ -410,12 +410,12 @@
           <br/>
         </div>
         <div id="area-all-style1">
-          <span class="area-in-style">{{ form.remark + " 补" }}</span>
+          <span class="area-in-style">{{ form.remark+'，'+form.carrier+'，'+form.transportMode+ " 补" }}</span>
           <br/>
         </div>
         <div id="user-all-style1">
-          <span>{{this.UserOption[0].Value}}</span>
-          <span>{{this.UserOption[1].Value}}</span>
+          <span>{{InUserWeighmanNameOption}}</span>
+          <span>{{outUserWeighmanNameOption}}</span>
         </div>
       </div>
     </div>
@@ -471,8 +471,10 @@ export default {
       loading: false,
       // 选中数组
       ids: [],
-      //获取当前用户名
-      WeighmanName:'',
+      //获取进场用户名
+      InUserWeighmanName:'',
+      //获取出场用户名
+      OutUserWeighmanName:'',
       // 通道配置表格数据
       chnlConfigList: [],
       //出场完结List统计列表
@@ -530,6 +532,7 @@ export default {
       isAdd: false,
       // 地磅数据
       form: {
+        id:0,
         //车号
         plateNum: undefined,
         //皮重
@@ -565,6 +568,14 @@ export default {
         viaType: undefined,
         //包装方式 ，1集装箱，2散货
         packMode: undefined,
+        //进场司磅员
+        inUser:'',
+        //出场司磅员
+        outUser:'',
+        //承运人
+        transportMode:'',
+        //运输方式
+        carrier:'',
       },
       //通道配置
       PoundForm: {
@@ -671,9 +682,30 @@ export default {
       },*/
       //当前选中的磅单
       selectPound: {},
-      UserOption:[{'Key':'TigerGod','Value':'虎神'},
-                  {'Key':'xiujin','Value':'休津'}]
+      UserOption:[{'Key':'admin','Value':'虎神'},
+                  {'Key':'xiujin','Value':'休津'}
+      ]
 
+    }
+  },
+  computed:{
+    //进场司磅员名称翻译
+    InUserWeighmanNameOption(){
+      this.UserOption.forEach(item =>{
+        if(item.Key == this.form.inUser){
+          this.InUserWeighmanName=item.Value
+        }
+      })
+      return this.InUserWeighmanName
+    },
+    //出场司磅员名称翻译
+    outUserWeighmanNameOption(){
+      this.UserOption.forEach(item =>{
+        if(item.Key == this.form.outUser){
+          this.OutUserWeighmanName=item.Value
+        }
+      })
+      return this.OutUserWeighmanName
     }
   },
   watch: {//监听值的变化
@@ -731,6 +763,7 @@ export default {
     //this.getStoreCode(this.queryParams.stationId)
   },
   mounted() {
+
     this.$nextTick(() => {
       this.$refs['vehicleNo'].focus()
       //this.poundConfig = this.PoundForm
@@ -1037,6 +1070,7 @@ export default {
               }
               //进场 新增
               addSheet(this.form).then((response) => {
+
                 if (response.code === 200) {
                   this.msgSuccess("进场成功");
                   //更新单证入场时间
@@ -1060,6 +1094,7 @@ export default {
               this.form.channelNumber = this.PoundForm.channelNumber;
               if (this.PoundForm.stationViaType === '01' || this.PoundForm.stationViaType === '02') {//重进空出 生成入库单
                 updateSheet(this.form).then(response => {
+
                   if (response.code === 200) {
                     this.msgSuccess("出场成功");
                     this.dataLoading = false
@@ -1435,15 +1470,15 @@ export default {
   width: 300px;
   height: 10px;
   margin-left: 20px;
-  float: left;
+  /*float: left;*/
   font-size: 25px;
 }
 #serialNumber1 {
   width: 300px;
   height: 10px;
   margin-top: 10px;
-  margin-left: 280px;
-  float: left;
+  margin-left: 610px;
+  /*float: left;*/
   font-size: 25px;
 }
 #areadate {
@@ -1470,8 +1505,8 @@ export default {
 .areadate1 {
   width: 400px;
   height: 10px;
-  /*padding-left: 340px;*/
-  float: left;
+  padding-left: 340px;
+  /*float: left;*/
   margin-left: 15px;
   font-size: 25px;
   margin-top: -10px;
@@ -1485,7 +1520,7 @@ export default {
 #area-style {
   width: 600px;
   height: 30px;
-  font-size: 20px;
+  font-size: 26px;
   margin-top: 30px;
   float: left;
 }
@@ -1494,7 +1529,7 @@ export default {
 #area-style1 {
   width: 600px;
   height: 30px;
-  font-size: 20px;
+  font-size: 26px;
   margin-top: 30px;
   float: left;
 }
