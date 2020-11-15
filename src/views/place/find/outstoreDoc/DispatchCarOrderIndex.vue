@@ -1,12 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true">
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="90px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
 <!--      <el-form-item label="场所编号" prop="placeId">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.placeId"-->
@@ -45,7 +39,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="提煤客户" prop="customerName">
+      <el-form-item label="寄舱客户" prop="customerName">
 <!--        <el-input v-model="queryParams.customerName" placeholder="请输入寄舱客户" clearable size="small" @keyup.enter.native="handleQuery" />-->
         <el-select
           filterable
@@ -109,6 +103,17 @@
 <!--          placeholder="选择出场时间">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
+      <el-form-item label="查询时间类型" prop="queryLogo">
+        <el-select
+          v-model="queryParams.queryLogo" placeholder="请选择查询时间类型" size="small">
+          <el-option
+            v-for="dept in timeQueryTypeOption"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="时间" prop="startTime">
         <el-date-picker
           v-model="dateRange"
@@ -116,8 +121,14 @@
           align="right"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          value-format="yyyy-MM-dd">
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']"
+        >
         </el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
 <!--      <el-form-item label="寄舱客户ID" prop="customerId">-->
 <!--        <el-input-->
@@ -1201,12 +1212,15 @@ export default {
       total: 0,
       // 出库明细单表格数据
       outstoreDocList: [],
+      //时间查询类型
+      timeQueryTypeOption:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
       // 查询参数
       queryParams: {
+        queryLogo:'I',
         pageNum: 1,
         pageSize: 20,
         placeId: undefined,
@@ -1314,6 +1328,10 @@ export default {
       this.queryParams.placeId = this.depts[0].deptId
       this.getContract(this.queryParams.placeId, '1')
     }
+    this.getDicts("time_query_type").then(response => {
+      this.timeQueryTypeOption = response.data;
+      console.log(this.timeQueryTypeOption)
+    });
     this.getList();
   },
   methods: {
@@ -1420,11 +1438,16 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      if(this.queryParams.queryLogo == undefined){
+        this.msgError("查询时间类型不可为空,请选择")
+        return
+      }
       this.getList();
     },
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.dateRange=[];
       this.handleQuery();
     },
     // 多选框选中数据

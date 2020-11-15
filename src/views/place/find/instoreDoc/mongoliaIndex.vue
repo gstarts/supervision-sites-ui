@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+    <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="100px">
       <el-form-item label="采购合同号" prop="purchaseContractNumber">
         <el-input
           v-model="queryParams.purchaseContractNumber"
@@ -63,6 +63,35 @@
 <!--          placeholder="选择境外出库日期">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
+      <el-form-item label="包装方式" prop="packMode">
+<!--        <el-input-->
+<!--          v-model="queryParams.packMode"-->
+<!--          placeholder="请输入包装方式"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+        <el-select
+          v-model="queryParams.packMode" placeholder="请选择包装方式" size="small">
+          <el-option
+            v-for="dept in packModeOption"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="查询时间类型" prop="queryLogo">
+        <el-select
+          v-model="queryParams.queryLogo" placeholder="请选择查询时间类型" size="small">
+          <el-option
+            v-for="dept in timeQueryTypeOption"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="时间" prop="startTime">
         <el-date-picker
           v-model="dateRange"
@@ -70,7 +99,9 @@
           align="right"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          value-format="yyyy-MM-dd">
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']">
+
         </el-date-picker>
       </el-form-item>
       <!-- <el-form-item label="场所编号 场所编号" prop="placeId">
@@ -215,15 +246,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="包装方式(集装箱，散装)" prop="packMode">
-        <el-input
-          v-model="queryParams.packMode"
-          placeholder="请输入包装方式(集装箱，散装)"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
 
       <el-form-item label="集装箱号2" prop="containerNo2">
         <el-input
@@ -648,7 +671,8 @@
       </el-col>
     </el-row> -->
 
-    <el-table v-loading="loading" :data="instoreDocList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="instoreDocList" @selection-change="handleSelectionChange"
+              show-summary :summary-method="getSummaries" >
 <!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="入库单号" align="center" prop="id" />
       <af-table-column label="寄舱客户" align="center" prop="checkConsumer" />
@@ -659,10 +683,26 @@
         <el-table-column label="车数" align="center" prop="vehicleNoCount"></el-table-column>
       </el-table-column>
       <el-table-column label="场所"  align="center" >
-        <el-table-column label="毛重(KG)" align="center" prop="roughWeight" />
-        <el-table-column label="皮重(KG)" align="center" prop="tareWeight" />
-        <el-table-column label="箱皮重" align="center" prop="boxTareWeight" />
-        <el-table-column label="净重(KG)" align="center" prop="netWeight" />
+        <el-table-column label="毛重(KG)" align="center" prop="roughWeight">
+        <template slot-scope="scope">
+          <span>{{(scope.row.roughWeight/1000).toFixed(2)}}</span>
+        </template>
+        </el-table-column>
+        <el-table-column label="皮重(KG)" align="center" prop="tareWeight">
+          <template slot-scope="scope">
+            <span>{{(scope.row.tareWeight/1000).toFixed(2)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="箱皮重" align="center" prop="boxTareWeight">
+          <template slot-scope="scope">
+            <span>{{ (scope.row.boxTareWeight/1000).toFixed(2)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="净重(KG)" align="center" prop="netWeight">
+          <template slot-scope="scope">
+            <span>{{(scope.row.netWeight/1000).toFixed(2)}}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="进场时间" align="center" prop="inTime" width="180">
         <template slot-scope="scope">
@@ -677,9 +717,21 @@
       <af-table-column label="库位号" align="center" prop="storeCodeAll" />
       <el-table-column label="蒙古磅单" align="center" >
         <af-table-column label="蒙方磅单号" align="center" prop="mongoliaBillNo" />
-        <el-table-column label="蒙方毛重" align="center" prop="mongoliaBillNo" />
-        <af-table-column label="蒙古磅皮重" align="center" prop="mongoliaTareWeight" />
-        <af-table-column label="蒙古磅净重" align="center" prop="mongoliaNetWeight" />
+        <el-table-column label="蒙方毛重" align="center" prop="mongoliaBillNo">
+          <template slot-scope="scope">
+            <span>{{(scope.row.mongoliaBillNo/1000).toFixed(2)}}</span>
+          </template>
+        </el-table-column>
+        <af-table-column label="蒙古磅皮重" align="center" prop="mongoliaTareWeight">
+          <template slot-scope="scope">
+            <span>{{(scope.row.mongoliaTareWeight/1000).toFixed(2)}}</span>
+          </template>
+        </af-table-column>
+        <af-table-column label="蒙古磅净重" align="center" prop="mongoliaNetWeight">
+          <template slot-scope="scope">
+            <span>{{(scope.row.mongoliaNetWeight/1000).toFixed(2)}}</span>
+          </template>
+        </af-table-column>
       </el-table-column>
       <el-table-column label="集装箱号" align="center" prop="containerNoAll" />
       <el-table-column label="供应商" align="center" prop="supplier" />
@@ -690,7 +742,11 @@
         </template>
       </el-table-column>
       <el-table-column label="运输单位" align="center" prop="vehicleTeam" />
-      <el-table-column label="计量单位" align="center" prop="measuringUnit" />
+      <el-table-column label="计量单位" align="center" prop="measuringUnit">
+        <template>
+          <span>t</span>
+        </template>
+      </el-table-column>
 
       <el-table-column label="入境日期" align="center" prop="entryDate" width="180">
         <template slot-scope="scope">
@@ -709,11 +765,14 @@
           <span>{{ parseTime(scope.row.nationalInspectionReleaseDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="包装方式" align="center" prop="packMode" />
+      <el-table-column label="包装方式" align="center" prop="packMode" :formatter="packModeTypeFormat" />
       <el-table-column label="车型" align="center" prop="vehicleType" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <af-table-column label="备注" align="center" prop="remark" />
+      <el-table-column>
 
-
+      </el-table-column>
+<!--      <af-table-column fixed="right" align="center" label="总净重"></af-table-column>-->
+<!--      <af-table-column fixed="right" align="center" label="蒙方净重"></af-table-column>-->
 
 <!--      <el-table-column label="场所编号" align="center" prop="placeId" />-->
 <!--      <el-table-column label="通知单号" align="center" prop="docNo" />-->
@@ -774,24 +833,24 @@
 <!--        </template>-->
 <!--      </el-table-column>-->
 <!--      <el-table-column label="制单人" align="center" prop="makerBy" />-->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['place:instoreDoc:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['place:instoreDoc:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['place:instoreDoc:edit']"-->
+<!--          >修改</el-button>-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['place:instoreDoc:remove']"-->
+<!--          >删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -804,7 +863,7 @@
 
     <!-- 添加或修改入库通知单 入库通知单对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+      <el-form ref="form" :model="form"  label-width="120px">
         <el-form-item label="场所编号 场所编号" prop="placeId">
           <el-input v-model="form.placeId" placeholder="请输入场所编号 场所编号" />
         </el-form-item>
@@ -964,7 +1023,7 @@
           <el-date-picker clearable size="small" style="width: 200px"
             v-model="form.updateTime"
             type="date"
-            value-format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd hh:mm:ss"
             placeholder="选择更新时间">
           </el-date-picker>
         </el-form-item>
@@ -998,7 +1057,7 @@
           <el-date-picker clearable size="small" style="width: 200px"
             v-model="form.outTime"
             type="date"
-            value-format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd "
             placeholder="选择出场时间">
           </el-date-picker>
         </el-form-item>
@@ -1114,12 +1173,17 @@ export default {
       total: 0,
       // 入库通知单 入库通知单表格数据
       instoreDocList: [],
+      //时间查询类型
+      timeQueryTypeOption:[],
+      //包装方式字典集
+      packModeOption:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
       // 查询参数
       queryParams: {
+        queryLogo:'I',
         vehicleNoCount:0,
         pageNum: 1,
         pageSize: 20,
@@ -1194,24 +1258,25 @@ export default {
       },
       // 表单参数
       form: {},
-      // 表单校验
-      rules: {
-        docNo: [
-          { required: true, message: "通知单号 通知单号不能为空", trigger: "blur" }
-        ],
-      },
+      rules:{},
       dateRange:[],
     };
   },
   created() {
     this.getList();
+    this.getDicts("time_query_type").then(response => {
+      this.timeQueryTypeOption = response.data;
+    });
+
+    this.getDicts("pack_mode").then(response => {
+      this.packModeOption = response.data;
+    });
   },
   methods: {
     /** 查询入库通知单 入库通知单列表 */
     getList() {
       this.loading = true;
       listInstoreDocLike(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
-
         this.instoreDocList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -1300,16 +1365,93 @@ export default {
         makerTime: undefined,
         makerBy: undefined
       };
-      this.resetForm("form");
+      this.queryParams= {
+        queryLogo:'I',
+          vehicleNoCount:0,
+          pageNum: 1,
+          pageSize: 20,
+          placeId: undefined,
+          docNo: undefined,
+          businessNo: undefined,
+          checkConsumer: undefined,
+          checkContractNo: undefined,
+          mongoliaBillNo: undefined,
+          vehicleNo: undefined,
+          trailerNo1: undefined,
+          trailerNo2: undefined,
+          vehicleTeam: undefined,
+          mongoliaNetWeight: undefined,
+          mongoliaTareWeight: undefined,
+          vehicleCount: undefined,
+          driverName: undefined,
+          vehicleTeamContact: undefined,
+          vehicleTeamTel: undefined,
+          vehicleType: undefined,
+          measuringUnit: undefined,
+          packMode: undefined,
+          containerNo1: undefined,
+          containerNo2: undefined,
+          containerNo3: undefined,
+          containerNo4: undefined,
+          netWeight: undefined,
+          tareWeight: undefined,
+          roughWeight: undefined,
+          genTime: undefined,
+          genBy: undefined,
+          poundTime: undefined,
+          poundNo: undefined,
+          batchNo: undefined,
+          loadingBillNo: undefined,
+          storeCode: undefined,
+          storeCode2: undefined,
+          storeCode3: undefined,
+          storeCode4: undefined,
+          hasManifest: undefined,
+          hasDeclare: undefined,
+          hasTransit: undefined,
+          storeState: undefined,
+          fileId: undefined,
+          passNo: undefined,
+          revision: undefined,
+          memo: undefined,
+          mongoliaRoughWeight: undefined,
+          goodsName: undefined,
+          sendName: undefined,
+          customerId: undefined,
+          inTime: undefined,
+          outTime: undefined,
+          inChannel: undefined,
+          outChannel: undefined,
+          inUser: undefined,
+          outUser: undefined,
+          supplier: undefined,
+          purchaseContractNumber: undefined,
+          locationAlias: undefined,
+          importContractNumber: undefined,
+          customsDeclarationNumber: undefined,
+          boxTareWeight: undefined,
+          customsWeight: undefined,
+          nationalInspectionReleaseDate: undefined,
+          overseasDepartureDate: undefined,
+          mongolianDeliveryDate: undefined,
+          entryDate: undefined,
+          customsDeclarationDate: undefined,
+          makerTime: undefined,
+          makerBy: undefined
+      };
     },
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      if(this.queryParams.queryLogo == undefined){
+        this.msgError("查询时间类型不可为空,请选择")
+        return
+      }
       this.getList();
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
+      this.reset();
       this.dateRange=[];
       this.handleQuery();
     },
@@ -1378,6 +1520,34 @@ export default {
       this.download('place/instoreDoc/export', {
         ...this.queryParams
       }, `place_instoreDoc.xlsx`)
+    },
+    getSummaries (param) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '本页总重(KG)';
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]));
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value) && index === 9) {
+              return prev + curr;
+            }
+            if (!isNaN(value) && index === 16) {
+              //.toFixed(2)
+              return prev + curr;
+            }
+          }, 0);
+        }
+      });
+      return sums;
+    },
+    //包装方式行翻译
+    packModeTypeFormat(row,column){
+      return this.selectDictLabel(this.packModeOption,row.packMode);
     }
   }
 };
