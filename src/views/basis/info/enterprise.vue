@@ -183,9 +183,9 @@
               <el-select v-model="form.companyType" placeholder="请选择公司类型">
                 <el-option
                   v-for="dict in companyTypeDic"
-                  :key="dict.key"
-                  :label="dict.value"
-                  :value="dict.key"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -435,8 +435,9 @@ export default {
         eLegalPersonPhone: [
           {required: true, message: "法人电话不能为空", trigger: "blur"},
         ],
-
-
+        companyType:[
+          {required: true, message: "公司类型不能为空", trigger: "change"},
+        ]
       },
     };
   },
