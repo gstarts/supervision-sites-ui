@@ -1,6 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="100px">
+    <el-form-item label="寄舱合同号" prop="checkContractNo">
+        <el-input
+          v-model="queryParams.checkContractNo"
+          placeholder="请输入寄舱合同号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="采购合同号" prop="purchaseContractNumber">
         <el-input
           v-model="queryParams.purchaseContractNumber"
@@ -81,6 +90,35 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="入场司磅员" prop="inUser">
+        <el-input
+          v-model="queryParams.inUser"
+          placeholder="请输入入场司磅员"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="出场司磅员" prop="outUser">
+        <el-input
+          v-model="queryParams.outUser"
+          placeholder="请输入出场司磅员"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="状态" prop="storeState">
+        <el-select
+          v-model="queryParams.storeState" placeholder="请选择状态" clearable size="small">
+          <el-option
+            v-for="dept in inStoreOption"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="查询时间类型" prop="queryLogo">
         <el-select
           v-model="queryParams.queryLogo" placeholder="请选择查询时间类型" size="small">
@@ -132,15 +170,7 @@
         />
       </el-form-item> -->
 
-      <!-- <el-form-item label="寄舱合同号" prop="checkContractNo">
-        <el-input
-          v-model="queryParams.checkContractNo"
-          placeholder="请输入寄舱合同号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
+
 <!--      <el-form-item label="蒙方磅单" prop="mongoliaBillNo">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.mongoliaBillNo"-->
@@ -409,15 +439,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="状态(0,待入库，1已入库，2可放行，3已生成放行单)" prop="storeState">
-        <el-input
-          v-model="queryParams.storeState"
-          placeholder="请输入状态(0,待入库，1已入库，2可放行，3已生成放行单)"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="文件ID" prop="fileId">
         <el-input
           v-model="queryParams.fileId"
@@ -501,24 +523,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="入场司磅员" prop="inUser">
-        <el-input
-          v-model="queryParams.inUser"
-          placeholder="请输入入场司磅员"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="出场司磅员" prop="outUser">
-        <el-input
-          v-model="queryParams.outUser"
-          placeholder="请输入出场司磅员"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="供应商" prop="supplier">
         <el-input
           v-model="queryParams.supplier"
@@ -676,6 +681,7 @@
 <!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="入库单号" align="center" prop="id" />
       <af-table-column label="寄舱客户" align="center" prop="checkConsumer" />
+      <af-table-column label="采购单价" align="center" prop="purPrice" />
       <af-table-column label="寄舱合同号" align="center" prop="checkContractNo" />
       <el-table-column label="品名" align="center" prop="goodsName" />
       <el-table-column label="车辆信息"  align="center" >
@@ -1177,6 +1183,8 @@ export default {
       timeQueryTypeOption:[],
       //包装方式字典集
       packModeOption:[],
+      //入库状态字典集
+      inStoreOption:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -1254,7 +1262,8 @@ export default {
         entryDate: undefined,
         customsDeclarationDate: undefined,
         makerTime: undefined,
-        makerBy: undefined
+        makerBy: undefined,
+        purPrice:0,
       },
       // 表单参数
       form: {},
@@ -1271,7 +1280,11 @@ export default {
     this.getDicts("pack_mode").then(response => {
       this.packModeOption = response.data;
     });
+    this.getDicts("inStore_doc_state").then(response => {
+      this.inStoreOption = response.data;
+    });
   },
+
   methods: {
     /** 查询入库通知单 入库通知单列表 */
     getList() {
