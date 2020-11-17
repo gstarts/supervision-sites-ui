@@ -42,12 +42,12 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="寄舱客户" prop="storeCustomer">
+        <el-form-item label="寄仓客户" prop="storeCustomer">
           <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>-->
           <el-select
             filterable
             clearable
-            v-model="queryParams.customerName" placeholder="请选择寄舱客户">
+            v-model="queryParams.customerName" placeholder="请选择寄仓客户">
             <el-option
               v-for="type in customerList"
               :key="type.customerName"
@@ -120,6 +120,16 @@
           </el-select>
         </el-form-item>-->
       </el-row>
+      <el-form-item label="称重状态" prop="flowDirection">
+        <el-select v-model="queryParams.store_state" placeholder="称重状态" @change="handleQuery">
+          <el-option
+            v-for="dept in store_stateDic"
+            :key="dept.key"
+            :label="dept.value"
+            :value="dept.key"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="货物类型" prop="packMode">
         <el-select
           v-model="queryParams.packMode" placeholder="请选择货物类型">
@@ -351,12 +361,16 @@
           {'key': 0, 'value': '出库'},
         ],
         statisticsModeDic: [
-          {'key': 1, 'value': '寄舱客户汇总'},
-          {'key': 2, 'value': '寄舱客户明细'}
+          {'key': 1, 'value': '寄仓客户汇总'},
+          {'key': 2, 'value': '寄仓客户明细'}
         ],
         packModeDic: [
           {'key': 1, 'value': '集装箱'},
           {'key': 2, 'value': '散货'}
+        ],
+        store_stateDic: [
+          {'key': '2', 'value': '未完成'},
+          {'key': '1', 'value': '已完成'},
         ],
         // 查询参数
         queryParams: {
@@ -366,7 +380,8 @@
           startTime: undefined,
           endTime: undefined,
           statisticsMode: 1,
-          packMode: 2
+          packMode: 2,
+          store_state: "E"
         },
         totalNetWeight: 0,
         totalRoughWeight: 0,
@@ -515,10 +530,10 @@
         //统计方式
         if (this.queryParams.statisticsMode === 2) {
           //判断时间
-          if (this.queryParams.customerName === undefined || this.queryParams.customerName === '') {
-            this.$message.warning('请选择寄舱客户')
-            return false
-          }
+          // if (this.queryParams.customerName === undefined || this.queryParams.customerName === '') {
+          //   this.$message.warning('请选择寄舱客户')
+          //   return false
+          // }
         }
 
         this.getInfo();
