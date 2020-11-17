@@ -31,8 +31,8 @@
     <el-row :gutter="10">
       <el-col :span="15">
         <el-card class="mb20">
-          <el-form :model="form" ref="form" :rules="rules" label-width="160px">
-            <el-row type="flex">
+          <el-form :model="form" ref="form" :rules="rules" label-width="100px">
+            <el-row type="flex" :gutter="20">
               <el-col :span="12">
                 <el-form-item label="发货单位" prop="deliveryUnit">
                   <el-input v-model="form.deliveryUnit" placeholder="请输入发货单位" clearable
@@ -47,8 +47,10 @@
                              prop="plateNum"
                              filterable
                              clearable
-                             @change="CarNumberChange">
-                    <el-option class="coalPageSelect"
+                             @change="CarNumberChange"
+                             @focus="showVehicleSelect"
+                             :popper-append-to-body="false">
+                    <el-option class="coalPageSelectOption"
                                v-for="dict in plateNumOptions"
                                :key="dict.value"
                                :label="dict.key"
@@ -60,7 +62,7 @@
               </el-col>
             </el-row>
 
-            <el-row type="flex">
+            <el-row type="flex" :gutter="20">
               <el-col :span="12">
                 <el-form-item label="收货单位" prop="receivingUnit">
                   <el-input v-model="form.receivingUnit" placeholder="请输入收货单位" clearable
@@ -68,43 +70,44 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="毛重" prop="grossWeight">
-                  <el-input
-                    v-model.number="form.grossWeight"
-                    placeholder="请输入毛重"
-                    clearable
+                <el-form-item label="毛重" prop="grossWeight" class="coalPageSelect">
+                  <el-input class="coalPageSelect"
+                            v-model.number="form.grossWeight"
+                            placeholder="请输入毛重"
+                            clearable
                   ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
 
-            <el-row type="flex">
+            <el-row type="flex" :gutter="20">
               <el-col :span="12">
                 <el-form-item label="货物名称" prop="goodsName">
                   <el-input v-model="form.goodsName" placeholder="请输入货物名称" clearable :disabled="isProduct"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="皮重" prop="tare">
-                  <el-input v-model.number="form.tare" placeholder="请输入皮重" clearable></el-input>
+                <el-form-item label="皮重" prop="tare" class="coalPageSelect">
+                  <el-input v-model.number="form.tare" placeholder="请输入皮重" clearable class="coalPageSelect"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
 
-            <el-row type="flex">
+            <el-row type="flex" :gutter="20">
               <el-col :span="12">
                 <el-form-item label="规格型号" prop="specification">
                   <el-input v-model="form.specification" placeholder="请输入规格型号" clearable></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="净重" prop="netWeight">
-                  <el-input v-model.number="form.netWeight" placeholder="请输入净重" clearable></el-input>
+                <el-form-item label="净重" prop="netWeight" class="coalPageSelect">
+                  <el-input v-model.number="form.netWeight" placeholder="请输入净重" clearable
+                            class="coalPageSelect"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
 
-            <el-row type="flex">
+            <el-row type="flex" :gutter="20">
               <el-col :span="24">
                 <el-form-item label="备注" prop="remark">
                   <el-input v-model="form.remark" placeholder="请输入备注" clearable></el-input>
@@ -189,8 +192,9 @@
               </el-select>
             </el-form-item>
             <!-- -->
-            <el-form-item label="车辆类型(F10)" prop="stationViaType" label-width="120px">
-              <el-select filterable v-model="PoundForm.stationViaType" placeholder="请选择车辆类型" @change="vehicleChange">
+            <el-form-item label="车辆类型" prop="stationViaType">
+              <el-select filterable clearable v-model="PoundForm.stationViaType" placeholder="请选择车辆类型"
+                         @change="vehicleChange">
                 <el-option
                   v-for="dept in stationViaTypeOptions"
                   :key="dept.dictValue"
@@ -206,7 +210,7 @@
     <el-card>
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane name="Approach">
-          <span slot="label">{{ "进场记录(" + this.total + ")" }}</span>
+          <span slot="label">{{ "全部未离场数据(" + this.total + ")" }}</span>
           <el-table
             class="mb20"
             ref="ApproachList"
@@ -265,7 +269,7 @@
           />
         </el-tab-pane>
         <el-tab-pane name="end">
-          <span slot="label">{{ "已完成(" + this.total1 + ")" }}</span>
+          <span slot="label">{{ "当日已完成数据(" + this.total1 + ")" }}</span>
           <el-table
             class="mb20"
             ref="sheetList"
@@ -328,7 +332,7 @@
         <span>{{ nowTime }}</span>
       </div>
       <div id="serialNumber">
-        <span>{{this.pad(this.form.id)}}</span>
+        <span>{{ this.pad(this.form.id) }}</span>
       </div>
       <div id="area-style">
         <span class="area-in-style">{{ form.deliveryUnit }}</span>
@@ -358,14 +362,15 @@
         <br/>
       </div>
       <div id="area-all-style">
-        <span class="area-in-style">{{ form.remark+'，'+form.carrier+'，'+form.transportMode}}</span>
+        <span class="area-in-style">{{
+            form.viaType === '02' ? form.remark + '  ' + form.transportUnit + '  ' + transportModeFormat(form.transportMode) : ''
+          }}</span>
         <br/>
       </div>
       <div id="user-all-style">
-          <span>{{InUserWeighmanNameOption}}</span>
-        <span>{{outUserWeighmanNameOption}}</span>
+        <span>{{ parseUserName(form.inUser) }}</span>
+        <span>{{ parseUserName(form.outUser) }}</span>
       </div>
-
       <!--   v-if判断 车辆类型是否为重进空出  标识为01   -->
       <div id="dayin1" v-if="this.PoundForm.stationViaType ==='01'">
         <div style="align-content: center;">
@@ -380,7 +385,7 @@
           </div>
         </div>
         <div id="serialNumber1">
-          <span>{{this.pad(this.form.id)}}</span>
+          <span>{{ this.pad(this.form.id) }}</span>
         </div>
         <div id="area-style1">
           <span class="area-in-style">{{ form.deliveryUnit }}</span>
@@ -410,17 +415,19 @@
           <br/>
         </div>
         <div id="area-all-style1">
-          <span class="area-in-style">{{ form.remark+'，'+form.carrier+'，'+form.transportMode+ " 补" }}</span>
+          <span class="area-in-style">
+          {{
+              form.viaType === '02' ? form.remark + '  ' + form.transportUnit + '  ' + transportModeFormat(form.transportMode) + ' 补' : '补'
+            }}
+          </span>
           <br/>
         </div>
         <div id="user-all-style1">
-          <span>{{InUserWeighmanNameOption}}</span>
-          <span>{{outUserWeighmanNameOption}}</span>
+          <span>{{ parseUserName(form.inUser) }}</span>
+          <span>{{ parseUserName(form.outUser) }}</span>
         </div>
       </div>
     </div>
-
-
   </div>
 </template>
 
@@ -472,9 +479,9 @@ export default {
       // 选中数组
       ids: [],
       //获取进场用户名
-      InUserWeighmanName:'',
+      InUserWeighmanName: '',
       //获取出场用户名
-      OutUserWeighmanName:'',
+      OutUserWeighmanName: '',
       // 通道配置表格数据
       chnlConfigList: [],
       //出场完结List统计列表
@@ -532,7 +539,7 @@ export default {
       isAdd: false,
       // 地磅数据
       form: {
-        id:0,
+        id: 0,
         //车号
         plateNum: undefined,
         //皮重
@@ -569,13 +576,13 @@ export default {
         //包装方式 ，1集装箱，2散货
         packMode: undefined,
         //进场司磅员
-        inUser:'',
+        inUser: '',
         //出场司磅员
-        outUser:'',
+        outUser: '',
         //承运人
-        transportMode:'',
+        transportMode: '',
         //运输方式
-        carrier:'',
+        transportUnit: '',
       },
       //通道配置
       PoundForm: {
@@ -656,6 +663,7 @@ export default {
       userList: [],
       //磅单修改页面的变量
       modifyOpen: false,
+      transportModeDic: [],
       /*poundModify: {
         poundId: undefined,
         poundState: undefined,
@@ -681,40 +689,40 @@ export default {
         modifyContainerNo4: '',
       },*/
       //当前选中的磅单
-      selectPound: {},
-      UserOption:[{'Key':'admin','Value':'虎神'},
-                  {'Key':'xiujin','Value':'休津'}
-      ]
+      /* selectPound: {},
+       UserOption: [{'Key': 'admin', 'Value': '虎神'},
+         {'Key': 'xiujin', 'Value': '休津'}
+       ]*/
 
     }
   },
-  computed:{
+  /*computed: {
     //进场司磅员名称翻译
-    InUserWeighmanNameOption(){
-      this.UserOption.forEach(item =>{
-        if(item.Key == this.form.inUser){
-          this.InUserWeighmanName=item.Value
+    InUserWeighmanNameOption() {
+      this.UserOption.forEach(item => {
+        if (item.Key == this.form.inUser) {
+          this.InUserWeighmanName = item.Value
         }
       })
       return this.InUserWeighmanName
     },
     //出场司磅员名称翻译
-    outUserWeighmanNameOption(){
-      this.UserOption.forEach(item =>{
-        if(item.Key == this.form.outUser){
-          this.OutUserWeighmanName=item.Value
+    outUserWeighmanNameOption() {
+      this.UserOption.forEach(item => {
+        if (item.Key == this.form.outUser) {
+          this.OutUserWeighmanName = item.Value
         }
       })
       return this.OutUserWeighmanName
     }
-  },
+  },*/
   watch: {//监听值的变化
     //三个值的变化
     PoundForm: {
       handler(newName, oldName) {
         //保存 form中的三个值
         this.$store.dispatch('SetPoundConfig', this.PoundForm)
-        setPoundConfig(JSON.stringify(this.PoundForm))
+        //setPoundConfig(JSON.stringify(this.PoundForm))
         //console.log('保存this.PoundForm')
         //console.log(this.PoundForm)
       },
@@ -723,7 +731,7 @@ export default {
     }
   },
   created() {
-    console.log("------")
+    //console.log("------")
     console.log(this.$store.state.user.nickName)
     //监听键盘事件
     document.addEventListener('keydown', this.handleKeyDown)
@@ -759,11 +767,14 @@ export default {
     });
     //进场记录
     this.getListI();
+    this.getListE();
+    this.getDicts("place_transport_type").then((response) => {
+      this.transportModeDic = response.data;
+    });
     //库位号
     //this.getStoreCode(this.queryParams.stationId)
   },
   mounted() {
-
     this.$nextTick(() => {
       this.$refs['vehicleNo'].focus()
       //this.poundConfig = this.PoundForm
@@ -778,6 +789,7 @@ export default {
         //this.$refs['channelNo'].change()
         this.ChannelNumberChange(this.PoundForm.channelNumber)
       }
+      this.getUserList()
     })
   },
   destroyed() {
@@ -850,6 +862,8 @@ export default {
               this.noticeNo = response.data.noticeNo;
               this.form.noticeNo = response.data.noticeNo;
               this.form.locationNumber = response.data.storeCode;
+              this.form.transportUnit = response.data.transportUnit
+              this.form.transportMode = response.data.transportMode
               this.dataLoading = false
             } else {
               this.msgError(response.msg);
@@ -863,8 +877,14 @@ export default {
       } else if (this.PoundForm.flowDirection === "E") {
         //调用后台查询API 通过选择的车号反添数据
         getSheet(event, this.queryParams.stationId).then((response) => {
+          let viaType = this.PoundForm.stationViaType
           if (response.code === 200) {
             this.form = response.data;
+            if (viaType !== response.data.viaType) {
+              this.PoundForm.stationViaType = response.data.viaType
+              this.getListE()
+              this.getListI()
+            }
           } else {
             this.msgError(response.msg);
           }
@@ -1077,12 +1097,14 @@ export default {
                   //this.updateDocTime(response.data.poundId)
                   this.dataLoading = false
                   //如果是进进场激活，刷新列表
-                  if (this.activeName === 'Approach') {
+                  /*if (this.activeName === 'Approach') {
                     this.getListI();
                   }
                   if (this.activeName === 'end') {
                     this.getListE();
-                  }
+                  }*/
+                  this.getListI();
+                  this.getListE();
                   this.getVehicleList() //重新加载车辆
                 } else {
                   this.dataLoading = false
@@ -1098,18 +1120,19 @@ export default {
                   if (response.code === 200) {
                     this.msgSuccess("出场成功");
                     this.dataLoading = false
-                    if (this.activeName === 'Approach') {
+                    this.getListI();
+                    this.getListE();
+                    /*if (this.activeName === 'Approach') {
                       this.getListI();
                     }
                     if (this.activeName === 'end') {
                       this.getListE();
-                    }
+                    }*/
                     //自动打印
+                    this.getVehicleList()
                     if (this.autoPrint) {
                       this.$refs['printBtn'].$el.click()
                       //阻塞操作
-                    } else {
-                      this.getVehicleList()
                     }
                   }
                 }).catch(err => {
@@ -1145,7 +1168,7 @@ export default {
         this.nowTime = ""
         this.poundTotal = ""
         //this.reset()
-        this.getVehicleList()
+        //this.getVehicleList()
       }, 2000);
     },
     endCallback() {
@@ -1167,8 +1190,6 @@ export default {
       let date = parseTime(new Date())
       this.nowDate = date.substring(0, 10)
       this.nowTime = date.substring(10, 19)
-
-
       // this.poundTotal = "洗精煤磅单";
     },
     //销毁前清除定时器
@@ -1302,7 +1323,13 @@ export default {
     //获取车号列表
     getVehicleList() {
       //场所ID 和车辆类型，
-      if (this.queryParams.stationId && this.PoundForm.stationViaType && this.PoundForm.flowDirection) {
+      if (this.queryParams.stationId && this.PoundForm.flowDirection) {
+        //if(&& this.PoundForm.stationViaType)
+        if(this.PoundForm.flowDirection !== 'I'){//如果是出场
+          if(!this.PoundForm.stationViaType){
+            return false
+          }
+        }
         this.cancel()//清form
         /* if (this.PoundForm.flowDirection !== "E") {
            this.form.plateNum = '' //如果流向不是出场，就清空当前车号
@@ -1364,7 +1391,7 @@ export default {
         e.preventDefault()
         this.getVehicleList()
       }
-      if (key === 121) { //C
+      /*if (key === 121) { //C
         e.preventDefault()
         //切换车辆类型
         this.$refs['vehicleNo'].blur()
@@ -1375,7 +1402,7 @@ export default {
         }
         this.getVehicleList()
         this.$refs['vehicleNo'].focus()
-      }
+      }*/
     },
     changPrint() {
       if (this.autoPrint === true) {
@@ -1389,6 +1416,12 @@ export default {
         return 'warning-row';
       }
       return 'success-row';
+    },
+    showVehicleSelect(event) {
+
+    },
+    transportModeFormat(transportMode) {
+      return this.selectDictLabel(this.transportModeDic, transportMode);
     },
     /*handlerModify(row) {
       //弹出对话框，修改磅单
@@ -1418,9 +1451,10 @@ export default {
     },*/
     pad(num) {
       var i = (num + "").length;
-      while(i++ < 8) num = "0" + num;
+      while (i++ < 8) num = "0" + num;
       return num;
     },
+
   }
 }
 
@@ -1463,6 +1497,7 @@ export default {
   float: left;
   font-size: 25px;
 }
+
 #serialNumber {
   width: 300px;
   height: 10px;
@@ -1470,6 +1505,7 @@ export default {
   float: left;
   font-size: 25px;
 }
+
 /*第二页*/
 #area1 {
   width: 300px;
@@ -1478,6 +1514,7 @@ export default {
   /*float: left;*/
   font-size: 25px;
 }
+
 #serialNumber1 {
   width: 300px;
   height: 10px;
@@ -1486,6 +1523,7 @@ export default {
   /*float: left;*/
   font-size: 25px;
 }
+
 #areadate {
   width: 300px;
   height: 10px;
@@ -1565,6 +1603,7 @@ export default {
   float: left;
   margin-top: 10px;
 }
+
 #user-all-style {
   width: 800px;
   height: 40px;
@@ -1573,6 +1612,7 @@ export default {
   padding-left: 130px;
   margin-top: 10px;
 }
+
 #user-all-style1 {
   width: 800px;
   height: 40px;
@@ -1625,6 +1665,47 @@ export default {
 .coalPageSelect /deep/ .el-select-dropdown__item {
   font-size: 30px !important;
 }
+
+.coalPageSelect /deep/ .el-select-dropdown__item.selected {
+  font-size: 30px !important;
+  background: #1e1e1e;
+}
+
+
+.coalPageSelectOption /deep/ .selected {
+  font-size: 28px !important;
+  background: #2b2f3a !important;
+}
+
+/*车号 鼠标 样式*/
+.coalPageSelectOption:hover {
+  font-size: 28px !important;
+  background: #2b2f3a !important;
+  color: whitesmoke;
+}
+
+/*车号 方向键 样式*/
+.coalPageSelectOption.hover {
+  font-size: 28px !important;
+  background: #2b2f3a !important;
+  color: whitesmoke;
+}
+
+.coalPageSelectOption.selected {
+  font-size: 28px !important;
+  color: #00BFFF;
+  /* background: #1e1e1e !important;*/
+  /* color: #00afff;*/
+}
+
+.coalPageSelectOption > span {
+  font-size: 28px !important;
+}
+
+/*.el-select-dropdown__item:hover {
+  font-size: 30px !important;
+  background: rebeccapurple;
+}*/
 </style>
 <style>
 .el-table .warning-row {
@@ -1632,8 +1713,9 @@ export default {
 }
 
 .el-table .success-row {
-  background: #fff;
+  background-color: #fff;
   color: green;
 }
+
 /**-- :row-style="green"  **/
 </style>

@@ -69,6 +69,25 @@
           />
         </el-select>
       </el-form-item>
+
+      <el-form-item label="品名" prop="goodsName">
+        <el-input
+          v-model="queryParams.goodsName"
+          placeholder="请输入品名"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="车号 " prop="vehicleNo">
+        <el-input
+          v-model="queryParams.vehicleNo"
+          placeholder="请输入车号 "
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="提煤单号" prop="coalBillNo">
         <el-input
           v-model="queryParams.coalBillNo"
@@ -78,10 +97,47 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+        <el-form-item label="运输方式" prop="transportMode">
+          <el-input
+            v-model="queryParams.transportMode"
+            placeholder="请输入运输方式"
+            clearable
+            size="small"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+      <el-form-item label="销售合同号" prop="salesContractNo">
+        <el-input
+          v-model="queryParams.salesContractNo"
+          placeholder="请输入销售合同号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="车队名 " prop="vehicleTeam">
         <el-input
           v-model="queryParams.vehicleTeam"
           placeholder="请输入车队名 "
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+
+      <el-form-item label="入场司磅员" prop="inUser">
+        <el-input
+          v-model="queryParams.inUser"
+          placeholder="请输入入场司磅员"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="出场司磅员" prop="outUser">
+        <el-input
+          v-model="queryParams.outUser"
+          placeholder="请输入出场司磅员"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -175,15 +231,7 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
-<!--      <el-form-item label="车号 " prop="vehicleNo">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.vehicleNo"-->
-<!--          placeholder="请输入车号 "-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+
 <!--      <el-form-item label="挂车号1 " prop="trailerNo1">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.trailerNo1"-->
@@ -512,14 +560,7 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
-<!--      <el-form-item label="货物名称" prop="goodsName">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.goodsName"-->
-<!--          placeholder="请输入货物名称"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
+
 <!--      </el-form-item>-->
 <!--      <el-form-item label="发货方" prop="sendName">-->
 <!--        <el-input-->
@@ -594,25 +635,9 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
-<!--      <el-form-item label="销售合同号" prop="salesContractNo">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.salesContractNo"-->
-<!--          placeholder="请输入销售合同号"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
 
-<!--      <el-form-item label="运输方式" prop="transportMode">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.transportMode"-->
-<!--          placeholder="请输入运输方式"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+
+
 <!--      <el-form-item label="运输单位" prop="transportUnit">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.transportUnit"-->
@@ -700,24 +725,6 @@
 <!--          value-format="yyyy-MM-dd"-->
 <!--          placeholder="选择制单时间">-->
 <!--        </el-date-picker>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="入场司磅员" prop="inUser">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.inUser"-->
-<!--          placeholder="请输入入场司磅员"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="出场司磅员" prop="outUser">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.outUser"-->
-<!--          placeholder="请输入出场司磅员"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
 <!--      </el-form-item>-->
     </el-form>
 

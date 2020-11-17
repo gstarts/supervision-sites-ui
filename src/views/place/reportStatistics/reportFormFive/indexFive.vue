@@ -257,7 +257,7 @@
         json_fields: {
           "寄仓客户": "column1",    //常规字段
           "合同": "column2", //支持嵌套属性
-          "入库总量": "column3",
+          "入库总量": "column6",
           "现有放行量": "column4",
           "可申请放行量": "column5",
         },
