@@ -41,7 +41,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['place:car:add']"
+          v-hasPermi="['place:outstoreDoc:addcar']"
         >新增
         </el-button>
       </el-col>
@@ -80,7 +80,7 @@
           icon="el-icon-download"
           size="mini"
           type="info"
-          v-hasPermi="['place:car:Import']"
+          v-hasPermi="['place:outstoreDoc:import']"
           @click="handleImport">
           导入
         </el-button>
@@ -113,7 +113,7 @@
             type="text"
             icon="el-icon-delete"
             @click="voidUpdate(scope.row)"
-            v-hasPermi="['place:big:remove']"
+            v-hasPermi="['place:big:void']"
             v-show="scope.row.storeState === '0' ">作废
           </el-button>
           <el-button
@@ -211,7 +211,7 @@
           <el-col :span="12">
             <el-form-item label="承运单位" prop="transportUnitId">
               <!--<el-input v-model="form.transportUnit" placeholder="请输入承运单位"/>-->
-              <el-select v-model="form.transportUnitId" filterable placeholder="请选择承运单位">
+              <el-select v-model="form.transportUnitId" filterable placeholder="请选择承运单位" @change="getUnitName">
                 <el-option
                   v-for="item in transUnitList"
                   :key="item.id"
@@ -417,12 +417,12 @@ export default {
         {dictValue: '4', dictLabel: '双箱'},
       ],
       transportModeDic: [
-        {'dictValue': '1', dictLabel: '汽铁联运-散装'},
+       /* {'dictValue': '1', dictLabel: '汽铁联运-散装'},
         {'dictValue': '2', dictLabel: '汽铁联运-集装箱'},
         {'dictValue': '3', dictLabel: '汽运短倒-散装'},
         {'dictValue': '4', dictLabel: '汽运短倒-集装箱'},
         {'dictValue': '5', dictLabel: '全程汽运-散装'},
-        {'dictValue': '6', dictLabel: '全程汽运-集装箱'},
+        {'dictValue': '6', dictLabel: '全程汽运-集装箱'},*/
       ],
       // 表单校验
       rules: {
@@ -500,9 +500,14 @@ export default {
         this.BigList = response.rows
       })
       this.getList()
+      this.getTransportUnitInfo()
     }
     // 外调车车牌号列表
     this.getPlateNoList()
+    /** 变更原因 */
+    this.getDicts("place_transport_type").then((response) => {
+      this.transportModeDic = response.data;
+    });
 
   },
   methods: {
@@ -585,7 +590,7 @@ export default {
         if (valid) {
           console.log(this.form)
           this.btnLoading = true
-          this.form.transportUnit = this.transUnitList.find(item => item.id === this.form.transportUnitId).eName
+          //this.form.transportUnit = this.transUnitList.find(item => item.id === this.form.transportUnitId).eName
           addOutstoreDocByCar(this.form, this.form.transportNum).then(response => {
             if (response.code === 200) {
               this.msgSuccess('新增成功')
@@ -673,12 +678,11 @@ export default {
       this.$refs['uploadForm'].validate(valid => {
         if (valid) {
           //console.log(this.form)
-         // console.log(this.$refs.upload.$refs['upload-inner'].fileList)
+          // console.log(this.$refs.upload.$refs['upload-inner'].fileList)
           if (this.$refs.upload.$refs['upload-inner'].fileList.length === 0) {
             this.$message.warning('请选择要上传的文件')
             return false
           }
-          this.form.transportUnit = this.transUnitList.find(item => item.id === this.form.transportUnitId).eName
           this.$refs.upload.submit()
           /*addOutstoreDocByCar(this.form, this.form.transportNum).then(response => {
             if (response.code === 200) {
@@ -766,9 +770,12 @@ export default {
         this.loading = false;
       });
     },
+    getUnitName(event) {//当承运单位变化时，算一下
+      this.form.transportUnit = this.transUnitList.find(item => item.id === event).eName
+      //this.form.transportUnit = this.transUnitList.find(item => item.id === this.form.transportUnitId).eName
+    }
 
   },
-
 }
 </script>
 <style lang="scss" scope>
