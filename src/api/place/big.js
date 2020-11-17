@@ -58,6 +58,13 @@ export function delBig(id) {
     method: 'delete'
   })
 }
+// 删除传入的文件
+export function delImport(id) {
+  return request({
+    url: '/place/big/del/' + id,
+    method: 'delete'
+  })
+}
 export function selectCoalBillNo(query){
   return request({
     url:'/place/big/SelectCoalBillNo',
@@ -65,6 +72,7 @@ export function selectCoalBillNo(query){
     params:query
   })
 }
+
 // 获取校验重量
 export function getReleaseWeight(query){
   return request({
