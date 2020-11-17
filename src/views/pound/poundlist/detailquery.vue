@@ -11,7 +11,25 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="车牌号" prop="plateNum">
+        <el-input
+          v-model="queryParams.plateNum"
+          placeholder="请输入车牌号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
 
+      <el-form-item label="寄仓客户" prop="remark">
+        <el-input
+          v-model="queryParams.delivery_unit"
+          placeholder="请输入寄仓客户"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="品名" prop="goodsName">
         <el-select v-model="queryParams.goodsName" placeholder="请选择货物名称" size="small" clearable @change="handleQuery">
           <el-option
@@ -30,15 +48,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="承运人" prop="carrier">
-        <el-input
-          v-model="queryParams.carrier"
-          placeholder="请输入承运人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="承运人" prop="carrier">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.carrier"-->
+<!--          placeholder="请输入承运人"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="车辆类型" prop="viaType">
         <el-select v-model="queryParams.viaType" placeholder="请选择进出车辆类型" clearable size="small" @change="handleQuery">
           <el-option
@@ -48,15 +66,6 @@
             :value="dept.key"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item label="车牌号" prop="plateNum">
-        <el-input
-          v-model="queryParams.plateNum"
-          placeholder="请输入车牌号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
 
       <!-- <el-form-item label="规格" prop="specification">
@@ -123,27 +132,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-
-      <el-form-item label="状态 " prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small" @change="handleQuery">
-          <el-option
-            v-for="dept in poundStateDic"
-            :key="dept.key"
-            :label="dept.value"
-            :value="dept.key"
-          />
-        </el-select>
-      </el-form-item>
-
-      <el-form-item label="箱号" prop="containerNum">
-        <el-input
-          v-model="queryParams.containerNum"
-          placeholder="请输入箱号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="箱号" prop="containerNum">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.containerNum"-->
+<!--          placeholder="请输入箱号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <!--<el-form-item label="保管员" prop="keeper">
         <el-input
           v-model="queryParams.keeper"
@@ -162,15 +159,15 @@
            @keyup.enter.native="handleQuery"
          />
        </el-form-item>-->
-      <el-form-item label="库位号" prop="locationNumber">
-        <el-input
-          v-model="queryParams.locationNumber"
-          placeholder="请输入库位号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="库位号" prop="locationNumber">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.locationNumber"-->
+<!--          placeholder="请输入库位号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <!--<el-form-item label="通道号" prop="channelNumber">
         <el-input
           v-model="queryParams.channelNumber"
@@ -199,18 +196,28 @@
         />
       </el-form-item>-->
 
-      <el-form-item label="包装类型" prop="packMode">
-        <el-select v-model="queryParams.packMode" placeholder="请选择包装类型" clearable size="small" @change="handleQuery">
+<!--      <el-form-item label="包装类型" prop="packMode">-->
+<!--        <el-select v-model="queryParams.packMode" placeholder="请选择包装类型" clearable size="small" @change="handleQuery">-->
+<!--          <el-option-->
+<!--            v-for="dept in packModeDic"-->
+<!--            :key="dept.key"-->
+<!--            :label="dept.value"-->
+<!--            :value="dept.key"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+      <el-form-item label="磅单状态 " prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small" @change="handleQuery">
           <el-option
-            v-for="dept in packModeDic"
+            v-for="dept in poundStateDic"
             :key="dept.key"
             :label="dept.value"
             :value="dept.key"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="流向" prop="flowDirection">
-        <el-select v-model="queryParams.flowDirection" placeholder="请选择流向" @change="handleQuery">
+      <el-form-item label="称重状态" prop="flowDirection">
+        <el-select v-model="queryParams.flowDirection" placeholder="称重状态" @change="handleQuery">
           <el-option
             v-for="dept in flowDic"
             :key="dept.key"
@@ -244,18 +251,18 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['place:sheet:export']"
-        >导出
-        </el-button>
-      </el-col>
-    </el-row>
+<!--    <el-row :gutter="10" class="mb8">-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['place:sheet:export']"-->
+<!--        >导出-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--    </el-row>-->
 
     <el-table v-loading="loading" :data="sheetList">
       <!-- <af-table-column type="selection" width="55" align="center"/>-->
@@ -264,7 +271,6 @@
       <!--<af-table-column label="计量号" align="center" prop="measurementNum"/>-->
       <af-table-column label="车牌号" align="center" prop="plateNum"/>
       <af-table-column label="品名" align="center" prop="goodsName"/>
-      <af-table-column label="提煤单号" align="center" prop="coalBillNum"/>
       <!--<af-table-column label="规格" align="center" prop="specification"/>-->
       <!--<af-table-column label="承运人" align="center" prop="carrier"/>-->
       <af-table-column label="毛重" align="center" prop="grossWeight"/>
@@ -273,18 +279,17 @@
       <af-table-column label="净重" align="center" prop="netWeight"/>
       <af-table-column label="供货单位" align="center" prop="deliveryUnit"/>
       <af-table-column label="收货单位" align="center" prop="receivingUnit"/>
-      <af-table-column label="流向" align="center" prop="flowDirection">
+      <af-table-column label="称重状态" align="center" prop="flowDirection">
         <template slot-scope="scope">
-          {{ scope.row.flowDirection === 'I' ? '进场' : '出场' }}
+          {{ scope.row.flowDirection === 'I' ? '未完成' : '已完成' }}
         </template>
       </af-table-column>
-      <af-table-column label="状态" align="center" prop="status">
+      <af-table-column label="磅单状态" align="center" prop="status">
         <template slot-scope="scope">
           {{ scope.row.status === '0' ? '正常' : '修改' }}
         </template>
       </af-table-column>
-      <!--<af-table-column label="提煤单号" align="center" prop="coalBillNum"/>-->
-
+      <af-table-column label="提煤单号" align="center" prop="coalBillNum"/>
       <!--<af-table-column label="保管员" align="center" prop="keeper"/>-->
       <!--<af-table-column label="计量员" align="center" prop="measurer"/>-->
       <!--<af-table-column label="出入库单号" align="center" prop="remark"/>-->
@@ -365,7 +370,7 @@
             发货单位:{{ selectPound.receivingUnit }}
           </el-col>
           <el-col :span="6" :offset="3">
-            流向:{{ selectPound.flowDirection == 'E' ? '出场' : '进场' }}
+            流向:{{ selectPound.flowDirection == 'E' ? '已完成' : '未完成' }}
           </el-col>
 
         </el-row>
@@ -664,7 +669,7 @@ export default {
         netWeight: undefined,
         deliveryUnit: undefined,
         receivingUnit: undefined,
-        flowDirection: 'I',
+        flowDirection: "E",
         status: undefined,
         coalBillNum: undefined,
         containerNum: undefined,
@@ -674,14 +679,16 @@ export default {
         channelNumber: undefined,
         stationId: undefined,
         noticeNo: undefined,
-        viaType: undefined,
+        via_type:'01',   //01为进场  02 为出场
         packMode: undefined,
         containerNum2: undefined,
         containerNum3: undefined,
         containerNum4: undefined,
         printState: undefined,
         orderByColumn: 'id',
-        isAsc: 'desc'
+        isAsc: 'desc',
+        delivery_unit:undefined
+
       },
       // 表单校验
       rules: {},
@@ -733,8 +740,8 @@ export default {
         {'key': '1', 'value': '修改'},
       ],
       flowDic: [
-        {'key': 'I', 'value': '进场'},
-        {'key': 'E', 'value': '出场'},
+        {'key': 'I', 'value': '未完成'},
+        {'key': 'E', 'value': '已完成'},
       ],
       viaTypeDic: [
         {'key': '01', 'value': '蒙煤车'},
@@ -803,6 +810,7 @@ export default {
     /** 查询计量单列表 */
     getList() {
       this.loading = true;
+
       listSheetLike(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
         this.sheetList = response.rows;
         this.total = response.total;
@@ -843,7 +851,8 @@ export default {
         modifyContainerNo3: undefined,
         modifyContainerNo4: undefined,
         coalBillNo: undefined,
-        modifyCoalBillNo: undefined
+        modifyCoalBillNo: undefined,
+        delivery_unit:undefined
       };
       this.resetForm("formModify");
     },
