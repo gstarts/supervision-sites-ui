@@ -29,6 +29,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="状态" prop="storeState">
+        <el-select v-model="queryParams.storeState" placeholder="请选择状态" @change="handleQuery">
+          <el-option
+            v-for="dept in storeStateDic"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"/>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -102,6 +111,8 @@
       <af-table-column label="申报海关" align="center" prop="isReportCustoms" :formatter="isReportFormatter"/>
       <af-table-column label="制单人" align="center" prop="makerBy"/>
       <af-table-column label="制单时间" align="center" prop="makerTime"/>
+      <el-table-column label="作废人" align="center" prop="voidUser" v-if="queryParams.storeState === '3'"></el-table-column>
+      <el-table-column label="作废时间" align="center" width="180px" prop="voidDate" v-if="queryParams.storeState === '3'"></el-table-column>
       <el-table-column
         label="操作"
         align="center"
@@ -288,7 +299,8 @@
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" :loading="btnLoading" @click="submitFileForm">确 定</el-button>
-        <el-button @click="upload.open = false">取 消</el-button>
+        <!--<el-button @click="upload.open = false">取 消</el-button>-->
+        <el-button @click="uploadCancel">取 消</el-button>
       </div>
       <el-form ref="uploadForm" :model="form" :rules="uploadRules" :label-position="left" label-width="80px"
                size="small">
@@ -487,7 +499,12 @@ export default {
         headers: {Authorization: 'Bearer ' + getToken()},
         // 上传的地址
         url: process.env.VUE_APP_BASE_API + '/place/outstoreDoc/importData'
-      }
+      },
+      storeStateDic:[
+        {'dictValue':'0','dictLabel':'未入场'},
+        {'dictValue':'2','dictLabel':'已入场'},
+        {'dictValue':'3','dictLabel':'作废'},
+      ],
     }
   },
   created() {
@@ -529,9 +546,14 @@ export default {
     cancel() {
       this.open = false
       this.reset()
-      this.$refs.upload.clearFiles()
+     // this.$refs.upload.clearFiles()
       //清空提煤单号
       // this.BigList = []
+    },
+    uploadCancel(){
+      this.upload.open = false
+      this.reset()
+      this.$refs.upload.clearFiles()
     },
     // 表单重置
     reset() {
@@ -717,6 +739,7 @@ export default {
         this.getList()
         this.getTransportUnitInfo()
       }
+
     },
     // 收发货单位建议
     nameSearch(queryString, cb) {
