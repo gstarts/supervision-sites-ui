@@ -78,6 +78,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="车号 " prop="vehicleNo">
+        <el-input
+          v-model="queryParams.vehicleNo"
+          placeholder="请输入车号 "
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="提煤单号" prop="coalBillNo">
         <el-input
           v-model="queryParams.coalBillNo"
@@ -780,7 +789,7 @@
       <el-table-column label="车队" align="center" prop="vehicleTeam" />
       <af-table-column label="派车单号" align="center" prop="dispatchNo" />
       <af-table-column label="车号 " align="center" prop="vehicleNo" />
-      <el-table-column label="车型" align="center" prop="vehicleType" />
+      <el-table-column label="车型" align="center" prop="vehicleType"/>
       <af-table-column label="集装箱号1" align="center" prop="containerNo1" />
       <af-table-column label="进场时间" align="center" prop="inTime" width="180">
         <template slot-scope="scope">
