@@ -121,7 +121,7 @@
         </el-form-item>-->
       </el-row>
       <el-form-item label="称重状态" prop="flowDirection">
-        <el-select v-model="queryParams.store_state" placeholder="称重状态" @change="handleQuery">
+        <el-select v-model="queryParams.storeState" placeholder="称重状态" @change="handleQuery">
           <el-option
             v-for="dept in store_stateDic"
             :key="dept.key"
@@ -381,7 +381,7 @@
           endTime: undefined,
           statisticsMode: 1,
           packMode: 2,
-          store_state: "E"
+          storeState: "1"
         },
         totalNetWeight: 0,
         totalRoughWeight: 0,
