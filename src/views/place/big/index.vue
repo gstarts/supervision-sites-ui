@@ -274,7 +274,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="库存量" prop="netWeight">
+            <el-form-item label="库存量(KG)" prop="netWeight">
               <el-input v-model="form.netWeight" disabled/>
             </el-form-item>
           </el-col>
@@ -289,7 +289,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="可分配重量" prop="distribution">
+            <el-form-item label="可分配重量(KG)" prop="distribution">
               <el-input v-model="form.distribution" disabled/>
             </el-form-item>
           </el-col>
@@ -319,7 +319,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="提煤重量" prop="coalWeight">
+            <el-form-item label="提煤重量(KG)" prop="coalWeight">
               <el-input v-model.number="form.coalWeight" placeholder="请输入重量"/>
             </el-form-item>
           </el-col>
