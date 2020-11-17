@@ -69,19 +69,29 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="提煤单号" prop="coalBillNo">
+
+      <el-form-item label="品名" prop="goodsName">
         <el-input
-          v-model="queryParams.coalBillNo"
-          placeholder="请输入提煤单号"
+          v-model="queryParams.goodsName"
+          placeholder="请输入品名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="品名" prop="goodsName">
+      <el-form-item label="车号 " prop="vehicleNo">
         <el-input
-          v-model="queryParams.goodsName"
-          placeholder="请输入品名"
+          v-model="queryParams.vehicleNo"
+          placeholder="请输入车号 "
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="提煤单号" prop="coalBillNo">
+        <el-input
+          v-model="queryParams.coalBillNo"
+          placeholder="请输入提煤单号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -114,6 +124,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+
       <el-form-item label="入场司磅员" prop="inUser">
         <el-input
           v-model="queryParams.inUser"
@@ -220,15 +231,7 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
-<!--      <el-form-item label="车号 " prop="vehicleNo">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.vehicleNo"-->
-<!--          placeholder="请输入车号 "-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+
 <!--      <el-form-item label="挂车号1 " prop="trailerNo1">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.trailerNo1"-->
