@@ -1706,10 +1706,20 @@ export default {
   font-size: 30px !important;
   background: rebeccapurple;
 }*/
+.el-table .warning-row {
+  color: red;
+  background-color: #fff;
+}
+
+.el-table .success-row {
+  background-color: #fff;
+  color: green;
+}
 </style>
 <style>
 .el-table .warning-row {
   color: red;
+  background-color: #fff;
 }
 
 .el-table .success-row {
