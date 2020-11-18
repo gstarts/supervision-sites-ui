@@ -120,7 +120,7 @@
           </el-select>
         </el-form-item>-->
       </el-row>
-      <el-form-item label="称重状态" prop="flowDirection">
+      <!--<el-form-item label="称重状态" prop="flowDirection">
         <el-select v-model="queryParams.storeState" placeholder="称重状态" @change="handleQuery">
           <el-option
             v-for="dept in store_stateDic"
@@ -129,7 +129,7 @@
             :value="dept.key"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="货物类型" prop="packMode">
         <el-select
           v-model="queryParams.packMode" placeholder="请选择货物类型">
