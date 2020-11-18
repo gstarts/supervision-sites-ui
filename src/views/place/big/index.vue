@@ -110,8 +110,8 @@
       <el-table-column label="合同编号" align="center" prop="contractNo"/>
       <el-table-column label="提煤重量" align="center" prop="coalWeight"/>
       <el-table-column label="货物名称" align="center" prop="goodsName"/>
-      <el-table-column label="收货单位" align="center" prop="receiveName"/>
-      <el-table-column label="客户名称" align="center" prop="customerName"/>
+      <el-table-column label="客户名称" align="center" prop="receiveName"/>
+      <el-table-column label="寄仓客户" align="center" prop="customerName"/>
       <el-table-column label="建单时间" align="center" prop="createTime"/>
       <!-- <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="乐观锁" align="center" prop="revision" /> -->
