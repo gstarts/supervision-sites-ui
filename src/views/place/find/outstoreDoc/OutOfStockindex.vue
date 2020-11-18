@@ -115,13 +115,31 @@
         />
       </el-form-item>
       <el-form-item label="运输方式" prop="transportMode">
-        <el-input
-          v-model="queryParams.transportMode"
-          placeholder="请输入运输方式"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.transportMode" filterable placeholder="请选择运输方式">
+          <el-option
+            v-for="item in transportModeDic"
+            :key="item.dictValue"
+            :label="item.dictLabel"
+            :value="item.dictValue">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="数据来源" prop="dataSources">
+<!--        <el-input-->
+<!--          v-model="queryParams.dataSources"-->
+<!--          placeholder="请输入数据来源"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+        <el-select v-model="queryParams.dataSources" filterable placeholder="请选择数据来源">
+          <el-option
+            v-for="item in outStoreDataSourcesOption"
+            :key="item.dictValue"
+            :label="item.dictLabel"
+            :value="item.dictValue">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="入场司磅员" prop="inUser">
         <el-input
@@ -140,6 +158,26 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="车型" prop="vehicleType">
+        <el-select v-model="queryParams.vehicleType" placeholder="请选择车型" clearable size="small">
+          <el-option
+            v-for="dept in outStoreVehicleTypesOption"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="状态" prop="storeState">
+        <el-select v-model="queryParams.storeState" placeholder="请选择状态" clearable size="small">
+          <el-option
+            v-for="dept in outStoreDocStateOption"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="查询时间类型" prop="queryLogo">
         <el-select
@@ -306,11 +344,7 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
-<!--      <el-form-item label="车型(双挂，单挂)" prop="vehicleType">-->
-<!--        <el-select v-model="queryParams.vehicleType" placeholder="请选择车型(双挂，单挂)" clearable size="small">-->
-<!--          <el-option label="请选择字典生成" value="" />-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
+
 <!--      <el-form-item label="计量单位(KG)" prop="measuringUnit">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.measuringUnit"-->
@@ -507,15 +541,7 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
-<!--      <el-form-item label="状态(0,待入场，2已入场，1已出场" prop="storeState">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.storeState"-->
-<!--          placeholder="请输入状态(0,待入场，2已入场，1已出场"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+
 <!--      <el-form-item label="文件ID" prop="fileId">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.fileId"-->
@@ -665,15 +691,7 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
-<!--      <el-form-item label="数据来源" prop="dataSources">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.dataSources"-->
-<!--          placeholder="请输入数据来源"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+
 <!--      <el-form-item label="作废原因" prop="voidReason">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.voidReason"-->
@@ -778,19 +796,20 @@
 <!--      <el-table-column label="ID 逻辑主键" align="center" prop="id" />-->
 <!--      <el-table-column label="场所编号" align="center" prop="placeId" />-->
       <af-table-column label="出库单号" align="center" prop="id" />
-      <af-table-column label="发料仓库" align="center" prop="sendName" />
+      <el-table-column label="状态" width="110" align="center" prop="storeState" :formatter="outStoreDocStateFormatter"/>
+      <af-table-column label="寄舱客户" align="center" prop="customerName" />
       <el-table-column label="品名" align="center" prop="goodsName" />
-      <el-table-column label="出库垛号" align="center" prop="storeCode" />
+      <el-table-column label="库位号" align="center" prop="storeCode" />
+      <af-table-column label="提煤单号" align="center" prop="coalBillNo" />
       <af-table-column label="提煤客户" align="center" prop="customerName" />
       <af-table-column label="销售合同号" align="center" prop="salesContractNo" />
-      <af-table-column label="提煤单号" align="center" prop="coalBillNo" />
-      <el-table-column label="运输方式" align="center" prop="transportMode" />
-<!--      <af-table-column label="运输单位" align="center" prop="transportUnit" />-->
-      <el-table-column label="承运单位" align="center" prop="vehicleTeam" />
-      <af-table-column label="派车单号" align="center" prop="dispatchNo" />
-      <af-table-column label="车号 " align="center" prop="vehicleNo" />
+      <af-table-column label="车号 " width="130" align="center" prop="vehicleNo" />
       <el-table-column label="车型" align="center" prop="vehicleType"/>
       <af-table-column label="集装箱号1" align="center" prop="containerNo1" />
+      <el-table-column label="毛重" align="center" prop="roughWeight" />
+      <el-table-column label="皮重" align="center" prop="tareWeight" />
+      <el-table-column label="箱皮重" align="center" prop="boxTareWeight" />
+      <el-table-column label="净重" align="center" prop="netWeight" />
       <af-table-column label="进场时间" align="center" prop="inTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.inTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
@@ -801,14 +820,32 @@
           <span>{{ parseTime(scope.row.outTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </af-table-column>
-      <el-table-column label="皮重" align="center" prop="tareWeight" />
-      <el-table-column label="箱皮重" align="center" prop="boxTareWeight" />
-      <el-table-column label="毛重" align="center" prop="roughWeight" />
-      <el-table-column label="净重" align="center" prop="netWeight" />
-      <el-table-column label="计量单位(KG)" align="center" prop="measuringUnit" />
-      <af-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="入场司磅员" align="center" prop="inUser" />
       <el-table-column label="出场司磅员" align="center" prop="outUser" />
+      <el-table-column label="承运单位" align="center" prop="vehicleTeam" />
+      <el-table-column label="运输方式" width="110" align="center" prop="transportMode" :formatter="transModeFormatter"/>
+      <af-table-column label="派车单号" align="center" prop="dispatchNo" />
+      <af-table-column label="提运单号" align="center" prop="loadingBillNo" />
+      <el-table-column label="数据来源" align="center" prop="dataSources"  :formatter="outStoreDataSourcesFormatter"/>
+      <af-table-column label="APP用户名" align="center" prop="appUser" />
+      <el-table-column label="司机姓名 " align="center" prop="driverName" />
+      <af-table-column label="司机手机号" align="center" prop="driverMobileNo" />
+      <el-table-column label="作废日期" align="center" prop="voidDate" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.voidDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="作废原因" align="center" prop="voidReason" />
+      <el-table-column label="制单人" align="center" prop="makerBy" />
+      <el-table-column label="制单时间" align="center" prop="makerTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.makerTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="计量单位(KG)" align="center" prop="measuringUnit" />
+      <af-table-column label="备注" align="center" prop="remark" />
+      <!--      <af-table-column label="运输单位" align="center" prop="transportUnit" />-->
+      <!--      <af-table-column label="发料仓库" align="center" prop="sendName" />-->
 <!--      <el-table-column label="放行单号" align="center" prop="businessNo" />-->
 <!--      <el-table-column label="寄舱客户ID" align="center" prop="customerId" />-->
 <!--      <el-table-column label="客户id" align="center" prop="receiveId" />-->
@@ -848,7 +885,7 @@
 <!--      <el-table-column label="生成舱单(0未生成，1已生成)" align="center" prop="hasManifest" />-->
 <!--      <el-table-column label="生成集报清单" align="center" prop="hasDeclare" />-->
 <!--      <el-table-column label="生成进境确报" align="center" prop="hasTransit" />-->
-<!--      <el-table-column label="状态(0,待入场，2已入场，1已出场" align="center" prop="storeState" />-->
+
 <!--      <el-table-column label="文件ID" align="center" prop="fileId" />-->
 <!--      <el-table-column label="放行单号" align="center" prop="passNo" />-->
 <!--      <el-table-column label="乐观锁" align="center" prop="revision" />-->
@@ -861,8 +898,8 @@
 <!--      <el-table-column label="通道号(进场)" align="center" prop="chnlNoI" />-->
 <!--      <el-table-column label="出场通道号" align="center" prop="chnlNoE" />-->
 <!--      <el-table-column label="库位别名" align="center" prop="locationAlias" />-->
-<!--      <el-table-column label="APP用户名" align="center" prop="appUser" />-->
-<!--      <el-table-column label="数据来源" align="center" prop="dataSources" />-->
+
+
 <!--      <el-table-column label="作废原因" align="center" prop="voidReason" />-->
 <!--      <el-table-column label="司机手机号" align="center" prop="driverMobileNo" />-->
 <!--      <el-table-column label="制单人" align="center" prop="makerBy" />-->
@@ -1217,6 +1254,14 @@ export default {
       outstoreDocList: [],
       //时间查询类型
       timeQueryTypeOption:[],
+      //车型字典集
+      outStoreVehicleTypesOption:[],
+      //运输方式字典集
+      transportModeDic:[],
+      //数据来源字典集
+      outStoreDataSourcesOption:[],
+      //状态字典集
+      outStoreDocStateOption:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -1333,7 +1378,23 @@ export default {
     }
     this.getDicts("time_query_type").then(response => {
       this.timeQueryTypeOption = response.data;
-      console.log(this.timeQueryTypeOption)
+
+    });
+    //车辆类型翻译
+    this.getDicts("outStore_vehicle_types").then(response => {
+      this.outStoreVehicleTypesOption = response.data;
+    });
+    //运输方式
+    this.getDicts("place_transport_type").then((response) => {
+      this.transportModeDic = response.data;
+    });
+    //数据来源
+    this.getDicts("outStore_data_sources").then((response) => {
+      this.outStoreDataSourcesOption = response.data;
+    });
+    //状态
+    this.getDicts("outStore_doc_state").then((response) => {
+      this.outStoreDocStateOption = response.data;
     });
     this.getList();
   },
@@ -1629,6 +1690,16 @@ export default {
       this.contractSubList = this.contractList.filter(
         (item) => item.customerName === event
       );
+    },
+    //运输方式 List翻译
+    transModeFormatter(row, column) {
+      return this.selectDictLabel(this.transportModeDic, row.transportMode);
+    },
+    outStoreDataSourcesFormatter(row, column) {
+      return this.selectDictLabel(this.outStoreDataSourcesOption, row.dataSources);
+    },
+    outStoreDocStateFormatter(row, column) {
+      return this.selectDictLabel(this.outStoreDocStateOption, row.storeState);
     },
   }
 };
