@@ -578,12 +578,12 @@
           <br/>
         </div>
         <div id="area-all-style">
-          <span class="area-in-style">{{  this.printDate.remark+' '+ this.printDate.carrier+' '+ this.printDate.transportMode+(this.printDate.printState == '1' ? '补':'')}}</span>
+          <span class="area-in-style">{{  this.printDate.remark+' '+ this.printDate.carrier+' '+ this.printDate.transportMode+(this.printDate.printState == '1' ? '补('+this.$store.state.user.nickName+')' :'')}}</span>
           <br/>
         </div>
         <div id="user-all-style">
-          <span>{{InUserWeighmanNameOption}}</span>
-          <span>{{this.printDate.outUser}}</span>
+          <span>{{parseUserName(this.printDate.inUser)}}</span>
+          <span>{{parseUserName(this.printDate.outUser)}}</span>
         </div>
       </div>
 
@@ -597,6 +597,7 @@ import {getUserDepts} from "@/utils/charutils";
 import {addModify, applyModify} from "@/api/place/modify";
 import {selectCoalBillNo} from "@/api/place/big";
 import {genTimeCode, parseTime} from "@/utils/common";
+import {listUser} from "@/api/system/user";
 
 export default {
   name: "Sheet",
@@ -612,6 +613,8 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
+      //
+      userList:[],
       // 计量单表格数据
       sheetList: [],
       BigList: [],//提煤单列表
@@ -649,6 +652,8 @@ export default {
         outUser:'',
         //补打标识
         printState:'',
+        //补打 当前操作员标识
+
       },
 
       UserOption:[{'Key':'admin','Value':'老板'},
@@ -786,6 +791,7 @@ export default {
 
   },
   created() {
+    this.getUserList();
     this.depts = getUserDepts('0')
     if (this.depts.length > 0) {
       this.queryParams.stationId = this.depts[0].deptId
@@ -948,7 +954,7 @@ export default {
       this.printDate.carrier = row.carrier;
       this.printDate.transportMode = row.transportMode;
       this.printDate.inUser = row.inUser;
-      this.printDate.outUser =  this.$store.state.user.nickName;
+      this.printDate.outUser =row.outUser;
       this.printDate.printState=row.printState;
       clearTimeout(this.timer1);
       //清除延迟执行
@@ -981,7 +987,25 @@ export default {
     placeChange() {
       this.handleQuery()
       this.getCoalBillList()
-    }
+    },
+    //翻译用户名
+    parseUserName(user) {
+      let u = this.userList.find(item => item.userName === user)
+      if (u) {
+        return u.nickName
+      } else {
+        return user
+      }
+    },
+    getUserList() {
+      listUser({'deptId': this.queryParams.stationId}).then(response => {
+        if (response.code === 200) {
+          this.userList = response.rows
+          console.log("==============")
+          console.log(this.userList)
+        }
+      });
+    },
   }
 };
 </script>
