@@ -39,7 +39,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="提煤客户" prop="customerName">
+      <el-form-item label="寄舱客户" prop="customerName">
 <!--        <el-input v-model="queryParams.customerName" placeholder="请输入寄舱客户" clearable size="small" @keyup.enter.native="handleQuery" />-->
         <el-select
           filterable
@@ -96,10 +96,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="车队名 " prop="vehicleTeam">
+      <el-form-item label="承运单位" prop="vehicleTeam">
         <el-input
           v-model="queryParams.vehicleTeam"
-          placeholder="请输入车队名 "
+          placeholder="请输入承运单位"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -785,8 +785,8 @@
       <af-table-column label="销售合同号" align="center" prop="salesContractNo" />
       <af-table-column label="提煤单号" align="center" prop="coalBillNo" />
       <el-table-column label="运输方式" align="center" prop="transportMode" />
-      <af-table-column label="运输单位" align="center" prop="transportUnit" />
-      <el-table-column label="车队" align="center" prop="vehicleTeam" />
+<!--      <af-table-column label="运输单位" align="center" prop="transportUnit" />-->
+      <el-table-column label="承运单位" align="center" prop="vehicleTeam" />
       <af-table-column label="派车单号" align="center" prop="dispatchNo" />
       <af-table-column label="车号 " align="center" prop="vehicleNo" />
       <el-table-column label="车型" align="center" prop="vehicleType"/>

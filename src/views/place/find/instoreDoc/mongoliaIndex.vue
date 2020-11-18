@@ -1,6 +1,25 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="100px">
+      <el-form-item label="场所名称" prop="placeId">
+      <el-select v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+        <el-option
+          v-for="dept in depts"
+          :key="dept.deptId"
+          :label="dept.deptName"
+          :value="dept.deptId"
+        />
+      </el-select>
+      </el-form-item>
+      <el-form-item label="寄舱客户" prop="checkConsumer">
+        <el-input
+          v-model="queryParams.checkConsumer"
+          placeholder="请输入寄舱客户"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
     <el-form-item label="寄舱合同号" prop="checkContractNo">
         <el-input
           v-model="queryParams.checkContractNo"
@@ -28,28 +47,21 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="状态" prop="storeState">
+        <el-select
+          v-model="queryParams.storeState" placeholder="请选择状态" clearable size="small">
+          <el-option
+            v-for="dept in inStoreOption"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="车号" prop="vehicleNo">
         <el-input
           v-model="queryParams.vehicleNo"
           placeholder="请输入车号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="集装箱号" prop="containerNo1">
-        <el-input
-          v-model="queryParams.containerNo1"
-          placeholder="请输入集装箱号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="寄舱客户" prop="checkConsumer">
-        <el-input
-          v-model="queryParams.checkConsumer"
-          placeholder="请输入寄舱客户"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -64,6 +76,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+<!--      <el-form-item label="集装箱号" prop="containerNo1">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.containerNo1"-->
+<!--          placeholder="请输入集装箱号"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+
 <!--      <el-form-item label="境外出库日期" prop="mongolianDeliveryDate">-->
 <!--        <el-date-picker clearable size="small" style="width: 200px"-->
 <!--          v-model="queryParams.mongolianDeliveryDate"-->
@@ -108,17 +130,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="storeState">
-        <el-select
-          v-model="queryParams.storeState" placeholder="请选择状态" clearable size="small">
-          <el-option
-            v-for="dept in inStoreOption"
-            :key="dept.dictValue"
-            :label="dept.dictLabel"
-            :value="dept.dictValue"
-          />
-        </el-select>
-      </el-form-item>
+
       <el-form-item label="查询时间类型" prop="queryLogo">
         <el-select
           v-model="queryParams.queryLogo" placeholder="请选择查询时间类型" size="small">
@@ -142,15 +154,7 @@
 
         </el-date-picker>
       </el-form-item>
-      <!-- <el-form-item label="场所编号 场所编号" prop="placeId">
-        <el-input
-          v-model="queryParams.placeId"
-          placeholder="请输入场所编号 场所编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
+
 <!--      <el-form-item label="通知单号" prop="docNo">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.docNo"-->
@@ -681,7 +685,7 @@
 <!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="入库单号" align="center" prop="id" />
       <af-table-column label="寄舱客户" align="center" prop="checkConsumer" />
-      <af-table-column label="采购单价" align="center" prop="purPrice" />
+
       <af-table-column label="寄舱合同号" align="center" prop="checkContractNo" />
       <el-table-column label="品名" align="center" prop="goodsName" />
       <el-table-column label="车辆信息"  align="center" >
@@ -742,6 +746,7 @@
       <el-table-column label="集装箱号" align="center" prop="containerNoAll" />
       <el-table-column label="供应商" align="center" prop="supplier" />
       <af-table-column label="采购合同号" align="center" prop="purchaseContractNumber" />
+      <af-table-column label="采购单价" align="center" prop="purPrice" />
       <el-table-column label="境外出库日期" align="center" prop="mongolianDeliveryDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.mongolianDeliveryDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
@@ -1162,7 +1167,7 @@
 
 <script>
 import { listInstoreDocLike, getInstoreDoc, delInstoreDoc, addInstoreDoc, updateInstoreDoc } from "@/api/place/instoreDoc";
-
+import {getUserDepts} from "@/utils/charutils";
 export default {
   name: "InstoreDoc",
   data() {
@@ -1185,6 +1190,8 @@ export default {
       packModeOption:[],
       //入库状态字典集
       inStoreOption:[],
+      //场所集
+      depts:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -1272,6 +1279,11 @@ export default {
     };
   },
   created() {
+    // 0 监管场所，1保税库，2堆场，3企业
+    this.depts = getUserDepts('0')
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+    }
     this.getList();
     this.getDicts("time_query_type").then(response => {
       this.timeQueryTypeOption = response.data;
