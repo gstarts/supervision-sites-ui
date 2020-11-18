@@ -365,8 +365,8 @@
               :on-exceed="handleExceed"
               list-type="picture-card"
               :file-list="fileListT">
-              <el-button size="mini" style="background: #91eae4">上传附件</el-button>      
-              <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“.png”或“.jpg”或“.jpeg”格式文件！</div>        
+              <el-button size="mini" style="background: #91eae4">上传附件</el-button>
+              <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“.png”或“.jpg”或“.jpeg”格式文件！</div>
             </el-upload>
             <div>
               <span>{{form.minBucketName}}{{ form.minFileName}}</span>
@@ -375,7 +375,7 @@
                   type="text"
                   icon="el-icon-download"
                   @click="handleDownload()"
-                  v-show="form.minFileName" 
+                  v-show="form.minFileName"
                 >下载
               </el-button>
               <el-button
@@ -418,11 +418,11 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
-      // 
+      //
       dialogImageUrl: '',
       //
       dialogVisible: false,
-      // 
+      //
       updateForm:{},
       // 非单个禁用
       single: true,
@@ -556,6 +556,7 @@ export default {
   created() {
     // 获取场所
     this.depts = getUserDepts('0')
+
     // 运输方式
     this.getDicts('place_transport_type').then(response => {
       this.transportOptions = response.data
@@ -570,7 +571,7 @@ export default {
         this.total = response.total
         this.queryParams.contractNo = undefined
       })
-    }    
+    }
   },
   methods: {
     /** 查询大提煤单列表 */
@@ -593,7 +594,7 @@ export default {
     cancelImport() {
       this.openImport = false
       this.reset()
-      
+
     },
     // 取消按钮
     cancel() {
@@ -604,7 +605,7 @@ export default {
       this.reset()
       this.$refs.uploadTwo.clearFiles()
 
-      
+
     },
     closeDialog() {
       this.open = false
@@ -728,10 +729,10 @@ export default {
     /** 删除按钮操作 */
     deleteBig: function() {
       const id = this.form.id
-      if(id){        
+      if(id){
         this.$refs.uploadTwo.clearFiles()
         delImport(id)
-        this.reset()            
+        this.reset()
         getBig(id).then((response) => {
           this.form = response.data
           this.updateForm = response.data
@@ -740,7 +741,7 @@ export default {
         })
       }else{
          this.msgError("未保存，请重新打开新增页面")
-      }             
+      }
     },
     /** 删除按钮操作 */
     handleDelete(row) {
