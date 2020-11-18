@@ -8,8 +8,7 @@
             v-for="dept in depts"
             :key="dept.deptId"
             :label="dept.deptName"
-            :value="dept.deptId"
-          />
+            :value="dept.deptId"/>
         </el-select>
       </el-form-item>
       <el-form-item label="提煤单号" prop="coalBillNo">
@@ -30,7 +29,7 @@
         />
       </el-form-item>
       <el-form-item label="状态" prop="storeState">
-        <el-select v-model="queryParams.storeState" placeholder="请选择状态" @change="handleQuery">
+        <el-select v-model="queryParams.storeState" clearable placeholder="请选择状态" @change="handleQuery">
           <el-option
             v-for="dept in storeStateDic"
             :key="dept.dictValue"
@@ -106,18 +105,20 @@
       <af-table-column label="提煤单号" align="center" prop="coalBillNo"/>
       <af-table-column label="包装方式" align="center" prop="packMode" :formatter="packModeFormatter"/>
       <af-table-column label="车辆类型" align="center" prop="vehicleType"/>
-      <af-table-column label="运输方式" align="center" prop="transportMode" :formatter="transModeFormatter"/>
+      <af-table-column label="运输方式" align="center" prop="transportMode" :formatter="transModeFormatter" width="120px"/>
       <af-table-column label="承运单位" align="center" prop="transportUnit"/>
       <af-table-column label="申报海关" align="center" prop="isReportCustoms" :formatter="isReportFormatter"/>
       <af-table-column label="制单人" align="center" prop="makerBy"/>
       <af-table-column label="制单时间" align="center" prop="makerTime"/>
-      <el-table-column label="作废人" align="center" prop="voidUser" v-if="queryParams.storeState === '3'"></el-table-column>
-      <el-table-column label="作废时间" align="center" width="180px" prop="voidDate" v-if="queryParams.storeState === '3'"></el-table-column>
+      <el-table-column label="作废人" align="center" prop="voidUser"
+                       v-if="queryParams.storeState === '3'"></el-table-column>
+      <el-table-column label="作废时间" align="center" width="180px" prop="voidDate"
+                       v-if="queryParams.storeState === '3'"></el-table-column>
       <el-table-column
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
-        fixed="right">
+        fixed="right" width="100px">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -132,7 +133,7 @@
             type="text"
             icon="el-icon-print"
             @click="print(scope.row)"
-            v-hasPermi="['place:big:remove']"
+            v-hasPermi="['place:big:print']"
             v-show="(scope.row.inCardPrintState === '0' || scope.row.inCardPrintState === null) && scope.row.storeState === '0' && scope.row.serialNo ===0 ">
             打印入门证
           </el-button>
@@ -226,7 +227,7 @@
                 <el-option
                   v-for="item in transUnitList"
                   :key="item.id"
-                  :label="item.eName"
+                  :label="item.eAbbreviation"
                   :value="item.id">
                 </el-option>
               </el-select>
@@ -324,8 +325,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="承运单位" prop="transportUnitId">
-          <!--<el-input v-model="form.transportUnit" placeholder="请输入承运单位"/>-->
+        <!--<el-form-item label="承运单位" prop="transportUnitId">
+          &lt;!&ndash;<el-input v-model="form.transportUnit" placeholder="请输入承运单位"/>&ndash;&gt;
           <el-select v-model="form.transportUnitId" filterable placeholder="请选择承运单位">
             <el-option
               v-for="item in transUnitList"
@@ -334,7 +335,7 @@
               :value="item.id">
             </el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
         <!-- <el-form-item label="运输方式" prop="transportMode">
            <el-select v-model="form.transportMode" filterable placeholder="请选择运输方式">
              <el-option
@@ -429,12 +430,12 @@ export default {
         {dictValue: '4', dictLabel: '双箱'},
       ],
       transportModeDic: [
-       /* {'dictValue': '1', dictLabel: '汽铁联运-散装'},
-        {'dictValue': '2', dictLabel: '汽铁联运-集装箱'},
-        {'dictValue': '3', dictLabel: '汽运短倒-散装'},
-        {'dictValue': '4', dictLabel: '汽运短倒-集装箱'},
-        {'dictValue': '5', dictLabel: '全程汽运-散装'},
-        {'dictValue': '6', dictLabel: '全程汽运-集装箱'},*/
+        /* {'dictValue': '1', dictLabel: '汽铁联运-散装'},
+         {'dictValue': '2', dictLabel: '汽铁联运-集装箱'},
+         {'dictValue': '3', dictLabel: '汽运短倒-散装'},
+         {'dictValue': '4', dictLabel: '汽运短倒-集装箱'},
+         {'dictValue': '5', dictLabel: '全程汽运-散装'},
+         {'dictValue': '6', dictLabel: '全程汽运-集装箱'},*/
       ],
       // 表单校验
       rules: {
@@ -500,10 +501,10 @@ export default {
         // 上传的地址
         url: process.env.VUE_APP_BASE_API + '/place/outstoreDoc/importData'
       },
-      storeStateDic:[
-        {'dictValue':'0','dictLabel':'未入场'},
-        {'dictValue':'2','dictLabel':'已入场'},
-        {'dictValue':'3','dictLabel':'作废'},
+      storeStateDic: [
+        {'dictValue': '0', 'dictLabel': '未入场'},
+        {'dictValue': '2', 'dictLabel': '已入场'},
+        {'dictValue': '3', 'dictLabel': '作废'},
       ],
     }
   },
@@ -546,11 +547,11 @@ export default {
     cancel() {
       this.open = false
       this.reset()
-     // this.$refs.upload.clearFiles()
+      // this.$refs.upload.clearFiles()
       //清空提煤单号
       // this.BigList = []
     },
-    uploadCancel(){
+    uploadCancel() {
       this.upload.open = false
       this.reset()
       this.$refs.upload.clearFiles()
@@ -794,7 +795,7 @@ export default {
       });
     },
     getUnitName(event) {//当承运单位变化时，算一下
-      this.form.transportUnit = this.transUnitList.find(item => item.id === event).eName
+      this.form.transportUnit = this.transUnitList.find(item => item.id === event).eAbbreviation
       //this.form.transportUnit = this.transUnitList.find(item => item.id === this.form.transportUnitId).eName
     }
 
