@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form
       :model="queryParams"
-      ref="queryForm"
+      ref="queryParams"
       :inline="true"
       label-width="68px"
     >
@@ -15,16 +15,61 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="合同编号" prop="contractNo">
+      <el-form-item label="寄仓客户" prop="customerName">
         <el-input
-          v-model="queryParams.contractNo"
-          placeholder="请输入合同编号"
+          v-model="queryParams.customerName"
+          placeholder="请输入寄仓客户"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="时间" prop="createTime">
+      <el-form-item label="提煤客户" prop="receiveName">
+        <el-input
+          v-model="queryParams.receiveName"
+          placeholder="请输入提煤客户"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="品名" prop="goodsName">
+        <el-input
+          v-model="queryParams.goodsName"
+          placeholder="请输入品名"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="状态" prop="status">
+<!--        statusOptions-->
+<!--        <el-input-->
+<!--          v-model="queryParams.status"-->
+<!--          placeholder="请输入状态"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+        <el-select v-model="queryParams.status" placeholder="请选择状态" size="small">
+          <el-option
+            v-for="dept in statusOptions"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="仓储合同" prop="contractNo">
+        <el-input
+          v-model="queryParams.contractNo"
+          placeholder="请输入仓储合同"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="建单时间" prop="createTime">
         <el-date-picker
           v-model="dateRange"
           type="datetimerange"
@@ -106,12 +151,14 @@
     >
       <el-table-column type="selection" width="55" align="center"/>
       <!-- <el-table-column label="主键" align="center" prop="id" /> -->
-      <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>
-      <el-table-column label="合同编号" align="center" prop="contractNo"/>
-      <el-table-column label="提煤重量" align="center" prop="coalWeight"/>
-      <el-table-column label="货物名称" align="center" prop="goodsName"/>
-      <el-table-column label="客户名称" align="center" prop="receiveName"/>
       <el-table-column label="寄仓客户" align="center" prop="customerName"/>
+      <el-table-column label="仓储合同" align="center" prop="contractNo"/>
+      <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>
+      <el-table-column label="提煤客户" align="center" prop="receiveName"/>
+      <el-table-column label="品名" align="center" prop="goodsName"/>
+      <el-table-column label="提煤重量" align="center" prop="coalWeight"/>
+      <el-table-column label="销售合同号" align="center" prop="salesContract"/>
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormatter"/>
       <el-table-column label="建单时间" align="center" prop="createTime"/>
       <!-- <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="乐观锁" align="center" prop="revision" /> -->
@@ -294,37 +341,37 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="承运单位" prop="carrier">
-              <!-- <el-input
-                v-model="form.carrier"
-                placeholder="请输入承运单位"
-              /> -->
-              <el-select v-model="form.carrier" filterable placeholder="请选择承运单位">
-                <el-option
-                  v-for="item in transUnitList"
-                  :key="item.eName"
-                  :label="item.eName"
-                  :value="item.eName">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="运输方式" prop="transportType">
-              <el-select v-model="form.transportType">
-                <el-option
-                  v-for="type in transportOptions"
-                  :key="type.dictValue"
-                  :label="type.dictLabel"
-                  :value="type.dictValue"
-                />
-              </el-select>
+<!--        <el-row>-->
+<!--          <el-col :span="12">-->
+<!--            <el-form-item label="承运单位" prop="carrier">-->
+<!--              &lt;!&ndash; <el-input-->
+<!--                v-model="form.carrier"-->
+<!--                placeholder="请输入承运单位"-->
+<!--              /> &ndash;&gt;-->
+<!--              <el-select v-model="form.carrier" filterable placeholder="请选择承运单位">-->
+<!--                <el-option-->
+<!--                  v-for="item in transUnitList"-->
+<!--                  :key="item.eName"-->
+<!--                  :label="item.eName"-->
+<!--                  :value="item.eName">-->
+<!--                </el-option>-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
+<!--          <el-col :span="12">-->
+<!--            <el-form-item label="运输方式" prop="transportType">-->
+<!--              <el-select v-model="form.transportType">-->
+<!--                <el-option-->
+<!--                  v-for="type in transportOptions"-->
+<!--                  :key="type.dictValue"-->
+<!--                  :label="type.dictLabel"-->
+<!--                  :value="type.dictValue"-->
+<!--                />-->
+<!--              </el-select>-->
 
-            </el-form-item>
-          </el-col>
-        </el-row>
+<!--            </el-form-item>-->
+<!--          </el-col>-->
+<!--        </el-row>-->
         <el-row>
           <el-col :span="12">
             <el-form-item label="提煤重量(KG)" prop="coalWeight">
@@ -403,7 +450,7 @@
 </template>
 
 <script>
-import { listBig, getBig, delBig, addBig, updateBig, getReleaseWeight, delImport } from '@/api/place/big'
+import { listBig, getBig, delBig, addBig, updateBig, getReleaseWeight, delImport,listBigLike } from '@/api/place/big'
 import { getToken } from '@/utils/auth'
 import { listStoreContract } from '@/api/place/storeContract'
 import { getStoreByIds } from '@/api/place/store'
@@ -455,7 +502,8 @@ export default {
         goodsName: undefined,
         receiveName: undefined,
         customerName: undefined,
-        revision: undefined
+        revision: undefined,
+        status:undefined
       },
       // 表单参数
       form: {},
@@ -480,7 +528,8 @@ export default {
       consumerOptions: [],
       //运输方式
       transportOptions:[],
-
+      //状态字典集
+      statusOptions:[],
       // 表单校验
       rules: {
 
@@ -561,6 +610,11 @@ export default {
     this.getDicts('place_transport_type').then(response => {
       this.transportOptions = response.data
     })
+    //状态
+    this.getDicts('place_coal_big_status').then(response => {
+      this.statusOptions = response.data
+      console.log(this.statusOptions)
+    })
     this.getList()
     const { tableId } = this.$route.query
     if (tableId) {
@@ -577,7 +631,7 @@ export default {
     /** 查询大提煤单列表 */
     getList() {
       this.loading = true
-      listBig(this.addDateRange(this.queryParams,this.dateRange)).then((response) => {
+      listBigLike(this.addDateRange(this.queryParams,this.dateRange)).then((response) => {
         this.bigList = response.rows
         this.total = response.total
         this.loading = false
@@ -637,7 +691,8 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm('queryForm')
+      this.resetForm('queryParams'),
+      this.dateRange=[],
       this.handleQuery()
     },
     // 多选框选中数据
@@ -910,7 +965,10 @@ export default {
         },
         `place_big.xlsx`
       )
-    }
+    },
+    statusFormatter(row, column) {
+      return this.selectDictLabel(this.statusOptions, row.status);
+    },
   }
 }
 </script>

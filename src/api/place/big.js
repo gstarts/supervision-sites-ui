@@ -8,7 +8,14 @@ export function listBig(query) {
     params: query
   })
 }
-
+// 查询大提煤单 大提煤单列表
+export function listBigLike(query) {
+  return request({
+    url: '/place/big/listLike',
+    method: 'get',
+    params: query
+  })
+}
 // 查询大提煤单详情页 大提煤单列表
 export function detailsBig(query) {
   return request({

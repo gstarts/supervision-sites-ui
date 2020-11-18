@@ -58,6 +58,15 @@
                   </el-row>
                   <el-row>
                     <el-col :span="12">
+                      <el-form-item label="寄舱客户:" prop="customerName">
+                        <!-- <el-input
+                          v-model="form.customerName"
+                          placeholder="请输入客户名称"
+                        /> -->
+                        <span>{{ form.customerName }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
                       <el-form-item label="收货单位:" prop="receiveName">
                         <!-- <el-input
                           v-model="form.receiveName"
@@ -66,15 +75,7 @@
                         <span>{{ form.receiveName }}</span>
                       </el-form-item>
                     </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="客户名称:" prop="customerName">
-                        <!-- <el-input
-                          v-model="form.customerName"
-                          placeholder="请输入客户名称"
-                        /> -->
-                        <span>{{ form.customerName }}</span>
-                      </el-form-item>
-                    </el-col>
+
                   </el-row>
                 </el-form>
               </el-row>

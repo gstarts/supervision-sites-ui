@@ -578,7 +578,7 @@
           <br/>
         </div>
         <div id="area-all-style">
-          <span class="area-in-style">{{  this.printDate.remark+' '+ this.printDate.carrier+' '+ this.printDate.transportMode}}</span>
+          <span class="area-in-style">{{  this.printDate.remark+' '+ this.printDate.carrier+' '+ this.printDate.transportMode+(this.printDate.printState == '1' ? '补':'')}}</span>
           <br/>
         </div>
         <div id="user-all-style">
@@ -647,6 +647,8 @@ export default {
         inUser:'',
         //出场司磅员
         outUser:'',
+        //补打标识
+        printState:'',
       },
 
       UserOption:[{'Key':'admin','Value':'老板'},
@@ -947,7 +949,7 @@ export default {
       this.printDate.transportMode = row.transportMode;
       this.printDate.inUser = row.inUser;
       this.printDate.outUser =  this.$store.state.user.nickName;
-
+      this.printDate.printState=row.printState;
       clearTimeout(this.timer1);
       //清除延迟执行
       this.timer1 = setTimeout(() => {
