@@ -605,6 +605,7 @@ export default {
   created() {
     // 获取场所
     this.depts = getUserDepts('0')
+
     // 运输方式
     this.getDicts('place_transport_type').then(response => {
       this.transportOptions = response.data

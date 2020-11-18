@@ -23,7 +23,7 @@
 
       <el-form-item label="寄仓客户" prop="remark">
         <el-input
-          v-model="queryParams.delivery_unit"
+          v-model="queryParams.deliveryUnit"
           placeholder="请输入寄仓客户"
           clearable
           size="small"
@@ -669,7 +669,7 @@ export default {
         netWeight: undefined,
         deliveryUnit: undefined,
         receivingUnit: undefined,
-        flowDirection: "E",
+        flowDirection: 'E',
         status: undefined,
         coalBillNum: undefined,
         containerNum: undefined,
@@ -679,7 +679,7 @@ export default {
         channelNumber: undefined,
         stationId: undefined,
         noticeNo: undefined,
-        via_type:'01',   //01为进场  02 为出场
+        viaType: undefined,   //01为进场  02 为出场
         packMode: undefined,
         containerNum2: undefined,
         containerNum3: undefined,
@@ -687,8 +687,6 @@ export default {
         printState: undefined,
         orderByColumn: 'id',
         isAsc: 'desc',
-        delivery_unit:undefined
-
       },
       // 表单校验
       rules: {},
