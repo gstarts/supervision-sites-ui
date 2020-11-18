@@ -240,11 +240,11 @@
                 {{ parseChannelName(scope.row.channelNumber) }}
               </template>
             </af-table-column>
-            <el-table-column label="司磅员" align="center" prop="inUser">
+            <af-table-column label="司磅员" align="center" prop="inUser">
               <template slot-scope="scope">
                 {{ parseUserName(scope.row.createBy) }}
               </template>
-            </el-table-column>
+            </af-table-column>
             <!--不在磅单页面做磅单修改的申请了-->
             <!--<af-table-column label="操作" align="center" prop="createBy" class-name="small-padding fixed-width"
                              fixed="right">
@@ -305,11 +305,11 @@
                 {{ parseChannelName(scope.row.channelNumber) }}
               </template>
             </af-table-column>
-            <el-table-column label="司磅员" align="center" prop="outUser">
+            <af-table-column label="司磅员" align="center" prop="outUser">
               <template slot-scope="scope">
                 {{ parseUserName(scope.row.measurer) }}
               </template>
-            </el-table-column>
+            </af-table-column>
           </el-table>
           <pagination
             v-show="total1>0"
@@ -583,6 +583,7 @@ export default {
         transportMode: '',
         //运输方式
         transportUnit: '',
+        preWeight: undefined,
       },
       //通道配置
       PoundForm: {
@@ -864,6 +865,7 @@ export default {
               this.form.locationNumber = response.data.storeCode;
               this.form.transportUnit = response.data.transportUnit
               this.form.transportMode = response.data.transportMode
+              this.form.preWeight = response.data.preWeight
               this.dataLoading = false
             } else {
               this.msgError(response.msg);
@@ -922,7 +924,7 @@ export default {
     },
     //双击列表赋值form表单
     dbRow(row, column) {
-      this.form = {...row}
+      this.form = {...row};
       //console.log(this.form)
       //this.form
     },
@@ -1033,6 +1035,7 @@ export default {
         if (this.PoundForm.stationViaType === "01") {
           //皮重
           this.form.tare = this.Poundweight;
+
           //判断出场时毛重是否未填写
           if (this.form.tare > 0 && this.form.grossWeight > this.form.tare) {
             //计算净重
@@ -1041,6 +1044,15 @@ export default {
             this.msgError("净重计算失败,毛重不可为0或空");
             return false
           }
+          if (this.form.errState === '0') {//无异常状态下
+            if (Math.abs(this.form.tare - this.form.preWeight) > 1000) {
+              this.tareWeightErrTip()
+              return false
+            }
+          } else {
+            //如果有异常
+          }
+
           //空进重出 出场
         } else if (this.PoundForm.stationViaType === "02") {
           //毛重
@@ -1110,6 +1122,8 @@ export default {
                   this.dataLoading = false
                   this.msgError(response.msg);
                 }
+              }).catch(err => {
+                this.dataLoading = false
               });
             } else if (this.PoundForm.flowDirection === "E") {//如果是出场
               this.form.flowDirection = this.PoundForm.flowDirection;
@@ -1450,11 +1464,118 @@ export default {
       })
     },*/
     pad(num) {
-      var i = (num + "").length;
+      let i = (num + "").length;
       while (i++ < 8) num = "0" + num;
       return num;
     },
 
+    //磅单称重异常提示
+    tareWeightCheck() {
+      if (!this.PoundForm.channelNumber) {
+        this.msgError("请选择通道号");
+        return false
+      }
+      //进场
+      //if (this.isStable == "1") {
+      if (this.PoundForm.flowDirection === "I") {
+        //重进空出的进场  算毛重
+        if (this.PoundForm.stationViaType === "01") {
+          this.form.grossWeight = this.Poundweight
+          if (this.form.grossWeight <= 0) {
+            this.msgError("进场毛重不能为空或为0");
+            return false
+          }
+          //空进重出的进场 算 皮重
+        } else if (this.PoundForm.stationViaType === "02") {
+          this.form.tare = this.Poundweight
+          if (this.form.tare <= 0) {
+            this.msgError("进场皮重不能为空或为0");
+            return false
+          }
+        } else {
+          this.msgError("车辆类型不可为空或选择错误,请检查");
+          return false
+        }
+        /*if (this.PoundForm.stationViaType == "01" || this.PoundForm.stationViaType == "02") {
+          //通过车辆类型 赋值毛重或皮重
+          this.PoundForm.stationViaType == "01" ? (this.form.grossWeight = this.Poundweight) : (this.form.tare = this.Poundweight);
+        } else {
+          this.msgError("车辆类型不可为空或选择错误,请检查");
+          return false
+        }*/
+        //出场
+      } else if (this.PoundForm.flowDirection === "E") {
+        //重进空出 出场
+        if (this.PoundForm.stationViaType === "01") {
+          //皮重
+          this.form.tare = this.Poundweight;
+          //判断出场时毛重是否未填写
+          if (this.form.tare > 0 && this.form.grossWeight > this.form.tare) {
+            //计算净重
+            this.form.netWeight = this.form.grossWeight - this.form.tare;
+          } else {
+            this.msgError("净重计算失败,毛重不可为0或空");
+            return false
+          }
+          //空进重出 出场
+        } else if (this.PoundForm.stationViaType === "02") {
+          //毛重
+          this.form.grossWeight = this.Poundweight;
+          //判断出场时皮重是否未填写
+          if (this.form.tare > 0 && this.form.grossWeight > this.form.tare) {
+            //计算净重
+            this.form.netWeight = this.form.grossWeight - this.form.tare;
+          } else {
+            this.msgError("净重计算失败,皮重不可为0或空");
+            return false
+          }
+        } else {
+          this.msgError("车辆类型不可为空或选择错误,请检查");
+          return false
+        }
+      } else {
+        this.msgError("流向不可为空,请选择");
+        return false
+      }
+
+      if (this.PoundForm.flowDirection === "E") {
+        if (this.form.errState === '0') {//无异常状态下
+          if (Math.abs(this.form.tare - this.form.preWeight) > 1000) {
+            this.tareWeightErrTip()
+          }
+        } else {
+          //如果有异常
+        }
+      }
+    },
+
+    tareWeightErrTip() {
+      let message = ''
+      if (this.form.viaType === '01') {
+        //蒙煤车
+        message = this.form.plateNum + '申报皮重为' + this.form.preWeight + 'KG,与实际称皮重' + this.form.tare + 'KG,相差大于1000KG，是否将其标记为异常？'
+      }
+      this.$prompt(message, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputValidator: true,
+        inputType: 'string',
+        inputValue: '出场皮重异常',
+        inputErrorMessage: '异常原因不能为空'
+      }).then(({value}) => {
+        //更新磅单
+        this.$message({
+          type: 'success',
+          message: '你的邮箱是: ' + value
+        });
+      }).catch(() => {
+        //放行
+        this.$message({
+          type: 'info',
+          message: '不标记，放行'
+        });
+      });
+    }
   }
 }
 
@@ -1706,6 +1827,15 @@ export default {
   font-size: 30px !important;
   background: rebeccapurple;
 }*/
+.el-table .warning-row {
+  color: red;
+  background-color: #fff;
+}
+
+.el-table .success-row {
+  background-color: #fff;
+  color: green;
+}
 </style>
 <style>
 .el-table .warning-row {
