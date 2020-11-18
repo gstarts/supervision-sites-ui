@@ -592,7 +592,7 @@
 </template>
 
 <script>
-import {listSheetLike, getSheet, delSheet, addSheet, updateSheet,undatePrintState} from "@/api/pound/poundlist";
+import {listSheetLike, getSheet, delSheet, addSheet, updateSheet,updatePrintState} from "@/api/pound/poundlist";
 import {getUserDepts} from "@/utils/charutils";
 import {addModify, applyModify} from "@/api/place/modify";
 import {selectCoalBillNo} from "@/api/place/big";
@@ -957,7 +957,7 @@ export default {
         this.printShow=false
       }, 2000);
 
-      undatePrintState(row.id).then(response =>{
+      updatePrintState(row.id).then(response =>{
           if (response.code === 200) {
             this.getList()
           };
