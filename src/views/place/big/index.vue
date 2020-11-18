@@ -297,10 +297,18 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="承运单位" prop="carrier">
-              <el-input
+              <!-- <el-input
                 v-model="form.carrier"
                 placeholder="请输入承运单位"
-              />
+              /> -->
+              <el-select v-model="form.carrier" filterable placeholder="请选择承运单位">
+                <el-option
+                  v-for="item in transUnitList"
+                  :key="item.eName"
+                  :label="item.eName"
+                  :value="item.eName">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -346,7 +354,8 @@
             <el-upload
               ref="uploadTwo"
               style="width: 100%"
-              :action=uploadActionTwo
+              accept=".png, .jpg, .jpeg"
+              :action="uploadActionTwo"
               :headers="headersTwo"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
@@ -354,9 +363,34 @@
               :before-remove="beforeRemove"
               :limit="1"
               :on-exceed="handleExceed"
+              list-type="picture-card"
               :file-list="fileListT">
-              <el-button size="mini" style="background: #91eae4">上传附件</el-button>
+              <el-button size="mini" style="background: #91eae4">上传附件</el-button>      
+              <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“.png”或“.jpg”或“.jpeg”格式文件！</div>        
             </el-upload>
+            <div>
+              <span>{{form.minBucketName}}{{ form.minFileName}}</span>
+              <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-download"
+                  @click="handleDownload()"
+                  v-show="form.minFileName" 
+                >下载
+              </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-delete"
+                @click="deleteBig()"
+                v-show="form.minFileName"
+                v-hasPermi="['place:big:remove']"
+              >删除
+              </el-button>
+            </div>
+            <el-dialog :visible.sync="dialogVisible" append-to-body>
+              <img width="100%" fit="contain" :src="dialogImageUrl" alt="">
+            </el-dialog>
           </el-col>
         </el-row>
       </el-form>
@@ -369,7 +403,7 @@
 </template>
 
 <script>
-import { listBig, getBig, delBig, addBig, updateBig, getReleaseWeight } from '@/api/place/big'
+import { listBig, getBig, delBig, addBig, updateBig, getReleaseWeight, delImport } from '@/api/place/big'
 import { getToken } from '@/utils/auth'
 import { listStoreContract } from '@/api/place/storeContract'
 import { getStoreByIds } from '@/api/place/store'
@@ -384,6 +418,12 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      // 
+      dialogImageUrl: '',
+      //
+      dialogVisible: false,
+      // 
+      updateForm:{},
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -393,6 +433,7 @@ export default {
       left: 'left',
       // 大提煤单 大提煤单表格数据
       bigList: [],
+      transUnitList: [],//承运单位列表
       // 通关单类型与车辆信息
       typeList: [
         { value: '0', label: '提运单信息' },
@@ -519,7 +560,6 @@ export default {
     this.getDicts('place_transport_type').then(response => {
       this.transportOptions = response.data
     })
-
     this.getList()
     const { tableId } = this.$route.query
     if (tableId) {
@@ -530,7 +570,7 @@ export default {
         this.total = response.total
         this.queryParams.contractNo = undefined
       })
-    }
+    }    
   },
   methods: {
     /** 查询大提煤单列表 */
@@ -553,14 +593,18 @@ export default {
     cancelImport() {
       this.openImport = false
       this.reset()
+      
     },
     // 取消按钮
     cancel() {
       this.open = false
       this.storeIds = []
       this.contractOptions = [],
-        this.consumerOptions = []
+      this.consumerOptions = []
       this.reset()
+      this.$refs.uploadTwo.clearFiles()
+
+      
     },
     closeDialog() {
       this.open = false
@@ -635,6 +679,7 @@ export default {
       const id = row.id || this.ids
       getBig(id).then((response) => {
         this.form = response.data
+        this.updateForm = response.data
         this.open = true
         this.title = '修改大提煤单'
       })
@@ -671,6 +716,7 @@ export default {
             addBig(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess('新增成功')
+                this.queryParams.customerId = undefined
                 this.open = false
                 this.getList()
               }
@@ -678,6 +724,23 @@ export default {
           }
         }
       })
+    },
+    /** 删除按钮操作 */
+    deleteBig: function() {
+      const id = this.form.id
+      if(id){        
+        this.$refs.uploadTwo.clearFiles()
+        delImport(id)
+        this.reset()            
+        getBig(id).then((response) => {
+          this.form = response.data
+          this.updateForm = response.data
+          this.open = true
+          this.title = '修改大提煤单'
+        })
+      }else{
+         this.msgError("未保存，请重新打开新增页面")
+      }             
     },
     /** 删除按钮操作 */
     handleDelete(row) {
@@ -717,8 +780,19 @@ export default {
     handleRemove(){
 
     },
-    handlePreview(){
-
+    handlePreview(file){
+      // if(file.name.includes('.pdf')){
+      //     let url = file.url;
+      //     const elink = document.createElement('a');
+      //     elink.href = basePdfUrl + encodeURIComponent(url); //basePdfUrl pdf.js插件的预览
+      //     elink.target= '_block';
+      //     document.body.appendChild(elink);
+      //     elink.click();
+      //     document.body.removeChild(elink);
+      // }else{
+          this.dialogImageUrl = file.url;
+          this.dialogVisible = true;
+      // }
     },
     // 文件上传成功
     uploadSuccess(response) {
@@ -729,7 +803,7 @@ export default {
       }
       this.$message.success("上传成功")
       this.uploading = true
-      this.$refs.uploadTwo.clearFiles()
+      // this.$refs.uploadTwo.clearFiles()
       // 路径+文件名
       this.form.minObjectName = response.data.objectName
       // 文件名
@@ -746,6 +820,11 @@ export default {
     },
     handleExceed(){
 
+    },
+    //下载
+    handleDownload() {
+      console.log(this.updateForm)
+      window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=' + this.updateForm.minBucketName + '&objectName=' + this.updateForm.minObjectName
     },
     /***上传end ***/
     // 文件上传成功处理（第一个）
@@ -767,6 +846,7 @@ export default {
         this.storeIds = []
         this.contractOptions = []
         this.getConsumerInfo(val)
+        this.getTransportUnitInfo()
       }
       // 客户
       if (name === 'eName') {
@@ -811,6 +891,14 @@ export default {
           }
         })
       }
+    },
+    getTransportUnitInfo() { //查承运单位
+      this.loading = true;
+      let info = {"eType": '2', 'deptId': this.queryParams.placeId, 'companyType': '4'}
+      listInfo(info).then(response => {
+        this.transUnitList = response.rows;
+        this.loading = false;
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
