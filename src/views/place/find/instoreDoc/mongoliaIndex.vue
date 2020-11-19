@@ -636,6 +636,20 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+
+      </el-form-item>
+      <el-form-item>
+        <download-excel
+          class="export-excel-wrapper"
+          :data="instoreDocList"
+          :fields="json_fields"
+          :title="titleList"
+          :footer="excelFooter"
+          :default-value="defaultValue"
+          name="嘉易达监管场所出库报表.xls">
+          <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
+          <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
+        </download-excel>
       </el-form-item>
     </el-form>
 
@@ -727,7 +741,7 @@
       <af-table-column label="库位号" align="center" prop="storeCodeAll" />
       <el-table-column label="蒙古磅单" align="center" >
         <af-table-column label="蒙方磅单号" align="center" prop="mongoliaBillNo" />
-        <el-table-column label="蒙方毛重" align="center" prop="mongoliaBillNo">
+        <el-table-column label="蒙方毛重" align="center" prop="mongoliaRoughWeight">
           <template slot-scope="scope">
             <span>{{(scope.row.mongoliaBillNo/1000).toFixed(2)}}</span>
           </template>
@@ -779,9 +793,7 @@
       <el-table-column label="包装方式" align="center" prop="packMode" :formatter="packModeTypeFormat" />
       <el-table-column label="车型" align="center" prop="vehicleType" />
       <af-table-column label="备注" align="center" prop="remark" />
-      <el-table-column>
 
-      </el-table-column>
 <!--      <af-table-column fixed="right" align="center" label="总净重"></af-table-column>-->
 <!--      <af-table-column fixed="right" align="center" label="蒙方净重"></af-table-column>-->
 
@@ -869,6 +881,7 @@
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
+      :page-sizes="[20,30,50,200,300,400,500,1000,2000,3000,5000]"
       @pagination="getList"
     />
 
@@ -1276,6 +1289,47 @@ export default {
       form: {},
       rules:{},
       dateRange:[],
+      titleList:[],
+      dataRange01:[],
+      printTitle:[],
+      // Excel 页脚
+      excelFooter: '',
+      // 默认值
+      defaultValue: '0',
+      json_fields:{
+        "入库单号":"id",
+        "寄舱客户":"checkConsumer",
+        "寄舱合同号":"checkContractNo",
+        "品名":"goodsName",
+        "车号":"vehicleNo",
+        "车数":"vehicleNoCount",
+        "毛重(KG)":"roughWeight",
+        "皮重(KG)":"tareWeight",
+        "箱皮重":"boxTareWeight",
+        "净重(KG)":"netWeight",
+        "进场时间":"inTime",
+        "出场时间":"outTime",
+        "库位号":"storeCodeAll",
+        "蒙方磅单号":"mongoliaBillNo",
+        "蒙方毛重":"mongoliaRoughWeight",
+        "蒙古磅皮重":"mongoliaTareWeight",
+        "蒙古磅净重":"mongoliaNetWeight",
+        "集装箱号":"containerNoAll",
+        "供应商":"supplier",
+        "采购合同号":"purchaseContractNumber",
+        "采购单价":"purPrice",
+        "境外出库日期":"mongolianDeliveryDate",
+        "运输单位":"vehicleTeam",
+        "计量单位":"measuringUnit",
+        "入境日期":"entryDate",
+        "报关日期":"customsDeclarationDate",
+        "报关量":"customsWeight",
+        "报关单号":"customsDeclarationNumber",
+        "国检放行日期":"nationalInspectionReleaseDate",
+        "包装方式":"packMode",
+        "车型":"vehicleType",
+        "备注":"remark",
+      },
     };
   },
   created() {
@@ -1301,9 +1355,15 @@ export default {
     /** 查询入库通知单 入库通知单列表 */
     getList() {
       this.loading = true;
+      this.titleList=[];
       listInstoreDocLike(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
         this.instoreDocList = response.rows;
         this.total = response.total;
+        this.dataRange01[0]=this.queryParams.beginTime
+        this.dataRange01[1]=this.queryParams.endTime
+        this.outstoreDocList = response.rows;
+        this.printTitle = '嘉易达监管场所' + this.dataRange01[0] + '至' + this.dataRange01[1] + '入库统计报表'
+        this.titleList.push(this.printTitle)
         this.loading = false;
       });
     },
@@ -1573,7 +1633,10 @@ export default {
     //包装方式行翻译
     packModeTypeFormat(row,column){
       return this.selectDictLabel(this.packModeOption,row.packMode);
-    }
+    },
+    importExcel(){
+
+    },
   }
 };
 </script>

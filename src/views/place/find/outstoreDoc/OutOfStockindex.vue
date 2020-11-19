@@ -747,6 +747,8 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+      <el-form-item>
         <download-excel
           class="export-excel-wrapper"
           :data="outstoreDocList"
@@ -1455,6 +1457,7 @@ export default {
     /** 查询出库明细单列表 */
     getList() {
       this.loading = true;
+      this.titleList=[];
       listOutstoreDocLike(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
         this.dataRange01[0]=this.queryParams.beginTime
         this.dataRange01[1]=this.queryParams.endTime
