@@ -401,28 +401,29 @@
             <el-upload
               ref="uploadTwo"
               style="width: 100%"
-              accept=".png, .jpg, .jpeg"
+              accept=".png, .jpg, .jpeg, .pdf"
               :action="uploadActionTwo"
               :headers="headersTwo"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :on-success="uploadSuccess"
               :before-remove="beforeRemove"
+              :before-upload="beforeUpload"
               :limit="1"
               :on-exceed="handleExceed"
               list-type="picture-card"
               :file-list="fileListT">
               <el-button size="mini" style="background: #91eae4">上传附件</el-button>
-              <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“.png”或“.jpg”或“.jpeg”格式文件！</div>
+              <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“.png”或“.jpg”或“.jpeg”或“.pdf”格式文件！</div>
             </el-upload>
             <div>
-              <span>{{form.minBucketName}}{{ form.minFileName}}</span>
+              <span v-show="updateForm.minFileName">{{updateForm.minBucketName}}{{ updateForm.minFileName}}</span>
               <el-button
                   size="mini"
                   type="text"
                   icon="el-icon-download"
                   @click="handleDownload()"
-                  v-show="form.minFileName"
+                  v-show="updateForm.minFileName"
                 >下载
               </el-button>
               <el-button
@@ -430,14 +431,11 @@
                 type="text"
                 icon="el-icon-delete"
                 @click="deleteBig()"
-                v-show="form.minFileName"
+                v-show="updateForm.minFileName"
                 v-hasPermi="['place:big:remove']"
               >删除
               </el-button>
             </div>
-            <el-dialog :visible.sync="dialogVisible" append-to-body>
-              <img width="100%" fit="contain" :src="dialogImageUrl" alt="">
-            </el-dialog>
           </el-col>
         </el-row>
       </el-form>
@@ -465,10 +463,6 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
-      //
-      dialogImageUrl: '',
-      //
-      dialogVisible: false,
       //
       updateForm:{},
       // 非单个禁用
@@ -658,8 +652,6 @@ export default {
       this.consumerOptions = []
       this.reset()
       this.$refs.uploadTwo.clearFiles()
-
-
     },
     closeDialog() {
       this.open = false
@@ -731,13 +723,13 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset()
+      this.reset()      
       const id = row.id || this.ids
       getBig(id).then((response) => {
         this.form = response.data
         this.updateForm = response.data
         this.open = true
-        this.title = '修改大提煤单'
+        this.title = '修改大提煤单'        
       })
     },
     uploadProcess() {
@@ -781,23 +773,42 @@ export default {
         }
       })
     },
-    /** 删除按钮操作 */
+    /** 删除云上附件信息按钮操作 */
     deleteBig: function() {
-      const id = this.form.id
-      if(id){
-        this.$refs.uploadTwo.clearFiles()
+        const id = this.form.id
         delImport(id)
-        this.reset()
+        this.$refs.uploadTwo.clearFiles()
         getBig(id).then((response) => {
           this.form = response.data
           this.updateForm = response.data
+          this.updateForm.minFileName = ''
           this.open = true
           this.title = '修改大提煤单'
         })
-      }else{
-         this.msgError("请重新打开新增页面,按流程操作: 输入框表单数据填写完成后,再进行上传附件操作")
-      }
     },
+    
+    /** 限制上传pdf文件大小 */
+    beforeUpload(file) { 				
+				// var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)				
+				// const extension = testmsg === 'png'
+        // const extension2 = testmsg === 'jpg'
+        // const extension3 = testmsg === 'jpeg'
+        // const extension4 = testmsg === 'pdf'
+				const isLt2M = file.size / 1024 / 1024 < 1     //这里做文件大小限制
+				// if(!extension && !extension2 && !extension3 && !extension4) {
+				// 	this.$message({
+				// 		message: '上传文件只能是 png,jpg,jpeg,pdf格式!',
+				// 		type: 'warning'
+				// 	});
+				// }
+				if(!isLt2M) {
+					this.$message({
+						message: '上传文件大小不能超过 1MB!请等待读条完毕,并重新上传',
+						type: 'error'
+					});
+				}
+				// return extension || extension2 && isLt2M
+			},
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
@@ -836,19 +847,9 @@ export default {
     handleRemove(){
 
     },
+    // 文件预览
     handlePreview(file){
-      // if(file.name.includes('.pdf')){
-      //     let url = file.url;
-      //     const elink = document.createElement('a');
-      //     elink.href = basePdfUrl + encodeURIComponent(url); //basePdfUrl pdf.js插件的预览
-      //     elink.target= '_block';
-      //     document.body.appendChild(elink);
-      //     elink.click();
-      //     document.body.removeChild(elink);
-      // }else{
-          this.dialogImageUrl = file.url;
-          this.dialogVisible = true;
-      // }
+      window.open(file.url) //blob格式地址        
     },
     // 文件上传成功
     uploadSuccess(response) {
@@ -877,11 +878,13 @@ export default {
     handleExceed(){
 
     },
+
     //下载
     handleDownload() {
       console.log(this.updateForm)
       window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=' + this.updateForm.minBucketName + '&objectName=' + this.updateForm.minObjectName
     },
+
     /***上传end ***/
     // 文件上传成功处理（第一个）
     handleFileSuccess(response, file, fileList) {
