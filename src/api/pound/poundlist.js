@@ -159,4 +159,11 @@ export function updatePrintState(id) {
 }
 
 
+export function updatePoundErr(params) {
+  return request({
+    url: '/pound/measurement/sheet/setErr',
+    method: 'post',
+    data: params
+  })
+}
 

@@ -1549,6 +1549,7 @@ export default {
       }
     },
 
+    //检查皮重异常
     tareWeightErrTip() {
       let message = ''
       if (this.form.viaType === '01') {
