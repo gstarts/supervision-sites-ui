@@ -795,7 +795,7 @@ export default {
           this.title = '修改大提煤单'
         })
       }else{
-         this.msgError("未保存，请重新打开新增页面")
+         this.msgError("请重新打开新增页面,按流程操作: 输入框表单数据填写完成后,再进行上传附件操作")
       }
     },
     /** 删除按钮操作 */
