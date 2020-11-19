@@ -16,7 +16,15 @@
             </el-select>
           </el-form-item>
         </el-col>
-
+        <el-form-item label="寄舱合同" prop="column2">
+          <el-input
+            v-model="queryParams.column2"
+            placeholder="请输入寄舱合同"
+            clearable
+            size="small"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
         <el-col :span="8">
           <el-form-item label="寄舱客户" prop="storeCustomer">
             <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>-->
@@ -185,7 +193,7 @@
       <!--      </div>-->
       <!--      </div>-->
 
-      <el-table v-loading="loading" :data="reportList" id="analyouttable" show-summary
+      <el-table v-loading="loading" :data="reportList" id="analyouttable" show-summary :summary-method="getSummaries"
                 :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
                 :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
                 style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
@@ -194,79 +202,48 @@
         <af-table-column label="寄舱合同" align="center" width="120%" prop="column2"/>
 
         <af-table-column label="品名" align="center" prop="column3" width="80%"/>
-        <af-table-column label="期初库存(t)" align="center" prop="column4"/>
+        <el-table-column label="期初库存(t)" align="center" prop="column4"/>
+        <el-table-column label="本期" align="center">
 
-        <el-table-column label="本期入库(t)" align="center" prop="column5">
           <el-table-column
             prop="column5"
-            label="车数"
+            label="入车数"
             align="center"
             width="70%">
           </el-table-column>
+          <af-table-column
+            prop="column6"
+            label="入重量（t）"
+            align="center"
+            width="100%">
+          </af-table-column>
+
           <el-table-column
-            prop="column5"
-            label="重量（t）"
+            prop="column7"
+            label="出车数"
             align="center"
             width="70%">
+          </el-table-column>
+          <af-table-column
+            prop="column8"
+            label="出重量（t）"
+            align="center"
+            width="100%">
+          </af-table-column>
+
+
+          <el-table-column label="亏吨(t)" align="center" prop="column9">
+          </el-table-column>
+          <el-table-column label="库存(t)" align="center" prop="column10">
+            <template slot-scope="scope">
+              <span>{{(scope.row.column4+scope.row.column7-scope.row.column9+scope.row.column10).toFixed(2)}}</span>
+            </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column label="本期出库(t)" align="center" prop="column6">
-          <el-table-column
-            prop="column5"
-            label="车数"
-            align="center"
-            width="70%">
-          </el-table-column>
-          <el-table-column
-            prop="column5"
-            label="重量（t）"
-            align="center"
-            width="70%">
-          </el-table-column>
-        </el-table-column>
 
-        <el-table-column label="本期库存(t)" align="center" prop="column7">
-          <el-table-column
-            prop="column5"
-            label="调入"
-            align="center"
-            width="70%">
-            <el-table-column
-              prop="column5"
-              label="车数"
-              align="center"
-              width="70%">
-            </el-table-column>
-            <el-table-column
-              prop="column5"
-              label="重量（t）"
-              align="center"
-              width="70%">
-            </el-table-column>
-          </el-table-column>
-          <el-table-column
-            prop="column5"
-            label="调出"
-            align="center"
-            width="70%">
-            <el-table-column
-              prop="column5"
-              label="车数"
-              align="center"
-              width="70%">
-            </el-table-column>
-            <el-table-column
-              prop="column5"
-              label="重量（t）"
-              align="center"
-              width="70%">
-            </el-table-column>
-          </el-table-column>
-
-        </el-table-column>
-        <af-table-column label="库存差(t)" align="center" prop="column8" width="80%">
+        <af-table-column label="库存差(t)" align="center" prop="column11" width="80%">
           <template slot-scope="scope">
-            {{scope.row.column4+scope.row.column5-scope.row.column7}}
+            {{(scope.row.column4-(scope.row.column4+scope.row.column7-scope.row.column9+scope.row.column10)).toFixed(2)}}
           </template>
           />
         </af-table-column>
@@ -287,6 +264,7 @@
     name: "Report",
     data() {
       return {
+        column11:undefined,
         // 遮罩层
         loading: false,
         // 控件日期时间
@@ -315,17 +293,17 @@
         ],
         // 导出Excel 字段
         json_fields: {
-          "单位名称": "column1",    //常规字段
-          "合同": "column2", //支持嵌套属性
-          "煤种": "column3",
+          "寄舱客户": "column1",    //常规字段
+          "寄舱合同": "column2", //支持嵌套属性
+          "品名": "column3",
           "期初库存": "column4",
-          "本期入库": "column5",
-          "本期出库": "column6",
-          "库存差": "column7",
-          "期初库存(t)":{
-            "车数":"column5",
-            "重量（t）":"column5",
-          }
+          "入车数": "column5",
+          "入重量(t)": "column6",
+          "出车数": "column7",
+          "出重量(t)":"column8",
+          "亏吨(t)":"column9",
+          "库存(t)":"column10",
+          "库存差(t)":"column11",
         },
         // 默认值
         defaultValue: '0',
@@ -367,6 +345,7 @@
           goodsName: undefined,
           placeId: undefined,
           customerName: undefined,
+          column2:undefined,
           startTime: undefined,
           endTime: undefined,
         },
@@ -489,10 +468,10 @@
         this.queryParams.startTime = this.dateRange[0]
         this.queryParams.endTime = this.dateRange[1]
 
-        if (!this.queryParams.startTime || !this.queryParams.endTime) {
-          this.$message.warning('请选择时间范围')
-          return false
-        }
+        // if (!this.queryParams.startTime || !this.queryParams.endTime) {
+        //   this.$message.warning('请选择时间范围')
+        //   return false
+        // }
         this.getInfo();
       },
       /** 重置按钮操作 */
@@ -579,6 +558,41 @@
         if (event === 1) {
           this.queryParams.customerName = ''
         }
+      },
+      getSummaries (param) {
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '总重';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value) && index === 3) {
+                return prev + curr;
+              }
+              if (!isNaN(value) && index === 4) {
+                return prev + curr;
+              }
+              if (!isNaN(value) && index === 5) {
+                return prev + curr;
+              }
+              if (!isNaN(value) && index === 6) {
+                return prev + curr;
+              }
+              if (!isNaN(value) && index === 7) {
+                return prev + curr;
+              }
+              if (!isNaN(value) && index === 8) {
+                return prev + curr;
+              }
+            }, 0);
+          }
+        });
+        return sums;
       }
     }
   };

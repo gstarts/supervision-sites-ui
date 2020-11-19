@@ -747,6 +747,17 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <download-excel
+          class="export-excel-wrapper"
+          :data="outstoreDocList"
+          :fields="json_fields"
+          :title="titleList"
+          :footer="excelFooter"
+          :default-value="defaultValue"
+          name="嘉易达监管场所出库报表.xls">
+          <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
+          <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
+        </download-excel>
       </el-form-item>
     </el-form>
 
@@ -938,6 +949,7 @@
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
+      :page-sizes="[20,30,50,200,300,400,500,1000,2000,3000,5000]"
       @pagination="getList"
     />
 
@@ -1240,6 +1252,11 @@ export default {
   name: "OutstoreDoc",
   data() {
     return {
+      titleList:[],
+      // Excel 页脚
+      excelFooter: '',
+      // 默认值
+      defaultValue: '0',
       // 遮罩层
       loading: true,
       // 选中数组
@@ -1350,6 +1367,7 @@ export default {
       depts: [],
       contractSubList: [],
       dateRange:[],
+      dataRange01:['',''],
       // 表单参数
       form: {},
       // 表单校验
@@ -1366,7 +1384,42 @@ export default {
         storeState: [
           { required: true, message: "状态(0,待入场，2已入场，1已出场不能为空", trigger: "blur" }
         ],
-      }
+      },
+      json_fields:{
+        "出库单号":"id",
+        "状态":"storeState",
+        "寄舱客户":"customerName",
+        "品名":"goodsName",
+        "库位号":"storeCode",
+        "提煤单号":"coalBillNo",
+        "提煤客户":"customerName",
+        "销售合同号":"salesContractNo",
+        "车号":"vehicleNo",
+        "车型":"vehicleType",
+        "集装箱号1":"containerNo1",
+        "毛重":"roughWeight",
+        "皮重":"tareWeight",
+        "箱皮重":"boxTareWeight",
+        "净重":"netWeight",
+        "进场时间":"inTime",
+        "出场时间":"outTime",
+        "入场司磅员":"inUser",
+        "出场司磅员":"outUser",
+        "承运单位":"vehicleTeam",
+        "运输方式":"transportMode",
+        "派车单号":"dispatchNo",
+        "提运单号":"loadingBillNo",
+        "数据来源":"dataSources",
+        " APP用户名":"appUser",
+        "司机姓名":"driverName",
+        "司机手机号":"driverMobileNo",
+        "作废日期":"voidDate",
+        "作废原因":"voidReason",
+        "制单人":"makerBy",
+        "制单时间":"makerTime",
+        "计量单位(KG)":"measuringUnit",
+        "备注":"remark",
+      },
     };
   },
   created() {
@@ -1403,7 +1456,11 @@ export default {
     getList() {
       this.loading = true;
       listOutstoreDocLike(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
+        this.dataRange01[0]=this.queryParams.beginTime
+        this.dataRange01[1]=this.queryParams.endTime
         this.outstoreDocList = response.rows;
+        this.printTitle = '嘉易达监管场所' + this.dataRange01[0] + '至' + this.dataRange01[1] + '出库统计报表'
+        this.titleList.push(this.printTitle)
         this.total = response.total;
         this.loading = false;
       });
@@ -1585,6 +1642,8 @@ export default {
         this.msgError("查询时间类型不可为空,请选择")
         return
       }
+
+
       this.getList();
     },
     /** 重置按钮操作 */
@@ -1700,6 +1759,9 @@ export default {
     },
     outStoreDocStateFormatter(row, column) {
       return this.selectDictLabel(this.outStoreDocStateOption, row.storeState);
+    },
+    importExcel() {
+
     },
   }
 };
