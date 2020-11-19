@@ -133,8 +133,8 @@
             type="text"
             icon="el-icon-print"
             @click="print(scope.row)"
-            v-hasPermi="['place:big:print']"
-            v-show="(scope.row.inCardPrintState === '0' || scope.row.inCardPrintState === null) && scope.row.storeState === '0' && scope.row.serialNo ===0 ">
+            v-print="'#dayin'"
+            v-hasPermi="['place:big:print']">
             打印入门证
           </el-button>
         </template>
@@ -359,6 +359,34 @@
       </el-form>
 
     </el-dialog>
+    <!--打印区域-->
+    <div id="dayin"  v-show="show">
+      <div v-for="(item,index) in printList" id="all">
+        <div :id="gennerateId(index)"></div>
+        <div id="headRow">{{item.no}}</div>
+        <div id="firstRow">
+          <span>{{item.date}}</span>
+          <span id="contractNoStyle">{{item.contractNo}}</span>
+          <span id="coalBillNoStyle">{{item.coalBillNo}}</span></div>
+
+        <div id="secondRow">
+          <span id="customerStyle">{{item.customer}}</span>
+          <span id="carriageStyle">{{item.carriage}}</span></div>
+
+        <div id="thirdRow">
+          <span>{{item.coalType}}</span>
+          <span id="loadingStyle">{{item.loading}}</span></div>
+
+        <div id="fourRow">
+          <span>{{item.plateNo}}</span>
+          <span id="receiptStyle">{{item.receipt}}</span></div>
+        <div id="fiveRow">
+          <span>{{biller}}</span>
+        </div>
+        <div id="nouse"></div>
+      </div>
+
+    </div>
   </div>
 </template>
 
@@ -506,6 +534,11 @@ export default {
         {'dictValue': '2', 'dictLabel': '已入场'},
         {'dictValue': '3', 'dictLabel': '作废'},
       ],
+      //开单员
+      biller: "",
+      show : false,
+      // 打印数据list
+      printList:[],
     }
   },
   created() {
@@ -586,6 +619,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
+      this.printList = selection
+      console.log("===========")
+      console.log(this.printList)
       this.ids = selection.map(item => item.id)
       this.single = selection.length != 1
       this.multiple = !selection.length
@@ -797,13 +833,133 @@ export default {
     getUnitName(event) {//当承运单位变化时，算一下
       this.form.transportUnit = this.transUnitList.find(item => item.id === event).eAbbreviation
       //this.form.transportUnit = this.transUnitList.find(item => item.id === this.form.transportUnitId).eName
-    }
-
+    },
+    print(){
+      console.log("进入打印页面")
+      this.biller  = this.$store.state.user.nickName
+      this.show = true;
+      clearTimeout(this.timer);
+      //清除延迟执行
+      this.timer = setTimeout(() => {
+        //设置延迟执行
+        //this.reset();
+        this.show = false;
+      }, 2000);
+    },
+    // 打印操作，生成divID
+    gennerateId:function (index) {
+      return "printDiv"+index
+    },
   },
 }
 </script>
 <style lang="scss" scope>
 .el-select {
   width: 100%;
+}
+@page {
+  size: auto;
+  margin: 3mm;
+}
+
+/*html {*/
+/*  background-color: #ffffff;*/
+/*  margin: 0px;*/
+/*}*/
+
+/*body {*/
+/*  margin: 10mm 15mm 10mm 15mm;*/
+/*}*/
+#all {
+  height:1638px;
+  width: 1150px;
+  /*border: 1px solid ;*/
+  /*margin-top: 1cm;*/
+}
+#headRow{
+  height: 40px;
+  width: 1000px;
+  padding-left: 3.5cm;
+  /*border: 1px solid ;*/
+  padding-top: 10px;
+  margin-top: 2.5cm;
+}
+#firstRow{
+  height: 40px;
+  width: 1000px;
+  padding-left: 4cm;
+  /*border: 1px solid ;*/
+  padding-top: 10px;
+  margin-top: 1cm;
+
+
+}
+#contractNoStyle{
+  margin-left: 4cm;
+}
+
+#coalBillNoStyle{
+  margin-left: 4cm;
+}
+
+#secondRow{
+  height: 40px;
+  width: 1000px;
+  padding-left: 4cm;
+  /*border: 1px solid ;*/
+  padding-top: 10px;
+
+}
+
+#thirdRow{
+  height: 40px;
+  width: 1000px;
+  padding-left: 4cm;
+  /*border: 1px solid ;*/
+  padding-top: 10px;
+}
+
+#fourRow{
+  height: 40px;
+  width: 1000px;
+  padding-left: 4cm;
+  /*border: 1px solid ;*/
+  padding-top: 10px;
+}
+
+/*#customerStyle{*/
+/*  margin-left: 4cm;*/
+/*}*/
+
+#carriageStyle{
+  margin-left: 4cm;
+}
+
+#loadingStyle{
+  margin-left: 4cm;
+}
+#receiptStyle{
+  margin-left: 4cm;
+}
+
+#fiveRow{
+  height: 40px;
+  width: 1000px;
+  padding-left: 4cm;
+  /*border: 1px solid ;*/
+  padding-top: 10px;
+  margin-top: 1cm;
+}
+
+#nouse{
+  height: 100px;
+  width: 1000px;
+  /*border: 1px solid*/
+
+}
+#dayin {
+  height: 500px;
+  width: 1200px;
+  /*border: 1px solid ;*/
 }
 </style>
