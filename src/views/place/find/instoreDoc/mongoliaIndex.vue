@@ -707,12 +707,12 @@
         <el-table-column label="车数" align="center" prop="vehicleNoCount"></el-table-column>
       </el-table-column>
       <el-table-column label="场所"  align="center" >
-        <el-table-column label="毛重(KG)" align="center" prop="roughWeight">
+        <el-table-column label="毛重(t)" align="center" prop="roughWeight">
         <template slot-scope="scope">
           <span>{{(scope.row.roughWeight/1000).toFixed(2)}}</span>
         </template>
         </el-table-column>
-        <el-table-column label="皮重(KG)" align="center" prop="tareWeight">
+        <el-table-column label="皮重(t)" align="center" prop="tareWeight">
           <template slot-scope="scope">
             <span>{{(scope.row.tareWeight/1000).toFixed(2)}}</span>
           </template>
@@ -722,7 +722,7 @@
             <span>{{ (scope.row.boxTareWeight/1000).toFixed(2)}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="净重(KG)" align="center" prop="netWeight">
+        <el-table-column label="净重(t)" align="center" prop="netWeight">
           <template slot-scope="scope">
             <span>{{(scope.row.netWeight/1000).toFixed(2)}}</span>
           </template>
