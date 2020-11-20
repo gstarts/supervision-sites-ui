@@ -39,7 +39,16 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button icon="el-icon-refresh" size="mini" type="warning" @click="resetQuery">重置</el-button>
+        <el-button
+          size="mini"
+          @click="print"
+          v-print="'#dayin'"
+          type="info"
+          icon="el-icon-printer"
+          >
+          打印入门证
+        </el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="10" class="mb8">
@@ -128,15 +137,7 @@
             v-hasPermi="['place:big:void']"
             v-show="scope.row.storeState === '0' ">作废
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-print"
-            @click="print(scope.row)"
-            v-print="'#dayin'"
-            v-hasPermi="['place:big:print']">
-            打印入门证
-          </el-button>
+
         </template>
       </el-table-column>
     </el-table>
@@ -365,21 +366,22 @@
         <div :id="gennerateId(index)"></div>
         <div id="headRow">{{item.no}}</div>
         <div id="firstRow">
-          <span>{{item.date}}</span>
-          <span id="contractNoStyle">{{item.contractNo}}</span>
-          <span id="coalBillNoStyle">{{item.coalBillNo}}</span></div>
+          <span >{{item.inCardPrintTime}}</span>
+          <span id="contractNoStyle">{{item.salesContractNo}}</span>
+          <span id="coalBillNoStyle">{{item.docNo}}</span></div>
 
         <div id="secondRow">
-          <span id="customerStyle">{{item.customer}}</span>
-          <span id="carriageStyle">{{item.carriage}}</span></div>
+          <span id="customerStyle">{{item.receiveName}}</span>
+          <span id="carriageStyle">{{item.transportUnit}}</span></div>
 
         <div id="thirdRow">
-          <span>{{item.coalType}}</span>
-          <span id="loadingStyle">{{item.loading}}</span></div>
+          <span>{{item.goodsName}}</span>
+<!--    场所名      -->
+          <span id="loadingStyle">{{"嘉易达"}}</span></div>
 
         <div id="fourRow">
-          <span>{{item.plateNo}}</span>
-          <span id="receiptStyle">{{item.receipt}}</span></div>
+          <span>{{item.vehicleNo}}</span>
+          <span id="receiptStyle">{{item.customerName}}</span></div>
         <div id="fiveRow">
           <span>{{biller}}</span>
         </div>
@@ -620,8 +622,6 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.printList = selection
-      console.log("===========")
-      console.log(this.printList)
       this.ids = selection.map(item => item.id)
       this.single = selection.length != 1
       this.multiple = !selection.length
@@ -647,7 +647,6 @@ export default {
     submitForm: function () {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          console.log(this.form)
           this.btnLoading = true
           //this.form.transportUnit = this.transUnitList.find(item => item.id === this.form.transportUnitId).eName
           addOutstoreDocByCar(this.form, this.form.transportNum).then(response => {
@@ -700,8 +699,7 @@ export default {
           //this.msgSuccess("设置成功");
           //this.getList();
         }).catch(function () {
-          console.log('取消了')
-          console.log(row)
+
         });
       }
     },
@@ -765,10 +763,8 @@ export default {
     change(val, name) {
       // 场所
       if (name === 'placeId') {
-        console.log(val)
         //查询场所下的大提煤单中的所有提煤单号
         this.form.placeId = this.queryParams.placeId
-        console.log(this.form.placeId)
         this.form.coalBillNo = undefined
         selectCoalBillNo({'placeId': this.queryParams.placeId}).then(response => {
           this.BigList = response.rows
@@ -780,12 +776,10 @@ export default {
     },
     // 收发货单位建议
     nameSearch(queryString, cb) {
-      console.log("1")
       let results = queryString ? this.plateNoList.filter(this.createFilter(queryString)) : this.plateNoList
       for (let item of results) {
         item.value = item.plateNo
       }
-      console.log(results);
       cb(results)
     },
 
@@ -835,7 +829,6 @@ export default {
       //this.form.transportUnit = this.transUnitList.find(item => item.id === this.form.transportUnitId).eName
     },
     print(){
-      console.log("进入打印页面")
       this.biller  = this.$store.state.user.nickName
       this.show = true;
       clearTimeout(this.timer);
