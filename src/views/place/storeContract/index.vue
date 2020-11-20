@@ -8,8 +8,7 @@
             v-for="dept in depts"
             :key="dept.deptId"
             :label="dept.deptName"
-            :value="dept.deptId"
-          />
+            :value="dept.deptId"/>
         </el-select>
       </el-form-item>
       <!--<el-form-item label="计费方式" prop="chargeMethod">
@@ -152,7 +151,7 @@
 
     <el-table v-loading="loading" :data="storeContractList">
       <af-table-column label="ID" align="center" prop="id"/>
-      <af-table-column label="场所ID" align="center" prop="placeId"/>
+      <!--<af-table-column label="场所ID" align="center" prop="placeId"/>-->
       <af-table-column label="合同编号" align="center" prop="contractNo"/>
       <af-table-column label="客户名称" align="center" prop="customerName"/>
       <af-table-column label="品名" align="center" prop="goodsName"/>
@@ -441,6 +440,8 @@ export default {
         settlementPeriod: undefined,
         signDate: undefined,
         startDate: undefined,
+        orderByColumn: 'id',
+        isAsc: 'desc'
       },
       // 表单参数
       form: {},

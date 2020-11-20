@@ -1011,7 +1011,7 @@ export default {
           }
           //}
         });
-      }, 2000);
+      }, 1000);
       //离开当前页面定时器停止
       this.$once("hook:beforeDestroy", () => {
         clearInterval(this.ChannelNumberTimer);
