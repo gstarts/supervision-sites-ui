@@ -1,11 +1,16 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryParams"
-      :inline="true"
-      label-width="68px"
-    >
+    <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="68px">
+      <el-form-item label="场所" prop="placeId">
+        <el-select v-model="queryParams.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="提煤单号" prop="coalBillNo">
         <el-input
           v-model="queryParams.coalBillNo"
@@ -43,14 +48,14 @@
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
-<!--        statusOptions-->
-<!--        <el-input-->
-<!--          v-model="queryParams.status"-->
-<!--          placeholder="请输入状态"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
+        <!--        statusOptions-->
+        <!--        <el-input-->
+        <!--          v-model="queryParams.status"-->
+        <!--          placeholder="请输入状态"-->
+        <!--          clearable-->
+        <!--          size="small"-->
+        <!--          @keyup.enter.native="handleQuery"-->
+        <!--        />-->
         <el-select v-model="queryParams.status" placeholder="请选择状态" size="small">
           <el-option
             v-for="dept in statusOptions"
@@ -243,25 +248,25 @@
         <el-button type="primary" @click="submitFileForm">确 定</el-button>
         <el-button @click="upload.open = false">取 消</el-button>
       </div>
-<!--      <el-form ref="form" :model="form" :label-position="left" size="mini">-->
-<!--        <el-form-item label="数据类型" prop="type">-->
-<!--          <el-select v-model="form.type" placeholder="请选择类型">-->
-<!--            <el-option-->
-<!--              v-for="item in typeList"-->
-<!--              :key="item.value"-->
-<!--              :label="item.label"-->
-<!--              :value="item.value">-->
-<!--            </el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--      </el-form>-->
+      <!--      <el-form ref="form" :model="form" :label-position="left" size="mini">-->
+      <!--        <el-form-item label="数据类型" prop="type">-->
+      <!--          <el-select v-model="form.type" placeholder="请选择类型">-->
+      <!--            <el-option-->
+      <!--              v-for="item in typeList"-->
+      <!--              :key="item.value"-->
+      <!--              :label="item.label"-->
+      <!--              :value="item.value">-->
+      <!--            </el-option>-->
+      <!--          </el-select>-->
+      <!--        </el-form-item>-->
+      <!--      </el-form>-->
     </el-dialog>
     <el-dialog :title="title" :visible.sync="open" append-to-body :before-close="closeDialog">
       <el-form ref="form" :model="form" :rules="rules" size="mini" label-width="120px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="所属场所" prop="placeId">
-              <el-select v-model="form.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
+              <el-select v-model="form.placeId" placeholder="请选择所属场所">
                 <el-option
                   v-for="dept in depts"
                   :key="dept.deptId"
@@ -341,37 +346,37 @@
             </el-form-item>
           </el-col>
         </el-row>
-<!--        <el-row>-->
-<!--          <el-col :span="12">-->
-<!--            <el-form-item label="承运单位" prop="carrier">-->
-<!--              &lt;!&ndash; <el-input-->
-<!--                v-model="form.carrier"-->
-<!--                placeholder="请输入承运单位"-->
-<!--              /> &ndash;&gt;-->
-<!--              <el-select v-model="form.carrier" filterable placeholder="请选择承运单位">-->
-<!--                <el-option-->
-<!--                  v-for="item in transUnitList"-->
-<!--                  :key="item.eName"-->
-<!--                  :label="item.eName"-->
-<!--                  :value="item.eName">-->
-<!--                </el-option>-->
-<!--              </el-select>-->
-<!--            </el-form-item>-->
-<!--          </el-col>-->
-<!--          <el-col :span="12">-->
-<!--            <el-form-item label="运输方式" prop="transportType">-->
-<!--              <el-select v-model="form.transportType">-->
-<!--                <el-option-->
-<!--                  v-for="type in transportOptions"-->
-<!--                  :key="type.dictValue"-->
-<!--                  :label="type.dictLabel"-->
-<!--                  :value="type.dictValue"-->
-<!--                />-->
-<!--              </el-select>-->
+        <!--        <el-row>-->
+        <!--          <el-col :span="12">-->
+        <!--            <el-form-item label="承运单位" prop="carrier">-->
+        <!--              &lt;!&ndash; <el-input-->
+        <!--                v-model="form.carrier"-->
+        <!--                placeholder="请输入承运单位"-->
+        <!--              /> &ndash;&gt;-->
+        <!--              <el-select v-model="form.carrier" filterable placeholder="请选择承运单位">-->
+        <!--                <el-option-->
+        <!--                  v-for="item in transUnitList"-->
+        <!--                  :key="item.eName"-->
+        <!--                  :label="item.eName"-->
+        <!--                  :value="item.eName">-->
+        <!--                </el-option>-->
+        <!--              </el-select>-->
+        <!--            </el-form-item>-->
+        <!--          </el-col>-->
+        <!--          <el-col :span="12">-->
+        <!--            <el-form-item label="运输方式" prop="transportType">-->
+        <!--              <el-select v-model="form.transportType">-->
+        <!--                <el-option-->
+        <!--                  v-for="type in transportOptions"-->
+        <!--                  :key="type.dictValue"-->
+        <!--                  :label="type.dictLabel"-->
+        <!--                  :value="type.dictValue"-->
+        <!--                />-->
+        <!--              </el-select>-->
 
-<!--            </el-form-item>-->
-<!--          </el-col>-->
-<!--        </el-row>-->
+        <!--            </el-form-item>-->
+        <!--          </el-col>-->
+        <!--        </el-row>-->
         <el-row>
           <el-col :span="12">
             <el-form-item label="提煤重量(KG)" prop="coalWeight">
@@ -392,7 +397,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="app用户" prop="phone">
-              <el-input v-model="form.phone"  placeholder="app用户"/>
+              <el-input v-model="form.phone" placeholder="app用户"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -417,14 +422,14 @@
               <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“.png”或“.jpg”或“.jpeg”或“.pdf”格式文件！</div>
             </el-upload>
             <div>
-              <span v-show="updateForm.minFileName">{{updateForm.minBucketName}}{{ updateForm.minFileName}}</span>
+              <span v-show="updateForm.minFileName">{{ updateForm.minBucketName }}{{ updateForm.minFileName }}</span>
               <el-button
-                  size="mini"
-                  type="text"
-                  icon="el-icon-download"
-                  @click="handleDownload()"
-                  v-show="updateForm.minFileName"
-                >下载
+                size="mini"
+                type="text"
+                icon="el-icon-download"
+                @click="handleDownload()"
+                v-show="updateForm.minFileName"
+              >下载
               </el-button>
               <el-button
                 size="mini"
@@ -448,12 +453,12 @@
 </template>
 
 <script>
-import { listBig, getBig, delBig, addBig, updateBig, getReleaseWeight, delImport,listBigLike } from '@/api/place/big'
-import { getToken } from '@/utils/auth'
-import { listStoreContract } from '@/api/place/storeContract'
-import { getStoreByIds } from '@/api/place/store'
-import { getUserDepts } from '@/utils/charutils'
-import { listInfo } from '@/api/basis/enterpriseInfo'
+import {listBig, getBig, delBig, addBig, updateBig, getReleaseWeight, delImport, listBigLike} from '@/api/place/big'
+import {getToken} from '@/utils/auth'
+import {listStoreContract} from '@/api/place/storeContract'
+import {getStoreByIds} from '@/api/place/store'
+import {getUserDepts} from '@/utils/charutils'
+import {listInfo} from '@/api/basis/enterpriseInfo'
 
 export default {
   name: 'Big',
@@ -464,7 +469,7 @@ export default {
       // 选中数组
       ids: [],
       //
-      updateForm:{},
+      updateForm: {},
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -477,8 +482,8 @@ export default {
       transUnitList: [],//承运单位列表
       // 通关单类型与车辆信息
       typeList: [
-        { value: '0', label: '提运单信息' },
-        { value: '1', label: '车辆信息' }
+        {value: '0', label: '提运单信息'},
+        {value: '1', label: '车辆信息'}
       ],
       // 弹出层标题
       title: '',
@@ -490,6 +495,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 20,
+        placeId: undefined,
         coalBillNo: undefined,
         contractNo: undefined,
         coalWeight: undefined,
@@ -497,7 +503,9 @@ export default {
         receiveName: undefined,
         customerName: undefined,
         revision: undefined,
-        status:undefined
+        status: undefined,
+        orderByColumn: 'id',
+        isAsc: 'desc'
       },
       // 表单参数
       form: {},
@@ -511,7 +519,7 @@ export default {
         'Authorization': '',
         'placeId': '',
         'bucketName': 'big',
-        'filename':''
+        'filename': ''
       },
       // 校验重量
       weightParams: {
@@ -521,47 +529,46 @@ export default {
       // 客户名称列表
       consumerOptions: [],
       //运输方式
-      transportOptions:[],
+      transportOptions: [],
       //状态字典集
-      statusOptions:[],
+      statusOptions: [],
       // 表单校验
       rules: {
 
 
-
         placeId: [
-          { required: true, message: '请选择场所', trigger: 'blur' }
+          {required: true, message: '请选择场所', trigger: 'blur'}
         ],
         customerName: [
-          { required: true, message: '请选择寄仓客户', trigger: 'blur' }
+          {required: true, message: '请选择寄仓客户', trigger: 'blur'}
         ],
         coalBillNo: [
-          { required: true, message: '提煤单号不能为空', trigger: 'blur' }
+          {required: true, message: '提煤单号不能为空', trigger: 'blur'}
         ],
         coalWeight: [
-          { required: true, message: '请输入', trigger: 'blur' },
-          { type: 'number', message: '必须为数字值' }
+          {required: true, message: '请输入', trigger: 'blur'},
+          {type: 'number', message: '必须为数字值'}
         ],
         contractNo: [
-          { required: true, message: '仓储合同不能为空', trigger: 'blur' }
+          {required: true, message: '仓储合同不能为空', trigger: 'blur'}
         ],
         goodsName: [
-          { required: true, message: '品名不能为空', trigger: 'blur' }
+          {required: true, message: '品名不能为空', trigger: 'blur'}
         ],
         carrier: [
-          { required: true, message: '承运单位不能为空', trigger: 'blur' }
+          {required: true, message: '承运单位不能为空', trigger: 'blur'}
         ],
         transportType: [
-          { required: true, message: '请选择运输方式', trigger: 'blur' }
+          {required: true, message: '请选择运输方式', trigger: 'blur'}
         ],
         salesContract: [
-          { required: true, message: '请输入销售合同', trigger: 'blur' }
+          {required: true, message: '请输入销售合同', trigger: 'blur'}
         ],
         receiveName: [
-          { required: true, message: '请输入客户名称', trigger: 'blur' }
+          {required: true, message: '请输入客户名称', trigger: 'blur'}
         ],
         storeCode: [
-          { required: true, message: '请选择库位', trigger: 'blur' }
+          {required: true, message: '请选择库位', trigger: 'blur'}
         ],
       },
       // 场所名称列表
@@ -575,7 +582,7 @@ export default {
       uploading: false,
       fileList: [],
       //时间组件
-      dateRange:[],
+      dateRange: [],
       headers: {},
       // 文件导入参数
 
@@ -590,7 +597,7 @@ export default {
         // 是否更新已经存在的用户数据
         updateSupport: 0,
         // 设置上传的请求头部
-        headers: { Authorization: 'Bearer ' + getToken() },
+        headers: {Authorization: 'Bearer ' + getToken()},
         // 上传的地址
         url: process.env.VUE_APP_BASE_API + '/place/big/importData'
       }
@@ -599,6 +606,11 @@ export default {
   created() {
     // 获取场所
     this.depts = getUserDepts('0')
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+      this.form.placeId = this.queryParams.placeId
+      this.getList()
+    }
 
     // 运输方式
     this.getDicts('place_transport_type').then(response => {
@@ -609,8 +621,8 @@ export default {
       this.statusOptions = response.data
       console.log(this.statusOptions)
     })
-    this.getList()
-    const { tableId } = this.$route.query
+    //this.getList()
+    const {tableId} = this.$route.query
     if (tableId) {
       this.queryParams.contractNo = tableId
       // 获取表详细信息
@@ -625,7 +637,7 @@ export default {
     /** 查询大提煤单列表 */
     getList() {
       this.loading = true
-      listBigLike(this.addDateRange(this.queryParams,this.dateRange)).then((response) => {
+      listBigLike(this.addDateRange(this.queryParams, this.dateRange)).then((response) => {
         this.bigList = response.rows
         this.total = response.total
         this.loading = false
@@ -633,7 +645,7 @@ export default {
     },
     /** 客户信息列表 */
     getConsumerInfo(placeId) {
-      let consumerParams = { eType: '2', deptId: placeId ,companyType: '2'}
+      let consumerParams = {eType: '2', deptId: placeId, companyType: '2'}
       listInfo(consumerParams).then(response => {
         this.consumerOptions = response.rows
       })
@@ -649,7 +661,7 @@ export default {
       this.open = false
       this.storeIds = []
       this.contractOptions = [],
-      this.consumerOptions = []
+        this.consumerOptions = []
       this.reset()
       this.$refs.uploadTwo.clearFiles()
     },
@@ -684,8 +696,8 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm('queryParams'),
-      this.dateRange=[],
-      this.handleQuery()
+        this.dateRange = [],
+        this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -698,11 +710,12 @@ export default {
       this.reset()
       this.open = true
       this.title = '添加大提煤单'
+      this.form.placeId = this.queryParams.placeId
     },
     /**详情按钮 */
     detail(row) {
       this.reset()
-      this.$router.push({ path: '/place/big/Selectbig', query: { 'coalBillNo': row.coalBillNo } })
+      this.$router.push({path: '/place/big/Selectbig', query: {'coalBillNo': row.coalBillNo}})
     },
     /** 导入按钮操作 */
     handleImport(row) {
@@ -723,13 +736,13 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset()      
+      this.reset()
       const id = row.id || this.ids
       getBig(id).then((response) => {
         this.form = response.data
         this.updateForm = response.data
         this.open = true
-        this.title = '修改大提煤单'        
+        this.title = '修改大提煤单'
       })
     },
     uploadProcess() {
@@ -743,7 +756,7 @@ export default {
     uploadBefore(file) {
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (this.form.coalWeight > this.form.netWeight) {
@@ -774,41 +787,41 @@ export default {
       })
     },
     /** 删除云上附件信息按钮操作 */
-    deleteBig: function() {
-        const id = this.form.id
-        delImport(id)
-        this.$refs.uploadTwo.clearFiles()
-        getBig(id).then((response) => {
-          this.form = response.data
-          this.updateForm = response.data
-          this.updateForm.minFileName = ''
-          this.open = true
-          this.title = '修改大提煤单'
-        })
+    deleteBig: function () {
+      const id = this.form.id
+      delImport(id)
+      this.$refs.uploadTwo.clearFiles()
+      getBig(id).then((response) => {
+        this.form = response.data
+        this.updateForm = response.data
+        this.updateForm.minFileName = ''
+        this.open = true
+        this.title = '修改大提煤单'
+      })
     },
-    
+
     /** 限制上传pdf文件大小 */
-    beforeUpload(file) { 				
-				// var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)				
-				// const extension = testmsg === 'png'
-        // const extension2 = testmsg === 'jpg'
-        // const extension3 = testmsg === 'jpeg'
-        // const extension4 = testmsg === 'pdf'
-				const isLt2M = file.size / 1024 / 1024 < 1     //这里做文件大小限制
-				// if(!extension && !extension2 && !extension3 && !extension4) {
-				// 	this.$message({
-				// 		message: '上传文件只能是 png,jpg,jpeg,pdf格式!',
-				// 		type: 'warning'
-				// 	});
-				// }
-				if(!isLt2M) {
-					this.$message({
-						message: '上传文件大小不能超过 1MB!请等待读条完毕,并重新上传',
-						type: 'error'
-					});
-				}
-				// return extension || extension2 && isLt2M
-			},
+    beforeUpload(file) {
+      // var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
+      // const extension = testmsg === 'png'
+      // const extension2 = testmsg === 'jpg'
+      // const extension3 = testmsg === 'jpeg'
+      // const extension4 = testmsg === 'pdf'
+      const isLt2M = file.size / 1024 / 1024 < 1     //这里做文件大小限制
+      // if(!extension && !extension2 && !extension3 && !extension4) {
+      // 	this.$message({
+      // 		message: '上传文件只能是 png,jpg,jpeg,pdf格式!',
+      // 		type: 'warning'
+      // 	});
+      // }
+      if (!isLt2M) {
+        this.$message({
+          message: '上传文件大小不能超过 1MB!请等待读条完毕,并重新上传',
+          type: 'error'
+        });
+      }
+      // return extension || extension2 && isLt2M
+    },
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
@@ -821,19 +834,19 @@ export default {
           type: 'warning'
         }
       )
-        .then(function() {
+        .then(function () {
           return delBig(ids)
         })
         .then(() => {
           this.getList()
           this.msgSuccess('删除成功')
         })
-        .catch(function() {
+        .catch(function () {
         })
     },
     /** 提交上传文件 */
     submitFileForm() {
-      this.form.type="1"
+      this.form.type = "1"
       if (this.form.type) {
         this.$refs.upload.submit()
         this.reset()
@@ -844,12 +857,12 @@ export default {
 
     /***上传start ***/
 
-    handleRemove(){
+    handleRemove() {
 
     },
     // 文件预览
-    handlePreview(file){
-      window.open(file.url) //blob格式地址        
+    handlePreview(file) {
+      window.open(file.url) //blob格式地址
     },
     // 文件上传成功
     uploadSuccess(response) {
@@ -870,12 +883,12 @@ export default {
       // 桶名
       this.form.minBucketName = response.data.bucketName
       // 路径
-      this.form.minPath=response.data.path
+      this.form.minPath = response.data.path
     },
-    beforeRemove(){
+    beforeRemove() {
 
     },
-    handleExceed(){
+    handleExceed() {
 
     },
 
@@ -891,7 +904,7 @@ export default {
       this.upload.open = false
       this.upload.isUploading = false
       this.$refs.upload.clearFiles()
-      this.$alert(response.msg, '导入结果', { dangerouslyUseHTMLString: true })
+      this.$alert(response.msg, '导入结果', {dangerouslyUseHTMLString: true})
       this.getList()
     },
     // 下拉列表改变时激活
@@ -899,6 +912,7 @@ export default {
       // 场所
       if (name === 'placeId') {
         this.queryParams.placeId = val
+        this.form.placeId = val
         this.form.customerName = undefined
         this.form.contractNo = undefined
         this.form.storeCode = undefined
@@ -906,6 +920,7 @@ export default {
         this.contractOptions = []
         this.getConsumerInfo(val)
         this.getTransportUnitInfo()
+        this.getList()
       }
       // 客户
       if (name === 'eName') {
@@ -921,7 +936,6 @@ export default {
           }
         })
       }
-
 
 
       // 合同
