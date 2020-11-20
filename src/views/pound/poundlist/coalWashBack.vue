@@ -48,7 +48,6 @@
                              filterable
                              clearable
                              @change="CarNumberChange"
-                             @focus="showVehicleSelect"
                              :popper-append-to-body="false">
                     <el-option class="coalPageSelectOption"
                                v-for="dict in plateNumOptions"
@@ -220,7 +219,22 @@
             style="width: 100%"
             :row-class-name="tableRowClassName"
             @row-dblclick="dbRow">
-            <af-table-column label="车号" align="center" prop="plateNum" width='100px' fixed/>
+            <af-table-column label="车号" align="center" prop="plateNum" width='130px' fixed>
+              <template slot-scope="scope">
+                <div v-if="scope.row.errState==='1'">
+                  <el-tooltip class="item" effect="light" :content="scope.row.errReason" placement="right">
+                    <span style='color:red'>{{ scope.row.plateNum }} <i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                  </el-tooltip>
+                </div>
+                <div v-else>
+                  {{ scope.row.plateNum }}
+                  <el-tooltip class="item" effect="dark" content="标记异常" placement="top-start">
+                    <i class="fa fa-pencil-square-o errPoint" aria-hidden="true"
+                       @click="markError(scope.row)"></i>
+                  </el-tooltip>
+                </div>
+              </template>
+            </af-table-column>
             <af-table-column label="毛重" align="center" prop="grossWeight" width='100px'/>
             <af-table-column label="皮重" align="center" prop="tare" width='100px'/>
             <af-table-column label="净重" align="center" prop="netWeight" width='100px'/>
@@ -281,7 +295,16 @@
             :row-class-name="tableRowClassName"
             @row-dblclick="dbRow"
           >
-            <af-table-column label="车号" align="center" prop="plateNum" width='100px' fixed/>
+            <af-table-column label="车号" align="center" prop="plateNum" width='100px' fixed>
+              <template slot-scope="scope">
+                <div v-if="scope.row.errState==='1'">
+                  <el-tooltip class="item" effect="light" :content="scope.row.errReason" placement="top-start">
+                    <span style='color:red'>{{ scope.row.plateNum }}</span>
+                  </el-tooltip>
+                </div>
+                <div v-else>{{ scope.row.plateNum }}</div>
+              </template>
+            </af-table-column>
             <af-table-column label="毛重" align="center" prop="grossWeight" width='100px'/>
             <af-table-column label="皮重" align="center" prop="tare" width='100px'/>
             <af-table-column label="净重" align="center" prop="netWeight" width='100px'/>
@@ -440,7 +463,7 @@ import {
   poundSelect,
   updateSheet,
   getVehicleList,
-  getNoticeByVehicle
+  getNoticeByVehicle, updatePoundErr
 } from "@/api/pound/poundlist";
 import {genTimeCode, parseTime} from "@/utils/common";
 import {listChnlConfig} from "@/api/basis/chnlConfig";
@@ -583,6 +606,7 @@ export default {
         transportMode: '',
         //运输方式
         transportUnit: '',
+        errState: '0'
       },
       //通道配置
       PoundForm: {
@@ -664,6 +688,7 @@ export default {
       //磅单修改页面的变量
       modifyOpen: false,
       transportModeDic: [],
+      printObject: {}
       /*poundModify: {
         poundId: undefined,
         poundState: undefined,
@@ -827,6 +852,7 @@ export default {
       this.noticeNo = ''
       this.form.noticeNo = ''
       this.form.packMode = '2' //默认散货
+      this.preWeight = 0
       if (!event || event === '') return
       //如果是进场
       if (this.PoundForm.flowDirection === "I") {
@@ -864,6 +890,7 @@ export default {
               this.form.locationNumber = response.data.storeCode;
               this.form.transportUnit = response.data.transportUnit
               this.form.transportMode = response.data.transportMode
+              this.form.preWeight = response.data.preWeight
               this.dataLoading = false
             } else {
               this.msgError(response.msg);
@@ -977,7 +1004,6 @@ export default {
             //计算净重
             this.form.netWeight = this.form.grossWeight - this.form.tare;
           }
-          ;
 
           this.isStable = response.data.isStable;
           if (this.plateNumOptions.length === 0) {
@@ -1057,96 +1083,31 @@ export default {
           this.msgError("车辆类型不可为空或选择错误,请检查");
           return false
         }
+        /*if (this.form.errState === '0') {//无异常状态下
+          if (this.form.tare - this.form.preWeight > 500) {
+            //this.tareWeightErrTip()
+            this.msgError("此车辆的称重皮重与通知皮重相差大于500KGS")
+          }
+        } else {
+          //if (this.form.tare - this.form.preWeight > 1000) {
+          this.msgError(this.form.errReason)
+          //如果有异常
+        }*/
       } else {
         this.msgError("流向不可为空,请选择");
         return false
       }
+
+      //到这里，前面验证通过了，再判断皮重是否异常
+      this.tareWeightErrTip()
+
       /*} else {
         this.msgError("地磅数值未稳定,请稍候....");
         return false;
       }*/
       //以下为新增 逻辑
       //通道号赋值
-      this.dataLoading = true //按钮禁用
-      this.form.channelNumber = this.PoundForm.channelNumber;
-      //场站ID赋值
-      this.form.stationId = this.queryParams.stationId;
-      //update时间
-      this.form.updateTime = genTimeCode(new Date(), "YYYY-MM-DD HH:mm:ss");
-      // 将空进重出 或重进空出 保存
-      this.form.viaType = this.PoundForm.stationViaType
 
-      this.$refs["form"].validate((valid) => {
-          if (valid) {
-            if (this.PoundForm.flowDirection === "I") {
-              this.form.flowDirection = this.PoundForm.flowDirection;
-              this.form.viaType = this.PoundForm.stationViaType
-              //this.form.noticeNo = this.noticeNo;
-              //判断 提交的参数
-              if (this.form.locationNumber == null || this.form.locationNumber === '' || this.form.noticeNo == null || this.form.noticeNo === '') {
-                this.msgError("此单未关联库位号 或 提煤单号");
-                this.dataLoading = false
-                return false
-              }
-              //进场 新增
-              addSheet(this.form).then((response) => {
-
-                if (response.code === 200) {
-                  this.msgSuccess("进场成功");
-                  //更新单证入场时间
-                  //this.updateDocTime(response.data.poundId)
-                  this.dataLoading = false
-                  //如果是进进场激活，刷新列表
-                  /*if (this.activeName === 'Approach') {
-                    this.getListI();
-                  }
-                  if (this.activeName === 'end') {
-                    this.getListE();
-                  }*/
-                  this.getListI();
-                  this.getListE();
-                  this.getVehicleList() //重新加载车辆
-                } else {
-                  this.dataLoading = false
-                  this.msgError(response.msg);
-                }
-              });
-            } else if (this.PoundForm.flowDirection === "E") {//如果是出场
-              this.form.flowDirection = this.PoundForm.flowDirection;
-              this.form.channelNumber = this.PoundForm.channelNumber;
-              if (this.PoundForm.stationViaType === '01' || this.PoundForm.stationViaType === '02') {//重进空出 生成入库单
-                updateSheet(this.form).then(response => {
-
-                  if (response.code === 200) {
-                    this.msgSuccess("出场成功");
-                    this.dataLoading = false
-                    this.getListI();
-                    this.getListE();
-                    /*if (this.activeName === 'Approach') {
-                      this.getListI();
-                    }
-                    if (this.activeName === 'end') {
-                      this.getListE();
-                    }*/
-                    //自动打印
-                    this.getVehicleList()
-                    if (this.autoPrint) {
-                      this.$refs['printBtn'].$el.click()
-                      //阻塞操作
-                    }
-                  }
-                }).catch(err => {
-                  this.dataLoading = false
-                })
-              }
-            } else {
-              this.msgError("流向参数错误");
-              this.dataLoading = false
-              return false
-            }
-          }
-        }
-      );
     },
 // 生成按钮
     generateAdd() {
@@ -1176,6 +1137,7 @@ export default {
     },
     print1() {
       this.Explicit = true;
+      this.printObject = {...this.form}
 
       //let date = new Date();
       /*let year = date.getFullYear();
@@ -1229,7 +1191,8 @@ export default {
         stationId: undefined,
         //出库/入库 标识  进 1  出0
         direction: undefined,
-        viaType: undefined
+        viaType: undefined,
+        errState: '0'
       };
     },
     //查询可用的库位
@@ -1316,7 +1279,6 @@ export default {
 
       //判断场所和车辆类型的是否全了
       this.getVehicleList()
-
       this.getUserList()//更新用户列表
 
     },
@@ -1330,7 +1292,11 @@ export default {
             return false
           }
         }
-        this.cancel()//清form
+        if (this.autoPrint !== true) {
+          this.cancel()//清form
+        }
+        //this.cancel()//清form
+        //this.form.plateNum = ''//清空车牌号
         /* if (this.PoundForm.flowDirection !== "E") {
            this.form.plateNum = '' //如果流向不是出场，就清空当前车号
          }*/
@@ -1450,16 +1416,194 @@ export default {
       })
     },*/
     pad(num) {
-      var i = (num + "").length;
+      let i = (num + "").length;
       while (i++ < 8) num = "0" + num;
       return num;
     },
+    //库存更新操作
+    outStoreUpdate() {
+      this.dataLoading = true //按钮禁用
+      this.form.channelNumber = this.PoundForm.channelNumber;
+      //场站ID赋值
+      this.form.stationId = this.queryParams.stationId;
+      //update时间
+      this.form.updateTime = genTimeCode(new Date(), "YYYY-MM-DD HH:mm:ss");
+      // 将空进重出 或重进空出 保存
+      this.form.viaType = this.PoundForm.stationViaType
+
+      this.$refs["form"].validate((valid) => {
+          if (valid) {
+            if (this.PoundForm.flowDirection === "I") {
+              this.form.flowDirection = this.PoundForm.flowDirection;
+              this.form.viaType = this.PoundForm.stationViaType
+              //this.form.noticeNo = this.noticeNo;
+              //判断 提交的参数
+              if (this.form.locationNumber == null || this.form.locationNumber === '' || this.form.noticeNo == null || this.form.noticeNo === '') {
+                this.msgError("此单未关联库位号 或 提煤单号");
+                this.dataLoading = false
+                return false
+              }
+              //进场 新增
+              addSheet(this.form).then((response) => {
+                if (response.code === 200) {
+                  this.msgSuccess("进场成功");
+                  //更新单证入场时间
+                  //this.updateDocTime(response.data.poundId)
+                  this.dataLoading = false
+                  //如果是进进场激活，刷新列表
+                  /*if (this.activeName === 'Approach') {
+                    this.getListI();
+                  }
+                  if (this.activeName === 'end') {
+                    this.getListE();
+                  }*/
+                  this.getListI();
+                  this.getListE();
+                  this.getVehicleList() //重新加载车辆
+                } else {
+                  this.dataLoading = false
+                  this.msgError(response.msg);
+                }
+              });
+            } else if (this.PoundForm.flowDirection === "E") {//如果是出场
+              this.form.flowDirection = this.PoundForm.flowDirection;
+              this.form.channelNumber = this.PoundForm.channelNumber;
+              if (this.PoundForm.stationViaType === '01' || this.PoundForm.stationViaType === '02') {//重进空出 生成入库单
+                updateSheet(this.form).then(response => {
+
+                  if (response.code === 200) {
+                    this.msgSuccess("出场成功");
+                    this.dataLoading = false
+                    this.getListI();
+                    this.getListE();
+                    /*if (this.activeName === 'Approach') {
+                      this.getListI();
+                    }
+                    if (this.activeName === 'end') {
+                      this.getListE();
+                    }*/
+                    //自动打印
+                    this.getVehicleList()
+                    if (this.autoPrint) {
+                      this.$refs['printBtn'].$el.click()
+                      //阻塞操作
+                    }
+                  }
+                }).catch(err => {
+                  this.dataLoading = false
+                })
+              }
+            } else {
+              this.msgError("流向参数错误");
+              this.dataLoading = false
+              return false
+            }
+          }
+        }
+      )
+    },
+    //皮重异常提醒
+    tareWeightErrTip() {
+      let errMsg = ''
+      let tipMsg = ''
+      // debugger
+      console.log('通知皮重：' + this.form.preWeight)
+      if (this.PoundForm.flowDirection === 'E') { //蒙煤车出场
+        if (this.PoundForm.stationViaType === '01') {//如果是蒙煤车出场
+          if (this.form.errState === '0') {//无异常状态下
+            if (this.form.tare - this.form.preWeight > 1000) {
+              //this.tareWeightErrTip()
+              errMsg = '车辆['+this.form.plateNum+']的称重皮重与通知皮重相差大于1000KGS,是否继续？'
+              tipMsg = '出场皮重异常'
+            }
+          } else {
+            //if (this.form.tare - this.form.preWeight > 1000) {
+            errMsg = this.form.errReason
+            //如果有异常
+          }
+        }
+      } else {//外调车进场
+        if (this.PoundForm.stationViaType === '02') {
+          if (this.form.errState === '0') {//无异常状态下
+            if (this.form.tare - this.form.preWeight > 500) {
+              errMsg = '车辆['+this.form.plateNum+']的称重皮重与通知皮重相差大于500KGS,是否继续？'
+              tipMsg = '进场皮重异常'
+            }
+          } else {
+            errMsg = this.form.errReason
+          }
+        }
+      }
+      let that = this
+      if (errMsg !== '') { //如果错误信息不为空
+        this.$prompt(errMsg, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
+          //inputValidator: this.inputValidator(),
+          //inputType: 'string',
+          inputValue: tipMsg,
+          inputErrorMessage: '异常原因不能为空',
+          inputPlaceholder: '请输入异常原因'
+        }).then(({value}) => {
+          //更新磅单异常信息，并放行
+          this.form.errState = '1'
+          this.form.errReason = value
+          this.outStoreUpdate()
+        }).catch(() => {
+          that.$message({
+            type: 'info',
+            message: '此车辆状态异常，不放行'
+          });
+        });
+      } else {
+        this.outStoreUpdate()
+      }
+    },
+    inputValidator(value) {
+      alert(value)
+      return true
+    },
+    markError(row) {
+      //弹出一个对话框
+      this.$prompt('是否将车辆 ['+row.plateNum+'] 标记为异常', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
+        //inputValidator: this.inputValidator(),
+        //inputType: 'string',
+        inputValue: '',
+        inputErrorMessage: '异常原因不能为空',
+        inputPlaceholder: '请输入异常原因'
+      }).then(({value}) => {
+        let err = {
+          id: row.id,
+          errReason: value
+        }
+        updatePoundErr(err).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess('标记完成')
+            row.errState = '1'
+            row.errReason = value
+          }
+        }).catch(err => {
+          this.msgSuccess('标记失败')
+        })
+      }).catch(() => {
+      });
+    }
 
   }
 }
 
 </script>
 <style scoped>
+.errPoint {
+  font-size: 16px;
+  color: #1e1e1e;
+  cursor: pointer
+}
+
 .el-select {
   width: 100%;
 }
