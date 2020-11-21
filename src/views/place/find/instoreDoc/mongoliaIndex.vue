@@ -704,7 +704,9 @@
       <el-table-column label="品名" align="center" prop="goodsName" />
       <el-table-column label="车辆信息"  align="center" >
         <el-table-column label="车号" align="center" prop="vehicleNo" width="90"/>
-        <el-table-column label="车数" align="center" prop="vehicleNoCount"></el-table-column>
+        <el-table-column label="车数" align="center" prop="vehicleNoCount">
+          <template slot-scope="scope">1</template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="场所"  align="center" >
         <el-table-column label="毛重" align="center" prop="roughWeight">
@@ -1611,7 +1613,7 @@ export default {
       const sums = [];
       columns.forEach((column, index) => {
         if (index === 0) {
-          sums[index] = '本页总重(KG)';
+          sums[index] = '本页总重(t)';
           return;
         }
         const values = data.map(item => Number(item[column.property]));
