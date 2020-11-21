@@ -622,6 +622,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.printList = selection
+      console.log(this.printList)
       this.ids = selection.map(item => item.id)
       this.single = selection.length != 1
       this.multiple = !selection.length
@@ -880,11 +881,11 @@ export default {
 #firstRow{
   height: 40px;
   width: 1000px;
-  padding-left: 4cm;
+  padding-left: 2cm;
   /*border: 1px solid ;*/
-  padding-top: 10px;
-  margin-top: 1cm;
-
+  padding-top: 20px;
+  //margin-top: 1cm;
+  font-size: 20px;
 
 }
 #contractNoStyle{
@@ -892,32 +893,34 @@ export default {
 }
 
 #coalBillNoStyle{
-  margin-left: 4cm;
+  margin-left: 5.5cm;
 }
 
 #secondRow{
   height: 40px;
   width: 1000px;
-  padding-left: 4cm;
+  padding-left: 2cm;
   /*border: 1px solid ;*/
-  padding-top: 10px;
-
+  padding-top: 25px;
+  font-size: 20px;
 }
 
 #thirdRow{
   height: 40px;
   width: 1000px;
-  padding-left: 4cm;
+  padding-left: 2cm;
   /*border: 1px solid ;*/
-  padding-top: 10px;
+  padding-top: 35px;
+  font-size: 20px;
 }
 
 #fourRow{
   height: 40px;
   width: 1000px;
-  padding-left: 4cm;
+  padding-left: 2cm;
   /*border: 1px solid ;*/
-  padding-top: 10px;
+  padding-top: 55px;
+  font-size: 20px;
 }
 
 /*#customerStyle{*/
@@ -925,22 +928,24 @@ export default {
 /*}*/
 
 #carriageStyle{
-  margin-left: 4cm;
+  margin-left: 17cm;
+  font-size: 14px;
 }
 
 #loadingStyle{
-  margin-left: 4cm;
+  margin-left: 16cm;
 }
 #receiptStyle{
-  margin-left: 4cm;
+  margin-left: 15cm;
+  font-size: 14px;
 }
 
 #fiveRow{
   height: 40px;
   width: 1000px;
-  padding-left: 4cm;
+  padding-left: 1.5cm;
   /*border: 1px solid ;*/
-  padding-top: 10px;
+  padding-top: 85px;
   margin-top: 1cm;
 }
 
@@ -952,7 +957,7 @@ export default {
 }
 #dayin {
   height: 500px;
-  width: 1200px;
+  width: 500px;
   /*border: 1px solid ;*/
 }
 </style>
