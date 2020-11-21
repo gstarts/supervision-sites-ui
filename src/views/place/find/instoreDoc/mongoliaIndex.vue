@@ -707,12 +707,12 @@
         <el-table-column label="车数" align="center" prop="vehicleNoCount"></el-table-column>
       </el-table-column>
       <el-table-column label="场所"  align="center" >
-        <el-table-column label="毛重(KG)" align="center" prop="roughWeight">
+        <el-table-column label="毛重" align="center" prop="roughWeight">
         <template slot-scope="scope">
           <span>{{(scope.row.roughWeight/1000).toFixed(2)}}</span>
         </template>
         </el-table-column>
-        <el-table-column label="皮重(KG)" align="center" prop="tareWeight">
+        <el-table-column label="皮重" align="center" prop="tareWeight">
           <template slot-scope="scope">
             <span>{{(scope.row.tareWeight/1000).toFixed(2)}}</span>
           </template>
@@ -722,7 +722,7 @@
             <span>{{ (scope.row.boxTareWeight/1000).toFixed(2)}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="净重(KG)" align="center" prop="netWeight">
+        <el-table-column label="净重" align="center" prop="netWeight">
           <template slot-scope="scope">
             <span>{{(scope.row.netWeight/1000).toFixed(2)}}</span>
           </template>
@@ -1611,7 +1611,7 @@ export default {
       const sums = [];
       columns.forEach((column, index) => {
         if (index === 0) {
-          sums[index] = '本页总重(KG)';
+          sums[index] = '本页总重';
           return;
         }
         const values = data.map(item => Number(item[column.property]));
@@ -1628,6 +1628,10 @@ export default {
           }, 0);
         }
       });
+      //console.log(sums)
+      //计算对应的列的总和/1000变成吨
+      sums[9] = (sums[9]/1000).toFixed(2)
+      sums[16] = (sums[16]/1000).toFixed(2)
       return sums;
     },
     //包装方式行翻译

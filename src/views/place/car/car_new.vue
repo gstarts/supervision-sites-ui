@@ -45,8 +45,7 @@
           @click="print"
           v-print="'#dayin'"
           type="info"
-          icon="el-icon-printer"
-          >
+          icon="el-icon-printer">
           打印入门证
         </el-button>
       </el-form-item>

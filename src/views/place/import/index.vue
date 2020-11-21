@@ -224,7 +224,7 @@
         </template>
       </af-table-column>
       <af-table-column label="文件长度" align="center" prop="fileLength"/>
-      <af-table-column label="寄舱合同ID" align="center" prop="storeContractId"/>
+      <!--<af-table-column label="寄舱合同ID" align="center" prop="storeContractId"/>-->
       <af-table-column label="寄舱客户" align="center" prop="storeCustomer"/>
       <!--      <af-table-column label="结算合同ID" align="center" prop="settlementContractId"/>-->
       <!--      <af-table-column label="结算客户" align="center" prop="settlementCustomer"/>-->
@@ -232,6 +232,9 @@
       <!-- <af-table-column label=" 发货单位" align="center" prop="sendName"/>
       <af-table-column label="收货单位" align="center" prop="receiveName"/>-->
       <!--      <af-table-column label="备注" align="center" prop="remark"/>-->
+      <af-table-column label="导入结果" align="center" prop="importResult"/>
+      <af-table-column label="导入用户" align="center" prop="createBy"/>
+      <af-table-column label="导入时间" align="center" prop="createTime"/>
       <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <!--<el-button
