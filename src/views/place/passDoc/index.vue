@@ -142,7 +142,6 @@
     <!-- 添加或修改放行单 对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-
         <el-row>
           <el-col :span="12">
             <el-form-item label="寄舱客户" prop="checkConsumer">
@@ -150,7 +149,7 @@
                 v-model="form.checkConsumer" placeholder="请选择寄舱客户" filterable @change="((val)=>{change(val, 'eName')})">
                 <el-option
                   v-for="dict in consumerOptions"
-                  :key="dict.eName"
+                  :key="dict.id"
                   :label="dict.eName"
                   :value="dict.eName"
                 />
@@ -277,7 +276,9 @@ export default {
         coalType: ''
       },
       // 表单参数
-      form: {},
+      form: {
+        checkConsumer:undefined,
+      },
       // 煤种
       coalTypeOptions: [],
       /***上传参数start ***/
@@ -301,6 +302,9 @@ export default {
       /***上传参数end ***/
       // 表单校验
       rules: {
+        checkConsumer: [
+          {required: true, message: '请选择寄仓客户', trigger: ['blur','change']}
+        ],
         passNo: [
           {required: true, message: '放行单号不能为空', trigger: 'blur'}
         ],
