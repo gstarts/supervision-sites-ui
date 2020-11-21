@@ -1611,7 +1611,7 @@ export default {
       const sums = [];
       columns.forEach((column, index) => {
         if (index === 0) {
-          sums[index] = '本页总重';
+          sums[index] = '本页总重(KG)';
           return;
         }
         const values = data.map(item => Number(item[column.property]));

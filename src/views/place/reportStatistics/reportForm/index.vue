@@ -2,8 +2,6 @@
   <div class="app-container">
     <!--    根据日期区间，期初库存（开始时间前的库存），当期入库，当期出库，当期库存，-->
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-row>
-        <el-col :span="8">
           <el-form-item label="场所名称" prop="placeId">
             <el-select @change="changePlace"
                        v-model="queryParams.placeId" placeholder="请选择场所" size="small">
@@ -15,7 +13,6 @@
               />
             </el-select>
           </el-form-item>
-        </el-col>
         <el-form-item label="寄舱合同" prop="column2">
           <el-input
             v-model="queryParams.column2"
@@ -25,7 +22,6 @@
             @keyup.enter.native="handleQuery"
           />
         </el-form-item>
-        <el-col :span="8">
           <el-form-item label="寄舱客户" prop="storeCustomer">
             <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>-->
             <el-select
@@ -40,9 +36,6 @@
               />
             </el-select>
           </el-form-item>
-        </el-col>
-
-        <el-col :span="8">
         <el-form-item label="品名" prop="goodsName">
           <el-select
             clearable
@@ -58,8 +51,6 @@
             />
           </el-select>
         </el-form-item>
-        </el-col>
-      </el-row>
 
 
       <!--        <el-form-item label="统计方式" prop="statisticsMode">-->

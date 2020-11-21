@@ -855,7 +855,11 @@
           <span>{{ parseTime(scope.row.makerTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="计量单位(KG)" align="center" prop="measuringUnit" />
+      <el-table-column label="计量单位" align="center" prop="measuringUnit">
+        <template>
+          <span>t</span>
+        </template>
+      </el-table-column>
       <af-table-column label="备注" align="center" prop="remark" />
       <!--      <af-table-column label="运输单位" align="center" prop="transportUnit" />-->
       <!--      <af-table-column label="发料仓库" align="center" prop="sendName" />-->
