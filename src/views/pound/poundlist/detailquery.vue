@@ -48,6 +48,17 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+
+      <el-form-item label="运输方式" prop="transportMode">
+        <el-select v-model="queryParams.transportMode" filterable placeholder="请选择运输方式">
+          <el-option
+            v-for="item in transportModeDic"
+            :key="item.dictValue"
+            :label="item.dictLabel"
+            :value="item.dictValue">
+          </el-option>
+        </el-select>
+      </el-form-item>
 <!--      <el-form-item label="承运人" prop="carrier">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.carrier"-->
@@ -264,7 +275,7 @@
 <!--      </el-col>-->
 <!--    </el-row>-->
 
-    <el-table v-loading="loading" :data="sheetList">
+    <el-table v-loading="loading" :data="sheetList" show-summary :summary-method="getSummaries" height="645">
       <!-- <af-table-column type="selection" width="55" align="center"/>-->
       <af-table-column label="ID" align="center" prop="id"/>
       <!--<af-table-column label="末检时间" align="center" prop="finalInspectionTime"/>-->
@@ -686,12 +697,13 @@ export default {
         channelNumber: undefined,
         stationId: undefined,
         noticeNo: undefined,
-        viaType: undefined,   //01为进场  02 为出场
+        viaType: undefined,   //01为蒙煤  02 为外调
         packMode: undefined,
         containerNum2: undefined,
         containerNum3: undefined,
         containerNum4: undefined,
         printState: undefined,
+        transportMode:undefined, //运输方式
         orderByColumn: 'id',
         isAsc: 'desc',
       },
@@ -745,6 +757,7 @@ export default {
         {'key': '1', 'value': '修改'},
       ],
       flowDic: [
+        {'key': 'A', 'value': '全部'},
         {'key': 'I', 'value': '未完成'},
         {'key': 'E', 'value': '已完成'},
       ],
@@ -757,6 +770,7 @@ export default {
         {'key': '2', 'value': '散杂货'},
       ],
       coalTypeOptions: [], //煤种
+      transportModeDic:[], //运输方式
     };
   },
   computed: {
@@ -800,6 +814,10 @@ export default {
     //煤种类型
     this.getDicts("coal_type").then(response => {
       this.coalTypeOptions = response.data;
+    });
+    //运输方式
+    this.getDicts("place_transport_type").then((response) => {
+      this.transportModeDic = response.data;
     });
   },
   watch: {
@@ -1005,6 +1023,27 @@ export default {
           console.log(this.userList)
         }
       });
+    },
+    // 合计
+    getSummaries (param) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '本页合计(KG)';
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]));
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value) && index === 5) {
+              return prev + curr;
+            }
+          }, 0);
+        }
+      });
+      return sums;
     },
   }
 };
