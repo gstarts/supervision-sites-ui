@@ -50,7 +50,7 @@
       </el-form-item>
 
       <el-form-item label="运输方式" prop="transportMode">
-        <el-select v-model="queryParams.transportMode" filterable placeholder="请选择运输方式">
+        <el-select v-model="queryParams.transportMode" filterable clearable placeholder="请选择运输方式">
           <el-option
             v-for="item in transportModeDic"
             :key="item.dictValue"
@@ -280,14 +280,14 @@
       <af-table-column label="ID" align="center" prop="id"/>
       <!--<af-table-column label="末检时间" align="center" prop="finalInspectionTime"/>-->
       <!--<af-table-column label="计量号" align="center" prop="measurementNum"/>-->
-      <af-table-column label="车牌号" align="center" prop="plateNum"/>
+      <af-table-column label="车牌号" align="center" width="130" prop="plateNum"/>
       <af-table-column label="品名" align="center" prop="goodsName"/>
       <!--<af-table-column label="规格" align="center" prop="specification"/>-->
       <!--<af-table-column label="承运人" align="center" prop="carrier"/>-->
       <af-table-column label="毛重" align="center" prop="grossWeight"/>
       <af-table-column label="皮重" align="center" prop="tare"/>
       <!--<af-table-column label="箱皮重" align="center" prop="tareWeight"/>-->
-      <af-table-column label="净重" align="center" prop="netWeight"/>
+      <af-table-column label="净重" width="150" align="center" prop="netWeight"/>
       <af-table-column label="供货单位" align="center" prop="deliveryUnit"/>
       <af-table-column label="收货单位" align="center" prop="receivingUnit"/>
       <af-table-column label="称重状态" align="center" prop="flowDirection">
@@ -1029,8 +1029,13 @@ export default {
       const { columns, data } = param;
       const sums = [];
       columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '本页合计(KG)';
+        if (index === 1) {
+          sums[index] = '本页合计';
+          return;
+        }
+
+        if (index === 6) {
+          sums[index] = '车数:'+this.queryParams.pageSize+'辆';
           return;
         }
         const values = data.map(item => Number(item[column.property]));
@@ -1040,9 +1045,11 @@ export default {
             if (!isNaN(value) && index === 5) {
               return prev + curr;
             }
+
           }, 0);
         }
       });
+      sums[5]=sums[5]+'(KG)'
       return sums;
     },
   }

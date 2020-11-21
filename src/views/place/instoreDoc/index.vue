@@ -511,7 +511,6 @@
       <!--<af-table-column type="selection" width="55" align="center" />-->
       <af-table-column label="ID" align="center" prop="id"/>
       <!--<af-table-column label="场所编号" align="center" prop="placeId"/>-->
-      <af-table-column label="通知单号" align="center" prop="docNo"/>
       <!--<af-table-column label="业务编号" align="center" prop="storeCode" />-->
       <!-- <af-table-column label="发货客户" align="center" prop="sendName"/>-->
       <af-table-column label="寄舱客户" align="center" prop="checkConsumer"/>
@@ -520,13 +519,24 @@
       <!--<af-table-column label="库位号" align="center" prop="storeCode"/>-->
       <!--<af-table-column label="蒙方磅单号" align="center" prop="mongoliaBillNo" />-->
       <af-table-column label="车号" align="center" prop="vehicleNo"/>
+      <af-table-column label="毛重" align="center" prop="roughWeight"/>
+      <af-table-column label="皮重" align="center" prop="tareWeight"/>
+      <af-table-column label="净重" align="center" prop="netWeight"/>
       <!--<af-table-column label="挂车号1 挂车号1" align="center" prop="trailerNo1" />
       <af-table-column label="挂车号2 挂车号2" align="center" prop="trailerNo2" />-->
-      <af-table-column label="车队名" align="center" prop="vehicleTeam"/>
       <!-- <af-table-column label="蒙古磅毛重" align="center" prop="mongoliaRoughWeight" />-->
       <af-table-column label="蒙方皮重" align="center" prop="mongoliaTareWeight"/>
       <af-table-column label="蒙方净重" align="center" prop="mongoliaNetWeight"/>
+      <af-table-column label="集装箱号1" align="center" prop="containerNo1"/>
+      <af-table-column label="集装箱号2" align="center" prop="containerNo2"/>
+      <af-table-column label="集装箱号3" align="center" prop="containerNo3"/>
+      <af-table-column label="集装箱号4" align="center" prop="containerNo4"/>
+      <af-table-column label="库位号" align="center" prop="storeCode"/>
+      <af-table-column label="库位号2" align="center" prop="storeCode2"/>
+      <af-table-column label="库位号3" align="center" prop="storeCode3"/>
+      <af-table-column label="库位号4" align="center" prop="storeCode4"/>
       <!--<af-table-column label="车辆数量" align="center" prop="vehicleCount" />-->
+      <af-table-column label="车队名" align="center" prop="vehicleTeam"/>
       <af-table-column label="司机姓名" align="center" prop="driverName"/>
       <af-table-column label="车队联系人" align="center" prop="vehicleTeamContact"/>
       <af-table-column label="车队联系电话" align="center" prop="vehicleTeamTel"/>
@@ -537,18 +547,8 @@
           <span>{{ scope.row.packMode === "1" ? "集装箱" : "散装" }}</span>
         </template>
       </af-table-column>
-      <af-table-column label="集装箱号1" align="center" prop="containerNo1"/>
-      <af-table-column label="集装箱号2" align="center" prop="containerNo2"/>
-      <af-table-column label="集装箱号3" align="center" prop="containerNo3"/>
-      <af-table-column label="集装箱号4" align="center" prop="containerNo4"/>
-      <af-table-column label="净重" align="center" prop="netWeight"/>
-      <af-table-column label="皮重" align="center" prop="tareWeight"/>
-      <af-table-column label="毛重" align="center" prop="roughWeight"/>
+      <af-table-column label="通知单号" align="center" prop="docNo"/>
       <!-- <af-table-column label="备注" align="center" prop="remark" />-->
-      <af-table-column label="库位号" align="center" prop="storeCode"/>
-      <af-table-column label="库位号2" align="center" prop="storeCode2"/>
-      <af-table-column label="库位号3" align="center" prop="storeCode3"/>
-      <af-table-column label="库位号4" align="center" prop="storeCode4"/>
       <af-table-column label="生成时间" align="center" prop="genTime" width="180">
         <template slot-scope="scope">
           <span>{{
