@@ -465,7 +465,7 @@ export default {
   data() {
     return {
       // 遮罩层
-      loading: true,
+      loading: false,
       // 选中数组
       ids: [],
       //
@@ -610,6 +610,8 @@ export default {
       this.queryParams.placeId = this.depts[0].deptId
       this.form.placeId = this.queryParams.placeId
       this.getList()
+      this.getConsumerInfo(this.queryParams.placeId)
+      this.getTransportUnitInfo()
     }
 
     // 运输方式
@@ -660,8 +662,8 @@ export default {
     cancel() {
       this.open = false
       this.storeIds = []
-      this.contractOptions = [],
-        this.consumerOptions = []
+      this.contractOptions = []
+      //this.consumerOptions = []
       this.reset()
       this.$refs.uploadTwo.clearFiles()
     },
