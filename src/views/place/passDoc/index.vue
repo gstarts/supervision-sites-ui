@@ -20,6 +20,18 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="建单时间" prop="createTime">
+        <el-date-picker
+          v-model="dateRange"
+          type="datetimerange"
+          align="right"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']">
+        </el-date-picker>
+      </el-form-item>
+
       <!--<el-form-item label="放行状态" prop="passState">
         <el-select
           v-model="queryParams.passState"
@@ -94,7 +106,7 @@
       <el-table-column label="放行量" align="center" prop="passVolume"/>
       <el-table-column label="放行状态" align="center" prop="passState" :formatter="ReleaseStatusFormat"/>
       <el-table-column label="所属场所" align="center" prop="placeId" :formatter="corporationFormat"/>
-      <el-table-column label="创建时间" align="center" prop="createTime"/>
+      <el-table-column label="建单时间" align="center" prop="createTime"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -277,7 +289,7 @@ export default {
       },
       // 表单参数
       form: {
-        checkConsumer:undefined,
+        checkConsumer: undefined,
       },
       // 煤种
       coalTypeOptions: [],
@@ -303,7 +315,7 @@ export default {
       // 表单校验
       rules: {
         checkConsumer: [
-          {required: true, message: '请选择寄仓客户', trigger: ['blur','change']}
+          {required: true, message: '请选择寄仓客户', trigger: ['blur', 'change']}
         ],
         passNo: [
           {required: true, message: '放行单号不能为空', trigger: 'blur'}
@@ -318,7 +330,8 @@ export default {
         goodsName: [
           {required: true, message: '品名不能为空', trigger: 'blur'}
         ]
-      }
+      },
+      dateRange: ['',''],//时间组件
     }
   },
   created() {
@@ -344,7 +357,10 @@ export default {
     /** 查询放行单 列表 */
     getList() {
       this.loading = true
-      listPassDoc(this.queryParams).then(response => {
+      /*this.addDateRange(this.queryParams, this.dateRange)
+      this.queryParams.beginTime = this.dateRange[0]
+      this.queryParams.endTime = this.dateRange[1]*/
+      listPassDoc(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.passDocList = response.rows
         this.total = response.total
         this.loading = false
