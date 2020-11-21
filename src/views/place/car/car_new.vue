@@ -155,7 +155,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="提煤单号" prop="coalBillNo">
-              <el-select v-model="form.coalBillNo" filterable placeholder="请选择提煤单号">
+              <el-select v-model="form.coalBillNo" filterable placeholder="请选择提煤单号" @change="getBigCanUse">
                 <el-option
                   v-for="item in BigList"
                   :key="item.coalBillNo"
@@ -265,6 +265,9 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="24" style="padding-left:40px">{{bigUseTip}}</el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm" :loading="btnLoading">确 定</el-button>
@@ -315,8 +318,8 @@
             />
           </el-select>
         </el-form-item>-->
-        <el-form-item label="提煤单号" prop="coalBillNo">
-          <el-select v-model="form.coalBillNo" placeholder="请选择提煤单号" filterable>
+        <el-form-item label="提煤单号" prop="coalBillNo" style="margin-top: 10px;">
+          <el-select v-model="form.coalBillNo" placeholder="请选择提煤单号" filterable @change="getBigCanUse">
             <el-option
               v-for="item in BigList"
               :key="item.coalBillNo"
@@ -356,33 +359,36 @@
             </el-option>
           </el-select>
         </el-form-item>-->
+        <el-row>
+          <el-col :span="24">{{bigUseTip}}</el-col>
+        </el-row>
       </el-form>
 
     </el-dialog>
     <!--打印区域-->
-    <div id="dayin"  v-show="show">
+    <div id="dayin" v-show="show">
       <div v-for="(item,index) in printList" id="all">
         <div :id="gennerateId(index)"></div>
-        <div id="headRow">{{item.no}}</div>
+        <div id="headRow">{{ item.no }}</div>
         <div id="firstRow">
-          <span >{{item.inCardPrintTime}}</span>
-          <span id="contractNoStyle">{{item.salesContractNo}}</span>
-          <span id="coalBillNoStyle">{{item.docNo}}</span></div>
+          <span>{{ item.inCardPrintTime }}</span>
+          <span id="contractNoStyle">{{ item.salesContractNo }}</span>
+          <span id="coalBillNoStyle">{{ item.docNo }}</span></div>
 
         <div id="secondRow">
-          <span id="customerStyle">{{item.receiveName}}</span>
-          <span id="carriageStyle">{{item.transportUnit}}</span></div>
+          <span id="customerStyle">{{ item.receiveName }}</span>
+          <span id="carriageStyle">{{ item.transportUnit }}</span></div>
 
         <div id="thirdRow">
-          <span>{{item.goodsName}}</span>
-<!--    场所名      -->
-          <span id="loadingStyle">{{"嘉易达"}}</span></div>
+          <span>{{ item.goodsName }}</span>
+          <!--    场所名      -->
+          <span id="loadingStyle">{{ "嘉易达" }}</span></div>
 
         <div id="fourRow">
-          <span>{{item.vehicleNo}}</span>
-          <span id="receiptStyle">{{item.customerName}}</span></div>
+          <span>{{ item.vehicleNo }}</span>
+          <span id="receiptStyle">{{ item.customerName }}</span></div>
         <div id="fiveRow">
-          <span>{{biller}}</span>
+          <span>{{ biller }}</span>
         </div>
         <div id="nouse"></div>
       </div>
@@ -393,7 +399,7 @@
 
 <script>
 import {addCar, delCar, getCar, getCarInfo, listCar, updateCar} from '@/api/place/car'
-import {selectCoalBillNo, updateVoidCar} from '@/api/place/big'
+import {getBigCanUse, selectCoalBillNo, updateVoidCar} from '@/api/place/big'
 import {getToken} from '@/utils/auth'
 import {getUserDepts} from '@/utils/charutils'
 import {addOutstoreDocByCar, listOutstoreDocLike} from "@/api/place/outstoreDoc";
@@ -537,9 +543,11 @@ export default {
       ],
       //开单员
       biller: "",
-      show : false,
+      show: false,
       // 打印数据list
-      printList:[],
+      printList: [],
+      //大提煤单可用量提示信息
+      bigUseTip: ''
     }
   },
   created() {
@@ -581,6 +589,7 @@ export default {
     cancel() {
       this.open = false
       this.reset()
+      this.bigUseTip = ''
       // this.$refs.upload.clearFiles()
       //清空提煤单号
       // this.BigList = []
@@ -589,6 +598,7 @@ export default {
       this.upload.open = false
       this.reset()
       this.$refs.upload.clearFiles()
+      this.bigUseTip = ''
     },
     // 表单重置
     reset() {
@@ -719,9 +729,12 @@ export default {
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
       this.upload.isUploading = true
+
     },
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
+      this.bigUseTip = ''
+      this.btnLoading = false
       this.upload.open = false
       this.upload.isUploading = false
       this.$refs.upload.clearFiles()
@@ -732,12 +745,14 @@ export default {
     },
     // 提交上传文件
     submitFileForm() {
+      this.btnLoading = true
       this.$refs['uploadForm'].validate(valid => {
         if (valid) {
           //console.log(this.form)
           // console.log(this.$refs.upload.$refs['upload-inner'].fileList)
           if (this.$refs.upload.$refs['upload-inner'].fileList.length === 0) {
             this.$message.warning('请选择要上传的文件')
+            this.btnLoading = false
             return false
           }
           this.$refs.upload.submit()
@@ -828,8 +843,8 @@ export default {
       this.form.transportUnit = this.transUnitList.find(item => item.id === event).eAbbreviation
       //this.form.transportUnit = this.transUnitList.find(item => item.id === this.form.transportUnitId).eName
     },
-    print(){
-      this.biller  = this.$store.state.user.nickName
+    print() {
+      this.biller = this.$store.state.user.nickName
       this.show = true;
       clearTimeout(this.timer);
       //清除延迟执行
@@ -840,9 +855,20 @@ export default {
       }, 2000);
     },
     // 打印操作，生成divID
-    gennerateId:function (index) {
-      return "printDiv"+index
+    gennerateId: function (index) {
+      return "printDiv" + index
     },
+    getBigCanUse(event) {
+      getBigCanUse(event).then(response => {
+        if (response.code === 200) {
+          //this.bigUseTip = response.data
+          this.bigUseTip = '提煤总量：' + response.data.total + ', 已提重量：' + response.data.hasUse + ', 未提重量：' + response.data.noUse  +
+            '。    有效车数：' + response.data.validVehicleCount + ', 已提车数：' + response.data.hasUseVehicleCount + ', 未提车数：' + response.data.noUseVehicleCount + ', 作废车数：' + response.data.badVehicleCount
+
+          //{ "badVehicleCount": 0, "total": 914150, "validVehicleCount": 15, "noUseVehicleCount": 7, "noUse": 850246, "hasUseVehicleCount": 8, "hasUse": 63904 }
+        }
+      })
+    }
   },
 }
 </script>
@@ -850,6 +876,7 @@ export default {
 .el-select {
   width: 100%;
 }
+
 @page {
   size: auto;
   margin: 3mm;
@@ -864,12 +891,13 @@ export default {
 /*  margin: 10mm 15mm 10mm 15mm;*/
 /*}*/
 #all {
-  height:1638px;
+  height: 1638px;
   width: 1150px;
   /*border: 1px solid ;*/
   /*margin-top: 1cm;*/
 }
-#headRow{
+
+#headRow {
   height: 40px;
   width: 1000px;
   padding-left: 3.5cm;
@@ -877,7 +905,8 @@ export default {
   padding-top: 10px;
   margin-top: 2.5cm;
 }
-#firstRow{
+
+#firstRow {
   height: 40px;
   width: 1000px;
   padding-left: 2cm;
@@ -887,15 +916,16 @@ export default {
   font-size: 20px;
 
 }
-#contractNoStyle{
+
+#contractNoStyle {
   margin-left: 4cm;
 }
 
-#coalBillNoStyle{
+#coalBillNoStyle {
   margin-left: 5.5cm;
 }
 
-#secondRow{
+#secondRow {
   height: 40px;
   width: 1000px;
   padding-left: 2cm;
@@ -904,7 +934,7 @@ export default {
   font-size: 20px;
 }
 
-#thirdRow{
+#thirdRow {
   height: 40px;
   width: 1000px;
   padding-left: 2cm;
@@ -913,7 +943,7 @@ export default {
   font-size: 20px;
 }
 
-#fourRow{
+#fourRow {
   height: 40px;
   width: 1000px;
   padding-left: 2cm;
@@ -926,20 +956,21 @@ export default {
 /*  margin-left: 4cm;*/
 /*}*/
 
-#carriageStyle{
+#carriageStyle {
   margin-left: 17cm;
   font-size: 14px;
 }
 
-#loadingStyle{
+#loadingStyle {
   margin-left: 16cm;
 }
-#receiptStyle{
+
+#receiptStyle {
   margin-left: 15cm;
   font-size: 14px;
 }
 
-#fiveRow{
+#fiveRow {
   height: 40px;
   width: 1000px;
   padding-left: 1.5cm;
@@ -948,12 +979,13 @@ export default {
   margin-top: 1cm;
 }
 
-#nouse{
+#nouse {
   height: 100px;
   width: 1000px;
   /*border: 1px solid*/
 
 }
+
 #dayin {
   height: 500px;
   width: 500px;

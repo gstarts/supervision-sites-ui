@@ -8,6 +8,7 @@ export function listBig(query) {
     params: query
   })
 }
+
 // 查询大提煤单 大提煤单列表
 export function listBigLike(query) {
   return request({
@@ -16,6 +17,7 @@ export function listBigLike(query) {
     params: query
   })
 }
+
 // 查询大提煤单详情页 大提煤单列表
 export function detailsBig(query) {
   return request({
@@ -50,6 +52,7 @@ export function updateBig(data) {
     data: data
   })
 }
+
 export function updateVoidCar(data) {
   return request({
     url: '/place/big/void',
@@ -65,6 +68,7 @@ export function delBig(id) {
     method: 'delete'
   })
 }
+
 // 删除传入的文件
 export function delImport(id) {
   return request({
@@ -72,19 +76,28 @@ export function delImport(id) {
     method: 'delete'
   })
 }
-export function selectCoalBillNo(query){
+
+export function selectCoalBillNo(query) {
   return request({
-    url:'/place/big/SelectCoalBillNo',
-    method:'get',
-    params:query
+    url: '/place/big/SelectCoalBillNo',
+    method: 'get',
+    params: query
   })
 }
 
 // 获取校验重量
-export function getReleaseWeight(query){
+export function getReleaseWeight(query) {
   return request({
-    url:'/place/big/checkWeight',
-    method:'get',
-    params:query
+    url: '/place/big/checkWeight',
+    method: 'get',
+    params: query
+  })
+}
+
+// 获取校验重量
+export function getBigCanUse(billNo) {
+  return request({
+    url: '/place/big/canUse/' + billNo,
+    method: 'get',
   })
 }

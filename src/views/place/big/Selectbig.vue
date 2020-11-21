@@ -38,7 +38,7 @@
                   </el-row>
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="提煤重量:" prop="coalWeight">
+                      <el-form-item label="提煤总量:" prop="coalWeight">
                         <!-- <el-input
                           v-model="form.coalWeight"
                           placeholder="请输入提煤重量"
