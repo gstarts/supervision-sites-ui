@@ -511,7 +511,6 @@
       <!--<af-table-column type="selection" width="55" align="center" />-->
       <af-table-column label="ID" align="center" prop="id"/>
       <!--<af-table-column label="场所编号" align="center" prop="placeId"/>-->
-      <af-table-column label="通知单号" align="center" prop="docNo"/>
       <!--<af-table-column label="业务编号" align="center" prop="storeCode" />-->
       <!-- <af-table-column label="发货客户" align="center" prop="sendName"/>-->
       <af-table-column label="寄舱客户" align="center" prop="checkConsumer"/>
@@ -549,6 +548,7 @@
       <af-table-column label="库位号2" align="center" prop="storeCode2"/>
       <af-table-column label="库位号3" align="center" prop="storeCode3"/>
       <af-table-column label="库位号4" align="center" prop="storeCode4"/>
+      <af-table-column label="通知单号" align="center" prop="docNo"/>
       <af-table-column label="生成时间" align="center" prop="genTime" width="180">
         <template slot-scope="scope">
           <span>{{
