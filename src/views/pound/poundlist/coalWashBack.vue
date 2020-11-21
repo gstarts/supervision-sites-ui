@@ -392,7 +392,7 @@
       </div>
       <div id="user-all-style">
         <span>{{ parseUserName(form.inUser) }}</span>
-        <span>{{ parseUserName(form.outUser) }}</span>
+        <span>{{ parseUserName(form.outUser== ''?this.$store.state.user.nickName:form.outUser) }}</span>
       </div>
       <!--   v-if判断 车辆类型是否为重进空出  标识为01   -->
       <div id="dayin1" v-if="this.PoundForm.stationViaType ==='01'">
@@ -1473,6 +1473,8 @@ export default {
 
                   if (response.code === 200) {
                     this.msgSuccess("出场成功");
+                    console.log("================")
+                    console.log(this.form)
                     this.dataLoading = false
                     this.getListI();
                     this.getListE();
