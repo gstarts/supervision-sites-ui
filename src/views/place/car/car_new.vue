@@ -508,16 +508,19 @@ export default {
           {required: true, message: '请选择车辆类型', trigger: 'change'}
         ],
         transportUnitId: [
-          {required: true, message: '承运单位', trigger: 'change'}
+          {required: true, message: '请选择承运单位', trigger: 'change'}
         ],
+        transportMode:[
+          {required: true, message: '请选择运输方式', trigger: 'change'}
+        ]
       },
       uploadRules: {
         coalBillNo: [
           {required: true, message: '请选择提煤单', trigger: 'change'}
         ],
-        transportUnitId: [
+       /* transportUnitId: [
           {required: true, message: '运输方式不能为空', trigger: 'change'}
-        ],
+        ],*/
       },
       //提煤单号
       BigList: [],
