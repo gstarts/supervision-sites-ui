@@ -136,7 +136,12 @@
             v-hasPermi="['place:big:void']"
             v-show="scope.row.storeState === '0' ">作废
           </el-button>
-
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="printMake(scope.row)"
+            >补打</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -367,30 +372,30 @@
     </el-dialog>
     <!--打印区域-->
     <div id="dayin" v-show="show">
-      <div v-for="(item,index) in printList" id="all">
+      <div v-for="(item,index) in printList" class="all">
         <div :id="gennerateId(index)"></div>
-        <div id="headRow">{{ item.no }}</div>
-        <div id="firstRow">
+        <div class="headRow">{{ item.no }}</div>
+        <div class="firstRow">
           <span>{{ item.inCardPrintTime }}</span>
-          <span id="contractNoStyle">{{ item.salesContractNo }}</span>
-          <span id="coalBillNoStyle">{{ item.docNo }}</span></div>
+          <span class="contractNoStyle">{{ item.salesContractNo }}</span>
+          <span class="coalBillNoStyle">{{ item.docNo }}</span></div>
 
         <div id="secondRow">
           <span id="customerStyle">{{ item.receiveName }}</span>
-          <span id="carriageStyle">{{ item.transportUnit }}</span></div>
+          <span class="carriageStyle">{{ item.transportUnit }}</span></div>
 
-        <div id="thirdRow">
+        <div class="thirdRow">
           <span>{{ item.goodsName }}</span>
           <!--    场所名      -->
-          <span id="loadingStyle">{{ "嘉易达" }}</span></div>
+          <span class="loadingStyle">{{ "嘉易达" }}</span></div>
 
-        <div id="fourRow">
+        <div class="fourRow">
           <span>{{ item.vehicleNo }}</span>
-          <span id="receiptStyle">{{ item.customerName }}</span></div>
-        <div id="fiveRow">
+          <span class="receiptStyle">{{ item.customerName }}</span></div>
+        <div class="fiveRow">
           <span>{{ biller }}</span>
         </div>
-        <div id="nouse"></div>
+        <div class="nouse"></div>
       </div>
 
     </div>
@@ -716,6 +721,10 @@ export default {
         });
       }
     },
+    printMake(row){
+      console.log("=======")
+      console.log(row)
+    },
     /** 导出按钮操作 */
     handleExport() {
       this.download('place/car/export', {
@@ -893,14 +902,14 @@ export default {
 /*body {*/
 /*  margin: 10mm 15mm 10mm 15mm;*/
 /*}*/
-#all {
+.all {
   height: 1638px;
   width: 1150px;
   /*border: 1px solid ;*/
   /*margin-top: 1cm;*/
 }
 
-#headRow {
+.headRow {
   height: 40px;
   width: 1000px;
   padding-left: 3.5cm;
@@ -909,7 +918,7 @@ export default {
   margin-top: 2.5cm;
 }
 
-#firstRow {
+.firstRow {
   height: 40px;
   width: 1000px;
   padding-left: 2cm;
@@ -920,11 +929,11 @@ export default {
 
 }
 
-#contractNoStyle {
+.contractNoStyle {
   margin-left: 4cm;
 }
 
-#coalBillNoStyle {
+.coalBillNoStyle {
   margin-left: 5.5cm;
 }
 
@@ -937,7 +946,7 @@ export default {
   font-size: 20px;
 }
 
-#thirdRow {
+.thirdRow {
   height: 40px;
   width: 1000px;
   padding-left: 2cm;
@@ -946,7 +955,7 @@ export default {
   font-size: 20px;
 }
 
-#fourRow {
+.fourRow {
   height: 40px;
   width: 1000px;
   padding-left: 2cm;
@@ -959,21 +968,21 @@ export default {
 /*  margin-left: 4cm;*/
 /*}*/
 
-#carriageStyle {
+.carriageStyle {
   margin-left: 17cm;
   font-size: 14px;
 }
 
-#loadingStyle {
+.loadingStyle {
   margin-left: 16cm;
 }
 
-#receiptStyle {
+.receiptStyle {
   margin-left: 15cm;
   font-size: 14px;
 }
 
-#fiveRow {
+.fiveRow {
   height: 40px;
   width: 1000px;
   padding-left: 1.5cm;
@@ -982,7 +991,7 @@ export default {
   margin-top: 1cm;
 }
 
-#nouse {
+.nouse {
   height: 100px;
   width: 1000px;
   /*border: 1px solid*/
