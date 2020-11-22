@@ -59,3 +59,10 @@ export function addOutstoreDocByCar(data, num) {
     data: data
   })
 }
+// 修改出库明细单
+export function updatePrintByIds(ids) {
+  return request({
+    url: '/place/outstoreDoc/update/'+ids,
+    method: 'post'
+  })
+}
