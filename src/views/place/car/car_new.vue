@@ -104,7 +104,13 @@
     </el-row>
 
     <el-table v-loading="loading" :data="docList" @selection-change="handleSelectionChange">
-      <af-table-column type="selection" width="55" align="center"/>
+      <el-table-column type="selection" width="55" align="center" :selectable="checkboxInit"/>
+      <el-table-column label="打印状态">
+        <template scope="scope">
+          <span v-if="scope.row.inCardPrintState =='1'" style="color: red">已打印</span>
+          <span v-else-if="scope.row.inCardPrintState !='1'" style="color:green">未打印</span>
+        </template>
+      </el-table-column>
       <af-table-column label="ID" align="center" prop="id"/>
       <af-table-column label="车牌号" align="center" prop="vehicleNo"/>
       <af-table-column label="货净重(KG)" align="center" prop="vehicleGoodsNetWeight"/>
@@ -136,7 +142,13 @@
             v-hasPermi="['place:big:void']"
             v-show="scope.row.storeState === '0' ">作废
           </el-button>
-
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            v-print="'#dayinMake'"
+            @click="printMake(scope.row)"
+            >补打</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -367,32 +379,58 @@
     </el-dialog>
     <!--打印区域-->
     <div id="dayin" v-show="show">
-      <div v-for="(item,index) in printList" id="all">
+      <div v-for="(item,index) in printList" class="all">
         <div :id="gennerateId(index)"></div>
-        <div id="headRow">{{ item.no }}</div>
-        <div id="firstRow">
+        <div class="headRow">{{ item.no }}</div>
+        <div class="firstRow">
           <span>{{ item.inCardPrintTime }}</span>
-          <span id="contractNoStyle">{{ item.salesContractNo }}</span>
-          <span id="coalBillNoStyle">{{ item.docNo }}</span></div>
+          <span class="contractNoStyle">{{ item.salesContractNo }}</span>
+          <span class="coalBillNoStyle">{{ item.docNo }}</span></div>
 
-        <div id="secondRow">
+        <div class="secondRow">
           <span id="customerStyle">{{ item.receiveName }}</span>
-          <span id="carriageStyle">{{ item.transportUnit }}</span></div>
+          <span class="carriageStyle">{{ item.transportUnit }}</span></div>
 
-        <div id="thirdRow">
+        <div class="thirdRow">
           <span>{{ item.goodsName }}</span>
           <!--    场所名      -->
-          <span id="loadingStyle">{{ "嘉易达" }}</span></div>
+          <span class="loadingStyle">{{ "嘉易达" }}</span></div>
 
-        <div id="fourRow">
+        <div class="fourRow">
           <span>{{ item.vehicleNo }}</span>
-          <span id="receiptStyle">{{ item.customerName }}</span></div>
-        <div id="fiveRow">
+          <span class="receiptStyle">{{ item.customerName }}</span></div>
+        <div class="fiveRow">
           <span>{{ biller }}</span>
         </div>
-        <div id="nouse"></div>
+        <div class="nouse"></div>
       </div>
+    </div>
+    <div id="dayinMake" v-show="showMake">
+      <div v-for="(itemMake,index) in printMakeList" class="all">
+        <div :id="gennerateId(index)"></div>
+        <div class="headRow">{{ itemMake.no }}</div>
+        <div class="firstRow">
+          <span>{{ itemMake.inCardPrintTime }}</span>
+          <span class="contractNoStyle">{{ itemMake.salesContractNo }}</span>
+          <span class="coalBillNoStyle">{{ itemMake.docNo }}</span></div>
 
+        <div class="secondRow">
+          <span>{{ itemMake.receiveName }}</span>
+          <span class="carriageStyle">{{ itemMake.transportUnit }}</span></div>
+
+        <div class="thirdRow">
+          <span>{{ itemMake.goodsName }}</span>
+          <!--    场所名      -->
+          <span class="loadingStyle">{{ "嘉易达" }}</span></div>
+
+        <div class="fourRow">
+          <span>{{ itemMake.vehicleNo }}</span>
+          <span class="receiptStyle">{{ itemMake.customerName }}</span></div>
+        <div class="fiveRow">
+          <span>{{ billerMake+'(补打)' }}</span>
+        </div>
+        <div class="nouse"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -402,7 +440,7 @@ import {addCar, delCar, getCar, getCarInfo, listCar, updateCar} from '@/api/plac
 import {getBigCanUse, selectCoalBillNo, updateVoidCar} from '@/api/place/big'
 import {getToken} from '@/utils/auth'
 import {getUserDepts} from '@/utils/charutils'
-import {addOutstoreDocByCar, listOutstoreDocLike} from "@/api/place/outstoreDoc";
+import {addOutstoreDocByCar, listOutstoreDocLike, updatePrintByIds} from "@/api/place/outstoreDoc";
 import {listInfo} from "@/api/basis/enterpriseInfo";
 
 export default {
@@ -430,6 +468,7 @@ export default {
       open: false,
       // 查询参数
       queryParams: {
+        id:undefined,
         pageNum: 1,
         pageSize: 20,
         coalBillNo: undefined,
@@ -438,7 +477,8 @@ export default {
         placeId: undefined,
         storeState: '0',
         orderByColumn: 'id',
-        isAsc: 'desc'
+        isAsc: 'desc',
+        inCardPrintState:1,
       },
       fileList: [],
       transUnitList: [],//承运单位列表
@@ -546,9 +586,13 @@ export default {
       ],
       //开单员
       biller: "",
+      billerMake:"",
       show: false,
+      showMake:false,
       // 打印数据list
       printList: [],
+      //补打 打印数据list
+      printMakeList:[],
       //大提煤单可用量提示信息
       bigUseTip: ''
     }
@@ -849,12 +893,33 @@ export default {
     print() {
       this.biller = this.$store.state.user.nickName
       this.show = true;
+      console.log(this.ids)
+      updatePrintByIds(this.ids).then(response =>{
+        if(response.code === 200){
+          this.msgSuccess("修改打印状态成功");
+          this.getList()
+        }
+
+      })
       clearTimeout(this.timer);
       //清除延迟执行
       this.timer = setTimeout(() => {
         //设置延迟执行
         //this.reset();
         this.show = false;
+      }, 2000);
+    },
+    printMake(row) {
+      this.billerMake = this.$store.state.user.nickName
+      this.printMakeList.push(row)
+      console.log(this.printMakeList)
+      this.showMake = true;
+      clearTimeout(this.timerMake);
+      //清除延迟执行
+      this.timerMake = setTimeout(() => {
+        //设置延迟执行
+        //this.reset();
+        this.showMake = false;
       }, 2000);
     },
     // 打印操作，生成divID
@@ -871,7 +936,15 @@ export default {
           //{ "badVehicleCount": 0, "total": 914150, "validVehicleCount": 15, "noUseVehicleCount": 7, "noUse": 850246, "hasUseVehicleCount": 8, "hasUse": 63904 }
         }
       })
-    }
+    },
+    //判断是否可选
+    checkboxInit(row,index){
+      if(row.inCardPrintState=='1'){
+        return 0;//不可勾选
+      }else{
+        return 1;
+      }
+    },
   },
 }
 </script>
@@ -893,14 +966,14 @@ export default {
 /*body {*/
 /*  margin: 10mm 15mm 10mm 15mm;*/
 /*}*/
-#all {
+.all {
   height: 1638px;
   width: 1150px;
   /*border: 1px solid ;*/
   /*margin-top: 1cm;*/
 }
 
-#headRow {
+.headRow {
   height: 40px;
   width: 1000px;
   padding-left: 3.5cm;
@@ -909,7 +982,7 @@ export default {
   margin-top: 2.5cm;
 }
 
-#firstRow {
+.firstRow {
   height: 40px;
   width: 1000px;
   padding-left: 2cm;
@@ -920,15 +993,15 @@ export default {
 
 }
 
-#contractNoStyle {
+.contractNoStyle {
   margin-left: 4cm;
 }
 
-#coalBillNoStyle {
+.coalBillNoStyle {
   margin-left: 5.5cm;
 }
 
-#secondRow {
+.secondRow {
   height: 40px;
   width: 1000px;
   padding-left: 2cm;
@@ -937,7 +1010,7 @@ export default {
   font-size: 20px;
 }
 
-#thirdRow {
+.thirdRow {
   height: 40px;
   width: 1000px;
   padding-left: 2cm;
@@ -946,7 +1019,7 @@ export default {
   font-size: 20px;
 }
 
-#fourRow {
+.fourRow {
   height: 40px;
   width: 1000px;
   padding-left: 2cm;
@@ -959,21 +1032,21 @@ export default {
 /*  margin-left: 4cm;*/
 /*}*/
 
-#carriageStyle {
+.carriageStyle {
   margin-left: 17cm;
   font-size: 14px;
 }
 
-#loadingStyle {
+.loadingStyle {
   margin-left: 16cm;
 }
 
-#receiptStyle {
+.receiptStyle {
   margin-left: 15cm;
   font-size: 14px;
 }
 
-#fiveRow {
+.fiveRow {
   height: 40px;
   width: 1000px;
   padding-left: 1.5cm;
@@ -982,7 +1055,7 @@ export default {
   margin-top: 1cm;
 }
 
-#nouse {
+.nouse {
   height: 100px;
   width: 1000px;
   /*border: 1px solid*/
@@ -990,6 +1063,11 @@ export default {
 }
 
 #dayin {
+  height: 500px;
+  width: 500px;
+  /*border: 1px solid ;*/
+}
+#dayinMake {
   height: 500px;
   width: 500px;
   /*border: 1px solid ;*/
