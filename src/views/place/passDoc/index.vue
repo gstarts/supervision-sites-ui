@@ -158,7 +158,7 @@
           <el-col :span="12">
             <el-form-item label="寄仓客户" prop="checkConsumer">
               <el-select
-                v-model="form.checkConsumer" placeholder="请选择寄仓客户" filterable @change="((val)=>{change(val, 'eName')})">
+                v-model="form.checkConsumer" placeholder="请选择寄仓客户" filterable @change="((val)=>{change(val, 'eName')})" :disabled="formUpdateMode">
                 <el-option
                   v-for="dict in consumerOptions"
                   :key="dict.id"
@@ -170,7 +170,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="品名" prop="goodsName">
-              <el-select v-model="form.goodsName" placeholder="请选择煤种" @change="((val)=>{change(val, 'coalType')})">
+              <el-select v-model="form.goodsName" placeholder="请选择煤种" @change="((val)=>{change(val, 'coalType')})" :disabled="formUpdateMode">
                 <el-option
                   v-for="dict in contractOptions"
                   :key="dict.id"
@@ -183,12 +183,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="放行单号" prop="passNo">
-              <el-input v-model="form.passNo" placeholder="请输入放行单号"/>
+              <el-input v-model="form.passNo" placeholder="请输入放行单号" :disabled="formUpdateMode"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="放行量" prop="passVolume">
-              <el-input v-model.number="form.passVolume" placeholder="请输入放行量"/>
+              <el-input v-model.number="form.passVolume" placeholder="请输入放行量" :disabled="formUpdateMode"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -331,7 +331,8 @@ export default {
           {required: true, message: '品名不能为空', trigger: 'blur'}
         ]
       },
-      dateRange: ['',''],//时间组件
+      dateRange: ['', ''],//时间组件
+      formUpdateMode: false,
     }
   },
   created() {
@@ -368,7 +369,7 @@ export default {
     },
     /** 客户信息列表 */
     getConsumerInfo(placeId) {
-      let consumerParams = {eType: '2', deptId: placeId}
+      let consumerParams = {eType: '2', deptId: placeId, companyType: '2'}
       listInfo(consumerParams).then(response => {
         this.consumerOptions = response.rows
       })
@@ -448,15 +449,25 @@ export default {
       this.open = true
       this.title = '添加放行单 '
       this.form.placeId = this.queryParams.placeId
+      this.formUpdateMode = false
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
+      this.formUpdateMode = true
       const id = row.id || this.ids
       getPassDoc(id).then(response => {
         this.form = response.data
         this.open = true
         this.title = '修改放行单 '
+
+        this.weightParams.coalType = this.form.goodsName
+        this.weightParams.id = this.form.customerId
+
+        getReleaseWeight(this.weightParams).then(response => {
+          this.form.release = response.data.release
+          this.$forceUpdate()
+        })
       })
     },
     /** 提交按钮 */
