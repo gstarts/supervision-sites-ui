@@ -501,6 +501,15 @@
         >导出
         </el-button
         >
+
+        <el-button
+          icon="el-icon-upload"
+          size="mini"
+          type="info"
+          v-hasPermi="['place:outstoreDoc:import']"
+          @click="handleImport">
+          导入
+        </el-button>
       </el-col>
     </el-row>
 
@@ -985,6 +994,143 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+
+    <!--  入库通知单导入弹出框  -->
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" :before-close="closeDialog">
+      <el-upload
+        ref="upload"
+        :limit="1"
+        accept=".xlsx, .xls"
+        :headers="upload.headers"
+        :action="upload.url"
+        :disabled="upload.isUploading"
+        :on-progress="handleFileUploadProgress"
+        :on-success="handleFileSuccess"
+        :auto-upload="false"
+        :file-list="fileList"
+        :data="form"
+        drag
+      >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">
+          将入库通知单文件拖到此处，或
+          <em>点击上传</em>
+        </div>
+        <div class="el-upload__tip" slot="tip">
+          <el-link type="info" style="font-size:12px" @click="importTemplate">下载模板</el-link>
+        </div>
+        <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
+
+      </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" :loading="btnLoading" @click="submitFileForm">确 定</el-button>
+        <!--<el-button @click="upload.open = false">取 消</el-button>-->
+        <el-button @click="uploadCancel">取 消</el-button>
+      </div>
+      <el-form ref="uploadForm" :model="form" :rules="uploadRules" :label-position="left" label-width="80px"
+               size="small">
+
+        <el-form-item label="寄仓客户" prop="checkConsumer">
+          <el-select
+            filterable
+            clearable
+            v-model="form.checkConsumer"
+            placeholder="请选择寄仓客户"
+            @change="changeCustomer">
+            <el-option
+              v-for="type in customerList"
+              :key="type.customerName"
+              :label="type.customerName"
+              :value="type.customerName"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="寄仓合同" prop="checkContractNo">
+          <el-select
+            v-model="form.checkContractNo"
+            placeholder="请选择寄仓合同"
+            @change="changeContract"
+          >
+            <el-option
+              v-for="type in contractSubList"
+              :key="type.contractNo"
+              :label="type.contractNo"
+              :value="type.contractNo"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="库位号" prop="storeCode">
+          <el-select v-model="form.storeCode" placeholder="请输入库位号">
+            <el-option
+              v-for="type in storeIds"
+              :key="type.storeCode"
+              :label="type.storeCode"
+              :value="type.storeCode"
+            />
+          </el-select>
+        </el-form-item>
+
+
+        <!--<el-form-item label="所属场所" prop="placeId">
+          <el-select v-model="form.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
+            <el-option
+              v-for="dept in depts"
+              :key="dept.deptId"
+              :label="dept.deptName"
+              :value="dept.deptId"
+            />
+          </el-select>
+        </el-form-item>-->
+<!--        <el-form-item label="提煤单号" prop="coalBillNo" style="margin-top: 10px;">-->
+<!--          <el-select v-model="form.coalBillNo" placeholder="请选择提煤单号" filterable @change="getBigCanUse">-->
+<!--            <el-option-->
+<!--              v-for="item in BigList"-->
+<!--              :key="item.coalBillNo"-->
+<!--              :label="item.coalBillNo"-->
+<!--              :value="item.coalBillNo"-->
+<!--            ></el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+        <!--<el-form-item label="承运单位" prop="transportUnitId">
+          &lt;!&ndash;<el-input v-model="form.transportUnit" placeholder="请输入承运单位"/>&ndash;&gt;
+          <el-select v-model="form.transportUnitId" filterable placeholder="请选择承运单位">
+            <el-option
+              v-for="item in transUnitList"
+              :key="item.id"
+              :label="item.eName"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>-->
+        <!-- <el-form-item label="运输方式" prop="transportMode">
+           <el-select v-model="form.transportMode" filterable placeholder="请选择运输方式">
+             <el-option
+               v-for="item in transportModeDic"
+               :key="item.dictValue"
+               :label="item.dictLabel"
+               :value="item.dictValue">
+             </el-option>
+           </el-select>
+         </el-form-item>-->
+        <!--<el-form-item label="申报海关" prop="isReportCustoms">
+          <el-select v-model="form.isReportCustoms" filterable placeholder="请选择是否申报海关">
+            <el-option
+              v-for="item in reportTypes"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="item.dictValue">
+            </el-option>
+          </el-select>
+        </el-form-item>-->
+<!--        <el-row>-->
+<!--          <el-col :span="24">{{bigUseTip}}</el-col>-->
+<!--        </el-row>-->
+      </el-form>
+
+    </el-dialog>
   </div>
 </template>
 
@@ -999,6 +1145,7 @@ import {
 import {getUserDepts} from "@/utils/charutils";
 import {listStoreContract} from "@/api/place/storeContract";
 import SimpleKeyboard from "@/components/SimpleKeyboard/SimpleKeyboard";
+import {getToken} from '@/utils/auth';
 
 export default {
   name: "InstoreDoc",
@@ -1014,6 +1161,7 @@ export default {
       ],
       // 遮罩层
       loading: true,
+      btnLoading: false,
       // 选中数组
       ids: [],
       depts: [],
@@ -1023,6 +1171,7 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
+      // 弹出层标题
       // 入库通知单表格数据
       instoreDocList: [],
       importTypeDic: [
@@ -1035,6 +1184,8 @@ export default {
       contractSubList: [], //合同子集，在选定寄仓客户时，从合同表里取出对应客户的合同放入到这个集合中
       // 弹出层标题
       title: "",
+
+      left:'left',
       // 是否显示弹出层
       open: false,
       // 查询参数
@@ -1093,6 +1244,24 @@ export default {
       // 表单参数
       form: {},
       goodsNameList: [],
+      // 文件
+      fileList: [],
+
+      //文件导入参数
+      upload: {
+        // 是否显示弹出层（用户导入）
+        open: false,
+        // 弹出层标题（用户导入）
+        title: '',
+        // 是否禁用上传
+        isUploading: false,
+        // 是否更新已经存在的用户数据
+        updateSupport: 0,
+        // 设置上传的请求头部
+        headers: {Authorization: 'Bearer ' + getToken()},
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + '/place/outstoreDoc/importData'
+      },
       // 表单校验
       rules: {
         docNo: [{required: true, message: "通知单号不能为空", trigger: "blur"},],
@@ -1117,6 +1286,15 @@ export default {
         vehicleType: [
           {required: true, message: "车辆类型不能为空", trigger: "change"},
         ]
+      },
+      // 导入表单校验
+      uploadRules: {
+        checkConsumer: [{type: "string", required: true, message: "寄仓客户不能为空", trigger: "blur",},],
+        checkContractNo: [{required: true, message: "寄仓合同不能为空", trigger: "change"},],
+        storeCode: [{type: "string", required: true, message: "库位号不能为空", trigger: "change",},],
+        /* transportUnitId: [
+           {required: true, message: '运输方式不能为空', trigger: 'change'}
+         ],*/
       },
       rulesBox: {
         docNo: [{required: true, message: "通知单号不能为空", trigger: "blur"},],
@@ -1274,6 +1452,85 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
+    },
+
+    /** 导入按钮操作 */
+    handleImport() {
+      this.reset()
+      this.upload.title = '入库通知单导入'
+      this.upload.open = true
+      this.form.placeId = this.queryParams.placeId
+    },
+      // 关闭导入弹框
+    closeDialog() {
+      this.open = false
+      this.upload.open = false
+      this.cancel()
+    },
+
+    importTemplate(){
+
+    },
+
+    // 取消按钮
+    uploadCancel() {
+      this.upload.open = false
+      this.reset()
+      this.$refs.upload.clearFiles()
+    //  this.bigUseTip = ''
+    },
+
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true
+
+    },
+
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      // this.bigUseTip = ''
+      this.btnLoading = false
+      this.upload.open = false
+      this.upload.isUploading = false
+      this.$refs.upload.clearFiles()
+      this.$alert(response.msg, '导入结果', {dangerouslyUseHTMLString: true})
+      if (response.code === 200) {
+        this.getList()
+      }
+    },
+
+
+    // 提交上传文件
+    submitFileForm() {
+      this.btnLoading = true
+      this.$refs['uploadForm'].validate(valid => {
+        if (valid) {
+          //console.log(this.form)
+          // console.log(this.$refs.upload.$refs['upload-inner'].fileList)
+          if (this.$refs.upload.$refs['upload-inner'].fileList.length === 0) {
+            this.$message.warning('请选择要上传的文件')
+            this.btnLoading = false
+            return false
+          }
+          this.$refs.upload.submit()
+          /*addOutstoreDocByCar(this.form, this.form.transportNum).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess('新增成功')
+              this.open = false
+              this.getList()
+              this.loading = false
+            }
+          }).catch((err) => {
+            this.loading = true
+          })*/
+        }
+      })
+
+      /* if (this.form.coalBillNo && this.form.placeId && this.form.reportType) {
+         this.$refs.upload.submit()
+       } else {
+         this.$alert('请选择场所和提煤单号和是否申报海关')
+       }*/
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
