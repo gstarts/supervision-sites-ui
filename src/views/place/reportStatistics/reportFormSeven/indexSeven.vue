@@ -34,13 +34,13 @@
         </el-col>
 
         <el-col :span="6">
-          <el-form-item label="寄舱合同" prop="checkContractNo">
+          <el-form-item label="寄仓合同" prop="checkContractNo">
             <el-select
 
               filterable
               clearable
               v-model="queryParams.checkContractNo"
-              placeholder="请选择寄舱合同"
+              placeholder="请选择寄仓合同"
               size="small">
               <el-option
                 v-for="dept in contractSubList"
@@ -202,8 +202,8 @@
         <!--          </el-date-picker>-->
         <!--        </el-form-item>-->
 
-        <!--<el-form-item label="寄舱合同" prop="storeContractId">
-          <el-select v-model="form.storeContractId" placeholder="请选择寄舱合同" @change="changeContract">
+        <!--<el-form-item label="寄仓合同" prop="storeContractId">
+          <el-select v-model="form.storeContractId" placeholder="请选择寄仓合同" @change="changeContract">
             <el-option
               v-for="type in contractSubList"
               :key="type.id"

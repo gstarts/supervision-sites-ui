@@ -53,13 +53,13 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="寄舱合同" prop="checkContractNo">
+      <el-form-item label="寄仓合同" prop="checkContractNo">
         <el-select
 
           filterable
           clearable
           v-model="queryParams.checkContractNo"
-          placeholder="请选择寄舱合同"
+          placeholder="请选择寄仓合同"
           size="small">
           <el-option
             v-for="dept in contractSubList"
@@ -244,10 +244,10 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
-<!--      <el-form-item label="寄舱合同号" prop="checkContractNo">-->
+<!--      <el-form-item label="寄仓合同号" prop="checkContractNo">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.checkContractNo"-->
-<!--          placeholder="请输入寄舱合同号"-->
+<!--          placeholder="请输入寄仓合同号"-->
 <!--          clearable-->
 <!--          size="small"-->
 <!--          @keyup.enter.native="handleQuery"-->
@@ -867,7 +867,7 @@
 <!--      <el-table-column label="寄仓客户ID" align="center" prop="customerId" />-->
 <!--      <el-table-column label="客户id" align="center" prop="receiveId" />-->
 <!--      <el-table-column label="客户名称" align="center" prop="receiveName" />-->
-<!--      <el-table-column label="寄舱合同号" align="center" prop="checkContractNo" />-->
+<!--      <el-table-column label="寄仓合同号" align="center" prop="checkContractNo" />-->
 <!--      <el-table-column label="蒙方磅单号 蒙方磅单号" align="center" prop="mongoliaBillNo" />-->
 <!--      <el-table-column label="挂车号1 " align="center" prop="trailerNo1" />-->
 <!--      <el-table-column label="挂车号2" align="center" prop="trailerNo2" />-->
@@ -983,8 +983,8 @@
         <el-form-item label="客户名称" prop="receiveName">
           <el-input v-model="form.receiveName" placeholder="请输入客户名称" />
         </el-form-item>
-        <el-form-item label="寄舱合同号" prop="checkContractNo">
-          <el-input v-model="form.checkContractNo" placeholder="请输入寄舱合同号" />
+        <el-form-item label="寄仓合同号" prop="checkContractNo">
+          <el-input v-model="form.checkContractNo" placeholder="请输入寄仓合同号" />
         </el-form-item>
         <el-form-item label="蒙方磅单号 蒙方磅单号" prop="mongoliaBillNo">
           <el-input v-model="form.mongoliaBillNo" placeholder="请输入蒙方磅单号 蒙方磅单号" />

@@ -13,10 +13,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="寄舱合同" prop="column2">
+      <el-form-item label="寄仓合同" prop="column2">
         <el-input
           v-model="queryParams.column2"
-          placeholder="请输入寄舱合同"
+          placeholder="请输入寄仓合同"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -114,8 +114,8 @@
           </el-date-picker>
         </el-form-item>
 
-        <!--<el-form-item label="寄舱合同" prop="storeContractId">
-          <el-select v-model="form.storeContractId" placeholder="请选择寄舱合同" @change="changeContract">
+        <!--<el-form-item label="寄仓合同" prop="storeContractId">
+          <el-select v-model="form.storeContractId" placeholder="请选择寄仓合同" @change="changeContract">
             <el-option
               v-for="type in contractSubList"
               :key="type.id"
@@ -190,7 +190,7 @@
                 style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
         <af-table-column label="寄仓客户" align="center" width="120%" prop="column1"/>
 
-        <af-table-column label="寄舱合同" align="center" width="120%" prop="column2"/>
+        <af-table-column label="寄仓合同" align="center" width="120%" prop="column2"/>
 
         <af-table-column label="品名" align="center" prop="column3" width="80%"/>
         <el-table-column label="期初库存(t)" align="center" prop="column4"/>
@@ -284,7 +284,7 @@ export default {
       // 导出Excel 字段
       json_fields: {
         "寄仓客户": "column1",    //常规字段
-        "寄舱合同": "column2", //支持嵌套属性
+        "寄仓合同": "column2", //支持嵌套属性
         "品名": "column3",
         "期初库存": "column4",
         "入车数": "column5",

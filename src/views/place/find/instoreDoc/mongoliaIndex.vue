@@ -20,10 +20,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-    <el-form-item label="寄舱合同号" prop="checkContractNo">
+    <el-form-item label="寄仓合同号" prop="checkContractNo">
         <el-input
           v-model="queryParams.checkContractNo"
-          placeholder="请输入寄舱合同号"
+          placeholder="请输入寄仓合同号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -700,7 +700,7 @@
       <el-table-column label="入库单号" align="center" prop="id" />
       <af-table-column label="寄仓客户" align="center" prop="checkConsumer" />
 
-      <af-table-column label="寄舱合同号" align="center" prop="checkContractNo" />
+      <af-table-column label="寄仓合同号" align="center" prop="checkContractNo" />
       <el-table-column label="品名" align="center" prop="goodsName" />
       <el-table-column label="车辆信息"  align="center" >
         <el-table-column label="车号" align="center" prop="vehicleNo" width="90"/>
@@ -902,8 +902,8 @@
         <el-form-item label="寄仓客户" prop="checkConsumer">
           <el-input v-model="form.checkConsumer" placeholder="请输入寄仓客户" />
         </el-form-item>
-        <el-form-item label="寄舱合同号" prop="checkContractNo">
-          <el-input v-model="form.checkContractNo" placeholder="请输入寄舱合同号" />
+        <el-form-item label="寄仓合同号" prop="checkContractNo">
+          <el-input v-model="form.checkContractNo" placeholder="请输入寄仓合同号" />
         </el-form-item>
         <el-form-item label="蒙方磅单号 蒙方磅单号" prop="mongoliaBillNo">
           <el-input v-model="form.mongoliaBillNo" placeholder="请输入蒙方磅单号 蒙方磅单号" />
@@ -1301,7 +1301,7 @@ export default {
       json_fields:{
         "入库单号":"id",
         "寄仓客户":"checkConsumer",
-        "寄舱合同号":"checkContractNo",
+        "寄仓合同号":"checkContractNo",
         "品名":"goodsName",
         "车号":"vehicleNo",
         "车数":"vehicleNoCount",

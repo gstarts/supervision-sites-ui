@@ -76,10 +76,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <!--<el-form-item label="寄舱合同ID" prop="storeContractId">
+      <!--<el-form-item label="寄仓合同ID" prop="storeContractId">
         <el-input
           v-model="queryParams.storeContractId"
-          placeholder="请输入寄舱合同ID"
+          placeholder="请输入寄仓合同ID"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -224,7 +224,7 @@
         </template>
       </af-table-column>
       <af-table-column label="文件长度" align="center" prop="fileLength"/>
-      <!--<af-table-column label="寄舱合同ID" align="center" prop="storeContractId"/>-->
+      <!--<af-table-column label="寄仓合同ID" align="center" prop="storeContractId"/>-->
       <af-table-column label="寄仓客户" align="center" prop="storeCustomer"/>
       <!--      <af-table-column label="结算合同ID" align="center" prop="settlementContractId"/>-->
       <!--      <af-table-column label="结算客户" align="center" prop="settlementCustomer"/>-->
@@ -357,8 +357,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="寄舱合同" prop="storeContractId">
-              <el-select v-model="form.storeContractId" placeholder="请选择寄舱合同" @change="changeContract">
+            <el-form-item label="寄仓合同" prop="storeContractId">
+              <el-select v-model="form.storeContractId" placeholder="请选择寄仓合同" @change="changeContract">
                 <el-option
                   v-for="type in contractSubList"
                   :key="type.id"
@@ -425,8 +425,8 @@
         <!--        <el-form-item label="文件长度" prop="fileLength">-->
         <!--          <el-input v-model="form.fileLength" placeholder="请输入文件长度" />-->
         <!--        </el-form-item>-->
-        <!--        <el-form-item label="寄舱合同ID" prop="storeContractId">-->
-        <!--          <el-input v-model="form.storeContractId" placeholder="请输入寄舱合同ID" />-->
+        <!--        <el-form-item label="寄仓合同ID" prop="storeContractId">-->
+        <!--          <el-input v-model="form.storeContractId" placeholder="请输入寄仓合同ID" />-->
         <!--        </el-form-item>-->
         <!--        <el-form-item label="结算合同ID" prop="settlementContractId">-->
         <!--          <el-input v-model="form.settlementContractId" placeholder="请输入结算合同ID" />-->
@@ -551,7 +551,7 @@ export default {
           {type: "string", required: true, message: "寄仓客户不能为空", trigger: "change"}
         ],
         storeContractId: [
-          {required: true, message: "寄舱合同不能为空", trigger: "change"}
+          {required: true, message: "寄仓合同不能为空", trigger: "change"}
         ],
 
       },

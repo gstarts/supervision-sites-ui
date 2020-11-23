@@ -51,10 +51,10 @@
         </el-select>
 
       </el-form-item>
-      <el-form-item label="寄舱合同" prop="checkContractNo">
+      <el-form-item label="寄仓合同" prop="checkContractNo">
         <el-select clearable
                    v-model="queryParams.checkContractNo"
-                   placeholder="请选择寄舱合同"
+                   placeholder="请选择寄仓合同"
                    size="small">
           <el-option
             v-for="dept in contractList"
@@ -514,7 +514,7 @@
       <!--<af-table-column label="业务编号" align="center" prop="storeCode" />-->
       <!-- <af-table-column label="发货客户" align="center" prop="sendName"/>-->
       <af-table-column label="寄仓客户" align="center" prop="checkConsumer"/>
-      <af-table-column label="寄舱合同号" align="center" prop="checkContractNo"/>
+      <af-table-column label="寄仓合同号" align="center" prop="checkContractNo"/>
       <af-table-column label="品名" align="center" prop="goodsName"/>
       <!--<af-table-column label="库位号" align="center" prop="storeCode"/>-->
       <!--<af-table-column label="蒙方磅单号" align="center" prop="mongoliaBillNo" />-->
@@ -641,8 +641,8 @@
         <el-form-item label="寄仓客户" prop="checkConsumer">
           <el-input v-model="form.checkConsumer" placeholder="请输入寄仓客户" />
         </el-form-item>
-        <el-form-item label="寄舱合同号" prop="checkContractNo">
-          <el-input v-model="form.checkContractNo" placeholder="请输入寄舱合同号" />
+        <el-form-item label="寄仓合同号" prop="checkContractNo">
+          <el-input v-model="form.checkContractNo" placeholder="请输入寄仓合同号" />
         </el-form-item>
         <el-form-item label="蒙方磅单号 蒙方磅单号" prop="mongoliaBillNo">
           <el-input v-model="form.mongoliaBillNo" placeholder="请输入蒙方磅单号 蒙方磅单号" />
@@ -666,10 +666,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="寄舱合同" prop="checkContractNo">
+            <el-form-item label="寄仓合同" prop="checkContractNo">
               <el-select
                 v-model="form.checkContractNo"
-                placeholder="请选择寄舱合同"
+                placeholder="请选择寄仓合同"
                 @change="changeContract"
               >
                 <el-option
@@ -879,7 +879,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-
         <!--<el-form-item label="净重" prop="netWeight">
           <el-input v-model="form.netWeight" placeholder="请输入净重" />
         </el-form-item>
@@ -1099,7 +1098,7 @@ export default {
         docNo: [{required: true, message: "通知单号不能为空", trigger: "blur"},],
         storeCode: [{type: "string", required: true, message: "库位号不能为空", trigger: "change",},],
         checkConsumer: [{type: "string", required: true, message: "寄仓客户不能为空", trigger: "blur",},],
-        checkContractNo: [{required: true, message: "寄舱合同不能为空", trigger: "change"},],
+        checkContractNo: [{required: true, message: "寄仓合同不能为空", trigger: "change"},],
         vehicleNo: [
           {required: true, message: "车号不能为空", trigger: "blur"},
           {min: 7, max: 8, message: "请输入7位有效车号", trigger: "blur"}
@@ -1123,7 +1122,7 @@ export default {
         docNo: [{required: true, message: "通知单号不能为空", trigger: "blur"},],
         storeCode: [{type: "string", required: true, message: "库位号不能为空", trigger: "change",},],
         checkConsumer: [{type: "string", required: true, message: "寄仓客户不能为空", trigger: "blur",},],
-        checkContractNo: [{required: true, message: "寄舱合同不能为空", trigger: "change"},],
+        checkContractNo: [{required: true, message: "寄仓合同不能为空", trigger: "change"},],
         vehicleNo: [
           {required: true, message: "车号不能为空", trigger: "blur"},
           {min: 7, max: 8, message: "请输入7位有效车号", trigger: "blur"}
