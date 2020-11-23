@@ -192,7 +192,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -221,7 +221,7 @@
         <el-col :span="12">
           <el-form-item label="寄仓客户" prop="customer">
             <el-select
-              v-model="form.customer" placeholder="请选择寄舱客户"  filterable @change="((val)=>{change(val, 'eName')})" :disabled="auditDisabled">
+              v-model="form.customer" placeholder="请选择寄仓客户"  filterable @change="((val)=>{change(val, 'eName')})" :disabled="auditDisabled">
               <el-option
                 v-for="dict in consumerOptions"
                 :key="dict.eName"

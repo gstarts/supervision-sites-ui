@@ -22,12 +22,12 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="寄舱客户" prop="storeCustomer">
-        <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>-->
+      <el-form-item label="寄仓客户" prop="storeCustomer">
+        <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄仓客户" disabled/>-->
         <el-select
           filterable
           clearable
-          v-model="queryParams.customerName" placeholder="请选择寄舱客户">
+          v-model="queryParams.customerName" placeholder="请选择寄仓客户">
           <el-option
             v-for="type in customerList"
             :key="type.customerName"
@@ -188,7 +188,7 @@
                 :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
                 :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
                 style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
-        <af-table-column label="寄舱客户" align="center" width="120%" prop="column1"/>
+        <af-table-column label="寄仓客户" align="center" width="120%" prop="column1"/>
 
         <af-table-column label="寄舱合同" align="center" width="120%" prop="column2"/>
 
@@ -283,7 +283,7 @@ export default {
       ],
       // 导出Excel 字段
       json_fields: {
-        "寄舱客户": "column1",    //常规字段
+        "寄仓客户": "column1",    //常规字段
         "寄舱合同": "column2", //支持嵌套属性
         "品名": "column3",
         "期初库存": "column4",
@@ -323,8 +323,8 @@ export default {
         {'key': 0, 'value': '出库'},
       ],
       statisticsModeDic: [
-        {'key': 1, 'value': '寄舱客户汇总'},
-        {'key': 2, 'value': '寄舱客户明细'}
+        {'key': 1, 'value': '寄仓客户汇总'},
+        {'key': 2, 'value': '寄仓客户明细'}
       ],
       packModeDic: [
         {'key': 1, 'value': '集装箱'},

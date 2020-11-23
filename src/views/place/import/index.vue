@@ -85,10 +85,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <!--<el-form-item label="寄舱客户" prop="storeCustomer">
+      <!--<el-form-item label="寄仓客户" prop="storeCustomer">
         <el-input
           v-model="queryParams.storeCustomer"
-          placeholder="请输入寄舱客户"
+          placeholder="请输入寄仓客户"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -225,7 +225,7 @@
       </af-table-column>
       <af-table-column label="文件长度" align="center" prop="fileLength"/>
       <!--<af-table-column label="寄舱合同ID" align="center" prop="storeContractId"/>-->
-      <af-table-column label="寄舱客户" align="center" prop="storeCustomer"/>
+      <af-table-column label="寄仓客户" align="center" prop="storeCustomer"/>
       <!--      <af-table-column label="结算合同ID" align="center" prop="settlementContractId"/>-->
       <!--      <af-table-column label="结算客户" align="center" prop="settlementCustomer"/>-->
       <!--<af-table-column label="业务编号" align="center" prop="businessNo"/>-->
@@ -372,12 +372,12 @@
 
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="寄舱客户" prop="storeCustomer">
-              <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>-->
+            <el-form-item label="寄仓客户" prop="storeCustomer">
+              <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄仓客户" disabled/>-->
               <el-select
                 filterable
                 clearable
-                v-model="form.storeCustomer" placeholder="请选择寄舱客户" @change="changeCustomer">
+                v-model="form.storeCustomer" placeholder="请选择寄仓客户" @change="changeCustomer">
                 <el-option
                   v-for="type in customerList"
                   :key="type.customerName"
@@ -386,7 +386,7 @@
                 />
               </el-select>
             </el-form-item>
-            <!--              <el-select v-model="form.storeCustomer" placeholder="请选择寄舱客户">-->
+            <!--              <el-select v-model="form.storeCustomer" placeholder="请选择寄仓客户">-->
             <!--                <el-option-->
             <!--                  v-for="type in contractList"-->
             <!--                  :key="type.id"-->
@@ -548,7 +548,7 @@ export default {
           {type: "string", required: true, message: "库位号不能为空", trigger: "change"}
         ],
         storeCustomer: [
-          {type: "string", required: true, message: "寄舱客户不能为空", trigger: "change"}
+          {type: "string", required: true, message: "寄仓客户不能为空", trigger: "change"}
         ],
         storeContractId: [
           {required: true, message: "寄舱合同不能为空", trigger: "change"}
@@ -566,8 +566,8 @@ export default {
         'bucketName': ''
       },
       fileList: [],
-      customerList: [],//寄舱客户列表
-      contractSubList: [] //合同子集，在选定寄舱客户时，从合同表里取出对应客户的合同放入到这个集合中
+      customerList: [],//寄仓客户列表
+      contractSubList: [] //合同子集，在选定寄仓客户时，从合同表里取出对应客户的合同放入到这个集合中
     };
   },
   created() {

@@ -48,10 +48,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="寄舱客户" prop="checkConsumer">
+      <el-form-item label="寄仓客户" prop="checkConsumer">
         <el-input
           v-model="queryParams.checkConsumer"
-          placeholder="请输入寄舱客户"
+          placeholder="请输入寄仓客户"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -311,7 +311,7 @@
       <af-table-column label="批次号" align="center" prop="batchNo"/>
       <!--<af-table-column label="预订库位号" align="center" prop="bookStoreCode" width="180"/>-->
       <af-table-column label="业务编号" align="center" prop="businessNo"/>
-      <af-table-column label="寄舱客户" align="center" prop="checkConsumer"/>
+      <af-table-column label="寄仓客户" align="center" prop="checkConsumer"/>
       <af-table-column label="寄舱合同编号" align="center" prop="contractNo"/>
       <af-table-column label="车队号" align="center" prop="convoyNo"/>
       <af-table-column label="车牌号" align="center" prop="vehicleNo"/>
@@ -420,8 +420,8 @@
         <el-form-item label="业务编号" prop="businessNo">
           <el-input v-model="form.businessNo" placeholder="请输入业务编号"/>
         </el-form-item>
-        <el-form-item label="寄舱客户" prop="checkConsumer">
-          <el-input v-model="form.checkConsumer" placeholder="请输入寄舱客户"/>
+        <el-form-item label="寄仓客户" prop="checkConsumer">
+          <el-input v-model="form.checkConsumer" placeholder="请输入寄仓客户"/>
         </el-form-item>
         <el-form-item label="寄舱合同编号" prop="contractNo">
           <el-input v-model="form.contractNo" placeholder="请输入寄舱合同编号"/>

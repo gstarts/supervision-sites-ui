@@ -39,12 +39,12 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="寄舱客户" prop="customerName">
-<!--        <el-input v-model="queryParams.customerName" placeholder="请输入寄舱客户" clearable size="small" @keyup.enter.native="handleQuery" />-->
+      <el-form-item label="寄仓客户" prop="customerName">
+<!--        <el-input v-model="queryParams.customerName" placeholder="请输入寄仓客户" clearable size="small" @keyup.enter.native="handleQuery" />-->
         <el-select
           filterable
           clearable
-          v-model="queryParams.customerName" placeholder="请选择寄舱客户" @change="changeCustomer">
+          v-model="queryParams.customerName" placeholder="请选择寄仓客户" @change="changeCustomer">
           <el-option
             v-for="type in customerList"
             :key="type.customerName"
@@ -186,10 +186,10 @@
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
-<!--      <el-form-item label="寄舱客户ID" prop="customerId">-->
+<!--      <el-form-item label="寄仓客户ID" prop="customerId">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.customerId"-->
-<!--          placeholder="请输入寄舱客户ID"-->
+<!--          placeholder="请输入寄仓客户ID"-->
 <!--          clearable-->
 <!--          size="small"-->
 <!--          @keyup.enter.native="handleQuery"-->
@@ -823,7 +823,7 @@
 <!--      <el-table-column label="入场司磅员" align="center" prop="inUser" />-->
 <!--      <el-table-column label="出场司磅员" align="center" prop="outUser" />-->
 <!--      <el-table-column label="放行单号" align="center" prop="businessNo" />-->
-<!--      <el-table-column label="寄舱客户ID" align="center" prop="customerId" />-->
+<!--      <el-table-column label="寄仓客户ID" align="center" prop="customerId" />-->
 <!--      <el-table-column label="客户id" align="center" prop="receiveId" />-->
 
 <!--      <el-table-column label="寄舱合同号" align="center" prop="checkContractNo" />-->
@@ -920,11 +920,11 @@
         <el-form-item label="放行单号" prop="businessNo">
           <el-input v-model="form.businessNo" placeholder="请输入放行单号" />
         </el-form-item>
-        <el-form-item label="寄舱客户" prop="customerName">
-          <el-input v-model="form.customerName" placeholder="请输入寄舱客户" />
+        <el-form-item label="寄仓客户" prop="customerName">
+          <el-input v-model="form.customerName" placeholder="请输入寄仓客户" />
         </el-form-item>
-        <el-form-item label="寄舱客户ID" prop="customerId">
-          <el-input v-model="form.customerId" placeholder="请输入寄舱客户ID" />
+        <el-form-item label="寄仓客户ID" prop="customerId">
+          <el-input v-model="form.customerId" placeholder="请输入寄仓客户ID" />
         </el-form-item>
         <el-form-item label="客户id" prop="receiveId">
           <el-input v-model="form.receiveId" placeholder="请输入客户id" />

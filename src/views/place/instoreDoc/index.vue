@@ -37,11 +37,11 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item label="寄舱客户" prop="checkConsumer">
+      <el-form-item label="寄仓客户" prop="checkConsumer">
         <el-select clearable
-          v-model="queryParams.checkConsumer"
-          placeholder="请选择寄舱客户"
-          size="small">
+                   v-model="queryParams.checkConsumer"
+                   placeholder="请选择寄仓客户"
+                   size="small">
           <el-option
             v-for="dept in customerList"
             :key="dept.customerName"
@@ -53,9 +53,9 @@
       </el-form-item>
       <el-form-item label="寄舱合同" prop="checkContractNo">
         <el-select clearable
-          v-model="queryParams.checkContractNo"
-          placeholder="请选择寄舱合同"
-          size="small">
+                   v-model="queryParams.checkContractNo"
+                   placeholder="请选择寄舱合同"
+                   size="small">
           <el-option
             v-for="dept in contractList"
             :key="dept.contractNo"
@@ -513,7 +513,7 @@
       <!--<af-table-column label="场所编号" align="center" prop="placeId"/>-->
       <!--<af-table-column label="业务编号" align="center" prop="storeCode" />-->
       <!-- <af-table-column label="发货客户" align="center" prop="sendName"/>-->
-      <af-table-column label="寄舱客户" align="center" prop="checkConsumer"/>
+      <af-table-column label="寄仓客户" align="center" prop="checkConsumer"/>
       <af-table-column label="寄舱合同号" align="center" prop="checkContractNo"/>
       <af-table-column label="品名" align="center" prop="goodsName"/>
       <!--<af-table-column label="库位号" align="center" prop="storeCode"/>-->
@@ -628,7 +628,7 @@
 
     <!-- 添加或修改入库通知单对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+      <el-form ref="form" :model="form" :rules="formRule" label-width="120px">
         <!-- <el-form-item label="场所编号 场所编号" prop="placeId">
           <el-input v-model="form.placeId" placeholder="请输入场所编号 场所编号" />
         </el-form-item>
@@ -638,8 +638,8 @@
         <el-form-item label="业务编号" prop="storeCode">
           <el-input v-model="form.storeCode" placeholder="请输入业务编号" />
         </el-form-item>
-        <el-form-item label="寄舱客户" prop="checkConsumer">
-          <el-input v-model="form.checkConsumer" placeholder="请输入寄舱客户" />
+        <el-form-item label="寄仓客户" prop="checkConsumer">
+          <el-input v-model="form.checkConsumer" placeholder="请输入寄仓客户" />
         </el-form-item>
         <el-form-item label="寄舱合同号" prop="checkContractNo">
           <el-input v-model="form.checkContractNo" placeholder="请输入寄舱合同号" />
@@ -649,12 +649,12 @@
         </el-form-item>-->
         <el-row :gutter="10">
           <el-col :span="8">
-            <el-form-item label="寄舱客户" prop="checkConsumer">
+            <el-form-item label="寄仓客户" prop="checkConsumer">
               <el-select
                 filterable
                 clearable
                 v-model="form.checkConsumer"
-                placeholder="请选择寄舱客户"
+                placeholder="请选择寄仓客户"
                 @change="changeCustomer">
                 <el-option
                   v-for="type in customerList"
@@ -741,6 +741,49 @@
             </el-form-item>
           </el-col>
         </el-row>
+
+        <!--<el-form-item label="车型(双挂，单挂)">
+          <el-select v-model="form.vehicleType" placeholder="请选择车型(双挂，单挂)">
+            <el-option label="请选择字典生成" value="" />
+          </el-select>
+        </el-form-item>-->
+        <!--<el-form-item label="计量单位(吨)" prop="measuringUnit">
+          <el-input v-model="form.measuringUnit" placeholder="请输入计量单位(吨)" />
+        </el-form-item>-->
+        <!--<el-form-item label="包装方式(集装箱，散装)" prop="packMode">
+          <el-input v-model="form.packMode" placeholder="请输入包装方式(集装箱，散装)" />
+        </el-form-item>-->
+
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="车辆类型" prop="vehicleType">
+              <el-select v-model="form.vehicleType" filterable placeholder="请选择车辆类型">
+                <el-option
+                  v-for="item in vehicleTypes"
+                  :key="item.dictLabel"
+                  :label="item.dictLabel"
+                  :value="item.dictLabel">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="包装方式" prop="packMode">
+              <el-select v-model="form.packMode" filterable placeholder="请选择包装方式" @change="packModeChange">
+                <el-option
+                  v-for="item in packModeDic"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!--<el-row :gutter="10">
+          <el-col :span="12"></el-col>
+          <el-col :span="12"></el-col>
+        </el-row>-->
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="车队联系人" prop="vehicleTeamContact">
@@ -965,10 +1008,10 @@ export default {
   },
   data() {
     return {
-      dateRange: ['',''],
+      dateRange: ['', ''],
       timeDic: [
-        {'key':'1','value':'进场时间'},
-        {'key':'0','value':'出场时间'}
+        {'key': '1', 'value': '进场时间'},
+        {'key': '0', 'value': '出场时间'}
       ],
       // 遮罩层
       loading: true,
@@ -989,8 +1032,8 @@ export default {
       ],
       storeIds: [],
       contractList: [],
-      customerList: [], //寄舱客户列表
-      contractSubList: [], //合同子集，在选定寄舱客户时，从合同表里取出对应客户的合同放入到这个集合中
+      customerList: [], //寄仓客户列表
+      contractSubList: [], //合同子集，在选定寄仓客户时，从合同表里取出对应客户的合同放入到这个集合中
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -1053,28 +1096,10 @@ export default {
       goodsNameList: [],
       // 表单校验
       rules: {
-        docNo: [
-          {required: true, message: "通知单号不能为空", trigger: "blur"},
-        ],
-        storeCode: [
-          {
-            type: "string",
-            required: true,
-            message: "库位号不能为空",
-            trigger: "change",
-          },
-        ],
-        checkConsumer: [
-          {
-            type: "string",
-            required: true,
-            message: "寄舱客户不能为空",
-            trigger: "blur",
-          },
-        ],
-        checkContractNo: [
-          {required: true, message: "寄舱合同不能为空", trigger: "change"},
-        ],
+        docNo: [{required: true, message: "通知单号不能为空", trigger: "blur"},],
+        storeCode: [{type: "string", required: true, message: "库位号不能为空", trigger: "change",},],
+        checkConsumer: [{type: "string", required: true, message: "寄仓客户不能为空", trigger: "blur",},],
+        checkContractNo: [{required: true, message: "寄舱合同不能为空", trigger: "change"},],
         vehicleNo: [
           {required: true, message: "车号不能为空", trigger: "blur"},
           {min: 7, max: 8, message: "请输入7位有效车号", trigger: "blur"}
@@ -1087,16 +1112,61 @@ export default {
           {required: true, message: "蒙方皮重不能为空", trigger: "blur"},
           {type: "number", message: "请输入数字", trigger: "blur"},
         ],
+        packMode: [
+          {required: true, message: "包装方式不能为空", trigger: "change"},
+        ],
+        vehicleType: [
+          {required: true, message: "车辆类型不能为空", trigger: "change"},
+        ]
+      },
+      rulesBox: {
+        docNo: [{required: true, message: "通知单号不能为空", trigger: "blur"},],
+        storeCode: [{type: "string", required: true, message: "库位号不能为空", trigger: "change",},],
+        checkConsumer: [{type: "string", required: true, message: "寄仓客户不能为空", trigger: "blur",},],
+        checkContractNo: [{required: true, message: "寄舱合同不能为空", trigger: "change"},],
+        vehicleNo: [
+          {required: true, message: "车号不能为空", trigger: "blur"},
+          {min: 7, max: 8, message: "请输入7位有效车号", trigger: "blur"}
+        ],
+        mongoliaNetWeight: [
+          {required: true, message: "蒙方净重不能为空", trigger: "blur"},
+          {type: "number", message: "请输入数字", trigger: "blur"},
+        ],
+        mongoliaTareWeight: [
+          {required: true, message: "蒙方皮重不能为空", trigger: "blur"},
+          {type: "number", message: "请输入数字", trigger: "blur"},
+        ],
+        packMode: [
+          {required: true, message: "包装方式不能为空", trigger: "change"}
+        ],
+        vehicleType: [
+          {required: true, message: "车辆类型不能为空", trigger: "change"}
+        ],
+        containerNo1: [{required: true, message: "集装箱号不能为空", trigger: "blur"}],
+        containerNo2: [{required: true, message: "集装箱号不能为空", trigger: "blur"}],
+        containerNo3: [{required: true, message: "集装箱号不能为空", trigger: "blur"}],
+        containerNo4: [{required: true, message: "集装箱号不能为空", trigger: "blur"}],
       },
       storeStateDic: [
         {key: "0", label: "未进场"},
         {key: "2", label: "已进场"},
         {key: "1", label: "已入库"},
       ],
-    };
+      packModeDic: [
+        {dictValue: '2', dictLabel: '散装'},
+        {dictValue: '1', dictLabel: '集装箱'}
+      ],
+      vehicleTypes: [
+        {dictValue: '1', dictLabel: '单驱'},
+        {dictValue: '2', dictLabel: '双驱'},
+        {dictValue: '3', dictLabel: '单箱'},
+        {dictValue: '4', dictLabel: '双箱'},
+      ],
+      formRule: this.rules
+    }
   },
   created() {
-    this.dateRange = ['','']
+    this.dateRange = ['', '']
     //this.queryParams.beginTime = this.dateRange[0]
     //this.queryParams.endTime = this.dateRange[1]
     this.depts = getUserDepts("0");
@@ -1109,21 +1179,22 @@ export default {
     this.getDicts("coal_type").then(response => {
       this.goodsNameList = response.data;
     });
+    this.formRule = this.rules
   },
   methods: {
     /** 查询入库通知单列表 */
     getList() {
       this.loading = true;
 
-      if(this.queryParams.remark && this.queryParams.remark !== '' ){
-          if(this.dateRange[0] !=='' && this.dateRange[1]!== ''){
-            this.queryParams.beginTime = this.dateRange[0]
-            this.queryParams.endTime = this.dateRange[1]
-          }else{
-            this.queryParams.remark = undefined
-            this.queryParams.beginTime = undefined
-            this.queryParams.endTime = undefined
-          }
+      if (this.queryParams.remark && this.queryParams.remark !== '') {
+        if (this.dateRange[0] !== '' && this.dateRange[1] !== '') {
+          this.queryParams.beginTime = this.dateRange[0]
+          this.queryParams.endTime = this.dateRange[1]
+        } else {
+          this.queryParams.remark = undefined
+          this.queryParams.beginTime = undefined
+          this.queryParams.endTime = undefined
+        }
       }
       listInstoreDocLike(this.queryParams).then((response) => {
         this.instoreDocList = response.rows;
@@ -1354,15 +1425,22 @@ export default {
     mengwenInput(input) {
       this.form.vehicleNo = input;
     },
-    setTime(event){
+    setTime(event) {
       console.log(event)
-      if(event==''){
-        this.dateRange = ['','']
+      if (event == '') {
+        this.dateRange = ['', '']
       }
     },
-    placeChange(){
+    placeChange() {
       this.getContract()
       this.getList()
+    },
+    packModeChange(event) {
+      if (event === '1') {
+        this.formRule = this.rulesBox
+      } else {
+        this.formRule = this.rules
+      }
     }
   },
 };

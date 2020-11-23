@@ -28,19 +28,19 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="寄舱客户" prop="customerName">
+      <el-form-item label="寄仓客户" prop="customerName">
         <el-input
           v-model="queryParams.customerName"
-          placeholder="请输入寄舱客户"
+          placeholder="请输入寄仓客户"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="寄舱客户ID" prop="customerId">
+      <el-form-item label="寄仓客户ID" prop="customerId">
         <el-input
           v-model="queryParams.customerId"
-          placeholder="请输入寄舱客户ID"
+          placeholder="请输入寄仓客户ID"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -728,8 +728,8 @@
       <el-table-column label="场所编号" align="center" prop="placeId" />
       <el-table-column label="提煤单号" align="center" prop="docNo" />
       <el-table-column label="放行单号" align="center" prop="businessNo" />
-      <el-table-column label="寄舱客户" align="center" prop="customerName" />
-      <el-table-column label="寄舱客户ID" align="center" prop="customerId" />
+      <el-table-column label="寄仓客户" align="center" prop="customerName" />
+      <el-table-column label="寄仓客户ID" align="center" prop="customerId" />
       <el-table-column label="客户id" align="center" prop="receiveId" />
       <el-table-column label="客户名称" align="center" prop="receiveName" />
       <el-table-column label="寄舱合同号" align="center" prop="checkContractNo" />
@@ -866,11 +866,11 @@
         <el-form-item label="放行单号" prop="businessNo">
           <el-input v-model="form.businessNo" placeholder="请输入放行单号" />
         </el-form-item>
-        <el-form-item label="寄舱客户" prop="customerName">
-          <el-input v-model="form.customerName" placeholder="请输入寄舱客户" />
+        <el-form-item label="寄仓客户" prop="customerName">
+          <el-input v-model="form.customerName" placeholder="请输入寄仓客户" />
         </el-form-item>
-        <el-form-item label="寄舱客户ID" prop="customerId">
-          <el-input v-model="form.customerId" placeholder="请输入寄舱客户ID" />
+        <el-form-item label="寄仓客户ID" prop="customerId">
+          <el-input v-model="form.customerId" placeholder="请输入寄仓客户ID" />
         </el-form-item>
         <el-form-item label="客户id" prop="receiveId">
           <el-input v-model="form.receiveId" placeholder="请输入客户id" />

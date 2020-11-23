@@ -102,7 +102,7 @@
     <el-table v-loading="loading" :data="passDocList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="放行单号" align="center" prop="passNo"/>
-      <el-table-column label="寄舱客户" align="center" prop="checkConsumer"/>
+      <el-table-column label="寄仓客户" align="center" prop="checkConsumer"/>
       <el-table-column label="放行量" align="center" prop="passVolume"/>
       <el-table-column label="放行状态" align="center" prop="passState" :formatter="ReleaseStatusFormat"/>
       <el-table-column label="所属场所" align="center" prop="placeId" :formatter="corporationFormat"/>
@@ -156,9 +156,9 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="寄舱客户" prop="checkConsumer">
+            <el-form-item label="寄仓客户" prop="checkConsumer">
               <el-select
-                v-model="form.checkConsumer" placeholder="请选择寄舱客户" filterable @change="((val)=>{change(val, 'eName')})">
+                v-model="form.checkConsumer" placeholder="请选择寄仓客户" filterable @change="((val)=>{change(val, 'eName')})">
                 <el-option
                   v-for="dict in consumerOptions"
                   :key="dict.id"
@@ -576,7 +576,7 @@ export default {
           }
         })
       }
-      // 客户名称->寄舱客户id
+      // 客户名称->寄仓客户id
       if (name === 'eName') {
         this.consumerOptions.forEach(element => {
           if (element.eName === val) {
