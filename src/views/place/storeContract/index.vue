@@ -396,7 +396,8 @@ import {
   getStoreContract,
   delStoreContract,
   addStoreContract,
-  updateStoreContract
+  updateStoreContract,
+  listStoreContractLike
 } from "@/api/place/storeContract";
 import {getUserDepts} from "@/utils/charutils";
 import {getZoneList} from "@/api/place/zone";
@@ -493,9 +494,9 @@ export default {
   methods: {
     /** 查询仓储合同 列表 */
     getList() {
-      if (!this.queryParams.placeId) return false
+      // if (!this.queryParams.placeId) return false
       this.loading = true;
-      listStoreContract(this.queryParams).then(response => {
+      listStoreContractLike(this.queryParams).then(response => {
         this.storeContractList = response.rows;
         this.total = response.total;
         this.loading = false;
