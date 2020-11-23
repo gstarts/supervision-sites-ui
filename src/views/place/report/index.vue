@@ -261,12 +261,12 @@
             <af-table-column label="皮重" align="center" prop="tareWeight"/>
             <af-table-column label="净重" align="center" prop="netWeight"/>
           </el-table>
-          <!--          <el-row class="countRow" v-show="reportList.length>0">-->
-          <!--            <span v-show="vehicleCount>0">总车数:{{ vehicleCount }}</span>-->
-          <!--            <span>毛重合计:{{ totalRoughWeight }}</span>-->
-          <!--            <span>皮重合计:{{ totalTareWeight }}</span>-->
-          <!--            <span>净重合计:{{ totalNetWeight }}</span>-->
-          <!--          </el-row>-->
+                    <el-row class="countRow" v-show="index===newArray.length-1 ?  true : false">
+                      <span v-show="vehicleCount>0">总车数:{{ vehicleCount }}</span>
+                      <span>毛重合计:{{ totalRoughWeight }}</span>
+                      <span>皮重合计:{{ totalTareWeight }}</span>
+                      <span>净重合计:{{ totalNetWeight }}</span>
+                    </el-row>
         </div>
       </div>
       <!--                <el-row class="countRow" v-show="reportList.length>0">-->
@@ -552,6 +552,9 @@
           //this.result = response
           if (response.code === 200) {
             this.reportList = response.data.list
+            if (this.reportList.length==0) {
+              this.$message.warning("没取到数据，请从新选取时间间隔")
+            }
             //console.log(this.reportList)
             this.vehicleCount = response.data.vehicleCount
             this.totalNetWeight = response.data.totalNetWeight
@@ -593,6 +596,7 @@
       // 打印操作，生成divID
       gennerateId: function (index) {
         return "printDiv" + index
+
       },
       //场所变化 获取对应场所的合同
       getContract(placeId, status) {
