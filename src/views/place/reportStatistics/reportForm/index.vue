@@ -13,21 +13,21 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="寄舱合同" prop="column2">
+      <el-form-item label="寄仓合同" prop="column2">
         <el-input
           v-model="queryParams.column2"
-          placeholder="请输入寄舱合同"
+          placeholder="请输入寄仓合同"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="寄舱客户" prop="storeCustomer">
-        <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>-->
+      <el-form-item label="寄仓客户" prop="storeCustomer">
+        <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄仓客户" disabled/>-->
         <el-select
           filterable
           clearable
-          v-model="queryParams.customerName" placeholder="请选择寄舱客户">
+          v-model="queryParams.customerName" placeholder="请选择寄仓客户">
           <el-option
             v-for="type in customerList"
             :key="type.customerName"
@@ -114,8 +114,8 @@
           </el-date-picker>
         </el-form-item>
 
-        <!--<el-form-item label="寄舱合同" prop="storeContractId">
-          <el-select v-model="form.storeContractId" placeholder="请选择寄舱合同" @change="changeContract">
+        <!--<el-form-item label="寄仓合同" prop="storeContractId">
+          <el-select v-model="form.storeContractId" placeholder="请选择寄仓合同" @change="changeContract">
             <el-option
               v-for="type in contractSubList"
               :key="type.id"
@@ -188,9 +188,9 @@
                 :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
                 :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
                 style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
-        <af-table-column label="寄舱客户" align="center" width="120%" prop="column1"/>
+        <af-table-column label="寄仓客户" align="center" width="120%" prop="column1"/>
 
-        <af-table-column label="寄舱合同" align="center" width="120%" prop="column2"/>
+        <af-table-column label="寄仓合同" align="center" width="120%" prop="column2"/>
 
         <af-table-column label="品名" align="center" prop="column3" width="80%"/>
         <el-table-column label="期初库存(t)" align="center" prop="column4"/>
@@ -283,8 +283,8 @@ export default {
       ],
       // 导出Excel 字段
       json_fields: {
-        "寄舱客户": "column1",    //常规字段
-        "寄舱合同": "column2", //支持嵌套属性
+        "寄仓客户": "column1",    //常规字段
+        "寄仓合同": "column2", //支持嵌套属性
         "品名": "column3",
         "期初库存": "column4",
         "入车数": "column5",
@@ -323,8 +323,8 @@ export default {
         {'key': 0, 'value': '出库'},
       ],
       statisticsModeDic: [
-        {'key': 1, 'value': '寄舱客户汇总'},
-        {'key': 2, 'value': '寄舱客户明细'}
+        {'key': 1, 'value': '寄仓客户汇总'},
+        {'key': 2, 'value': '寄仓客户明细'}
       ],
       packModeDic: [
         {'key': 1, 'value': '集装箱'},

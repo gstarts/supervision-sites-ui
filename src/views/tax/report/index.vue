@@ -16,10 +16,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="寄舱客户名称" prop="sendCustomerName" label-width="150px">
+      <el-form-item label="寄仓客户名称" prop="sendCustomerName" label-width="150px">
         <el-input
           v-model="queryParams.sendCustomerName"
-          placeholder="请输入寄舱客户名称"
+          placeholder="请输入寄仓客户名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -63,7 +63,7 @@
 
 
     <el-table v-loading="loading" :data="reportList" >
-      <el-table-column label="寄舱客户名称" align="center" prop="sendCustomerName" />
+      <el-table-column label="寄仓客户名称" align="center" prop="sendCustomerName" />
       <el-table-column label="货物总数量" align="center" prop="packages" />
       <el-table-column label="入库总数量" align="center" prop="packagesIn" />
       <el-table-column label="出库总数量" align="center" prop="packagesOut" />

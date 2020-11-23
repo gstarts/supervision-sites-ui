@@ -1276,11 +1276,9 @@ export default {
       //进场记录
       this.getListI();
       this.getListE();
-
       //判断场所和车辆类型的是否全了
       this.getVehicleList()
       this.getUserList()//更新用户列表
-
     },
     //获取车号列表
     getVehicleList() {
@@ -1289,7 +1287,8 @@ export default {
         //if(&& this.PoundForm.stationViaType)
         if (this.PoundForm.flowDirection !== 'I') {//如果是出场
           if (!this.PoundForm.stationViaType) {
-            return false
+            this.PoundForm.stationViaType = undefined
+            //return false
           }
         }
         if (this.autoPrint !== true) {
@@ -1537,6 +1536,8 @@ export default {
         }
       }
       let that = this
+      //todo 暂时不验证皮重异常
+      errMsg = ''
       if (errMsg !== '') { //如果错误信息不为空
         this.$prompt(errMsg, '提示', {
           confirmButtonText: '确定',
@@ -1566,6 +1567,7 @@ export default {
       alert(value)
       return true
     },
+    //将表格上行的记录标记为异常的方法
     markError(row) {
       //弹出一个对话框
       this.$prompt('是否将车辆 ['+row.plateNum+'] 标记为异常', '提示', {

@@ -679,7 +679,7 @@ export default {
     },
     // 下拉列表改变时激活
     change(val, name) {
-      // 客户名称->寄舱客户id
+      // 客户名称->寄仓客户id
       if (name === 'eName') {
         this.clientNameList.forEach(element => {
           if (element.eName === val) {

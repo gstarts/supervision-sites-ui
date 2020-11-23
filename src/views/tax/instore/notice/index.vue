@@ -30,20 +30,20 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      
-      <el-form-item label="寄舱客户" prop="checkConsumer">
+
+      <el-form-item label="寄仓客户" prop="checkConsumer">
         <el-input
           v-model="queryParams.checkConsumer"
-          placeholder="请输入寄舱客户"
+          placeholder="请输入寄仓客户"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!--<el-form-item label="寄舱合同" prop="contractNo">
+      <!--<el-form-item label="寄仓合同" prop="contractNo">
         <el-input
           v-model="queryParams.contractNo"
-          placeholder="请输入寄舱合同编号"
+          placeholder="请输入寄仓合同编号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -119,7 +119,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      
+
       <!-- <el-form-item label="机械号" prop="mechanicalNo">
          <el-input
            v-model="queryParams.mechanicalNo"
@@ -252,7 +252,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-    
+
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -297,7 +297,7 @@
         </el-button>
       </el-col>
     </el-row>
-    
+
     <el-table v-loading="loading" :data="instore_noticeList" @selection-change="handleSelectionChange">
       <!--<af-table-column type="selection" align="center" />-->
       <!--<af-table-column label="ID" align="center" prop="id" />-->
@@ -305,8 +305,8 @@
       <!--<af-table-column label="备注" align="center" prop="remark" />-->
       <!--<af-table-column label="预订库位号" align="center" prop="bookStoreCode" width="180" />-->
       <af-table-column label="业务编号" align="center" prop="businessNo"/>
-      <af-table-column label="寄舱客户" align="center" prop="checkConsumer" width="180px"/>
-      <af-table-column label="寄舱合同编号" align="center" prop="contractNo"/>
+      <af-table-column label="寄仓客户" align="center" prop="checkConsumer" width="180px"/>
+      <af-table-column label="寄仓合同编号" align="center" prop="contractNo"/>
       <af-table-column label="销售合同号" align="center" prop="saleContractNo"/>
       <af-table-column label="批次号" align="center" prop="batchNo"/>
       <af-table-column label="司机姓名" align="center" prop="driverName"/>
@@ -335,7 +335,7 @@
       <!--<af-table-column label="理货员" align="center" prop="tallyClerk" />-->
       <af-table-column label="总毛重(KG)" align="center" prop="totalRoughWeight"/>
       <!--<af-table-column label="装卸组" align="center" prop="unloadGroup" />-->
-      
+
       <!--<af-table-column label="工组人员" align="center" prop="workGroup" />-->
       <af-table-column label="状态" align="center" prop="state">
         <template slot-scope="scope">
@@ -420,7 +420,7 @@
         </template>
       </af-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -428,7 +428,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    
+
     <!-- 添加或修改入库通知单对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
@@ -444,20 +444,20 @@
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item label="寄舱客户" prop="checkConsumer">
-              <el-input v-model="form.checkConsumer" placeholder="请输入寄舱客户"/>
+            <el-form-item label="寄仓客户" prop="checkConsumer">
+              <el-input v-model="form.checkConsumer" placeholder="请输入寄仓客户"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="寄舱合同编号" prop="contractNo">
-              <el-input v-model="form.contractNo" placeholder="请输入寄舱合同编号"/>
+            <el-form-item label="寄仓合同编号" prop="contractNo">
+              <el-input v-model="form.contractNo" placeholder="请输入寄仓合同编号"/>
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="销售合同号" prop="saleContractNo">
@@ -470,7 +470,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="司机姓名" prop="driverName">
@@ -483,7 +483,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="车板号" prop="trailerNo">
@@ -496,7 +496,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="车队名称" prop="fleetName">
@@ -509,7 +509,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="订单号" prop="soNo">
@@ -539,7 +539,7 @@
             </el-form-item>
           </el-col>
         </el-row>-->
-        
+
         <!--<el-row type="flex">
           <el-col :span="12">
             <el-form-item label="打印时间" prop="printTime">
@@ -551,7 +551,7 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
-          
+
           <el-col :span="12">
             <el-form-item label="磅单时间" prop="poundTime">
               <el-date-picker clearable size="small" style="width: 200px"
@@ -562,9 +562,9 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
-        
+
         </el-row>
-        
+
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="完成时间" prop="competeTime">

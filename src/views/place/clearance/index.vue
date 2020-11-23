@@ -117,8 +117,8 @@
           </el-select>
         </el-form-item>
        <!-- 应急需求变更       -->
-        <el-form-item label="寄舱客户" prop="customsId">
-          <el-select v-model="form.customsId" filterable placeholder="请选择寄舱客户">
+        <el-form-item label="寄仓客户" prop="customsId">
+          <el-select v-model="form.customsId" filterable placeholder="请选择寄仓客户">
             <el-option
               v-for="item in consumerOptions"
               :key="item.id"
@@ -186,9 +186,9 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="寄舱客户" prop="customsId">
+        <el-form-item label="寄仓客户" prop="customsId">
 <!--          应急-->
-          <el-select v-model="form.customsId" filterable placeholder="请选择寄舱客户" @change="((val)=>{change(val, 'customs')})">
+          <el-select v-model="form.customsId" filterable placeholder="请选择寄仓客户" @change="((val)=>{change(val, 'customs')})">
             <el-option
               v-for="item in consumerOptions"
               :key="item.id"
@@ -233,7 +233,7 @@ export default {
       depts: [],
       // 是否显示弹出层
       open: false,
-      // 寄舱客户
+      // 寄仓客户
       consumerOptions:[],
       // 查询参数
       queryParams: {
@@ -432,7 +432,7 @@ export default {
       if (this.form.coalBillNo&&this.form.placeId) {
         this.$refs.upload.submit()
       } else {
-        this.$alert('请选择场所和寄舱客户')
+        this.$alert('请选择场所和寄仓客户')
       }
     },
     /** 客户信息列表 */

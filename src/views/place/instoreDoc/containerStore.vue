@@ -54,8 +54,8 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row :gutter="10">
           <el-col :span="24">
-            <el-form-item label="寄舱客户" prop="checkConsumer">
-              <el-input v-model="form.checkConsumer" placeholder="请输入寄舱客户" disabled/>
+            <el-form-item label="寄仓客户" prop="checkConsumer">
+              <el-input v-model="form.checkConsumer" placeholder="请输入寄仓客户" disabled/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -195,7 +195,7 @@ export default {
       // 表单校验
       rules: {
         checkConsumer: [
-          {type: 'string', required: true, message: "寄舱客户不能为空", trigger: "blur"}
+          {type: 'string', required: true, message: "寄仓客户不能为空", trigger: "blur"}
         ],
         containerNo1: [
           {required: true, message: "集装箱号1不能为空", trigger: "blur"}

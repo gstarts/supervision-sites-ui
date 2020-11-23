@@ -17,12 +17,12 @@
         </el-col>
 
         <el-col :span="6">
-          <el-form-item label="寄舱客户" prop="storeCustomer">
-            <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>-->
+          <el-form-item label="寄仓客户" prop="storeCustomer">
+            <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄仓客户" disabled/>-->
             <el-select
               filterable
               clearable
-              v-model="queryParams.customerName" placeholder="请选择寄舱客户" @change="changeCustomer">
+              v-model="queryParams.customerName" placeholder="请选择寄仓客户" @change="changeCustomer">
               <el-option
                 v-for="type in customerList"
                 :key="type.customerName"
@@ -34,13 +34,13 @@
         </el-col>
 
         <el-col :span="6">
-          <el-form-item label="寄舱合同" prop="checkContractNo">
+          <el-form-item label="寄仓合同" prop="checkContractNo">
             <el-select
 
               filterable
               clearable
               v-model="queryParams.checkContractNo"
-              placeholder="请选择寄舱合同"
+              placeholder="请选择寄仓合同"
               size="small">
               <el-option
                 v-for="dept in contractSubList"
@@ -202,8 +202,8 @@
         <!--          </el-date-picker>-->
         <!--        </el-form-item>-->
 
-        <!--<el-form-item label="寄舱合同" prop="storeContractId">
-          <el-select v-model="form.storeContractId" placeholder="请选择寄舱合同" @change="changeContract">
+        <!--<el-form-item label="寄仓合同" prop="storeContractId">
+          <el-select v-model="form.storeContractId" placeholder="请选择寄仓合同" @change="changeContract">
             <el-option
               v-for="type in contractSubList"
               :key="type.id"
@@ -382,8 +382,8 @@
           {'key': 0, 'value': '出库'},
         ],
         statisticsModeDic: [
-          {'key': 1, 'value': '寄舱客户汇总'},
-          {'key': 2, 'value': '寄舱客户明细'}
+          {'key': 1, 'value': '寄仓客户汇总'},
+          {'key': 2, 'value': '寄仓客户明细'}
         ],
         packModeDic: [
           {'key': 1, 'value': '集装箱'},

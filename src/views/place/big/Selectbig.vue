@@ -58,7 +58,7 @@
                   </el-row>
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="寄舱客户:" prop="customerName">
+                      <el-form-item label="寄仓客户:" prop="customerName">
                         <!-- <el-input
                           v-model="form.customerName"
                           placeholder="请输入客户名称"

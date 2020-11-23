@@ -207,7 +207,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="包装类型" prop="packMode">
+            <el-form-item label="包装方式" prop="packMode">
               <el-select v-model="form.packMode" filterable placeholder="请选择包装类型">
                 <el-option
                   v-for="item in types"
@@ -491,7 +491,7 @@ export default {
       plateNoList: [],
       // 车辆类型
       types: [
-        {dictValue: '2', dictLabel: '散杂货'},
+        {dictValue: '2', dictLabel: '散装'},
         {dictValue: '1', dictLabel: '集装箱'}
       ],
       // 是否申报海关

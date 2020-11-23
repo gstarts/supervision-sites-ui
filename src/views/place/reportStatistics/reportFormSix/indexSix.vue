@@ -14,12 +14,12 @@
 <!--          </el-select>-->
 <!--        </el-form-item>-->
 
-<!--      <el-form-item label="寄舱客户" prop="storeCustomer">-->
-<!--        &lt;!&ndash;<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>&ndash;&gt;-->
+<!--      <el-form-item label="寄仓客户" prop="storeCustomer">-->
+<!--        &lt;!&ndash;<el-input v-model="form.storeCustomer" placeholder="请输入寄仓客户" disabled/>&ndash;&gt;-->
 <!--        <el-select-->
 <!--          filterable-->
 <!--          clearable-->
-<!--          v-model="queryParams.customerName" placeholder="请选择寄舱客户">-->
+<!--          v-model="queryParams.customerName" placeholder="请选择寄仓客户">-->
 <!--          <el-option-->
 <!--            v-for="type in customerList"-->
 <!--            :key="type.customerName"-->
@@ -89,8 +89,8 @@
 <!--          </el-date-picker>-->
 <!--        </el-form-item>-->
 
-        <!--<el-form-item label="寄舱合同" prop="storeContractId">
-          <el-select v-model="form.storeContractId" placeholder="请选择寄舱合同" @change="changeContract">
+        <!--<el-form-item label="寄仓合同" prop="storeContractId">
+          <el-select v-model="form.storeContractId" placeholder="请选择寄仓合同" @change="changeContract">
             <el-option
               v-for="type in contractSubList"
               :key="type.id"
@@ -101,7 +101,7 @@
         </el-form-item>-->
 
         <!--<el-form-item label="品名" prop="goodsName">
-          &lt;!&ndash;<el-input v-model="form.storeCustomer" placeholder="请输入寄舱客户" disabled/>&ndash;&gt;
+          &lt;!&ndash;<el-input v-model="form.storeCustomer" placeholder="请输入寄仓客户" disabled/>&ndash;&gt;
           <el-select
             filterable
             clearable
@@ -261,8 +261,8 @@ export default {
         {'key': 0, 'value': '出库'},
       ],
       statisticsModeDic: [
-        {'key': 1, 'value': '寄舱客户汇总'},
-        {'key': 2, 'value': '寄舱客户明细'}
+        {'key': 1, 'value': '寄仓客户汇总'},
+        {'key': 2, 'value': '寄仓客户明细'}
       ],
       packModeDic: [
         {'key': 1, 'value': '集装箱'},

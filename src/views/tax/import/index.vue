@@ -110,7 +110,7 @@
         </template>
       </af-table-column>
       <af-table-column label="业务编号" align="center" prop="businessNo"/>
-      <af-table-column label="寄舱客户" align="center" prop="storeCustomer"/>
+      <af-table-column label="寄仓客户" align="center" prop="storeCustomer"/>
       <af-table-column label="结算客户" align="center" prop="settlementCustomer"/>
       <af-table-column label="发货单位" align="center" prop="sendName"/>
       <af-table-column label="收货单位" align="center" prop="receiveName"/>
@@ -261,8 +261,8 @@
 
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="寄舱客户" prop="storeCustomer" v-show="noticeType">
-              <el-select v-model="form.storeCustomer" placeholder="请选择寄舱客户" @change="setStoreCustomer">
+            <el-form-item label="寄仓客户" prop="storeCustomer" v-show="noticeType">
+              <el-select v-model="form.storeCustomer" placeholder="请选择寄仓客户" @change="setStoreCustomer">
                 <el-option
                   v-for="type in contractList"
                   :key="type.id"
@@ -314,7 +314,7 @@
         <el-row :gutter="10" v-show="transType">
           <el-col :span="12">
             <el-form-item label="运输方式" prop="transportMode">
-              <el-select v-model="form.transportMode" placeholder="请选择寄舱客户">
+              <el-select v-model="form.transportMode" placeholder="请选择寄仓客户">
                 <el-option
                   v-for="type in transportModeList"
                   :key="type.key"
@@ -434,7 +434,7 @@
 						{ type:"string", required: true, message: "模板类型不能为空", trigger: "change"}
 					],
 					storeCustomer: [
-						{type:"string",required: true, message: "寄舱客户不能为空", trigger: "change"}
+						{type:"string",required: true, message: "寄仓客户不能为空", trigger: "change"}
 					],
 					settlementCustomer: [
 						{type:"string",required: true, message: "结算客户不能为空", trigger: "change"}
@@ -459,7 +459,7 @@
 						{type:"string",required: true, message: "模板类型不能为空", trigger: "change"}
 					],
 					storeCustomer: [
-						{type:"string",required: true, message: "寄舱客户不能为空", trigger: "change"}
+						{type:"string",required: true, message: "寄仓客户不能为空", trigger: "change"}
 					],
 					settlementCustomer: [
 						{type:"string",required: true, message: "结算客户不能为空", trigger: "change"}

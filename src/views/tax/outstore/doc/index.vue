@@ -84,8 +84,8 @@
       <af-table-column label="批次号" align="center" prop="batchNo" />
       <af-table-column label="业务编号" align="center" prop="businessNo" />
       <af-table-column label="销售合同号" align="center" prop="saleContractNo" />
-      <af-table-column label="寄舱客户" align="center" prop="checkConsumer" />
-      <af-table-column label="寄舱合同编号" align="center" prop="contractNo" />
+      <af-table-column label="寄仓客户" align="center" prop="checkConsumer" />
+      <af-table-column label="寄仓合同编号" align="center" prop="contractNo" />
       <!--<af-table-column label="车队号" align="center" prop="convoyNo" />-->
       <!--<af-table-column label="报关单号" align="center" prop="customsDeclarationNo" />
       <af-table-column label="提运单号" align="center" prop="deliveryNo" />-->
