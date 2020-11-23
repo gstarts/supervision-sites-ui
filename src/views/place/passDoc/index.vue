@@ -106,6 +106,8 @@
       <el-table-column label="放行量" align="center" prop="passVolume"/>
       <el-table-column label="放行状态" align="center" prop="passState" :formatter="ReleaseStatusFormat"/>
       <el-table-column label="所属场所" align="center" prop="placeId" :formatter="corporationFormat"/>
+      <el-table-column label="报送日期" align="center" prop="submitDate"/>
+      <el-table-column label="送来日期" align="center" prop="submitBackDate"/>
       <el-table-column label="建单时间" align="center" prop="createTime"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
@@ -189,6 +191,30 @@
           <el-col :span="12">
             <el-form-item label="放行量" prop="passVolume">
               <el-input v-model.number="form.passVolume" placeholder="请输入放行量" :disabled="formUpdateMode"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="报送日期" prop="submitDate">
+              <el-date-picker
+                v-model="form.submitDate"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="送来日期" prop="submitBackDate">
+              <el-date-picker
+                v-model="form.submitBackDate"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd">
+              </el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -423,7 +449,9 @@ export default {
         updateBy: undefined,
         updateTime: undefined,
         remark: undefined,
-        revision: undefined
+        revision: undefined,
+        submitDate: undefined,
+        submitBackDate: undefined,
       }
       this.resetForm('form')
     },

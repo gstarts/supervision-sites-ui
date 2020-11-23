@@ -333,10 +333,15 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="客户名称" prop="receiveName">
-              <el-input
-                v-model="form.receiveName"
-                placeholder="请输入客户名称"
-              />
+              <el-select
+                v-model="form.receiveName" placeholder="请销售客户名称" filterable>
+                <el-option
+                  v-for="dict in saleConsumerOptions"
+                  :key="dict.eName"
+                  :label="dict.eName"
+                  :value="dict.eName"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -525,8 +530,11 @@ export default {
         coalType: undefined,
         id: undefined
       },
-      // 客户名称列表
+      // 寄仓名称列表
       consumerOptions: [],
+      //销售客户列表
+      saleConsumerOptions: [],
+
       //运输方式
       transportOptions: [],
       //状态字典集
@@ -564,7 +572,7 @@ export default {
           {required: true, message: '请输入销售合同', trigger: 'blur'}
         ],
         receiveName: [
-          {required: true, message: '请输入客户名称', trigger: 'blur'}
+          {required: true, message: '请输入销售客户名称', trigger: 'change'}
         ],
         storeCode: [
           {required: true, message: '请选择库位', trigger: 'blur'}
@@ -610,6 +618,7 @@ export default {
       this.form.placeId = this.queryParams.placeId
       this.getList()
       this.getConsumerInfo(this.queryParams.placeId)
+      this.getSaleConsumerInfo(this.queryParams.placeId)
       this.getTransportUnitInfo()
     }
 
@@ -644,11 +653,18 @@ export default {
         this.loading = false
       })
     },
-    /** 客户信息列表 */
+    /** 寄仓信息列表 */
     getConsumerInfo(placeId) {
       let consumerParams = {eType: '2', deptId: placeId, companyType: '2'}
       listInfo(consumerParams).then(response => {
         this.consumerOptions = response.rows
+      })
+    },
+    /** 销售信息列表 */
+    getSaleConsumerInfo(placeId) {
+      let saleConsumerParams = {eType: '2', deptId: placeId, companyType: '3'}
+      listInfo(saleConsumerParams).then(response => {
+        this.saleConsumerOptions = response.rows
       })
     },
     // 导入取消按钮
