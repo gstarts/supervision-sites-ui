@@ -133,7 +133,7 @@
         align="center"
         class-name="small-padding fixed-width"
         fixed="right" width="100px">
-        <template slot-scope="scope">
+        <template scope="scope">
           <el-button
             size="mini"
             type="text"
@@ -143,6 +143,7 @@
             v-show="scope.row.storeState === '0' ">作废
           </el-button>
           <el-button
+            v-if="scope.row.inCardPrintState ==1"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -379,7 +380,7 @@
     </el-dialog>
     <!--打印区域-->
     <div id="dayin" v-show="show">
-      <div v-for="(item,index) in printList" class="all">
+      <div v-for="(item,index) in printList" class="all" style="page-break-after:always">
         <div :id="gennerateId(index)"></div>
         <div class="headRow">{{ item.no }}</div>
         <div class="firstRow">
@@ -402,7 +403,7 @@
         <div class="fiveRow">
           <span>{{ biller }}</span>
         </div>
-        <div class="nouse"></div>
+<!--        <div class="nouse"></div>-->
       </div>
     </div>
     <div id="dayinMake" v-show="showMake">
@@ -429,7 +430,7 @@
         <div class="fiveRow">
           <span>{{ billerMake+'(补打)' }}</span>
         </div>
-        <div class="nouse"></div>
+<!--        <div class="nouse"></div>-->
       </div>
     </div>
   </div>
@@ -911,6 +912,7 @@ export default {
     },
     printMake(row) {
       this.billerMake = this.$store.state.user.nickName
+      this.printMakeList=[],
       this.printMakeList.push(row)
       console.log(this.printMakeList)
       this.showMake = true;
@@ -967,7 +969,7 @@ export default {
 /*  margin: 10mm 15mm 10mm 15mm;*/
 /*}*/
 .all {
-  height: 1638px;
+  //height: 10px;
   width: 1150px;
   /*border: 1px solid ;*/
   /*margin-top: 1cm;*/
@@ -978,8 +980,8 @@ export default {
   width: 1000px;
   padding-left: 3.5cm;
   /*border: 1px solid ;*/
-  padding-top: 10px;
-  margin-top: 2.5cm;
+  //padding-top: 10px;
+  //margin-top: 2.5cm;
 }
 
 .firstRow {
@@ -1059,16 +1061,15 @@ export default {
   height: 100px;
   width: 1000px;
   /*border: 1px solid*/
-
 }
 
 #dayin {
-  height: 500px;
+  height: 300px;
   width: 500px;
   /*border: 1px solid ;*/
 }
 #dayinMake {
-  height: 500px;
+  height: 100px;
   width: 500px;
   /*border: 1px solid ;*/
 }
