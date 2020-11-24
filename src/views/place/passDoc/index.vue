@@ -106,6 +106,8 @@
       <el-table-column label="放行量" align="center" prop="passVolume"/>
       <el-table-column label="放行状态" align="center" prop="passState" :formatter="ReleaseStatusFormat"/>
       <el-table-column label="所属场所" align="center" prop="placeId" :formatter="corporationFormat"/>
+      <el-table-column label="报送日期" align="center" prop="submitDate"/>
+      <el-table-column label="送来日期" align="center" prop="submitBackDate"/>
       <el-table-column label="建单时间" align="center" prop="createTime"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
@@ -158,7 +160,7 @@
           <el-col :span="12">
             <el-form-item label="寄仓客户" prop="checkConsumer">
               <el-select
-                v-model="form.checkConsumer" placeholder="请选择寄仓客户" filterable @change="((val)=>{change(val, 'eName')})">
+                v-model="form.checkConsumer" placeholder="请选择寄仓客户" filterable @change="((val)=>{change(val, 'eName')})" :disabled="formUpdateMode">
                 <el-option
                   v-for="dict in consumerOptions"
                   :key="dict.id"
@@ -170,7 +172,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="品名" prop="goodsName">
-              <el-select v-model="form.goodsName" placeholder="请选择煤种" @change="((val)=>{change(val, 'coalType')})">
+              <el-select v-model="form.goodsName" placeholder="请选择煤种" @change="((val)=>{change(val, 'coalType')})" :disabled="formUpdateMode">
                 <el-option
                   v-for="dict in contractOptions"
                   :key="dict.id"
@@ -183,12 +185,36 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="放行单号" prop="passNo">
-              <el-input v-model="form.passNo" placeholder="请输入放行单号"/>
+              <el-input v-model="form.passNo" placeholder="请输入放行单号" :disabled="formUpdateMode"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="放行量" prop="passVolume">
-              <el-input v-model.number="form.passVolume" placeholder="请输入放行量"/>
+              <el-input v-model.number="form.passVolume" placeholder="请输入放行量" :disabled="formUpdateMode"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="报送日期" prop="submitDate">
+              <el-date-picker
+                v-model="form.submitDate"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="送来日期" prop="submitBackDate">
+              <el-date-picker
+                v-model="form.submitBackDate"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd">
+              </el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -331,7 +357,8 @@ export default {
           {required: true, message: '品名不能为空', trigger: 'blur'}
         ]
       },
-      dateRange: ['',''],//时间组件
+      dateRange: ['', ''],//时间组件
+      formUpdateMode: false,
     }
   },
   created() {
@@ -368,7 +395,7 @@ export default {
     },
     /** 客户信息列表 */
     getConsumerInfo(placeId) {
-      let consumerParams = {eType: '2', deptId: placeId}
+      let consumerParams = {eType: '2', deptId: placeId, companyType: '2'}
       listInfo(consumerParams).then(response => {
         this.consumerOptions = response.rows
       })
@@ -422,7 +449,9 @@ export default {
         updateBy: undefined,
         updateTime: undefined,
         remark: undefined,
-        revision: undefined
+        revision: undefined,
+        submitDate: undefined,
+        submitBackDate: undefined,
       }
       this.resetForm('form')
     },
@@ -448,15 +477,25 @@ export default {
       this.open = true
       this.title = '添加放行单 '
       this.form.placeId = this.queryParams.placeId
+      this.formUpdateMode = false
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
+      this.formUpdateMode = true
       const id = row.id || this.ids
       getPassDoc(id).then(response => {
         this.form = response.data
         this.open = true
         this.title = '修改放行单 '
+
+        this.weightParams.coalType = this.form.goodsName
+        this.weightParams.id = this.form.customerId
+
+        getReleaseWeight(this.weightParams).then(response => {
+          this.form.release = response.data.release
+          this.$forceUpdate()
+        })
       })
     },
     /** 提交按钮 */
