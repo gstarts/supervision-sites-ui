@@ -59,3 +59,11 @@ export function customsWeekList(params) {
     data: params
   })
 }
+//调入调出月报表
+export function customsMonthList(params) {
+  return request({
+    url: '/place/instoreDoc/customsMonthList',
+    method: 'post',
+    data: params
+  })
+}

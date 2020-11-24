@@ -209,7 +209,7 @@
       <el-form-item label="时间" prop="startTime">
         <el-date-picker
           v-model="dateRange"
-          type="datetimerange"
+          type="date"
           align="right"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
