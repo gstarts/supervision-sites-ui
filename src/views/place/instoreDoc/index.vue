@@ -506,7 +506,7 @@
           icon="el-icon-upload"
           size="mini"
           type="info"
-          v-hasPermi="['place:outstoreDoc:import']"
+          v-hasPermi="['place:instoreDoc:import']"
           @click="handleImport">
           导入
         </el-button>
@@ -1136,7 +1136,6 @@
 
 <script>
 import {
-  listInstoreDoc,
   getInstoreDoc,
   delInstoreDoc,
   addInstoreDoc,
@@ -1260,7 +1259,7 @@ export default {
         // 设置上传的请求头部
         headers: {Authorization: 'Bearer ' + getToken()},
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + '/place/outstoreDoc/importData'
+        url: process.env.VUE_APP_BASE_API + '/place/instoreDoc/importData'
       },
       // 表单校验
       rules: {
@@ -1558,6 +1557,7 @@ export default {
     //获取场所下有效的合同 列表
     getContract(placeId, status) {
       //查找合同
+      this.customerList = []
       listStoreContract({placeId: placeId, status: status}).then((response) => {
           if (response.code === 200) {
             this.contractList = response.rows;
@@ -1688,7 +1688,7 @@ export default {
       }
     },
     placeChange() {
-      this.getContract()
+      this.getContract(this.queryParams.placeId,'1')
       this.getList()
     },
     packModeChange(event) {

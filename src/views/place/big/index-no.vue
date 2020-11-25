@@ -223,7 +223,7 @@
     />
 
     <!-- 添加或修改导入文件记录 对话框,用于导入车辆的上传框 -->
-    <!--<el-dialog :title="upload.title" :visible.sync="upload.open" width="400px">
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px">
       <el-upload
         ref="upload"
         :limit="1"
@@ -246,19 +246,19 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitFileForm">确 定</el-button>
         <el-button @click="upload.open = false">取 消</el-button>
-      </div>-->
-    <!--      <el-form ref="form" :model="form" :label-position="left" size="mini">-->
-    <!--        <el-form-item label="数据类型" prop="type">-->
-    <!--          <el-select v-model="form.type" placeholder="请选择类型">-->
-    <!--            <el-option-->
-    <!--              v-for="item in typeList"-->
-    <!--              :key="item.value"-->
-    <!--              :label="item.label"-->
-    <!--              :value="item.value">-->
-    <!--            </el-option>-->
-    <!--          </el-select>-->
-    <!--        </el-form-item>-->
-    <!--      </el-form>-->
+      </div>
+      <!--      <el-form ref="form" :model="form" :label-position="left" size="mini">-->
+      <!--        <el-form-item label="数据类型" prop="type">-->
+      <!--          <el-select v-model="form.type" placeholder="请选择类型">-->
+      <!--            <el-option-->
+      <!--              v-for="item in typeList"-->
+      <!--              :key="item.value"-->
+      <!--              :label="item.label"-->
+      <!--              :value="item.value">-->
+      <!--            </el-option>-->
+      <!--          </el-select>-->
+      <!--        </el-form-item>-->
+      <!--      </el-form>-->
     </el-dialog>
     <el-dialog :title="title" :visible.sync="open" append-to-body :before-close="closeDialog">
       <el-form ref="form" :model="form" :rules="rules" size="mini" label-width="120px">
@@ -405,7 +405,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row style="margin-left: 60px;margin-right: 40px">
+        <el-row style="margin-left: 40px;margin-right: 40px">
           <!--上传图片或pdf附件用的上传组件-->
           <el-col :span="24">
             <el-upload
@@ -422,7 +422,7 @@
               :before-upload="beforeUpload"
               :limit="10"
               :on-exceed="handleExceed"
-              list-type="text"
+              list-type="picture-card"
               :file-list="fileList">
               <el-button size="mini" style="background: #91eae4">上传附件</el-button>
               <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“.png”或“.jpg”或“.jpeg”或“.pdf”格式文件！</div>
@@ -465,7 +465,6 @@ import {listStoreContract} from '@/api/place/storeContract'
 import {getStoreByIds} from '@/api/place/store'
 import {getUserDepts} from '@/utils/charutils'
 import {listInfo} from '@/api/basis/enterpriseInfo'
-import {delAttachment, getPreview} from "@/api/place/attachment";
 
 export default {
   name: 'Big',
@@ -605,11 +604,10 @@ export default {
         // 是否更新已经存在的用户数据
         updateSupport: 0,
         // 设置上传的请求头部
-        headers: {'Authorization': 'Bearer ' + getToken(), 'bucketName': 'place', 'pathName': 'big'},
+        headers: {Authorization: 'Bearer ' + getToken()},
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + '/place/attachment/add'
-      },
-      attachmentList: [],//保存附件的id
+        url: process.env.VUE_APP_BASE_API + '/place/big/addFile'
+      }
     }
   },
   created() {
@@ -677,27 +675,12 @@ export default {
     },
     // 取消按钮
     cancel() {
-      //如果是新增的时候，点了取消，则删除文件记录
-      if (this.form.id === undefined) {
-        if (this.attachmentList.length > 0) {
-          delAttachment(this.attachmentList).then(response => {
-            this.attachmentList = []
-          }).catch(err => {
-            this.attachmentList = []
-          })
-        }
-      } else {
-        this.attachmentList = []
-
-      }
       this.open = false
       this.storeIds = []
       this.contractOptions = []
       //this.consumerOptions = []
-      this.fileList = []
-      this.$refs.uploadTwo.clearFiles()
       this.reset()
-
+      this.$refs.uploadTwo.clearFiles()
     },
     closeDialog() {
       this.open = false
@@ -777,18 +760,6 @@ export default {
         this.updateForm = response.data
         this.open = true
         this.title = '修改大提煤单'
-        this.attachmentList = response.data.remark.split(',')
-        console.log('--------------------')
-        console.log(this.attachmentList)
-        this.fileList = []
-        for (let file of response.data.attachmentList) {
-          this.fileList.push({
-            'name': file.originalName,
-            'url': file.objectName,
-            'bucketName': file.bucketName,
-            'id': file.id
-          })
-        }
       })
     },
     uploadProcess() {
@@ -812,7 +783,6 @@ export default {
             return this.msgError('超出可分配重量')
           }
           if (this.form.id != undefined) {
-            this.form.remark = this.attachmentList.join(',')
             updateBig(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess('修改成功')
@@ -821,7 +791,6 @@ export default {
               }
             })
           } else {
-            this.form.remark = this.attachmentList.join(',')
             addBig(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess('新增成功')
@@ -904,32 +873,13 @@ export default {
     },
 
     /***上传start ***/
-    handleRemove(file, fileList) {
+
+    handleRemove() {
+
     },
     // 文件预览
     handlePreview(file) {
-      //如果是新增时
-      //console.log('preview')
-      //console.log(file)
-      //console.log(file.response)
-      let id = ''
-      if (file.response) {
-        id = file.response.data
-      } else {
-        id = file.id
-      }
-      // console.log(id)
-      getPreview(id).then(response => {
-        if (response.data) {
-          window.open(response.data)
-        }
-      })
-
-      /*window.open(file.url)
-      if(file.bucketName){//服务器端的
-        //获取服务端预览地址
-      }*/
-
+      window.open(file.url) //blob格式地址
     },
     // 文件上传成功
     uploadSuccess(response) {
@@ -938,12 +888,11 @@ export default {
         this.uploading = false
         return false
       }
-      //this.$message.success("上传成功")
+      this.$message.success("上传成功")
       this.uploading = true
       // this.$refs.uploadTwo.clearFiles()
-      this.attachmentList.push(response.data)
       // 路径+文件名
-      /*this.form.minObjectName = response.data.objectName
+      this.form.minObjectName = response.data.objectName
       // 文件名
       this.form.minFileName = response.data.name
       // 文件长度
@@ -951,23 +900,10 @@ export default {
       // 桶名
       this.form.minBucketName = response.data.bucketName
       // 路径
-      this.form.minPath = response.data.path*/
+      this.form.minPath = response.data.path
     },
-    //删除之前的钩子
-    beforeRemove(file, fileList) {
-      /* console.log(fileList)
-       console.log(file)*/
-      let index = fileList.indexOf(file)
+    beforeRemove() {
 
-      //console.log(index)
-      let attachmentId = this.attachmentList[index];
-      console.log(attachmentId)
-      //console.log(this.attachmentList)
-      //删除指定位置的元素
-      this.attachmentList.splice(index, 1)
-      //console.log(this.attachmentList)
-      //删除文件 及附件记录
-      delAttachment(attachmentId)
     },
     handleExceed() {
 
