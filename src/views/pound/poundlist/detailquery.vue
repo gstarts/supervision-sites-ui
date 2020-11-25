@@ -1035,7 +1035,7 @@ export default {
         }
 
         if (index === 6) {
-          sums[index] = '车数:'+this.queryParams.pageSize+'辆';
+          sums[index] = '车数:'+this.sheetList.length+'辆';
           return;
         }
         const values = data.map(item => Number(item[column.property]));

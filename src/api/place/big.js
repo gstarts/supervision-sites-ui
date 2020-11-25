@@ -101,3 +101,11 @@ export function getBigCanUse(billNo) {
     method: 'get',
   })
 }
+
+export function addBigFile(data) {
+  return request({
+    url: '/place/big/addFile',
+    method: 'post',
+    data: data
+  })
+}
