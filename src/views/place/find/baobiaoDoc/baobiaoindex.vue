@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px" >
       <!--      <el-form-item label="场所编号" prop="placeId">-->
       <!--        <el-input-->
       <!--          v-model="queryParams.placeId"-->
@@ -746,7 +746,7 @@
       <!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
       </el-form-item>
       <el-form-item>
         <download-excel
@@ -1489,6 +1489,10 @@ export default {
   methods: {
     /** 查询出库明细单列表 */
     getList() {
+      if(this.dateRange.length==0){
+        this.msgError("时间选择不可为空");
+        return
+      }
       this.loading = true;
       this.titleList=[];
 
@@ -1676,19 +1680,12 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      if(this.queryParams.queryLogo == undefined){
-        this.msgError("查询时间类型不可为空,请选择")
-        return
-      }
-
-
       this.getList();
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.dateRange=[];
-      this.resetForm("queryForm");
+      // this.dateRange=[];
+      // this.resetForm("queryForm");
       this.handleQuery();
     },
     // // 多选框选中数据

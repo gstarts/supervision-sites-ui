@@ -743,7 +743,7 @@
       <!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
       </el-form-item>
       <el-form-item>
         <download-excel
@@ -1502,6 +1502,10 @@ export default {
   methods: {
     /** 查询出库明细单列表 */
     getList() {
+      if(this.queryParams.beginTime==''){
+        this.msgError("时间选择不可为空");
+        return
+      }
       this.loading = true;
       this.titleList=[];
       customsDayList(this.queryParams,this.dateRange).then(response => {
