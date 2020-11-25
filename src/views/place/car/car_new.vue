@@ -102,9 +102,9 @@
         </el-button>
       </el-col>
     </el-row>
-<!--:selectable="checkboxInit"-->
+
     <el-table v-loading="loading" :data="docList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" :selectable="checkboxInit"/>
       <el-table-column label="打印状态">
         <template scope="scope">
           <span v-if="scope.row.inCardPrintState =='1'" style="color: red">已打印</span>
