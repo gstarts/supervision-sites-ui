@@ -1001,7 +1001,7 @@ export default {
 }
 
 .coalBillNoStyle {
-  margin-left: 5.5cm;
+  margin-left: 4.5cm;
 }
 
 .secondRow {
@@ -1036,16 +1036,16 @@ export default {
 /*}*/
 
 .carriageStyle {
-  margin-left: 18cm;
+  margin-left: 17cm;
   font-size: 15px;
 }
 
 .loadingStyle {
-  margin-left: 16.5cm;
+  margin-left: 15.5cm;
 }
 
 .receiptStyle {
-  margin-left: 15.5cm;
+  margin-left: 14.5cm;
   font-size: 13px;
 }
 
