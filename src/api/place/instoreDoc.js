@@ -51,3 +51,19 @@ export function delInstoreDoc(id) {
     method: 'delete'
   })
 }
+//调入调出周报表
+export function customsWeekList(params) {
+  return request({
+    url: '/place/instoreDoc/customsWeekList',
+    method: 'post',
+    data: params
+  })
+}
+//调入调出月报表
+export function customsMonthList(params) {
+  return request({
+    url: '/place/instoreDoc/customsMonthList',
+    method: 'post',
+    data: params
+  })
+}

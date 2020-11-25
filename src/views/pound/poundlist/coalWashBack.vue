@@ -1728,7 +1728,7 @@ export default {
 #area-right-style {
   height: 35px;
   width: 350px;
-  font-size: 20px;
+  font-size: 26px;
   margin-top: 28px;
   margin-left: 40px;
   float: left;
