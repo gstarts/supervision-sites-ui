@@ -67,3 +67,11 @@ export function customsMonthList(params) {
     data: params
   })
 }
+//海关-场所日报
+export  function customsDayList(params){
+  return request({
+    url:'/place/instoreDoc/customsDayList',
+    method:'post',
+    data:params
+  })
+}

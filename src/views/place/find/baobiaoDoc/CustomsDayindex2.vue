@@ -28,168 +28,168 @@
       <!--          @keyup.enter.native="handleQuery"-->
       <!--        />-->
       <!--      </el-form-item>-->
-      <el-form-item label="场所名称" prop="placeId">
-        <el-select @change="changePlace"
-                   v-model="queryParams.placeId" placeholder="请选择场所" size="small">
-          <el-option
-            v-for="dept in depts"
-            :key="dept.deptId"
-            :label="dept.deptName"
-            :value="dept.deptId"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="寄仓客户" prop="customerName">
-        <!--        <el-input v-model="queryParams.customerName" placeholder="请输入寄仓客户" clearable size="small" @keyup.enter.native="handleQuery" />-->
-        <el-select
-          filterable
-          clearable
-          v-model="queryParams.customerName" placeholder="请选择寄仓客户" @change="changeCustomer">
-          <el-option
-            v-for="type in customerList"
-            :key="type.customerName"
-            :label="type.customerName"
-            :value="type.customerName"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="寄仓合同" prop="checkContractNo">
-        <el-select
+      <!--      <el-form-item label="场所名称" prop="placeId">-->
+      <!--        <el-select @change="changePlace"-->
+      <!--                   v-model="queryParams.placeId" placeholder="请选择场所" size="small">-->
+      <!--          <el-option-->
+      <!--            v-for="dept in depts"-->
+      <!--            :key="dept.deptId"-->
+      <!--            :label="dept.deptName"-->
+      <!--            :value="dept.deptId"-->
+      <!--          />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="寄仓客户" prop="customerName">-->
+      <!--        &lt;!&ndash;        <el-input v-model="queryParams.customerName" placeholder="请输入寄仓客户" clearable size="small" @keyup.enter.native="handleQuery" />&ndash;&gt;-->
+      <!--        <el-select-->
+      <!--          filterable-->
+      <!--          clearable-->
+      <!--          v-model="queryParams.customerName" placeholder="请选择寄仓客户" @change="changeCustomer">-->
+      <!--          <el-option-->
+      <!--            v-for="type in customerList"-->
+      <!--            :key="type.customerName"-->
+      <!--            :label="type.customerName"-->
+      <!--            :value="type.customerName"-->
+      <!--          />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="寄仓合同" prop="checkContractNo">-->
+      <!--        <el-select-->
 
-          filterable
-          clearable
-          v-model="queryParams.checkContractNo"
-          placeholder="请选择寄仓合同"
-          size="small">
-          <el-option
-            v-for="dept in contractSubList"
-            :key="dept.contractNo"
-            :label="dept.contractNo"
-            :value="dept.contractNo"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="品名" prop="goodsName">
-        <el-input
-          v-model="queryParams.goodsName"
-          placeholder="请输入品名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="车号 " prop="vehicleNo">
-        <el-input
-          v-model="queryParams.vehicleNo"
-          placeholder="请输入车号 "
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="提煤单号" prop="coalBillNo">
-        <el-input
-          v-model="queryParams.coalBillNo"
-          placeholder="请输入提煤单号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="承运单位" prop="vehicleTeam">
-        <el-input
-          v-model="queryParams.vehicleTeam"
-          placeholder="请输入承运单位"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="销售合同号" prop="salesContractNo">
-        <el-input
-          v-model="queryParams.salesContractNo"
-          placeholder="请输入销售合同号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="运输方式" prop="transportMode">
-        <el-select v-model="queryParams.transportMode" filterable placeholder="请选择运输方式">
-          <el-option
-            v-for="item in transportModeDic"
-            :key="item.dictValue"
-            :label="item.dictLabel"
-            :value="item.dictValue">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="数据来源" prop="dataSources">
-        <!--        <el-input-->
-        <!--          v-model="queryParams.dataSources"-->
-        <!--          placeholder="请输入数据来源"-->
-        <!--          clearable-->
-        <!--          size="small"-->
-        <!--          @keyup.enter.native="handleQuery"-->
-        <!--        />-->
-        <el-select v-model="queryParams.dataSources" filterable placeholder="请选择数据来源">
-          <el-option
-            v-for="item in outStoreDataSourcesOption"
-            :key="item.dictValue"
-            :label="item.dictLabel"
-            :value="item.dictValue">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="入场司磅员" prop="inUser">
-        <el-input
-          v-model="queryParams.inUser"
-          placeholder="请输入入场司磅员"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="出场司磅员" prop="outUser">
-        <el-input
-          v-model="queryParams.outUser"
-          placeholder="请输入出场司磅员"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="车型" prop="vehicleType">
-        <el-select v-model="queryParams.vehicleType" placeholder="请选择车型" clearable size="small">
-          <el-option
-            v-for="dept in outStoreVehicleTypesOption"
-            :key="dept.dictValue"
-            :label="dept.dictLabel"
-            :value="dept.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态" prop="storeState">
-        <el-select v-model="queryParams.storeState" placeholder="请选择状态" clearable size="small">
-          <el-option
-            v-for="dept in outStoreDocStateOption"
-            :key="dept.dictValue"
-            :label="dept.dictLabel"
-            :value="dept.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="查询时间类型" prop="queryLogo">
-        <el-select
-          v-model="queryParams.queryLogo" placeholder="请选择查询时间类型" size="small">
-          <el-option
-            v-for="dept in timeQueryTypeOption"
-            :key="dept.dictValue"
-            :label="dept.dictLabel"
-            :value="dept.dictValue"
-          />
-        </el-select>
-      </el-form-item>
+      <!--          filterable-->
+      <!--          clearable-->
+      <!--          v-model="queryParams.checkContractNo"-->
+      <!--          placeholder="请选择寄仓合同"-->
+      <!--          size="small">-->
+      <!--          <el-option-->
+      <!--            v-for="dept in contractSubList"-->
+      <!--            :key="dept.contractNo"-->
+      <!--            :label="dept.contractNo"-->
+      <!--            :value="dept.contractNo"-->
+      <!--          />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="品名" prop="goodsName">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.goodsName"-->
+      <!--          placeholder="请输入品名"-->
+      <!--          clearable-->
+      <!--          size="small"-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="车号 " prop="vehicleNo">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.vehicleNo"-->
+      <!--          placeholder="请输入车号 "-->
+      <!--          clearable-->
+      <!--          size="small"-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="提煤单号" prop="coalBillNo">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.coalBillNo"-->
+      <!--          placeholder="请输入提煤单号"-->
+      <!--          clearable-->
+      <!--          size="small"-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="承运单位" prop="vehicleTeam">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.vehicleTeam"-->
+      <!--          placeholder="请输入承运单位"-->
+      <!--          clearable-->
+      <!--          size="small"-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="销售合同号" prop="salesContractNo">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.salesContractNo"-->
+      <!--          placeholder="请输入销售合同号"-->
+      <!--          clearable-->
+      <!--          size="small"-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="运输方式" prop="transportMode">-->
+      <!--        <el-select v-model="queryParams.transportMode" filterable placeholder="请选择运输方式">-->
+      <!--          <el-option-->
+      <!--            v-for="item in transportModeDic"-->
+      <!--            :key="item.dictValue"-->
+      <!--            :label="item.dictLabel"-->
+      <!--            :value="item.dictValue">-->
+      <!--          </el-option>-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="数据来源" prop="dataSources">-->
+      <!--        &lt;!&ndash;        <el-input&ndash;&gt;-->
+      <!--        &lt;!&ndash;          v-model="queryParams.dataSources"&ndash;&gt;-->
+      <!--        &lt;!&ndash;          placeholder="请输入数据来源"&ndash;&gt;-->
+      <!--        &lt;!&ndash;          clearable&ndash;&gt;-->
+      <!--        &lt;!&ndash;          size="small"&ndash;&gt;-->
+      <!--        &lt;!&ndash;          @keyup.enter.native="handleQuery"&ndash;&gt;-->
+      <!--        &lt;!&ndash;        />&ndash;&gt;-->
+      <!--        <el-select v-model="queryParams.dataSources" filterable placeholder="请选择数据来源">-->
+      <!--          <el-option-->
+      <!--            v-for="item in outStoreDataSourcesOption"-->
+      <!--            :key="item.dictValue"-->
+      <!--            :label="item.dictLabel"-->
+      <!--            :value="item.dictValue">-->
+      <!--          </el-option>-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="入场司磅员" prop="inUser">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.inUser"-->
+      <!--          placeholder="请输入入场司磅员"-->
+      <!--          clearable-->
+      <!--          size="small"-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="出场司磅员" prop="outUser">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.outUser"-->
+      <!--          placeholder="请输入出场司磅员"-->
+      <!--          clearable-->
+      <!--          size="small"-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="车型" prop="vehicleType">-->
+      <!--        <el-select v-model="queryParams.vehicleType" placeholder="请选择车型" clearable size="small">-->
+      <!--          <el-option-->
+      <!--            v-for="dept in outStoreVehicleTypesOption"-->
+      <!--            :key="dept.dictValue"-->
+      <!--            :label="dept.dictLabel"-->
+      <!--            :value="dept.dictValue"-->
+      <!--          />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="状态" prop="storeState">-->
+      <!--        <el-select v-model="queryParams.storeState" placeholder="请选择状态" clearable size="small">-->
+      <!--          <el-option-->
+      <!--            v-for="dept in outStoreDocStateOption"-->
+      <!--            :key="dept.dictValue"-->
+      <!--            :label="dept.dictLabel"-->
+      <!--            :value="dept.dictValue"-->
+      <!--          />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="查询时间类型" prop="queryLogo">-->
+      <!--        <el-select-->
+      <!--          v-model="queryParams.queryLogo" placeholder="请选择查询时间类型" size="small">-->
+      <!--          <el-option-->
+      <!--            v-for="dept in timeQueryTypeOption"-->
+      <!--            :key="dept.dictValue"-->
+      <!--            :label="dept.dictLabel"-->
+      <!--            :value="dept.dictValue"-->
+      <!--          />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
       <!--      <el-form-item label="进场时间" prop="inTime">-->
       <!--        <el-date-picker clearable size="small" style="width: 200px"-->
       <!--           v-model="queryParams.inTime"-->
@@ -208,13 +208,10 @@
       <!--      </el-form-item>-->
       <el-form-item label="时间" prop="startTime">
         <el-date-picker
-          v-model="dateRange"
-          type="datetimerange"
-          align="right"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          :default-time="['00:00:00', '23:59:59']">
+          v-model="queryParams.beginTime"
+          type="date"
+          placeholder="选择日期"
+          value-format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
       <!--      <el-form-item label="寄仓客户ID" prop="customerId">-->
@@ -756,7 +753,7 @@
           :title="titleList"
           :footer="excelFooter"
           :default-value="defaultValue"
-          name="海关日报.xls">
+          name="场所日报.xls">
           <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
           <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
         </download-excel>
@@ -804,31 +801,41 @@
     <!--      </el-col>-->
     <!--    </el-row>-->
 
-    <el-table v-loading="loading" :data="outstoreDocList" @selection-change="handleSelectionChange" height="645">
+    <el-table v-loading="loading" :data="outstoreDocList" @selection-change="handleSelectionChange" max-height="645" show-summary>
 
-      <el-table-column label="单位名称" align="center" prop="inUser" />
-      <el-table-column label="品名" align="center" prop="goodsName" />
-
+      <el-table-column label="寄仓客户" align="center" prop="column1" />
+      <el-table-column label="煤种" align="center" prop="column2" />
       <el-table-column label="当日入库" align="center">
-        <el-table-column label="车数" align="center" prop="inUser" />
-        <el-table-column label="调入" align="center" prop="inUser" />
+        <el-table-column label="车数" align="center" prop="column3" />
+        <el-table-column label="调入"  align="center" prop="column4" />
       </el-table-column>
 
       <el-table-column label="当日出库" align="center">
-        <el-table-column label="车数" align="center" prop="inUser" />
-        <el-table-column label="调入" align="center" prop="inUser" />
+        <el-table-column label="车数" align="center" prop="column5" />
+        <el-table-column label="调出" align="center" prop="column6" />
       </el-table-column>
 
-      <el-table-column label="库存" align="center" prop="inUser" />
-      <el-table-column label="本年累计调入" align="center">
-        <el-table-column label="车数" align="center" prop="inUser" />
-        <el-table-column label="吨数" align="center" prop="inUser" />
+      <el-table-column label="库存" align="center" prop="column7" />
+      <el-table-column label="累计损耗" align="center" prop="column8" />
+      <el-table-column label="备注" align="center" prop="column9" />
+
+      <el-table-column label="本月累计调入" align="center">
+        <el-table-column label="车数" align="center" prop="column10" />
+        <el-table-column label="吨数" align="center" prop="column11" />
       </el-table-column>
 
-      <el-table-column label="本年累计调出" align="center">
-        <el-table-column label="车数" align="center" prop="inUser" />
-        <el-table-column label="吨数" align="center" prop="inUser" />
+      <el-table-column label="本月累计调出" align="center">
+        <el-table-column label="车数" align="center" prop="column12" />
+        <el-table-column label="吨数" align="center" prop="column13" />
       </el-table-column>
+      <el-table-column label="期初转入" align="center" prop="column18" />
+
+      <el-table-column label="本年累计" align="center">
+        <el-table-column label="调入" width="130" align="center" prop="column15" />
+        <el-table-column label="调出" align="center" prop="column17" />
+      </el-table-column>
+
+
 
       <!--   ------------------------------完美的分割线-----------------------------   -->
 
@@ -1284,6 +1291,7 @@
 import { listOutstoreDoc,listOutstoreDocLike, getOutstoreDoc, delOutstoreDoc, addOutstoreDoc, updateOutstoreDoc } from "@/api/place/outstoreDoc";
 import {getUserDepts} from "@/utils/charutils";
 import {listStoreContract} from "@/api/place/storeContract";
+import {customsDayList} from "@/api/place/instoreDoc";
 export default {
   name: "OutstoreDoc",
   data() {
@@ -1294,7 +1302,7 @@ export default {
       // 默认值
       defaultValue: '0',
       // 遮罩层
-      loading: true,
+      loading: false,
       // 选中数组
       ids: [],
       // 非单个禁用
@@ -1397,7 +1405,8 @@ export default {
         voidDate: undefined,
         makerTime: undefined,
         inUser: undefined,
-        outUser: undefined
+        outUser: undefined,
+        beginTime:'',
       },
       customerList:[],
       depts: [],
@@ -1422,18 +1431,22 @@ export default {
         ],
       },
       json_fields:{
-        "单位名称":"id",
-        "煤种":"storeState",
-        "当日入库车数":"customerName",
-        "当日入库调入":"goodsName",
-        "当日出库车数":"coalBillNo",
-        "当日出库调出":"customerName",
-        "库存":"salesContractNo",
-        "本年累计调入车数":"vehicleNo",
-        "本年累计调入吨数":"vehicleType",
-        "本年累计调出车数":"containerNo1",
-        "本年累计调出吨数":"roughWeight",
-        "期初转入":"tareWeight",
+        "寄舱客户":"column1",
+        "煤种":"column2",
+        "当日入库车数":"column3",
+        "当日入库调入":"column4",
+        "当日出库车数":"column5",
+        "当日出库调出":"column6",
+        "库存":"column7",
+        "累计损耗":"column8",
+        "备注":"column9",
+        "本月累计调入车数":"column10",
+        "本月累计调入吨数":"column11",
+        "本月累计调出车数":"column12",
+        "本月累计调出吨数":"column13",
+        "期初转入":"column18",
+        "本年累计调入":"column15",
+        "本年累计调出":"column17",
         // "箱皮重":"boxTareWeight",
         // "净重":"netWeight",
         // "进场时间":"inTime",
@@ -1484,20 +1497,18 @@ export default {
     this.getDicts("outStore_doc_state").then((response) => {
       this.outStoreDocStateOption = response.data;
     });
-    this.getList();
+    // this.getList();
   },
   methods: {
     /** 查询出库明细单列表 */
     getList() {
       this.loading = true;
       this.titleList=[];
-      listOutstoreDocLike(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
-        this.dataRange01[0]=this.queryParams.beginTime
-        this.dataRange01[1]=this.queryParams.endTime
-        this.outstoreDocList = response.rows;
-        this.printTitle = '海关日报'
+      customsDayList(this.queryParams,this.dateRange).then(response => {
+        this.outstoreDocList = response.data;
+        this.printTitle = '场所日报'
         this.titleList.push(this.printTitle)
-        this.titleList.push(this.dataRange01[0] + '-' + this.dataRange01[1]);
+        this.titleList.push(this.queryParams.beginTime);
         this.total = response.total;
         this.loading = false;
       });
@@ -1675,10 +1686,10 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
-      if(this.queryParams.queryLogo == undefined){
-        this.msgError("查询时间类型不可为空,请选择")
-        return
-      }
+      // if(this.queryParams.queryLogo == undefined){
+      //   this.msgError("查询时间类型不可为空,请选择")
+      //   return
+      // }
 
 
       this.getList();
