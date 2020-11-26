@@ -260,6 +260,7 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button v-print="'#dayin'" ref="printBtn" style="display: none"/>
       </el-form-item>
     </el-form>
 <!--    <el-row :gutter="10" class="mb8">-->
@@ -345,11 +346,12 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
-            v-print="'#dayin'"
+
             @click="handlePrint(scope.row)"
             v-hasPermi="['place:sheet:print']"
           >{{ scope.row.printState === '0' ? '打印' : '补打' }}
           </el-button>
+
         </template>
       </af-table-column>
     </el-table>
@@ -576,6 +578,7 @@
         </div>
         <div id="area-style">
           <span class="area-in-style">{{this.printDate.goodsName }}</span>
+          <span class="area-in-style">{{this.printDate.goodsName }}</span>
         </div>
         <div id="area-right-style">
           <span>{{this.printDate.tare }} kg</span>
@@ -609,11 +612,18 @@ import {addModify, applyModify} from "@/api/place/modify";
 import {selectCoalBillNo} from "@/api/place/big";
 import {genTimeCode, parseTime} from "@/utils/common";
 import {listUser} from "@/api/system/user";
+import {getPrint} from "@/api/place/print";
 
 export default {
   name: "Sheet",
   data() {
     return {
+      printObj: {
+        id: '#dayin',
+        endCallback: (err => {
+          console.log('印完成')
+        })
+      },
       // 遮罩层
       loading: true,
       // 选中数组
@@ -805,6 +815,7 @@ export default {
 
   },
   created() {
+
     this.getUserList();
     this.depts = getUserDepts('0')
     if (this.depts.length > 0) {
@@ -955,38 +966,90 @@ export default {
     },
     /** 打印按钮操作 */
     handlePrint(row) {
-      this.printShow=true
-      let date = parseTime(new Date())
-      this.printDate.nowDate = date.substring(0, 10);
-      this.printDate.nowTime = date.substring(10, 19);
-      //发货单位
-      this.printDate.deliveryUnit = row.deliveryUnit;
-      this.printDate.plateNum = row.plateNum;
-      this.printDate.receivingUnit = row.receivingUnit;
-      this.printDate.grossWeight = row.grossWeight;
-      this.printDate.goodsName = row.goodsName;
-      this.printDate.tare = row.tare;
-      this.printDate.specification = row.tare;
-      this.printDate.netWeight = row.netWeight;
-      this.printDate.remark = row.remark;
-      this.printDate.carrier = row.carrier;
-      this.printDate.transportMode = row.transportMode;
-      this.printDate.inUser = row.inUser;
-      this.printDate.outUser =row.outUser;
-      this.printDate.printState=row.printState;
-      clearTimeout(this.timer1);
-      //清除延迟执行
-      this.timer1 = setTimeout(() => {
-        //设置延迟执行
-        this.printShow=false
-      }, 2000);
-
-      updatePrintState(row.id).then(response =>{
+      if(((new Date().getTime()-new Date(row.outTime).getTime())/1000/60/60)<=4){
+        this.printShow=true
+        let date = parseTime(new Date())
+        this.printDate.nowDate = date.substring(0, 10);
+        this.printDate.nowTime = date.substring(10, 19);
+        //发货单位
+        this.printDate.deliveryUnit = row.deliveryUnit;
+        this.printDate.plateNum = row.plateNum;
+        this.printDate.receivingUnit = row.receivingUnit;
+        this.printDate.grossWeight = row.grossWeight;
+        this.printDate.goodsName = row.goodsName;
+        this.printDate.tare = row.tare;
+        this.printDate.specification = row.tare;
+        this.printDate.netWeight = row.netWeight;
+        this.printDate.remark = row.remark;
+        this.printDate.carrier = row.carrier;
+        this.printDate.transportMode = row.transportMode;
+        this.printDate.inUser = row.inUser;
+        this.printDate.outUser =row.outUser;
+        this.printDate.printState=row.printState;
+        clearTimeout(this.timer1);
+        //清除延迟执行
+        this.timer1 = setTimeout(() => {
+          //设置延迟执行
+          this.printShow=false
+        }, 2000);
+        updatePrintState(row.id).then(response =>{
           if (response.code === 200) {
             this.getList()
           };
         })
-
+        this.$refs['printBtn'].$el.click()
+        //阻塞操作
+      }else{
+        getPrint(row.id).then(response =>{
+          //101 待审批 102 通过 103 未通过 104 无单号
+          if(response.data=="101"){
+            this.$message.info(response.msg);
+            return false
+          }else if(response.data=="102"){
+            this.$message.success(response.msg);
+            this.printShow=true
+            let date = parseTime(new Date())
+            this.printDate.nowDate = date.substring(0, 10);
+            this.printDate.nowTime = date.substring(10, 19);
+            //发货单位
+            this.printDate.deliveryUnit = row.deliveryUnit;
+            this.printDate.plateNum = row.plateNum;
+            this.printDate.receivingUnit = row.receivingUnit;
+            this.printDate.grossWeight = row.grossWeight;
+            this.printDate.goodsName = row.goodsName;
+            this.printDate.tare = row.tare;
+            this.printDate.specification = row.tare;
+            this.printDate.netWeight = row.netWeight;
+            this.printDate.remark = row.remark;
+            this.printDate.carrier = row.carrier;
+            this.printDate.transportMode = row.transportMode;
+            this.printDate.inUser = row.inUser;
+            this.printDate.outUser =row.outUser;
+            this.printDate.printState=row.printState;
+            clearTimeout(this.timer1);
+            //清除延迟执行
+            this.timer1 = setTimeout(() => {
+              //设置延迟执行
+              this.printShow=false
+            }, 2000);
+            updatePrintState(row.id).then(response =>{
+              if (response.code === 200) {
+                this.getList()
+              };
+            })
+            this.$refs['printBtn'].$el.click()
+            //阻塞操作
+          }else if(response.data=="103"){
+            this.$message.warning(response.msg);
+            return false
+          }else if(response.data=="104"){
+            this.$message.error(response.msg);
+            return false
+          }else if(response.data=="105"){
+            this.$message.warning(response.msg);
+          }
+        })
+      }
     },
 
 
