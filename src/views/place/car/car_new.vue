@@ -393,7 +393,7 @@
         <div :id="gennerateId(index)"></div>
         <div class="headRow">{{ item.no }}</div>
         <div class="firstRow">
-          <span>{{ item.inCardPrintTime }}</span>
+          <span>{{ item.inCardPrintTime.substring(0,10) }}</span>
           <span class="contractNoStyle">{{ item.checkContractNo }}</span>
           <span class="coalBillNoStyle">{{ item.docNo }}</span></div>
 
@@ -420,7 +420,7 @@
         <div :id="gennerateId(index)"></div>
         <div class="headRow">{{ itemMake.no }}</div>
         <div class="firstRow">
-          <span>{{ itemMake.inCardPrintTime }}</span>
+          <span>{{ itemMake.inCardPrintTime.substring(0,10) }}</span>
           <span class="contractNoStyle">{{ itemMake.checkContractNo }}</span>
           <span class="coalBillNoStyle">{{ itemMake.docNo }}</span></div>
 
@@ -1016,7 +1016,7 @@ export default {
 }
 
 .coalBillNoStyle {
-  margin-left: 4.5cm;
+  margin-left: 6cm;
 }
 
 .secondRow {
@@ -1052,7 +1052,7 @@ export default {
 
 .carriageStyle {
   margin-left: 17cm;
-  font-size: 15px;
+  font-size: 20px;
 }
 
 .loadingStyle {
@@ -1061,7 +1061,8 @@ export default {
 
 .receiptStyle {
   margin-left: 14.5cm;
-  font-size: 13px;
+  font-size: 15px;
+
 }
 
 .fiveRow {
