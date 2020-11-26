@@ -167,3 +167,11 @@ export function updatePoundErr(params) {
   })
 }
 
+export function report(params) {
+  return request({
+    url: '/pound/measurement/sheet/report',
+    method: 'post',
+    data: params
+  })
+}
+
