@@ -135,13 +135,13 @@
             v-hasPermi="['place:passDoc:remove']"
           >删除
           </el-button>
-          <el-button
+          <!--<el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDownload(scope.row)"
           >下载
-          </el-button>
+          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -160,7 +160,8 @@
           <el-col :span="12">
             <el-form-item label="寄仓客户" prop="checkConsumer">
               <el-select
-                v-model="form.checkConsumer" placeholder="请选择寄仓客户" filterable @change="((val)=>{change(val, 'eName')})" :disabled="formUpdateMode">
+                v-model="form.checkConsumer" placeholder="请选择寄仓客户" filterable @change="((val)=>{change(val, 'eName')})"
+                :disabled="formUpdateMode">
                 <el-option
                   v-for="dict in consumerOptions"
                   :key="dict.id"
@@ -172,7 +173,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="品名" prop="goodsName">
-              <el-select v-model="form.goodsName" placeholder="请选择煤种" @change="((val)=>{change(val, 'coalType')})" :disabled="formUpdateMode">
+              <el-select v-model="form.goodsName" placeholder="请选择煤种" @change="((val)=>{change(val, 'coalType')})"
+                         :disabled="formUpdateMode">
                 <el-option
                   v-for="dict in contractOptions"
                   :key="dict.id"
@@ -226,20 +228,26 @@
               <el-input v-model="form.release" :disabled="true"/>
             </el-form-item>
           </el-col>
-          <el-col :span="1">
+        </el-row>
+        <el-row style="padding-left: 50px;padding-right: 50px">
+          <el-col :span="24">
             <el-upload
               ref="upload"
               style="width: 100%"
               :action=uploadAction
               :headers="headers"
+              accept=".png, .jpg, .jpeg, .pdf"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :on-success="uploadSuccess"
               :before-remove="beforeRemove"
-              :limit="1"
+              :before-upload="beforeUpload"
+              :limit="10"
               :on-exceed="handleExceed"
-              :file-list="fileList">
+              :file-list="fileList"
+              multiple>
               <el-button>上传附件</el-button>
+              <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“.png”或“.jpg”或“.jpeg”或“.pdf”格式文件！</div>
             </el-upload>
           </el-col>
         </el-row>
@@ -259,6 +267,7 @@ import {getUserDepts} from '@/utils/charutils'
 import {listInfo} from '@/api/basis/enterpriseInfo'
 import {getReleaseWeight} from '@/api/place/big'
 import {getToken} from '@/utils/auth'
+import {delAttachment, getPreview} from "@/api/place/attachment";
 
 export default {
   name: 'PassDoc',
@@ -320,17 +329,11 @@ export default {
       // 煤种
       coalTypeOptions: [],
       /***上传参数start ***/
-      uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/place/upload/anyFile',
+      uploadAction: process.env.VUE_APP_BASE_API + '/place/attachment/add',
       uploadData: {},
       uploading: false,
       fileList: [],
-      headers: {
-        'Authorization': '',
-        'placeId': '',
-        'bucketName': 'place',
-        'mode': 'pass',
-        'filename': 'pass'
-      },
+      headers: {'Authorization': 'Bearer ' + getToken(), 'bucketName': 'place', 'pathName': 'pass'},
       passStateDic: [
         //0，初始，1放行中，2放行完成)
         {'key': '0', 'value': '初始'},
@@ -359,6 +362,7 @@ export default {
       },
       dateRange: ['', ''],//时间组件
       formUpdateMode: false,
+      attachmentList: [],//保存附件的id
     }
   },
   created() {
@@ -417,11 +421,25 @@ export default {
     },
     // 取消按钮
     cancel() {
+      //如果是新增的时候，点了取消，则删除文件记录
+      if (this.form.id === undefined) {
+        if (this.attachmentList.length > 0) {
+          delAttachment(this.attachmentList).then(response => {
+            this.attachmentList = []
+          }).catch(err => {
+            this.attachmentList = []
+          })
+        }
+      } else {
+        this.attachmentList = []
+      }
       this.open = false
-      this.reset()
-      this.form = {}
-      //this.consumerOptions = []
       this.storeIds = []
+      //this.consumerOptions = []
+      this.fileList = []
+      this.$refs.upload.clearFiles()
+      this.reset()
+
       this.weightParams = {
         id: '',
         coalType: ''
@@ -485,18 +503,32 @@ export default {
       this.formUpdateMode = true
       const id = row.id || this.ids
       getPassDoc(id).then(response => {
-        this.form = response.data
-        this.open = true
-        this.title = '修改放行单 '
+          this.form = response.data
+          this.open = true
+          this.title = '修改放行单 '
 
-        this.weightParams.coalType = this.form.goodsName
-        this.weightParams.id = this.form.customerId
+          this.weightParams.coalType = this.form.goodsName
+          this.weightParams.id = this.form.customerId
 
-        getReleaseWeight(this.weightParams).then(response => {
-          this.form.release = response.data.release
-          this.$forceUpdate()
-        })
-      })
+          if (response.data.remark) {
+            this.attachmentList = response.data.remark.split(',')
+          }
+          this.fileList = []
+          for (let file of response.data.attachmentList) {
+            this.fileList.push({
+              'name': file.originalName,
+              'url': file.objectName,
+              'bucketName': file.bucketName,
+              'id': file.id
+            })
+          }
+
+          getReleaseWeight(this.weightParams).then(response => {
+            this.form.release = response.data.release
+            this.$forceUpdate()
+          })
+        }
+      )
     },
     /** 提交按钮 */
     submitForm: function () {
@@ -507,14 +539,17 @@ export default {
             return this.msgError('可放行量不足！请联系客户')
           }
           if (this.form.id != undefined) {
+            this.form.remark = this.attachmentList.join(',')
             updatePassDoc(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess('修改成功')
                 this.open = false
                 this.getList()
+                this.$refs.upload.clearFiles()
               }
             })
           } else {
+            this.form.remark = this.attachmentList.join(',')
             addPassDoc(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess('新增成功')
@@ -526,7 +561,8 @@ export default {
         }
       })
 
-    },
+    }
+    ,
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
@@ -541,35 +577,54 @@ export default {
         this.msgSuccess('删除成功')
       }).catch(function () {
       })
-    },
+    }
+    ,
     /** 导出按钮操作 */
     handleExport() {
       this.download('place/passDoc/export', {
         ...this.queryParams
       }, `place_passDoc.xlsx`)
-    },
+    }
+    ,
     /**详情按钮 */
     detail(row) {
       this.reset()
       const id = row.contractNo
       this.$router.push({path: '/place/big', query: {tableId: id}})
-    },
+    }
+    ,
     /***上传start ***/
 
     handleRemove() {
 
-    },
-    handlePreview() {
-
-    },
-    // 文件上传成功
+    }
+    ,
+    handlePreview(file) {
+      let id = ''
+      if (file.response) {
+        id = file.response.data
+      } else {
+        id = file.id
+      }
+      // console.log(id)
+      getPreview(id).then(response => {
+        if (response.data) {
+          window.open(response.data)
+        }
+      })
+    }
+    ,
+// 文件上传成功
     uploadSuccess(response) {
       if (response.code !== 200) {
         this.$message.error(response.msg)
         this.uploading = false
         return false
       }
-      this.$message.success("上传成功")
+
+      this.uploading = true
+      this.attachmentList.push(response.data)
+      /*this.$message.success("上传成功")
       this.uploading = true
       this.$refs.upload.clearFiles()
       // 路径+文件名
@@ -581,26 +636,53 @@ export default {
       // 桶名
       this.form.minBucketName = response.data.bucketName
       // 路径
-      this.form.minPath = response.data.path
-    },
-    beforeRemove() {
-
-    },
+      this.form.minPath = response.data.path*/
+    }
+    ,
+    beforeUpload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 10     //这里做文件大小限制
+      if (!isLt2M) {
+        this.$message({
+          message: '上传文件大小不能超过 10MB!请等待读条完毕,并重新上传',
+          type: 'error'
+        });
+      }
+    }
+    ,
+//删除之前的钩子
+    beforeRemove(file, fileList) {
+      /* console.log(fileList)
+       console.log(file)*/
+      let index = fileList.indexOf(file)
+      //console.log(index)
+      let attachmentId = this.attachmentList[index];
+      console.log(attachmentId)
+      //console.log(this.attachmentList)
+      //删除指定位置的元素
+      this.attachmentList.splice(index, 1)
+      //console.log(this.attachmentList)
+      //删除文件 及附件记录
+      delAttachment(attachmentId)
+    }
+    ,
     handleExceed() {
-
-    },
+      this.$message.warning('最多只能上传10个附件')
+    }
+    ,
     uploadError(err) {
       this.uploading = false
       console.log(err)
       this.$message.error('文件上传失败')
-    },
+    }
+    ,
     /***上传end ***/
 
     /** 文件下载 */
     handleDownload(row) {
       window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=' + row.minBucketName + '&objectName=' + row.minObjectName
-    },
-    // 下拉列表改变时激活
+    }
+    ,
+// 下拉列表改变时激活
     change(val, name) {
       // 场所
       if (name === 'placeId') {
@@ -635,7 +717,8 @@ export default {
           this.$forceUpdate()
         })
       }
-    },
+    }
+    ,
     placeChange() {
       this.getConsumerInfo(this.queryParams.placeId)
       this.handleQuery()

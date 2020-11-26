@@ -89,12 +89,12 @@
         <el-button
           type="primary"
           icon="el-icon-search"
-          size="mini"
+          size="small"
           @click="handleQuery"
         >搜索
         </el-button
         >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+        <el-button icon="el-icon-refresh" size="small" @click="resetQuery"
         >重置
         </el-button
         >
@@ -106,7 +106,7 @@
         <el-button
           type="primary"
           icon="el-icon-plus"
-          size="mini"
+          size="small"
           @click="handleAdd"
           v-hasPermi="['place:big:add']"
         >新增
@@ -117,7 +117,7 @@
         <el-button
           type="success"
           icon="el-icon-edit"
-          size="mini"
+          size="small"
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['place:big:edit']"
@@ -129,7 +129,7 @@
         <el-button
           type="danger"
           icon="el-icon-delete"
-          size="mini"
+          size="small"
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['place:big:remove']"
@@ -141,7 +141,7 @@
         <el-button
           type="warning"
           icon="el-icon-download"
-          size="mini"
+          size="small"
           @click="handleExport"
           v-hasPermi="['place:big:export']"
         >导出</el-button>
@@ -174,7 +174,7 @@
       >
         <template slot-scope="scope">
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-detail"
             @click="detail(scope.row)"
@@ -184,14 +184,14 @@
           <!-- <el-button
              type="text"
              icon="el-icon-plus"
-             size="mini"
+             size="small"
              @click="handleImport(scope.row)"
              v-hasPermi="['place:big:Import']"
              v-show="scope.row.status != '1'"
            >导入
            </el-button>-->
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
@@ -201,7 +201,7 @@
           </el-button
           >
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
@@ -247,7 +247,7 @@
         <el-button type="primary" @click="submitFileForm">确 定</el-button>
         <el-button @click="upload.open = false">取 消</el-button>
       </div>-->
-    <!--      <el-form ref="form" :model="form" :label-position="left" size="mini">-->
+    <!--      <el-form ref="form" :model="form" :label-position="left" size="small">-->
     <!--        <el-form-item label="数据类型" prop="type">-->
     <!--          <el-select v-model="form.type" placeholder="请选择类型">-->
     <!--            <el-option-->
@@ -261,7 +261,7 @@
     <!--      </el-form>-->
     </el-dialog>
     <el-dialog :title="title" :visible.sync="open" append-to-body :before-close="closeDialog">
-      <el-form ref="form" :model="form" :rules="rules" size="mini" label-width="120px">
+      <el-form ref="form" :model="form" :rules="rules" size="small" label-width="120px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="所属场所" prop="placeId">
@@ -424,13 +424,13 @@
               :on-exceed="handleExceed"
               list-type="text"
               :file-list="fileList">
-              <el-button size="mini" style="background: #91eae4">上传附件</el-button>
+              <el-button size="small" type="primary" plain>上传附件</el-button>
               <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“.png”或“.jpg”或“.jpeg”或“.pdf”格式文件！</div>
             </el-upload>
             <div>
               <span v-show="updateForm.minFileName">{{ updateForm.minBucketName }}{{ updateForm.minFileName }}</span>
               <el-button
-                size="mini"
+                size="small"
                 type="text"
                 icon="el-icon-download"
                 @click="handleDownload()"
@@ -438,7 +438,7 @@
               >下载
               </el-button>
               <el-button
-                size="mini"
+                size="small"
                 type="text"
                 icon="el-icon-delete"
                 @click="deleteBig()"
@@ -518,7 +518,7 @@ export default {
       form: {},
       //上传参数
       // 第二个
-      uploadActionTwo: process.env.VUE_APP_BASE_API + '/minio/files/place/upload/anyFile',
+      uploadActionTwo: process.env.VUE_APP_BASE_API + '/smallo/files/place/upload/anyFile',
       uploadDataTwo: {},
       // uploading: false,
       fileListT: [],
@@ -777,9 +777,12 @@ export default {
         this.updateForm = response.data
         this.open = true
         this.title = '修改大提煤单'
-        this.attachmentList = response.data.remark.split(',')
-        console.log('--------------------')
-        console.log(this.attachmentList)
+
+        if (response.data.remark) {
+          this.attachmentList = response.data.remark.split(',')
+        }
+        //console.log('--------------------')
+        //console.log(this.attachmentList)
         this.fileList = []
         for (let file of response.data.attachmentList) {
           this.fileList.push({
@@ -842,7 +845,7 @@ export default {
       getBig(id).then((response) => {
         this.form = response.data
         this.updateForm = response.data
-        this.updateForm.minFileName = ''
+        //this.updateForm.minFileName = ''
         this.open = true
         this.title = '修改大提煤单'
       })
@@ -855,7 +858,7 @@ export default {
       // const extension2 = testmsg === 'jpg'
       // const extension3 = testmsg === 'jpeg'
       // const extension4 = testmsg === 'pdf'
-      const isLt2M = file.size / 1024 / 1024 < 5     //这里做文件大小限制
+      const isLt2M = file.size / 1024 / 1024 < 10     //这里做文件大小限制
       // if(!extension && !extension2 && !extension3 && !extension4) {
       // 	this.$message({
       // 		message: '上传文件只能是 png,jpg,jpeg,pdf格式!',
@@ -864,7 +867,7 @@ export default {
       // }
       if (!isLt2M) {
         this.$message({
-          message: '上传文件大小不能超过 5MB!请等待读条完毕,并重新上传',
+          message: '上传文件大小不能超过 10MB!请等待读条完毕,并重新上传',
           type: 'error'
         });
       }
@@ -893,7 +896,7 @@ export default {
         })
     },
     /** 提交上传文件 */
-    submitFileForm() {
+    /*submitFileForm() {
       this.form.type = "1"
       if (this.form.type) {
         this.$refs.upload.submit()
@@ -901,7 +904,7 @@ export default {
       } else {
         this.$alert('请选择上传文件类型')
       }
-    },
+    },*/
 
     /***上传start ***/
     handleRemove(file, fileList) {
@@ -970,13 +973,13 @@ export default {
       delAttachment(attachmentId)
     },
     handleExceed() {
-
+      this.$message.warning('最多只能上传10个附件')
     },
 
     //下载
     handleDownload() {
       console.log(this.updateForm)
-      window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=' + this.updateForm.minBucketName + '&objectName=' + this.updateForm.minObjectName
+      window.location.href = process.env.VUE_APP_BASE_API + '/smallo/files/download?bucketName=' + this.updateForm.minBucketName + '&objectName=' + this.updateForm.minObjectName
     },
 
     /***上传end ***/

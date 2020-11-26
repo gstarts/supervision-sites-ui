@@ -2,6 +2,9 @@
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
 
+// vue.config.js
+const TerserPlugin = require('terser-webpack-plugin');
+
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
@@ -37,7 +40,9 @@ module.exports = {
         // 168
 	      // target: `http://192.168.12.168:9090`,
         // 华方
-        target: `http://10.0.130.51:9090`,
+        //target: `http://10.0.130.51:9090`,
+        //口岸office
+        target: `http://192.168.1.14:9090`,
 	      // target: `http://39.105.36.197:9090`,
         changeOrigin: true,
         pathRewrite: {
@@ -60,7 +65,18 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
-    }
+    },
+    optimization: { // 打包时，去掉console.log 的内容
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              drop_console: true,
+            }
+          }
+        })
+      ]
+    },
   },
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test
