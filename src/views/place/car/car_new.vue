@@ -149,7 +149,8 @@
             icon="el-icon-delete"
             v-print="'#dayinMake'"
             @click="printMake(scope.row)"
-            >补打</el-button>
+          >补打
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -278,8 +279,12 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="24" style="padding-left:40px">{{bigUseTip}}</el-col>
+        <el-row style="padding-left: 30px" v-show="form.coalBillNo">
+          <el-alert
+            :title="bigUseTip"
+            type="warning"
+            :closable="false">
+          </el-alert>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -372,8 +377,12 @@
             </el-option>
           </el-select>
         </el-form-item>-->
-        <el-row>
-          <el-col :span="24">{{bigUseTip}}</el-col>
+        <el-row v-show="form.coalBillNo">
+          <el-alert
+            :title="bigUseTip"
+            type="warning"
+            :closable="false">
+          </el-alert>
         </el-row>
       </el-form>
 
@@ -403,7 +412,7 @@
         <div class="fiveRow">
           <span>{{ biller }}</span>
         </div>
-<!--        <div class="nouse"></div>-->
+        <!--        <div class="nouse"></div>-->
       </div>
     </div>
     <div id="dayinMake" v-show="showMake">
@@ -428,9 +437,9 @@
           <span>{{ itemMake.vehicleNo }}</span>
           <span class="receiptStyle">{{ itemMake.customerName }}</span></div>
         <div class="fiveRow">
-          <span>{{ billerMake+'(补打)' }}</span>
+          <span>{{ billerMake + '(补打)' }}</span>
         </div>
-<!--        <div class="nouse"></div>-->
+        <!--        <div class="nouse"></div>-->
       </div>
     </div>
   </div>
@@ -469,7 +478,7 @@ export default {
       open: false,
       // 查询参数
       queryParams: {
-        id:undefined,
+        id: undefined,
         pageNum: 1,
         pageSize: 20,
         coalBillNo: undefined,
@@ -479,7 +488,7 @@ export default {
         storeState: '0',
         orderByColumn: 'id',
         isAsc: 'desc',
-        inCardPrintState:1,
+        inCardPrintState: 1,
       },
       fileList: [],
       transUnitList: [],//承运单位列表
@@ -540,7 +549,7 @@ export default {
         transportNum: [
           {required: true, message: '运输次数不能为空', trigger: 'blur'},
           {type: 'number', message: '运输次数必须是数字'},
-          {pattern: /^\+?[1-9][0-9]*$/, message: '不能为0', trigger: 'blur'}
+          {pattern: /^\+?[1-9][0-9]*$/, message: '运输次数不能小于1', trigger: 'blur'}
         ],
         packMode: [
           {required: true, message: '请选择包装类型', trigger: 'change'}
@@ -551,7 +560,7 @@ export default {
         transportUnitId: [
           {required: true, message: '请选择承运单位', trigger: 'change'}
         ],
-        transportMode:[
+        transportMode: [
           {required: true, message: '请选择运输方式', trigger: 'change'}
         ]
       },
@@ -559,12 +568,13 @@ export default {
         coalBillNo: [
           {required: true, message: '请选择提煤单', trigger: 'change'}
         ],
-       /* transportUnitId: [
-          {required: true, message: '运输方式不能为空', trigger: 'change'}
-        ],*/
+        /* transportUnitId: [
+           {required: true, message: '运输方式不能为空', trigger: 'change'}
+         ],*/
       },
       //提煤单号
       BigList: [],
+      canAlloc: 0,//当前单子可分配的重量
       //文件导入参数
       upload: {
         // 是否显示弹出层（用户导入）
@@ -587,13 +597,13 @@ export default {
       ],
       //开单员
       biller: "",
-      billerMake:"",
+      billerMake: "",
       show: false,
-      showMake:false,
+      showMake: false,
       // 打印数据list
       printList: [],
       //补打 打印数据list
-      printMakeList:[],
+      printMakeList: [],
       //大提煤单可用量提示信息
       bigUseTip: ''
     }
@@ -705,6 +715,11 @@ export default {
     submitForm: function () {
       this.$refs['form'].validate(valid => {
         if (valid) {
+          //计算提煤量是否小于可分配重量
+          if (this.form.vehicleGoodsNetWeight * this.form.transportNum > this.canAlloc) {
+            this.$message.warning("提煤重量不能大于可分配重量")
+            return false
+          }
           this.btnLoading = true
           //this.form.transportUnit = this.transUnitList.find(item => item.id === this.form.transportUnitId).eName
           addOutstoreDocByCar(this.form, this.form.transportNum).then(response => {
@@ -895,8 +910,8 @@ export default {
       this.biller = this.$store.state.user.nickName
       this.show = true;
       console.log(this.ids)
-      updatePrintByIds(this.ids).then(response =>{
-        if(response.code === 200){
+      updatePrintByIds(this.ids).then(response => {
+        if (response.code === 200) {
           this.msgSuccess("修改打印状态成功");
           this.getList()
         }
@@ -912,8 +927,8 @@ export default {
     },
     printMake(row) {
       this.billerMake = this.$store.state.user.nickName
-      this.printMakeList=[],
-      this.printMakeList.push(row)
+      this.printMakeList = [],
+        this.printMakeList.push(row)
       console.log(this.printMakeList)
       this.showMake = true;
       clearTimeout(this.timerMake);
@@ -931,19 +946,19 @@ export default {
     getBigCanUse(event) {
       getBigCanUse(event).then(response => {
         if (response.code === 200) {
-          //this.bigUseTip = response.data
-          this.bigUseTip = '提煤总量：' + response.data.total + ', 已提重量：' + response.data.hasUse + ', 未提重量：' + response.data.noUse  +
+          this.bigUseTip = '提煤总量：' + response.data.total + ', 可分配重量：' + response.data.canAlloc + ', 已分配未提离重量：' + response.data.holdUse + ' , 已提重量：' + response.data.hasUse + ', 未提重量：' + response.data.noUse +
             '。    有效车数：' + response.data.validVehicleCount + ', 已提车数：' + response.data.hasUseVehicleCount + ', 未提车数：' + response.data.noUseVehicleCount + ', 作废车数：' + response.data.badVehicleCount
 
           //{ "badVehicleCount": 0, "total": 914150, "validVehicleCount": 15, "noUseVehicleCount": 7, "noUse": 850246, "hasUseVehicleCount": 8, "hasUse": 63904 }
+          this.canAlloc = response.data.canAlloc
         }
       })
     },
     //判断是否可选
-    checkboxInit(row,index){
-      if(row.inCardPrintState=='1'){
+    checkboxInit(row, index) {
+      if (row.inCardPrintState == '1') {
         return 0;//不可勾选
-      }else{
+      } else {
         return 1;
       }
     },
@@ -1069,6 +1084,7 @@ export default {
   width: 500px;
   /*border: 1px solid ;*/
 }
+
 #dayinMake {
   height: 100px;
   width: 500px;
