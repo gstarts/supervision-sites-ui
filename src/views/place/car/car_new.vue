@@ -385,7 +385,7 @@
         <div class="headRow">{{ item.no }}</div>
         <div class="firstRow">
           <span>{{ item.inCardPrintTime }}</span>
-          <span class="contractNoStyle">{{ item.salesContractNo }}</span>
+          <span class="contractNoStyle">{{ item.checkContractNo }}</span>
           <span class="coalBillNoStyle">{{ item.docNo }}</span></div>
 
         <div class="secondRow">
@@ -412,7 +412,7 @@
         <div class="headRow">{{ itemMake.no }}</div>
         <div class="firstRow">
           <span>{{ itemMake.inCardPrintTime }}</span>
-          <span class="contractNoStyle">{{ itemMake.salesContractNo }}</span>
+          <span class="contractNoStyle">{{ itemMake.checkContractNo }}</span>
           <span class="coalBillNoStyle">{{ itemMake.docNo }}</span></div>
 
         <div class="secondRow">
@@ -971,6 +971,7 @@ export default {
 .all {
   //height: 10px;
   width: 1150px;
+  margin-top: 80px;
   /*border: 1px solid ;*/
   /*margin-top: 1cm;*/
 }
@@ -991,7 +992,7 @@ export default {
   /*border: 1px solid ;*/
   padding-top: 20px;
   //margin-top: 1cm;
-  font-size: 20px;
+  font-size: 17px;
 
 }
 
@@ -1000,7 +1001,7 @@ export default {
 }
 
 .coalBillNoStyle {
-  margin-left: 5.5cm;
+  margin-left: 4.5cm;
 }
 
 .secondRow {
@@ -1018,7 +1019,7 @@ export default {
   padding-left: 2cm;
   /*border: 1px solid ;*/
   padding-top: 35px;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .fourRow {
@@ -1027,7 +1028,7 @@ export default {
   padding-left: 2cm;
   /*border: 1px solid ;*/
   padding-top: 55px;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 /*#customerStyle{*/
@@ -1036,16 +1037,16 @@ export default {
 
 .carriageStyle {
   margin-left: 17cm;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .loadingStyle {
-  margin-left: 16cm;
+  margin-left: 15.5cm;
 }
 
 .receiptStyle {
-  margin-left: 15cm;
-  font-size: 14px;
+  margin-left: 14.5cm;
+  font-size: 13px;
 }
 
 .fiveRow {
