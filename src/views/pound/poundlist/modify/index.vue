@@ -170,6 +170,11 @@
     <el-table v-loading="loading" :data="modifyList">
       <!--<af-table-column type="selection" width="55" align="center"/>-->
       <!-- <af-table-column label="ID" align="center" prop="id" /> -->
+      <af-table-column label="修改项" align="center" prop="modifyType" format="">
+        <template slot-scope="scope">
+          {{ formatModifyType(scope.row.modifyType) }}
+        </template>
+      </af-table-column>
       <af-table-column label="磅单ID" align="center" prop="poundId"/>
       <af-table-column label="车号" align="center" prop="vehicleNo"/>
       <af-table-column label="车辆类型" align="center" prop="viaType"/>
@@ -275,16 +280,42 @@
           </el-col>
         </el-row>
         <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
-          <el-col :span="24" :offset="2">
-            提煤单号:{{ selectPound.coalBillNo }}
+          <el-col :span="6" :offset="2">
+            提煤单号:{{ selectPound.coalBillNum }}
+          </el-col>
+          <el-col :span="6" :offset="2">
+            合同号:{{ selectPound.remark }}
           </el-col>
         </el-row>
 
         <el-row :gutter="10">
+          <el-col :span="20" :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            修改项：{{ formatModifyType(selectModify.modifyType) }}
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="6" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            车牌号:{{ selectModify.vehicleNo }}
+          </el-col>
+          <el-col :span="3" :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
+          <el-col :span="10" :offset="0" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            车牌号:{{ selectModify.modifyVehicleNo }}
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="6" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            合同号:{{ selectModify.contractNo }}
+          </el-col>
+          <el-col :span="3" :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
+          <el-col :span="10" :offset="0" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            合同号:{{ selectModify.modifyContractNo }}
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
           <el-col :span="6" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
             提煤单号:{{ selectModify.coalBillNo }}
           </el-col>
-          <el-col :span="3"  :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
+          <el-col :span="3" :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
           <el-col :span="10" :offset="0" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
             提煤单号:{{ selectModify.modifyCoalBillNo }}
           </el-col>
@@ -532,8 +563,13 @@ export default {
       auditStateFormDic: [
         {'key': '1', 'value': '通过'},
         {'key': '2', 'value': '不通过'},
+      ],
+      modifyTypeDic: [
+        {'dictValue': '3', 'dictLabel': '车牌号'},
+        {'dictValue': '1', 'dictLabel': '合同号'},
+        {'dictValue': '2', 'dictLabel': '提煤单号'},
       ]
-    };
+    }
   },
   created() {
     this.depts = getUserDepts('0')
@@ -678,6 +714,14 @@ export default {
       this.download('place/modify/export', {
         ...this.queryParams
       }, `place_modify.xlsx`)
+    },
+    formatModifyType(val) {
+      let value = this.modifyTypeDic.find(item => item.dictValue === val)
+      if (value) {
+        return value.dictLabel
+      } else {
+        return val
+      }
     }
   }
 };

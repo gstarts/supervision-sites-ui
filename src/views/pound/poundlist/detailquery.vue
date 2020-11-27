@@ -487,7 +487,7 @@
             <el-col :span="2" class="modifyTo">修改为</el-col>
             <el-col :span="11">
               <!-- <el-input v-model="poundModify.modifyCoalBillNo" disabled></el-input>-->
-              <el-form-item label="合同" prop="modifyContractNo">
+              <el-form-item label="合同号" prop="modifyContractNo">
                 <el-select v-model="poundModify.modifyContractNo" filterable placeholder="请选择合同号"
                            :disabled="poundModify.modifyType!=='1'"
                            @change="contractChange">
@@ -568,8 +568,7 @@
           <el-col :span="2" class="modifyTo">修改为</el-col>
           <el-col :span="11">
             <el-form-item label="净重" prop="modifyNetWeight">
-              <el-input :min="0" :step="1" v-model.number="poundModify.modifyNetWeight" placeholder="请输入修改后净重"
-                        disabled/>
+              <el-input :min="0" :step="1" v-model.number="poundModify.modifyNetWeight" placeholder="请输入修改后净重"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -658,8 +657,6 @@
           </el-col>
           <el-col :span="12"></el-col>
         </el-row>
-
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -670,12 +667,12 @@
     <!--  磅单打印申请  -->
     <el-dialog :title="printTitle" :visible.sync="printOpen" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="磅单ID" prop="poundId" >
+        <el-form-item label="磅单ID" prop="poundId">
           <el-input v-model="form.poundId" placeholder="请输入磅单ID" disabled/>
         </el-form-item>
-<!--        <el-form-item label="申请人名称" prop="applyUserName">-->
-<!--          <el-input v-model="form.applyUserName" placeholder="请输入申请人名称"/>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="申请人名称" prop="applyUserName">-->
+        <!--          <el-input v-model="form.applyUserName" placeholder="请输入申请人名称"/>-->
+        <!--        </el-form-item>-->
         <el-form-item label="审批组" prop="auditGroup">
           <el-select v-model="poundModify.auditGroup" filterable placeholder="请选择审批组" @change="groupChange">
             <el-option
@@ -775,11 +772,9 @@ import {applyModify} from "@/api/place/modify";
 import {selectCoalBillNo} from "@/api/place/big";
 import {parseTime} from "@/utils/common";
 import {listUser} from "@/api/system/user";
-import {getPrint} from "@/api/place/print";
-import {listGroup} from "@/api/place/group";
 import {listStoreContract} from "@/api/place/storeContract";
 import {addPrint, getPrint} from "@/api/place/print";
-import {getGroup, listGroup} from "@/api/place/group";
+import {listGroup} from "@/api/place/group";
 
 export default {
   name: "Sheet",
@@ -813,7 +808,7 @@ export default {
       open: false,
       //是否显示磅单打印申请弹出层
       printOpen: false,
-      printTitle:"",
+      printTitle: "",
       //打印区域显示隐藏
       printShow: false,
       printDate: {
@@ -889,7 +884,7 @@ export default {
       },
       // 表单校验
       rulesModifyNew: {},
-      rules: { approvalUserName: [{type: 'string', required: true, message: '审批人不能为空', trigger: 'change'}],},
+      rules: {approvalUserName: [{type: 'string', required: true, message: '审批人不能为空', trigger: 'change'}],},
       rulesModify: {
         //tareWeight: [{type: 'number', required: true, message: '皮重不能为空', trigger: 'blur'}],
         //roughWeight: [{type: 'number', required: true, message: '毛重不能为空', trigger: 'blur'}],
@@ -948,7 +943,7 @@ export default {
         auditUser: undefined,
         storeCode: undefined,
         contractNo: undefined,
-        modifyContactNo: undefined,
+        modifyContractNo: undefined,
         modifyStoreCode: undefined,
         modifyVehicleNo: undefined,
         modifyType: undefined
@@ -986,7 +981,7 @@ export default {
         //备注
         remark: '',
         //申请原因
-        applicationFactor:'',
+        applicationFactor: '',
       },
       auditGroupList: [],
       auditUserList: [],
@@ -1080,20 +1075,20 @@ export default {
       this.reset();
     },
     //磅单打印审批操作相关
-    printCancel(){
-     this.printOpen=false;
-     this.form={};
-     this.poundModify.auditGroup='';
+    printCancel() {
+      this.printOpen = false;
+      this.form = {};
+      this.poundModify.auditGroup = '';
     },
-    printSubmitForm: function(){
+    printSubmitForm: function () {
       this.$refs["form"].validate(valid => {
-        if(valid){
+        if (valid) {
           addPrint(this.form).then(response => {
             if (response.code === 200) {
               this.msgSuccess("申请成功");
               this.printOpen = false;
               this.getList();
-            }else if(response.data=='101'){
+            } else if (response.data == '101') {
               this.msgError(response.msg);
 
             }
@@ -1185,8 +1180,13 @@ export default {
       this.poundModify.modifyCoalBillNo = this.selectPound.coalBillNum
       this.poundModify.vehicleNo = this.selectPound.plateNum
       this.poundModify.modifyVehicleNo = this.selectPound.plateNum
-      this.poundModify.contractNo = this.selectPound.remark
+      //if (this.poundModify.viaType === '01') {
       this.poundModify.modifyContractNo = this.selectPound.remark
+      //} else {
+      this.poundModify.modifyCoalBillNo = this.selectPound.coalBillNum
+      //}
+      //this.poundModify.contractNo = this.selectPound.remark
+      //this.poundModify.modifyContractNo = this.selectPound.remark
       this.poundModify.storeCode = this.selectPound.locationNumber //库位号
       this.poundModify.modifyStoreCode = this.selectPound.locationNumber //修改后的库位号
       /* console.log(this.poundModify)
@@ -1195,12 +1195,12 @@ export default {
 
     },
     //打印申请弹出框
-    printApplication(row){
-      this.form={};
-      this.poundModify.auditGroup='';
-      this.printTitle="磅单打印申请";
-      this.printOpen=true;
-      this.form.poundId=row.id;
+    printApplication(row) {
+      this.form = {};
+      this.poundModify.auditGroup = '';
+      this.printTitle = "磅单打印申请";
+      this.printOpen = true;
+      this.form.poundId = row.id;
     },
     /** 提交按钮 */
     submitForm: function () {
@@ -1215,7 +1215,7 @@ export default {
           }
 
           if (this.poundModify.modifyType === '1') {//改合同
-            if (!this.poundModify.modifyContactNo || !this.poundModify.modifyStoreCode || this.poundModify.modifyStoreCode === this.poundModify.storeCode) {
+            if (!this.poundModify.modifyStoreCode || this.poundModify.modifyStoreCode === this.poundModify.storeCode) {
               this.$message.warning('请填写要修改的合同号和库位号')
               return false
             }
@@ -1433,11 +1433,12 @@ export default {
       }
     },
     modifyTypeChange(event) {
+      this.rulesModifyNew = {}
       if (event === '3') {
         this.rulesModifyNew = Object.assign(this.rulesModify, this.ruleVehicleNo)
       } else if (event === '1') {
         this.rulesModifyNew = Object.assign(this.rulesModify, this.ruleContractNo)
-      } else if (event === '2') {
+      } else if (event === '2') {//改提煤单
         this.rulesModifyNew = Object.assign(this.rulesModify, this.ruleCoalBillNo)
       } else {
         this.rulesModifyNew = this.rulesModify
