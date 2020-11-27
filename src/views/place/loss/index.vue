@@ -240,7 +240,7 @@
                          @change="((val)=>{change(val, 'contractNo')})" :disabled="auditDisabled">
                 <el-option
                   v-for="item in contractOptions"
-                  :key="item.contractNo"
+                  :key="1+item.contractNo"
                   :label="item.contractNo"
                   :value="item.contractNo"
                 >
@@ -312,25 +312,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row style="margin-left: 120px">
-          <el-col :span="12">
-            <el-upload
-              ref="uploadTwo"
-              style="width: 100%"
-              :action=uploadAction
-              :headers="headers"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              :on-success="uploadSuccess"
-              :before-remove="beforeRemove"
-              :limit="1"
-              :on-exceed="handleExceed"
-              :file-list="fileListT"
-              :disabled="auditDisabled">
-              <el-button size="mini" style="background: #91eae4">上传附件</el-button>
-            </el-upload>
-          </el-col>
-        </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
@@ -338,7 +319,51 @@
             </el-form-item>
           </el-col>
         </el-row>
-
+        <el-row style="margin-left: 60px;margin-right: 40px">
+          <!--上传图片或pdf附件用的上传组件-->
+          <el-col :span="24">
+            <el-upload
+              ref="uploadTwo"
+              style="width: 100%"
+              :multiple="true"
+              accept=".png, .jpg, .jpeg, .pdf"
+              :action="upload.url"
+              :headers="upload.headers"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :on-success="uploadSuccess"
+              :before-remove="beforeRemove"
+              :before-upload="beforeUpload"
+              :limit="10"
+              :on-exceed="handleExceed"
+              list-type="text"
+              :disabled="auditDisabled"
+              :file-list="fileList">
+              <el-button size="small" type="primary" plain>上传附件</el-button>
+              <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“.png”或“.jpg”或“.jpeg”或“.pdf”格式文件！</div>
+            </el-upload>
+            <div>
+              <span v-show="updateForm.minFileName">{{ updateForm.minBucketName }}{{ updateForm.minFileName }}</span>
+              <el-button
+                size="small"
+                type="text"
+                icon="el-icon-download"
+                @click="handleDownload()"
+                v-show="updateForm.minFileName"
+              >下载
+              </el-button>
+              <el-button
+                size="small"
+                type="text"
+                icon="el-icon-delete"
+                @click="deleteBig()"
+                v-show="updateForm.minFileName"
+                v-hasPermi="['place:loss:remove']"
+              >删除
+              </el-button>
+            </div>
+          </el-col>
+        </el-row>
         <el-row>
           <el-form-item label="审批" prop="auditState" v-if="this.title === '亏吨审批'">
             <el-select v-model="form.auditState" placeholder="请选择审批结果">
@@ -365,11 +390,12 @@
 
 <script>
 import { listLoss, getLoss, delLoss, addLoss, updateLoss,auditLoss,getPlaceWeight } from "@/api/place/loss";
-
+import {getToken} from '@/utils/auth'
 import { getUserDepts } from '@/utils/charutils'
 import { listInfo } from '@/api/basis/enterpriseInfo'
 import { listStoreContract } from '@/api/place/storeContract'
 import { getStoreByIds } from '@/api/place/store'   //获取库位信息
+import {delAttachment, getPreview} from "@/api/place/attachment";  //附件对象
 
 
 export default {
@@ -394,6 +420,9 @@ export default {
       open: false,
       //审批对话框字段只读
       auditDisabled:false,
+
+      updateForm: {},
+      fileList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -428,18 +457,24 @@ export default {
         auditState: undefined,
         placeId: undefined,
         stockWeight:undefined
-
       },
-
-      uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/place/upload/anyFile',
-      headers: {
-        'Authorization': '',
-        'placeId': '',
-        'bucketName': 'big',
-        'filename':''
+      // 文件上传
+      upload: {
+        // 是否显示弹出层（用户导入）
+        open: false,
+        // 弹出层标题（用户导入）
+        title: '',
+        // 是否禁用上传
+        isUploading: false,
+        // 是否更新已经存在的用户数据
+        updateSupport: 0,
+        // 设置上传的请求头部
+        headers: {'Authorization': 'Bearer ' + getToken(), 'bucketName': 'place', 'pathName': 'loss'},
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + '/place/attachment/add'
       },
-      fileListT: [],
-
+      attachmentList: [],//保存附件的id
+      uploading: false,
       // 校验重量
       weightParams: {
         placeId: '',
@@ -483,7 +518,6 @@ export default {
       contractOptions: [],
       // 库位号
       storeIds: [],
-
       auditStateTopDic: [
         {'key': '0', 'value': '申请中'},
         {'key': '1', 'value': '审批通过'},
@@ -498,13 +532,10 @@ export default {
   created() {
     // 获取场所
     this.depts = getUserDepts('0')
-    this.queryParams.placeId=
+    this.queryParams.placeId=this.depts
     this.getList();
-
-
   },
   methods: {
-
     /** 客户信息列表 */
     getConsumerInfo(placeId) {
       let consumerParams = { eType: '2', deptId: placeId }
@@ -524,6 +555,19 @@ export default {
     },
     // 取消按钮
     cancel() {
+      //如果是新增的时候，点了取消，则删除文件记录
+      if (this.form.id === undefined) {
+        if (this.attachmentList.length > 0) {
+          delAttachment(this.attachmentList).then(response => {
+            this.attachmentList = []
+          }).catch(err => {
+            this.attachmentList = []
+          })
+        }
+      } else {
+        this.attachmentList = []
+
+      }
       this.open = false;
       this.storeIds = []
       this.contractOptions = [],
@@ -532,6 +576,8 @@ export default {
           id: '',
           coalType: ''
         }
+      this.fileList = []
+      this.$refs.uploadTwo.clearFiles()
       this.reset();
     },
     // 表单重置
@@ -605,6 +651,20 @@ export default {
         this.checkStoreWeight(this.weightParams)
         this.open = true;
         this.title = "修改亏吨";
+
+        //加载附件内容
+        if (response.data.attachementids) {
+          this.attachmentList = response.data.attachementids.split(',')
+        }
+        this.fileList = []
+        for (let file of response.data.attachmentList) {
+          this.fileList.push({
+            'name': file.originalName,
+            'url': file.objectName,
+            'bucketName': file.bucketName,
+            'id': file.id
+          })
+        }
       });
     },
 
@@ -630,6 +690,7 @@ export default {
         if (valid) {
           if (this.form.id != undefined) {
             if(this.title != "亏吨审批"){
+              this.form.attachementids = this.attachmentList.join(',')
               updateLoss(this.form).then(response => {
                 if (response.code === 200) {
                   this.msgSuccess("修改成功");
@@ -651,6 +712,7 @@ export default {
               });
             }
           } else {
+            this.form.attachementids = this.attachmentList.join(',')
             addLoss(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
@@ -748,11 +810,44 @@ export default {
       }
     },
     /***上传start ***/
+    /** 限制上传pdf文件大小 */
+    beforeUpload(file) {
+      // var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
+      // const extension = testmsg === 'png'
+      // const extension2 = testmsg === 'jpg'
+      // const extension3 = testmsg === 'jpeg'
+      // const extension4 = testmsg === 'pdf'
+      const isLt2M = file.size / 1024 / 1024 < 10     //这里做文件大小限制
+      // if(!extension && !extension2 && !extension3 && !extension4) {
+      // 	this.$message({
+      // 		message: '上传文件只能是 png,jpg,jpeg,pdf格式!',
+      // 		type: 'warning'
+      // 	});
+      // }
+      if (!isLt2M) {
+        this.$message({
+          message: '上传文件大小不能超过 10MB!请等待读条完毕,并重新上传',
+          type: 'error'
+        });
+      }
+      // return extension || extension2 && isLt2M
+    },
     handleRemove(){
 
     },
-    handlePreview(){
-
+    handlePreview(file){
+      let id = ''
+      if (file.response) {
+        id = file.response.data
+      } else {
+        id = file.id
+      }
+      // console.log(id)
+      getPreview(id).then(response => {
+        if (response.data) {
+          window.open(response.data)
+        }
+      })
     },
     // 文件上传成功
     uploadSuccess(response) {
@@ -761,25 +856,27 @@ export default {
         this.uploading = false
         return false
       }
-      this.$message.success("上传成功")
+      //this.$message.success("上传成功")
       this.uploading = true
-      this.$refs.uploadTwo.clearFiles()
-      // 路径+文件名
-      this.form.minObjectName = response.data.objectName
-      // 文件名
-      this.form.minFileName = response.data.name
-      // 文件长度
-      this.form.minFileLength = response.data.length
-      // 桶名
-      this.form.minBucketName = response.data.bucketName
-      // 路径
-      this.form.minPath=response.data.path
+      // this.$refs.uploadTwo.clearFiles()
+      this.attachmentList.push(response.data)
     },
-    beforeRemove(){
-
+    beforeRemove(file, fileList){
+      let index = fileList.indexOf(file)
+      let attachmentId = this.attachmentList[index];
+      console.log(attachmentId)
+      //删除指定位置的元素
+      this.attachmentList.splice(index, 1)
+      //删除文件 及附件记录
+      delAttachment(attachmentId)
     },
     handleExceed(){
-
+      this.$message.warning('最多只能上传10个附件')
+    },
+    //下载
+    handleDownload() {
+      console.log(this.updateForm)
+      window.location.href = process.env.VUE_APP_BASE_API + '/smallo/files/download?bucketName=' + this.updateForm.minBucketName + '&objectName=' + this.updateForm.minObjectName
     },
     /***上传end ***/
   }

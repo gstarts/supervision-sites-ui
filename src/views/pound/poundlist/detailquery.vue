@@ -548,6 +548,28 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+<!--  磅单打印申请  -->
+    <el-dialog :title="title" :visible.sync="printOpen"  append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-form-item label="磅单ID" prop="poundId">
+          <el-input v-model="form.poundId" placeholder="请输入磅单ID" />
+        </el-form-item>
+        <el-form-item label="申请人名称" prop="applyUserName">
+          <el-input v-model="form.applyUserName" placeholder="请输入申请人名称" />
+        </el-form-item>
+        <el-form-item label="审批用户名称" prop="approvalUserName">
+          <el-input v-model="form.approvalUserName" placeholder="请输入审批用户名称" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="printSubmitForm">确 定</el-button>
+        <el-button @click="printCancel">取 消</el-button>
+      </div>
+    </el-dialog>
       <div id="dayin" v-show="printShow">
         <div style="align-content: center;">
           <span class="poundTotal11">{{ this.printDate.poundTotal}}</span>
@@ -642,8 +664,10 @@ export default {
       dateRange:[],
       // 弹出层标题
       title: "",
-      // 是否显示弹出层
+      // 是否显示磅单修改弹出层
       open: false,
+      //是否显示磅单打印申请弹出层
+      printOpen:false,
       //打印区域显示隐藏
       printShow:false,
       printDate:{
@@ -781,6 +805,18 @@ export default {
       ],
       coalTypeOptions: [], //煤种
       transportModeDic:[], //运输方式
+
+      //磅单打印审批 JSON
+      form:{
+        //磅单id
+        poundId:'',
+        //申请人名称
+        applyUserName:'',
+        //审批用户名称
+        approvalUserName:'',
+        //备注
+        remark:'',
+      },
     };
   },
   computed: {
@@ -857,6 +893,9 @@ export default {
       this.open = false;
       this.reset();
     },
+    //磅单打印审批操作相关
+    printCancel:{},
+    printSubmitForm:{},
     // 表单重置
     reset() {
       this.formModify = {

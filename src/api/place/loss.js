@@ -61,3 +61,11 @@ export function delLoss(id) {
     method: 'delete'
   })
 }
+
+// 删除传入的文件
+export function delImportFile(id) {
+  return request({
+    url: '/place/loss/del/' + id,
+    method: 'delete'
+  })
+}
