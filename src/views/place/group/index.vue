@@ -46,7 +46,7 @@
         >新增
         </el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!--<el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -56,8 +56,8 @@
           v-hasPermi="['place:group:edit']"
         >修改
         </el-button>
-      </el-col>
-      <el-col :span="1.5">
+      </el-col>-->
+      <!--<el-col :span="1.5">
         <el-button
           type="danger"
           icon="el-icon-delete"
@@ -67,17 +67,17 @@
           v-hasPermi="['place:group:remove']"
         >删除
         </el-button>
-      </el-col>
+      </el-col>-->
     </el-row>
     <el-table v-loading="loading" :data="groupList">
-      <af-table-column type="selection" width="55" align="center"/>
+      <!--<af-table-column type="selection" width="55" align="center"/>-->
       <af-table-column label="ID" align="center" prop="id"/>
-      <af-table-column label="场所ID" align="center" prop="placeId"/>
+      <!--<af-table-column label="场所" align="center" prop="placeId"/>-->
       <af-table-column label="组名" align="center" prop="groupName"/>
       <af-table-column label="组编号" align="center" prop="groupCode"/>
-      <af-table-column label="成员名称，用逗号分隔" align="center" prop="userNames">
+      <af-table-column label="成员" align="center" prop="userNames">
         <template slot-scope="scope">
-          {{getUserNickName(scope.row.userNames)}}
+          {{ getUserNickName(scope.row.userNames) }}
         </template>
       </af-table-column>
       <af-table-column label="备注" align="center" prop="remark"/>
@@ -129,8 +129,10 @@
           <el-col :span="24">
             <el-form-item label="成员" prop="userNames">
               <el-input v-model="form.userNames" placeholder="请输入内容" disabled style="display:none"/>
-              <el-checkbox-group v-model="userNames" @change="handleCheckedUserChange">
-                <el-checkbox v-for="user in userList" :label="user.userName" :key="user.id" @click="getCheckUser">{{ user.nickName }}
+              <el-checkbox-group v-model="userNames">
+                <el-checkbox v-for="user in userList" :label="user.userName" :key="user.id"
+                             v-model="user.isChecked" @change="val=> handleUserSelect(val,user)"
+                >{{ user.nickName }}
                 </el-checkbox>
               </el-checkbox-group>
             </el-form-item>
@@ -220,7 +222,7 @@ export default {
       });
     },
     getUserList() {
-      listUser({'deptId': this.queryParams.placeId}).then(response => {
+      listUser({'deptId': this.queryParams.placeId,'delFlag':'0'}).then(response => {
         if (response.code === 200) {
           this.userList = response.rows
           console.log("==============")
@@ -232,7 +234,7 @@ export default {
       this.getList()
       this.getUserList()
     },
-    handleCheckedUserChange(value) {
+    /*handleCheckedUserChange(value) {
       //debugger
       console.log(value)
       this.form.userNames = this.userNames.join(',')
@@ -240,7 +242,7 @@ export default {
       //let checkedCount = value.length;
       //this.checkAll = checkedCount === this.cities.length;
       // this.form.userNames += value + ','
-    },
+    },*/
     // 取消按钮
     cancel() {
       this.open = false;
@@ -336,26 +338,50 @@ export default {
       });
     },
     /** 导出按钮操作 */
-   /* handleExport() {
-      this.download('place/group/export', {
-        ...this.queryParams
-      }, `place_group.xlsx`)
-    }*/
-    getUserNickName(userNames){
+    /* handleExport() {
+       this.download('place/group/export', {
+         ...this.queryParams
+       }, `place_group.xlsx`)
+     }*/
+    getUserNickName(userNames) {
       let names = userNames.split(',')
       let str = []
-      for(let userName of names){
-        let userObj = this.userList.find(item=> item.userName === userName)
-        if(userObj){
+      for (let userName of names) {
+        let userObj = this.userList.find(item => item.userName === userName)
+        if (userObj) {
           str.push(userObj.nickName)
-        }else{
+        } else {
           str.push(userName)
         }
       }
       return str.join('，')
     },
-    getCheckUser(value){
-      console.log(value)
+    handleUserSelect(val, user) {
+      // debugger
+      console.log(this.userNames)
+      console.log(val)
+      console.log(user)
+      if (val) { //如果是选中了，就增加一个
+        //系统已经自动加了，不用再加
+        //this.userNames.push(user.userName)
+      } else {
+        //val = true
+        //user.isChecked = true
+        this.userNames.push(user.userName)//不让删除
+        this.$message.warning('组内用户不能删除')
+
+        //如果是取消了，要删除，删除之前要判断，此用户是否在审批用户 里还有未审批的工作要作
+        //this.deleteItem(user.userName, this.userNames)
+      }
+      console.log(this.userNames)
+      this.form.userNames = this.userNames.join(',')
+    },
+    deleteItem(item, list) {
+      for (let key in list) {
+        if (list[key].userName === item) {
+          list.splice(key, 1)
+        }
+      }
     }
   }
 };
