@@ -217,7 +217,7 @@
       <!--          />-->
       <!--        </el-select>-->
       <!--      </el-form-item>-->
-      <el-form-item label="磅单状态 " prop="status">
+      <el-form-item label="磅单状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small" @change="handleQuery">
           <el-option
             v-for="dept in poundStateDic"
@@ -308,7 +308,7 @@
       <af-table-column label="库位号" align="center" prop="locationNumber"/>
       <!--<af-table-column label="通道号" align="center" prop="channelNumber"/>-->
       <!--<af-table-column label="场所ID" align="center" prop="stationId"/>-->
-      <af-table-column label="出入库单ID" align="center" prop="noticeNo"/>
+      <af-table-column label="出入库单" align="center" prop="noticeNo"/>
       <af-table-column label="车辆类型" align="center" prop="viaType">
         <template slot-scope="scope">
           {{ scope.row.viaType === '01' ? '蒙煤车' : '外调车' }}
@@ -346,12 +346,10 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
-
             @click="handlePrint(scope.row)"
             v-hasPermi="['place:sheet:print']"
           >{{ scope.row.printState === '0' ? '打印' : '补打' }}
           </el-button>
-
         </template>
       </af-table-column>
     </el-table>
@@ -366,7 +364,7 @@
 
     <!--磅单申请的弹出框-->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
-      <el-form ref="formModify" :model="poundModify" :rules="rulesModify" label-width="120px">
+      <el-form ref="formModify" :model="poundModify" :rules="rulesModifyNew" label-width="120px">
         <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
           <el-col :span="8" :offset="2">
             车号：{{ poundModify.vehicleNo }}
@@ -417,18 +415,49 @@
             提煤单号:{{ selectPound.remark }}
           </el-col>
         </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="修改项" prop="modifyType">
+              <el-select v-model="poundModify.modifyType" filterable placeholder="请选择修改项" @change="modifyTypeChange">
+                <el-option
+                  v-for="item in modifyTypeDic"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!--改车号，一定是出场前修改-->
+        <el-row :gutter="10" v-show="selectPound.flowDirection ==='I'">
+          <el-col :span="11">
+            <el-form-item label="车牌号" prop="vehicleNo">
+              {{ poundModify.vehicleNo }}
+              <!--<el-input v-model="poundModify.vehicleNo" disabled></el-input>-->
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" class="modifyTo">修改为</el-col>
+          <el-col :span="11">
+            <!-- <el-input v-model="poundModify.modifyCoalBillNo" disabled></el-input>-->
+            <el-form-item label="车牌号" prop="modifyVehicleNo">
+              <el-input v-model="poundModify.modifyVehicleNo" :disabled="poundModify.modifyType!=='3'"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <!--外调车时，显示 可以改提煤单号-->
         <el-row :gutter="10" v-show="selectPound.viaType === '02' && selectPound.flowDirection ==='E'">
           <el-col :span="11">
             <el-form-item label="提煤单号" prop="coalBillNo">
-              <el-input v-model="poundModify.coalBillNo" disabled></el-input>
+              {{ poundModify.coalBillNo }}
+              <!--<el-input v-model="poundModify.coalBillNo" disabled></el-input>-->
             </el-form-item>
           </el-col>
-          <el-col :span="2">修改为</el-col>
+          <el-col :span="2" class="modifyTo">修改为</el-col>
           <el-col :span="11">
-            <!-- <el-input v-model="poundModify.modifyCoalBillNo" disabled></el-input>-->
             <el-form-item label="提煤单号" prop="modifyCoalBillNo">
-              <el-select v-model="poundModify.modifyCoalBillNo" filterable placeholder="请选择提煤单号">
+              <el-select v-model="poundModify.modifyCoalBillNo" filterable placeholder="请选择提煤单号"
+                         :disabled="poundModify.modifyType!=='2'">
                 <el-option
                   v-for="item in BigList"
                   :key="item.coalBillNo"
@@ -439,6 +468,55 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <!--蒙煤车修改合同-->
+        <div>
+          <el-row :gutter="10">
+            <el-col :span="11">
+              <el-form-item label="合同号" prop="contactNo">
+                {{ poundModify.contactNo }}
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" class="modifyTo">修改为</el-col>
+            <el-col :span="11">
+              <!-- <el-input v-model="poundModify.modifyCoalBillNo" disabled></el-input>-->
+              <el-form-item label="合同" prop="modifyContractNo">
+                <el-select v-model="poundModify.modifyContractNo" filterable placeholder="请选择合同号"
+                           :disabled="poundModify.modifyType!=='1'"
+                           @change="contractChange">
+                  <el-option
+                    v-for="item in contractList"
+                    :key="item.contractNo"
+                    :label="item.contractNo"
+                    :value="item.contractNo">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="11">
+              <el-form-item label="库位号" prop="storeCode">
+                {{ poundModify.storeCode }}
+                <!--<el-input v-model="poundModify.storeCode" disabled></el-input>-->
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" class="modifyTo">修改为</el-col>
+            <el-col :span="11">
+              <!-- <el-input v-model="poundModify.modifyCoalBillNo" disabled></el-input>-->
+              <el-form-item label="库位号" prop="modifyStoreCode">
+                <el-select v-model="poundModify.modifyStoreCode" filterable placeholder="请选择库位号"
+                           :disabled="poundModify.modifyType!=='1'">
+                  <el-option
+                    v-for="item in storeCodeList"
+                    :key="item.storeCode"
+                    :label="item.storeCode"
+                    :value="item.storeCode">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
         <!--        <el-row>-->
         <!--          <el-col>-->
         <!--            {{ selectPound }}-->
@@ -447,10 +525,11 @@
         <el-row :gutter="10">
           <el-col :span="11">
             <el-form-item label="皮重" prop="tareWeight">
-              <el-input-number v-model="poundModify.tareWeight" placeholder="请输入修改前皮重" disabled/>
+              {{ poundModify.tareWeight }}
+              <!--<el-input-number v-model="poundModify.tareWeight" placeholder="请输入修改前皮重" disabled/>-->
             </el-form-item>
           </el-col>
-          <el-col :span="2">修改为</el-col>
+          <el-col :span="2" class="modifyTo">修改为</el-col>
           <el-col :span="11">
             <el-form-item label="皮重" prop="modifyTareWeight">
               <el-input :min="0" :step="1" v-model.number="poundModify.modifyTareWeight" placeholder="请输入修改后皮重"/>
@@ -460,10 +539,11 @@
         <el-row :gutter="10">
           <el-col :span="11">
             <el-form-item label="毛重" prop="roughWeight">
-              <el-input-number v-model="poundModify.roughWeight" placeholder="请输入修改前毛重" disabled/>
+              {{ poundModify.roughWeight }}
+              <!--<el-input-number v-model="poundModify.roughWeight" placeholder="请输入修改前毛重" disabled/>-->
             </el-form-item>
           </el-col>
-          <el-col :span="2">修改为</el-col>
+          <el-col :span="2" class="modifyTo">修改为</el-col>
           <el-col :span="11">
             <el-form-item label="毛重" prop="modifyRoughWeight">
               <el-input :min="0" :step="1" v-model.number="poundModify.modifyRoughWeight" placeholder="请输入修改后毛重"/>
@@ -473,10 +553,11 @@
         <el-row :gutter="10">
           <el-col :span="11">
             <el-form-item label="净重" prop="netWeight">
-              <el-input-number v-model="poundModify.netWeight" placeholder="请输入修改前净重" disabled/>
+              {{ poundModify.netWeight }}
+              <!--<el-input-number v-model="poundModify.netWeight" placeholder="请输入修改前净重" disabled/>-->
             </el-form-item>
           </el-col>
-          <el-col :span="2">修改为</el-col>
+          <el-col :span="2" class="modifyTo">修改为</el-col>
           <el-col :span="11">
             <el-form-item label="净重" prop="modifyNetWeight">
               <el-input :min="0" :step="1" v-model.number="poundModify.modifyNetWeight" placeholder="请输入修改后净重"
@@ -492,7 +573,7 @@
                 <el-input v-model="poundModify.containerNo1" placeholder="请输入集装号1" disabled/>
               </el-form-item>
             </el-col>
-            <el-col :span="2" style="padding-top:10px;">修改为</el-col>
+            <el-col :span="2" style="padding-top:10px;" class="modifyTo">修改为</el-col>
             <el-col :span="11">
               <el-form-item label="集装箱号1" prop="modifyContainerNo1">
                 <el-input v-model="poundModify.modifyContainerNo1" placeholder="请输入修改后集装箱号1"/>
@@ -505,7 +586,7 @@
                 <el-input v-model="poundModify.containerNo2" placeholder="请输入集装号2" disabled/>
               </el-form-item>
             </el-col>
-            <el-col :span="2" style="padding-top:10px;">修改为</el-col>
+            <el-col :span="2" style="padding-top:10px;" class="modifyTo">修改为</el-col>
             <el-col :span="11">
               <el-form-item label="集装箱号2" prop="modifyContainerNo2">
                 <el-input v-model="poundModify.modifyContainerNo2" placeholder="请输入修改后集装箱号2"/>
@@ -518,7 +599,7 @@
                 <el-input v-model="poundModify.containerNo3" placeholder="请输入集装号3" disabled/>
               </el-form-item>
             </el-col>
-            <el-col :span="2" style="padding-top:10px;">修改为</el-col>
+            <el-col :span="2" style="padding-top:10px;" class="modifyTo">修改为</el-col>
             <el-col :span="11">
               <el-form-item label="集装箱号3" prop="modifyContainerNo3">
                 <el-input v-model="poundModify.modifyContainerNo3" placeholder="请输入修改后集装箱号3"/>
@@ -531,7 +612,7 @@
                 <el-input v-model="poundModify.containerNo4" placeholder="请输入集装号4" disabled/>
               </el-form-item>
             </el-col>
-            <el-col :span="2" style="padding-top:10px;">修改为</el-col>
+            <el-col :span="2" style="padding-top:10px;" class="modifyTo">修改为</el-col>
             <el-col :span="11">
               <el-form-item label="集装箱号4" prop="modifyContainerNo4">
                 <el-input v-model="poundModify.modifyContainerNo4" placeholder="请输入修改后集装箱号4"/>
@@ -660,14 +741,15 @@
 </template>
 
 <script>
-import {listSheetLike, getSheet, delSheet, addSheet, updateSheet, updatePrintState} from "@/api/pound/poundlist";
+import {listSheetLike, updatePrintState} from "@/api/pound/poundlist";
 import {getUserDepts} from "@/utils/charutils";
-import {addModify, applyModify} from "@/api/place/modify";
+import {applyModify} from "@/api/place/modify";
 import {selectCoalBillNo} from "@/api/place/big";
-import {genTimeCode, parseTime} from "@/utils/common";
+import {parseTime} from "@/utils/common";
 import {listUser} from "@/api/system/user";
 import {getPrint} from "@/api/place/print";
-import {getGroup, listGroup} from "@/api/place/group";
+import {listGroup} from "@/api/place/group";
+import {listStoreContract} from "@/api/place/storeContract";
 
 export default {
   name: "Sheet",
@@ -776,10 +858,11 @@ export default {
       },
       // 表单校验
       rules: {},
+      rulesModifyNew: {},
       rulesModify: {
-        tareWeight: [{type: 'number', required: true, message: '皮重不能为空', trigger: 'blur'}],
-        roughWeight: [{type: 'number', required: true, message: '毛重不能为空', trigger: 'blur'}],
-        netWeight: [{type: 'number', required: true, message: '净重不能为空', trigger: 'blur'}],
+        //tareWeight: [{type: 'number', required: true, message: '皮重不能为空', trigger: 'blur'}],
+        //roughWeight: [{type: 'number', required: true, message: '毛重不能为空', trigger: 'blur'}],
+        //netWeight: [{type: 'number', required: true, message: '净重不能为空', trigger: 'blur'}],
         modifyTareWeight: [{required: true, message: '皮重不能为空', trigger: 'blur'},
           {type: "number", message: "皮重需为数字", trigger: "blur"}],
         modifyRoughWeight: [{required: true, message: '毛重不能为空', trigger: 'blur'},
@@ -788,6 +871,19 @@ export default {
           {type: "number", message: "净重需为数字", trigger: "blur"}],
         applyReason: [{type: 'string', required: true, message: '修改原因不能为空', trigger: 'blur'}],
         auditUser: [{type: 'string', required: true, message: '审批人不能为空', trigger: 'change'}],
+        modifyType: [{type: 'string', required: true, message: '修改项不能为空', trigger: 'change'}],
+      },
+
+      ruleVehicleNo: {
+        modifyVehicleNo: [{required: true, message: '车号不能为空', trigger: 'blur'}],
+      },
+
+      ruleContractNo: {
+        modifyContractNo: [{type: 'string', required: true, message: '合同号不能为空', trigger: 'change'}],
+        modifyStoreCode: [{type: 'string', required: true, message: '库位号不能为空', trigger: 'change'}],
+      },
+      ruleCoalBillNo: {
+        modifyCoalBillNo: [{type: 'string', required: true, message: '提煤单号不能为空', trigger: 'change'}],
       },
       poundModify: {
         id: undefined,
@@ -818,7 +914,13 @@ export default {
         coalBillNo: undefined,
         modifyCoalBillNo: undefined,
         auditGroup: undefined,
-        auditUser: undefined
+        auditUser: undefined,
+        storeCode: undefined,
+        contractNo: undefined,
+        modifyContactNo: undefined,
+        modifyStoreCode: undefined,
+        modifyVehicleNo: undefined,
+        modifyType: undefined
       },
       //当前选中的磅单
       selectPound: {},
@@ -855,7 +957,13 @@ export default {
       },
       auditGroupList: [],
       auditUserList: [],
-
+      contractList: [],
+      storeCodeList: [],
+      modifyTypeDic: [
+        {'dictValue': '3', 'dictLabel': '修改车号'},
+        {'dictValue': '1', 'dictLabel': '修改合同'},
+        {'dictValue': '2', 'dictLabel': '修改提煤单'},
+      ]
     };
   },
   computed: {
@@ -890,13 +998,13 @@ export default {
 
   },
   created() {
-
     this.getUserList();
     this.depts = getUserDepts('0')
     if (this.depts.length > 0) {
       this.queryParams.stationId = this.depts[0].deptId
       this.getList();
       this.getGroupList()
+      this.getContractList()
     }
     //煤种类型
     this.getDicts("coal_type").then(response => {
@@ -906,15 +1014,20 @@ export default {
     this.getDicts("place_transport_type").then((response) => {
       this.transportModeDic = response.data;
     });
+    this.rulesModifyNew = this.rulesModify
   },
   watch: {
     //毛重监听
     modifyRoughWeightWatch(val) {
-      this.poundModify.modifyNetWeight = this.poundModify.modifyRoughWeight - this.poundModify.modifyTareWeight;
+      if (this.selectPound.flowDirection === 'E') {
+        this.poundModify.modifyNetWeight = this.poundModify.modifyRoughWeight - this.poundModify.modifyTareWeight;
+      }
     },
     //皮重监听
     modifyTareWeightWatch01(val) {
-      this.poundModify.modifyNetWeight = this.poundModify.modifyRoughWeight - this.poundModify.modifyTareWeight;
+      if (this.selectPound.flowDirection === 'E') {
+        this.poundModify.modifyNetWeight = this.poundModify.modifyRoughWeight - this.poundModify.modifyTareWeight;
+      }
     },
   },
   methods: {
@@ -991,44 +1104,70 @@ export default {
       this.reset();
       this.open = true;
       this.title = "磅单修改申请";
-      this.selectPound = row
+      this.selectPound = {...row}
 
-      this.poundModify.netWeight = row.netWeight
-      this.poundModify.poundId = row.id
-      this.poundModify.poundState = row.status
-      this.poundModify.tareWeight = row.tare
-      this.poundModify.roughWeight = row.grossWeight
-      this.poundModify.netWeight = row.netWeight
-      this.poundModify.modifyTareWeight = row.tare
-      this.poundModify.modifyRoughWeight = row.grossWeight
-      this.poundModify.modifyNetWeight = row.netWeight
-      this.poundModify.vehicleNo = row.plateNum
-      this.poundModify.packMode = row.packMode
-      this.poundModify.containerNo1 = row.containerNum
-      this.poundModify.containerNo2 = row.containerNum2
-      this.poundModify.containerNo3 = row.containerNum3
-      this.poundModify.containerNo4 = row.containerNum4
-      this.poundModify.modifyContainerNo1 = row.containerNum
-      this.poundModify.modifyContainerNo2 = row.containerNum2
-      this.poundModify.modifyContainerNo3 = row.containerNum3
-      this.poundModify.modifyContainerNo4 = row.containerNum4
-      this.poundModify.viaType = row.viaType
-      this.poundModify.placeId = row.stationId
-      this.poundModify.flow = row.flowDirection
-      this.poundModify.docId = row.noticeNo
-      this.poundModify.coalBillNo = row.coalBillNum
-      this.poundModify.modifyCoalBillNo = row.coalBillNum
+      this.poundModify.netWeight = this.selectPound.netWeight
+      this.poundModify.poundId = this.selectPound.id
+      this.poundModify.poundState = this.selectPound.status
+      this.poundModify.tareWeight = this.selectPound.tare
+      this.poundModify.roughWeight = this.selectPound.grossWeight
+      this.poundModify.netWeight = this.selectPound.netWeight
+      this.poundModify.modifyTareWeight = this.selectPound.tare
+      this.poundModify.modifyRoughWeight = this.selectPound.grossWeight
+      this.poundModify.modifyNetWeight = this.selectPound.netWeight
+      this.poundModify.vehicleNo = this.selectPound.plateNum
+      this.poundModify.packMode = this.selectPound.packMode
+      this.poundModify.containerNo1 = this.selectPound.containerNum
+      this.poundModify.containerNo2 = this.selectPound.containerNum2
+      this.poundModify.containerNo3 = this.selectPound.containerNum3
+      this.poundModify.containerNo4 = this.selectPound.containerNum4
+      this.poundModify.modifyContainerNo1 = this.selectPound.containerNum
+      this.poundModify.modifyContainerNo2 = this.selectPound.containerNum2
+      this.poundModify.modifyContainerNo3 = this.selectPound.containerNum3
+      this.poundModify.modifyContainerNo4 = this.selectPound.containerNum4
+      this.poundModify.viaType = this.selectPound.viaType
+      this.poundModify.placeId = this.selectPound.stationId
+      this.poundModify.flow = this.selectPound.flowDirection
+      this.poundModify.docId = this.selectPound.noticeNo
+      this.poundModify.coalBillNo = this.selectPound.coalBillNum
+      this.poundModify.modifyCoalBillNo = this.selectPound.coalBillNum
+      this.poundModify.vehicleNo = this.selectPound.plateNum
+      this.poundModify.modifyVehicleNo = this.selectPound.plateNum
+      this.poundModify.contractNo = this.selectPound.remark
+      this.poundModify.modifyContractNo = this.selectPound.remark
+      this.poundModify.storeCode = this.selectPound.locationNumber //库位号
+      this.poundModify.modifyStoreCode = this.selectPound.locationNumber //修改后的库位号
       /* console.log(this.poundModify)
        console.log("--------------")
        console.log(this.selectPound)*/
 
     },
-
     /** 提交按钮 */
     submitForm: function () {
       // if (this.poundModify.modifyNetWeight >= 0) {
       this.$refs["formModify"].validate(valid => {
         if (valid) {
+          if (this.poundModify.modifyType === '3') {//改车牌
+            if (!this.poundModify.modifyVehicleNo || this.poundModify.modifyVehicleNo === this.poundModify.vehicleNo) {
+              this.$message.warning('请填写要修改的车牌号')
+              return false
+            }
+          }
+
+          if (this.poundModify.modifyType === '1') {//改合同
+            if (!this.poundModify.modifyContactNo || !this.poundModify.modifyStoreCode || this.poundModify.modifyStoreCode === this.poundModify.storeCode) {
+              this.$message.warning('请填写要修改的合同号和库位号')
+              return false
+            }
+          }
+
+          if (this.poundModify.modifyType === '2') {//改提煤单
+            if (!this.poundModify.modifyCoalBillNo || this.poundModify.modifyCoalBillNo === this.poundModify.coalBillNo) {
+              this.$message.warning('请填写要修改的提煤单号')
+              return false
+            }
+          }
+
           applyModify(this.poundModify).then(response => {
             if (response.code === 200) {
               this.msgSuccess("申请成功");
@@ -1036,9 +1175,9 @@ export default {
               //可以不刷，只把 状态改了
               this.getList();
             }
-          });
+          })
         }
-      });
+      })
       //} else {
       //  this.msgError("净重不能小于0,请检查！")
       //}
@@ -1075,7 +1214,6 @@ export default {
           if (response.code === 200) {
             this.getList()
           }
-          ;
         })
         this.$refs['printBtn'].$el.click()
         //阻塞操作
@@ -1132,8 +1270,6 @@ export default {
         })
       }
     },
-
-
     /** 导出按钮操作 */
     handleExport() {
       this.download('place/sheet/export', {
@@ -1149,6 +1285,8 @@ export default {
     placeChange() {
       this.handleQuery()
       this.getCoalBillList()
+      this.getGroupList()
+      this.getContractList()
     },
     //翻译用户名
     parseUserName(user) {
@@ -1216,6 +1354,35 @@ export default {
           })
         }
       }
+    },
+    //获取场所合同列表
+    getContractList() {
+      listStoreContract({'placeId': this.queryParams.placeId, 'status': '1'}).then(response => {
+        if (response.code === 200) {
+          this.contractList = response.rows
+        }
+      })
+    },
+    contractChange(event) {
+      this.storeCodeList = []
+      this.poundModify.modifyStoreCode = ''
+      let contract = this.contractList.find(item => item.contractNo === event)
+      if (contract) {
+        this.storeCodeList = contract.params.contract
+      }
+    },
+    modifyTypeChange(event) {
+      if (event === '3') {
+        this.rulesModifyNew = Object.assign(this.rulesModify, this.ruleVehicleNo)
+      } else if (event === '1') {
+        this.rulesModifyNew = Object.assign(this.rulesModify, this.ruleContractNo)
+      } else if (event === '2') {
+        this.rulesModifyNew = Object.assign(this.rulesModify, this.ruleCoalBillNo)
+      } else {
+        this.rulesModifyNew = this.rulesModify
+      }
+      console.log(this.rulesModifyNew)
+      this.$forceUpdate()
     }
   }
 };
@@ -1349,5 +1516,9 @@ export default {
   float: left;
   padding-left: 130px;
   margin-top: 10px;
+}
+
+.modifyTo {
+  padding-top: 10px
 }
 </style>
