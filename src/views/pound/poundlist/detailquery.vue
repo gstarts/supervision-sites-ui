@@ -217,7 +217,7 @@
       <!--          />-->
       <!--        </el-select>-->
       <!--      </el-form-item>-->
-      <el-form-item label="磅单状态" prop="status">
+      <el-form-item label="磅单状态 " prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small" @change="handleQuery">
           <el-option
             v-for="dept in poundStateDic"
@@ -308,7 +308,7 @@
       <af-table-column label="库位号" align="center" prop="locationNumber"/>
       <!--<af-table-column label="通道号" align="center" prop="channelNumber"/>-->
       <!--<af-table-column label="场所ID" align="center" prop="stationId"/>-->
-      <af-table-column label="出入库单" align="center" prop="noticeNo"/>
+      <af-table-column label="出入库单ID" align="center" prop="noticeNo"/>
       <af-table-column label="车辆类型" align="center" prop="viaType">
         <template slot-scope="scope">
           {{ scope.row.viaType === '01' ? '蒙煤车' : '外调车' }}
@@ -341,6 +341,14 @@
                      @click="handleApply(scope.row)"
                      v-hasPermi="['place:modify:apply']"
           >申请修改
+          </el-button>
+          <el-button v-show="scope.row.status === '0'"
+                     size="mini"
+                     type="text"
+                     icon="el-icon-edit"
+                     @click="printApplication(scope.row)"
+                     v-hasPermi="['place:print:add']"
+          >打印申请
           </el-button>
           <el-button
             size="mini"
@@ -660,19 +668,39 @@
     </el-dialog>
 
     <!--  磅单打印申请  -->
-    <el-dialog :title="title" :visible.sync="printOpen" append-to-body>
+    <el-dialog :title="printTitle" :visible.sync="printOpen" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="磅单ID" prop="poundId">
-          <el-input v-model="form.poundId" placeholder="请输入磅单ID"/>
+        <el-form-item label="磅单ID" prop="poundId" >
+          <el-input v-model="form.poundId" placeholder="请输入磅单ID" disabled/>
         </el-form-item>
-        <el-form-item label="申请人名称" prop="applyUserName">
-          <el-input v-model="form.applyUserName" placeholder="请输入申请人名称"/>
+<!--        <el-form-item label="申请人名称" prop="applyUserName">-->
+<!--          <el-input v-model="form.applyUserName" placeholder="请输入申请人名称"/>-->
+<!--        </el-form-item>-->
+        <el-form-item label="审批组" prop="auditGroup">
+          <el-select v-model="poundModify.auditGroup" filterable placeholder="请选择审批组" @change="groupChange">
+            <el-option
+              v-for="item in auditGroupList"
+              :key="item.groupCode"
+              :label="item.groupName"
+              :value="item.groupCode">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="审批用户名称" prop="approvalUserName">
-          <el-input v-model="form.approvalUserName" placeholder="请输入审批用户名称"/>
+          <el-select v-model="form.approvalUserName" filterable placeholder="请输入审批用户名称">
+            <el-option
+              v-for="item in auditUserList"
+              :key="item.userName"
+              :label="item.nickName"
+              :value="item.userName">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
+        </el-form-item>
+        <el-form-item label="申请原因" prop="applicationFactor">
+          <el-input v-model="form.applicationFactor" type="textarea" placeholder="请输入申请原因"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -750,6 +778,8 @@ import {listUser} from "@/api/system/user";
 import {getPrint} from "@/api/place/print";
 import {listGroup} from "@/api/place/group";
 import {listStoreContract} from "@/api/place/storeContract";
+import {addPrint, getPrint} from "@/api/place/print";
+import {getGroup, listGroup} from "@/api/place/group";
 
 export default {
   name: "Sheet",
@@ -783,6 +813,7 @@ export default {
       open: false,
       //是否显示磅单打印申请弹出层
       printOpen: false,
+      printTitle:"",
       //打印区域显示隐藏
       printShow: false,
       printDate: {
@@ -857,8 +888,8 @@ export default {
         isAsc: 'desc',
       },
       // 表单校验
-      rules: {},
       rulesModifyNew: {},
+      rules: { approvalUserName: [{type: 'string', required: true, message: '审批人不能为空', trigger: 'change'}],},
       rulesModify: {
         //tareWeight: [{type: 'number', required: true, message: '皮重不能为空', trigger: 'blur'}],
         //roughWeight: [{type: 'number', required: true, message: '毛重不能为空', trigger: 'blur'}],
@@ -954,6 +985,8 @@ export default {
         approvalUserName: '',
         //备注
         remark: '',
+        //申请原因
+        applicationFactor:'',
       },
       auditGroupList: [],
       auditUserList: [],
@@ -1047,8 +1080,27 @@ export default {
       this.reset();
     },
     //磅单打印审批操作相关
-    printCancel: {},
-    printSubmitForm: {},
+    printCancel(){
+     this.printOpen=false;
+     this.form={};
+     this.poundModify.auditGroup='';
+    },
+    printSubmitForm: function(){
+      this.$refs["form"].validate(valid => {
+        if(valid){
+          addPrint(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("申请成功");
+              this.printOpen = false;
+              this.getList();
+            }else if(response.data=='101'){
+              this.msgError(response.msg);
+
+            }
+          });
+        }
+      });
+    },
     // 表单重置
     reset() {
       this.formModify = {
@@ -1141,6 +1193,14 @@ export default {
        console.log("--------------")
        console.log(this.selectPound)*/
 
+    },
+    //打印申请弹出框
+    printApplication(row){
+      this.form={};
+      this.poundModify.auditGroup='';
+      this.printTitle="磅单打印申请";
+      this.printOpen=true;
+      this.form.poundId=row.id;
     },
     /** 提交按钮 */
     submitForm: function () {
@@ -1354,6 +1414,7 @@ export default {
           })
         }
       }
+
     },
     //获取场所合同列表
     getContractList() {
