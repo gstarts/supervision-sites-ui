@@ -59,15 +59,15 @@
           </el-option>
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="承运人" prop="carrier">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.carrier"-->
-<!--          placeholder="请输入承运人"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="承运人" prop="carrier">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.carrier"-->
+      <!--          placeholder="请输入承运人"-->
+      <!--          clearable-->
+      <!--          size="small"-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="车辆类型" prop="viaType">
         <el-select v-model="queryParams.viaType" placeholder="请选择进出车辆类型" clearable size="small" @change="handleQuery">
           <el-option
@@ -143,15 +143,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-<!--      <el-form-item label="箱号" prop="containerNum">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.containerNum"-->
-<!--          placeholder="请输入箱号"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="箱号" prop="containerNum">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.containerNum"-->
+      <!--          placeholder="请输入箱号"-->
+      <!--          clearable-->
+      <!--          size="small"-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <!--<el-form-item label="保管员" prop="keeper">
         <el-input
           v-model="queryParams.keeper"
@@ -170,15 +170,15 @@
            @keyup.enter.native="handleQuery"
          />
        </el-form-item>-->
-<!--      <el-form-item label="库位号" prop="locationNumber">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.locationNumber"-->
-<!--          placeholder="请输入库位号"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="库位号" prop="locationNumber">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.locationNumber"-->
+      <!--          placeholder="请输入库位号"-->
+      <!--          clearable-->
+      <!--          size="small"-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <!--<el-form-item label="通道号" prop="channelNumber">
         <el-input
           v-model="queryParams.channelNumber"
@@ -207,16 +207,16 @@
         />
       </el-form-item>-->
 
-<!--      <el-form-item label="包装类型" prop="packMode">-->
-<!--        <el-select v-model="queryParams.packMode" placeholder="请选择包装类型" clearable size="small" @change="handleQuery">-->
-<!--          <el-option-->
-<!--            v-for="dept in packModeDic"-->
-<!--            :key="dept.key"-->
-<!--            :label="dept.value"-->
-<!--            :value="dept.key"-->
-<!--          />-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="包装类型" prop="packMode">-->
+      <!--        <el-select v-model="queryParams.packMode" placeholder="请选择包装类型" clearable size="small" @change="handleQuery">-->
+      <!--          <el-option-->
+      <!--            v-for="dept in packModeDic"-->
+      <!--            :key="dept.key"-->
+      <!--            :label="dept.value"-->
+      <!--            :value="dept.key"-->
+      <!--          />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
       <el-form-item label="磅单状态 " prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small" @change="handleQuery">
           <el-option
@@ -263,18 +263,18 @@
         <el-button v-print="'#dayin'" ref="printBtn" style="display: none"/>
       </el-form-item>
     </el-form>
-<!--    <el-row :gutter="10" class="mb8">-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="warning"-->
-<!--          icon="el-icon-download"-->
-<!--          size="mini"-->
-<!--          @click="handleExport"-->
-<!--          v-hasPermi="['place:sheet:export']"-->
-<!--        >导出-->
-<!--        </el-button>-->
-<!--      </el-col>-->
-<!--    </el-row>-->
+    <!--    <el-row :gutter="10" class="mb8">-->
+    <!--      <el-col :span="1.5">-->
+    <!--        <el-button-->
+    <!--          type="warning"-->
+    <!--          icon="el-icon-download"-->
+    <!--          size="mini"-->
+    <!--          @click="handleExport"-->
+    <!--          v-hasPermi="['place:sheet:export']"-->
+    <!--        >导出-->
+    <!--        </el-button>-->
+    <!--      </el-col>-->
+    <!--    </el-row>-->
 
     <el-table v-loading="loading" :data="sheetList" show-summary :summary-method="getSummaries" height="645">
       <!-- <af-table-column type="selection" width="55" align="center"/>-->
@@ -542,6 +542,35 @@
         <el-form-item label="修改原因" prop="applyReason">
           <el-input v-model="poundModify.applyReason" type="textarea" placeholder="请输入修改原因"/>
         </el-form-item>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="审批组" prop="auditGroup">
+              <el-select v-model="poundModify.auditGroup" filterable placeholder="请选择审批组" @change="groupChange">
+                <el-option
+                  v-for="item in auditGroupList"
+                  :key="item.groupCode"
+                  :label="item.groupName"
+                  :value="item.groupCode">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="审批人" prop="auditUser">
+              <el-select v-model="poundModify.auditUser" filterable placeholder="请选择提煤单号">
+                <el-option
+                  v-for="item in auditUserList"
+                  :key="item.userName"
+                  :label="item.nickName"
+                  :value="item.userName">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12"></el-col>
+        </el-row>
+
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -549,20 +578,20 @@
       </div>
     </el-dialog>
 
-<!--  磅单打印申请  -->
-    <el-dialog :title="title" :visible.sync="printOpen"  append-to-body>
+    <!--  磅单打印申请  -->
+    <el-dialog :title="title" :visible.sync="printOpen" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="磅单ID" prop="poundId">
-          <el-input v-model="form.poundId" placeholder="请输入磅单ID" />
+          <el-input v-model="form.poundId" placeholder="请输入磅单ID"/>
         </el-form-item>
         <el-form-item label="申请人名称" prop="applyUserName">
-          <el-input v-model="form.applyUserName" placeholder="请输入申请人名称" />
+          <el-input v-model="form.applyUserName" placeholder="请输入申请人名称"/>
         </el-form-item>
         <el-form-item label="审批用户名称" prop="approvalUserName">
-          <el-input v-model="form.approvalUserName" placeholder="请输入审批用户名称" />
+          <el-input v-model="form.approvalUserName" placeholder="请输入审批用户名称"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -570,71 +599,75 @@
         <el-button @click="printCancel">取 消</el-button>
       </div>
     </el-dialog>
-      <div id="dayin" v-show="printShow">
-        <div style="align-content: center;">
-          <span class="poundTotal11">{{ this.printDate.poundTotal}}</span>
-        </div>
-        <div id="area">
-          <span class="area-in-style">{{this.printDate.nowDate}}</span>
-        </div>
-        <div id="areadate">
-          <span>{{this.printDate.nowTime}}</span>
-        </div>
-<!--        <div id="serialNumber">-->
-<!--          <span>{{this.pad(this.form.id)}}</span>-->
-<!--        </div>-->
-
-<!--        发货单位-->
-        <div id="area-style">
-          <span class="area-in-style">{{ this.printDate.deliveryUnit }}</span>
-        </div>
-        <div id="area-right-style">
-          <span>{{this.printDate.plateNum }}</span>
-        </div>
-        <br/>
-        <div id="area-style">
-          <span class="area-in-style">{{this.printDate.receivingUnit }}</span>
-        </div>
-        <div id="area-right-style">
-          <span>{{this.printDate.grossWeight }} kg</span>
-        </div>
-        <div id="area-style">
-          <span class="area-in-style">{{this.printDate.goodsName }}</span>
-          <span class="area-in-style">{{this.printDate.goodsName }}</span>
-        </div>
-        <div id="area-right-style">
-          <span>{{this.printDate.tare }} kg</span>
-          <br/>
-        </div>
-        <div id="area-style">
-          <span class="area-in-style">{{this.printDate.specification }}</span>
-        </div>
-        <div id="area-right-style">
-          <span>{{ this.printDate.netWeight }} kg</span>
-          <br/>
-        </div>
-        <div id="area-all-style">
-          <span class="area-in-style">{{  this.printDate.remark+' '+ this.printDate.carrier+' '+ this.printDate.transportMode+(this.printDate.printState == '1' ? '补('+this.$store.state.user.nickName+')' :'')}}</span>
-          <br/>
-        </div>
-        <div id="user-all-style">
-          <span>{{parseUserName(this.printDate.inUser)}}</span>
-          <span>{{parseUserName(this.printDate.outUser)}}</span>
-        </div>
+    <div id="dayin" v-show="printShow">
+      <div style="align-content: center;">
+        <span class="poundTotal11">{{ this.printDate.poundTotal }}</span>
       </div>
+      <div id="area">
+        <span class="area-in-style">{{ this.printDate.nowDate }}</span>
+      </div>
+      <div id="areadate">
+        <span>{{ this.printDate.nowTime }}</span>
+      </div>
+      <!--        <div id="serialNumber">-->
+      <!--          <span>{{this.pad(this.form.id)}}</span>-->
+      <!--        </div>-->
+
+      <!--        发货单位-->
+      <div id="area-style">
+        <span class="area-in-style">{{ this.printDate.deliveryUnit }}</span>
+      </div>
+      <div id="area-right-style">
+        <span>{{ this.printDate.plateNum }}</span>
+      </div>
+      <br/>
+      <div id="area-style">
+        <span class="area-in-style">{{ this.printDate.receivingUnit }}</span>
+      </div>
+      <div id="area-right-style">
+        <span>{{ this.printDate.grossWeight }} kg</span>
+      </div>
+      <div id="area-style">
+        <span class="area-in-style">{{ this.printDate.goodsName }}</span>
+        <span class="area-in-style">{{ this.printDate.goodsName }}</span>
+      </div>
+      <div id="area-right-style">
+        <span>{{ this.printDate.tare }} kg</span>
+        <br/>
+      </div>
+      <div id="area-style">
+        <span class="area-in-style">{{ this.printDate.specification }}</span>
+      </div>
+      <div id="area-right-style">
+        <span>{{ this.printDate.netWeight }} kg</span>
+        <br/>
+      </div>
+      <div id="area-all-style">
+        <span
+          class="area-in-style">{{
+            this.printDate.remark + ' ' + this.printDate.carrier + ' ' + this.printDate.transportMode + (this.printDate.printState == '1' ? '补(' + this.$store.state.user.nickName + ')' : '')
+          }}</span>
+        <br/>
+      </div>
+      <div id="user-all-style">
+        <span>{{ parseUserName(this.printDate.inUser) }}</span>
+        <span>{{ parseUserName(this.printDate.outUser) }}</span>
+      </div>
+    </div>
 
   </div>
 
 </template>
 
 <script>
-import {listSheetLike, getSheet, delSheet, addSheet, updateSheet,updatePrintState} from "@/api/pound/poundlist";
+import {listSheetLike, getSheet, delSheet, addSheet, updateSheet, updatePrintState} from "@/api/pound/poundlist";
 import {getUserDepts} from "@/utils/charutils";
 import {addModify, applyModify} from "@/api/place/modify";
 import {selectCoalBillNo} from "@/api/place/big";
 import {genTimeCode, parseTime} from "@/utils/common";
 import {listUser} from "@/api/system/user";
 import {getPrint} from "@/api/place/print";
+import {getGroup, listGroup} from "@/api/place/group";
 
 export default {
   name: "Sheet",
@@ -657,52 +690,52 @@ export default {
       // 总条数
       total: 0,
       //
-      userList:[],
+      userList: [],
       // 计量单表格数据
       sheetList: [],
       BigList: [],//提煤单列表
-      dateRange:[],
+      dateRange: [],
       // 弹出层标题
       title: "",
       // 是否显示磅单修改弹出层
       open: false,
       //是否显示磅单打印申请弹出层
-      printOpen:false,
+      printOpen: false,
       //打印区域显示隐藏
-      printShow:false,
-      printDate:{
-        poundTotal:"",
+      printShow: false,
+      printDate: {
+        poundTotal: "",
         // 时间
         nowDate: '',
         nowTime: '',
         // 发货单位
-        deliveryUnit:'',
+        deliveryUnit: '',
         //车号
-        plateNum:'',
+        plateNum: '',
         //收货单位
-        receivingUnit:'',
-        grossWeight:'',
+        receivingUnit: '',
+        grossWeight: '',
         //货物名称
-        goodsName:'',
-        tare:'',
-        specification:'',
-        netWeight:'',
+        goodsName: '',
+        tare: '',
+        specification: '',
+        netWeight: '',
         // 备注
-        remark:'',
-        carrier:'',
-        transportMode:'',
+        remark: '',
+        carrier: '',
+        transportMode: '',
         // 进场司磅员
-        inUser:'',
+        inUser: '',
         //出场司磅员
-        outUser:'',
+        outUser: '',
         //补打标识
-        printState:'',
+        printState: '',
         //补打 当前操作员标识
 
       },
 
-      UserOption:[{'Key':'admin','Value':'老板'},
-        {'Key':'song','Value':'宋'}
+      UserOption: [{'Key': 'admin', 'Value': '老板'},
+        {'Key': 'song', 'Value': '宋'}
       ],
 
       // 查询参数
@@ -737,7 +770,7 @@ export default {
         containerNum3: undefined,
         containerNum4: undefined,
         printState: undefined,
-        transportMode:undefined, //运输方式
+        transportMode: undefined, //运输方式
         orderByColumn: 'id',
         isAsc: 'desc',
       },
@@ -754,6 +787,7 @@ export default {
         modifyNetWeight: [{required: true, message: '净重不能为空', trigger: 'blur'},
           {type: "number", message: "净重需为数字", trigger: "blur"}],
         applyReason: [{type: 'string', required: true, message: '修改原因不能为空', trigger: 'blur'}],
+        auditUser: [{type: 'string', required: true, message: '审批人不能为空', trigger: 'change'}],
       },
       poundModify: {
         id: undefined,
@@ -782,7 +816,9 @@ export default {
         modifyContainerNo3: undefined,
         modifyContainerNo4: undefined,
         coalBillNo: undefined,
-        modifyCoalBillNo: undefined
+        modifyCoalBillNo: undefined,
+        auditGroup: undefined,
+        auditUser: undefined
       },
       //当前选中的磅单
       selectPound: {},
@@ -804,19 +840,22 @@ export default {
         {'key': '2', 'value': '散杂货'},
       ],
       coalTypeOptions: [], //煤种
-      transportModeDic:[], //运输方式
+      transportModeDic: [], //运输方式
 
       //磅单打印审批 JSON
-      form:{
+      form: {
         //磅单id
-        poundId:'',
+        poundId: '',
         //申请人名称
-        applyUserName:'',
+        applyUserName: '',
         //审批用户名称
-        approvalUserName:'',
+        approvalUserName: '',
         //备注
-        remark:'',
+        remark: '',
       },
+      auditGroupList: [],
+      auditUserList: [],
+
     };
   },
   computed: {
@@ -829,24 +868,24 @@ export default {
       return this.poundModify.modifyTareWeight
     },
 
-      //进场司磅员名称翻译
-      InUserWeighmanNameOption(){
-        this.UserOption.forEach(item =>{
-          if(item.Key == this.printDate.inUser){
-            this.printDate.inUser=item.Value
-          }
-        })
-        return this.printDate.inUser
-      },
-      // //出场司磅员名称翻译
-      // outUserWeighmanNameOption(){
-      //   this.UserOption.forEach(item =>{
-      //     if(item.Key == this.printDate.outUser){
-      //       this.printDate.outUser=item.Value
-      //     }
-      //   })
-      //   return this.printDate.outUser
-      // }
+    //进场司磅员名称翻译
+    InUserWeighmanNameOption() {
+      this.UserOption.forEach(item => {
+        if (item.Key == this.printDate.inUser) {
+          this.printDate.inUser = item.Value
+        }
+      })
+      return this.printDate.inUser
+    },
+    // //出场司磅员名称翻译
+    // outUserWeighmanNameOption(){
+    //   this.UserOption.forEach(item =>{
+    //     if(item.Key == this.printDate.outUser){
+    //       this.printDate.outUser=item.Value
+    //     }
+    //   })
+    //   return this.printDate.outUser
+    // }
 
 
   },
@@ -857,6 +896,7 @@ export default {
     if (this.depts.length > 0) {
       this.queryParams.stationId = this.depts[0].deptId
       this.getList();
+      this.getGroupList()
     }
     //煤种类型
     this.getDicts("coal_type").then(response => {
@@ -882,7 +922,7 @@ export default {
     getList() {
       this.loading = true;
 
-      listSheetLike(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
+      listSheetLike(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.sheetList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -894,8 +934,8 @@ export default {
       this.reset();
     },
     //磅单打印审批操作相关
-    printCancel:{},
-    printSubmitForm:{},
+    printCancel: {},
+    printSubmitForm: {},
     // 表单重置
     reset() {
       this.formModify = {
@@ -926,7 +966,7 @@ export default {
         modifyContainerNo4: undefined,
         coalBillNo: undefined,
         modifyCoalBillNo: undefined,
-        delivery_unit:undefined
+        delivery_unit: undefined
       };
       this.resetForm("formModify");
     },
@@ -1005,8 +1045,8 @@ export default {
     },
     /** 打印按钮操作 */
     handlePrint(row) {
-      if(((new Date().getTime()-new Date(row.outTime).getTime())/1000/60/60)<=4){
-        this.printShow=true
+      if (((new Date().getTime() - new Date(row.outTime).getTime()) / 1000 / 60 / 60) <= 4) {
+        this.printShow = true
         let date = parseTime(new Date())
         this.printDate.nowDate = date.substring(0, 10);
         this.printDate.nowTime = date.substring(10, 19);
@@ -1023,30 +1063,31 @@ export default {
         this.printDate.carrier = row.carrier;
         this.printDate.transportMode = row.transportMode;
         this.printDate.inUser = row.inUser;
-        this.printDate.outUser =row.outUser;
-        this.printDate.printState=row.printState;
+        this.printDate.outUser = row.outUser;
+        this.printDate.printState = row.printState;
         clearTimeout(this.timer1);
         //清除延迟执行
         this.timer1 = setTimeout(() => {
           //设置延迟执行
-          this.printShow=false
+          this.printShow = false
         }, 2000);
-        updatePrintState(row.id).then(response =>{
+        updatePrintState(row.id).then(response => {
           if (response.code === 200) {
             this.getList()
-          };
+          }
+          ;
         })
         this.$refs['printBtn'].$el.click()
         //阻塞操作
-      }else{
-        getPrint(row.id).then(response =>{
+      } else {
+        getPrint(row.id).then(response => {
           //101 待审批 102 通过 103 未通过 104 无单号
-          if(response.data=="101"){
+          if (response.data == "101") {
             this.$message.info(response.msg);
             return false
-          }else if(response.data=="102"){
+          } else if (response.data == "102") {
             this.$message.success(response.msg);
-            this.printShow=true
+            this.printShow = true
             let date = parseTime(new Date())
             this.printDate.nowDate = date.substring(0, 10);
             this.printDate.nowTime = date.substring(10, 19);
@@ -1063,28 +1104,29 @@ export default {
             this.printDate.carrier = row.carrier;
             this.printDate.transportMode = row.transportMode;
             this.printDate.inUser = row.inUser;
-            this.printDate.outUser =row.outUser;
-            this.printDate.printState=row.printState;
+            this.printDate.outUser = row.outUser;
+            this.printDate.printState = row.printState;
             clearTimeout(this.timer1);
             //清除延迟执行
             this.timer1 = setTimeout(() => {
               //设置延迟执行
-              this.printShow=false
+              this.printShow = false
             }, 2000);
-            updatePrintState(row.id).then(response =>{
+            updatePrintState(row.id).then(response => {
               if (response.code === 200) {
                 this.getList()
-              };
+              }
+              ;
             })
             this.$refs['printBtn'].$el.click()
             //阻塞操作
-          }else if(response.data=="103"){
+          } else if (response.data == "103") {
             this.$message.warning(response.msg);
             return false
-          }else if(response.data=="104"){
+          } else if (response.data == "104") {
             this.$message.error(response.msg);
             return false
-          }else if(response.data=="105"){
+          } else if (response.data == "105") {
             this.$message.warning(response.msg);
           }
         })
@@ -1118,7 +1160,7 @@ export default {
       }
     },
     getUserList() {
-      listUser({'deptId': this.queryParams.stationId}).then(response => {
+      listUser({'deptId': this.queryParams.stationId, 'delFlag': '0'}).then(response => {
         if (response.code === 200) {
           this.userList = response.rows
           console.log("==============")
@@ -1127,8 +1169,8 @@ export default {
       });
     },
     // 合计
-    getSummaries (param) {
-      const { columns, data } = param;
+    getSummaries(param) {
+      const {columns, data} = param;
       const sums = [];
       columns.forEach((column, index) => {
         if (index === 1) {
@@ -1137,7 +1179,7 @@ export default {
         }
 
         if (index === 6) {
-          sums[index] = '车数:'+this.sheetList.length+'辆';
+          sums[index] = '车数:' + this.sheetList.length + '辆';
           return;
         }
         const values = data.map(item => Number(item[column.property]));
@@ -1151,16 +1193,37 @@ export default {
           }, 0);
         }
       });
-      sums[5]=sums[5]+'(KG)'
+      sums[5] = sums[5] + '(KG)'
       return sums;
     },
+    getGroupList() {
+      listGroup({'placeId': this.queryParams.placeId, 'state': '1'}).then(response => {
+        if (response.code === 200) {
+          this.auditGroupList = response.rows
+        }
+      })
+    },
+    groupChange(event) {
+      this.poundModify.auditUser = undefined
+      this.auditUserList = []
+      let group = this.auditGroupList.find(item => item.groupCode === event);
+      if (group) {
+        let users = group.userNames.split(',')
+        for (let name of users) {
+          this.auditUserList.push({
+            'userName': name,
+            'nickName': this.userList.find(item => item.userName === name).nickName
+          })
+        }
+      }
+    }
   }
 };
 </script>
 <style scoped>
 
 @page {
-margin: 8mm;
+  margin: 8mm;
 }
 
 /*.Pound {*/
@@ -1174,10 +1237,11 @@ margin: 8mm;
 /*}*/
 
 #dayin {
-height: 500px;
-width: 1200px;
-/*border: 1px solid ;*/
+  height: 500px;
+  width: 1200px;
+  /*border: 1px solid ;*/
 }
+
 /*标题*/
 .poundTotal11 {
   font-size: 35px;
@@ -1194,12 +1258,12 @@ width: 1200px;
 }
 
 #area {
-width: 300px;
-height: 10px;
-margin-top: 60px;
-float: left;
-font-size: 25px;
-/*border: 1px solid ;*/
+  width: 300px;
+  height: 10px;
+  margin-top: 60px;
+  float: left;
+  font-size: 25px;
+  /*border: 1px solid ;*/
 }
 
 #areadate {
@@ -1212,68 +1276,70 @@ font-size: 25px;
   font-size: 25px;
   /*border: 1px solid ;*/
 }
+
 #serialNumber {
-width: 300px;
-height: 10px;
-margin-top: 10px;
-float: left;
-font-size: 25px;
+  width: 300px;
+  height: 10px;
+  margin-top: 10px;
+  float: left;
+  font-size: 25px;
 }
+
 /*第二页*/
 #area1 {
-width: 300px;
-height: 10px;
-margin-left: 20px;
-/*float: left;*/
-font-size: 25px;
+  width: 300px;
+  height: 10px;
+  margin-left: 20px;
+  /*float: left;*/
+  font-size: 25px;
 }
+
 #serialNumber1 {
-width: 300px;
-height: 10px;
-margin-top: 10px;
-margin-left: 610px;
-/*float: left;*/
-font-size: 25px;
+  width: 300px;
+  height: 10px;
+  margin-top: 10px;
+  margin-left: 610px;
+  /*float: left;*/
+  font-size: 25px;
 }
 
 
 /*第二页*/
 #areadate1 {
-width: 400px;
-height: 10px;
+  width: 400px;
+  height: 10px;
 
-padding-left: 340px;
-/*float: left;*/
-margin-left: 15px;
-font-size: 25px;
+  padding-left: 340px;
+  /*float: left;*/
+  margin-left: 15px;
+  font-size: 25px;
 }
 
 #area-style {
-width: 600px;
-height: 30px;
-font-size: 26px;
-margin-top: 30px;
-float: left;
+  width: 600px;
+  height: 30px;
+  font-size: 26px;
+  margin-top: 30px;
+  float: left;
 }
 
 
 #area-right-style {
-height: 35px;
-width: 350px;
-font-size: 20px;
-margin-top: 28px;
-margin-left: 40px;
-float: left;
+  height: 35px;
+  width: 350px;
+  font-size: 20px;
+  margin-top: 28px;
+  margin-left: 40px;
+  float: left;
 }
 
 
-
 #area-all-style {
-width: 800px;
-height: 40px;
-font-size: 20px;
-float: left;
-margin-top: 10px;
+  width: 800px;
+  height: 40px;
+  font-size: 20px;
+  float: left;
+  margin-top: 10px;
 }
 
 #user-all-style {
