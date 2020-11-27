@@ -80,8 +80,13 @@
           {{ getUserNickName(scope.row.userNames) }}
         </template>
       </af-table-column>
+      <af-table-column label="状态" align="center" prop="state">
+        <template slot-scope="scope">
+          {{ scope.row.state === '1' ? '正常' : '失效' }}
+        </template>
+      </af-table-column>
       <af-table-column label="备注" align="center" prop="remark"/>
-      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" style="width:100px" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -100,7 +105,7 @@
           >删除
           </el-button>
         </template>
-      </af-table-column>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -138,6 +143,15 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-form-item label="状态" prop="state">
+          <el-select v-model="form.state" placeholder="请选择状态">
+            <el-option v-for="item in groupStateDic"
+                       :key="item.dictValue"
+                       :label="item.dictLabel"
+                       :value="item.dictValue"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
@@ -175,6 +189,10 @@ export default {
       groupList: [],
       // 弹出层标题
       title: "",
+      groupStateDic: [
+        {'dictValue': '1', 'dictLabel': '正常'},
+        {'dictValue': '0', 'dictLabel': '无效'},
+      ],
       // 是否显示弹出层
       open: false,
       // 查询参数
@@ -222,7 +240,7 @@ export default {
       });
     },
     getUserList() {
-      listUser({'deptId': this.queryParams.placeId,'delFlag':'0'}).then(response => {
+      listUser({'deptId': this.queryParams.placeId, 'delFlag': '0'}).then(response => {
         if (response.code === 200) {
           this.userList = response.rows
           console.log("==============")
@@ -261,7 +279,8 @@ export default {
         createBy: undefined,
         updateBy: undefined,
         updateTime: undefined,
-        remark: undefined
+        remark: undefined,
+        state: undefined
       };
       this.resetForm("form");
     },
