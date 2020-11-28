@@ -393,49 +393,99 @@
         <div :id="gennerateId(index)"></div>
         <div class="headRow">{{ item.no }}</div>
         <div class="firstRow">
-          <span>{{ item.inCardPrintTime.substring(0,10) }}</span>
-          <span class="contractNoStyle">{{ item.checkContractNo }}</span>
-          <span class="coalBillNoStyle">{{ item.docNo }}</span></div>
-
+          <div class="firstRow1">
+            <span>{{ item.inCardPrintTime.substring(0,10) }}</span>
+          </div>
+          <div class="firstRow2">
+            <span class="contractNoStyle" style="display: flow-root">{{ item.checkContractNo }}</span>
+          </div>
+          <div class="firstRow3">
+            <span class="coalBillNoStyle" style="display: flow-root">{{ item.docNo }}</span>
+          </div>
+        </div>
         <div class="secondRow">
-          <span id="customerStyle">{{ item.receiveName }}</span>
-          <span class="carriageStyle">{{ item.transportUnit }}</span></div>
+          <div class="secondRow1">
+            <span>{{ item.receiveName }}</span>
+          </div>
+          <div class="secondRow2">
+            <span class="carriageStyle">{{ item.transportUnit }}</span>
+          </div>
+        </div>
+
 
         <div class="thirdRow">
-          <span>{{ item.goodsName }}</span>
-          <!--    场所名      -->
-          <span class="loadingStyle">{{ "嘉易达" }}</span></div>
+          <div class="thirdRow1">
+            <span>{{ item.goodsName }}</span>
+          </div>
+          <div calss="thirdRow2">
+            <!--    场所名      -->
+            <span class="loadingStyle">{{ "嘉易达" }}</span>
+          </div>
+
+        </div>
 
         <div class="fourRow">
-          <span>{{ item.vehicleNo }}</span>
-          <span class="receiptStyle">{{ item.customerName }}</span></div>
+          <div class="fourRow1">
+            <span>{{ item.vehicleNo }}</span>
+          </div>
+          <div class="fourRow2" >
+            <span class="receiptStyle" style="display: flow-root">{{ item.customerName }}</span>
+          </div>
+
+        </div>
         <div class="fiveRow">
-          <span>{{ biller }}</span>
+          <span>{{ biller}}</span>
         </div>
         <!--        <div class="nouse"></div>-->
       </div>
+
     </div>
+
     <div id="dayinMake" v-show="showMake">
       <div v-for="(itemMake,index) in printMakeList" class="all">
         <div :id="gennerateId(index)"></div>
         <div class="headRow">{{ itemMake.no }}</div>
         <div class="firstRow">
-          <span>{{ itemMake.inCardPrintTime.substring(0,10) }}</span>
-          <span class="contractNoStyle">{{ itemMake.checkContractNo }}</span>
-          <span class="coalBillNoStyle">{{ itemMake.docNo }}</span></div>
-
+          <div class="firstRow1">
+            <span>{{ itemMake.inCardPrintTime.substring(0,10) }}</span>
+          </div>
+          <div class="firstRow2">
+            <span class="contractNoStyle" style="display: flow-root">{{ itemMake.checkContractNo }}</span>
+          </div>
+          <div class="firstRow3">
+            <span class="coalBillNoStyle" style="display: flow-root">{{ itemMake.docNo }}</span>
+          </div>
+        </div>
         <div class="secondRow">
-          <span>{{ itemMake.receiveName }}</span>
-          <span class="carriageStyle">{{ itemMake.transportUnit }}</span></div>
+          <div class="secondRow1">
+            <span>{{ itemMake.receiveName }}</span>
+          </div>
+          <div class="secondRow2">
+            <span class="carriageStyle">{{ itemMake.transportUnit }}</span>
+          </div>
+        </div>
+
 
         <div class="thirdRow">
-          <span>{{ itemMake.goodsName }}</span>
-          <!--    场所名      -->
-          <span class="loadingStyle">{{ "嘉易达" }}</span></div>
+          <div class="thirdRow1">
+            <span>{{ itemMake.goodsName }}</span>
+          </div>
+          <div calss="thirdRow2">
+            <!--    场所名      -->
+            <span class="loadingStyle">{{ "嘉易达" }}</span>
+          </div>
+
+        </div>
 
         <div class="fourRow">
-          <span>{{ itemMake.vehicleNo }}</span>
-          <span class="receiptStyle">{{ itemMake.customerName }}</span></div>
+          <div class="fourRow1">
+            <span>{{ itemMake.vehicleNo }}</span>
+          </div>
+          <div class="fourRow2" >
+            <span class="receiptStyle" style="display: flow-root">{{ itemMake.customerName }}</span>
+          </div>
+
+        </div>
         <div class="fiveRow">
           <span>{{ billerMake + '(补打)' }}</span>
         </div>
@@ -985,7 +1035,7 @@ export default {
 /*}*/
 .all {
   //height: 10px;
-  width: 1150px;
+  width: 1200px;
   margin-top: 80px;
   /*border: 1px solid ;*/
   /*margin-top: 1cm;*/
@@ -999,20 +1049,42 @@ export default {
   //padding-top: 10px;
   //margin-top: 2.5cm;
 }
-
-.firstRow {
+.firstRow{
+  border-width: 20px;
   height: 40px;
-  width: 1000px;
+  width: 1200px;
   padding-left: 2cm;
   /*border: 1px solid ;*/
   padding-top: 20px;
   //margin-top: 1cm;
-  font-size: 17px;
+}
+.firstRow1 {
+  border-width: 20px;
+  /*border: 1px solid ;*/
+  font-size: 20px;
+  float: left;
+}
+.firstRow2 {
+  width: 350px;
+  margin-left: 50px;
+  margin-left: 50px;
+  /*border: 1px solid ;*/
+  font-size: 20px;
+  float: left;
+  word-break: break-all;
 
 }
-
+.firstRow3 {
+  margin-left: -80px;
+  width: 470px;
+  /*border: 1px solid ;*/
+  font-size: 20px;
+  float: left;
+  word-break: break-all;
+}
 .contractNoStyle {
   margin-left: 4cm;
+
 }
 
 .coalBillNoStyle {
@@ -1025,27 +1097,68 @@ export default {
   padding-left: 2cm;
   /*border: 1px solid ;*/
   padding-top: 25px;
+}
+.secondRow1 {
+  /*border: 1px solid ;*/
+  height: 40px;
   font-size: 20px;
+  padding-top: 15px;
+  float: left;
+}
+.secondRow2 {
+  height: 40px;
+  /*border: 1px solid ;*/
+  font-size: 20px;
+  padding-left: 20px;
+  float: left;
 }
 
 .thirdRow {
   height: 40px;
-  width: 1000px;
+  width: 1200px;
   padding-left: 2cm;
   /*border: 1px solid ;*/
   padding-top: 35px;
   font-size: 22px;
-}
 
+}
+.thirdRow1 {
+  height: 40px;
+  /*border: 1px solid ;*/
+  padding-top: 35px;
+  font-size: 22px;
+
+}
+.thirdRow2 {
+  height: 40px;
+
+  /*border: 1px solid ;*/
+  padding-top: 35px;
+  font-size: 22px;
+  float: left;
+}
 .fourRow {
   height: 40px;
   width: 1000px;
   padding-left: 2cm;
   /*border: 1px solid ;*/
   padding-top: 55px;
-  font-size: 22px;
+  float: left;
 }
-
+.fourRow1 {
+  height: 40px;
+  /*border: 1px solid ;*/
+  font-size: 22px;
+  word-break: break-all;
+  float: left;
+}
+.fourRow2 {
+  height: 40px;
+  /*border: 1px solid ;*/
+  font-size: 22px;
+  word-break: break-all;
+  float: left;
+}
 /*#customerStyle{*/
 /*  margin-left: 4cm;*/
 /*}*/
@@ -1057,21 +1170,22 @@ export default {
 
 .loadingStyle {
   margin-left: 15.5cm;
+  padding-left: 2cm;
 }
 
 .receiptStyle {
   margin-left: 14.5cm;
-  font-size: 15px;
 
 }
 
 .fiveRow {
   height: 40px;
   width: 1000px;
-  padding-left: 1.5cm;
+  padding-left: 1cm;
+  font-size: 22px;
   /*border: 1px solid ;*/
   padding-top: 85px;
-  margin-top: 1cm;
+  margin-top: 3cm;
 }
 
 .nouse {
