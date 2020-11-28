@@ -1033,6 +1033,7 @@ export default {
       this.getList();
       this.getGroupList()
       this.getContractList()
+      this.getCoalBillList()
     }
     //煤种类型
     this.getDicts("coal_type").then(response => {
@@ -1387,7 +1388,6 @@ export default {
             if (!isNaN(value) && index === 5) {
               return prev + curr;
             }
-
           }, 0);
         }
       });
@@ -1414,7 +1414,6 @@ export default {
           })
         }
       }
-
     },
     //获取场所合同列表
     getContractList() {
