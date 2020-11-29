@@ -253,13 +253,29 @@
             }
           ]
         ],
+
         // 导出Excel 字段
         json_fields: {
           "寄仓客户": "column1",    //常规字段
           "合同": "column2", //支持嵌套属性
-          "入库总量": "column6",
-          "现有放行量": "column4",
-          "可申请放行量": "column5",
+          "入库总量":{
+            field: "column6",
+            callback: (value) => {
+              return value = (value / 1000).toFixed(2)
+            }
+          },
+          "现有放行量":{
+            field: "column4",
+            callback: (value) => {
+              return value = (value / 1000).toFixed(2)
+            }
+          },
+          "可申请放行量":{
+            field: "column5",
+            callback: (value) => {
+              return value = (value / 1000).toFixed(2)
+            }
+          },
         },
         // 默认值
         defaultValue: '0',
