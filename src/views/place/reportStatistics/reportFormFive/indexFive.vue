@@ -28,7 +28,26 @@
             />
           </el-select>
         </el-form-item>
-      </el-row>
+        <el-form-item label="时间" prop="startTime">
+          <!--                  <el-date-picker-->
+          <!--                    v-model="dateRange"-->
+          <!--                    type="datetimerange"-->
+          <!--                    value-format="yyyy-MM-dd"-->
+          <!--                    range-separator="至"-->
+          <!--                    start-placeholder="开始日期"-->
+          <!--                    end-placeholder="结束日期"-->
+          <!--                  :default-time="['06:00:00','06:00:00']">-->
+          <!--                  </el-date-picker>-->
+
+          <el-date-picker
+            v-model="dateRange"
+            type="datetimerange"
+            align="right"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            value-format="yyyy-MM-dd">
+          </el-date-picker>
+        </el-form-item>
       <!--              <el-form-item label="统计方式" prop="statisticsMode">-->
       <!--                <el-select @change="changeStatistics"-->
       <!--                  v-model="queryParams.statisticsMode" placeholder="请选择统计方式">-->
@@ -42,7 +61,7 @@
       <!--              </el-form-item>-->
 
 
-      <el-row>
+
         <!--        <el-form-item label="进/出库" prop="direction">-->
         <!--          <el-select-->
         <!--            v-model="queryParams.direction" placeholder="请选择进出场类型">-->
@@ -54,40 +73,21 @@
         <!--            />-->
         <!--          </el-select>-->
         <!--        </el-form-item>-->
-                <el-form-item label="品名" prop="goodsName">
-                  <el-select
-                    clearable
-                    v-model="queryParams.goodsName"
-                    placeholder="请选择品名"
-                    size="small">
-                    <el-option
-                      v-for="dict in goodsNameList"
-                      :key="dict.dictLabel"
-                      :label="dict.dictLabel"
-                      :value="dict.dictLabel"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="时间" prop="startTime">
-<!--                  <el-date-picker-->
-<!--                    v-model="dateRange"-->
-<!--                    type="datetimerange"-->
-<!--                    value-format="yyyy-MM-dd"-->
-<!--                    range-separator="至"-->
-<!--                    start-placeholder="开始日期"-->
-<!--                    end-placeholder="结束日期"-->
-<!--                  :default-time="['06:00:00','06:00:00']">-->
-<!--                  </el-date-picker>-->
+<!--                <el-form-item label="品名" prop="goodsName">-->
+<!--                  <el-select-->
+<!--                    clearable-->
+<!--                    v-model="queryParams.goodsName"-->
+<!--                    placeholder="请选择品名"-->
+<!--                    size="small">-->
+<!--                    <el-option-->
+<!--                      v-for="dict in goodsNameList"-->
+<!--                      :key="dict.dictLabel"-->
+<!--                      :label="dict.dictLabel"-->
+<!--                      :value="dict.dictLabel"-->
+<!--                    />-->
+<!--                  </el-select>-->
+<!--                </el-form-item>-->
 
-                  <el-date-picker
-                    v-model="dateRange"
-                    type="datetimerange"
-                    align="right"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期"
-                    value-format="yyyy-MM-dd">
-                  </el-date-picker>
-                </el-form-item>
 
         <!--<el-form-item label="寄仓合同" prop="storeContractId">
           <el-select v-model="form.storeContractId" placeholder="请选择寄仓合同" @change="changeContract">
