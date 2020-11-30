@@ -156,11 +156,10 @@
                 <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
               </download-excel>
             </el-col>
-            <!--            -->
+<!--            -->
             <el-col :span="6">
-              <el-button type="info" icon="fa fa-print" v-print="'#print'" size="mini" @click="print"
-                         v-show="buttonShow" ref="printBtn"> 打印
-              </el-button>
+              <el-button type="info" icon="fa fa-print" v-print="'#allPrint'" size="mini" @click="print"
+                         v-show="buttonShow" ref="printBtn"> 打印 </el-button>
             </el-col>
           </el-row>
         </el-form-item>
@@ -237,88 +236,94 @@
       </af-table-column>
     </el-table>
 
+    <!--打印区域-->
+    <div id="allPrint" v-show="showPrint">
+      <div v-for="(item,index) in newArray" style="page-break-after:always">
+        <div :id="gennerateId(index)"></div>
+        <div class="box-card" style="margin: 0 auto;font-size:15px;width:1100px;padding-left: 1px ;padding-top:50px"
+        >
+          <!--      <div v-show="printSmallTitle">-->
+          <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">
+            <span>{{printTitle}}</span><br>
+            <span>{{dateTime }}</span>
+          </div>
+          <!--        <div>-->
+          <!--          <span>{{timeTitle}}</span>-->
+          <!--        </div>-->
+          <!--      <div>-->
+          <!--        <span>{{shipper}}</span>-->
+          <!--      </div>-->
+          <!--      </div>-->
+          <!--  show-summary :summary-method="getSummaries"-->
+          <el-table v-loading="loading" :data="item" id="analyouttable"
+                    :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
+                    :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
+                    style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
+            <af-table-column label="寄仓客户" align="center" width="120%" prop="column1"/>
+            <af-table-column label="寄仓合同" align="center" width="120%" prop="column2"/>
+            <af-table-column label="品名" align="center" prop="column3" width="80%"/>
+            <el-table-column label="期初库存(t)" align="center" prop="column4">
+              <template slot-scope="scope">
+                {{ (scope.row.column4).toFixed(2) }}
+              </template>
+            </el-table-column>
+            <el-table-column label="本期" align="center">
+              <el-table-column prop="column6" label="入车数" align="center" width="70%">
+              </el-table-column>
+              <af-table-column
+                prop="column7"
+                label="入重量（t）"
+                align="center"
+                width="100%">
+                <template slot-scope="scope">
+                  {{ (scope.row.column7).toFixed(2) }}
+                </template>
+              </af-table-column>
 
-    <div class="box-card" style="margin: 0 auto;font-size:15px;width:1100px;padding-left: 1px ;padding-top:50px"
-         id="print" v-show="showPrint">
-      <!--      <div v-show="printSmallTitle">-->
-      <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">
-        <span>{{ this.printTitle }}</span><br>
-        <span>{{ this.dateTime }}</span>
-      </div>
-      <!--        <div>-->
-      <!--          <span>{{timeTitle}}</span>-->
-      <!--        </div>-->
-      <!--      <div>-->
-      <!--        <span>{{shipper}}</span>-->
-      <!--      </div>-->
-      <!--      </div>-->
-      <!--  show-summary :summary-method="getSummaries"-->
-      <el-table v-loading="loading" :data="reportList" id="analyouttable"
-                :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
-                :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
-                style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
-        <af-table-column label="寄仓客户" align="center" width="120%" prop="column1"/>
-        <af-table-column label="寄仓合同" align="center" width="120%" prop="column2"/>
-        <af-table-column label="品名" align="center" prop="column3" width="80%"/>
-        <el-table-column label="期初库存(t)" align="center" prop="column4">
-          <template slot-scope="scope">
-            {{ (scope.row.column4).toFixed(2) }}
-          </template>
-        </el-table-column>
-        <el-table-column label="本期" align="center">
-          <el-table-column prop="column6" label="入车数" align="center" width="70%">
-          </el-table-column>
-          <af-table-column
-            prop="column7"
-            label="入重量（t）"
-            align="center"
-            width="100%">
-            <template slot-scope="scope">
-              {{ (scope.row.column7).toFixed(2) }}
-            </template>
-          </af-table-column>
-
-          <el-table-column
-            prop="column8"
-            label="出车数"
-            align="center"
-            width="70%">
-          </el-table-column>
-          <af-table-column
-            prop="column9"
-            label="出重量（t）"
-            align="center"
-            width="100%">
-            <template slot-scope="scope">
-              {{ (scope.row.column9).toFixed(2) }}
-            </template>
-          </af-table-column>
+              <el-table-column
+                prop="column8"
+                label="出车数"
+                align="center"
+                width="70%">
+              </el-table-column>
+              <af-table-column
+                prop="column9"
+                label="出重量（t）"
+                align="center"
+                width="100%">
+                <template slot-scope="scope">
+                  {{ (scope.row.column9).toFixed(2) }}
+                </template>
+              </af-table-column>
 
 
-          <el-table-column label="亏吨(t)" align="center" width="60px" prop="column10">
-            <template slot-scope="scope">
-              {{ (scope.row.column10).toFixed(2) }}
-            </template>
-          </el-table-column>
-          <el-table-column label="库存(t)" align="center" prop="column11">
-            <template slot-scope="scope">
+              <el-table-column label="亏吨(t)" align="center" width="60px" prop="column10">
+                <template slot-scope="scope">
+                  {{ (scope.row.column10).toFixed(2) }}
+                </template>
+              </el-table-column>
+              <el-table-column label="库存(t)" align="center" prop="column11">
+                <template slot-scope="scope">
               <span>{{
                   (scope.row.column11).toFixed(2)
                 }}</span>
-            </template>
-          </el-table-column>
-        </el-table-column>
+                </template>
+              </el-table-column>
+            </el-table-column>
 
-        <af-table-column label="库存差(t)" align="center" prop="column12" width="120px">
-          <template slot-scope="scope">
-            {{
-              (scope.row.column12).toFixed(2)
-            }}
-          </template>
-          />
-        </af-table-column>
-      </el-table>
+            <af-table-column label="库存差(t)" align="center" prop="column12" width="120px">
+              <template slot-scope="scope">
+                {{
+                (scope.row.column12).toFixed(2)
+                }}
+              </template>
+              />
+            </af-table-column>
+          </el-table>
 
+        </div>
+
+      </div>
     </div>
 
   </div>
@@ -330,27 +335,32 @@ import {getUserDepts} from "@/utils/charutils";
 import {listStoreContract} from "@/api/place/storeContract";
 import {statisticsMonth} from "@/api/place/info";
 
-export default {
-  name: "Report",
-  data() {
-    return {
-      column11: undefined,
-      // 遮罩层
-      loading: false,
-      // 控件日期时间
-      dateRange: ['', ''],
-      // 初始化时间
-      nowDate: '',
-      nextDate: '',
-      //打印按钮显示隐藏
-      show: false,
-      dateTime: '',
-      buttonShow: false,
-      showPrint: false,
-      // 导出按钮显示隐藏
-      showImport: false,
-      // 导出标题集合
-      titleList: [],
+  export default {
+    name: "Report",
+    data() {
+      return {
+        column11: undefined,
+        // 遮罩层
+        loading: false,
+        // 控件日期时间
+        dateRange: ['', ''],
+        // 初始化时间
+        nowDate: '',
+        nextDate: '',
+        //打印按钮显示隐藏
+        show: false,
+        dateTime: '',
+        // 打印按钮隐藏
+        buttonShow: false,
+        //打印区域显示
+        showPrint: false,
+        // 导出按钮显示隐藏
+        showImport: false,
+        // 导出标题集合
+        titleList: [],
+        // 打印集合
+        newArray: [],
+
 
       printSmallTitle: false,
 
@@ -492,305 +502,314 @@ export default {
     // this.dateRange[0]至{{this.dateRange[1]}}
     this.queryParams.startTime = this.dateRange[0]
 
-    this.queryParams.endTime = this.dateRange[1]
-    this.timeTitle = this.dateRange[0] + '至' + this.dateRange[1] + '按客户统计'
-    // this.titleList.push(this.timeTitle)
-    // this.titleList.push(this.shipper);
-    // 0 监管场所，1保税库，2堆场，3企业
-    this.depts = getUserDepts('0')
-    if (this.depts.length > 0) {
-      this.queryParams.placeId = this.depts[0].deptId
-      this.getContract(this.queryParams.placeId, '1')
-    }
-    //煤种 品名
-    this.getDicts("coal_type").then(response => {
-      this.goodsNameList = response.data;
-    });
-  },
-  methods: {
-    /** 查询堆场报表列表 */
-    getList() {
-      //this.loading = true;
-      /*listReport(this.queryParams).then(response => {
-        this.reportList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });*/
-    },
-    // 报表类型字典翻译
-    reportTypeFormat(row, column) {
-      return this.selectDictLabel(this.reportTypeOptions, row.reportType);
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 打印按钮
-    print() {
-      this.printSmallTitle = true;
-      clearTimeout(this.timer1);
-      this.timer1 = setTimeout(() => {
-        //设置延迟执行
-        //this.reset();
-        this.printSmallTitle = false;
-      }, 2000);
-
-    },
-
-    printShow() {
-      if (this.showPrint == false) {
-        this.showPrint = true;
-      } else {
-        this.$refs['printBtn'].$el.click()
-      }
-
-
-    },
-
-    importExcel() {
-
-    },
-
-    // 表单重置
-    reset() {
-      this.form = {
-        id: undefined,
-        yardId: undefined,
-        containerStoreCount: undefined,
-        containerTotal: undefined,
-        emptyTotal: undefined,
-        fullTotal: undefined,
-        goodsStoreCount: undefined,
-        goodsCount: undefined,
-        goodsWeightTotal: undefined,
-        goodsCurrentWeight: undefined,
-        reportType: undefined,
-        reportDate: undefined,
-        remark: undefined,
-        createdBy: undefined,
-        createdTime: undefined,
-        updateBy: undefined,
-        updateTime: undefined
-      };
-      this.resetForm("form");
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      //先判断条件，再查询
-      console.log(this.dateRange)
-
-      this.queryParams.startTime = this.dateRange[0]
       this.queryParams.endTime = this.dateRange[1]
-
-
-      // if (!this.queryParams.startTime || !this.queryParams.endTime) {
-      //   this.$message.warning('请选择时间范围')
-      //   return false
-      // }
-      this.getInfo();
+      this.timeTitle = this.dateRange[0] + '至' + this.dateRange[1] + '按客户统计'
+      // this.titleList.push(this.timeTitle)
+      // this.titleList.push(this.shipper);
+      // 0 监管场所，1保税库，2堆场，3企业
+      this.depts = getUserDepts('0')
+      if (this.depts.length > 0) {
+        this.queryParams.placeId = this.depts[0].deptId
+        this.getContract(this.queryParams.placeId, '1')
+      }
+      //煤种 品名
+      this.getDicts("coal_type").then(response => {
+        this.goodsNameList = response.data;
+      });
     },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.dateRange = [];
-      this.queryParams.goodsName = undefined
-      this.queryParams.customerName = undefined
-    },
-    getInfo() {
-      this.loading = true
-      this.reportList = []
-      this.titleList = []
-      statisticsMonth(this.queryParams).then(response => {
-        this.loading = false
-        //this.result = response
-        if (response.code === 200) {
-          this.reportList = response.data
-          //console.log(this.reportList)
-          this.printTitle = '嘉易达监管场所库存统计报表';
-          this.dateTime = this.dateRange[0] + '至' + this.dateRange[1]
-          console.log(this.printTitle)
-          this.titleList.push(this.printTitle)
-          this.titleList.push(this.dateTime)
+    methods: {
+      /** 查询堆场报表列表 */
+      getList() {
+        //this.loading = true;
+        /*listReport(this.queryParams).then(response => {
+          this.reportList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        });*/
+      },
+      // 报表类型字典翻译
+      reportTypeFormat(row, column) {
+        return this.selectDictLabel(this.reportTypeOptions, row.reportType);
+      },
+      // 取消按钮
+      cancel() {
+        this.open = false;
+        this.reset();
+      },
+      // 打印按钮
+      print() {
+        this.printSmallTitle = true;
+        clearTimeout(this.timer1);
+        this.timer1 = setTimeout(() => {
+          //设置延迟执行
+          //this.reset();
+          this.printSmallTitle = false;
+        }, 2000);
 
+      },
 
-          // this.vehicleCount = response.data.vehicleCount
-          // this.totalNetWeight = response.data.totalNetWeight
-          // this.totalRoughWeight = response.data.totalRoughWeight
-          // this.totalTareWeight = response.data.totalTareWeight
-          // if(this.reportList.length>0){
-          //   this.showImport = true;
-          //   if (this.reportList.length>20) {
-          //     this.$message.info('亲，数据量有点大，请你先导出在打印')
-          //     this.show = false;
-          //
-          //   }else{
-          //     this.show = true;
-          //   }
-          //
-          // } else{
-          //   this.show = false;
-          //   this.showImport = false;
-          //
-          // }
-          // this.excelFooter = '总车数'+':' + this.vehicleCount+"    " +'毛重合计' +':'+
-          //   this.totalRoughWeight+"  "+'皮重合计'+':'+this.totalRoughWeight+"  "+'净重合计'+':'+this.totalTareWeight
-          //
-          // console.log(this.titleList+1111111112222222)
+      printShow() {
+        if (this.showPrint == false) {
+          this.showPrint = true;
+        } else {
+          this.$refs['printBtn'].$el.click()
         }
-      })
-    },
+      },
+      gennerateId: function (index) {
+        return "printDiv" + index
 
-    //场所改变时，去查对应场所的
-    changePlace(event) {
-      console.log(this.depts + 1511)
-      this.getContract(event, '1')
-    },
-    // //场所变化 获取对应场所的合同
-    getContract(placeId, status) {
-      //查找合同
-      listStoreContract({'placeId': placeId, 'status': status}).then(response => {
-        if (response.code === 200) {
-          this.contractList = response.rows;
-          if (this.contractList.length === 0) {
-            //this.$message.warning('此场所没有有效的合同')
-          } else {
-            //重新给客户列表 赋值
-            this.customerList = []
-            for (let contract of this.contractList) {
-              if (!this.customerList.find(cus => cus.customerId === contract.customerId)) {
-                this.customerList.push(contract)
+      },
+
+      importExcel() {
+
+      },
+
+      // 表单重置
+      reset() {
+        this.form = {
+          id: undefined,
+          yardId: undefined,
+          containerStoreCount: undefined,
+          containerTotal: undefined,
+          emptyTotal: undefined,
+          fullTotal: undefined,
+          goodsStoreCount: undefined,
+          goodsCount: undefined,
+          goodsWeightTotal: undefined,
+          goodsCurrentWeight: undefined,
+          reportType: undefined,
+          reportDate: undefined,
+          remark: undefined,
+          createdBy: undefined,
+          createdTime: undefined,
+          updateBy: undefined,
+          updateTime: undefined
+        };
+        this.resetForm("form");
+      },
+      /** 搜索按钮操作 */
+      handleQuery() {
+        //先判断条件，再查询
+        console.log(this.dateRange)
+
+        this.queryParams.startTime = this.dateRange[0]
+        this.queryParams.endTime = this.dateRange[1]
+
+
+        // if (!this.queryParams.startTime || !this.queryParams.endTime) {
+        //   this.$message.warning('请选择时间范围')
+        //   return false
+        // }
+        this.getInfo();
+      },
+      /** 重置按钮操作 */
+      resetQuery() {
+        this.dateRange = [];
+        this.queryParams.goodsName = undefined
+        this.queryParams.customerName = undefined
+      },
+      getInfo() {
+        this.loading = true
+        this.reportList = []
+        this.titleList = []
+        statisticsMonth(this.queryParams).then(response => {
+          this.loading = false
+          //this.result = response
+          if (response.code === 200) {
+            this.reportList = response.data
+            //console.log(this.reportList)
+
+            let index = 0
+            this.newArray = [];
+            while (index < this.reportList.length) {
+              this.newArray.push(this.reportList.slice(index, index += 17));
+            }
+            ;
+            this.printTitle = '嘉易达监管场所库存对比统计报表';
+            this.dateTime = this.dateRange[0] + '至' + this.dateRange[1]
+            console.log(this.printTitle)
+            this.titleList.push(this.printTitle)
+            this.titleList.push(this.dateTime)
+
+
+            // this.vehicleCount = response.data.vehicleCount
+            // this.totalNetWeight = response.data.totalNetWeight
+            // this.totalRoughWeight = response.data.totalRoughWeight
+            // this.totalTareWeight = response.data.totalTareWeight
+            // if(this.reportList.length>0){
+            //   this.showImport = true;
+            //   if (this.reportList.length>20) {
+            //     this.$message.info('亲，数据量有点大，请你先导出在打印')
+            //     this.show = false;
+            //
+            //   }else{
+            //     this.show = true;
+            //   }
+            //
+            // } else{
+            //   this.show = false;
+            //   this.showImport = false;
+            //
+            // }
+            // this.excelFooter = '总车数'+':' + this.vehicleCount+"    " +'毛重合计' +':'+
+            //   this.totalRoughWeight+"  "+'皮重合计'+':'+this.totalRoughWeight+"  "+'净重合计'+':'+this.totalTareWeight
+            //
+            // console.log(this.titleList+1111111112222222)
+          }
+        })
+      },
+
+      //场所改变时，去查对应场所的
+      changePlace(event) {
+        console.log(this.depts + 1511)
+        this.getContract(event, '1')
+      },
+      // //场所变化 获取对应场所的合同
+      getContract(placeId, status) {
+        //查找合同
+        listStoreContract({'placeId': placeId, 'status': status}).then(response => {
+          if (response.code === 200) {
+            this.contractList = response.rows;
+            if (this.contractList.length === 0) {
+              //this.$message.warning('此场所没有有效的合同')
+            } else {
+              //重新给客户列表 赋值
+              this.customerList = []
+              for (let contract of this.contractList) {
+                if (!this.customerList.find(cus => cus.customerId === contract.customerId)) {
+                  this.customerList.push(contract)
+                }
               }
             }
           }
+        });
+      },
+      /** 导出按钮操作 */
+      /*handleExport() {
+        this.download('yard/report/export', {
+          ...this.queryParams
+        }, `yard_report.xlsx`)
+      },*/
+      changeStatistics(event) {
+        if (event === 1) {
+          this.queryParams.customerName = ''
         }
-      });
-    },
-    /** 导出按钮操作 */
-    /*handleExport() {
-      this.download('yard/report/export', {
-        ...this.queryParams
-      }, `yard_report.xlsx`)
-    },*/
-    changeStatistics(event) {
-      if (event === 1) {
-        this.queryParams.customerName = ''
-      }
-    },
-    /*getSummaries(param) {
-      const {columns, data} = param;
-      const sums = [];
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '总重';
-          return;
+      },
+      /*getSummaries(param) {
+        const {columns, data} = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '总重';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value) && index === 3) {
+                return prev + curr;
+              }
+              if (!isNaN(value) && index === 4) {
+                return prev + curr;
+              }
+              if (!isNaN(value) && index === 5) {
+                return prev + curr;
+              }
+              if (!isNaN(value) && index === 6) {
+                return prev + curr;
+              }
+              if (!isNaN(value) && index === 7) {
+                return prev + curr;
+              }
+              if (!isNaN(value) && index === 8) {
+                return prev + curr;
+              }
+              if (!isNaN(value) && index === 9) {
+                return prev + curr;
+              }
+              if (!isNaN(value) && index === 10) {
+                return prev + curr;
+              }
+            }, 0);
+          }
+        });
+
+        sums[3] = Number.parseFloat(sums[3]).toFixed(3) //期初库存
+        sums[4] = Number.parseFloat(sums[4]) //入车数
+        sums[5] = Number.parseFloat(sums[5]).toFixed(3) //入重量
+        sums[6] = Number.parseFloat(sums[6]) //出车数
+        sums[7] = Number.parseFloat(sums[7]).toFixed(3) //出重量
+        sums[8] = Number.parseFloat(sums[8]).toFixed(3) //亏吨
+        sums[9] = (this.getColumn11()).toFixed(3) //库存
+        sums[10] = (this.getColumn12()).toFixed(3)//库存差
+
+        /!*
+        * "寄仓客户": "column1",    //常规字段
+          "寄仓合同": "column2", //支持嵌套属性
+          "品名": "column3",
+          "期初库存": "column4",
+          "入车数": "column6",
+          "入重量(t)": "column7",
+          "出车数": "column8",
+          "出重量(t)": "column9",
+          "亏吨(t)": "column10",
+          "库存(t)": "column11",
+          "库存差(t)": "column12",
+        * *!/
+
+        let total = {
+          column1: '总重',
+          column2: '',
+          column3: '',
+          column4: sums[3],
+          //column5: '',
+          column6: sums[4],
+          column7: sums[5],
+          column8: sums[6],
+          column9: sums[7],
+          column10: sums[8],
+          column11: sums[9],
+          column12: sums[10],
+
         }
-        const values = data.map(item => Number(item[column.property]));
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr);
-            if (!isNaN(value) && index === 3) {
-              return prev + curr;
-            }
-            if (!isNaN(value) && index === 4) {
-              return prev + curr;
-            }
-            if (!isNaN(value) && index === 5) {
-              return prev + curr;
-            }
-            if (!isNaN(value) && index === 6) {
-              return prev + curr;
-            }
-            if (!isNaN(value) && index === 7) {
-              return prev + curr;
-            }
-            if (!isNaN(value) && index === 8) {
-              return prev + curr;
-            }
-            if (!isNaN(value) && index === 9) {
-              return prev + curr;
-            }
-            if (!isNaN(value) && index === 10) {
-              return prev + curr;
-            }
-          }, 0);
-        }
-      });
+        //this.reportList.push(total)
+        return sums;
+      },*/
+      //根据reportList中对应的列，求和 list中为对象，通过reduce 计算每个对象的值 累加求和
+      //库存汇总
+      /*getColumn11() {
+        if (this.reportList.length === 0) return 0
+        return this.reportList.reduce(function (previousValue, currentValue) {
+          let a = previousValue + Number.parseFloat(currentValue.column4) + Number.parseFloat(currentValue.column7) - Number.parseFloat(currentValue.column9) + Number.parseFloat(currentValue.column10)
+          return a;
+        }, 0)
+      },*/
+      /*getColumn12() {//库存差
+        if (this.reportList.length === 0) return 0
+        return this.reportList.reduce(function (previousValue, currentValue) {
+          let b = previousValue + Number.parseFloat(currentValue.column4) + Number.parseFloat(currentValue.column7) - Number.parseFloat(currentValue.column9)
+          return b;
+        }, 0)
+      },*/
 
-      sums[3] = Number.parseFloat(sums[3]).toFixed(3) //期初库存
-      sums[4] = Number.parseFloat(sums[4]) //入车数
-      sums[5] = Number.parseFloat(sums[5]).toFixed(3) //入重量
-      sums[6] = Number.parseFloat(sums[6]) //出车数
-      sums[7] = Number.parseFloat(sums[7]).toFixed(3) //出重量
-      sums[8] = Number.parseFloat(sums[8]).toFixed(3) //亏吨
-      sums[9] = (this.getColumn11()).toFixed(3) //库存
-      sums[10] = (this.getColumn12()).toFixed(3)//库存差
-
-      /!*
-      * "寄仓客户": "column1",    //常规字段
-        "寄仓合同": "column2", //支持嵌套属性
-        "品名": "column3",
-        "期初库存": "column4",
-        "入车数": "column6",
-        "入重量(t)": "column7",
-        "出车数": "column8",
-        "出重量(t)": "column9",
-        "亏吨(t)": "column10",
-        "库存(t)": "column11",
-        "库存差(t)": "column12",
-      * *!/
-
-      let total = {
-        column1: '总重',
-        column2: '',
-        column3: '',
-        column4: sums[3],
-        //column5: '',
-        column6: sums[4],
-        column7: sums[5],
-        column8: sums[6],
-        column9: sums[7],
-        column10: sums[8],
-        column11: sums[9],
-        column12: sums[10],
-
-      }
-      //this.reportList.push(total)
-      return sums;
-    },*/
-    //根据reportList中对应的列，求和 list中为对象，通过reduce 计算每个对象的值 累加求和
-    //库存汇总
-    /*getColumn11() {
-      if (this.reportList.length === 0) return 0
-      return this.reportList.reduce(function (previousValue, currentValue) {
-        let a = previousValue + Number.parseFloat(currentValue.column4) + Number.parseFloat(currentValue.column7) - Number.parseFloat(currentValue.column9) + Number.parseFloat(currentValue.column10)
-        return a;
-      }, 0)
-    },*/
-    /*getColumn12() {//库存差
-      if (this.reportList.length === 0) return 0
-      return this.reportList.reduce(function (previousValue, currentValue) {
-        let b = previousValue + Number.parseFloat(currentValue.column4) + Number.parseFloat(currentValue.column7) - Number.parseFloat(currentValue.column9)
-        return b;
-      }, 0)
-    },*/
-
-    /**
-     * Math.abs(scope.row.column4 - (scope.row.column4 + scope.row.column7 - scope.row.column9 + scope.row.column10)).toFixed(3)
-     */
-  }
-};
+      /**
+       * Math.abs(scope.row.column4 - (scope.row.column4 + scope.row.column7 - scope.row.column9 + scope.row.column10)).toFixed(3)
+       */
+    }
+  };
 </script>
 <style scoped>
-.countRow {
-  margin-top: 8px;
-}
+  .countRow {
+    margin-top: 8px;
+  }
 
-.countRow span {
-  margin-right: 10px;
-  font-size: 14px;
-}
+  .countRow span {
+    margin-right: 10px;
+    font-size: 14px;
+  }
 
-@page {
-  margin: 6mm;
-}
+  @page {
+    margin: 6mm;
+  }
 </style>

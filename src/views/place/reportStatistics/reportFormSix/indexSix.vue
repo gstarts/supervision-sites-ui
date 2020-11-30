@@ -155,6 +155,26 @@
       </el-row>
 
     </el-form>
+    <el-table v-loading="loading" :data="reportList"  show-summary :summary-method="getSummaries" >
+      <el-table-column label="寄仓客户" align="center" prop="column1"/>
+      <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
+      <el-table-column label="合同" align="center" prop="column2"></el-table-column>
+      <el-table-column label="放行单总量" align="center" prop="column6">
+        <template slot-scope="scope">
+          <span>{{ (scope.row.column6/1000).toFixed(2)}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="已占用" align="center" prop="column4">
+        <template slot-scope="scope">
+          <span>{{ (scope.row.column4/1000).toFixed(2)}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="可分配提煤单总量" align="center" prop="column5">
+        <template slot-scope="scope">
+          <span>{{ (scope.row.column5/1000).toFixed(2)}}</span>
+        </template>
+      </el-table-column>
+    </el-table>
     <div class="box-card" style="margin: 0 auto;font-size:15px;width:1100px;padding-left: 1px ;padding-top:50px" id="print">
       <div v-show="printSmallTitle">
 <!--      <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">-->
@@ -168,7 +188,7 @@
 <!--      </div>-->
       </div>
 
-    <el-table v-loading="loading" :data="reportList" id="analyouttable" show-summary :summary-method="getSummaries"
+    <el-table v-loading="loading" :data="reportList" id="analyouttable" show-summary :summary-method="getSummaries" v-show="false"
               :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
               :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
               style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
@@ -190,14 +210,9 @@
           <span>{{ (scope.row.column5/1000).toFixed(2)}}</span>
         </template>
       </af-table-column>
-
-
     </el-table>
-
     </div>
-
   </div>
-
 </template>
 
 <script>
