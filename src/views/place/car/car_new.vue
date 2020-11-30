@@ -394,7 +394,7 @@
         <div class="headRow">{{ item.no }}</div>
         <div class="firstRow">
           <div class="firstRow1">
-            <span>{{item.inCardPrintTime.substring(0,10)}}</span>
+            <span>{{item.createTime.substring(0,10)}}</span>
           </div>
           <div class="firstRow2">
             <span class="contractNoStyle" style="display: flow-root">{{ item.checkContractNo }}</span>
@@ -447,7 +447,7 @@
         <div class="headRow">{{ itemMake.no }}</div>
         <div class="firstRow">
           <div class="firstRow1">
-            <span>{{itemMake.inCardPrintTime.substring(0,10)}}</span>
+            <span>{{itemMake.createTime.substring(0,10)}}</span>
           </div>
           <div class="firstRow2">
             <span class="contractNoStyle" style="display: flow-root">{{ itemMake.checkContractNo }}</span>

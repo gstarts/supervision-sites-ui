@@ -138,7 +138,7 @@
               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
             </el-col>
             <el-col :span="6">
-              <el-button type="info" icon="fa fa-print" v-print="'#print'" size="mini" @click="print"> 打印
+              <el-button type="info" icon="fa fa-print" size="mini" @click="printShow"> 打印
               </el-button>
             </el-col>
             <el-col :span="6">
@@ -153,6 +153,11 @@
                 <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
                 <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
               </download-excel>
+            </el-col>
+<!--            -->
+            <el-col :span="6">
+              <el-button type="info" icon="fa fa-print" v-print="'#print'" size="mini" @click="print"  v-show="buttonShow" ref="printBtn"> 打印
+              </el-button>
             </el-col>
           </el-row>
         </el-form-item>
@@ -169,8 +174,36 @@
       <!--        <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>-->
       <!--      </download-excel>-->
     </el-form>
+    <el-table v-loading="loading" :data="reportList">
+      <el-table-column label="寄仓客户" align="center" prop="column1"/>
+      <el-table-column label="寄仓合同" align="center" prop="column2"/>
+      <el-table-column label="品名" align="center" prop="column3"/>
+      <el-table-column label="期初库存(t)" align="center" prop="column4"/>
+
+      <el-table-column label="本期" align="center" prop="column4">
+        <el-table-column label="入车数" align="center" prop="column4"/>
+        <el-table-column label="入重量(t)" align="center" prop="column4">
+          <template slot-scope="scope">1</template>
+        </el-table-column>
+        <el-table-column label="出车数" align="center" prop="column4">
+          <template slot-scope="scope">1</template>
+        </el-table-column>
+          <el-table-column label="出重量(t)" align="center" prop="column4">
+          <template slot-scope="scope">1</template>
+        </el-table-column>
+        <el-table-column label="亏吨(t)" align="center" prop="column4">
+          <template slot-scope="scope">1</template>
+        </el-table-column>
+        <el-table-column label="库存(t)" align="center" prop="column4">
+          <template slot-scope="scope">1</template>
+        </el-table-column>
+      </el-table-column>
+      <el-table-column label="库存差(t)" align="center" prop="column4"/>
+    </el-table>
+
+
     <div class="box-card" style="margin: 0 auto;font-size:15px;width:1100px;padding-left: 1px ;padding-top:50px"
-         id="print">
+         id="print" v-show="showPrint">
       <!--      <div v-show="printSmallTitle">-->
       <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">
         <span>{{ this.printTitle }}</span><br>
@@ -276,6 +309,8 @@ export default {
       //打印按钮显示隐藏
       show: false,
       dateTime: '',
+      buttonShow:false,
+      showPrint:false,
       // 导出按钮显示隐藏
       showImport: false,
       // 导出标题集合
@@ -433,6 +468,16 @@ export default {
         //this.reset();
         this.printSmallTitle = false;
       }, 2000);
+
+    },
+
+    printShow(){
+      if (this.showPrint==false){
+        this.showPrint = true;
+      } else {
+        this.$refs['printBtn'].$el.click()
+      }
+
 
     },
 
