@@ -1383,26 +1383,15 @@ export default {
         "包装方式": {
           field: "packMode",
           callback: (value) => {
-            if (value == '2') {
-              return value = '散装';
-            } else if (value == '1') {
-              return value = '集装箱'
-            } else if (value == '') {
-              return value == '空'
+            let u = this.packModeOption.find(item => item.dictValue === value)
+            if (u) {
+              return u.dictLabel
             } else {
-              return value == '编译错误'
+              return value
             }
           }
         },
-        "车型": {
-          field: "vehicleType",
-          callback: (value) => {
-            if (value == '') {
-              return value = "无"
-            }
-            return value = value
-          }
-        },
+        "车型":"vehicleType",
         "备注": "remark",
       },
       packModeTypeFormatTranslation: '',
@@ -1422,6 +1411,8 @@ export default {
 
     this.getDicts("pack_mode").then(response => {
       this.packModeOption = response.data;
+      console.log("包装方式字典")
+      console.log(this.packModeOption)
     });
     this.getDicts("inStore_doc_state").then(response => {
       this.inStoreOption = response.data;
@@ -1715,8 +1706,6 @@ export default {
     //包装方式行翻译
     packModeTypeFormat(row) {
       this.packModeTypeFormatTranslation = this.selectDictLabel(this.packModeOption, row.packMode);
-      console.log("准备进行翻译的数据")
-      console.log(this.packModeTypeFormatTranslation)
       return this.selectDictLabel(this.packModeOption, row.packMode);
 
     },
