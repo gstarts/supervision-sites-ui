@@ -157,11 +157,11 @@
               </download-excel>
             </el-col>
             <!--            -->
-            <el-col :span="6">
+
               <el-button type="info" icon="fa fa-print" v-print="'#allPrint'" size="mini" @click="print"
-                         v-show="buttonShow" ref="printBtn"> 打印
+                         v-show="buttonShow" ref="printBtn" > 打印
               </el-button>
-            </el-col>
+
           </el-row>
         </el-form-item>
       </el-row>
@@ -243,7 +243,7 @@
       size="100%"
     >
       <el-button type="info" icon="fa fa-print" v-print="'#allPrint'" size="mini" @click="print"
-                 ref="printBtn"> 打印
+                 ref="printBtn" style="position: fixed;top: 50px;margin-left: 1500px"> 打印
       </el-button>
       <div id="allPrint" v-show="showPrint">
         <div v-for="(item,index) in newArray" style="page-break-after:always">
@@ -804,4 +804,5 @@
     overflow: auto;
 
   }
+
 </style>
