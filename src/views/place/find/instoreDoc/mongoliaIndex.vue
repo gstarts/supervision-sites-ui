@@ -76,19 +76,19 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-            <el-form-item label="集装箱号" prop="containerNo1">
-              <el-input
-                v-model="queryParams.containerNo1"
-                placeholder="请输入集装箱号"
-                clearable
-                size="small"
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+      <el-form-item label="集装箱号" prop="containerNo1">
+        <el-input
+          v-model="queryParams.containerNo1"
+          placeholder="请输入集装箱号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="车型" prop="vehicleType">
-<!--        <el-select v-model="queryParams.vehicleType" placeholder="请选择车型(双挂，单挂)" clearable size="small">-->
-<!--          <el-option label="请选择字典生成" value="" />-->
-<!--        </el-select>-->
+        <!--        <el-select v-model="queryParams.vehicleType" placeholder="请选择车型(双挂，单挂)" clearable size="small">-->
+        <!--          <el-option label="请选择字典生成" value="" />-->
+        <!--        </el-select>-->
         <el-input
           v-model="queryParams.vehicleType"
           placeholder="请输入车型"
@@ -1383,18 +1383,15 @@ export default {
         "包装方式": {
           field: "packMode",
           callback: (value) => {
-            return value = this.packModeTypeFormatTranslation
-          }
-        },
-        "车型": {
-          field: "vehicleType",
-          callback: (value) => {
-            if (value == '') {
-              return value = "无"
+            let u = this.packModeOption.find(item => item.dictValue === value)
+            if (u) {
+              return u.dictLabel
+            } else {
+              return value
             }
-            return value = value
           }
         },
+        "车型":"vehicleType",
         "备注": "remark",
       },
       packModeTypeFormatTranslation: '',
@@ -1414,6 +1411,8 @@ export default {
 
     this.getDicts("pack_mode").then(response => {
       this.packModeOption = response.data;
+      console.log("包装方式字典")
+      console.log(this.packModeOption)
     });
     this.getDicts("inStore_doc_state").then(response => {
       this.inStoreOption = response.data;
@@ -1710,8 +1709,8 @@ export default {
       return this.selectDictLabel(this.packModeOption, row.packMode);
 
     },
-    importExcel() {
 
+    importExcel() {
     },
   }
 };
