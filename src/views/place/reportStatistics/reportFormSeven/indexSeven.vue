@@ -243,8 +243,10 @@
         <el-col :span="1.5">
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button></el-col>
         <el-col :span="1.5">
-          <el-button type="info" size="mini" icon="fa fa-print" v-print="'#print' " @click="print"> 打印
-          </el-button>
+          <el-col :span="6">
+            <el-button type="info" icon="fa fa-print" size="mini" @click="printShow"> 打印
+            </el-button>
+          </el-col>
           </el-col>
         <el-col :span="1.5">
           <download-excel
@@ -259,51 +261,91 @@
             <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
           </download-excel>
         </el-col>
+
+        <el-col :span="1.5">
+          <el-button type="info" size="mini" icon="fa fa-print" v-print="'#allPrint' " @click="print" ref="printBtn" v-show="false"> 打印
+          </el-button>
+        </el-col>
       </el-row>
 
     </el-form>
-    <div class="box-card" style="margin: 0 auto;font-size:15px;width:1100px;padding-left: 1px ;padding-top:50px"
+<!--    展示数据-->
+    <el-table v-loading="loading" :data="reportList" :border="true" show-summary>
+      <el-table-column label="寄仓客户" align="center" prop="column1"/>
+      <el-table-column label="寄仓合同号" align="center" prop="column2"/>
+      <el-table-column label="客户名称" align="center" prop="column19"/>
+      <el-table-column label="销售合同" align="center" prop="column20"/>
+
+      <el-table-column label="提煤单号" align="center" prop="column3"/>
+      <el-table-column label="品名" align="center" prop="column21"/>
+      <el-table-column label="提煤单重量" align="center" prop="column4"/>
+      <el-table-column label="已分配未完成车数" align="center" prop="column5"/>
+      <el-table-column label="已分配未提离重量(吨)" align="center" prop="column6"/>
+      <el-table-column label="已完成车数" align="center" prop="column7"/>
+
+      <el-table-column label="已提离重量(吨)" align="center" prop="column8"/>
+      <el-table-column label="剩余重量(吨)" align="center" prop="column9"/>
+
+      <el-table-column label="承运单位" align="center" prop="column22"/>
+      <el-table-column label="运输方式" align="center" prop="column23"/>
+      <el-table-column label="制单人" align="center" prop="column24">
+        <template slot-scope="scope">
+          {{ parseUserName(scope.row.column24) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="制单时间" align="center" prop="column25"/>
+
+    </el-table>
+
+
+<!--    打印区域-->
+    <div id="allPrint" v-show="showPrint">
+      <div v-for="(item,index) in newArray" style="page-break-after:always">
+        <div :id="gennerateId(index)"></div>
+    <div class="box-card" style="margin: 0 auto;font-size:15px;width:1600px;padding-left: 1px ;padding-top:50px"
          id="print">
       <!--      <div v-show="printSmallTitle">-->
-      <!--      <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">-->
-      <!--        <span>{{this.prinTtitle}}</span><br>-->
-      <!--      </div>-->
-      <!--      <div>-->
-      <!--        <span>{{timeTitle}}</span>-->
-      <!--      </div>-->
+            <div style="font-size: 30px;margin-bottom: 50px" align="center">
+              <span>{{printTitle}}</span><br>
+            </div>
+
+<!--            <div>-->
+<!--              <span>{{timeTitle}}</span>-->
+<!--            </div>-->
       <!--      <div>-->
       <!--        <span>{{shipper}}</span>-->
       <!--      </div>-->
       <!--      </div>-->
 
-      <el-table v-loading="loading" :data="reportList" id="analyouttable" show-summary
-                :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
-                :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
+      <el-table v-loading="loading" :data="item" id="analyouttable"
+                :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'10px',padding:'2 -3px',margin:'-2'}"
+                :cell-style="{border:'solid .4px black',fontSize:'5px',padding:'5px 0',color:'black'}"
                 style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
-        <af-table-column label="寄仓客户" align="center" width="120%" prop="column1"/>
-        <af-table-column label="寄仓合同号" align="center" width="130%" prop="column2"/>
+        <af-table-column label="寄仓客户" align="center" width="120%"  prop="column1"/>
+        <af-table-column label="寄仓合同号" align="center" width="120%" prop="column2"/>
 
 
         <af-table-column label="客户名称" align="center" width="120%" prop="column19"/>
-        <af-table-column label="销售合同" align="center" width="120%" prop="column20"/>
+        <af-table-column label="销售合同" align="center" width="100%" prop="column20"/>
 
 
-        <af-table-column label="提煤单号" align="center" width="130%" prop="column3"/>
+        <af-table-column label="提煤单号" align="center" width="100%" prop="column3"/>
 
-        <af-table-column label="品名" align="center" width="130%" prop="column21"/>
+        <af-table-column label="品名" align="center" width="100%" prop="column21"/>
 
-        <af-table-column label="提煤单重量" align="center" prop="column4"/>
-        <af-table-column label="已分配未完成车数" align="center" prop="column5"/>
-        <af-table-column label="已分配未提离重量(吨)" align="center" prop="column6"/>
-        <af-table-column label="已完成车数" align="center" prop="column7"/>
-        <af-table-column label="已提离重量(吨)" align="center" prop="column8"/>
-        <af-table-column label="剩余重量(吨)" align="center" prop="column9"/>
+        <af-table-column label="提煤单重量" align="center" width="100%" prop="column4"/>
+        <af-table-column label="已分配未完成车数" align="center" width="80%" prop="column5"/>
+        <af-table-column label="已分配未提离重量(吨)" align="center" width="100%" prop="column6"/>
+
+        <af-table-column label="已完成车数" align="center" width="80%"  prop="column7"/>
+        <af-table-column label="已提离重量(吨)" align="center" width="100%" prop="column8"/>
+        <af-table-column label="剩余重量(吨)" align="center" width="80%" prop="column9"/>
 
 
-        <af-table-column label="承运单位" align="center" width="120%" prop="column22"/>
-        <af-table-column label="运输方式" align="center" width="120%" prop="column23" :formatter="transportFormatter"/>
+        <af-table-column label="承运单位" align="center" width="100%" prop="column22"/>
+        <af-table-column label="运输方式" align="center" width="100%" prop="column23" :formatter="transportFormatter"/>
 
-        <af-table-column label="制单人" align="center" width="120%" prop="column24">
+        <af-table-column label="制单人" align="center" width="80%" prop="column24">
           <template slot-scope="scope">
                 {{ parseUserName(scope.row.column24) }}
               </template>
@@ -316,6 +358,8 @@
 
     </div>
 
+  </div>
+    </div>
   </div>
 
 </template>
@@ -337,15 +381,17 @@
         // 初始化时间
         nowDate: '',
         nextDate: '',
+        showPrint:false,
         //打印按钮显示隐藏
         show: false,
         // 导出按钮显示隐藏
         showImport: false,
         // 导出标题集合
         titleList: [],
-
         printSmallTitle: false,
         userList: [],
+        //打印集合
+        newArray:[],
 
         // 导出格式
         json_meta: [
@@ -573,6 +619,19 @@
 
       },
 
+      // 打印预览
+      printShow() {
+        if (this.showPrint == false) {
+          this.showPrint = true;
+        } else {
+          this.$refs['printBtn'].$el.click()
+        }
+      },
+      gennerateId: function (index) {
+        return "printDiv" + index
+
+      },
+
       importExcel() {
        
       },
@@ -622,15 +681,21 @@
 
       getInfo() {
         this.loading = true
-        this.reportList = []
+        this.reportList = [],
+        this.titleList=[],
         statisticsSeven(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
           this.loading = false
           //this.result = response
           if (response.code === 200) {
             this.reportList = response.data
+            let index = 0
+            this.newArray = [];
+            while (index < this.reportList.length) {
+              this.newArray.push(this.reportList.slice(index, index +=10));
+            };
             // console.log(this.reportList)
-
-            this.printTitle = '嘉易达监管场所' + this.dateRange[0] + '至' + this.dateRange[1] + '库存统计报表'
+            let date =    this.dateRange[0] != '' ? this.dateRange[0] + '至' + this.dateRange[1] : ''
+            this.printTitle = '嘉易达监管场所' + date + '大提煤单统计报表'
             this.titleList.push(this.printTitle)
 
 
@@ -726,5 +791,7 @@
 
   @page {
     margin: 6mm;
+    /*横向*/
+    size: landscape;
   }
 </style>
