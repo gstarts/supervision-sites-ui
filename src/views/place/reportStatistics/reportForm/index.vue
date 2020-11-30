@@ -175,30 +175,66 @@
       <!--      </download-excel>-->
     </el-form>
     <el-table v-loading="loading" :data="reportList">
-      <el-table-column label="寄仓客户" align="center" prop="column1"/>
-      <el-table-column label="寄仓合同" align="center" prop="column2"/>
-      <el-table-column label="品名" align="center" prop="column3"/>
-      <el-table-column label="期初库存(t)" align="center" prop="column4"/>
+      <af-table-column label="寄仓客户" align="center" width="120%" prop="column1"/>
+      <af-table-column label="寄仓合同" align="center" width="120%" prop="column2"/>
+      <af-table-column label="品名" align="center" prop="column3" width="80%"/>
+      <el-table-column label="期初库存(t)" align="center" prop="column4">
+        <template slot-scope="scope">
+          {{ (scope.row.column4).toFixed(2) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="本期" align="center">
+        <el-table-column prop="column6" label="入车数" align="center" width="70%">
+        </el-table-column>
+        <af-table-column
+          prop="column7"
+          label="入重量（t）"
+          align="center"
+          width="100%">
+          <template slot-scope="scope">
+            {{ (scope.row.column7).toFixed(2) }}
+          </template>
+        </af-table-column>
 
-      <el-table-column label="本期" align="center" prop="column4">
-        <el-table-column label="入车数" align="center" prop="column4"/>
-        <el-table-column label="入重量(t)" align="center" prop="column4">
-          <template slot-scope="scope">1</template>
+        <el-table-column
+          prop="column8"
+          label="出车数"
+          align="center"
+          width="70%">
         </el-table-column>
-        <el-table-column label="出车数" align="center" prop="column4">
-          <template slot-scope="scope">1</template>
+        <af-table-column
+          prop="column9"
+          label="出重量（t）"
+          align="center"
+          width="100%">
+          <template slot-scope="scope">
+            {{ (scope.row.column9).toFixed(2) }}
+          </template>
+        </af-table-column>
+
+
+        <el-table-column label="亏吨(t)" align="center" width="60px" prop="column10">
+          <template slot-scope="scope">
+            {{ (scope.row.column10).toFixed(2) }}
+          </template>
         </el-table-column>
-          <el-table-column label="出重量(t)" align="center" prop="column4">
-          <template slot-scope="scope">1</template>
-        </el-table-column>
-        <el-table-column label="亏吨(t)" align="center" prop="column4">
-          <template slot-scope="scope">1</template>
-        </el-table-column>
-        <el-table-column label="库存(t)" align="center" prop="column4">
-          <template slot-scope="scope">1</template>
+        <el-table-column label="库存(t)" align="center" prop="column11">
+          <template slot-scope="scope">
+              <span>{{
+                  (scope.row.column11).toFixed(2)
+                }}</span>
+          </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="库存差(t)" align="center" prop="column4"/>
+
+      <af-table-column label="库存差(t)" align="center" prop="column12" width="120px">
+        <template slot-scope="scope">
+          {{
+            (scope.row.column12).toFixed(2)
+          }}
+        </template>
+        />
+      </af-table-column>
     </el-table>
 
 
@@ -267,7 +303,7 @@
           <el-table-column label="库存(t)" align="center" prop="column11">
             <template slot-scope="scope">
               <span>{{
-                  (scope.row.column4 + scope.row.column7 - scope.row.column9 + scope.row.column10).toFixed(2)
+                  (scope.row.column11).toFixed(2)
                 }}</span>
             </template>
           </el-table-column>
@@ -276,7 +312,7 @@
         <af-table-column label="库存差(t)" align="center" prop="column12" width="120px">
           <template slot-scope="scope">
             {{
-              Math.abs(scope.row.column4 - (scope.row.column4 + scope.row.column7 - scope.row.column9 + scope.row.column10)).toFixed(2)
+              (scope.row.column12).toFixed(2)
             }}
           </template>
           />
