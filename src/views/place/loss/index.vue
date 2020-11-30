@@ -2,21 +2,21 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="所属场所" prop="placeId">
-          <el-select v-model="queryParams.placeId" placeholder="请选择所属场所" >
-            <el-option
-              v-for="dept in depts"
-              :key="dept.deptId"
-              :label="dept.deptName"
-              :value="dept.deptId"
-            />
-          </el-select>
+        <el-select v-model="queryParams.placeId" placeholder="请选择所属场所" @change="placeChange">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="亏吨日期" prop="odate">
         <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.odate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择亏吨日期">
+                        v-model="queryParams.odate"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择亏吨日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="寄仓客户" prop="customer">
@@ -57,10 +57,10 @@
       </el-form-item>
       <el-form-item label="申请时间" prop="applyTime">
         <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.applyTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择申请时间">
+                        v-model="queryParams.applyTime"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择申请时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="申请用户" prop="applyUser">
@@ -95,28 +95,29 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['place:loss:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="success"-->
-<!--          icon="el-icon-edit"-->
-<!--          size="mini"-->
-<!--          :disabled="single"-->
-<!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['place:loss:edit']"-->
-<!--        >修改</el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="danger"-->
-<!--          icon="el-icon-delete"-->
-<!--          size="mini"-->
-<!--          :disabled="multiple"-->
-<!--          @click="handleDelete"-->
-<!--          v-hasPermi="['place:loss:remove']"-->
-<!--        >删除</el-button>-->
-<!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="success"-->
+      <!--          icon="el-icon-edit"-->
+      <!--          size="mini"-->
+      <!--          :disabled="single"-->
+      <!--          @click="handleUpdate"-->
+      <!--          v-hasPermi="['place:loss:edit']"-->
+      <!--        >修改</el-button>-->
+      <!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="danger"-->
+      <!--          icon="el-icon-delete"-->
+      <!--          size="mini"-->
+      <!--          :disabled="multiple"-->
+      <!--          @click="handleDelete"-->
+      <!--          v-hasPermi="['place:loss:remove']"-->
+      <!--        >删除</el-button>-->
+      <!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -124,63 +125,66 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['place:loss:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="lossList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
-      <el-table-column label="所属场所" align="center" prop="placeId" :show-overflow-tooltip="true">
+      <af-table-column type="selection" width="55" align="center"/>
+      <af-table-column label="ID" align="center" prop="id"/>
+      <af-table-column label="所属场所" align="center" prop="placeId" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           {{ depts.find(dept => dept.deptId === scope.row.placeId).deptName }}
         </template>
-      </el-table-column>
-      <el-table-column label="亏吨日期" align="center" prop="odate" width="180">
+      </af-table-column>
+      <af-table-column label="亏吨日期" align="center" prop="odate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.odate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="寄仓客户" align="center" prop="customer" width="200" :show-overflow-tooltip="true"/>
-      <el-table-column label="合同号" align="center" prop="contractNo" width="160" :show-overflow-tooltip="true"/>
-      <el-table-column label="货物名称" align="center" prop="goodsName" :show-overflow-tooltip="true"/>
-      <el-table-column label="亏吨重量(KGS)" align="center" prop="netWeight" />
-      <el-table-column label="库位号" align="center" prop="storeCode" />
-      <el-table-column label="申请时间" align="center" prop="applyTime" width="180">
+      </af-table-column>
+      <af-table-column label="寄仓客户" align="center" prop="customer"  :show-overflow-tooltip="true"/>
+      <af-table-column label="合同号" align="center" prop="contractNo"  :show-overflow-tooltip="true"/>
+      <af-table-column label="货物名称" align="center" prop="goodsName" :show-overflow-tooltip="true"/>
+      <af-table-column label="亏吨重量(KGS)" align="center" prop="netWeight"/>
+      <af-table-column label="库位号" align="center" prop="storeCode"/>
+      <af-table-column label="申请时间" align="center" prop="applyTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.applyTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="申请用户" align="center" prop="applyUser" />
+      </af-table-column>
+      <af-table-column label="申请用户" align="center" prop="applyUser"/>
       <af-table-column label="审批状态" align="center" prop="auditState">
         <template slot-scope="scope">
           {{ auditStateTopDic.find(item => item.key === scope.row.auditState).value }}
         </template>
       </af-table-column>
-      <el-table-column label="审批人" align="center" prop="auditUser" />
-      <el-table-column label="审批时间" align="center" prop="auditTime" width="180">
+      <af-table-column label="审批人" align="center" prop="auditUser"/>
+      <af-table-column label="审批时间" align="center" prop="auditTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.auditTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="审批说明" align="center" prop="auditReason" />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      </af-table-column>
+      <af-table-column label="审批说明" align="center" prop="auditReason"/>
+      <af-table-column label="备注" align="center" prop="remark"/>
+      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button v-show="scope.row.auditState === '2'"
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['place:loss:edit']"
-          >修改</el-button>
+                     size="mini"
+                     type="text"
+                     icon="el-icon-edit"
+                     @click="handleUpdate(scope.row)"
+                     v-hasPermi="['place:loss:edit']"
+          >修改
+          </el-button>
           <el-button v-show="scope.row.auditState === '2'"
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['place:loss:remove']"
-          >删除</el-button>
+                     size="mini"
+                     type="text"
+                     icon="el-icon-delete"
+                     @click="handleDelete(scope.row)"
+                     v-hasPermi="['place:loss:remove']"
+          >删除
+          </el-button>
           <el-button v-show="scope.row.auditState === '0'"
                      size="mini"
                      type="text"
@@ -190,7 +194,7 @@
           >审批
           </el-button>
         </template>
-      </el-table-column>
+      </af-table-column>
     </el-table>
 
     <pagination
@@ -202,36 +206,38 @@
     />
 
     <!-- 添加或修改亏吨对话框 -->
-    <el-dialog :title="title" :visible.sync="open"  append-to-body>
-<!--      <el-form ref="form" :model="form" :rules="form.title !='亏吨审批' ? 'rules' : 'audit_rules'" label-width="120px">-->
+    <el-dialog :title="title" :visible.sync="open" append-to-body>
+      <!--      <el-form ref="form" :model="form" :rules="form.title !='亏吨审批' ? 'rules' : 'audit_rules'" label-width="120px">-->
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row>
-        <el-col :span="12">
-          <el-form-item label="所属场所" prop="placeId">
-            <el-select v-model="form.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})" :disabled="auditDisabled">
-              <el-option
-                v-for="dept in depts"
-                :key="dept.deptId"
-                :label="dept.deptName"
-                :value="dept.deptId"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="寄仓客户" prop="customer">
-            <el-select
-              v-model="form.customer" placeholder="请选择寄仓客户"  filterable @change="((val)=>{change(val, 'eName')})" :disabled="auditDisabled">
-              <el-option
-                v-for="dict in consumerOptions"
-                :key="dict.eName"
-                :label="dict.eName"
-                :value="dict.eName"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
+          <el-col :span="12">
+            <el-form-item label="所属场所" prop="placeId">
+              <el-select v-model="form.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})"
+                         :disabled="auditDisabled">
+                <el-option
+                  v-for="dept in depts"
+                  :key="dept.deptId"
+                  :label="dept.deptName"
+                  :value="dept.deptId"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="寄仓客户" prop="customer">
+              <el-select
+                v-model="form.customer" placeholder="请选择寄仓客户" filterable @change="((val)=>{change(val, 'eName')})"
+                :disabled="auditDisabled">
+                <el-option
+                  v-for="dict in consumerOptions"
+                  :key="dict.eName"
+                  :label="dict.eName"
+                  :value="dict.eName"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
         <el-row>
           <el-col :span="12">
@@ -250,7 +256,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="货物名称" prop="goodsName">
-              <el-input v-model="form.goodsName" placeholder="请输入货物名称"  :disabled="true"/>
+              <el-input v-model="form.goodsName" placeholder="请输入货物名称" :disabled="true"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -258,7 +264,8 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="库位号" prop="storeCode">
-              <el-select v-model="form.storeCode" placeholder="请输入库位号" @change="((val)=>{change(val, 'storeCode')})" :disabled="auditDisabled">
+              <el-select v-model="form.storeCode" placeholder="请输入库位号" @change="((val)=>{change(val, 'storeCode')})"
+                         :disabled="auditDisabled">
                 <el-option
                   v-for="type in storeIds"
                   :key="type.storeCode"
@@ -277,7 +284,7 @@
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="亏吨日期" prop="odate"  >
+            <el-form-item label="亏吨日期" prop="odate">
               <el-date-picker clearable size="small" style="width: 200px"
                               v-model="form.odate"
                               type="date"
@@ -288,14 +295,14 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="亏吨重量(t)" prop="netWeight"  >
-              <el-input v-model="form.netWeight" placeholder="请输入亏吨重量(t)" :disabled="auditDisabled" />
+            <el-form-item label="亏吨重量(KGS)" prop="netWeight">
+              <el-input v-model="form.netWeight" placeholder="请输入亏吨重量(t)" :disabled="auditDisabled"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="创建人" prop="createBy" >
+            <el-form-item label="创建人" prop="createBy">
               <el-input v-model="form.createBy" placeholder="请输入创建人" :disabled="true"/>
             </el-form-item>
           </el-col>
@@ -307,7 +314,7 @@
                               value-format="yyyy-MM-dd"
                               placeholder="选择创建时间"
                               :disabled="true"
-                              >
+              >
               </el-date-picker>
             </el-form-item>
           </el-col>
@@ -381,7 +388,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">提 交</el-button>
+        <el-button type="primary" :loading="btnLoading" @click="submitForm">提 交</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -389,12 +396,12 @@
 </template>
 
 <script>
-import { listLoss, getLoss, delLoss, addLoss, updateLoss,auditLoss,getPlaceWeight } from "@/api/place/loss";
+import {listLoss, getLoss, delLoss, addLoss, updateLoss, auditLoss, getPlaceWeight} from "@/api/place/loss";
 import {getToken} from '@/utils/auth'
-import { getUserDepts } from '@/utils/charutils'
-import { listInfo } from '@/api/basis/enterpriseInfo'
-import { listStoreContract } from '@/api/place/storeContract'
-import { getStoreByIds } from '@/api/place/store'   //获取库位信息
+import {getUserDepts} from '@/utils/charutils'
+import {listInfo} from '@/api/basis/enterpriseInfo'
+import {listStoreContract} from '@/api/place/storeContract'
+import {getStoreByIds} from '@/api/place/store'   //获取库位信息
 import {delAttachment, getPreview} from "@/api/place/attachment";  //附件对象
 
 
@@ -419,7 +426,7 @@ export default {
       // 是否显示弹出层
       open: false,
       //审批对话框字段只读
-      auditDisabled:false,
+      auditDisabled: false,
 
       updateForm: {},
       fileList: [],
@@ -449,14 +456,16 @@ export default {
         minFileName: undefined,
         minPath: undefined,
         minFileLength: undefined,
-        minObjectName: undefined
+        minObjectName: undefined,
+        orderByColumn:'id',
+        isAsc: 'desc'
       },
       // 表单参数
       form: {
-        goodsName : undefined,
+        goodsName: undefined,
         auditState: undefined,
         placeId: undefined,
-        stockWeight:undefined
+        stockWeight: undefined
       },
       // 文件上传
       upload: {
@@ -483,33 +492,34 @@ export default {
       // 新增表单校验
       rules: {
         placeId: [
-          { required: true, message: "所属场所id不能为空", trigger: "blur" }
+          {required: true, message: "所属场所id不能为空", trigger: "blur"}
         ],
         customer: [
-          { required: true, message: "寄仓客户不能为空", trigger: "blur" }
+          {required: true, message: "寄仓客户不能为空", trigger: "blur"}
         ],
         contractNo: [
-          { required: true, message: "合同号不能为空", trigger: "blur" }
+          {required: true, message: "合同号不能为空", trigger: "blur"}
         ],
         goodsName: [
-          { required: true, message: "货物名称不能为空", trigger: "blur" }
+          {required: true, message: "货物名称不能为空", trigger: "blur"}
         ],
         odate: [
-          { required: true, message: "亏吨日期不能为空", trigger: "blur" }
+          {required: true, message: "亏吨日期不能为空", trigger: "blur"}
         ],
         netWeight: [
-          { required: true, message: "亏吨重量不能为空", trigger: "blur" }
+          {required: true, message: "亏吨重量不能为空", trigger: "blur"}
         ],
-        storeCode : [
-          { required: true, message: "库位不能为空", trigger: "blur" }
+        storeCode: [
+          {required: true, message: "库位不能为空", trigger: "blur"}
         ],
         auditState: [
           {required: true, message: "审批不能为空", trigger: "blur"}
         ],
-        auditReason:[
+        auditReason: [
           {required: true, message: "批示意见不能为空", trigger: "blur"}
         ]
       },
+      btnLoading: false,
       // 场所名称列表
       depts: [],
       // 客户名称列表
@@ -532,13 +542,15 @@ export default {
   created() {
     // 获取场所
     this.depts = getUserDepts('0')
-    this.queryParams.placeId=this.depts
-    this.getList();
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId;
+      this.getList();
+    }
   },
   methods: {
     /** 客户信息列表 */
     getConsumerInfo(placeId) {
-      let consumerParams = { eType: '2', deptId: placeId }
+      let consumerParams = {eType: '2', deptId: placeId}
       listInfo(consumerParams).then(response => {
         this.consumerOptions = response.rows
       })
@@ -571,7 +583,7 @@ export default {
       this.open = false;
       this.storeIds = []
       this.contractOptions = [],
-      this.consumerOptions = [],
+        this.consumerOptions = [],
         this.weightParams = {
           id: '',
           coalType: ''
@@ -628,26 +640,26 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
+      this.single = selection.length != 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      this.auditDisabled=false
+      this.auditDisabled = false
       this.open = true;
       this.title = "添加亏吨";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      this.auditDisabled=false
+      this.auditDisabled = false
       const id = row.id || this.ids
       getLoss(id).then(response => {
         this.form = response.data;
         this.getConsumerInfo(this.form.placeId)  //构造寄仓客户码表
-        this.weightParams.placeId=this.form.placeId
-        this.weightParams.storeCode=this.form.storeCode
+        this.weightParams.placeId = this.form.placeId
+        this.weightParams.storeCode = this.form.storeCode
         this.checkStoreWeight(this.weightParams)
         this.open = true;
         this.title = "修改亏吨";
@@ -671,39 +683,43 @@ export default {
     /** 审批按钮操作 */
     auditUpdate(row) {
       this.reset();
-      this.auditDisabled=true
+      this.auditDisabled = true
       const id = row.id || this.ids
       getLoss(id).then(response => {
         this.form = response.data;
-        this.form.auditReason=undefined
+        this.form.auditReason = undefined
         this.open = true;
         this.title = "亏吨审批";
-        this.form.auditState=undefined
-        this.weightParams.placeId=this.form.placeId
-        this.weightParams.storeCode=this.form.storeCode
+        this.form.auditState = undefined
+        this.weightParams.placeId = this.form.placeId
+        this.weightParams.storeCode = this.form.storeCode
         this.checkStoreWeight(this.weightParams)
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          this.btnLoading = true
           if (this.form.id != undefined) {
-            if(this.title != "亏吨审批"){
+            if (this.title != "亏吨审批") {
               this.form.attachementids = this.attachmentList.join(',')
               updateLoss(this.form).then(response => {
+                this.btnLoading = false
                 if (response.code === 200) {
                   this.msgSuccess("修改成功");
                   this.open = false;
                   this.getList();
                 }
               });
-            }else{
-              if(this.form.auditReason == null || this.form.auditState ==null){
+            } else {
+              if (this.form.auditReason == null || this.form.auditState == null) {
                 this.msgError("请填写审批相关内容")
+                this.btnLoading = false
                 return
               }
               auditLoss(this.form).then(response => {
+                this.btnLoading = false
                 if (response.code === 200) {
                   this.msgSuccess("成功");
                   this.open = false;
@@ -714,6 +730,7 @@ export default {
           } else {
             this.form.attachementids = this.attachmentList.join(',')
             addLoss(this.form).then(response => {
+              this.btnLoading = false
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -728,15 +745,16 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm('是否确认删除亏吨编号为"' + ids + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delLoss(ids);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        }).catch(function() {});
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return delLoss(ids);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      }).catch(function () {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -801,8 +819,8 @@ export default {
       if (name === 'storeCode') {
         this.storeIds.forEach(element => {
           if (element.storeCode === val) {
-            this.weightParams.storeCode=val
-            this.weightParams.placeId=this.form.placeId
+            this.weightParams.storeCode = val
+            this.weightParams.placeId = this.form.placeId
             this.checkStoreWeight(this.weightParams)
             this.$forceUpdate()
           }
@@ -832,10 +850,10 @@ export default {
       }
       // return extension || extension2 && isLt2M
     },
-    handleRemove(){
+    handleRemove() {
 
     },
-    handlePreview(file){
+    handlePreview(file) {
       let id = ''
       if (file.response) {
         id = file.response.data
@@ -861,7 +879,7 @@ export default {
       // this.$refs.uploadTwo.clearFiles()
       this.attachmentList.push(response.data)
     },
-    beforeRemove(file, fileList){
+    beforeRemove(file, fileList) {
       let index = fileList.indexOf(file)
       let attachmentId = this.attachmentList[index];
       console.log(attachmentId)
@@ -870,7 +888,7 @@ export default {
       //删除文件 及附件记录
       delAttachment(attachmentId)
     },
-    handleExceed(){
+    handleExceed() {
       this.$message.warning('最多只能上传10个附件')
     },
     //下载
@@ -878,7 +896,11 @@ export default {
       console.log(this.updateForm)
       window.location.href = process.env.VUE_APP_BASE_API + '/smallo/files/download?bucketName=' + this.updateForm.minBucketName + '&objectName=' + this.updateForm.minObjectName
     },
+
     /***上传end ***/
+    placeChange(event) {
+      this.getList()
+    }
   }
 };
 </script>
