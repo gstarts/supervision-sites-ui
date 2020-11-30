@@ -1,7 +1,9 @@
 <template>
   <div class="app-container">
     <el-row class="mb8">
-      <el-button type="primary" v-hasPermi="['place:big:edit']" @click="updateBigForm" :disabled="form.status==='1'">执行完毕</el-button>
+      <el-button type="primary" v-hasPermi="['place:big:edit']" @click="updateBigForm" :disabled="form.status==='1'">
+        执行完毕
+      </el-button>
     </el-row>
 
     <el-row :gutter="10">
@@ -622,7 +624,15 @@ export default {
       const id = row.id || this.ids;
       this.$router.push({path: "/place/head", query: {tableId: id}});
     },
-    updateBigForm(){
+    updateBigForm() {
+      if (this.bigList.length > 0) {
+        let value = this.bigList.find(item => item.storeState === '0')
+        console.log(value)
+        if (value) {
+          this.$message.warning("请先作废未进场的车辆，再执行此操作")
+          return false
+        }
+      }
       this.updateForm(this.form)
     },
 

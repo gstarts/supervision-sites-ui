@@ -103,7 +103,7 @@
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="放行单号" align="center" prop="passNo"/>
       <el-table-column label="寄仓客户" align="center" prop="checkConsumer"/>
-      <el-table-column label="放行量" align="center" prop="passVolume"/>
+      <el-table-column label="放行量(KGS)" align="center" prop="passVolume"/>
       <el-table-column label="放行状态" align="center" prop="passState" :formatter="ReleaseStatusFormat"/>
       <el-table-column label="所属场所" align="center" prop="placeId" :formatter="corporationFormat"/>
       <el-table-column label="报送日期" align="center" prop="submitDate"/>
@@ -191,7 +191,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="放行量" prop="passVolume">
+            <el-form-item label="放行量(KGS)" prop="passVolume">
               <el-input v-model.number="form.passVolume" placeholder="请输入放行量" :disabled="formUpdateMode"/>
             </el-form-item>
           </el-col>
@@ -507,26 +507,31 @@ export default {
           this.open = true
           this.title = '修改放行单 '
 
-          this.weightParams.coalType = this.form.goodsName
-          this.weightParams.id = this.form.customerId
 
+          this.fileList = []
           if (response.data.remark) {
             this.attachmentList = response.data.remark.split(',')
-          }
-          this.fileList = []
-          for (let file of response.data.attachmentList) {
-            this.fileList.push({
-              'name': file.originalName,
-              'url': file.objectName,
-              'bucketName': file.bucketName,
-              'id': file.id
-            })
+            for (let file of response.data.attachmentList) {
+              this.fileList.push({
+                'name': file.originalName,
+                'url': file.objectName,
+                'bucketName': file.bucketName,
+                'id': file.id
+              })
+            }
           }
 
-          getReleaseWeight(this.weightParams).then(response => {
-            this.form.release = response.data.release
-            this.$forceUpdate()
-          })
+          //修改时，增加可放行量的显示
+          let customer = this.consumerOptions.find(item => item.eName === this.form.checkConsumer)
+          if (customer) {
+            this.weightParams.id = customer.id
+            this.weightParams.coalType = this.form.goodsName
+            //debugger
+            getReleaseWeight(this.weightParams).then(response => {
+              this.form.release = response.data.release
+              this.$forceUpdate()
+            })
+          }
         }
       )
     },
@@ -560,9 +565,7 @@ export default {
           }
         }
       })
-
-    }
-    ,
+    },
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
@@ -577,28 +580,22 @@ export default {
         this.msgSuccess('删除成功')
       }).catch(function () {
       })
-    }
-    ,
+    },
     /** 导出按钮操作 */
     handleExport() {
       this.download('place/passDoc/export', {
         ...this.queryParams
       }, `place_passDoc.xlsx`)
-    }
-    ,
+    },
     /**详情按钮 */
     detail(row) {
       this.reset()
       const id = row.contractNo
       this.$router.push({path: '/place/big', query: {tableId: id}})
-    }
-    ,
+    },
     /***上传start ***/
-
     handleRemove() {
-
-    }
-    ,
+    },
     handlePreview(file) {
       let id = ''
       if (file.response) {
@@ -612,8 +609,7 @@ export default {
           window.open(response.data)
         }
       })
-    }
-    ,
+    },
 // 文件上传成功
     uploadSuccess(response) {
       if (response.code !== 200) {
@@ -637,8 +633,7 @@ export default {
       this.form.minBucketName = response.data.bucketName
       // 路径
       this.form.minPath = response.data.path*/
-    }
-    ,
+    },
     beforeUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 10     //这里做文件大小限制
       if (!isLt2M) {
@@ -647,8 +642,7 @@ export default {
           type: 'error'
         });
       }
-    }
-    ,
+    },
 //删除之前的钩子
     beforeRemove(file, fileList) {
       /* console.log(fileList)
@@ -663,25 +657,21 @@ export default {
       //console.log(this.attachmentList)
       //删除文件 及附件记录
       delAttachment(attachmentId)
-    }
-    ,
+    },
     handleExceed() {
       this.$message.warning('最多只能上传10个附件')
-    }
-    ,
+    },
     uploadError(err) {
       this.uploading = false
       console.log(err)
       this.$message.error('文件上传失败')
-    }
-    ,
+    },
     /***上传end ***/
 
     /** 文件下载 */
     handleDownload(row) {
       window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=' + row.minBucketName + '&objectName=' + row.minObjectName
-    }
-    ,
+    },
 // 下拉列表改变时激活
     change(val, name) {
       // 场所
@@ -717,8 +707,7 @@ export default {
           this.$forceUpdate()
         })
       }
-    }
-    ,
+    },
     placeChange() {
       this.getConsumerInfo(this.queryParams.placeId)
       this.handleQuery()

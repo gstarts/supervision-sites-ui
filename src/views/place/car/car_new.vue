@@ -664,7 +664,7 @@ export default {
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId;
       //提煤单号
-      selectCoalBillNo({'placeId': this.queryParams.placeId}).then(response => {
+      selectCoalBillNo({'placeId': this.queryParams.placeId,'status':'0'}).then(response => {
         this.BigList = response.rows
       })
       this.getList()
@@ -894,7 +894,7 @@ export default {
         //查询场所下的大提煤单中的所有提煤单号
         this.form.placeId = this.queryParams.placeId
         this.form.coalBillNo = undefined
-        selectCoalBillNo({'placeId': this.queryParams.placeId}).then(response => {
+        selectCoalBillNo({'placeId': this.queryParams.placeId,'status':'0'}).then(response => {
           this.BigList = response.rows
         })
         this.getList()
