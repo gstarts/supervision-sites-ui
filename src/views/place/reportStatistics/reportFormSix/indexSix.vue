@@ -2,32 +2,32 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
 <!--      <el-row>-->
-<!--        <el-form-item label="场所名称" prop="placeId">-->
-<!--          <el-select @change="changePlace"-->
-<!--                     v-model="queryParams.placeId" placeholder="请选择场所" size="small">-->
-<!--            <el-option-->
-<!--              v-for="dept in depts"-->
-<!--              :key="dept.deptId"-->
-<!--              :label="dept.deptName"-->
-<!--              :value="dept.deptId"-->
-<!--            />-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
+        <el-form-item label="场所名称" prop="placeId">
+          <el-select @change="changePlace"
+                     v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+            <el-option
+              v-for="dept in depts"
+              :key="dept.deptId"
+              :label="dept.deptName"
+              :value="dept.deptId"
+            />
+          </el-select>
+        </el-form-item>
 
-<!--      <el-form-item label="寄仓客户" prop="storeCustomer">-->
-<!--        &lt;!&ndash;<el-input v-model="form.storeCustomer" placeholder="请输入寄仓客户" disabled/>&ndash;&gt;-->
-<!--        <el-select-->
-<!--          filterable-->
-<!--          clearable-->
-<!--          v-model="queryParams.customerName" placeholder="请选择寄仓客户">-->
-<!--          <el-option-->
-<!--            v-for="type in customerList"-->
-<!--            :key="type.customerName"-->
-<!--            :label="type.customerName"-->
-<!--            :value="type.customerName"-->
-<!--          />-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
+      <el-form-item label="寄仓客户" prop="storeCustomer">
+        <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄仓客户" disabled/>-->
+        <el-select
+          filterable
+          clearable
+          v-model="queryParams.customerName" placeholder="请选择寄仓客户">
+          <el-option
+            v-for="type in customerList"
+            :key="type.customerName"
+            :label="type.customerName"
+            :value="type.customerName"
+          />
+        </el-select>
+      </el-form-item>
 <!--        <el-form-item label="统计方式" prop="statisticsMode">-->
 <!--          <el-select @change="changeStatistics"-->
 <!--            v-model="queryParams.statisticsMode" placeholder="请选择统计方式">-->
@@ -40,7 +40,32 @@
 <!--          </el-select>-->
 <!--        </el-form-item>-->
 <!--      </el-row>-->
+      <el-form-item>
+        <el-col :span="6" >
+          <el-button type="primary" icon="el-icon-search"  @click="handleQuery">搜索</el-button>
+        </el-col>
+        <el-col :span="6" >
+                  <el-button icon="el-icon-refresh"  @click="resetQuery">重置</el-button>
+        </el-col>
 
+        <el-col :span="6" >
+          <el-button type="info" icon="fa fa-print" v-print="'#print' "@click="print"> 打印
+          </el-button>
+        </el-col>
+        <el-col :span="6" >
+          <download-excel
+            class = "export-excel-wrapper"
+            :data = "reportList"
+            :fields = "json_fields"
+            :title="titleList"
+            :footer="excelFooter"
+            :default-value="defaultValue"
+            name = "嘉易达监管场所库存情况报表.xls">
+            <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
+            <el-button type="primary"  @click="importExcel">导出EXCEL</el-button>
+          </download-excel>
+        </el-col>
+      </el-form-item>
       <el-row>
 <!--        <el-form-item label="进/出库" prop="direction">-->
 <!--          <el-select-->
@@ -126,24 +151,9 @@
 <!--            />-->
 <!--          </el-select>-->
 <!--        </el-form-item>-->
-        <el-form-item>
-<!--          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
-<!--          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
-          <el-button type="info" icon="fa fa-print" v-print="'#print' "@click="print"> 打印
-          </el-button>
-        </el-form-item>
+
       </el-row>
-      <download-excel
-        class = "export-excel-wrapper"
-        :data = "reportList"
-        :fields = "json_fields"
-        :title="titleList"
-        :footer="excelFooter"
-        :default-value="defaultValue"
-        name = "嘉易达监管场所库存情况报表.xls">
-        <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
-        <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
-      </download-excel>
+
     </el-form>
     <div class="box-card" style="margin: 0 auto;font-size:15px;width:1100px;padding-left: 1px ;padding-top:50px" id="print">
       <div v-show="printSmallTitle">
@@ -158,7 +168,7 @@
 <!--      </div>-->
       </div>
 
-    <el-table v-loading="loading" :data="reportList" id="analyouttable" show-summary
+    <el-table v-loading="loading" :data="reportList" id="analyouttable" show-summary :summary-method="getSummaries"
               :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
               :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
               style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
@@ -211,8 +221,7 @@ export default {
       // 导出按钮显示隐藏
       showImport:false,
       // 导出标题集合
-      titleList:[
-      ],
+      titleList:[],
 
       printSmallTitle:false,
 
@@ -229,9 +238,24 @@ export default {
       json_fields: {
         "寄仓客户": "column1",    //常规字段
         "合同": "column2", //支持嵌套属性
-        "放行单总量":"column3",
-        "已占用":"column4",
-        "可分配提煤单总量":"column5",
+        "放行单总量":{
+          field: "column6",
+          callback: (value) => {
+            return value = (value / 1000).toFixed(2)
+          }
+        },
+        "已占用":{
+          field: "column4",
+          callback: (value) => {
+            return value = (value / 1000).toFixed(2)
+          }
+        },
+        "可分配提煤单总量":{
+          field: "column5",
+          callback: (value) => {
+            return value = (value / 1000).toFixed(2)
+          }
+        },
       },
       // 默认值
       defaultValue:'0',
@@ -294,6 +318,7 @@ export default {
     };
   },
   created() {
+    //初始化数据
     this.getInfo()
     // this.titleList.push(this.prinTtitle);
     // 页面初始化获取时间0
@@ -391,14 +416,14 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      //先判断条件，再查询
-      this.queryParams.startTime = this.dateRange[0]
-      this.queryParams.endTime = this.dateRange[1]
-
-      if (!this.queryParams.startTime || !this.queryParams.endTime) {
-        this.$message.warning('请选择时间范围')
-        return false
-      }
+      // //先判断条件，再查询
+      // this.queryParams.startTime = this.dateRange[0]
+      // this.queryParams.endTime = this.dateRange[1]
+      //
+      // if (!this.queryParams.startTime || !this.queryParams.endTime) {
+      //   this.$message.warning('请选择时间范围')
+      //   return false
+      // }
       this.getInfo();
     },
     /** 重置按钮操作 */
@@ -410,6 +435,7 @@ export default {
     getInfo() {
       this.loading = true
       this.reportList = []
+      this.titleList=[]
       statisticsSix(this.queryParams).then(response => {
         this.loading = false
         //this.result = response
@@ -418,6 +444,8 @@ export default {
           //console.log(this.reportList)
           this.printTitle = '嘉易达监管场所'+this.dateRange[0]+'至'+this.dateRange[1]+'库存统计报表'
           this.titleList.push(this.printTitle)
+          console.log("==========")
+          console.log(this.titleList)
 
 
           // this.vehicleCount = response.data.vehicleCount
@@ -481,6 +509,37 @@ export default {
       if(event === 1){
         this.queryParams.customerName = ''
       }
+    },
+    getSummaries (param) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        //index就当table的下标 0 为起始表头
+        if (index === 0) {
+          sums[index] = '总重量';
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]));
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            //想计算哪行 index就等于那一行的下标 注意:下标起始值为0
+            if (!isNaN(value) && index === 2) {
+              return prev + curr;
+            }
+            if (!isNaN(value) && index === 3) {
+              return prev + curr;
+            }
+            if (!isNaN(value) && index === 4) {
+              return prev + curr;
+            }
+          }, 0);
+        }
+      });
+      sums[2]=(sums[2]/1000).toFixed(2);
+      sums[3]=(sums[3]/1000).toFixed(2);
+      sums[4]=(sums[4]/1000).toFixed(2);
+      return sums;
     }
   }
 };
