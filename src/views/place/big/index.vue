@@ -111,7 +111,7 @@
           v-hasPermi="['place:big:add']">新增
         </el-button>
       </el-col>
-      <el-col :span="1.5">
+<!--      <el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -120,7 +120,7 @@
           @click="handleUpdate"
           v-hasPermi="['place:big:edit']">修改
         </el-button>
-      </el-col>
+      </el-col>-->
       <!--      <el-col :span="1.5">
               <el-button
                 type="danger"
