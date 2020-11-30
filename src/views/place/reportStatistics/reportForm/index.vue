@@ -144,19 +144,22 @@
             <el-col :span="6">
               <download-excel
                 class="export-excel-wrapper"
+                type="xls"
                 :data="reportList"
                 :fields="json_fields"
                 :title="titleList"
                 :footer="excelFooter"
                 :default-value="defaultValue"
+                :stringifyLongNum="true"
                 name="内蒙古嘉易达矿业有限公司统计报表.xls">
                 <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
                 <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
               </download-excel>
             </el-col>
-<!--            -->
+            <!--            -->
             <el-col :span="6">
-              <el-button type="info" icon="fa fa-print" v-print="'#print'" size="mini" @click="print"  v-show="buttonShow" ref="printBtn"> 打印
+              <el-button type="info" icon="fa fa-print" v-print="'#print'" size="mini" @click="print"
+                         v-show="buttonShow" ref="printBtn"> 打印
               </el-button>
             </el-col>
           </el-row>
@@ -175,59 +178,56 @@
       <!--      </download-excel>-->
     </el-form>
     <el-table v-loading="loading" :data="reportList">
-      <af-table-column label="寄仓客户" align="center" width="120%" prop="column1"/>
-      <af-table-column label="寄仓合同" align="center" width="120%" prop="column2"/>
-      <af-table-column label="品名" align="center" prop="column3" width="80%"/>
-      <el-table-column label="期初库存(t)" align="center" prop="column4">
+      <af-table-column label="寄仓客户" align="center" prop="column1"/>
+      <af-table-column label="寄仓合同" align="center" prop="column2"/>
+      <af-table-column label="品名" align="center" prop="column3"/>
+      <af-table-column label="期初库存(t)" align="center" width="130px" prop="column4">
         <template slot-scope="scope">
           {{ (scope.row.column4).toFixed(2) }}
         </template>
-      </el-table-column>
+      </af-table-column>
       <el-table-column label="本期" align="center">
-        <el-table-column prop="column6" label="入车数" align="center" width="70%">
-        </el-table-column>
+        <af-table-column prop="column6" label="入车数" align="center">
+        </af-table-column>
         <af-table-column
           prop="column7"
           label="入重量（t）"
-          align="center"
-          width="100%">
+          align="center">
           <template slot-scope="scope">
             {{ (scope.row.column7).toFixed(2) }}
           </template>
         </af-table-column>
 
-        <el-table-column
+        <af-table-column
           prop="column8"
           label="出车数"
           align="center"
-          width="70%">
-        </el-table-column>
+        >
+        </af-table-column>
         <af-table-column
           prop="column9"
           label="出重量（t）"
           align="center"
-          width="100%">
+        >
           <template slot-scope="scope">
             {{ (scope.row.column9).toFixed(2) }}
           </template>
         </af-table-column>
 
 
-        <el-table-column label="亏吨(t)" align="center" width="60px" prop="column10">
+        <af-table-column label="亏吨(t)" align="center" prop="column10">
           <template slot-scope="scope">
             {{ (scope.row.column10).toFixed(2) }}
           </template>
-        </el-table-column>
-        <el-table-column label="库存(t)" align="center" prop="column11">
+        </af-table-column>
+        <af-table-column label="库存(t)" align="center" prop="column11">
           <template slot-scope="scope">
-              <span>{{
-                  (scope.row.column11).toFixed(2)
-                }}</span>
+            <span>{{ (scope.row.column11).toFixed(2) }}</span>
           </template>
-        </el-table-column>
+        </af-table-column>
       </el-table-column>
 
-      <af-table-column label="库存差(t)" align="center" prop="column12" width="120px">
+      <af-table-column label="库存差(t)" align="center" prop="column12">
         <template slot-scope="scope">
           {{
             (scope.row.column12).toFixed(2)
@@ -345,8 +345,8 @@ export default {
       //打印按钮显示隐藏
       show: false,
       dateTime: '',
-      buttonShow:false,
-      showPrint:false,
+      buttonShow: false,
+      showPrint: false,
       // 导出按钮显示隐藏
       showImport: false,
       // 导出标题集合
@@ -358,8 +358,8 @@ export default {
       json_meta: [
         [
           {
-            " key ": " charset ",
-            " value ": " utf- 8 "
+            "key": "charset",
+            "value": "utf-8"
           }
         ]
       ],
@@ -368,14 +368,45 @@ export default {
         "寄仓客户": "column1",    //常规字段
         "寄仓合同": "column2", //支持嵌套属性
         "品名": "column3",
-        "期初库存": "column4",
+        "期初库存": {
+          field: "column4",
+          callback: (value) => {
+            return (value*100/100).toFixed(2)
+          }
+        },
         "入车数": "column6",
-        "入重量(t)": "column7",
+        "入重量(t)": {
+          field: "column7",
+          callback: (value) => {
+            return (value).toFixed(2)
+          }
+        },
+
         "出车数": "column8",
-        "出重量(t)": "column9",
-        "亏吨(t)": "column10",
-        "库存(t)": "column11",
-        "库存差(t)": "column12",
+        "出重量(t)": {
+          field: "column9",
+          callback: (value) => {
+            return (value).toFixed(2)
+          }
+        },
+        "亏吨(t)": {
+          field: "column10",
+          callback: (value) => {
+            return (value).toFixed(2)
+          }
+        },
+        "库存(t)": {
+          field: "column11",
+          callback: (value) => {
+            return (value).toFixed(2)
+          }
+        },
+        "库存差(t)": {
+          field: "column12",
+          callback: (value) => {
+            return (value).toFixed(2)
+          }
+        },
       },
       // 默认值
       defaultValue: '',
@@ -507,8 +538,8 @@ export default {
 
     },
 
-    printShow(){
-      if (this.showPrint==false){
+    printShow() {
+      if (this.showPrint == false) {
         this.showPrint = true;
       } else {
         this.$refs['printBtn'].$el.click()
