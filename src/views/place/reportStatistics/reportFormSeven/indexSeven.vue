@@ -85,9 +85,9 @@
         </el-col>
 
         <el-col :span="6">
-        <el-form-item label="客户名称" prop="clientName">
+        <el-form-item label="客户名称" prop="receiveName">
           <el-input
-            v-model="queryParams.clientName"
+            v-model="queryParams.receiveName"
             placeholder="请输入客户名称"
             clearable
             size="small"
@@ -120,20 +120,27 @@
 
       <el-row>
         <el-col :span="6">
-          <el-form-item label="运输方式" prop="transport">
-            <el-input
-              v-model="queryParams.transport"
-              placeholder="请输入运输方式"
-              clearable
-              size="small"
+          <el-form-item label="运输方式" prop="transportType">
+            <el-select
+            clearable
+            filterable
+            v-model="queryParams.transportType"
+            placeholder="请输入运输方式"
+            size="small">
+            <el-option
+              v-for="dict in transportOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
             />
+          </el-select>
           </el-form-item>
         </el-col>
 
         <el-col :span="6">
-          <el-form-item label="制单人" prop="prepared">
+          <el-form-item label="制单人" prop="createBy">
             <el-input
-              v-model="queryParams.prepared"
+              v-model="queryParams.createBy"
               placeholder="请输入制单人"
               clearable
               size="small"
@@ -141,14 +148,18 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="6">
+        <el-col :span="12">
           <el-form-item label="制单时间" prop="preparedtime">
-            <el-input
-              v-model="queryParams.preparedtime"
-              placeholder="制单时间"
-              clearable
+            <el-date-picker
+              v-model="dateRange"
+              type="datetimerange"
+              align="right"
               size="small"
-            />
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              :default-time="['00:00:00', '23:59:59']">
+            </el-date-picker>
           </el-form-item>
         </el-col>
 
@@ -226,13 +237,13 @@
         <!--          </el-select>-->
         <!--
           </el-form-item>-->
-      <el-row>
+      <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button></el-col>
         <el-col :span="1.5">
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button></el-col>
         <el-col :span="1.5">
-          <el-button type="info" icon="fa fa-print" v-print="'#print' " @click="print"> 打印
+          <el-button type="info" size="mini" icon="fa fa-print" v-print="'#print' " @click="print"> 打印
           </el-button>
           </el-col>
         <el-col :span="1.5">
@@ -273,13 +284,13 @@
         <af-table-column label="寄仓合同号" align="center" width="130%" prop="column2"/>
 
 
-        <af-table-column label="客户名称2" align="center" width="120%" prop="column1"/>
-        <af-table-column label="销售合同2" align="center" width="120%" prop="column1"/>
+        <af-table-column label="客户名称" align="center" width="120%" prop="column19"/>
+        <af-table-column label="销售合同" align="center" width="120%" prop="column20"/>
 
 
         <af-table-column label="提煤单号" align="center" width="130%" prop="column3"/>
 
-        <af-table-column label="品名2" align="center" width="130%" prop="column3"/>
+        <af-table-column label="品名" align="center" width="130%" prop="column21"/>
 
         <af-table-column label="提煤单重量" align="center" prop="column4"/>
         <af-table-column label="已分配未完成车数" align="center" prop="column5"/>
@@ -289,12 +300,16 @@
         <af-table-column label="剩余重量(吨)" align="center" prop="column9"/>
 
 
-        <af-table-column label="承运单位2" align="center" width="120%" prop="column1"/>
-        <af-table-column label="运输方式3" align="center" width="120%" prop="column1"/>
+        <af-table-column label="承运单位" align="center" width="120%" prop="column22"/>
+        <af-table-column label="运输方式" align="center" width="120%" prop="column23" :formatter="transportFormatter"/>
 
-        <af-table-column label="制单人3" align="center" width="120%" prop="column1"/>
+        <af-table-column label="制单人" align="center" width="120%" prop="column24">
+          <template slot-scope="scope">
+                {{ parseUserName(scope.row.column24) }}
+              </template>
+        </af-table-column>
         <!--      制单时间需要查询条件，from to-->
-        <af-table-column label="制单时间3" align="center" width="120%" prop="column1"/>
+        <af-table-column label="制单时间" align="center" width="120%" prop="column25"/>
 
 
       </el-table>
@@ -309,6 +324,7 @@
   import {getUserDepts} from "@/utils/charutils";
   import {listStoreContract} from "@/api/place/storeContract";
   import {statisticsSeven} from "@/api/place/info";
+  import {listUser} from "@/api/system/user";
 
   export default {
     name: "Report",
@@ -329,6 +345,7 @@
         titleList: [],
 
         printSmallTitle: false,
+        userList: [],
 
         // 导出格式
         json_meta: [
@@ -343,17 +360,45 @@
         json_fields: {
           "寄仓客户": "column1",    //常规字段
           "合同号": "column2", //支持嵌套属性
+          "客户名称": "column19",
+          "销售合同": "column20",
           "提煤单号": "column3",
+          "品名": "column21",
           "提煤单重量": "column4",
           "已分配未完成车辆": "column5",
           "已分配未提离重量": "column6",
           "已完成车辆": "column7",
           "已提离重量": "column8",
-          "剩余重量": "column9",
+          "剩余重量": "column9",         
+          "承运单位": "column22",
+          "运输方式":{
+          field: "column23",
+          callback: (value) => {
+          let u = this.transportOptions.find(item => item.dictValue === value)
+                if (u) {
+                  return value = u.dictLabel
+                } else {
+                  return value
+                }
+          }
+        },
+          "制单人": 
+            {
+              field: "column24",
+              callback: (value) => {
+                let u = this.userList.find(item => item.userName === value)
+                if (u) {
+                  return value = u.nickName
+                } else {
+                  return value
+                }
+              }
+            },
+          "制单时间": "column25",
 
         },
         // 默认值
-        defaultValue: '0',
+        defaultValue: '',
         // Excel 页脚
         excelFooter: '',
         // 选中数组
@@ -361,6 +406,8 @@
         prinTtitle: '',
         // 标题时间
         timeTitle: '',
+        //运输方式
+        transportOptions: [],
         ids: [],
         depts: [],
         // 非单个禁用
@@ -398,15 +445,15 @@
           coalBillNo: undefined,
           checkContractNo: undefined,
           // 客户姓名
-          clientName:undefined,
+          receiveName:undefined,
           // 销售合同
           salesContract:undefined,
           //承运单位
           carrier:undefined,
           //运输方式
-          transport:undefined,
+          transportType:undefined,
           // 制单人
-          prepared:undefined,
+          createBy:undefined,
           // 制单时间
           preparedtime:undefined,
 
@@ -432,6 +479,11 @@
     created() {
 
       this.getInfo()
+      // 运输方式
+      this.getDicts('place_transport_type').then(response => {
+        this.transportOptions = response.data
+        console.log(this.transportOptions)
+      })
       // this.titleList.push(this.prinTtitle);
       // 页面初始化获取时间0
       this.dateRange = ['', '']
@@ -467,7 +519,12 @@
       this.getDicts("coal_type").then(response => {
         this.goodsNameList = response.data;
       });
+      
+    },   
+    mounted() {
+      this.getUserList()
     },
+     
     methods: {
       /** 查询堆场报表列表 */
       getList() {
@@ -481,6 +538,23 @@
       // 报表类型字典翻译
       reportTypeFormat(row, column) {
         return this.selectDictLabel(this.reportTypeOptions, row.reportType);
+      },
+      //翻译用户名
+      parseUserName(user) {
+        let u = this.userList.find(item => item.userName === user)
+        if (u) {
+          return u.nickName
+        } else {
+          return user
+        }
+      },
+      getUserList() {
+        listUser({'deptId': this.queryParams.placeId}).then(response => {
+          if (response.code === 200) {
+            this.userList = response.rows
+            // console.log(this.userList)
+          }
+        });
       },
       // 取消按钮
       cancel() {
@@ -500,7 +574,7 @@
       },
 
       importExcel() {
-
+       
       },
 
       // 表单重置
@@ -542,18 +616,20 @@
       /** 重置按钮操作 */
       resetQuery() {
         this.resetForm("queryForm");
+        this.dateRange = ['', '']
         this.handleQuery();
       },
 
       getInfo() {
         this.loading = true
         this.reportList = []
-        statisticsSeven(this.queryParams).then(response => {
+        statisticsSeven(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
           this.loading = false
           //this.result = response
           if (response.code === 200) {
             this.reportList = response.data
-            //console.log(this.reportList)
+            // console.log(this.reportList)
+
             this.printTitle = '嘉易达监管场所' + this.dateRange[0] + '至' + this.dateRange[1] + '库存统计报表'
             this.titleList.push(this.printTitle)
 
@@ -588,6 +664,7 @@
       //场所改变时，去查对应场所的
       changePlace(event) {
         this.getContract(event, '1')
+        this.getUserList()//更新用户列表
       },
 
       //获取场所下有效的合同 列表
@@ -630,7 +707,10 @@
         if (event === 1) {
           this.queryParams.customerName = ''
         }
-      }
+      },
+      transportFormatter(row, column) {
+        return this.selectDictLabel(this.transportOptions, row.column23);
+      },
     }
   };
 </script>

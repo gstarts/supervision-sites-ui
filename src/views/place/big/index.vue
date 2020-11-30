@@ -259,7 +259,7 @@
     <!--          </el-select>-->
     <!--        </el-form-item>-->
     <!--      </el-form>-->
-    </el-dialog>
+    <!-- </el-dialog> -->
     <el-dialog :title="title" :visible.sync="open" append-to-body :before-close="closeDialog">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="120px">
         <el-row>
