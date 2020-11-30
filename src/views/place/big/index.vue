@@ -108,10 +108,8 @@
           icon="el-icon-plus"
           size="small"
           @click="handleAdd"
-          v-hasPermi="['place:big:add']"
-        >新增
-        </el-button
-        >
+          v-hasPermi="['place:big:add']">新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -120,23 +118,21 @@
           size="small"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['place:big:edit']"
-        >修改
-        </el-button
-        >
+          v-hasPermi="['place:big:edit']">修改
+        </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="small"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['place:big:remove']"
-        >删除
-        </el-button
-        >
-      </el-col>
+      <!--      <el-col :span="1.5">
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="small"
+                :disabled="multiple"
+                @click="handleDelete"
+                v-hasPermi="['place:big:remove']"
+              >删除
+              </el-button
+              >
+            </el-col>-->
       <!-- <el-col :span="1.5">
         <el-button
           type="warning"
@@ -149,24 +145,21 @@
     </el-row>
 
     <el-table
-      v-loading="loading"
-      :data="bigList"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" width="55" align="center"/>
-      <!-- <el-table-column label="主键" align="center" prop="id" /> -->
-      <el-table-column label="寄仓客户" align="center" prop="customerName"/>
-      <el-table-column label="仓储合同" align="center" prop="contractNo"/>
-      <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>
-      <el-table-column label="提煤客户" align="center" prop="receiveName"/>
-      <el-table-column label="品名" align="center" prop="goodsName"/>
-      <el-table-column label="提煤重量" align="center" prop="coalWeight"/>
-      <el-table-column label="销售合同号" align="center" prop="salesContract"/>
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormatter"/>
-      <el-table-column label="建单时间" align="center" prop="createTime"/>
-      <!-- <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="乐观锁" align="center" prop="revision" /> -->
-      <el-table-column
+      v-loading="loading" :data="bigList" @selection-change="handleSelectionChange">
+      <!--      <af-table-column type="selection" width="55" align="center"/>-->
+      <!-- <af-table-column label="主键" align="center" prop="id" /> -->
+      <af-table-column label="寄仓客户" align="center" prop="customerName"/>
+      <af-table-column label="仓储合同" align="center" prop="contractNo"/>
+      <af-table-column label="提煤单号" align="center" prop="coalBillNo"/>
+      <af-table-column label="提煤客户" align="center" prop="receiveName"/>
+      <af-table-column label="品名" align="center" prop="goodsName"/>
+      <af-table-column label="提煤重量" align="center" prop="coalWeight"/>
+      <af-table-column label="销售合同号" align="center" prop="salesContract"/>
+      <af-table-column label="状态" align="center" prop="status" :formatter="statusFormatter"/>
+      <af-table-column label="建单时间" align="center" prop="createTime"/>
+      <!-- <af-table-column label="备注" align="center" prop="remark" />
+      <af-table-column label="乐观锁" align="center" prop="revision" /> -->
+      <af-table-column
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
@@ -200,18 +193,17 @@
           >修改
           </el-button
           >
-          <el-button
-            size="small"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['place:big:remove']"
-            v-show="scope.row.status != '1'"
-          >删除
-          </el-button
-          >
+          <!--          <el-button
+                      size="small"
+                      type="text"
+                      icon="el-icon-delete"
+                      @click="handleDelete(scope.row)"
+                      v-hasPermi="['place:big:remove']"
+                      v-show="scope.row.status != '1'"
+                    >删除
+                    </el-button>-->
         </template>
-      </el-table-column>
+      </af-table-column>
     </el-table>
 
     <pagination
@@ -858,7 +850,7 @@ export default {
       // const extension2 = testmsg === 'jpg'
       // const extension3 = testmsg === 'jpeg'
       // const extension4 = testmsg === 'pdf'
-      const isLt2M = file.size / 1024 / 1024 < 10     //这里做文件大小限制
+      const isLt2M = file.size / 1024 / 1024 < 20     //这里做文件大小限制
       // if(!extension && !extension2 && !extension3 && !extension4) {
       // 	this.$message({
       // 		message: '上传文件只能是 png,jpg,jpeg,pdf格式!',
@@ -867,9 +859,10 @@ export default {
       // }
       if (!isLt2M) {
         this.$message({
-          message: '上传文件大小不能超过 10MB!请等待读条完毕,并重新上传',
+          message: '上传文件大小不能超过 20MB!请等待读条完毕,并重新上传',
           type: 'error'
         });
+        return false
       }
       // return extension || extension2 && isLt2M
     },
@@ -962,6 +955,7 @@ export default {
        console.log(file)*/
       let index = fileList.indexOf(file)
 
+      console.log(index)
       //console.log(index)
       let attachmentId = this.attachmentList[index];
       console.log(attachmentId)
@@ -970,7 +964,9 @@ export default {
       this.attachmentList.splice(index, 1)
       //console.log(this.attachmentList)
       //删除文件 及附件记录
-      delAttachment(attachmentId)
+      if (attachmentId) {
+        delAttachment(attachmentId)
+      }
     },
     handleExceed() {
       this.$message.warning('最多只能上传10个附件')
