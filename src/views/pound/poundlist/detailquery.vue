@@ -1339,7 +1339,7 @@ export default {
     },
     //获取大提煤单列表
     getCoalBillList() {
-      selectCoalBillNo({'placeId': this.queryParams.stationId}).then(response => {
+      selectCoalBillNo({'placeId': this.queryParams.stationId,'status':'0'}).then(response => {
         this.BigList = response.rows
       })
     },
