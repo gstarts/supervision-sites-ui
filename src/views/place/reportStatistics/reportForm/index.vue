@@ -232,7 +232,6 @@
             (scope.row.column12).toFixed(2)
           }}
         </template>
-        />
       </af-table-column>
     </el-table>
 
@@ -317,15 +316,11 @@
                 (scope.row.column12).toFixed(2)
                 }}
               </template>
-              />
             </af-table-column>
           </el-table>
-
         </div>
-
       </div>
     </div>
-
   </div>
 
 </template>
@@ -368,8 +363,8 @@ import {statisticsMonth} from "@/api/place/info";
       json_meta: [
         [
           {
-            "key": "charset",
-            "value": "utf-8"
+            " key ": " charset ",
+            " value ": " utf- 8 "
           }
         ]
       ],
@@ -378,45 +373,14 @@ import {statisticsMonth} from "@/api/place/info";
         "寄仓客户": "column1",    //常规字段
         "寄仓合同": "column2", //支持嵌套属性
         "品名": "column3",
-        "期初库存": {
-          field: "column4",
-          callback: (value) => {
-            return (value*100/100).toFixed(2)
-          }
-        },
+        "期初库存": "column4",
         "入车数": "column6",
-        "入重量(t)": {
-          field: "column7",
-          callback: (value) => {
-            return (value).toFixed(2)
-          }
-        },
-
+        "入重量(t)": "column7",
         "出车数": "column8",
-        "出重量(t)": {
-          field: "column9",
-          callback: (value) => {
-            return (value).toFixed(2)
-          }
-        },
-        "亏吨(t)": {
-          field: "column10",
-          callback: (value) => {
-            return (value).toFixed(2)
-          }
-        },
-        "库存(t)": {
-          field: "column11",
-          callback: (value) => {
-            return (value).toFixed(2)
-          }
-        },
-        "库存差(t)": {
-          field: "column12",
-          callback: (value) => {
-            return (value).toFixed(2)
-          }
-        },
+        "出重量(t)": "column9",
+        "亏吨(t)": "column10",
+        "库存(t)": "column11",
+        "库存差(t)": "column12",
       },
       // 默认值
       defaultValue: '',
