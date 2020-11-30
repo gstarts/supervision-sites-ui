@@ -156,10 +156,11 @@
                 <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
               </download-excel>
             </el-col>
-<!--            -->
+            <!--            -->
             <el-col :span="6">
               <el-button type="info" icon="fa fa-print" v-print="'#allPrint'" size="mini" @click="print"
-                         v-show="buttonShow" ref="printBtn"> 打印 </el-button>
+                         v-show="buttonShow" ref="printBtn"> 打印
+              </el-button>
             </el-col>
           </el-row>
         </el-form-item>
@@ -229,106 +230,115 @@
       <af-table-column label="库存差(t)" align="center" prop="column12">
         <template slot-scope="scope">
           {{
-            (scope.row.column12).toFixed(2)
+          (scope.row.column12).toFixed(2)
           }}
         </template>
       </af-table-column>
     </el-table>
 
-    <!--打印区域-->
-    <div id="allPrint" v-show="showPrint">
-      <div v-for="(item,index) in newArray" style="page-break-after:always">
-        <div :id="gennerateId(index)"></div>
-        <div class="box-card" style="margin: 0 auto;font-size:15px;width:1100px;padding-left: 1px ;padding-top:50px"
-        >
-          <!--      <div v-show="printSmallTitle">-->
-          <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">
-            <span>{{printTitle}}</span><br>
-            <span>{{dateTime }}</span>
-          </div>
-          <!--        <div>-->
-          <!--          <span>{{timeTitle}}</span>-->
-          <!--        </div>-->
-          <!--      <div>-->
-          <!--        <span>{{shipper}}</span>-->
-          <!--      </div>-->
-          <!--      </div>-->
-          <!--  show-summary :summary-method="getSummaries"-->
-          <el-table v-loading="loading" :data="item" id="analyouttable"
-                    :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
-                    :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
-                    style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
-            <af-table-column label="寄仓客户" align="center" width="120%" prop="column1"/>
-            <af-table-column label="寄仓合同" align="center" width="120%" prop="column2"/>
-            <af-table-column label="品名" align="center" prop="column3" width="80%"/>
-            <el-table-column label="期初库存(t)" align="center" prop="column4">
-              <template slot-scope="scope">
-                {{ (scope.row.column4).toFixed(2) }}
-              </template>
-            </el-table-column>
-            <el-table-column label="本期" align="center">
-              <el-table-column prop="column6" label="入车数" align="center" width="70%">
-              </el-table-column>
-              <af-table-column
-                prop="column7"
-                label="入重量（t）"
-                align="center"
-                width="100%">
+    <!--打印区域 弹出窗打印-->
+    <el-drawer
+      :visible.sync="drawer"
+      :direction="direction"
+      size="100%"
+    >
+      <el-button type="info" icon="fa fa-print" v-print="'#allPrint'" size="mini" @click="print"
+                 ref="printBtn"> 打印
+      </el-button>
+      <div id="allPrint" v-show="showPrint">
+        <div v-for="(item,index) in newArray" style="page-break-after:always">
+          <div :id="gennerateId(index)"></div>
+          <div class="box-card" style="margin: 0 auto;font-size:15px;width:1100px;padding-left: 1px ;padding-top:50px"
+          >
+            <!--   <div v-show="printSmallTitle">-->
+            <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">
+              <span>{{printTitle}}</span><br>
+              <span>{{dateTime }}</span>
+            </div>
+            <!--        <div>-->
+            <!--          <span>{{timeTitle}}</span>-->
+            <!--        </div>-->
+            <!--      <div>-->
+            <!--        <span>{{shipper}}</span>-->
+            <!--      </div>-->
+            <!--      </div>-->
+            <!--  show-summary :summary-method="getSummaries"-->
+            <el-table v-loading="loading" :data="item" id="analyouttable"
+                      :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
+                      :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
+                      style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
+              <af-table-column label="寄仓客户" align="center" width="120%" prop="column1"/>
+              <af-table-column label="寄仓合同" align="center" width="120%" prop="column2"/>
+              <af-table-column label="品名" align="center" prop="column3" width="80%"/>
+              <el-table-column label="期初库存(t)" align="center" prop="column4">
                 <template slot-scope="scope">
-                  {{ (scope.row.column7).toFixed(2) }}
-                </template>
-              </af-table-column>
-
-              <el-table-column
-                prop="column8"
-                label="出车数"
-                align="center"
-                width="70%">
-              </el-table-column>
-              <af-table-column
-                prop="column9"
-                label="出重量（t）"
-                align="center"
-                width="100%">
-                <template slot-scope="scope">
-                  {{ (scope.row.column9).toFixed(2) }}
-                </template>
-              </af-table-column>
-
-
-              <el-table-column label="亏吨(t)" align="center" width="60px" prop="column10">
-                <template slot-scope="scope">
-                  {{ (scope.row.column10).toFixed(2) }}
+                  {{ (scope.row.column4).toFixed(2) }}
                 </template>
               </el-table-column>
-              <el-table-column label="库存(t)" align="center" prop="column11">
-                <template slot-scope="scope">
+              <el-table-column label="本期" align="center">
+                <el-table-column prop="column6" label="入车数" align="center" width="70%">
+                </el-table-column>
+                <af-table-column
+                  prop="column7"
+                  label="入重量（t）"
+                  align="center"
+                  width="100%">
+                  <template slot-scope="scope">
+                    {{ (scope.row.column7).toFixed(2) }}
+                  </template>
+                </af-table-column>
+
+                <el-table-column
+                  prop="column8"
+                  label="出车数"
+                  align="center"
+                  width="70%">
+                </el-table-column>
+                <af-table-column
+                  prop="column9"
+                  label="出重量（t）"
+                  align="center"
+                  width="100%">
+                  <template slot-scope="scope">
+                    {{ (scope.row.column9).toFixed(2) }}
+                  </template>
+                </af-table-column>
+
+
+                <el-table-column label="亏吨(t)" align="center" width="60px" prop="column10">
+                  <template slot-scope="scope">
+                    {{ (scope.row.column10).toFixed(2) }}
+                  </template>
+                </el-table-column>
+                <el-table-column label="库存(t)" align="center" prop="column11">
+                  <template slot-scope="scope">
               <span>{{
                   (scope.row.column11).toFixed(2)
                 }}</span>
-                </template>
+                  </template>
+                </el-table-column>
               </el-table-column>
-            </el-table-column>
 
-            <af-table-column label="库存差(t)" align="center" prop="column12" width="120px">
-              <template slot-scope="scope">
-                {{
-                (scope.row.column12).toFixed(2)
-                }}
-              </template>
-            </af-table-column>
-          </el-table>
+              <af-table-column label="库存差(t)" align="center" prop="column12" width="120px">
+                <template slot-scope="scope">
+                  {{
+                  (scope.row.column12).toFixed(2)
+                  }}
+                </template>
+              </af-table-column>
+            </el-table>
+          </div>
         </div>
       </div>
-    </div>
+    </el-drawer>
   </div>
 
 </template>
 
 <script>
-import {getUserDepts} from "@/utils/charutils";
-import {listStoreContract} from "@/api/place/storeContract";
-import {statisticsMonth} from "@/api/place/info";
+  import {getUserDepts} from "@/utils/charutils";
+  import {listStoreContract} from "@/api/place/storeContract";
+  import {statisticsMonth} from "@/api/place/info";
 
   export default {
     name: "Report",
@@ -344,6 +354,8 @@ import {statisticsMonth} from "@/api/place/info";
         nextDate: '',
         //打印按钮显示隐藏
         show: false,
+        //打印弹窗
+        drawer: false,
         dateTime: '',
         // 打印按钮隐藏
         buttonShow: false,
@@ -356,115 +368,116 @@ import {statisticsMonth} from "@/api/place/info";
         // 打印集合
         newArray: [],
 
+        printSmallTitle: false,
 
-      printSmallTitle: false,
-
-      // 导出格式
-      json_meta: [
-        [
-          {
-            " key ": " charset ",
-            " value ": " utf- 8 "
-          }
-        ]
-      ],
-      // 导出Excel 字段
-      json_fields: {
-        "寄仓客户": "column1",    //常规字段
-        "寄仓合同": "column2", //支持嵌套属性
-        "品名": "column3",
-        "期初库存": "column4",
-        "入车数": "column6",
-        "入重量(t)": "column7",
-        "出车数": "column8",
-        "出重量(t)": "column9",
-        "亏吨(t)": "column10",
-        "库存(t)": "column11",
-        "库存差(t)": "column12",
-      },
-      // 默认值
-      defaultValue: '',
-      // Excel 页脚
-      excelFooter: '',
-      // 选中数组
-      // 打印标题
-      printTitle: '',
-      // 标题时间
-      timeTitle: '',
-      ids: [],
-      depts: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
-      // 总条数
-      total: 0,
-      // 堆场报表表格数据
-      reportList: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
-      directionDic: [
-        {'key': 1, 'value': '入库'},
-        {'key': 0, 'value': '出库'},
-      ],
-      statisticsModeDic: [
-        {'key': 1, 'value': '寄仓客户汇总'},
-        {'key': 2, 'value': '寄仓客户明细'}
-      ],
-      packModeDic: [
-        {'key': 1, 'value': '集装箱'},
-        {'key': 2, 'value': '散货'}
-      ],
-      // 查询参数
-      queryParams: {
-        goodsName: undefined,
-        placeId: undefined,
-        customerName: undefined,
-        column2: undefined,
-        startTime: undefined,
-        endTime: undefined,
-      },
-      totalNetWeight: 0,
-      totalRoughWeight: 0,
-      totalTareWeight: 0,
-      vehicleCount: 0,
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-        yardId: [
-          {required: true, message: "堆场ID不能为空", trigger: "blur"}
+        // 导出格式
+        json_meta: [
+          [
+            {
+              " key ": " charset ",
+              " value ": " utf- 8 "
+            }
+          ]
         ],
-      },
-      customerList: [],
-      contractSubList: [],
-      result: {},
-      goodsNameList: []
-    };
-  },
-  created() {
-    // this.titleList.push(this.printTitle);
-    // 页面初始化获取时间0
-    this.dateRange = ['', '']
-    // var aData = new Date();
-    // this.nowDate =
-    //   aData.getFullYear() +
-    //   "-" +
-    //   (aData.getMonth() + 1) +
-    //   "-" +
-    //   (aData.getDate())+' '+'06:00:00';
-    // this.dateRange[0] = this.nowDate;
-    // this.nextDate =
-    //   aData.getFullYear() +
-    //   "-" +
-    //   (aData.getMonth() + 1) +
-    //   "-" +
-    //   (aData.getDate()+1)+' '+'06:00:00';
-    // this.dateRange[1] = this.nextDate;
-    // this.dateRange[0]至{{this.dateRange[1]}}
-    this.queryParams.startTime = this.dateRange[0]
+        // 导出Excel 字段
+        json_fields: {
+          "寄仓客户": "column1",    //常规字段
+          "寄仓合同": "column2", //支持嵌套属性
+          "品名": "column3",
+          "期初库存": "column4",
+          "入车数": "column6",
+          "入重量(t)": "column7",
+          "出车数": "column8",
+          "出重量(t)": "column9",
+          "亏吨(t)": "column10",
+          "库存(t)": "column11",
+          "库存差(t)": "column12",
+        },
+        // 默认值
+        defaultValue: '',
+        // Excel 页脚
+        excelFooter: '',
+        // 选中数组
+        // 打印标题
+        printTitle: '',
+        // 标题时间
+        timeTitle: '',
+        ids: [],
+        depts: [],
+        // 非单个禁用
+        single: true,
+        // 非多个禁用
+        multiple: true,
+        // 总条数
+        total: 0,
+        // 堆场报表表格数据
+        reportList: [],
+        //打印弹窗方向
+        direction: 'ttb',
+        // 弹出层标题
+        title: "",
+        // 是否显示弹出层
+        open: false,
+        directionDic: [
+          {'key': 1, 'value': '入库'},
+          {'key': 0, 'value': '出库'},
+        ],
+        statisticsModeDic: [
+          {'key': 1, 'value': '寄仓客户汇总'},
+          {'key': 2, 'value': '寄仓客户明细'}
+        ],
+        packModeDic: [
+          {'key': 1, 'value': '集装箱'},
+          {'key': 2, 'value': '散货'}
+        ],
+        // 查询参数
+        queryParams: {
+          goodsName: undefined,
+          placeId: undefined,
+          customerName: undefined,
+          column2: undefined,
+          startTime: undefined,
+          endTime: undefined,
+        },
+        totalNetWeight: 0,
+        totalRoughWeight: 0,
+        totalTareWeight: 0,
+        vehicleCount: 0,
+        // 表单参数
+        form: {},
+        // 表单校验
+        rules: {
+          yardId: [
+            {required: true, message: "堆场ID不能为空", trigger: "blur"}
+          ],
+        },
+        customerList: [],
+        contractSubList: [],
+        result: {},
+        goodsNameList: []
+      };
+    },
+    created() {
+      // this.titleList.push(this.printTitle);
+      // 页面初始化获取时间0
+      this.dateRange = ['', '']
+      // var aData = new Date();
+      // this.nowDate =
+      //   aData.getFullYear() +
+      //   "-" +
+      //   (aData.getMonth() + 1) +
+      //   "-" +
+      //   (aData.getDate())+' '+'06:00:00';
+      // this.dateRange[0] = this.nowDate;
+      // this.nextDate =
+      //   aData.getFullYear() +
+      //   "-" +
+      //   (aData.getMonth() + 1) +
+      //   "-" +
+      //   (aData.getDate()+1)+' '+'06:00:00';
+      // this.dateRange[1] = this.nextDate;
+      // this.dateRange[0]至{{this.dateRange[1]}}
+      this.queryParams.startTime = this.dateRange[0]
 
       this.queryParams.endTime = this.dateRange[1]
       this.timeTitle = this.dateRange[0] + '至' + this.dateRange[1] + '按客户统计'
@@ -513,16 +526,26 @@ import {statisticsMonth} from "@/api/place/info";
       },
 
       printShow() {
+        // 打印浮动弹窗
+        this.drawer = true;
         if (this.showPrint == false) {
           this.showPrint = true;
         } else {
-          this.$refs['printBtn'].$el.click()
+          // this.$refs['printBtn'].$el.click()
         }
       },
       gennerateId: function (index) {
         return "printDiv" + index
 
       },
+
+      // handleClose(done) {
+      //   this.$confirm('确认关闭？')
+      //     .then(_ => {
+      //       done();
+      //     })
+      //     .catch(_ => {});
+      // },
 
       importExcel() {
 
@@ -763,7 +786,7 @@ import {statisticsMonth} from "@/api/place/info";
     }
   };
 </script>
-<style scoped>
+<style>
   .countRow {
     margin-top: 8px;
   }
@@ -775,5 +798,10 @@ import {statisticsMonth} from "@/api/place/info";
 
   @page {
     margin: 6mm;
+  }
+
+  .el-drawer__body {
+    overflow: auto;
+
   }
 </style>
