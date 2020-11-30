@@ -42,16 +42,16 @@
 <!--      </el-row>-->
       <el-form-item>
         <el-col :span="6" >
-          <el-button type="primary" icon="el-icon-search"  @click="handleQuery">搜索</el-button>
+          <el-button type="primary" icon="el-icon-search" size="mini"  @click="handleQuery">搜索</el-button>
         </el-col>
         <el-col :span="6" >
-                  <el-button icon="el-icon-refresh"  @click="resetQuery">重置</el-button>
+                  <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
         </el-col>
-
-        <el-col :span="6" >
-          <el-button type="info" icon="fa fa-print" v-print="'#print' "@click="print"> 打印
+        <el-col :span="6">
+          <el-button type="info" icon="fa fa-print" size="mini" @click="printShow"> 打印
           </el-button>
         </el-col>
+
         <el-col :span="6" >
           <download-excel
             class = "export-excel-wrapper"
@@ -60,10 +60,16 @@
             :title="titleList"
             :footer="excelFooter"
             :default-value="defaultValue"
+            type="csv"
             name = "嘉易达监管场所库存情况报表.xls">
             <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
-            <el-button type="primary"  @click="importExcel">导出EXCEL</el-button>
+            <el-button type="primary" size="mini"  @click="importExcel">导出EXCEL</el-button>
           </download-excel>
+        </el-col>
+
+        <el-col :span="6" >
+          <el-button type="info" icon="fa fa-print" size="mini" v-print="'#allPrint' "@click="print" ref="printBtn" v-show="buttonShow"> 打印
+          </el-button>
         </el-col>
       </el-form-item>
       <el-row>
@@ -153,9 +159,10 @@
 <!--        </el-form-item>-->
 
       </el-row>
-
     </el-form>
-    <el-table v-loading="loading" :data="reportList"  show-summary :summary-method="getSummaries" >
+
+
+    <el-table v-loading="loading" :data="reportList"  show-summary :summary-method="getSummaries"  :border="true">
       <el-table-column label="寄仓客户" align="center" prop="column1"/>
       <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
       <el-table-column label="合同" align="center" prop="column2"></el-table-column>
@@ -175,20 +182,24 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <div id="allPrint" v-show="showPrint">
+      <div v-for="(item,index) in newArray" style="page-break-after:always">
+        <div :id="gennerateId(index)"></div>
     <div class="box-card" style="margin: 0 auto;font-size:15px;width:1100px;padding-left: 1px ;padding-top:50px" id="print">
-      <div v-show="printSmallTitle">
-<!--      <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">-->
-<!--        <span>{{this.prinTtitle}}</span><br>-->
-<!--      </div>-->
+<!--      <div v-show="printSmallTitle">-->
+      <div style="padding-left: 300px;font-size: 30px;margin-bottom: 30px">
+        <span>{{printTitle}}</span><br>
+      </div>
 <!--      <div>-->
 <!--        <span>{{timeTitle}}</span>-->
 <!--      </div>-->
 <!--      <div>-->
 <!--        <span>{{shipper}}</span>-->
 <!--      </div>-->
-      </div>
+<!--      </div>-->
 
-    <el-table v-loading="loading" :data="reportList" id="analyouttable" show-summary :summary-method="getSummaries" v-show="false"
+    <el-table v-loading="loading" :data="item" id="analyouttable" show-summary :summary-method="getSummaries"
               :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
               :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
               style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
@@ -212,6 +223,8 @@
       </af-table-column>
     </el-table>
     </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -231,6 +244,10 @@ export default {
       // 初始化时间
       nowDate:'',
       nextDate:'',
+      // 按钮显示
+      buttonShow:false,
+      //打印区域显示
+      showPrint: false,
       //打印按钮显示隐藏
       show:false,
       // 导出按钮显示隐藏
@@ -291,6 +308,8 @@ export default {
       total: 0,
       // 堆场报表表格数据
       reportList: [],
+
+      newArray:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -402,6 +421,19 @@ export default {
 
     },
 
+    // 打印预览
+    printShow() {
+      if (this.showPrint == false) {
+        this.showPrint = true;
+      } else {
+        this.$refs['printBtn'].$el.click()
+      }
+    },
+    gennerateId: function (index) {
+      return "printDiv" + index
+
+    },
+
     importExcel(){
 
     },
@@ -455,9 +487,15 @@ export default {
         this.loading = false
         //this.result = response
         if (response.code === 200) {
-          this.reportList = response.data
+          this.reportList = response.data;
+          this.printTitle = '嘉易达监管场所统计放行量报表'
+          let index = 0
+          this.newArray = [];
+          while (index < this.reportList.length) {
+            this.newArray.push(this.reportList.slice(index, index +=30));
+          };
           //console.log(this.reportList)
-          this.printTitle = '嘉易达监管场所'+this.dateRange[0]+'至'+this.dateRange[1]+'库存统计报表'
+
           this.titleList.push(this.printTitle)
           console.log("==========")
           console.log(this.titleList)
