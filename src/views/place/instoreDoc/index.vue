@@ -1323,6 +1323,7 @@ export default {
         containerNo4: [{required: true, message: "集装箱号不能为空", trigger: "blur"}],
       },
       storeStateDic: [
+        {key: "-1", label: "亏吨记录"},
         {key: "0", label: "未进场"},
         {key: "2", label: "已进场"},
         {key: "1", label: "已入库"},

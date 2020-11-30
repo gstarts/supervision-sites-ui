@@ -626,10 +626,11 @@ export default {
     },
     updateBigForm() {
       if (this.bigList.length > 0) {
-        let value = this.bigList.find(item => item.storeState === '0')
+        //前端验证
+        let value = this.bigList.find(item => item.storeState === '0' || item.storeState === '2')
         console.log(value)
         if (value) {
-          this.$message.warning("请先作废未进场的车辆，再执行此操作")
+          this.$message.warning("有未进场或已进场车辆，不可执行此操作")
           return false
         }
       }
