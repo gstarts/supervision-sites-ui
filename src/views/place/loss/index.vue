@@ -144,7 +144,7 @@
       <el-table-column label="寄仓客户" align="center" prop="customer" width="200" :show-overflow-tooltip="true"/>
       <el-table-column label="合同号" align="center" prop="contractNo" width="160" :show-overflow-tooltip="true"/>
       <el-table-column label="货物名称" align="center" prop="goodsName" :show-overflow-tooltip="true"/>
-      <el-table-column label="亏吨重量(KGS)" align="center" prop="roughWeight" />
+      <el-table-column label="亏吨重量(KGS)" align="center" prop="netWeight" />
       <el-table-column label="库位号" align="center" prop="storeCode" />
       <el-table-column label="申请时间" align="center" prop="applyTime" width="180">
         <template slot-scope="scope">
@@ -288,8 +288,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="亏吨重量(t)" prop="roughWeight"  >
-              <el-input v-model="form.roughWeight" placeholder="请输入亏吨重量(t)" :disabled="auditDisabled" />
+            <el-form-item label="亏吨重量(t)" prop="netWeight"  >
+              <el-input v-model="form.netWeight" placeholder="请输入亏吨重量(t)" :disabled="auditDisabled" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -432,7 +432,7 @@ export default {
         customer: undefined,
         contractNo: undefined,
         goodsName: undefined,
-        roughWeight: undefined,
+        netWeight: undefined,
         storeCode: undefined,
         applyTime: undefined,
         applyUser: undefined,
@@ -497,7 +497,7 @@ export default {
         odate: [
           { required: true, message: "亏吨日期不能为空", trigger: "blur" }
         ],
-        roughWeight: [
+        netWeight: [
           { required: true, message: "亏吨重量不能为空", trigger: "blur" }
         ],
         storeCode : [
@@ -589,7 +589,7 @@ export default {
         customer: undefined,
         contractNo: undefined,
         goodsName: undefined,
-        roughWeight: undefined,
+        netWeight: undefined,
         storeCode: undefined,
         applyTime: undefined,
         applyUser: undefined,

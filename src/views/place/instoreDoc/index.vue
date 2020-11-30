@@ -385,14 +385,12 @@
           clearable
           v-model="queryParams.storeState"
           placeholder="请选择状态"
-          size="small"
-        >
+          size="small">
           <el-option
             v-for="dept in storeStateDic"
             :key="dept.key"
             :label="dept.label"
-            :value="dept.key"
-          />
+            :value="dept.key"/>
         </el-select>
       </el-form-item>
 
@@ -499,8 +497,7 @@
           @click="handleExport"
           v-hasPermi="['place:instoreDoc:export']"
         >导出
-        </el-button
-        >
+        </el-button>
 
         <el-button
           icon="el-icon-upload"
@@ -518,7 +515,8 @@
       :data="instoreDocList"
       @selection-change="handleSelectionChange">
       <!--<af-table-column type="selection" width="55" align="center" />-->
-      <af-table-column label="ID" align="center" prop="id"/>
+<!--      <af-table-column label="ID" align="center" prop="id"/>-->
+
       <!--<af-table-column label="场所编号" align="center" prop="placeId"/>-->
       <!--<af-table-column label="业务编号" align="center" prop="storeCode" />-->
       <!-- <af-table-column label="发货客户" align="center" prop="sendName"/>-->
@@ -528,9 +526,7 @@
       <!--<af-table-column label="库位号" align="center" prop="storeCode"/>-->
       <!--<af-table-column label="蒙方磅单号" align="center" prop="mongoliaBillNo" />-->
       <af-table-column label="车号" align="center" prop="vehicleNo"/>
-      <af-table-column label="毛重" align="center" prop="roughWeight"/>
-      <af-table-column label="皮重" align="center" prop="tareWeight"/>
-      <af-table-column label="净重" align="center" prop="netWeight"/>
+
       <!--<af-table-column label="挂车号1 挂车号1" align="center" prop="trailerNo1" />
       <af-table-column label="挂车号2 挂车号2" align="center" prop="trailerNo2" />-->
       <!-- <af-table-column label="蒙古磅毛重" align="center" prop="mongoliaRoughWeight" />-->
@@ -556,7 +552,7 @@
           <span>{{ scope.row.packMode === "1" ? "集装箱" : "散装" }}</span>
         </template>
       </af-table-column>
-      <af-table-column label="通知单号" align="center" prop="docNo"/>
+
       <!-- <af-table-column label="备注" align="center" prop="remark" />-->
       <af-table-column label="生成时间" align="center" prop="genTime" width="180">
         <template slot-scope="scope">
@@ -575,10 +571,11 @@
       </af-table-column>
       <!--<af-table-column label="磅单号" align="center" prop="poundNo" />-->
       <af-table-column label="批次号" align="center" prop="batchNo"/>
+      <af-table-column label="通知单号" align="center" prop="docNo"/>
       <!--<af-table-column label="提运单号" align="center" prop="loadingBillNo" />-->
-      <af-table-column label="生成舱单" align="center" prop="hasManifest"/>
+<!--      <af-table-column label="生成舱单" align="center" prop="hasManifest"/>
       <af-table-column label="生成集报清单" align="center" prop="hasDeclare"/>
-      <af-table-column label="生成进境确报" align="center" prop="hasTransit"/>
+      <af-table-column label="生成进境确报" align="center" prop="hasTransit"/>-->
       <af-table-column label="状态" align="center" prop="storeState">
         <template slot-scope="scope">
           {{
@@ -586,6 +583,9 @@
           }}
         </template>
       </af-table-column>
+      <af-table-column label="毛重" align="center" prop="roughWeight"/>
+      <af-table-column label="皮重" align="center" prop="tareWeight"/>
+      <af-table-column label="净重" align="center" prop="netWeight"/>
       <af-table-column label="进场时间" align="center" prop="inTime">
         <template slot-scope="scope">
           <span>{{
@@ -1021,7 +1021,6 @@
           <el-link type="info" style="font-size:12px" @click="importTemplate">下载模板</el-link>
         </div>
         <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
-
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" :loading="btnLoading" @click="submitFileForm">确 定</el-button>
