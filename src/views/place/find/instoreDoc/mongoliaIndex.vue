@@ -76,19 +76,19 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-            <el-form-item label="集装箱号" prop="containerNo1">
-              <el-input
-                v-model="queryParams.containerNo1"
-                placeholder="请输入集装箱号"
-                clearable
-                size="small"
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+      <el-form-item label="集装箱号" prop="containerNo1">
+        <el-input
+          v-model="queryParams.containerNo1"
+          placeholder="请输入集装箱号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="车型" prop="vehicleType">
-<!--        <el-select v-model="queryParams.vehicleType" placeholder="请选择车型(双挂，单挂)" clearable size="small">-->
-<!--          <el-option label="请选择字典生成" value="" />-->
-<!--        </el-select>-->
+        <!--        <el-select v-model="queryParams.vehicleType" placeholder="请选择车型(双挂，单挂)" clearable size="small">-->
+        <!--          <el-option label="请选择字典生成" value="" />-->
+        <!--        </el-select>-->
         <el-input
           v-model="queryParams.vehicleType"
           placeholder="请输入车型"
@@ -1383,7 +1383,15 @@ export default {
         "包装方式": {
           field: "packMode",
           callback: (value) => {
-            return value = this.packModeTypeFormatTranslation
+            if (value == '2') {
+              return value = '散装';
+            } else if (value == '1') {
+              return value = '集装箱'
+            } else if (value == '') {
+              return value == '空'
+            } else {
+              return value == '编译错误'
+            }
           }
         },
         "车型": {
@@ -1707,11 +1715,13 @@ export default {
     //包装方式行翻译
     packModeTypeFormat(row) {
       this.packModeTypeFormatTranslation = this.selectDictLabel(this.packModeOption, row.packMode);
+      console.log("准备进行翻译的数据")
+      console.log(this.packModeTypeFormatTranslation)
       return this.selectDictLabel(this.packModeOption, row.packMode);
 
     },
-    importExcel() {
 
+    importExcel() {
     },
   }
 };
