@@ -13,15 +13,15 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="寄仓合同" prop="column2">
-        <el-input
-          v-model="queryParams.column2"
-          placeholder="请输入寄仓合同"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+      <!--      <el-form-item label="寄仓合同" prop="column2">
+              <el-input
+                v-model="queryParams.column2"
+                placeholder="请输入寄仓合同"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>-->
       <el-form-item label="寄仓客户" prop="storeCustomer">
         <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄仓客户" disabled/>-->
         <el-select
@@ -206,7 +206,7 @@
          id="print" v-show="showPrint">
       <!--      <div v-show="printSmallTitle">-->
       <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">
-        <span>{{ this.prinTtitle }}</span><br>
+        <span>{{ this.printTitle }}</span><br>
         <span>{{ this.dateTime }}</span>
       </div>
       <!--        <div>-->
@@ -216,17 +216,19 @@
       <!--        <span>{{shipper}}</span>-->
       <!--      </div>-->
       <!--      </div>-->
-
-      <el-table v-loading="loading" :data="reportList" id="analyouttable" show-summary :summary-method="getSummaries"
+      <!--  show-summary :summary-method="getSummaries"-->
+      <el-table v-loading="loading" :data="reportList" id="analyouttable"
                 :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
                 :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
                 style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
         <af-table-column label="寄仓客户" align="center" width="120%" prop="column1"/>
-
         <af-table-column label="寄仓合同" align="center" width="120%" prop="column2"/>
-
         <af-table-column label="品名" align="center" prop="column3" width="80%"/>
-        <el-table-column label="期初库存(t)" align="center" prop="column4"/>
+        <el-table-column label="期初库存(t)" align="center" prop="column4">
+          <template slot-scope="scope">
+            {{ (scope.row.column4).toFixed(2) }}
+          </template>
+        </el-table-column>
         <el-table-column label="本期" align="center">
           <el-table-column prop="column6" label="入车数" align="center" width="70%">
           </el-table-column>
@@ -235,6 +237,9 @@
             label="入重量（t）"
             align="center"
             width="100%">
+            <template slot-scope="scope">
+              {{ (scope.row.column7).toFixed(2) }}
+            </template>
           </af-table-column>
 
           <el-table-column
@@ -248,24 +253,30 @@
             label="出重量（t）"
             align="center"
             width="100%">
+            <template slot-scope="scope">
+              {{ (scope.row.column9).toFixed(2) }}
+            </template>
           </af-table-column>
 
 
           <el-table-column label="亏吨(t)" align="center" width="60px" prop="column10">
+            <template slot-scope="scope">
+              {{ (scope.row.column10).toFixed(2) }}
+            </template>
           </el-table-column>
-          <el-table-column label="库存(t)" align="center" prop="">
+          <el-table-column label="库存(t)" align="center" prop="column11">
             <template slot-scope="scope">
               <span>{{
-                  (scope.row.column4 + scope.row.column7 - scope.row.column9 + scope.row.column10).toFixed(3)
+                  (scope.row.column4 + scope.row.column7 - scope.row.column9 + scope.row.column10).toFixed(2)
                 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
 
-        <af-table-column label="库存差(t)" align="center" prop="column11" width="120px">
+        <af-table-column label="库存差(t)" align="center" prop="column12" width="120px">
           <template slot-scope="scope">
             {{
-              (scope.row.column4 - (scope.row.column4 + scope.row.column7 - scope.row.column9 + scope.row.column10)).toFixed(3)
+              Math.abs(scope.row.column4 - (scope.row.column4 + scope.row.column7 - scope.row.column9 + scope.row.column10)).toFixed(2)
             }}
           </template>
           />
@@ -322,21 +333,21 @@ export default {
         "寄仓合同": "column2", //支持嵌套属性
         "品名": "column3",
         "期初库存": "column4",
-        "入车数": "column5",
-        "入重量(t)": "column6",
-        "出车数": "column7",
-        "出重量(t)": "column8",
-        "亏吨(t)": "column9",
-        "库存(t)": "column10",
-        "库存差(t)": "column11",
+        "入车数": "column6",
+        "入重量(t)": "column7",
+        "出车数": "column8",
+        "出重量(t)": "column9",
+        "亏吨(t)": "column10",
+        "库存(t)": "column11",
+        "库存差(t)": "column12",
       },
       // 默认值
-      defaultValue: '0',
+      defaultValue: '',
       // Excel 页脚
       excelFooter: '',
       // 选中数组
       // 打印标题
-      prinTtitle: '',
+      printTitle: '',
       // 标题时间
       timeTitle: '',
       ids: [],
@@ -393,7 +404,7 @@ export default {
     };
   },
   created() {
-    // this.titleList.push(this.prinTtitle);
+    // this.titleList.push(this.printTitle);
     // 页面初始化获取时间0
     this.dateRange = ['', '']
     // var aData = new Date();
@@ -500,8 +511,11 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       //先判断条件，再查询
+      console.log(this.dateRange)
+
       this.queryParams.startTime = this.dateRange[0]
       this.queryParams.endTime = this.dateRange[1]
+
 
       // if (!this.queryParams.startTime || !this.queryParams.endTime) {
       //   this.$message.warning('请选择时间范围')
@@ -518,16 +532,18 @@ export default {
     getInfo() {
       this.loading = true
       this.reportList = []
+      this.titleList = []
       statisticsMonth(this.queryParams).then(response => {
         this.loading = false
         //this.result = response
         if (response.code === 200) {
           this.reportList = response.data
           //console.log(this.reportList)
-          this.prinTtitle = '嘉易达监管场所库存统计报表';
+          this.printTitle = '嘉易达监管场所库存统计报表';
           this.dateTime = this.dateRange[0] + '至' + this.dateRange[1]
           console.log(this.printTitle)
           this.titleList.push(this.printTitle)
+          this.titleList.push(this.dateTime)
 
 
           // this.vehicleCount = response.data.vehicleCount
@@ -560,7 +576,6 @@ export default {
     //场所改变时，去查对应场所的
     changePlace(event) {
       console.log(this.depts + 1511)
-
       this.getContract(event, '1')
     },
     // //场所变化 获取对应场所的合同
@@ -584,17 +599,17 @@ export default {
       });
     },
     /** 导出按钮操作 */
-    handleExport() {
+    /*handleExport() {
       this.download('yard/report/export', {
         ...this.queryParams
       }, `yard_report.xlsx`)
-    },
+    },*/
     changeStatistics(event) {
       if (event === 1) {
         this.queryParams.customerName = ''
       }
     },
-    getSummaries(param) {
+    /*getSummaries(param) {
       const {columns, data} = param;
       const sums = [];
       columns.forEach((column, index) => {
@@ -627,25 +642,74 @@ export default {
             if (!isNaN(value) && index === 9) {
               return prev + curr;
             }
+            if (!isNaN(value) && index === 10) {
+              return prev + curr;
+            }
           }, 0);
         }
       });
 
-      sums[3] = Number.parseFloat(sums[3]).toFixed(3)
-      sums[5] = Number.parseFloat(sums[5]).toFixed(3)
-      sums[7] = Number.parseFloat(sums[7]).toFixed(3)
-      sums[8] = Number.parseFloat(sums[8]).toFixed(3)
-      sums[9] = (this.getColumn9()).toFixed(3)
+      sums[3] = Number.parseFloat(sums[3]).toFixed(3) //期初库存
+      sums[4] = Number.parseFloat(sums[4]) //入车数
+      sums[5] = Number.parseFloat(sums[5]).toFixed(3) //入重量
+      sums[6] = Number.parseFloat(sums[6]) //出车数
+      sums[7] = Number.parseFloat(sums[7]).toFixed(3) //出重量
+      sums[8] = Number.parseFloat(sums[8]).toFixed(3) //亏吨
+      sums[9] = (this.getColumn11()).toFixed(3) //库存
+      sums[10] = (this.getColumn12()).toFixed(3)//库存差
+
+      /!*
+      * "寄仓客户": "column1",    //常规字段
+        "寄仓合同": "column2", //支持嵌套属性
+        "品名": "column3",
+        "期初库存": "column4",
+        "入车数": "column6",
+        "入重量(t)": "column7",
+        "出车数": "column8",
+        "出重量(t)": "column9",
+        "亏吨(t)": "column10",
+        "库存(t)": "column11",
+        "库存差(t)": "column12",
+      * *!/
+
+      let total = {
+        column1: '总重',
+        column2: '',
+        column3: '',
+        column4: sums[3],
+        //column5: '',
+        column6: sums[4],
+        column7: sums[5],
+        column8: sums[6],
+        column9: sums[7],
+        column10: sums[8],
+        column11: sums[9],
+        column12: sums[10],
+
+      }
+      //this.reportList.push(total)
       return sums;
-    },
+    },*/
     //根据reportList中对应的列，求和 list中为对象，通过reduce 计算每个对象的值 累加求和
-    getColumn9() {
+    //库存汇总
+    /*getColumn11() {
       if (this.reportList.length === 0) return 0
       return this.reportList.reduce(function (previousValue, currentValue) {
         let a = previousValue + Number.parseFloat(currentValue.column4) + Number.parseFloat(currentValue.column7) - Number.parseFloat(currentValue.column9) + Number.parseFloat(currentValue.column10)
         return a;
       }, 0)
-    }
+    },*/
+    /*getColumn12() {//库存差
+      if (this.reportList.length === 0) return 0
+      return this.reportList.reduce(function (previousValue, currentValue) {
+        let b = previousValue + Number.parseFloat(currentValue.column4) + Number.parseFloat(currentValue.column7) - Number.parseFloat(currentValue.column9)
+        return b;
+      }, 0)
+    },*/
+
+    /**
+     * Math.abs(scope.row.column4 - (scope.row.column4 + scope.row.column7 - scope.row.column9 + scope.row.column10)).toFixed(3)
+     */
   }
 };
 </script>
