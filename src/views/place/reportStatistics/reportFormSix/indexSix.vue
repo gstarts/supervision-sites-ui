@@ -626,10 +626,14 @@
   @page {
     margin: 6mm;
   }
+
   .styleButton{
     position: fixed;
     top: 50px;
     margin-left: 1500px
 
+  }
+  .app-container >>>.el-drawer__body{
+    overflow: auto;
   }
 </style>
