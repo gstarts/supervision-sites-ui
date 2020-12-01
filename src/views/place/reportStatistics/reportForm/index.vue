@@ -582,7 +582,6 @@
         this.queryParams.startTime = this.dateRange[0]
         this.queryParams.endTime = this.dateRange[1]
 
-
         // if (!this.queryParams.startTime || !this.queryParams.endTime) {
         //   this.$message.warning('请选择时间范围')
         //   return false
@@ -786,7 +785,7 @@
     }
   };
 </script>
-<style>
+<style scoped>
   .countRow {
     margin-top: 8px;
   }
@@ -799,9 +798,9 @@
   @page {
     margin: 6mm;
   }
-  .el-drawer__body{
-    overflow: auto;
 
+  .app-container >>>.el-drawer__body{
+    overflow: auto;
   }
   .styleButton{
     position: fixed;
