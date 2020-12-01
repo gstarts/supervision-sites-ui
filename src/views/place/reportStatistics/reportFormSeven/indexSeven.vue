@@ -313,7 +313,7 @@
       <div id="allPrint" v-show="true">
         <div v-for="(item,index) in newArray" style="page-break-after:always">
           <div :id="gennerateId(index)"></div>
-          <div class="box-card" style="margin: 0 auto;font-size:15px;width:1700px;padding-left: 1px ;padding-top:50px"
+          <div class="box-card" style="margin: 0 auto;font-size:15px;width:1615px;padding-left: 1px ;padding-top:50px"
                id="print">
             <!--      <div v-show="printSmallTitle">-->
             <div style="font-size: 30px;margin-bottom: 50px" align="center">
@@ -342,13 +342,13 @@
 
               <af-table-column label="提煤单号" align="center" width="100%" prop="column3"/>
 
-              <af-table-column label="品名" align="center" width="100%" prop="column21"/>
+              <af-table-column label="品名" align="center" width="80%" prop="column21"/>
 
               <af-table-column label="提煤单重量" align="center" width="100%" prop="column4"/>
               <af-table-column label="已分配未完成车数" align="center" width="80%" prop="column5"/>
               <af-table-column label="已分配未提离重量(吨)" align="center" width="100%" prop="column6"/>
 
-              <af-table-column label="已完成车数" align="center" width="80%" prop="column7"/>
+              <af-table-column label="已完成车数" align="center" width="60%" prop="column7"/>
               <af-table-column label="已提离重量(吨)" align="center" width="100%" prop="column8"/>
               <af-table-column label="剩余重量(吨)" align="center" width="80%" prop="column9"/>
 
@@ -363,7 +363,7 @@
                 </template>
               </af-table-column>
               <!--      制单时间需要查询条件，from to-->
-              <af-table-column label="制单时间" align="center" width="120%" prop="column25"/>
+              <af-table-column label="制单时间" align="center" width="160%" prop="column25"/>
 
 
             </el-table>
@@ -797,7 +797,7 @@
     }
   };
 </script>
-<style scoped>
+<style >
   .countRow {
     margin-top: 8px;
   }
