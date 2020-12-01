@@ -227,13 +227,13 @@
         </af-table-column>
       </el-table-column>
 
-      <af-table-column label="库存差(t)" align="center" prop="column12">
+      <el-table-column label="库存差(t)" align="center" prop="column12">
         <template slot-scope="scope">
           {{
           (scope.row.column12).toFixed(2)
           }}
         </template>
-      </af-table-column>
+      </el-table-column>
     </el-table>
 
     <!--打印区域 弹出窗打印-->
@@ -319,13 +319,13 @@
                 </el-table-column>
               </el-table-column>
 
-              <af-table-column label="库存差(t)" align="center" prop="column12" width="120px">
+              <el-table-column label="库存差(t)" align="center" prop="column12" width="120px">
                 <template slot-scope="scope">
                   {{
                   (scope.row.column12).toFixed(2)
                   }}
                 </template>
-              </af-table-column>
+              </el-table-column>
             </el-table>
           </div>
         </div>

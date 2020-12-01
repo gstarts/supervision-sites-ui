@@ -1470,6 +1470,7 @@ export default {
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId
       this.getContract(this.queryParams.placeId, '1')
+      this.getUserList()
     }
     this.getDicts("time_query_type").then(response => {
       this.timeQueryTypeOption = response.data;
