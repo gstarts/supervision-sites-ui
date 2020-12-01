@@ -106,7 +106,7 @@
       <af-table-column label="ID" align="center" prop="id" width="60px"/>
       <af-table-column label="模板类型" align="center" width="100px">
         <template slot-scope="scope">
-          {{importTypeDic.find(item=> item.value ===scope.row.templateType ).label}}
+          {{ importTypeDic.find(item => item.value === scope.row.templateType).label }}
         </template>
       </af-table-column>
       <af-table-column label="业务编号" align="center" prop="businessNo"/>
@@ -116,7 +116,7 @@
       <af-table-column label="收货单位" align="center" prop="receiveName"/>
       <af-table-column label="运输方式" align="center" prop="transportMode">
         <template slot-scope="scope">
-          {{ (scope.row.transportMode && scope.row.transportMode==='2')?'短倒':'长途' }}
+          {{ (scope.row.transportMode && scope.row.transportMode === '2') ? '短倒' : '长途' }}
         </template>
       </af-table-column>
       <af-table-column label="文件路径" align="center" prop="path"/>
@@ -251,7 +251,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="业务编号" prop="businessNo" v-show="noticeType">
-              <el-input v-model="form.businessNo"  placeholder="请输入业务编号"
+              <el-input v-model="form.businessNo" placeholder="请输入业务编号"
                         clearable
                         size="small">
               </el-input>
@@ -299,16 +299,16 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-              <el-form-item label="收货单位" prop="receiveName">
-                <el-autocomplete
-                  class="inline-input"
-                  v-model="form.receiveName"
-                  :fetch-suggestions="nameSearch"
-                  placeholder="请输入收货单位"
-                  clearable
-                  @select="handleSelect2"
-                ></el-autocomplete>
-              </el-form-item>
+            <el-form-item label="收货单位" prop="receiveName">
+              <el-autocomplete
+                class="inline-input"
+                v-model="form.receiveName"
+                :fetch-suggestions="nameSearch"
+                placeholder="请输入收货单位"
+                clearable
+                @select="handleSelect2"
+              ></el-autocomplete>
+            </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="10" v-show="transType">
@@ -343,7 +343,15 @@
             :auto-upload="false">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击选择文件</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传xls/xlsx文件</div>
+            <div class="el-upload__tip" slot="tip">只能上传xls/xlsx文件
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-download"
+                v-show="form.templateType!==''"
+                @click="handleTemplateDownload">{{ templateDownTxt }}
+              </el-button>
+            </div>
           </el-upload>
         </el-row>
 
@@ -358,439 +366,461 @@
 </template>
 
 <script>
-	import {listImport, getImport, delImport, addImport, genNotice} from "@/api/tax/import";
-	import {getUserDepts} from '@/utils/charutils'
-	import { listContract} from '@/api/tax/contract'
-	import {getToken} from '@/utils/auth'
+import {listImport, getImport, delImport, addImport, genNotice} from "@/api/tax/import";
+import {getUserDepts} from '@/utils/charutils'
+import {listContract} from '@/api/tax/contract'
+import {getToken} from '@/utils/auth'
 
-	export default {
-		name: "Import",
-		data() {
-			return {
-				// 遮罩层
-				loading: false,
-				noticeGening: false,
-				// 选中数组
-				ids: [],
-				//客户合同
-				contractList: [],
-        nameList: [
-          {"value":"金航保税库 Jinhang Bonded Warehouse"},
-          {"value":"奥云陶勒盖 Oyu Tolgoi Limited"},
-          {"value":"金航保税库"},
-          {"value":"飞尚铜业"},
+export default {
+  name: "Import",
+  data() {
+    return {
+      templateDownTxt: '',
+      // 遮罩层
+      loading: false,
+      noticeGening: false,
+      // 选中数组
+      ids: [],
+      //客户合同
+      contractList: [],
+      nameList: [
+        {"value": "金航保税库 Jinhang Bonded Warehouse"},
+        {"value": "奥云陶勒盖 Oyu Tolgoi Limited"},
+        {"value": "金航保税库"},
+        {"value": "飞尚铜业"},
+      ],
+      //机构列表
+      depts: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 总条数
+      total: 0,
+      // 导入文件记录表格数据
+      importList: [],
+      importTypeDic: [
+        {value: '1', label: '入库通知单'},
+        {value: '0', label: '出库通知单'},
+        {value: '2', label: '报关数据单'}
+      ],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 20,
+        bucketName: undefined,
+        fileName: undefined,
+        isGenReport: undefined,
+        isGenStoreNotice: undefined,
+        objectName: undefined,
+        path: undefined,
+        placeId: undefined,
+        templateType: undefined,
+        orderByColumn: 'id',
+        isAsc: 'desc'
+      },
+      // 表单参数
+      form: {
+        templateType: '',
+        businessNo: '',
+        storeCustomer: '',
+        settlementCustomer: '',
+        storeContractId: '',
+        settlementContractId: '',
+        sendName: '',
+        receiveName: ''
+      },
+      noticeType: true,
+      transType: false,
+      rules: {},
+      // 表单校验
+      rules1: {
+        templateType: [
+          {type: "string", required: true, message: "模板类型不能为空", trigger: "change"}
         ],
-				//机构列表
-				depts: [],
-				// 非单个禁用
-				single: true,
-				// 非多个禁用
-				multiple: true,
-				// 总条数
-				total: 0,
-				// 导入文件记录表格数据
-				importList: [],
-				importTypeDic: [
-					{value: '1', label: '入库通知单'},
-					{value: '0', label: '出库通知单'},
-					{value: '2', label: '报关数据单'}
-				],
-				// 弹出层标题
-				title: "",
-				// 是否显示弹出层
-				open: false,
-				// 查询参数
-				queryParams: {
-					pageNum: 1,
-					pageSize: 20,
-					bucketName: undefined,
-					fileName: undefined,
-					isGenReport: undefined,
-					isGenStoreNotice: undefined,
-					objectName: undefined,
-					path: undefined,
-					placeId: undefined,
-					templateType: undefined,
-					orderByColumn: 'id',
-					isAsc: 'desc'
-				},
-				// 表单参数
-				form: {
-					templateType: '',
-					businessNo: '',
-					storeCustomer: '',
-					settlementCustomer: '',
-					storeContractId: '',
-					settlementContractId: '',
-          sendName: '',
-          receiveName: ''
-				},
-				noticeType: true,
-        transType: false,
-				rules: {},
-				// 表单校验
-				rules1: {
-					templateType: [
-						{ type:"string", required: true, message: "模板类型不能为空", trigger: "change"}
-					],
-					storeCustomer: [
-						{type:"string",required: true, message: "寄仓客户不能为空", trigger: "change"}
-					],
-					settlementCustomer: [
-						{type:"string",required: true, message: "结算客户不能为空", trigger: "change"}
-					],
-					businessNo: [
-						{type:"string",required: true, message: "业务编号不能为空", trigger: "change"}
-					],
-					sendName: [
-						{type:"string",required: true, message: "发货单位不能为空", trigger: "change"}
-					],
-          receiveName: [
-						{type:"string",required: true, message: "收货单位不能为空", trigger: "change"}
-					]
-				},
-				rules2: {
-					templateType: [
-						{type:"string",required: true, message: "模板类型不能为空", trigger: "change"}
-					]
-				},
-				rules3: {
-					templateType: [
-						{type:"string",required: true, message: "模板类型不能为空", trigger: "change"}
-					],
-					storeCustomer: [
-						{type:"string",required: true, message: "寄仓客户不能为空", trigger: "change"}
-					],
-					settlementCustomer: [
-						{type:"string",required: true, message: "结算客户不能为空", trigger: "change"}
-					],
-					sendName: [
-						{type:"string",required: true, message: "发货单位不能为空", trigger: "change"}
-					],
-					receiveName: [
-						{type:"string",required: true, message: "收货单位不能为空", trigger: "change"}
-					],
-          transportMode: [
-            {type:"string",required: true, message: "运输方式不能为空", trigger: "change"}
-          ]
-				},
-				uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/tax/upload',
-				uploadData: {},
-				uploading: false,
-
-				headers: {
-					'Authorization': '',
-					'templateType': '',
-					'placeId': '',
-					'bucketName': ''
-				},
-        fileList: [],
-        transportModeList: [
-          {'key':'1','value':'长途'},
-          {'key':'2','value':'短倒'},
+        storeCustomer: [
+          {type: "string", required: true, message: "寄仓客户不能为空", trigger: "change"}
+        ],
+        settlementCustomer: [
+          {type: "string", required: true, message: "结算客户不能为空", trigger: "change"}
+        ],
+        businessNo: [
+          {type: "string", required: true, message: "业务编号不能为空", trigger: "change"}
+        ],
+        sendName: [
+          {type: "string", required: true, message: "发货单位不能为空", trigger: "change"}
+        ],
+        receiveName: [
+          {type: "string", required: true, message: "收货单位不能为空", trigger: "change"}
         ]
-			};
-		},
-		created() {
-			// 0 监管场所，1保税库，2堆场，3企业
-			this.importTypeDic = [
-				{value: '1', label: '入库通知单'},
-				{value: '0', label: '出库通知单'},
-				{value: '2', label: '报关数据单'}
-			]
-
-			listContract({'placeId': this.queryParams.placeId}).then(response => {
-				this.contractList = response.rows;
-			});
-			this.depts = getUserDepts('1')
-			if (this.depts.length > 0) {
-				this.queryParams.placeId = this.depts[0].deptId
-				this.getList();
-			}
-			this.rules = this.rules1
-		},
-		methods: {
-			/** 查询导入文件记录列表 */
-			getList() {
-				this.loading = true;
-				listImport(this.queryParams).then(response => {
-					this.importList = response.rows;
-					this.total = response.total;
-					this.loading = false;
-				});
-			},
-			// 取消按钮
-			cancel() {
-				this.open = false;
-				this.reset();
-				//this.$refs.upload.$refs['upload-inner'].fileList =[]
-        this.$refs.upload.clearFiles()
-			},
-			// 表单重置
-			reset() {
-				this.form = {
-					templateType: undefined,
-					storeCustomer: undefined,
-					settlementCustomer: undefined,
-					storeContractId: undefined,
-					settlementContractId: undefined,
-					id: undefined,
-					createBy: undefined,
-					createTime: undefined,
-					remark: undefined,
-					updateBy: undefined,
-					updateTime: undefined,
-					bucketName: undefined,
-					fileName: undefined,
-					isGenReport: undefined,
-					isGenStoreNotice: undefined,
-					objectName: undefined,
-					path: undefined,
-					placeId: undefined,
-
-				};
-				this.uploading = false
-				this.resetForm("form");
-			},
-			/** 搜索按钮操作 */
-			handleQuery() {
-				this.queryParams.pageNum = 1;
-				this.getList();
-			},
-			/** 重置按钮操作 */
-			resetQuery() {
-				this.resetForm("queryForm");
-				this.handleQuery();
-			},
-			// 多选框选中数据
-			handleSelectionChange(selection) {
-				this.ids = selection.map(item => item.id)
-				this.single = selection.length != 1
-				this.multiple = !selection.length
-			},
-			/** 新增按钮操作 */
-			handleAdd() {
-				//this.reset();
-				this.open = true;
-				this.title = "导入模板文件";
-			},
-			/** 修改按钮操作 */
-			handleUpdate(row) {
-				this.reset();
-				const id = row.id || this.ids
-				getImport(id).then(response => {
-					this.form = response.data;
-					this.open = true;
-					this.title = "修改导入文件记录";
-				});
-			},
-			//下载
-			handleDownload(row) {
-				window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=' + row.bucketName + '&objectName=' + row.objectName
-			},
-			//生成出入库通知单
-			handleGenNotice(row) {
-				this.$confirm('生成通知单前请确认文件格式正确无误?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					this.loading = true
-					genNotice(row.id).then(response => {
-						this.loading = false
-						if (response.code === 200) {
-							this.msgSuccess("通知单生成成功");
-							row.isGenStoreNotice = 1
-						} else {
-							this.msgError("通知单生成失败");
-						}
-					}).catch(err => {
-						this.loading = false
-						console.log("取消生成通知单")
-					})
-				}).catch((err) => {
-					this.loading = false
-					console.log("取消生成通知单")
-				});
-			},
-			handleGenReport(row) {
-				this.$confirm('生成报关数据单前请确认文件格式正确无误?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					this.loading = true
-					genNotice(row.id).then(response => {
-						this.loading = false
-						if (response.code === 200) {
-							this.msgSuccess("报关数据生成成功");
-							row.isGenReport = 1
-						} else {
-							this.msgError("报关数据生成失败");
-						}
-					}).catch(err => {
-						this.loading = false
-						console.log("报关数据生成失败")
-					})
-				}).catch((err) => {
-					this.loading = false
-					console.log("取消生成通知单")
-				});
-			},
-			uploadProcess() {
-				this.uploading = true
-			},
-      uploadBefore(file){
-				/*alert("要上传")
-				console.log(file)
-				if(!file){
-					this.$message.error('请选择要上传的文件22')
-					return false
-        }*/
       },
-			uploadSuccess(response) {
-				if(response.code !==200){
-					this.$message.error(response.msg)
-					this.uploading = false
-          return false
-        }
-				this.uploading = true
-				this.$refs.upload.clearFiles()
-				this.form.createTime = response.data.createTime
-				this.form.bucketName = this.headers.bucketName
-				this.form.fileName = response.data.name
-				this.form.objectName = response.data.objectName
-				this.form.placeId = this.queryParams.placeId
-				this.form.fileLength = response.data.length
+      rules2: {
+        templateType: [
+          {type: "string", required: true, message: "模板类型不能为空", trigger: "change"}
+        ]
+      },
+      rules3: {
+        templateType: [
+          {type: "string", required: true, message: "模板类型不能为空", trigger: "change"}
+        ],
+        storeCustomer: [
+          {type: "string", required: true, message: "寄仓客户不能为空", trigger: "change"}
+        ],
+        settlementCustomer: [
+          {type: "string", required: true, message: "结算客户不能为空", trigger: "change"}
+        ],
+        sendName: [
+          {type: "string", required: true, message: "发货单位不能为空", trigger: "change"}
+        ],
+        receiveName: [
+          {type: "string", required: true, message: "收货单位不能为空", trigger: "change"}
+        ],
+        transportMode: [
+          {type: "string", required: true, message: "运输方式不能为空", trigger: "change"}
+        ]
+      },
+      uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/tax/upload',
+      uploadData: {},
+      uploading: false,
 
-				addImport(this.form).then(response => {
-					console.log('上传数据')
-					if (response.code === 200) {
-						this.$message.success("上传成功")
-						//this.msgSuccess("上传成功");
-						this.uploading = false
-						this.open = false;
-						this.cancel()
-						this.getList();
-					} else {
-						this.uploading = false
-						console.log(response)
-						this.msgError('创建记录失败')
-					}
-				}).catch(err => {
-					this.uploading = false
-				})
-			},
-			uploadError(err) {
-				this.uploading = false
-				console.log(err)
-				this.$message.error('文件上传失败')
-			},
-			/** 提交上传按钮 */
-			submitForm: function () {
-				//console.log(this.fileList)
-				//console.log(this.$refs.upload.$refs['upload-inner'].fileList)
-				//console.log(this.$refs.upload.fileList)
-				/*if (this.$refs.upload.fileList.length === 0) {
-					this.$message.error('请选择要上传的文件')
-					return
-				}*/
-				this.$refs["form"].validate(valid => {
-					if (valid) {
-						if(this.$refs.upload.$refs['upload-inner'].fileList.length === 0){
-								this.$message.error('请选择要上传的文件')
-								return false
-            }
-						this.uploading = true
-						this.headers.Authorization = 'Bearer ' + getToken()
-						this.headers.placeId = this.queryParams.placeId
-						console.log('this.form.templateType=' + this.form.templateType)
-						this.headers.templateType = this.form.templateType
-						this.headers.bucketName = 'tax'
-						this.$refs.upload.submit();
-					}
-				});
-				/*if (this.form.id != undefined) {
-          updateImport(this.form).then(response => {
-            if (response.code === 200) {
-              this.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            }
-          });
+      headers: {
+        'Authorization': '',
+        'templateType': '',
+        'placeId': '',
+        'bucketName': ''
+      },
+      fileList: [],
+      transportModeList: [
+        {'key': '1', 'value': '长途'},
+        {'key': '2', 'value': '短倒'},
+      ]
+    };
+  },
+  created() {
+    // 0 监管场所，1保税库，2堆场，3企业
+    this.importTypeDic = [
+      {value: '1', label: '入库通知单'},
+      {value: '0', label: '出库通知单'},
+      {value: '2', label: '报关数据单'}
+    ]
+
+    listContract({'placeId': this.queryParams.placeId}).then(response => {
+      this.contractList = response.rows;
+    });
+    this.depts = getUserDepts('1')
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+      this.getList();
+    }
+    this.rules = this.rules1
+  },
+  methods: {
+    /** 查询导入文件记录列表 */
+    getList() {
+      this.loading = true;
+      listImport(this.queryParams).then(response => {
+        this.importList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+      //this.$refs.upload.$refs['upload-inner'].fileList =[]
+      this.$refs.upload.clearFiles()
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        templateType: undefined,
+        storeCustomer: undefined,
+        settlementCustomer: undefined,
+        storeContractId: undefined,
+        settlementContractId: undefined,
+        id: undefined,
+        createBy: undefined,
+        createTime: undefined,
+        remark: undefined,
+        updateBy: undefined,
+        updateTime: undefined,
+        bucketName: undefined,
+        fileName: undefined,
+        isGenReport: undefined,
+        isGenStoreNotice: undefined,
+        objectName: undefined,
+        path: undefined,
+        placeId: undefined,
+
+      };
+      this.uploading = false
+      this.resetForm("form");
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id)
+      this.single = selection.length != 1
+      this.multiple = !selection.length
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      //this.reset();
+      this.open = true;
+      this.title = "导入模板文件";
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      const id = row.id || this.ids
+      getImport(id).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改导入文件记录";
+      });
+    },
+    //下载
+    handleDownload(row) {
+      window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=' + row.bucketName + '&objectName=' + row.objectName
+    },
+    //生成出入库通知单
+    handleGenNotice(row) {
+      this.$confirm('生成通知单前请确认文件格式正确无误?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true
+        genNotice(row.id).then(response => {
+          this.loading = false
+          if (response.code === 200) {
+            this.msgSuccess("通知单生成成功");
+            row.isGenStoreNotice = 1
+          } else {
+            this.msgError("通知单生成失败");
+          }
+        }).catch(err => {
+          this.loading = false
+          console.log("取消生成通知单")
+        })
+      }).catch((err) => {
+        this.loading = false
+        console.log("取消生成通知单")
+      });
+    },
+    handleGenReport(row) {
+      this.$confirm('生成报关数据单前请确认文件格式正确无误?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true
+        genNotice(row.id).then(response => {
+          this.loading = false
+          if (response.code === 200) {
+            this.msgSuccess("报关数据生成成功");
+            row.isGenReport = 1
+          } else {
+            this.msgError("报关数据生成失败");
+          }
+        }).catch(err => {
+          this.loading = false
+          console.log("报关数据生成失败")
+        })
+      }).catch((err) => {
+        this.loading = false
+        console.log("取消生成通知单")
+      });
+    },
+    uploadProcess() {
+      this.uploading = true
+    },
+    uploadBefore(file) {
+      /*alert("要上传")
+      console.log(file)
+      if(!file){
+        this.$message.error('请选择要上传的文件22')
+        return false
+      }*/
+    },
+    uploadSuccess(response) {
+      if (response.code !== 200) {
+        this.$message.error(response.msg)
+        this.uploading = false
+        return false
+      }
+      this.uploading = true
+      this.$refs.upload.clearFiles()
+      this.form.createTime = response.data.createTime
+      this.form.bucketName = this.headers.bucketName
+      this.form.fileName = response.data.name
+      this.form.objectName = response.data.objectName
+      this.form.placeId = this.queryParams.placeId
+      this.form.fileLength = response.data.length
+
+      addImport(this.form).then(response => {
+        console.log('上传数据')
+        if (response.code === 200) {
+          this.$message.success("上传成功")
+          //this.msgSuccess("上传成功");
+          this.uploading = false
+          this.open = false;
+          this.cancel()
+          this.getList();
         } else {
-          addImport(this.form).then(response => {
-            if (response.code === 200) {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            }
-          });
-        }*/
-
-			},
-			/** 删除按钮操作 */
-			handleDelete(row) {
-				const ids = row.id || this.ids;
-				this.$confirm('是否确认删除导入文件记录编号为"' + ids + '"的数据项?', "警告", {
-					confirmButtonText: "确定",
-					cancelButtonText: "取消",
-					type: "warning"
-				}).then(function () {
-					return delImport(ids);
-				}).then(() => {
-					this.getList();
-					this.msgSuccess("删除成功");
-				}).catch(function () {
-				});
-			},
-			setStoreCustomer() {
-				this.form.storeContractId = this.contractList.find(item => item.customerName === this.form.storeCustomer).id
-				console.log(this.form)
-			},
-			setSettlementCustomer() {
-				this.form.settlementContractId = this.contractList.find(item => item.customerName === this.form.settlementCustomer).id
-				console.log(this.form)
-			},
-			templateChange() {
-				console.log(this.form.templateType)
-				if (this.form.templateType === '1' ){
-					this.rules = this.rules1
-					this.noticeType = true
-          this.transType = false
-				} else if(this.form.templateType === '0') {
-					this.rules = this.rules3
-					this.noticeType = true
-          this.transType = true
-				}else{
-					this.form.businessNo = ''
-					this.form.settlementCustomer = ''
-					this.form.storeCustomer = ''
-					this.form.storeContractId = ''
-					this.form.settlementContractId = ''
-					this.rules = this.rules2
-          this.form.sendName = ''
-          this.form.receiveName = ''
-					this.noticeType = false
-          this.transType = false
+          this.uploading = false
+          console.log(response)
+          this.msgError('创建记录失败')
         }
-			},
-      // 收发货单位建议
-			nameSearch(queryString,cb){
-				let results = queryString?this.nameList.filter(this.createFilter(queryString)):this.nameList
-        cb(results)
-      },
-			createFilter(queryString) {
-				return (name) => {
-					return (name.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
-				}
-			},
-			handleSelect(item) {
-        this.form.sendName = item.value
-			},
-			handleSelect2(item) {
-				this.form.receiveName = item.value
-			}
-		}
-	};
+      }).catch(err => {
+        this.uploading = false
+      })
+    },
+    uploadError(err) {
+      this.uploading = false
+      console.log(err)
+      this.$message.error('文件上传失败')
+    },
+    /** 提交上传按钮 */
+    submitForm: function () {
+      //console.log(this.fileList)
+      //console.log(this.$refs.upload.$refs['upload-inner'].fileList)
+      //console.log(this.$refs.upload.fileList)
+      /*if (this.$refs.upload.fileList.length === 0) {
+        this.$message.error('请选择要上传的文件')
+        return
+      }*/
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.$refs.upload.$refs['upload-inner'].fileList.length === 0) {
+            this.$message.error('请选择要上传的文件')
+            return false
+          }
+          this.uploading = true
+          this.headers.Authorization = 'Bearer ' + getToken()
+          this.headers.placeId = this.queryParams.placeId
+          console.log('this.form.templateType=' + this.form.templateType)
+          this.headers.templateType = this.form.templateType
+          this.headers.bucketName = 'tax'
+          this.$refs.upload.submit();
+        }
+      });
+      /*if (this.form.id != undefined) {
+        updateImport(this.form).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess("修改成功");
+            this.open = false;
+            this.getList();
+          }
+        });
+      } else {
+        addImport(this.form).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess("新增成功");
+            this.open = false;
+            this.getList();
+          }
+        });
+      }*/
+
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$confirm('是否确认删除导入文件记录编号为"' + ids + '"的数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return delImport(ids);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      }).catch(function () {
+      });
+    },
+    setStoreCustomer() {
+      this.form.storeContractId = this.contractList.find(item => item.customerName === this.form.storeCustomer).id
+      console.log(this.form)
+    },
+    setSettlementCustomer() {
+      this.form.settlementContractId = this.contractList.find(item => item.customerName === this.form.settlementCustomer).id
+      console.log(this.form)
+    },
+    templateChange() {
+      console.log(this.form.templateType)
+      if (this.form.templateType === '1') {
+        this.rules = this.rules1
+        this.noticeType = true
+        this.transType = false
+        this.templateDownTxt = '入库通知单模板下载'
+      } else if (this.form.templateType === '0') {
+        this.rules = this.rules3
+        this.noticeType = true
+        this.transType = true
+        this.templateDownTxt = '出库通知单模板下载'
+      } else if (this.form.templateType === '2') {
+        this.templateDownTxt = '报关数据单模板下载'
+        this.form.businessNo = ''
+        this.form.settlementCustomer = ''
+        this.form.storeCustomer = ''
+        this.form.storeContractId = ''
+        this.form.settlementContractId = ''
+        this.rules = this.rules2
+        this.form.sendName = ''
+        this.form.receiveName = ''
+        this.noticeType = false
+        this.transType = false
+      }
+    },
+    // 收发货单位建议
+    nameSearch(queryString, cb) {
+      let results = queryString ? this.nameList.filter(this.createFilter(queryString)) : this.nameList
+      cb(results)
+    },
+    createFilter(queryString) {
+      return (name) => {
+        return (name.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    handleSelect(item) {
+      this.form.sendName = item.value
+    },
+    handleSelect2(item) {
+      this.form.receiveName = item.value
+    },
+    //模板下载
+    handleTemplateDownload() {
+      let objectName = undefined
+      if (this.form.templateType === '1') {
+        objectName = '金航入库通知单模板.xlsx'
+        // this.templateDownTxt = '入库通知单模板下载'
+        // window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=tax&objectName=金航入库通知单模板.xlsx'
+      } else if (this.form.templateType === '0') {
+        // this.templateDownTxt = '出库通知单模板下载'
+        objectName = '金航出库通知单模板.xls'
+        //  window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=tax&objectName=金航出库通知单模板.xls'
+      } else if (this.form.templateType === '2') {
+        // this.templateDownTxt = '报关数据单模板下载'
+        objectName = '金航报关数据单模板.xlsx'
+        // window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=tax&objectName=金航报关数据单模板.xlsx'
+      }
+      window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=tax&objectName=' + objectName
+    },
+  }
+}
 </script>
