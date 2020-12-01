@@ -190,7 +190,7 @@
       size="100%"
     >
       <el-button type="info" icon="fa fa-print" v-print="'#allPrint'" size="mini" @click="print"
-                 ref="printBtn" style="position: fixed;top: 50px;margin-left: 1500px"> 打印
+                 ref="printBtn"  class="styleButton"> 打印
       </el-button>
       <div id="allPrint" v-show="showPrint">
         <div v-for="(item,index) in newArray" style="page-break-after:always">
@@ -625,5 +625,11 @@
 
   @page {
     margin: 6mm;
+  }
+  .styleButton{
+    position: fixed;
+    top: 50px;
+    margin-left: 1500px
+
   }
 </style>

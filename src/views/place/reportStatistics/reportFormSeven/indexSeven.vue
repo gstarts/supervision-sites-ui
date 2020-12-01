@@ -290,7 +290,7 @@
       <el-table-column label="剩余重量(吨)" align="center" prop="column9"/>
 
       <el-table-column label="承运单位" align="center" prop="column22"/>
-      <el-table-column label="运输方式" align="center" prop="column23"/>
+      <el-table-column label="运输方式" align="center" prop="column23" :formatter="transportFormatter"/>
       <el-table-column label="制单人" align="center" prop="column24">
         <template slot-scope="scope">
           {{ parseUserName(scope.row.column24) }}
@@ -308,7 +308,7 @@
       size="100%"
     >
       <el-button type="info" icon="fa fa-print" v-print="'#allPrint'" size="mini" @click="print"
-                 ref="printBtn" style="position: fixed;top: 50px;margin-left: 1500px"> 打印
+                 ref="printBtn" class="styleButton"> 打印
       </el-button>
       <div id="allPrint" v-show="true">
         <div v-for="(item,index) in newArray" style="page-break-after:always">
@@ -811,9 +811,14 @@
     margin: 6mm;
     /*横向*/
   }
-
   .el-drawer__body {
     overflow: auto;
+
+  }
+  .styleButton{
+    position: fixed;
+    top: 50px;
+    margin-left: 1500px
 
   }
 </style>
