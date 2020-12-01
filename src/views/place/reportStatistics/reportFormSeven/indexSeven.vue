@@ -358,13 +358,13 @@
 
               <af-table-column label="提煤单号" align="center" width="100%" prop="column3"/>
 
-              <af-table-column label="品名" align="center" width="100%" prop="column21"/>
+              <af-table-column label="品名" align="center" width="80%" prop="column21"/>
 
               <af-table-column label="提煤单重量" align="center" width="100%" prop="column4"/>
               <af-table-column label="已分配未完成车数" align="center" width="80%" prop="column5"/>
               <af-table-column label="已分配未提离重量(吨)" align="center" width="100%" prop="column6"/>
 
-              <af-table-column label="已完成车数" align="center" width="80%" prop="column7"/>
+              <af-table-column label="已完成车数" align="center" width="60%" prop="column7"/>
               <af-table-column label="已提离重量(吨)" align="center" width="100%" prop="column8"/>
               <af-table-column label="剩余重量(吨)" align="center" width="80%" prop="column9"/>
 
@@ -379,7 +379,7 @@
                 </template>
               </af-table-column>
               <!--      制单时间需要查询条件，from to-->
-              <af-table-column label="制单时间" align="center" width="120%" prop="column25"/>
+              <af-table-column label="制单时间" align="center" width="160%" prop="column25"/>
 
 
             </el-table>
@@ -846,30 +846,28 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
 .countRow {
   margin-top: 8px;
 }
 
-.countRow span {
-  margin-right: 10px;
-  font-size: 14px;
-}
+  .countRow span {
+    margin-right: 10px;
+    font-size: 14px;
+  }
 
-@page {
-  margin: 6mm;
-  /*横向*/
-}
+  @page {
+    margin: 6mm;
+    /*横向*/
+  }
+  .el-drawer__body {
+    overflow: auto;
 
-.el-drawer__body {
-  overflow: auto;
+  }
+  .styleButton{
+    position: fixed;
+    top: 50px;
+    margin-left: 1500px
 
-}
-
-.styleButton {
-  position: fixed;
-  top: 50px;
-  margin-left: 1500px
-
-}
+  }
 </style>

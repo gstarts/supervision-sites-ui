@@ -637,6 +637,7 @@ import receivingInfo from './receivingInfo.vue'
 
 import { listInfo } from '@/api/basis/enterpriseInfo'
 import { queryById } from '@/api/manifest/query'
+import { valueOf } from 'screenfull'
 
 export default {
   components: {
@@ -660,7 +661,9 @@ export default {
       consignorInfo: false,
       receivingInfo: false,
       gridData: [],
-      currencySystem: [],
+      currencySystem: [
+        {dictValue: '美元', dictLable: 'USD'}
+      ],
       shippingTerms: [],
       dangerousGoodsNumber: [],
       freightPaymentMethod: [],
@@ -1049,11 +1052,11 @@ export default {
         this.hg_customs_code = response.data
       })
       /** 进出境口岸关区代码字典 */
-      this.getDicts('sw_current_code').then((response) => {
+      this.getDicts('CurrentCode').then((response) => {
         this.currentCode = response.data
       })
       /** 包装种类代码字典 */
-      this.getDicts('sw_packag_type').then((response) => {
+      this.getDicts('PaymentMethodCode').then((response) => {
         this.PaymentMethodCode = response.data
       })
       /** 途经国家 */
@@ -1061,15 +1064,15 @@ export default {
         this.routingContry = response.data
       })
       /** 运费支付方法 */
-      this.getDicts('sw_freight_payment_method').then((response) => {
+      this.getDicts('PaymentMethodCode-Freight').then((response) => {
         this.freightPaymentMethod = response.data
       })
       /** 金额类型 */
-      this.getDicts('sw_currency_system').then((response) => {
-        this.currencySystem = response.data
-      })
+      // this.getDicts('sw_currency_system').then((response) => {
+      //   this.currencySystem = response.data
+      // })
       /** 运输条款 */
-      this.getDicts('sw_shipping_terms').then((response) => {
+      this.getDicts('ConditionCode').then((response) => {
         this.shippingTerms = response.data
       })
       /** 危险品编号 */

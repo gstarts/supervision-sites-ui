@@ -170,9 +170,9 @@
               <el-select v-model="form.head.contractorcodescc" placeholder="请选择" @change="change">
                 <el-option
                   v-for="item in enterpriseOptions"
-                  :key="item.contractorCodeScc"
-                  :label="item.contractorCodeScc"
-                  :value="item.contractorCodeScc"
+                  :key="item.id"
+                  :label="item.eName"
+                  :value="item.id"
                 >
                 </el-option>
               </el-select>
