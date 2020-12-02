@@ -54,20 +54,28 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="danger"
+          type="primary"
           icon="el-icon-thumb"
           size="mini"
           :disabled="multiple"
           @click="declare"
           v-hasPermi="['manifest:head:declare']"
-        >申报</el-button>
+        >申报
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['manifest:head:remove']"
+        >删除
+        </el-button>
       </el-col>
     </el-row>
-    <el-table
-      v-loading="loading"
-      :data="manifestList"
-      @selection-change="handleSelectionChange"
-    >
+    <el-table v-loading="loading" :data="manifestList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="货物运输批次号" align="center" prop="declarationId"/>
       <el-table-column label="录入时间" align="center" prop="createTime"/>
@@ -121,7 +129,8 @@
 </template>
 
 <script>
-import { manifestList,declareManifest } from '@/api/manifest/query'
+import {manifestList, declareManifest, logicDetailsByIds} from '@/api/manifest/query'
+import {delReport} from "@/api/yard/report";
 
 export default {
   data() {
@@ -146,14 +155,14 @@ export default {
       title: '',
       // 是否显示弹出层
       router: [
-        { path: '/rmft1401', messageType: 'MT1401', value: '原始舱单' },
-        { path: '/rmft2401', messageType: 'MT2401', value: '预配舱单' },
-        { path: '/rmft5402', messageType: 'MT5402', value: '出口理货报告' },
-        { path: '/rmft3402', messageType: 'MT3402', value: '运抵报告' },
-        { path: '/rmft4401', messageType: 'MT4401', value: '载货进境确报' },
-        { path: '/rmft4403', messageType: 'MT4403', value: '空载进境确报' },
-        { path: '/rmft4404', messageType: 'MT4404', value: '空载出境确报' },
-        { path: '/rmft4406', messageType: 'MT4406', value: '空箱出境确报' }],
+        {path: '/rmft1401', messageType: 'MT1401', value: '原始舱单'},
+        {path: '/rmft2401', messageType: 'MT2401', value: '预配舱单'},
+        {path: '/rmft5402', messageType: 'MT5402', value: '出口理货报告'},
+        {path: '/rmft3402', messageType: 'MT3402', value: '运抵报告'},
+        {path: '/rmft4401', messageType: 'MT4401', value: '载货进境确报'},
+        {path: '/rmft4403', messageType: 'MT4403', value: '空载进境确报'},
+        {path: '/rmft4404', messageType: 'MT4404', value: '空载出境确报'},
+        {path: '/rmft4406', messageType: 'MT4406', value: '空箱出境确报'}],
       open: false,
       // 查询参数
       queryParams: {
@@ -161,7 +170,8 @@ export default {
         pageSize: 20,
         statementCode: undefined,
         declarationId: undefined,
-        messageType: undefined
+        messageType: undefined,
+        del: 0,
       }
     }
   },
@@ -181,7 +191,7 @@ export default {
           this.manifestList = response.rows
           this.total = response.total
           this.loading = false
-      //this.queryParams.statementCode=undefined
+          //this.queryParams.statementCode=undefined
         }
       )
     },
@@ -197,7 +207,7 @@ export default {
     },
 
     // 报文功能翻译
-    viaVehicleFormat(){
+    viaVehicleFormat() {
 
     },
     // 取消按钮
@@ -230,9 +240,9 @@ export default {
       console.log(row)
       // 跳转到原始舱单页面
       const data = this.router.find(el => el.messageType === row.messageType)
-      this.$router.push({ path: '/singlewindow' + data.path,query: { id: id }  })
+      this.$router.push({path: '/singlewindow' + data.path, query: {id: id}})
     },
- /** 申报按钮操作 */
+    /** 申报按钮操作 */
     declare(row) {
       const ids = row.id || this.ids;
       this.$confirm("是否确认进行批量申报", "警告", {
@@ -240,22 +250,38 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       })
-        .then(function() {
+        .then(function () {
           return declareManifest(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("申报成功");
         })
-        .catch(function() {});
+        .catch(function () {
+        });
     },
     /**详情按钮 */
     detail(row) {
       const id = row.id || this.ids
       const data = this.router.find(el => el.messageType === row.messageType)
       // 调用 某页面 的初始化方法
-      this.$router.push({ path: '/singlewindow' + data.path,query: { id: id, flag:true }  })
-    }
+      this.$router.push({path: '/singlewindow' + data.path, query: {id: id, flag: true}})
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$confirm('是否确认删除选中的舱单数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return logicDetailsByIds(ids);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      }).catch(function () {
+      });
+    },
   }
 }
 </script>

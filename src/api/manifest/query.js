@@ -32,3 +32,10 @@ export function queryDetailsById(id) {
     method: 'get'
   })
 }
+
+export function logicDetailsByIds(id) {
+  return request({
+    url: '/manifest/head/logic/'+id,
+    method: 'delete'
+  })
+}
