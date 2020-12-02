@@ -87,14 +87,14 @@
             @click="detail(scope.row)"
           >详情
           </el-button>
-          <el-button
+<!--          <el-button
             v-if="scope.row.statementCode=='10' || scope.row.statementCode=='20'|| scope.row.statementCode=='0'|| scope.row.statementCode=='FF'|| scope.row.statementCode=='3' "
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
           >修改
-          </el-button>
+          </el-button>-->
           <el-button
             v-if="scope.row.statementCode!='2'"
             size="mini"
@@ -191,7 +191,7 @@ export default {
       const data = this.router.find(el => el.messageType === row.messageType)
       return data.value
     },
-    
+
     // 报文功能翻译
     viaVehicleFormat(){
 
