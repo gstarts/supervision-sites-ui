@@ -11,7 +11,7 @@
         />
       </el-form-item>
       <el-form-item label="单证名称" prop="messageType">
-        <el-select v-model="queryParams.messageType" placeholder="请选择查询的单证">
+        <el-select v-model="queryParams.messageType" clearable filterable placeholder="请选择查询的单证">
           <el-option
             v-for="dict in router"
             :key="dict.messageType"
@@ -22,7 +22,7 @@
       </el-form-item>
 
       <el-form-item label="单证状态" prop="statementCode">
-        <el-select v-model="queryParams.statementCode" placeholder="请选择状态">
+        <el-select v-model="queryParams.statementCode" clearable filterable placeholder="请选择状态">
           <el-option
             v-for="dict in statementCodeOptions"
             :key="dict.dictValue"
