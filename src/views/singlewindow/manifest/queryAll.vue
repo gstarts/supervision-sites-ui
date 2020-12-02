@@ -100,6 +100,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
+            v-hasPermi="['manifest:head:remove']"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>
@@ -119,7 +120,7 @@
 </template>
 
 <script>
-import { manifestList,declareManifest } from '@/api/manifest/query'
+import {manifestList, declareManifest, logicDetailsByIds} from '@/api/manifest/query'
 
 export default {
   data() {
@@ -156,10 +157,11 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
         statementCode: undefined,
         declarationId: undefined,
-        messageType: undefined
+        messageType: undefined,
+        del: 0,
       }
     }
   },
@@ -251,7 +253,22 @@ export default {
       const id = row.id || this.ids
       const data = this.router.find(el => el.messageType === row.messageType)
       this.$router.push({ path: '/singlewindow' + data.path })
-    }
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$confirm('是否确认删除选中的舱单数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return logicDetailsByIds(ids);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      }).catch(function () {
+      });
+    },
   }
 }
 </script>
