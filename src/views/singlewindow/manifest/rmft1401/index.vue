@@ -1052,11 +1052,11 @@ export default {
         this.hg_customs_code = response.data
       })
       /** 进出境口岸关区代码字典 */
-      this.getDicts('CurrentCode').then((response) => {
+      this.getDicts('sw_current_code').then((response) => {
         this.currentCode = response.data
       })
       /** 包装种类代码字典 */
-      this.getDicts('PaymentMethodCode').then((response) => {
+      this.getDicts('sw_packag_type').then((response) => {
         this.PaymentMethodCode = response.data
       })
       /** 途经国家 */
@@ -1064,7 +1064,7 @@ export default {
         this.routingContry = response.data
       })
       /** 运费支付方法 */
-      this.getDicts('PaymentMethodCode-Freight').then((response) => {
+      this.getDicts('sw_freight_payment_method').then((response) => {
         this.freightPaymentMethod = response.data
       })
       /** 金额类型 */
@@ -1072,7 +1072,7 @@ export default {
       //   this.currencySystem = response.data
       // })
       /** 运输条款 */
-      this.getDicts('ConditionCode').then((response) => {
+      this.getDicts('sw_shipping_terms').then((response) => {
         this.shippingTerms = response.data
       })
       /** 危险品编号 */
