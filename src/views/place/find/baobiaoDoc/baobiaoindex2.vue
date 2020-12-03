@@ -805,7 +805,7 @@
     <!--    </el-row>-->
 
     <el-table ref="table" v-loading="loading" :data="outstoreDocList" max-height="700"  show-summary>
-      <el-table-column label="寄舱客户" align="center" prop="column1" />
+      <el-table-column label="寄仓客户" align="center" prop="column1" />
       <el-table-column label="煤种" align="center" prop="column2" />
       <el-table-column label="调入车数" align="center" prop="column3" />
       <el-table-column label="调入数量" align="center" prop="column4" />

@@ -59,15 +59,16 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <!--      <el-form-item label="承运人" prop="carrier">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.carrier"-->
-      <!--          placeholder="请输入承运人"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
+      <el-form-item label="承运单位" prop="transportUnit">
+        <el-select v-model="queryParams.transportUnit" filterable clearable placeholder="请选择承运单位">
+          <el-option
+            v-for="item in transUnitList"
+            :key="item.eAbbreviation"
+            :label="item.eAbbreviation"
+            :value="item.eAbbreviation">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="车辆类型" prop="viaType">
         <el-select v-model="queryParams.viaType" placeholder="请选择进出车辆类型" clearable size="small" @change="handleQuery">
           <el-option
@@ -291,6 +292,7 @@
       <af-table-column label="净重" width="150" align="center" prop="netWeight"/>
       <af-table-column label="供货单位" align="center" prop="deliveryUnit"/>
       <af-table-column label="收货单位" align="center" prop="receivingUnit"/>
+      <af-table-column label="承运单位" align="center" prop="transportUnit"/>
       <af-table-column label="称重状态" align="center" prop="flowDirection">
         <template slot-scope="scope">
           {{ scope.row.flowDirection === 'I' ? '未完成' : '已完成' }}
@@ -365,6 +367,7 @@
     <pagination
       v-show="total>0"
       :total="total"
+      :page-sizes="[10,20,50,100,200,500,1000]"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
@@ -775,6 +778,7 @@ import {listUser} from "@/api/system/user";
 import {listStoreContract} from "@/api/place/storeContract";
 import {addPrint, getPrint} from "@/api/place/print";
 import {listGroup} from "@/api/place/group";
+import {listInfo} from "@/api/basis/enterpriseInfo";
 
 export default {
   name: "Sheet",
@@ -783,7 +787,7 @@ export default {
       printObj: {
         id: '#dayin',
         endCallback: (err => {
-          console.log('印完成')
+          console.log('打印完成')
         })
       },
       // 遮罩层
@@ -879,6 +883,7 @@ export default {
         containerNum4: undefined,
         printState: undefined,
         transportMode: undefined, //运输方式
+        transportUnit: undefined,//承运单位
         orderByColumn: 'id',
         isAsc: 'desc',
       },
@@ -991,8 +996,9 @@ export default {
         {'dictValue': '3', 'dictLabel': '修改车号'},
         {'dictValue': '1', 'dictLabel': '修改合同'},
         {'dictValue': '2', 'dictLabel': '修改提煤单'},
-      ]
-    };
+      ],
+      transUnitList: []
+    }
   },
   computed: {
     //毛重监听
@@ -1034,6 +1040,7 @@ export default {
       this.getGroupList()
       this.getContractList()
       this.getCoalBillList()
+      this.getTransportUnitInfo()
     }
     //煤种类型
     this.getDicts("coal_type").then(response => {
@@ -1339,15 +1346,17 @@ export default {
     },
     //获取大提煤单列表
     getCoalBillList() {
-      selectCoalBillNo({'placeId': this.queryParams.stationId,'status':'0'}).then(response => {
+      selectCoalBillNo({'placeId': this.queryParams.stationId, 'status': '0'}).then(response => {
         this.BigList = response.rows
       })
     },
+    //场所变化时，更新列表
     placeChange() {
       this.handleQuery()
       this.getCoalBillList()
       this.getGroupList()
       this.getContractList()
+      this.getTransportUnitInfo()
     },
     //翻译用户名
     parseUserName(user) {
@@ -1444,7 +1453,17 @@ export default {
       }
       console.log(this.rulesModifyNew)
       this.$forceUpdate()
-    }
+    },
+    //查承运单位
+    getTransportUnitInfo() {
+      this.queryParams.transportUnit = undefined
+      this.loading = true;
+      let info = {"eType": '2', 'deptId': this.queryParams.stationId, 'companyType': '4'}
+      listInfo(info).then(response => {
+        this.transUnitList = response.rows;
+        this.loading = false;
+      });
+    },
   }
 };
 </script>

@@ -1194,6 +1194,8 @@ export default {
         viaType: undefined,
         errState: '0'
       };
+      //清空后，重新激活车牌号列表
+      this.$refs['vehicleNo'].focus()
     },
     //查询可用的库位
     /*getStoreCode(placeId) {
