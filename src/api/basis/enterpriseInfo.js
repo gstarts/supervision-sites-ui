@@ -8,7 +8,13 @@ export function listInfo(query) {
     params: query
   })
 }
-
+export function listInfoIn(query) {
+  return request({
+    url: '/place/enterprise/info/listIn',
+    method: 'get',
+    params: query
+  })
+}
 // 查询企业信息备案详细
 export function getInfo(id) {
   return request({

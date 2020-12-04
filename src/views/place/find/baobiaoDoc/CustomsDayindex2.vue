@@ -1431,7 +1431,7 @@ export default {
         ],
       },
       json_fields:{
-        "寄舱客户":"column1",
+        "寄仓客户":"column1",
         "煤种":"column2",
         "当日入库车数":"column3",
         "当日入库调入":"column4",
