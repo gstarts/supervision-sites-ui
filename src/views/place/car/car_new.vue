@@ -105,10 +105,10 @@
 
     <el-table v-loading="loading" :data="docList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" :selectable="checkboxInit"/>
-      <el-table-column label="打印状态">
-        <template scope="scope">
-          <span v-if="scope.row.inCardPrintState =='1'" style="color: red">已打印</span>
-          <span v-else-if="scope.row.inCardPrintState !='1'" style="color:green">未打印</span>
+      <el-table-column label="打印状态(次数)" width="110">
+        <template scope="scope" >
+          <span v-if="scope.row.inCardPrintState =='0'" style="color:green">未打印</span>
+          <span class="printSpan" v-else-if="scope.row.inCardPrintState !='0'" >{{scope.row.inCardPrintState}}</span>
         </template>
       </el-table-column>
       <af-table-column label="ID" align="center" prop="id"/>
@@ -143,7 +143,7 @@
             v-show="scope.row.storeState === '0' ">作废
           </el-button>
           <el-button
-            v-if="scope.row.inCardPrintState ==1"
+            v-if="scope.row.inCardPrintState !=0"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -962,10 +962,9 @@ export default {
       console.log(this.ids)
       updatePrintByIds(this.ids).then(response => {
         if (response.code === 200) {
-          this.msgSuccess("修改打印状态成功");
+          this.msgSuccess("修改打印状态(次数)成功");
           this.getList()
         }
-
       })
       clearTimeout(this.timer);
       //清除延迟执行
@@ -981,6 +980,12 @@ export default {
         this.printMakeList.push(row)
       console.log(this.printMakeList)
       this.showMake = true;
+      updatePrintByIds(row.id).then(response => {
+        if (response.code === 200) {
+          this.msgSuccess("修改打印状态(次数)成功");
+          this.getList()
+        }
+      })
       clearTimeout(this.timerMake);
       //清除延迟执行
       this.timerMake = setTimeout(() => {
@@ -1205,5 +1210,11 @@ export default {
   height: 100px;
   width: 500px;
   /*border: 1px solid ;*/
+}
+.printSpan{
+  color: red;
+  font-size: 15px;
+  text-align: center;
+  display: block;
 }
 </style>

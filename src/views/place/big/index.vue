@@ -329,7 +329,7 @@
                 v-model="form.receiveName" placeholder="请销售客户名称" filterable>
                 <el-option
                   v-for="dict in saleConsumerOptions"
-                  :key="dict.eName"
+                  :key="dict.id"
                   :label="dict.eName"
                   :value="dict.eName"
                 />
@@ -456,7 +456,7 @@ import {getToken} from '@/utils/auth'
 import {listStoreContract} from '@/api/place/storeContract'
 import {getStoreByIds} from '@/api/place/store'
 import {getUserDepts} from '@/utils/charutils'
-import {listInfo} from '@/api/basis/enterpriseInfo'
+import {listInfo, listInfoIn} from '@/api/basis/enterpriseInfo'
 import {delAttachment, getPreview} from "@/api/place/attachment";
 
 export default {
@@ -656,8 +656,9 @@ export default {
     },
     /** 销售信息列表 */
     getSaleConsumerInfo(placeId) {
-      let saleConsumerParams = {eType: '2', deptId: placeId, companyType: '3'}
-      listInfo(saleConsumerParams).then(response => {
+
+      let saleConsumerParams = {eType: '2', deptId: placeId, companyType: '3',stationPersonName:'2'}
+      listInfoIn(saleConsumerParams).then(response => {
         this.saleConsumerOptions = response.rows
       })
     },
