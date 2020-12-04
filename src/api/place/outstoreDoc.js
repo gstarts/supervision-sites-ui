@@ -66,3 +66,18 @@ export function updatePrintByIds(ids) {
     method: 'post'
   })
 }
+
+export function updateVoidCar(data) {
+  return request({
+    url: '/place/outstoreDoc/void',
+    method: 'post',
+    data: data
+  })
+}
+
+export function multiVoidCar(vehicleNos) {
+  return request({
+    url: '/place/outstoreDoc/multiVoid/' + vehicleNos,
+    method: 'post'
+  })
+}

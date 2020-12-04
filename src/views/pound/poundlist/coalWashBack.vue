@@ -1538,8 +1538,8 @@ export default {
         }
       }
       let that = this
-      //todo 暂时不验证皮重异常
-      errMsg = ''
+      //验证皮重异常
+      //errMsg = ''
       if (errMsg !== '') { //如果错误信息不为空
         this.$prompt(errMsg, '提示', {
           confirmButtonText: '确定',

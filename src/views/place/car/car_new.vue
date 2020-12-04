@@ -72,17 +72,17 @@
         >修改
         </el-button>
       </el-col>-->
-      <!--<el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="danger"
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['place:car:remove']"
-        >删除
+          @click="handleMultiVoid"
+          v-hasPermi="['place:big:void']"
+        >作废
         </el-button>
-      </el-col>-->
+      </el-col>
       <el-col :span="1.5">
         <!--        <el-button-->
         <!--          type="warning"-->
@@ -181,15 +181,16 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="车牌号" prop="vehicleNo">
-              <el-autocomplete
-                class="inline-input"
-                v-model="form.vehicleNo"
-                :fetch-suggestions="nameSearch"
-                placeholder="请输入车牌号"
-                @select="handleSelect"
-                style="width: 100%"
-                clearable
-              ></el-autocomplete>
+              <el-input v-model="form.vehicleNo" placeholder="请输入车牌号"/>
+              <!--        <el-autocomplete
+                              class="inline-input"
+                              v-model="form.vehicleNo"
+                              :fetch-suggestions="nameSearch"
+                              placeholder="请输入车牌号"
+                              @select="handleSelect"
+                              style="width: 100%"
+                              clearable
+                            ></el-autocomplete>-->
             </el-form-item>
           </el-col>
         </el-row>
@@ -394,7 +395,7 @@
         <div class="headRow">{{ item.no }}</div>
         <div class="firstRow">
           <div class="firstRow1">
-            <span>{{item.createTime.substring(0,10)}}</span>
+            <span>{{ item.createTime.substring(0, 10) }}</span>
           </div>
           <div class="firstRow2">
             <span class="contractNoStyle" style="display: flow-root">{{ item.checkContractNo }}</span>
@@ -428,13 +429,13 @@
           <div class="fourRow1">
             <span>{{ item.vehicleNo }}</span>
           </div>
-          <div class="fourRow2" >
+          <div class="fourRow2">
             <span class="receiptStyle" style="display: flow-root">{{ item.customerName }}</span>
           </div>
 
         </div>
         <div class="fiveRow">
-          <span>{{ biller}}</span>
+          <span>{{ biller }}</span>
         </div>
         <!--        <div class="nouse"></div>-->
       </div>
@@ -447,7 +448,7 @@
         <div class="headRow">{{ itemMake.no }}</div>
         <div class="firstRow">
           <div class="firstRow1">
-            <span>{{itemMake.createTime.substring(0,10)}}</span>
+            <span>{{ itemMake.createTime.substring(0, 10) }}</span>
           </div>
           <div class="firstRow2">
             <span class="contractNoStyle" style="display: flow-root">{{ itemMake.checkContractNo }}</span>
@@ -481,7 +482,7 @@
           <div class="fourRow1">
             <span>{{ itemMake.vehicleNo }}</span>
           </div>
-          <div class="fourRow2" >
+          <div class="fourRow2">
             <span class="receiptStyle" style="display: flow-root">{{ itemMake.customerName }}</span>
           </div>
 
@@ -497,10 +498,16 @@
 
 <script>
 import {addCar, delCar, getCar, getCarInfo, listCar, updateCar} from '@/api/place/car'
-import {getBigCanUse, selectCoalBillNo, updateVoidCar} from '@/api/place/big'
+import {getBigCanUse, selectCoalBillNo} from '@/api/place/big'
 import {getToken} from '@/utils/auth'
 import {getUserDepts} from '@/utils/charutils'
-import {addOutstoreDocByCar, listOutstoreDocLike, updatePrintByIds} from "@/api/place/outstoreDoc";
+import {
+  addOutstoreDocByCar,
+  listOutstoreDocLike,
+  multiVoidCar,
+  updatePrintByIds,
+  updateVoidCar
+} from "@/api/place/outstoreDoc";
 import {listInfo} from "@/api/basis/enterpriseInfo";
 
 export default {
@@ -513,6 +520,7 @@ export default {
       docList: [],
       // 选中数组
       ids: [],
+      vehicleNos: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -547,7 +555,7 @@ export default {
       //场所列表
       depts: [],
       // 车牌号列表
-      plateNoList: [],
+      //plateNoList: [],
       // 车辆类型
       types: [
         {dictValue: '2', dictLabel: '散装'},
@@ -581,12 +589,12 @@ export default {
           {required: true, message: '请选择提煤单', trigger: 'change'}
         ],
         vehicleGoodsNetWeight: [
-          {required: true, message: '货净重不能为空', trigger: 'blur'},
+          {message: '货净重不能为空', trigger: 'blur'},
           {type: 'number', message: '货净重必须是数字'},
           {pattern: /^\+?[1-9][0-9]*$/, message: '不能为0', trigger: 'blur'}
         ],
         vehicleTareWeight: [
-          {required: true, message: '车皮重不能为空', trigger: 'blur'},
+          {message: '车皮重不能为空', trigger: 'blur'},
           {type: 'number', message: '车皮重必须是数字'},
           {pattern: /^\+?[1-9][0-9]*$/, message: '不能为0', trigger: 'blur'}
         ],
@@ -664,14 +672,14 @@ export default {
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId;
       //提煤单号
-      selectCoalBillNo({'placeId': this.queryParams.placeId,'status':'0'}).then(response => {
+      selectCoalBillNo({'placeId': this.queryParams.placeId, 'status': '0'}).then(response => {
         this.BigList = response.rows
       })
       this.getList()
       this.getTransportUnitInfo()
     }
     // 外调车车牌号列表
-    this.getPlateNoList()
+    //this.getPlateNoList()
     /** 变更原因 */
     this.getDicts("place_transport_type").then((response) => {
       this.transportModeDic = response.data;
@@ -688,11 +696,11 @@ export default {
         this.loading = false
       })
     },
-    getPlateNoList() {
+    /*getPlateNoList() {
       getCarInfo().then(res => {
         this.plateNoList = res.data
       })
-    },
+    },*/
     // 取消按钮
     cancel() {
       this.open = false
@@ -741,6 +749,7 @@ export default {
       this.printList = selection
       console.log(this.printList)
       this.ids = selection.map(item => item.id)
+      this.vehicleNos = selection.map(item => item.vehicleNo)
       this.single = selection.length != 1
       this.multiple = !selection.length
     },
@@ -752,7 +761,7 @@ export default {
       this.title = '添加派车单 '
     },
     /** 修改按钮操作 */
-    handleUpdate(row) {
+    /*handleUpdate(row) {
       this.reset()
       const id = row.id || this.ids
       getCar(id).then(response => {
@@ -760,7 +769,7 @@ export default {
         this.open = true
         this.title = '修改外调车 '
       })
-    },
+    },*/
     /** 提交按钮 */
     submitForm: function () {
       this.$refs['form'].validate(valid => {
@@ -785,21 +794,24 @@ export default {
         }
       })
     },
-    /** 删除按钮操作 */
-    /*handleDelete(row) {
-      const ids = row.id || this.ids
-      this.$confirm('是否确认删除外调车 编号为"' + ids + '"的数据项?', '警告', {
+    /** 批量作废按钮 */
+    handleMultiVoid(row) {
+      //const ids = row.id || this.ids
+      const vehicleNos = row.vehicleNo || this.vehicleNos
+      console.log(vehicleNos)
+      //return false
+      this.$confirm('是否确认作废所选的派车单?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(function () {
-        return delCar(ids)
+        return multiVoidCar(vehicleNos)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
       }).catch(function () {
       })
-    },*/
+    },
     /** 作废状态更改 */
     voidUpdate(row) {
       if (row.id != undefined) {
@@ -894,7 +906,7 @@ export default {
         //查询场所下的大提煤单中的所有提煤单号
         this.form.placeId = this.queryParams.placeId
         this.form.coalBillNo = undefined
-        selectCoalBillNo({'placeId': this.queryParams.placeId,'status':'0'}).then(response => {
+        selectCoalBillNo({'placeId': this.queryParams.placeId, 'status': '0'}).then(response => {
           this.BigList = response.rows
         })
         this.getList()
@@ -903,13 +915,13 @@ export default {
 
     },
     // 收发货单位建议
-    nameSearch(queryString, cb) {
+    /*nameSearch(queryString, cb) {
       let results = queryString ? this.plateNoList.filter(this.createFilter(queryString)) : this.plateNoList
       for (let item of results) {
         item.value = item.plateNo
       }
       cb(results)
-    },
+    },*/
 
     createFilter(queryString) {
 
@@ -1006,7 +1018,7 @@ export default {
     },
     //判断是否可选
     checkboxInit(row, index) {
-      if (row.inCardPrintState == '1') {
+      if (row.inCardPrintState == '1' || row.storeState === '3' || row.storeState === '1' || row.storeState === '2') {
         return 0;//不可勾选
       } else {
         return 1;
@@ -1049,7 +1061,8 @@ export default {
   //padding-top: 10px;
   //margin-top: 2.5cm;
 }
-.firstRow{
+
+.firstRow {
   border-width: 20px;
   height: 40px;
   width: 1200px;
@@ -1058,12 +1071,14 @@ export default {
   padding-top: 20px;
   //margin-top: 1cm;
 }
+
 .firstRow1 {
   border-width: 20px;
   /*border: 1px solid ;*/
   font-size: 20px;
   float: left;
 }
+
 .firstRow2 {
   width: 350px;
   margin-left: 50px;
@@ -1074,6 +1089,7 @@ export default {
   word-break: break-all;
 
 }
+
 .firstRow3 {
   margin-left: -80px;
   width: 470px;
@@ -1082,6 +1098,7 @@ export default {
   float: left;
   word-break: break-all;
 }
+
 .contractNoStyle {
   margin-left: 4cm;
 
@@ -1098,14 +1115,16 @@ export default {
   /*border: 1px solid ;*/
   padding-top: 25px;
 }
+
 .secondRow1 {
   /*border: 1px solid ;*/
-  width:500px;
+  width: 500px;
   height: 40px;
   font-size: 20px;
   padding-top: 20px;
   float: left;
 }
+
 .secondRow2 {
   height: 40px;
   /*border: 1px solid ;*/
@@ -1123,6 +1142,7 @@ export default {
   font-size: 22px;
 
 }
+
 .thirdRow1 {
   height: 40px;
   /*border: 1px solid ;*/
@@ -1130,6 +1150,7 @@ export default {
   font-size: 22px;
 
 }
+
 .thirdRow2 {
   height: 40px;
 
@@ -1138,6 +1159,7 @@ export default {
   font-size: 22px;
   float: left;
 }
+
 .fourRow {
   height: 40px;
   width: 1000px;
@@ -1146,6 +1168,7 @@ export default {
   padding-top: 55px;
   float: left;
 }
+
 .fourRow1 {
   height: 40px;
   /*border: 1px solid ;*/
@@ -1153,6 +1176,7 @@ export default {
   word-break: break-all;
   float: left;
 }
+
 .fourRow2 {
   height: 40px;
   /*border: 1px solid ;*/
@@ -1160,6 +1184,7 @@ export default {
   word-break: break-all;
   float: left;
 }
+
 /*#customerStyle{*/
 /*  margin-left: 4cm;*/
 /*}*/
