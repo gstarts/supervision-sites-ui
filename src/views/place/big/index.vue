@@ -103,16 +103,16 @@
           v-hasPermi="['place:big:add']">新增
         </el-button>
       </el-col>
-<!--      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="small"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['place:big:edit']">修改
-        </el-button>
-      </el-col>-->
+      <!--      <el-col :span="1.5">
+              <el-button
+                type="success"
+                icon="el-icon-edit"
+                size="small"
+                :disabled="single"
+                @click="handleUpdate"
+                v-hasPermi="['place:big:edit']">修改
+              </el-button>
+            </el-col>-->
       <!--      <el-col :span="1.5">
               <el-button
                 type="danger"
@@ -648,10 +648,11 @@ export default {
     },
     /** 销售信息列表 */
     getSaleConsumerInfo(placeId) {
-
-      let saleConsumerParams = {eType: '2', deptId: placeId, companyType: '3',stationPersonName:'2'}
+      //获取销售客户列表时，查的是寄仓客户和 销售客户两者的值
+      let saleConsumerParams = {eType: '2', deptId: placeId, companyType: '3', stationPersonName: '2'}
       listInfoIn(saleConsumerParams).then(response => {
         this.saleConsumerOptions = response.rows
+        this.saleConsumerOptions.unshift({'id':'无','eName':'无'})
       })
     },
     // 导入取消按钮
@@ -715,8 +716,8 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm('queryParams')
-        this.dateRange = []
-        this.handleQuery()
+      this.dateRange = []
+      this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -762,12 +763,15 @@ export default {
         this.updateForm = response.data
         this.open = true
         this.title = '修改大提煤单'
+        this.form.distribution = response.data.params.canUse
+        this.form.netWeight = response.data.params.netWeight
 
         if (response.data.remark) {
           this.attachmentList = response.data.remark.split(',')
         }
         //console.log('--------------------')
         //console.log(this.attachmentList)
+        //附件
         this.fileList = []
         for (let file of response.data.attachmentList) {
           this.fileList.push({
@@ -1003,10 +1007,10 @@ export default {
           if (element.eName === val) {
             this.form.customerId = element.id
             this.weightParams.id = element.id
-            this.queryParams.customerId = element.id
-            listStoreContract(this.queryParams).then((response) => {
+            //this.queryParams.customerId = element.id
+            listStoreContract({'placeId': this.queryParams.placeId, 'customerId': element.id}).then((response) => {
               this.contractOptions = response.rows
-              this.queryParams.customerId = undefined
+              //this.queryParams.customerId = undefined
             })
           }
         })
