@@ -1060,11 +1060,12 @@ export default {
           //皮重
           this.form.tare = this.Poundweight;
           //判断出场时毛重是否未填写
-          if (this.form.tare > 0 && this.form.grossWeight > this.form.tare) {
+          //this.form.tare > 0 &&
+          if (this.form.grossWeight >= this.form.tare) {
             //计算净重
             this.form.netWeight = this.form.grossWeight - this.form.tare;
           } else {
-            this.msgError("净重计算失败,毛重不可为0或空");
+            this.msgError("净重计算失败,请检查称重数据");
             return false
           }
           //空进重出 出场
@@ -1072,11 +1073,12 @@ export default {
           //毛重
           this.form.grossWeight = this.Poundweight;
           //判断出场时皮重是否未填写
-          if (this.form.tare > 0 && this.form.grossWeight > this.form.tare) {
+          //this.form.tare > 0 &&
+          if (this.form.grossWeight >= this.form.tare) {
             //计算净重
             this.form.netWeight = this.form.grossWeight - this.form.tare;
           } else {
-            this.msgError("净重计算失败,皮重不可为0或空");
+            this.msgError("净重计算失败,请检查称重数据");
             return false
           }
         } else {
