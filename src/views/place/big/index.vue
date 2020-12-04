@@ -48,15 +48,7 @@
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <!--        statusOptions-->
-        <!--        <el-input-->
-        <!--          v-model="queryParams.status"-->
-        <!--          placeholder="请输入状态"-->
-        <!--          clearable-->
-        <!--          size="small"-->
-        <!--          @keyup.enter.native="handleQuery"-->
-        <!--        />-->
-        <el-select v-model="queryParams.status" placeholder="请选择状态" size="small">
+        <el-select v-model="queryParams.status" clearable placeholder="请选择状态" size="small">
           <el-option
             v-for="dept in statusOptions"
             :key="dept.dictValue"
@@ -722,8 +714,8 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm('queryParams'),
-        this.dateRange = [],
+      this.resetForm('queryParams')
+        this.dateRange = []
         this.handleQuery()
     },
     // 多选框选中数据
@@ -1014,6 +1006,7 @@ export default {
             this.queryParams.customerId = element.id
             listStoreContract(this.queryParams).then((response) => {
               this.contractOptions = response.rows
+              this.queryParams.customerId = undefined
             })
           }
         })
