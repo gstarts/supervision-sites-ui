@@ -53,14 +53,6 @@ export function updateBig(data) {
   })
 }
 
-export function updateVoidCar(data) {
-  return request({
-    url: '/place/big/void',
-    method: 'post',
-    data: data
-  })
-}
-
 // 删除大提煤单 大提煤单
 export function delBig(id) {
   return request({
@@ -107,5 +99,13 @@ export function addBigFile(data) {
     url: '/place/big/addFile',
     method: 'post',
     data: data
+  })
+}
+
+// 批量作废派车单
+export function multiVoid(id) {
+  return request({
+    url: '/place/big/del/' + id,
+    method: 'delete'
   })
 }

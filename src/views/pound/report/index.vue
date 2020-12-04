@@ -216,7 +216,8 @@
                 style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
         <!--   checkConsumer   -->
         <!--      <af-table-column label="发货单位" align="center" prop="goodsName"/>-->
-        <af-table-column label="客户" align="center" prop="deliveryUnit"/>
+        <el-table-column label="序号" type="index"/>
+        <af-table-column label="客户11" align="center" prop="deliveryUnit"/>
         <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
         <af-table-column label="煤种" align="center" prop="goodsName"/>
         <af-table-column :label="queryParams.statisticsMode===1?'车数':'车号'" align="center" prop="plateNum"/>
@@ -259,6 +260,7 @@
                     style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
             <!--   checkConsumer   -->
             <!--      <af-table-column label="发货单位" align="center" prop="goodsName"/>-->
+            <el-table-column label="序号" type="index" align="center"    width="80px"/>
             <af-table-column label="客户" align="center" prop="deliveryUnit"/>
             <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
             <af-table-column label="煤种" align="center" prop="goodsName"/>

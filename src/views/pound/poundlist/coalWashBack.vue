@@ -1194,6 +1194,8 @@ export default {
         viaType: undefined,
         errState: '0'
       };
+      //清空后，重新激活车牌号列表
+      this.$refs['vehicleNo'].focus()
     },
     //查询可用的库位
     /*getStoreCode(placeId) {
@@ -1536,8 +1538,8 @@ export default {
         }
       }
       let that = this
-      //todo 暂时不验证皮重异常
-      errMsg = ''
+      //验证皮重异常
+      //errMsg = ''
       if (errMsg !== '') { //如果错误信息不为空
         this.$prompt(errMsg, '提示', {
           confirmButtonText: '确定',
