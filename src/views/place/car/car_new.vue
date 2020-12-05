@@ -418,7 +418,7 @@
           <div class="thirdRow1">
             <span>{{ item.goodsName }}</span>
           </div>
-          <div calss="thirdRow2">
+          <div class="thirdRow2">
             <!--    场所名      -->
             <span class="loadingStyle">{{ "嘉易达" }}</span>
           </div>
@@ -434,16 +434,20 @@
           </div>
 
         </div>
+
+
         <div class="fiveRow">
           <span>{{ biller }}</span>
         </div>
+      </div>
         <!--        <div class="nouse"></div>-->
       </div>
 
-    </div>
 
+
+<!--    补打-->
     <div id="dayinMake" v-show="showMake">
-      <div v-for="(itemMake,index) in printMakeList" class="all">
+      <div v-for="(itemMake,index) in printMakeList" class="all" >
         <div :id="gennerateId(index)"></div>
         <div class="headRow">{{ itemMake.no }}</div>
         <div class="firstRow">
@@ -471,7 +475,7 @@
           <div class="thirdRow1">
             <span>{{ itemMake.goodsName }}</span>
           </div>
-          <div calss="thirdRow2">
+          <div class="thirdRow2">
             <!--    场所名      -->
             <span class="loadingStyle">{{ "嘉易达" }}</span>
           </div>
@@ -1051,10 +1055,12 @@ export default {
 /*  margin: 10mm 15mm 10mm 15mm;*/
 /*}*/
 .all {
-  //height: 10px;
-  width: 1200px;
-  margin-top: 80px;
+  height: 470px;
+  width: 1100px;
+  /*margin-top: 80px;*/
+  margin-left: 5px;
   /*border: 1px solid ;*/
+  padding-top: 74px;
   /*margin-top: 1cm;*/
 }
 
@@ -1069,11 +1075,12 @@ export default {
 
 .firstRow {
   border-width: 20px;
-  height: 40px;
-  width: 1200px;
+  height: 50px;
+  width: 1100px;
   padding-left: 2cm;
+  padding-top: 10px;
   /*border: 1px solid ;*/
-  padding-top: 20px;
+  margin-top: 15px;
   //margin-top: 1cm;
 }
 
@@ -1114,11 +1121,12 @@ export default {
 }
 
 .secondRow {
-  height: 40px;
+  height: 50px;
   width: 1000px;
   padding-left: 2cm;
+  margin-top: 0px;
   /*border: 1px solid ;*/
-  padding-top: 25px;
+  /*padding-top: 15px;*/
 }
 
 .secondRow1 {
@@ -1131,50 +1139,65 @@ export default {
 }
 
 .secondRow2 {
+  width: 400px;
   height: 40px;
   /*border: 1px solid ;*/
   font-size: 20px;
-  padding-left: 20px;
-  float: left;
+  /*padding-left: 20px;*/
+  margin-top: 10px;
+  padding-top: 10px;
+  float: right;
 }
 
 .thirdRow {
-  height: 40px;
-  width: 1200px;
+  height: 60px;
+  width: 1100px;
   padding-left: 2cm;
   /*border: 1px solid ;*/
-  padding-top: 35px;
-  font-size: 22px;
+  margin-top: 20px;
+  /*padding-top: 35px;*/
+  font-size: 20px;
 
 }
 
+
+
+
 .thirdRow1 {
+  width: 500px;
   height: 40px;
   /*border: 1px solid ;*/
-  padding-top: 35px;
-  font-size: 22px;
-
+  /*margin-top: 15px;*/
+  padding-top: 15px;
+  /*!*padding-top: 35px;*!*/
+  /*font-size: 22px;*/
+  /*display: inline-block;*/
 }
 
 .thirdRow2 {
+  width: 400px;
   height: 40px;
-
   /*border: 1px solid ;*/
-  padding-top: 35px;
-  font-size: 22px;
-  float: left;
+  margin-top: -25px;
+  padding-left: 30px;
+  font-size: 20px;
+  float: right;
+  /*display: inline-block;*/
+  margin-left: 30px;
 }
 
 .fourRow {
-  height: 40px;
+  height: 60px;
   width: 1000px;
   padding-left: 2cm;
   /*border: 1px solid ;*/
-  padding-top: 55px;
-  float: left;
+  /*padding-top: 55px;*/
+  margin-top: 10px;
+  /*float: right;*/
 }
 
 .fourRow1 {
+  width: 400px;
   height: 40px;
   /*border: 1px solid ;*/
   font-size: 22px;
@@ -1183,29 +1206,36 @@ export default {
 }
 
 .fourRow2 {
+  width: 400px;
   height: 40px;
   /*border: 1px solid ;*/
   font-size: 22px;
   word-break: break-all;
-  float: left;
+  padding-left: 80px;
+  float: right;
 }
 
 /*#customerStyle{*/
 /*  margin-left: 4cm;*/
 /*}*/
+.nullStyle{
+  font-size: 20px;
 
+}
 .carriageStyle {
-  margin-left: 17cm;
+  /*margin-left: 17cm;*/
+  /*margin-top: 20px;*/
+  padding-left: 120px;
   font-size: 20px;
 }
 
 .loadingStyle {
-  margin-left: 15.5cm;
-  padding-left: 2cm;
+  /*margin-left: 15.5cm;*/
+  /*padding-left: 2cm;*/
 }
 
 .receiptStyle {
-  margin-left: 14.5cm;
+
 
 }
 
@@ -1215,8 +1245,7 @@ export default {
   padding-left: 1cm;
   font-size: 22px;
   /*border: 1px solid ;*/
-  padding-top: 85px;
-  margin-top: 3cm;
+  margin-top: 1.2cm;
 }
 
 .nouse {
@@ -1226,14 +1255,14 @@ export default {
 }
 
 #dayin {
-  height: 300px;
-  width: 500px;
+  height: 9.40cm;
+  width: 21cm;
   /*border: 1px solid ;*/
 }
 
 #dayinMake {
-  height: 100px;
-  width: 500px;
+  height: 9.40cm;
+  width: 21cm;
   /*border: 1px solid ;*/
 }
 .printSpan{
