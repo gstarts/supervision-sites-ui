@@ -109,3 +109,12 @@ export function multiVoid(id) {
     method: 'delete'
   })
 }
+
+// 结束大提煤单 大提煤单
+export function overBig(data) {
+  return request({
+    url: '/place/big/over',
+    method: 'put',
+    data: data
+  })
+}

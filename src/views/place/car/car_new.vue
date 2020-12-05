@@ -40,14 +40,6 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" type="warning" @click="resetQuery">重置</el-button>
-        <el-button
-          size="mini"
-          @click="print"
-          v-print="'#dayin'"
-          type="info"
-          icon="el-icon-printer">
-          打印入门证
-        </el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="10" class="mb8">
@@ -95,10 +87,18 @@
         <el-button
           icon="el-icon-download"
           size="mini"
-          type="info"
+          type="success"
           v-hasPermi="['place:outstoreDoc:import']"
           @click="handleImport">
           导入
+        </el-button>
+        <el-button
+          size="mini"
+          @click="print"
+          v-print="'#dayin'"
+          type="info"
+          icon="el-icon-printer">
+          打印入门证
         </el-button>
       </el-col>
     </el-row>
@@ -106,9 +106,9 @@
     <el-table v-loading="loading" :data="docList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" :selectable="checkboxInit"/>
       <el-table-column label="打印状态(次数)" width="110">
-        <template scope="scope" >
+        <template scope="scope">
           <span v-if="scope.row.inCardPrintState =='0'" style="color:green">未打印</span>
-          <span class="printSpan" v-else-if="scope.row.inCardPrintState !='0'" >{{scope.row.inCardPrintState}}</span>
+          <span class="printSpan" v-else-if="scope.row.inCardPrintState !='0'">{{ scope.row.inCardPrintState }}</span>
         </template>
       </el-table-column>
       <af-table-column label="ID" align="center" prop="id"/>
@@ -1027,7 +1027,7 @@ export default {
     },
     //判断是否可选
     checkboxInit(row, index) {
-      if (row.inCardPrintState == '1' || row.storeState === '3' || row.storeState === '1' || row.storeState === '2') {
+      if (row.storeState === '3' || row.storeState === '1' || row.storeState === '2') {
         return 0;//不可勾选
       } else {
         return 1;
@@ -1265,7 +1265,8 @@ export default {
   width: 21cm;
   /*border: 1px solid ;*/
 }
-.printSpan{
+
+.printSpan {
   color: red;
   font-size: 15px;
   text-align: center;

@@ -5,7 +5,6 @@
         执行完毕
       </el-button>
     </el-row>
-
     <el-row :gutter="10">
       <el-col :span="14">
         <el-card class="mb20">
@@ -334,7 +333,7 @@
                      type="text"
                      icon="el-icon-warning"
                      @click="voidUpdate(scope.row)"
-                     v-hasPermi="['place:big:void']">作废
+                     v-hasPermi="['place:outstoreDoc:void']">作废
           </el-button>
           <!-- <el-button
             type="text"
@@ -489,9 +488,8 @@
 </template>
 
 <script>
-import {addBig, delBig, detailsBig, getBig, updateBig, updateVoidCar} from "@/api/place/big";
-import {updateHead} from "@/api/place/head";
-import {delImport} from "@/api/place/import";
+import {addBig, delBig, detailsBig, getBig, overBig, updateBig} from "@/api/place/big";
+import {updateVoidCar} from "@/api/place/outstoreDoc";
 
 export default {
   name: "Big",
@@ -648,11 +646,12 @@ export default {
         }).then(function () {
           form.status = "1"
           //console.log('确定了222')
-          updateBig(form).then((response) => {
+          overBig(form).then((response) => {
             if (response.code === 200) {
               //console.log('确定了2221111')
               //this.msgSuccess("修改成功");
               //this.getList();
+              this.form.status = "1"
             }
           });
         }).then(() => {
@@ -724,9 +723,9 @@ export default {
         }).then(function () {
           updateVoidCar(row).then((response) => {
             if (response.code === 200) {
-              this.$message.success(response.msg);
+              //this.$message.success(response.msg);
               //this.getList();
-              //row.storeState = '3'
+              row.storeState = '3'
             }
           })
         }).then(() => {

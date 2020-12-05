@@ -48,15 +48,7 @@
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <!--        statusOptions-->
-        <!--        <el-input-->
-        <!--          v-model="queryParams.status"-->
-        <!--          placeholder="请输入状态"-->
-        <!--          clearable-->
-        <!--          size="small"-->
-        <!--          @keyup.enter.native="handleQuery"-->
-        <!--        />-->
-        <el-select v-model="queryParams.status" placeholder="请选择状态" size="small">
+        <el-select v-model="queryParams.status" clearable placeholder="请选择状态" size="small">
           <el-option
             v-for="dept in statusOptions"
             :key="dept.dictValue"
@@ -111,16 +103,16 @@
           v-hasPermi="['place:big:add']">新增
         </el-button>
       </el-col>
-<!--      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="small"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['place:big:edit']">修改
-        </el-button>
-      </el-col>-->
+      <!--      <el-col :span="1.5">
+              <el-button
+                type="success"
+                icon="el-icon-edit"
+                size="small"
+                :disabled="single"
+                @click="handleUpdate"
+                v-hasPermi="['place:big:edit']">修改
+              </el-button>
+            </el-col>-->
       <!--      <el-col :span="1.5">
               <el-button
                 type="danger"
@@ -159,20 +151,14 @@
       <af-table-column label="建单时间" align="center" prop="createTime"/>
       <!-- <af-table-column label="备注" align="center" prop="remark" />
       <af-table-column label="乐观锁" align="center" prop="revision" /> -->
-      <af-table-column
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-        fixed="right"
-      >
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="140px" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="small"
             type="text"
             icon="el-icon-detail"
             @click="detail(scope.row)"
-            v-hasPermi="['place:big:query']"
-          >详情
+            v-hasPermi="['place:big:query']">详情
           </el-button>
           <!-- <el-button
              type="text"
@@ -191,8 +177,7 @@
             v-hasPermi="['place:big:edit']"
             v-show="scope.row.status != '1'"
           >修改
-          </el-button
-          >
+          </el-button>
           <!--          <el-button
                       size="small"
                       type="text"
@@ -203,7 +188,7 @@
                     >删除
                     </el-button>-->
         </template>
-      </af-table-column>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -419,7 +404,7 @@
               <el-button size="small" type="primary" plain>上传附件</el-button>
               <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“.png”或“.jpg”或“.jpeg”或“.pdf”格式文件！</div>
             </el-upload>
-            <div>
+<!--         <div>
               <span v-show="updateForm.minFileName">{{ updateForm.minBucketName }}{{ updateForm.minFileName }}</span>
               <el-button
                 size="small"
@@ -438,7 +423,7 @@
                 v-hasPermi="['place:big:remove']"
               >删除
               </el-button>
-            </div>
+            </div>-->
           </el-col>
         </el-row>
       </el-form>
@@ -656,10 +641,11 @@ export default {
     },
     /** 销售信息列表 */
     getSaleConsumerInfo(placeId) {
-
-      let saleConsumerParams = {eType: '2', deptId: placeId, companyType: '3',stationPersonName:'2'}
+      //获取销售客户列表时，查的是寄仓客户和 销售客户两者的值
+      let saleConsumerParams = {eType: '2', deptId: placeId, companyType: '3', stationPersonName: '2'}
       listInfoIn(saleConsumerParams).then(response => {
         this.saleConsumerOptions = response.rows
+        this.saleConsumerOptions.unshift({'id': '无', 'eName': '无'})
       })
     },
     // 导入取消按钮
@@ -722,9 +708,9 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm('queryParams'),
-        this.dateRange = [],
-        this.handleQuery()
+      this.resetForm('queryParams')
+      this.dateRange = []
+      this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -770,21 +756,27 @@ export default {
         this.updateForm = response.data
         this.open = true
         this.title = '修改大提煤单'
-
+        this.form.distribution = response.data.params.canUse
+        this.form.netWeight = response.data.params.netWeight
+        this.fileList = []
         if (response.data.remark) {
           this.attachmentList = response.data.remark.split(',')
         }
+        if (response.data.attachmentList) {
+          for (let file of response.data.attachmentList) {
+            this.fileList.push({
+              'name': file.originalName,
+              'url': file.objectName,
+              'bucketName': file.bucketName,
+              'id': file.id
+            })
+          }
+        }
         //console.log('--------------------')
         //console.log(this.attachmentList)
-        this.fileList = []
-        for (let file of response.data.attachmentList) {
-          this.fileList.push({
-            'name': file.originalName,
-            'url': file.objectName,
-            'bucketName': file.bucketName,
-            'id': file.id
-          })
-        }
+        //附件
+
+
       })
     },
     uploadProcess() {
@@ -1011,9 +1003,10 @@ export default {
           if (element.eName === val) {
             this.form.customerId = element.id
             this.weightParams.id = element.id
-            this.queryParams.customerId = element.id
-            listStoreContract(this.queryParams).then((response) => {
+            //this.queryParams.customerId = element.id
+            listStoreContract({'placeId': this.queryParams.placeId, 'customerId': element.id}).then((response) => {
               this.contractOptions = response.rows
+              //this.queryParams.customerId = undefined
             })
           }
         })
