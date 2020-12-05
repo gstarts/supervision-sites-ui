@@ -472,6 +472,7 @@ export default {
         submitBackDate: undefined,
       }
       this.resetForm('form')
+      this.queryParams.customerId = undefined
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -697,6 +698,7 @@ export default {
             listStoreContract(this.queryParams).then((response) => {
               this.form.goodsName = ''
               this.contractOptions = response.rows
+              this.queryParams.customerId = undefined
             })
           }
         })

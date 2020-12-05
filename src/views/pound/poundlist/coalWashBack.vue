@@ -396,62 +396,63 @@
       </div>
       <!--   v-if判断 车辆类型是否为重进空出  标识为01   -->
       <div id="dayin1" v-if="this.PoundForm.stationViaType ==='01'">
-        <div style="align-content: center;">
-          <span class="poundTotal111">{{ poundTotal }}</span>
-        </div>
-        <div id="area1">
-          <span class="area-in-style">{{ nowDate }}</span>
-        </div>
-        <div style="margin-bottom: 4px;">
-          <div class="areadate1">
-            <span>{{ nowTime }}</span>
+      <!-- 整体DIV -->
+          <div style="align-content: center;">
+            <span class="poundTotal111">{{ poundTotal }}</span>
           </div>
-        </div>
-        <div id="serialNumber1">
-          <span>{{ this.pad(this.form.id) }}</span>
-        </div>
-        <div id="area-style1">
-          <span class="area-in-style">{{ form.deliveryUnit }}</span>
-        </div>
-        <div id="area-right-style1">
-          <span>{{ form.plateNum }}</span>
-        </div>
-        <br/>
-        <div id="area-style1">
-          <span class="area-in-style">{{ form.receivingUnit }}</span>
-        </div>
-        <div id="area-right-style1">
-          <span>{{ form.grossWeight }}kg</span>
-        </div>
-        <div id="area-style1">
-          <span class="area-in-style">{{ form.goodsName }}</span>
-        </div>
-        <div id="area-right-style1">
-          <span>{{ form.tare }}kg</span>
+          <div id="area1">
+            <span class="area-in-style">{{ nowDate }}</span>
+          </div>
+          <div style="margin-bottom: 4px;">
+            <div class="areadate1">
+              <span>{{ nowTime }}</span>
+            </div>
+          </div>
+          <div id="serialNumber1">
+            <span>{{ this.pad(this.form.id) }}</span>
+          </div>
+          <div id="area-style1">
+            <span class="area-in-style">{{ form.deliveryUnit }}</span>
+          </div>
+          <div id="area-right-style1">
+            <span>{{ form.plateNum }}</span>
+          </div>
           <br/>
-        </div>
-        <div id="area-style1">
-          <span class="area-in-style">{{ form.specification }}</span>
-        </div>
-        <div id="area-right-style1">
-          <span>{{ form.netWeight }}kg</span>
-          <br/>
-        </div>
-        <div id="area-all-style1">
+          <div id="area-style1">
+            <span class="area-in-style">{{ form.receivingUnit }}</span>
+          </div>
+          <div id="area-right-style1">
+            <span>{{ form.grossWeight }}kg</span>
+          </div>
+          <div id="area-style1">
+            <span class="area-in-style">{{ form.goodsName }}</span>
+          </div>
+          <div id="area-right-style1">
+            <span>{{ form.tare }}kg</span>
+            <br/>
+          </div>
+          <div id="area-style1">
+            <span class="area-in-style">{{ form.specification }}</span>
+          </div>
+          <div id="area-right-style1">
+            <span>{{ form.netWeight }}kg</span>
+            <br/>
+          </div>
+          <div id="area-all-style1">
           <span class="area-in-style">
           {{
               form.viaType === '02' ? form.remark + '  ' + form.transportUnit + '  ' + transportModeFormat(form.transportMode) + ' 补' : '补'
             }}
           </span>
-          <br/>
-        </div>
-        <div id="user-all-style1">
-          <span>{{ parseUserName(form.inUser) }}</span>
-          <span>{{ parseUserName(form.outUser) }}</span>
+            <br/>
+          </div>
+          <div id="user-all-style1">
+            <span>{{ parseUserName(form.inUser) }}</span>
+            <span>{{ parseUserName(form.outUser== ''?this.$store.state.user.nickName:form.outUser) }}</span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -1541,7 +1542,7 @@ export default {
       }
       let that = this
       //验证皮重异常
-      //errMsg = ''
+      errMsg = ''
       if (errMsg !== '') { //如果错误信息不为空
         this.$prompt(errMsg, '提示', {
           confirmButtonText: '确定',
@@ -1631,12 +1632,15 @@ export default {
 }
 
 #dayin {
+  margin-top: 25px;
+  padding-top: 15px;
   height: 500px;
   width: 1200px;
 }
 
 /*第二页*/
 #dayin1 {
+  padding-top: -25px;
   margin-top: 520px;
   height: 500px;
   width: 1200px;
@@ -1742,7 +1746,17 @@ export default {
 #area-right-style1 {
   height: 35px;
   width: 350px;
-  font-size: 20px;
+  font-size: 26px;
+  margin-top: 28px;
+  padding-top: -5px;
+  margin-left: 40px;
+  float: left;
+}
+
+#area-right-style2 {
+  height: 35px;
+  width: 350px;
+  font-size: 26px;
   margin-top: 28px;
   margin-left: 40px;
   float: left;
@@ -1776,11 +1790,13 @@ export default {
 
 /*第二页*/
 #area-all-style1 {
+  /*border: 1px solid;*/
   width: 800px;
   height: 40px;
   font-size: 20px;
   float: left;
-  margin-top: 10px;
+  /*margin-top: 10px;*/
+  padding-top: -10px;
 }
 
 .area-in-style {
@@ -1805,6 +1821,10 @@ export default {
   max-width: 20%;
 }
 
+/*打印整体DIV*/
+.MakeAll{
+  border: 1px solid;
+}
 /*改变车号字体大小的样式*/
 .coalPageSelect /deep/ .el-form-item__label {
   font-size: 30px;

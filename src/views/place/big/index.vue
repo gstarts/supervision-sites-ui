@@ -151,20 +151,14 @@
       <af-table-column label="建单时间" align="center" prop="createTime"/>
       <!-- <af-table-column label="备注" align="center" prop="remark" />
       <af-table-column label="乐观锁" align="center" prop="revision" /> -->
-      <af-table-column
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-        fixed="right"
-      >
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="140px" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="small"
             type="text"
             icon="el-icon-detail"
             @click="detail(scope.row)"
-            v-hasPermi="['place:big:query']"
-          >详情
+            v-hasPermi="['place:big:query']">详情
           </el-button>
           <!-- <el-button
              type="text"
@@ -183,8 +177,7 @@
             v-hasPermi="['place:big:edit']"
             v-show="scope.row.status != '1'"
           >修改
-          </el-button
-          >
+          </el-button>
           <!--          <el-button
                       size="small"
                       type="text"
@@ -195,7 +188,7 @@
                     >删除
                     </el-button>-->
         </template>
-      </af-table-column>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -411,7 +404,7 @@
               <el-button size="small" type="primary" plain>上传附件</el-button>
               <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“.png”或“.jpg”或“.jpeg”或“.pdf”格式文件！</div>
             </el-upload>
-            <div>
+<!--         <div>
               <span v-show="updateForm.minFileName">{{ updateForm.minBucketName }}{{ updateForm.minFileName }}</span>
               <el-button
                 size="small"
@@ -430,7 +423,7 @@
                 v-hasPermi="['place:big:remove']"
               >删除
               </el-button>
-            </div>
+            </div>-->
           </el-col>
         </el-row>
       </el-form>
@@ -652,7 +645,7 @@ export default {
       let saleConsumerParams = {eType: '2', deptId: placeId, companyType: '3', stationPersonName: '2'}
       listInfoIn(saleConsumerParams).then(response => {
         this.saleConsumerOptions = response.rows
-        this.saleConsumerOptions.unshift({'id':'无','eName':'无'})
+        this.saleConsumerOptions.unshift({'id': '无', 'eName': '无'})
       })
     },
     // 导入取消按钮
@@ -765,22 +758,25 @@ export default {
         this.title = '修改大提煤单'
         this.form.distribution = response.data.params.canUse
         this.form.netWeight = response.data.params.netWeight
-
+        this.fileList = []
         if (response.data.remark) {
           this.attachmentList = response.data.remark.split(',')
+        }
+        if (response.data.attachmentList) {
+          for (let file of response.data.attachmentList) {
+            this.fileList.push({
+              'name': file.originalName,
+              'url': file.objectName,
+              'bucketName': file.bucketName,
+              'id': file.id
+            })
+          }
         }
         //console.log('--------------------')
         //console.log(this.attachmentList)
         //附件
-        this.fileList = []
-        for (let file of response.data.attachmentList) {
-          this.fileList.push({
-            'name': file.originalName,
-            'url': file.objectName,
-            'bucketName': file.bucketName,
-            'id': file.id
-          })
-        }
+
+
       })
     },
     uploadProcess() {
