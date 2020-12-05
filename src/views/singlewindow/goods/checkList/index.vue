@@ -849,6 +849,7 @@
         :data="declist"
         tooltip-effect="dark"
         style="width: 100%"
+        @row-click='bodyFormClick1'
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
@@ -1296,6 +1297,7 @@
         :data="deccontainers"
         tooltip-effect="dark"
         style="width: 100%"
+        @row-click='bodyFormClick2'
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
@@ -1456,6 +1458,7 @@
         :data="declicensedocus"
         tooltip-effect="dark"
         style="width: 100%"
+        @row-click='bodyFormClick3'
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" min-width="55" />
@@ -1807,6 +1810,14 @@
 // import depParaList from "./../components/depParaList";
 // import depParaList2 from "./../components/depParaList2";
 import { add } from "@/api/declare/declare";
+import {
+  listDechead,
+  listAll,
+  getDechead,
+  delDechead,
+  addDechead,
+  updateDechead,
+} from "@/api/goods/dechead";
 export default {
   // components: { depParaList, depParaList2 },
   data() {
@@ -1875,6 +1886,7 @@ export default {
       // 查询参数
       queryParams: {
         postCode: undefined,
+        id: undefined,
       },
       //进口/出口报关单表头 DecHead
       dechead: {
@@ -2159,6 +2171,11 @@ export default {
   // 随附单证
   // attaDocuCdstr: undefined,
   created() {
+    let headId = this.$route.query.id;
+        if (headId) {
+          this.getInfo(headId)
+        }
+
     //业务事项 字典翻译
     this.getDicts("sw_business_matters").then((response) => {
       this.businessMattersOptions = response.data;
@@ -2251,6 +2268,24 @@ export default {
     this.List1Hide = "none";
   },
   methods: {
+    getInfo(headId) {
+      this.loading = true;
+      //将表头id 保存
+      this.queryParams.id = headId;
+      // 获取表详细信息      
+      listAll(this.queryParams).then((response) => {
+        this.dechead = response.rows[0];
+        this.decfreetxt = this.dechead.goodsdeclareDecfreetxt;
+        this.deccontainers.push(this.dechead.goodsdeclareDeccontainer);
+        this.declicensedocus.push(this.dechead.goodsdeclareDeclicensedocus);
+        this.decuser.push(this.dechead.goodsdeclareDecuser);
+        this.declist.push(this.dechead.goodsdeclareDeclist);
+        this.loading = false
+
+      }).catch(err => {
+        this.loading = false
+      })
+    },
     //
     Trailerformat(row, column) {
       return this.selectDictLabel(this.TrailertypeOptions, row.typeCode);
@@ -2288,6 +2323,21 @@ export default {
     //   console.log(row.tradeCurr);
     //   return this.selectDictLabel(this.currencySystemOptions, row.tradeCurr);
     // },
+    // 点击某一条集装箱信息
+    bodyFormClick1(row, column, event) {
+      // this.bodyIndex = JSON.parse(JSON.stringify(row)).rowIndex
+      this.commodityForm = JSON.parse(JSON.stringify(row))
+    },
+    // 点击某一条集装箱信息
+    bodyFormClick2(row, column, event) {
+      // this.bodyIndex = JSON.parse(JSON.stringify(row)).rowIndex
+      this.containerForm = JSON.parse(JSON.stringify(row))
+    },
+    // 点击某一条集装箱信息
+    bodyFormClick3(row, column, event) {
+      // this.bodyIndex = JSON.parse(JSON.stringify(row)).rowIndex
+      this.DocumentsForm = JSON.parse(JSON.stringify(row))
+    },
     //整体新增
     SingleAll() {
       this.dechead.promiseItmes =
