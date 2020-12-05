@@ -1541,7 +1541,7 @@ export default {
       }
       let that = this
       //验证皮重异常
-      //errMsg = ''
+      errMsg = ''
       if (errMsg !== '') { //如果错误信息不为空
         this.$prompt(errMsg, '提示', {
           confirmButtonText: '确定',
