@@ -248,7 +248,6 @@
           <el-col :span="8">
             <el-form-item label="驾驶员代码" prop="masterId">
               <el-input
-                @focus="dialogTableVisible2 = true"
                 v-model="borderTransportMeans.master.masterId"
                 placeholder="驾驶员代码"
                 clearable
@@ -259,7 +258,6 @@
           <el-col :span="8">
             <el-form-item label="驾驶员名称" prop="name">
               <el-input
-                @focus="dialogTableVisible2 = true"
                 v-model="borderTransportMeans.master.name"
                 placeholder="驾驶员名称"
                 clearable
@@ -274,7 +272,7 @@
                 v-model="borderTransportMeans.arrivalDateTime"
                 type="datetime"
                 placeholder="选择日期时间"
-                value-format="yyyyMMddHHmmss"
+                value-format="yyyy-MM-dd HH:mm:ss"
               />
             </el-form-item>
           </el-col>
