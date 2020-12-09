@@ -71,7 +71,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleMultiVoid"
-          v-hasPermi="['place:big:void']"
+          v-hasPermi="['place:outstoreDoc:void']"
         >作废
         </el-button>
       </el-col>
@@ -139,7 +139,7 @@
             type="text"
             icon="el-icon-delete"
             @click="voidUpdate(scope.row)"
-            v-hasPermi="['place:big:void']"
+            v-hasPermi="['place:outstoreDoc:void']"
             v-show="scope.row.storeState === '0' ">作废
           </el-button>
           <el-button
@@ -198,12 +198,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="车皮重(KG)" prop="vehicleTareWeight">
-              <el-input v-model.number="form.vehicleTareWeight" placeholder="请输入车皮重"/>
+              <el-input v-model="form.vehicleTareWeight" placeholder="请输入车皮重"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="货净重(KG)" prop="vehicleGoodsNetWeight">
-              <el-input v-model.number="form.vehicleGoodsNetWeight" placeholder="请输入货净重"/>
+              <el-input v-model="form.vehicleGoodsNetWeight" placeholder="请输入货净重"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -593,14 +593,14 @@ export default {
           {required: true, message: '请选择提煤单', trigger: 'change'}
         ],
         vehicleGoodsNetWeight: [
-          {message: '货净重不能为空', trigger: 'blur'},
-          {type: 'number', message: '货净重必须是数字'},
-          {pattern: /^\+?[1-9][0-9]*$/, message: '不能为0', trigger: 'blur'}
+         // {message: '货净重不能为空', trigger: 'blur'},
+          //{type: 'number', message: '货净重必须是数字'},
+          {pattern: /^\+?[1-9][0-9]*$/, message: '货净重必须是数字,且不能为0', trigger: 'blur'}
         ],
         vehicleTareWeight: [
-          {message: '车皮重不能为空', trigger: 'blur'},
-          {type: 'number', message: '车皮重必须是数字'},
-          {pattern: /^\+?[1-9][0-9]*$/, message: '不能为0', trigger: 'blur'}
+         // {message: '车皮重不能为空', trigger: 'blur'},
+          //{type: 'number', message: '车皮重必须是数字'},
+          {pattern: /^\+?[1-9][0-9]*$/, message: '车皮重必须是数字,且不能为0', trigger: 'blur'}
         ],
         vehicleNo: [
           {required: true, message: '车牌号不能为空', trigger: 'blur'}

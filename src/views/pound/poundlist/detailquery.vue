@@ -344,20 +344,20 @@
                      v-hasPermi="['place:modify:apply']"
           >申请修改
           </el-button>
-          <el-button v-show="scope.row.status === '0'"
+          <!--  <el-button v-show="scope.row.status === '0'"
+                               size="mini"
+                               type="text"
+                               icon="el-icon-edit"
+                               @click="printApplication(scope.row)"
+                               v-hasPermi="['place:print:add']"
+                    >打印申请
+                    </el-button>-->
+          <el-button v-show="scope.row.flowDirection === 'E'"
                      size="mini"
                      type="text"
-                     icon="el-icon-edit"
-                     @click="printApplication(scope.row)"
-                     v-hasPermi="['place:print:add']"
-          >打印申请
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handlePrint(scope.row)"
-            v-hasPermi="['place:sheet:print']"
+                     icon="el-icon-printer"
+                     @click="handlePrint(scope.row)"
+                     v-hasPermi="['place:sheet:print']"
           >{{ scope.row.printState === '0' ? '打印' : '补打' }}
           </el-button>
         </template>
@@ -457,7 +457,7 @@
           </el-col>
         </el-row>
         <!--外调车时，显示 可以改提煤单号-->
-        <el-row :gutter="10" v-show="selectPound.viaType === '02' && selectPound.flowDirection ==='E'">
+        <el-row :gutter="10" v-show="selectPound.viaType === '02'">
           <el-col :span="11">
             <el-form-item label="提煤单号" prop="coalBillNo">
               {{ poundModify.coalBillNo }}
@@ -648,7 +648,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="审批人" prop="auditUser">
-              <el-select v-model="poundModify.auditUser" filterable placeholder="请选择提煤单号">
+              <el-select v-model="poundModify.auditUser" filterable placeholder="请选择审批人">
                 <el-option
                   v-for="item in auditUserList"
                   :key="item.userName"
@@ -1252,7 +1252,9 @@ export default {
     },
     /** 打印按钮操作 */
     handlePrint(row) {
+      // 判断磅单时间 与当前时间 相差是否超过4小时
       if (((new Date().getTime() - new Date(row.outTime).getTime()) / 1000 / 60 / 60) <= 4) {
+
         this.printShow = true
         let date = parseTime(new Date())
         this.printDate.nowDate = date.substring(0, 10);

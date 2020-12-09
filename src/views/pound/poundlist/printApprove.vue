@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="场所" prop="stationId">
-        <el-select v-model="queryParams.stationId" placeholder="请选择场所" @change="changePlace">
+      <el-form-item label="场所" prop="placeId">
+        <el-select v-model="queryParams.placeId" placeholder="请选择场所" @change="changePlace">
           <el-option
             v-for="dept in depts"
             :key="dept.deptId"
@@ -298,7 +298,7 @@ export default {
         applyTime: undefined,
         approvalTime: undefined,
         revision: undefined,
-        stationId:undefined
+        placeId:undefined
       },
       // 表单参数
       form: {
@@ -340,13 +340,13 @@ export default {
     });
     this.depts = getUserDepts("0");
     if (this.depts.length > 0) {
-      this.queryParams.stationId = this.depts[0].deptId;
+      this.queryParams.placeId = this.depts[0].deptId;
     }
     // this.getList();
   },
   methods: {
     getUserList() {
-      listUser({'deptId': this.queryParams.stationId, 'delFlag': '0'}).then(response => {
+      listUser({'deptId': this.queryParams.placeId, 'delFlag': '0'}).then(response => {
         if (response.code === 200) {
           this.userList = response.rows
           console.log("==============")
