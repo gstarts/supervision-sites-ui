@@ -373,7 +373,7 @@
       @pagination="getList"
     />
 
-    <!--磅单申请的弹出框-->
+    <!--磅单修改申请的弹出框-->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="formModify" :model="poundModify" :rules="rulesModifyNew" label-width="120px">
         <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
@@ -669,39 +669,44 @@
 
     <!--  磅单打印申请  -->
     <el-dialog :title="printTitle" :visible.sync="printOpen" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="磅单ID" prop="poundId">
-          <el-input v-model="form.poundId" placeholder="请输入磅单ID" disabled/>
+      <el-form ref="form" :model="form" :rules="rulesPrint" label-width="120px">
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="磅单编号" prop="poundId">
+              <el-input v-model="form.poundId" placeholder="请输入磅单ID" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12"></el-col>
+        </el-row>
+        <el-form-item label="申请原因" prop="applyFactor">
+          <el-input v-model="form.applyFactor" type="textarea" placeholder="请输入申请原因"/>
         </el-form-item>
-        <!--        <el-form-item label="申请人名称" prop="applyUserName">-->
-        <!--          <el-input v-model="form.applyUserName" placeholder="请输入申请人名称"/>-->
-        <!--        </el-form-item>-->
-        <el-form-item label="审批组" prop="auditGroup">
-          <el-select v-model="poundModify.auditGroup" filterable placeholder="请选择审批组" @change="groupChange">
-            <el-option
-              v-for="item in auditGroupList"
-              :key="item.groupCode"
-              :label="item.groupName"
-              :value="item.groupCode">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="审批用户名称" prop="approvalUserName">
-          <el-select v-model="form.approvalUserName" filterable placeholder="请输入审批用户名称">
-            <el-option
-              v-for="item in auditUserList"
-              :key="item.userName"
-              :label="item.nickName"
-              :value="item.userName">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
-        </el-form-item>
-        <el-form-item label="申请原因" prop="applicationFactor">
-          <el-input v-model="form.applicationFactor" type="textarea" placeholder="请输入申请原因"/>
-        </el-form-item>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="审批组" prop="auditGroup">
+              <el-select v-model="poundModify.auditGroup" filterable placeholder="请选择审批组" @change="groupChange">
+                <el-option
+                  v-for="item in auditGroupList"
+                  :key="item.groupCode"
+                  :label="item.groupName"
+                  :value="item.groupCode">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="审批人" prop="approvalUserName">
+              <el-select v-model="form.approvalUserName" filterable placeholder="请选择审批人">
+                <el-option
+                  v-for="item in auditUserList"
+                  :key="item.userName"
+                  :label="item.nickName"
+                  :value="item.userName">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="printSubmitForm">确 定</el-button>
@@ -776,7 +781,7 @@ import {selectCoalBillNo} from "@/api/place/big";
 import {parseTime} from "@/utils/common";
 import {listUser} from "@/api/system/user";
 import {listStoreContract} from "@/api/place/storeContract";
-import {addPrint, getPrint} from "@/api/place/print";
+import {addPrint, checkPrint, getPrint} from "@/api/place/print";
 import {listGroup} from "@/api/place/group";
 import {listInfo} from "@/api/basis/enterpriseInfo";
 
@@ -916,6 +921,12 @@ export default {
       ruleCoalBillNo: {
         modifyCoalBillNo: [{type: 'string', required: true, message: '提煤单号不能为空', trigger: 'change'}],
       },
+      //磅单打印申请的表单验证
+      rulesPrint: {
+        poundId: [{required: true, message: '磅单编号不能为空', trigger: 'blur'}],
+        applyFactor: [{type: 'string', required: true, message: '申请原因不能为空', trigger: 'blur'}],
+        approvalUserName: [{required: true, message: '审批人不能为空', trigger: 'change'}],
+      },
       poundModify: {
         id: undefined,
         poundId: undefined,
@@ -986,7 +997,8 @@ export default {
         //备注
         remark: '',
         //申请原因
-        applicationFactor: '',
+        applyFactor: '',
+        placeId: '',
       },
       auditGroupList: [],
       auditUserList: [],
@@ -1091,14 +1103,14 @@ export default {
     printSubmitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          this.form.placeId = this.queryParams.stationId
           addPrint(this.form).then(response => {
             if (response.code === 200) {
               this.msgSuccess("申请成功");
               this.printOpen = false;
               this.getList();
-            } else if (response.data == '101') {
+            } else {
               this.msgError(response.msg);
-
             }
           });
         }
@@ -1280,6 +1292,7 @@ export default {
           //设置延迟执行
           this.printShow = false
         }, 2000);
+        // 没超过4小时，直接可以打印，并更新打印状态
         updatePrintState(row.id).then(response => {
           if (response.code === 200) {
             this.getList()
@@ -1288,13 +1301,18 @@ export default {
         this.$refs['printBtn'].$el.click()
         //阻塞操作
       } else {
-        getPrint(row.id).then(response => {
+        checkPrint(row.id).then(response => {
           //101 待审批 102 通过 103 未通过 104 无单号
-          if (response.data == "101") {
+          /**
+           * int canPrint = 0; //可以打印
+           int needApply = 1; //需要申请
+           int approving = 2; //审批中
+           */
+          if (response.data === 2) {
             this.$message.info(response.msg);
             return false
-          } else if (response.data == "102") {
-            this.$message.success(response.msg);
+          } else if (response.data === 0) { //可以打印的
+            //this.$message.success(response.msg);
             this.printShow = true
             let date = parseTime(new Date())
             this.printDate.nowDate = date.substring(0, 10);
@@ -1324,18 +1342,11 @@ export default {
               if (response.code === 200) {
                 this.getList()
               }
-              ;
             })
             this.$refs['printBtn'].$el.click()
             //阻塞操作
-          } else if (response.data == "103") {
-            this.$message.warning(response.msg);
-            return false
-          } else if (response.data == "104") {
-            this.$message.error(response.msg);
-            return false
-          } else if (response.data == "105") {
-            this.$message.warning(response.msg);
+          } else { //弹出申请框
+            this.printApplication(row)
           }
         })
       }

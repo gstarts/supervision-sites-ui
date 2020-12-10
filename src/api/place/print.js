@@ -42,3 +42,11 @@ export function delPrint(id) {
     method: 'delete'
   })
 }
+
+// 查询 磅单查询审批详细
+export function checkPrint(poundId) {
+  return request({
+    url: '/place/print/checkPoundInfo/' + poundId,
+    method: 'get'
+  })
+}
