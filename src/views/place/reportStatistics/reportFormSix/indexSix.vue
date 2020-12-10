@@ -162,7 +162,7 @@
     </el-form>
 
 
-    <el-table v-loading="loading" :data="reportList" show-summary :summary-method="getSummaries" :border="true">
+    <el-table v-loading="loading" :data="reportList"  :border="true">
       <el-table-column label="寄仓客户" align="center" prop="column1"/>
       <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
       <el-table-column label="合同" align="center" prop="column2"></el-table-column>
@@ -209,7 +209,7 @@
             <!--      </div>-->
             <!--      </div>-->
 
-            <el-table v-loading="loading" :data="item" id="analyouttable" show-summary :summary-method="getSummaries"
+            <el-table v-loading="loading" :data="item" id="analyouttable"
                       :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
                       :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
                       style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
@@ -579,37 +579,37 @@
           this.queryParams.customerName = ''
         }
       },
-      getSummaries(param) {
-        const {columns, data} = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          //index就当table的下标 0 为起始表头
-          if (index === 0) {
-            sums[index] = '总重量';
-            return;
-          }
-          const values = data.map(item => Number(item[column.property]));
-          if (!values.every(value => isNaN(value))) {
-            sums[index] = values.reduce((prev, curr) => {
-              const value = Number(curr);
-              //想计算哪行 index就等于那一行的下标 注意:下标起始值为0
-              if (!isNaN(value) && index === 2) {
-                return prev + curr;
-              }
-              if (!isNaN(value) && index === 3) {
-                return prev + curr;
-              }
-              if (!isNaN(value) && index === 4) {
-                return prev + curr;
-              }
-            }, 0);
-          }
-        });
-        sums[2] = (sums[2] / 1000).toFixed(2);
-        sums[3] = (sums[3] / 1000).toFixed(2);
-        sums[4] = (sums[4] / 1000).toFixed(2);
-        return sums;
-      }
+      // getSummaries(param) {
+      //   const {columns, data} = param;
+      //   const sums = [];
+      //   columns.forEach((column, index) => {
+      //     //index就当table的下标 0 为起始表头
+      //     if (index === 0) {
+      //       sums[index] = '总重量';
+      //       return;
+      //     }
+      //     const values = data.map(item => Number(item[column.property]));
+      //     if (!values.every(value => isNaN(value))) {
+      //       sums[index] = values.reduce((prev, curr) => {
+      //         const value = Number(curr);
+      //         //想计算哪行 index就等于那一行的下标 注意:下标起始值为0
+      //         if (!isNaN(value) && index === 2) {
+      //           return prev + curr;
+      //         }
+      //         if (!isNaN(value) && index === 3) {
+      //           return prev + curr;
+      //         }
+      //         if (!isNaN(value) && index === 4) {
+      //           return prev + curr;
+      //         }
+      //       }, 0);
+      //     }
+      //   });
+      //   sums[2] = (sums[2] / 1000).toFixed(2);
+      //   sums[3] = (sums[3] / 1000).toFixed(2);
+      //   sums[4] = (sums[4] / 1000).toFixed(2);
+      //   return sums;
+      // }
     }
   };
 </script>
