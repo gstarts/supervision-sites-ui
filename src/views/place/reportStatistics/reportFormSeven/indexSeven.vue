@@ -258,7 +258,7 @@
             :title="titleList"
             :footer="excelFooter"
             :default-value="defaultValue"
-            name="嘉易达监管场所库存情况报表.xls">
+            name="嘉易达监管场所提煤单报表.xls">
             <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
             <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
           </download-excel>
@@ -273,7 +273,7 @@
 
     </el-form>
     <!--    展示数据-->
-    <el-table v-loading="loading" :data="reportList" :border="true" show-summary>
+    <el-table v-loading="loading" :data="reportList" :border="true" >
       <el-table-column label="寄仓客户" align="center" prop="column1"/>
       <el-table-column label="寄仓合同号" align="center" prop="column2"/>
       <el-table-column label="客户名称" align="center" prop="column19"/>
