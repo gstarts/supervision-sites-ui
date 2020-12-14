@@ -105,10 +105,11 @@
 
     <el-table v-loading="loading" :data="docList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" :selectable="checkboxInit"/>
-      <el-table-column label="打印状态(次数)" width="110">
+      <el-table-column label="打印次数" align="center">
         <template scope="scope">
-          <span v-if="scope.row.inCardPrintState =='0'" style="color:green">未打印</span>
-          <span class="printSpan" v-else-if="scope.row.inCardPrintState !='0'">{{ scope.row.inCardPrintState }}</span>
+          <span v-if="scope.row.inCardPrintState ==='0' || scope.row.inCardPrintState == null "
+                style="color:green">未打印</span>
+          <span class="printSpan" v-else-if="scope.row.inCardPrintState !=='0'">{{ scope.row.inCardPrintState }}</span>
         </template>
       </el-table-column>
       <af-table-column label="ID" align="center" prop="id"/>
@@ -132,7 +133,7 @@
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
-        fixed="right" width="100px">
+        fixed="right" width="140px">
         <template scope="scope">
           <el-button
             size="mini"
@@ -143,13 +144,12 @@
             v-show="scope.row.storeState === '0' ">作废
           </el-button>
           <el-button
-            v-if="scope.row.inCardPrintState !=0"
             size="mini"
             type="text"
-            icon="el-icon-delete"
+            icon="el-icon-printer"
             v-print="'#dayinMake'"
             @click="printMake(scope.row)"
-          >补打
+          >{{ scope.row.inCardPrintState == null || scope.row.inCardPrintState === '0' ? '打印' : '补打' }}
           </el-button>
         </template>
       </el-table-column>
@@ -440,14 +440,13 @@
           <span>{{ biller }}</span>
         </div>
       </div>
-        <!--        <div class="nouse"></div>-->
-      </div>
+      <!--        <div class="nouse"></div>-->
+    </div>
 
 
-
-<!--    补打-->
+    <!--    补打-->
     <div id="dayinMake" v-show="showMake">
-      <div v-for="(itemMake,index) in printMakeList" class="all" >
+      <div v-for="(itemMake,index) in printMakeList" class="all">
         <div :id="gennerateId(index)"></div>
         <div class="headRow">{{ itemMake.no }}</div>
         <div class="firstRow">
@@ -593,12 +592,12 @@ export default {
           {required: true, message: '请选择提煤单', trigger: 'change'}
         ],
         vehicleGoodsNetWeight: [
-         // {message: '货净重不能为空', trigger: 'blur'},
+          // {message: '货净重不能为空', trigger: 'blur'},
           //{type: 'number', message: '货净重必须是数字'},
           {pattern: /^\+?[1-9][0-9]*$/, message: '货净重必须是数字,且不能为0', trigger: 'blur'}
         ],
         vehicleTareWeight: [
-         // {message: '车皮重不能为空', trigger: 'blur'},
+          // {message: '车皮重不能为空', trigger: 'blur'},
           //{type: 'number', message: '车皮重必须是数字'},
           {pattern: /^\+?[1-9][0-9]*$/, message: '车皮重必须是数字,且不能为0', trigger: 'blur'}
         ],
@@ -992,8 +991,8 @@ export default {
     },
     printMake(row) {
       this.billerMake = this.$store.state.user.nickName
-      this.printMakeList = [],
-        this.printMakeList.push(row)
+      this.printMakeList = []
+      this.printMakeList.push(row)
       console.log(this.printMakeList)
       this.showMake = true;
       updatePrintByIds(row.id).then(response => {
@@ -1161,8 +1160,6 @@ export default {
 }
 
 
-
-
 .thirdRow1 {
   width: 500px;
   height: 40px;
@@ -1218,10 +1215,11 @@ export default {
 /*#customerStyle{*/
 /*  margin-left: 4cm;*/
 /*}*/
-.nullStyle{
+.nullStyle {
   font-size: 20px;
 
 }
+
 .carriageStyle {
   /*margin-left: 17cm;*/
   /*margin-top: 20px;*/

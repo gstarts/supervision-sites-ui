@@ -223,7 +223,8 @@
               <template slot-scope="scope">
                 <div v-if="scope.row.errState==='1'">
                   <el-tooltip class="item" effect="light" :content="scope.row.errReason" placement="right">
-                    <span style='color:red'>{{ scope.row.plateNum }} <i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                    <span style='color:red'>{{ scope.row.plateNum }} <i class="fa fa-exclamation-circle"
+                                                                        aria-hidden="true"></i></span>
                   </el-tooltip>
                 </div>
                 <div v-else>
@@ -392,67 +393,67 @@
       </div>
       <div id="user-all-style">
         <span>{{ parseUserName(form.inUser) }}</span>
-        <span>{{ parseUserName(form.outUser== ''?this.$store.state.user.nickName:form.outUser) }}</span>
+        <span>{{ parseUserName(form.outUser == '' ? this.$store.state.user.nickName : form.outUser) }}</span>
       </div>
       <!--   v-if判断 车辆类型是否为重进空出  标识为01   -->
       <div id="dayin1" v-if="this.PoundForm.stationViaType ==='01'">
-      <!-- 整体DIV -->
-          <div style="align-content: center;">
-            <span class="poundTotal111">{{ poundTotal }}</span>
+        <!-- 整体DIV -->
+        <div style="align-content: center;">
+          <span class="poundTotal111">{{ poundTotal }}</span>
+        </div>
+        <div id="area1">
+          <span class="area-in-style">{{ nowDate }}</span>
+        </div>
+        <div style="margin-bottom: 4px;">
+          <div class="areadate1">
+            <span>{{ nowTime }}</span>
           </div>
-          <div id="area1">
-            <span class="area-in-style">{{ nowDate }}</span>
-          </div>
-          <div style="margin-bottom: 4px;">
-            <div class="areadate1">
-              <span>{{ nowTime }}</span>
-            </div>
-          </div>
-          <div id="serialNumber1">
-            <span>{{ this.pad(this.form.id) }}</span>
-          </div>
-          <div id="area-style1">
-            <span class="area-in-style">{{ form.deliveryUnit }}</span>
-          </div>
-          <div id="area-right-style1">
-            <span>{{ form.plateNum }}</span>
-          </div>
+        </div>
+        <div id="serialNumber1">
+          <span>{{ this.pad(this.form.id) }}</span>
+        </div>
+        <div id="area-style1">
+          <span class="area-in-style">{{ form.deliveryUnit }}</span>
+        </div>
+        <div id="area-right-style1">
+          <span>{{ form.plateNum }}</span>
+        </div>
+        <br/>
+        <div id="area-style1">
+          <span class="area-in-style">{{ form.receivingUnit }}</span>
+        </div>
+        <div id="area-right-style1">
+          <span>{{ form.grossWeight }}kg</span>
+        </div>
+        <div id="area-style1">
+          <span class="area-in-style">{{ form.goodsName }}</span>
+        </div>
+        <div id="area-right-style1">
+          <span>{{ form.tare }}kg</span>
           <br/>
-          <div id="area-style1">
-            <span class="area-in-style">{{ form.receivingUnit }}</span>
-          </div>
-          <div id="area-right-style1">
-            <span>{{ form.grossWeight }}kg</span>
-          </div>
-          <div id="area-style1">
-            <span class="area-in-style">{{ form.goodsName }}</span>
-          </div>
-          <div id="area-right-style1">
-            <span>{{ form.tare }}kg</span>
-            <br/>
-          </div>
-          <div id="area-style1">
-            <span class="area-in-style">{{ form.specification }}</span>
-          </div>
-          <div id="area-right-style1">
-            <span>{{ form.netWeight }}kg</span>
-            <br/>
-          </div>
-          <div id="area-all-style1">
+        </div>
+        <div id="area-style1">
+          <span class="area-in-style">{{ form.specification }}</span>
+        </div>
+        <div id="area-right-style1">
+          <span>{{ form.netWeight }}kg</span>
+          <br/>
+        </div>
+        <div id="area-all-style1">
           <span class="area-in-style">
           {{
               form.viaType === '02' ? form.remark + '  ' + form.transportUnit + '  ' + transportModeFormat(form.transportMode) + ' 补' : '补'
             }}
           </span>
-            <br/>
-          </div>
-          <div id="user-all-style1">
-            <span>{{ parseUserName(form.inUser) }}</span>
-            <span>{{ parseUserName(form.outUser== ''?this.$store.state.user.nickName:form.outUser) }}</span>
-          </div>
+          <br/>
+        </div>
+        <div id="user-all-style1">
+          <span>{{ parseUserName(form.inUser) }}</span>
+          <span>{{ parseUserName(form.outUser == '' ? this.$store.state.user.nickName : form.outUser) }}</span>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -1473,8 +1474,11 @@ export default {
               this.form.flowDirection = this.PoundForm.flowDirection;
               this.form.channelNumber = this.PoundForm.channelNumber;
               if (this.PoundForm.stationViaType === '01' || this.PoundForm.stationViaType === '02') {//重进空出 生成入库单
+                //保存之前判断打印状态
+                if (this.autoPrint) {
+                  this.form.printState = '1' //如果设置了自动打印，将打印状态设置为1
+                }
                 updateSheet(this.form).then(response => {
-
                   if (response.code === 200) {
                     this.msgSuccess("出场成功");
                     console.log("================")
@@ -1519,7 +1523,7 @@ export default {
           if (this.form.errState === '0') {//无异常状态下
             if (this.form.tare - this.form.preWeight > 1000) {
               //this.tareWeightErrTip()
-              errMsg = '车辆['+this.form.plateNum+']的称重皮重与通知皮重相差大于1000KGS,是否继续？'
+              errMsg = '车辆[' + this.form.plateNum + ']的称重皮重与通知皮重相差大于1000KGS,是否继续？'
               tipMsg = '出场皮重异常'
             }
           } else {
@@ -1532,7 +1536,7 @@ export default {
         if (this.PoundForm.stationViaType === '02') {
           if (this.form.errState === '0') {//无异常状态下
             if (this.form.tare - this.form.preWeight > 500) {
-              errMsg = '车辆['+this.form.plateNum+']的称重皮重与通知皮重相差大于500KGS,是否继续？'
+              errMsg = '车辆[' + this.form.plateNum + ']的称重皮重与通知皮重相差大于500KGS,是否继续？'
               tipMsg = '进场皮重异常'
             }
           } else {
@@ -1542,7 +1546,7 @@ export default {
       }
       let that = this
       //验证皮重异常
-      errMsg = ''
+      //errMsg = ''
       if (errMsg !== '') { //如果错误信息不为空
         this.$prompt(errMsg, '提示', {
           confirmButtonText: '确定',
@@ -1575,7 +1579,7 @@ export default {
     //将表格上行的记录标记为异常的方法
     markError(row) {
       //弹出一个对话框
-      this.$prompt('是否将车辆 ['+row.plateNum+'] 标记为异常', '提示', {
+      this.$prompt('是否将车辆 [' + row.plateNum + '] 标记为异常', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
@@ -1822,9 +1826,10 @@ export default {
 }
 
 /*打印整体DIV*/
-.MakeAll{
+.MakeAll {
   border: 1px solid;
 }
+
 /*改变车号字体大小的样式*/
 .coalPageSelect /deep/ .el-form-item__label {
   font-size: 30px;
