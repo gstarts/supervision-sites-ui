@@ -626,7 +626,7 @@ export default {
       if (this.bigList.length > 0) {
         //前端验证
         let value = this.bigList.find(item => item.storeState === '0' || item.storeState === '2')
-        console.log(value)
+        //console.log(value)
         if (value) {
           this.$message.warning("有未进场或已进场车辆，不可执行此操作")
           return false

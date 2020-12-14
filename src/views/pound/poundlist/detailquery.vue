@@ -11,6 +11,15 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="磅单ID" prop="id">
+        <el-input
+          v-model="queryParams.id"
+          placeholder="请输入磅单ID"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="车牌号" prop="plateNum">
         <el-input
           v-model="queryParams.plateNum"
@@ -480,11 +489,11 @@
           </el-col>
         </el-row>
         <!--蒙煤车修改合同-->
-        <div>
+        <div v-show="selectPound.viaType === '01'">
           <el-row :gutter="10">
             <el-col :span="11">
               <el-form-item label="合同号" prop="contactNo">
-                {{ poundModify.contactNo }}
+                {{ poundModify.contractNo }}
               </el-form-item>
             </el-col>
             <el-col :span="2" class="modifyTo">修改为</el-col>
@@ -891,6 +900,7 @@ export default {
         transportUnit: undefined,//承运单位
         orderByColumn: 'id',
         isAsc: 'desc',
+        id: undefined
       },
       // 表单校验
       rulesModifyNew: {},
@@ -962,7 +972,8 @@ export default {
         modifyContractNo: undefined,
         modifyStoreCode: undefined,
         modifyVehicleNo: undefined,
-        modifyType: undefined
+        modifyType: undefined,
+        remark: undefined
       },
       //当前选中的磅单
       selectPound: {},
@@ -1200,6 +1211,7 @@ export default {
       this.poundModify.modifyCoalBillNo = this.selectPound.coalBillNum
       this.poundModify.vehicleNo = this.selectPound.plateNum
       this.poundModify.modifyVehicleNo = this.selectPound.plateNum
+      this.poundModify.contractNo = this.selectPound.remark
       //if (this.poundModify.viaType === '01') {
       this.poundModify.modifyContractNo = this.selectPound.remark
       //} else {

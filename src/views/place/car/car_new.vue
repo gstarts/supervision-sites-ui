@@ -95,6 +95,7 @@
         <el-button
           size="mini"
           @click="print"
+          :disabled="multiple"
           v-print="'#dayin'"
           type="info"
           icon="el-icon-printer">
@@ -972,9 +973,13 @@ export default {
       //this.form.transportUnit = this.transUnitList.find(item => item.id === this.form.transportUnitId).eName
     },
     print() {
-      this.biller = this.$store.state.user.nickName
+      /*console.log(this.ids)
+      if (this.ids.length === 0) {
+        this.$message.warning('请选择要打印的出门证')
+        return false
+      }*/
       this.show = true;
-      console.log(this.ids)
+      this.biller = this.$store.state.user.nickName
       updatePrintByIds(this.ids).then(response => {
         if (response.code === 200) {
           this.msgSuccess("修改打印状态(次数)成功");
