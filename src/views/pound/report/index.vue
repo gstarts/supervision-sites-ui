@@ -596,7 +596,7 @@ export default {
           }
 
           this.excelFooter = '总车数' + ':' + this.vehicleCount + "    " + '毛重合计' + ':' +
-            this.totalRoughWeight + "  " + '皮重合计' + ':' + this.totalRoughWeight + "  " + '净重合计' + ':' + this.totalTareWeight
+            this.totalRoughWeight + "  " +'皮重合计'+':'+this.totalTareWeight+ "  " + '净重合计' + ':' + this.totalNetWeight
 
         }
       })
