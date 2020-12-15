@@ -216,7 +216,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="归属机构" prop="deptId">
-              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属机构"/>
+              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属机构"
+                          @change="deptChange"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -299,6 +300,36 @@
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span="12">
+            <el-form-item label="用户类型" prop="userType">
+              <el-select v-model="form.userType" placeholder="请选择用户类型" @change="userTypeChange">
+                <el-option
+                  v-for="item in userTypeDic"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-show="form.userType!=='' && form.userType!== '00'">
+            <el-form-item label="单位名称" prop="companyId">
+              <el-select v-model="form.companyId" placeholder="请选择单位">
+                <el-option
+                  v-for="item in consumerOptions"
+                  :key="item.id"
+                  :label="form.userType==='02'?item.eAbbreviation:item.eName"
+                  :value="item.id"
+                  :disabled="form.deptId === ''"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <!-- <el-form-item label="单位名字" style="display: none">
+                          <el-input v-model="form.companyName"></el-input>
+                        </el-form-item>-->
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="24">
             <el-form-item label="备注">
               <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
@@ -307,7 +338,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitForm" :loading="btnLoading">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -352,6 +383,7 @@ import {getToken} from "@/utils/auth";
 import {treeselect} from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import {listInfo} from "@/api/basis/enterpriseInfo";
 
 export default {
   name: "User",
@@ -360,6 +392,7 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      btnLoading: false,
       // 选中数组
       ids: [],
       // 非单个禁用
@@ -449,8 +482,22 @@ export default {
             message: "请输入正确的手机号码",
             trigger: "blur"
           }
+        ],
+        userType: [
+          {required: true, message: "用户类型不能为空", trigger: "change"}
+        ],
+      },
+      companyRule: {
+        companyId: [
+          {required: true, message: "单位名称不能为空", trigger: "change"}
         ]
-      }
+      },
+      userTypeDic: [
+        /*{'dictValue': '00', 'dictLabel': '系统用户'},
+        {'dictValue': '01', 'dictLabel': '寄仓客户'},
+        {'dictValue': '02', 'dictLabel': '承运单位'},*/
+      ],
+      consumerOptions: [],
     };
   },
   watch: {
@@ -464,6 +511,9 @@ export default {
     this.getTreeselect();
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
+    });
+    this.getDicts("user_type").then(response => {
+      this.userTypeDic = response.data;
     });
     this.getDicts("sys_user_sex").then(response => {
       this.sexOptions = response.data;
@@ -518,6 +568,7 @@ export default {
     cancel() {
       this.open = false;
       this.reset();
+      this.btnLoading = false
     },
     // 表单重置
     reset() {
@@ -533,7 +584,8 @@ export default {
         status: "0",
         remark: undefined,
         postIds: [],
-        roleIds: []
+        roleIds: [],
+        userType: '00',
       };
       this.resetForm("form");
     },
@@ -573,13 +625,22 @@ export default {
       const userId = row.userId || this.ids;
       getUser(userId).then(response => {
         this.form = response.data;
+        //console.log(data)
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
         this.form.postIds = response.postIds;
         this.form.roleIds = response.roleIds;
+        // this.form.userType = response.
         this.open = true;
         this.title = "修改用户";
         this.form.password = "";
+        if (this.form.userType !== '00') {
+          let companyType = '2';
+          if (this.form.userType === '02') {
+            companyType = '3'
+          }
+          this.getCustomerList(this.form.deptId, companyType)
+        }
       });
     },
     /** 重置密码按钮操作 */
@@ -600,21 +661,28 @@ export default {
     submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          this.btnLoading = true
           if (this.form.userId != undefined) {
             updateUser(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
+                this.btnLoading = false
                 this.getList();
               }
+            }).catch(e =>{
+              this.btnLoading = false
             });
           } else {
             addUser(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
+                this.btnLoading = false
                 this.getList();
               }
+            }).catch(e => {
+              this.btnLoading = false
             });
           }
         }
@@ -667,7 +735,54 @@ export default {
     // 提交上传文件
     submitFileForm() {
       this.$refs.upload.submit();
-    }
+    },
+    deptChange(event) {
+      //部门变化
+      let companyType = '2'
+      if (this.form.userType !== '00') {
+        if (this.form.userType === '01') {//寄仓客户
+          companyType = '2'
+        } else if (this.form.userType === '02') {//承运单位
+          companyType = '3'
+        }
+        //获取单位列表
+        this.getCustomerList(event, companyType)
+      } else {
+        this.consumerOptions = []
+        this.form.companyId = undefined
+      }
+    },
+    //用户类型变化
+    userTypeChange(event) {
+      if (event === '00') {
+        this.rules.companyId = undefined
+      } else {
+        this.rules = Object.assign(this.rules, this.companyRule)
+      }
+      //用户类型变化
+      this.form.companyId = undefined
+      if (this.form.deptId && this.form.deptId !== '') {
+        if (event === '00') { //如果是系统用户
+          this.consumerOptions = []
+        } else {
+          let companyType = '2'
+          if (event === '01') {
+            companyType = '2'
+          } else {
+            companyType = '3'
+          }
+          this.getCustomerList(this.form.deptId, companyType)
+        }
+      }
+    },
+    /** 寄仓信息列表 */
+    getCustomerList(deptId, companyType) {
+      let consumerParams = {eType: '2', deptId: deptId, companyType: companyType}
+      listInfo(consumerParams).then(response => {
+        this.consumerOptions = response.rows
+      })
+    },
+
   }
 };
 </script>
