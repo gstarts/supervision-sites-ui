@@ -75,3 +75,12 @@ export  function customsDayList(params){
     data:params
   })
 }
+
+//调入调出汇总表
+export function customsMonthHz(params) {
+  return request({
+    url: '/place/instoreDoc/customsMonthHz',
+    method: 'post',
+    data: params
+  })
+}
