@@ -449,8 +449,8 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!--改车号，一定是出场前修改-->
-        <el-row :gutter="10" v-show="selectPound.flowDirection ==='I'">
+        <!--改车号，一定是出场前修改 ，出场的也能改-->
+        <el-row :gutter="10">
           <el-col :span="11">
             <el-form-item label="车牌号" prop="vehicleNo">
               {{ poundModify.vehicleNo }}

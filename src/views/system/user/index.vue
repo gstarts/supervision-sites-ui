@@ -216,8 +216,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="归属机构" prop="deptId">
-              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属机构"
-                          @change="deptChange"/>
+              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属机构"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -504,7 +503,10 @@ export default {
     // 根据名称筛选部门树
     deptName(val) {
       this.$refs.tree.filter(val);
-    }
+    },
+    //监听部门id变化
+    'form.deptId': 'deptChange'
+
   },
   created() {
     this.getList();
@@ -586,6 +588,7 @@ export default {
         postIds: [],
         roleIds: [],
         userType: '00',
+        companyId: undefined,
       };
       this.resetForm("form");
     },
@@ -737,6 +740,7 @@ export default {
       this.$refs.upload.submit();
     },
     deptChange(event) {
+      console.log("dept 变化")
       //部门变化
       let companyType = '2'
       if (this.form.userType !== '00') {
