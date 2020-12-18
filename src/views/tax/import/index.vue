@@ -168,6 +168,14 @@
             v-hasPermi="['tax:import:download']"
           >下载
           </el-button>
+          <el-button v-show="queryParams.templateType === '2' && scope.row.isGenReport !==0"
+                     size="mini"
+                     type="text"
+                     icon="el-icon-delete"
+                     @click="customsDelete(scope.row)"
+                     v-hasPermi="['tax:import:remove']"
+          >删除报关数据
+          </el-button>
           <el-button v-show="scope.row.isGenReport ===0 && scope.row.isGenStoreNotice ===0"
                      size="mini"
                      type="text"
@@ -366,7 +374,7 @@
 </template>
 
 <script>
-import {listImport, getImport, delImport, addImport, genNotice} from "@/api/tax/import";
+import {listImport, getImport, delImport, customsDel, addImport, genNotice} from "@/api/tax/import";
 import {getUserDepts} from '@/utils/charutils'
 import {listContract} from '@/api/tax/contract'
 import {getToken} from '@/utils/auth'
@@ -747,6 +755,21 @@ export default {
         type: "warning"
       }).then(function () {
         return delImport(ids);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      }).catch(function () {
+      });
+    },
+    /** 删除报关数据操作 */
+    customsDelete(row) {
+      const ids = row.id || this.ids;
+      this.$confirm('是否确认删除导入文件记录编号为"' + ids + '"的数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return customsDel(ids);
       }).then(() => {
         this.getList();
         this.msgSuccess("删除成功");
