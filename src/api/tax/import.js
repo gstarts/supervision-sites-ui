@@ -43,6 +43,14 @@ export function delImport(id) {
 	})
 }
 
+// 删除报关数据
+export function customsDel(id) {
+	return request({
+		url: '/tax/import/customsDel/' + id,
+		method: 'delete'
+	})
+}
+
 export function downloadFile(bucketName, fileName) {
 	return request({
 		url: '/minio/files/download?bucketName=' + bucketName + '&objectName=' + fileName,
