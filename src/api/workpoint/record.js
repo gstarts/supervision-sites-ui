@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询 工分记录列表
+// 查询工分记录列表
 export function listRecord(query) {
   return request({
     url: '/workpoint/record/list',
@@ -9,7 +9,7 @@ export function listRecord(query) {
   })
 }
 
-// 查询 工分记录详细
+// 查询工分记录详细
 export function getRecord(id) {
   return request({
     url: '/workpoint/record/' + id,
@@ -17,7 +17,7 @@ export function getRecord(id) {
   })
 }
 
-// 新增 工分记录
+// 新增工分记录
 export function addRecord(data) {
   return request({
     url: '/workpoint/record',
@@ -26,7 +26,7 @@ export function addRecord(data) {
   })
 }
 
-// 修改 工分记录
+// 修改工分记录
 export function updateRecord(data) {
   return request({
     url: '/workpoint/record',
@@ -35,7 +35,7 @@ export function updateRecord(data) {
   })
 }
 
-// 删除 工分记录
+// 删除工分记录
 export function delRecord(id) {
   return request({
     url: '/workpoint/record/' + id,

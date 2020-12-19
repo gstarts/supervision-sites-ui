@@ -61,10 +61,10 @@
       </el-form-item>-->
       <el-form-item label="状态" prop="state">
         <el-select clearable
-          v-model="queryParams.state"
-          placeholder="请输入状态"
-          size="small"
-          @change="handleQuery"
+                   v-model="queryParams.state"
+                   placeholder="请输入状态"
+                   size="small"
+                   @change="handleQuery"
         >
           <el-option
             v-for="dept in stateList"
@@ -90,7 +90,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['workpoint:standard:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -100,7 +101,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['workpoint:standard:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -110,7 +112,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['workpoint:standard:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -119,19 +122,20 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['workpoint:standard:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="standardList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
-      <el-table-column label="名称" align="center" prop="name" />
-      <el-table-column label="代码" align="center" prop="code" />
-      <el-table-column label="分值" align="center" prop="score" />
-      <el-table-column label="工分类型" align="center" prop="pointCode" />
-      <el-table-column label="场所ID" align="center" prop="placeId" />
-      <el-table-column label="状态" align="center" prop="state" />
+      <el-table-column type="selection" width="55" align="center"/>
+      <!--      <el-table-column label="ID" align="center" prop="id" />-->
+      <el-table-column label="名称" align="center" prop="name"/>
+      <el-table-column label="代码" align="center" prop="code"/>
+      <el-table-column label="分值" align="center" prop="score"/>
+      <el-table-column label="工分类型" align="center" prop="pointCode" :formatter="formatPointType"/>
+      <el-table-column label="场所ID" align="center" prop="placeId" :formatter="formatPlace"/>
+      <el-table-column label="状态" align="center" prop="state" :formatter="formatState"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -140,14 +144,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['workpoint:standard:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['workpoint:standard:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -161,26 +167,64 @@
     />
 
     <!-- 添加或修改 工分标准对话框 -->
-    <el-dialog :title="title" :visible.sync="open"  append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入名称" />
-        </el-form-item>
-        <el-form-item label="代码" prop="code">
-          <el-input v-model="form.code" placeholder="请输入代码" />
-        </el-form-item>
-        <el-form-item label="分值" prop="score">
-          <el-input v-model="form.score" placeholder="请输入分值" />
-        </el-form-item>
-        <el-form-item label="工分类型" prop="pointCode">
-          <el-input v-model="form.pointCode" placeholder="请输入工分类型" />
-        </el-form-item>
-        <el-form-item label="场所ID" prop="placeId">
-          <el-input v-model="form.placeId" placeholder="请输入场所ID" />
-        </el-form-item>
-        <el-form-item label="状态" prop="state">
-          <el-input v-model="form.state" placeholder="请输入状态" />
-        </el-form-item>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="代码" prop="code">
+              <el-input v-model="form.code" placeholder="请输入代码"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="工分类型" prop="pointCode">
+              <el-select v-model="form.pointCode" placeholder="请选择工分类型" filterable>
+                <el-option
+                  v-for="item in pointTypeList"
+                  :key="item.code"
+                  :label="item.name"
+                  :value="item.code"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="分值" prop="score">
+              <el-input v-model.number="form.score" placeholder="请输入分值"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="状态" prop="state">
+              <el-select v-model="form.state" placeholder="请选择状态" filterable>
+                <el-option
+                  v-for="item in stateList"
+                  :key="item.key"
+                  :label="item.value"
+                  :value="item.key"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="场所" prop="placeId">
+              <el-select v-model="form.placeId" placeholder="请选择场所" disabled>
+                <el-option
+                  v-for="dept in depts"
+                  :key="dept.deptId"
+                  :label="dept.deptName"
+                  :value="dept.deptId"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -191,8 +235,9 @@
 </template>
 
 <script>
-import { listStandard, getStandard, delStandard, addStandard, updateStandard } from "@/api/workpoint/standard";
+import {listStandard, getStandard, delStandard, addStandard, updateStandard} from "@/api/workpoint/standard";
 import {getUserDepts} from "@/utils/charutils";
+import {listType} from "@/api/workpoint/type";
 
 export default {
   name: "Standard",
@@ -227,19 +272,43 @@ export default {
         state: undefined
       },
       stateList: [
-        {'key':'1',value:'启用'},
-        {'key':'0',value:'停用'},
+        {'key': '1', value: '启用'},
+        {'key': '0', value: '停用'},
       ],
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-      }
+        name: [
+          {required: true, message: "名称不能为空", trigger: "blur"}
+        ],
+        code: [
+          {required: true, message: "代码不能为空", trigger: "blur"}
+        ],
+        pointCode: [
+          {required: true, message: "工分类型不能为空", trigger: "change"}
+        ],
+        score: [
+          {required: true, type: 'number', message: "分值不能为空", trigger: "blur"}
+        ],
+        state: [
+          {required: true, message: "状态不能为空", trigger: "change"}
+        ],
+        placeId: [
+          {required: true, message: "场所不能为空", trigger: "change"}
+        ]
+      },
+      pointTypeList: [],
     };
   },
   created() {
+    //需要
+    this.getPointTypeList()
     this.depts = getUserDepts('')
-    this.getList();
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+      this.getList();
+    }
   },
   methods: {
     /** 查询 工分标准列表 */
@@ -287,7 +356,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
+      this.single = selection.length != 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -295,6 +364,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加 工分标准";
+      this.form.placeId = this.queryParams.placeId
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -307,7 +377,7 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
@@ -334,21 +404,54 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm('是否确认删除 工分标准编号为"' + ids + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delStandard(ids);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        }).catch(function() {});
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return delStandard(ids);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      }).catch(function () {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
       this.download('workpoint/standard/export', {
         ...this.queryParams
       }, `workpoint_standard.xlsx`)
+    },
+    //翻译状态
+    formatState(row) {
+      let state = this.stateList.find(item => item.key === row.state)
+      if (state) {
+        return state.value
+      } else {
+        return row.state
+      }
+    },
+    //翻译工分类型
+    formatPointType(row) {
+      console.log(row.pointCode)
+      let point = this.pointTypeList.find(item => item.code === row.pointCode)
+      if (point !== null) {
+        return point.name + ' (' + point.code + ')'
+      } else {
+        return row.pointCode
+      }
+    },
+    formatPlace(row) {
+      let place = this.depts.find(item => item.deptId === row.placeId);
+      if (place) {
+        return place.deptName
+      } else {
+        return row.placeId
+      }
+    },
+    getPointTypeList() {
+      listType().then(response => {
+        this.pointTypeList = response.rows;
+      });
     }
   }
 };

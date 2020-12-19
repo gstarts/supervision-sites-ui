@@ -1,28 +1,22 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="代码" prop="code">
-        <el-input
-          v-model="queryParams.code"
-          placeholder="请输入代码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="场所" prop="placeId">
+        <el-select
+          @change="handleQuery"
+          v-model="queryParams.placeId" placeholder="请选择场所" clearable size="small">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="名称" prop="name">
+      <el-form-item label="设备名称" prop="name">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="英文含义" prop="ename">
-        <el-input
-          v-model="queryParams.ename"
-          placeholder="请输入英文含义"
+          placeholder="请输入设备名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -41,8 +35,9 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['workpoint:type:add']"
-        >新增</el-button>
+          v-hasPermi="['workpoint:device:add']"
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -51,8 +46,9 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['workpoint:type:edit']"
-        >修改</el-button>
+          v-hasPermi="['workpoint:device:edit']"
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -61,8 +57,9 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['workpoint:type:remove']"
-        >删除</el-button>
+          v-hasPermi="['workpoint:device:remove']"
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -70,17 +67,16 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['workpoint:type:export']"
-        >导出</el-button>
+          v-hasPermi="['workpoint:device:export']"
+        >导出
+        </el-button>
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-<!--      <el-table-column label="ID" align="center" prop="id" />-->
-      <el-table-column label="代码" align="center" prop="code" />
-      <el-table-column label="名称" align="center" prop="name" />
-      <el-table-column label="英文含义" align="center" prop="ename" />
+    <el-table v-loading="loading" :data="deviceList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="ID" align="center" prop="id"/>
+      <el-table-column label="设备名称" align="center" prop="name"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -88,15 +84,17 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['workpoint:type:edit']"
-          >修改</el-button>
+            v-hasPermi="['workpoint:device:edit']"
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['workpoint:type:remove']"
-          >删除</el-button>
+            v-hasPermi="['workpoint:device:remove']"
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -109,29 +107,12 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改 工分类型对话框 -->
-    <el-dialog :title="title" :visible.sync="open"  append-to-body>
+    <!-- 添加或修改作业设备对话框 -->
+    <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-row :gutter="10">
-          <el-col :span="12">
-            <el-form-item label="代码" prop="code">
-              <el-input v-model="form.code" placeholder="请输入代码" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入名称" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="10">
-          <el-col :span="12">
-            <el-form-item label="英文含义" prop="ename">
-              <el-input v-model="form.ename" placeholder="请输入英文含义" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12"></el-col>
-        </el-row>
+        <el-form-item label="设备名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入设备名称"/>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -142,24 +123,26 @@
 </template>
 
 <script>
-import { listType, getType, delType, addType, updateType } from "@/api/workpoint/type";
+import {listDevice, getDevice, delDevice, addDevice, updateDevice} from "@/api/workpoint/device";
+import {getUserDepts} from "@/utils/charutils";
 
 export default {
-  name: "Type",
+  name: "Device",
   data() {
     return {
       // 遮罩层
       loading: true,
       // 选中数组
       ids: [],
+      depts: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
       multiple: true,
       // 总条数
       total: 0,
-      //  工分类型表格数据
-      typeList: [],
+      // 作业设备表格数据
+      deviceList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -168,32 +151,31 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 20,
-        code: undefined,
         name: undefined,
-        ename: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        code: [
-          { required: true, message: "代码不能为空", trigger: "blur" }
-        ],
         name: [
-          { required: true, message: "名称不能为空", trigger: "blur" }
+          {required: true, message: "设备名称不能为空", trigger: "blur"}
         ],
       }
     };
   },
   created() {
-    this.getList();
+    this.depts = getUserDepts('')
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+      this.getList();
+    }
   },
   methods: {
-    /** 查询 工分类型列表 */
+    /** 查询作业设备列表 */
     getList() {
       this.loading = true;
-      listType(this.queryParams).then(response => {
-        this.typeList = response.rows;
+      listDevice(this.queryParams).then(response => {
+        this.deviceList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -206,15 +188,13 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        createBy: undefined,
-        createTime: undefined,
-        updateBy: undefined,
-        updateTime: undefined,
-        remark: undefined,
         id: undefined,
-        code: undefined,
         name: undefined,
-        ename: undefined
+        createTime: undefined,
+        createBy: undefined,
+        updateTime: undefined,
+        updateBy: undefined,
+        remark: undefined
       };
       this.resetForm("form");
     },
@@ -231,31 +211,31 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
+      this.single = selection.length != 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加 工分类型";
+      this.title = "添加作业设备";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getType(id).then(response => {
+      getDevice(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改 工分类型";
+        this.title = "修改作业设备";
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateType(this.form).then(response => {
+            updateDevice(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -263,7 +243,7 @@ export default {
               }
             });
           } else {
-            addType(this.form).then(response => {
+            addDevice(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -277,22 +257,23 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除 工分类型编号为"' + ids + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delType(ids);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        }).catch(function() {});
+      this.$confirm('是否确认删除作业设备编号为"' + ids + '"的数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return delDevice(ids);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      }).catch(function () {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('workpoint/type/export', {
+      this.download('workpoint/device/export', {
         ...this.queryParams
-      }, `workpoint_type.xlsx`)
+      }, `workpoint_device.xlsx`)
     }
   }
 };

@@ -1,36 +1,110 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="场所" prop="placeId">
-        <el-select
-          @change="handleQuery"
-          v-model="queryParams.placeId" placeholder="请选择场所" clearable size="small">
-          <el-option
-            v-for="dept in depts"
-            :key="dept.deptId"
-            :label="dept.deptName"
-            :value="dept.deptId"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="工作日期" prop="workDate">
-        <el-date-picker clearable size="small" style="width: 200px"
-                        v-model="queryParams.workDate"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="选择工作日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="工人编号" prop="workerCode">
+      <el-form-item label="场所ID" prop="placeId">
         <el-input
-          v-model="queryParams.workerCode"
-          placeholder="请输入工人编号"
+          v-model="queryParams.placeId"
+          placeholder="请输入场所ID"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!--<el-form-item label="工分类型" prop="pointTypeCode">
+      <el-form-item label="父级ID" prop="headId">
+        <el-input
+          v-model="queryParams.headId"
+          placeholder="请输入父级ID"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="作业小组" prop="groupCode">
+        <el-input
+          v-model="queryParams.groupCode"
+          placeholder="请输入作业小组"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="作业人员" prop="workerCode">
+        <el-input
+          v-model="queryParams.workerCode"
+          placeholder="请输入作业人员"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="核定工分" prop="vouchScore">
+        <el-input
+          v-model="queryParams.vouchScore"
+          placeholder="请输入核定工分"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="扣除工分" prop="deductScore">
+        <el-input
+          v-model="queryParams.deductScore"
+          placeholder="请输入扣除工分"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="结余工分" prop="surplusScore">
+        <el-input
+          v-model="queryParams.surplusScore"
+          placeholder="请输入结余工分"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="通知单号" prop="docNo">
+        <el-input
+          v-model="queryParams.docNo"
+          placeholder="请输入通知单号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="单据类型" prop="docType">
+        <el-select v-model="queryParams.docType" placeholder="请选择单据类型" clearable size="small">
+          <el-option label="请选择字典生成" value="" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="寄仓客户" prop="customerName">
+        <el-input
+          v-model="queryParams.customerName"
+          placeholder="请输入寄仓客户"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="车牌号" prop="vehicleNo">
+        <el-input
+          v-model="queryParams.vehicleNo"
+          placeholder="请输入车牌号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="业务日期" prop="businessTime">
+        <el-date-picker clearable size="small" style="width: 200px"
+          v-model="queryParams.businessTime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择业务日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="工分类型" prop="pointTypeCode">
         <el-input
           v-model="queryParams.pointTypeCode"
           placeholder="请输入工分类型"
@@ -38,8 +112,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
-      <!--<el-form-item label="工分标准" prop="pointStandardCode">
+      </el-form-item>
+      <el-form-item label="工分标准" prop="pointStandardCode">
         <el-input
           v-model="queryParams.pointStandardCode"
           placeholder="请输入工分标准"
@@ -47,43 +121,169 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
-      <!--<el-form-item label="工分值" prop="score">
-        <el-input
-          v-model="queryParams.score"
-          placeholder="请输入工分值"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>-->
-      <el-form-item label="工单类型" prop="docType">
-        <el-select v-model="queryParams.docType" placeholder="请选择工单类型" clearable size="small">
-          <el-option label="请选择字典生成" value=""/>
-        </el-select>
       </el-form-item>
-      <!--<el-form-item label="工单编号" prop="docNo">
+      <el-form-item label="标准分数" prop="standardSocre">
         <el-input
-          v-model="queryParams.docNo"
-          placeholder="请输入工单编号"
+          v-model="queryParams.standardSocre"
+          placeholder="请输入标准分数"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
-      <!--<el-form-item label="作业小组" prop="jobGroupCode">
+      </el-form-item>
+      <el-form-item label="计分车数" prop="vehicleCount">
         <el-input
-          v-model="queryParams.jobGroupCode"
-          placeholder="请输入作业小组"
+          v-model="queryParams.vehicleCount"
+          placeholder="请输入计分车数"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
+      </el-form-item>
       <el-form-item label="业务编号" prop="businessNo">
         <el-input
           v-model="queryParams.businessNo"
-          placeholder="请输入业务编号(一个编号对应多个单号)"
+          placeholder="请输入业务编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="开始时间" prop="workStartTime">
+        <el-date-picker clearable size="small" style="width: 200px"
+          v-model="queryParams.workStartTime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择开始时间">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="结束时间" prop="workOverTime">
+        <el-date-picker clearable size="small" style="width: 200px"
+          v-model="queryParams.workOverTime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择结束时间">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="时间差(分钟)" prop="useTime">
+        <el-input
+          v-model="queryParams.useTime"
+          placeholder="请输入时间差(分钟)"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="临时作业人员" prop="tempWorker">
+        <el-input
+          v-model="queryParams.tempWorker"
+          placeholder="请输入临时作业人员"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="理货人/安全员" prop="tallyWorker">
+        <el-input
+          v-model="queryParams.tallyWorker"
+          placeholder="请输入理货人/安全员"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="作业设备" prop="jobDevice">
+        <el-input
+          v-model="queryParams.jobDevice"
+          placeholder="请输入作业设备"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="设备作业人员" prop="jobDeviceWorker">
+        <el-input
+          v-model="queryParams.jobDeviceWorker"
+          placeholder="请输入设备作业人员"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="设备开始时间" prop="deviceStartTime">
+        <el-date-picker clearable size="small" style="width: 200px"
+          v-model="queryParams.deviceStartTime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择设备开始时间">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="设备结束时间" prop="deviceOverTime">
+        <el-date-picker clearable size="small" style="width: 200px"
+          v-model="queryParams.deviceOverTime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择设备结束时间">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="设备耗时(分钟)" prop="deviceUseTime">
+        <el-input
+          v-model="queryParams.deviceUseTime"
+          placeholder="请输入设备耗时(分钟)"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="设备开始里程" prop="deviceStartMileage">
+        <el-input
+          v-model="queryParams.deviceStartMileage"
+          placeholder="请输入设备开始里程"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="设备结束里程" prop="deviceOverMileage">
+        <el-input
+          v-model="queryParams.deviceOverMileage"
+          placeholder="请输入设备结束里程"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="设备耗里程" prop="deviceUseMileage">
+        <el-input
+          v-model="queryParams.deviceUseMileage"
+          placeholder="请输入设备耗里程"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="设备开始油表" prop="deviceStartOil">
+        <el-input
+          v-model="queryParams.deviceStartOil"
+          placeholder="请输入设备开始油表"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="设备结束油表" prop="deviceOverOil">
+        <el-input
+          v-model="queryParams.deviceOverOil"
+          placeholder="请输入设备结束油表"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="设备耗油" prop="deviceUseOil">
+        <el-input
+          v-model="queryParams.deviceUseOil"
+          placeholder="请输入设备耗油"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -103,8 +303,7 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['workpoint:record:add']"
-        >新增
-        </el-button>
+        >新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -114,8 +313,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['workpoint:record:edit']"
-        >修改
-        </el-button>
+        >修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -125,8 +323,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['workpoint:record:remove']"
-        >删除
-        </el-button>
+        >删除</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -135,56 +332,87 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['workpoint:record:export']"
-        >导出
-        </el-button>
+        >导出</el-button>
       </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="recordList" @selection-change="handleSelectionChange">
-      <!--<el-table-column type="selection" width="55" align="center"/>-->
-      <el-table-column label="ID" align="center" prop="id"/>
-      <el-table-column label="作业人员" align="center" prop="worker.wname"/>
-      <el-table-column label="作业日期" align="center" prop="workDate" width="180">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="ID" align="center" prop="id" />
+      <el-table-column label="场所ID" align="center" prop="placeId" />
+      <el-table-column label="父级ID" align="center" prop="headId" />
+      <el-table-column label="作业小组" align="center" prop="groupCode" />
+      <el-table-column label="作业人员" align="center" prop="workerCode" />
+      <el-table-column label="核定工分" align="center" prop="vouchScore" />
+      <el-table-column label="扣除工分" align="center" prop="deductScore" />
+      <el-table-column label="结余工分" align="center" prop="surplusScore" />
+      <el-table-column label="通知单号" align="center" prop="docNo" />
+      <el-table-column label="单据类型" align="center" prop="docType" />
+      <el-table-column label="寄仓客户" align="center" prop="customerName" />
+      <el-table-column label="车牌号" align="center" prop="vehicleNo" />
+      <el-table-column label="业务日期" align="center" prop="businessTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.workDate, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.businessTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="工分类型" align="center" prop="pointTypeCode"/>
-      <el-table-column label="工分标准" align="center" >
+      <el-table-column label="工分类型" align="center" prop="pointTypeCode" />
+      <el-table-column label="工分标准" align="center" prop="pointStandardCode" />
+      <el-table-column label="标准分数" align="center" prop="standardSocre" />
+      <el-table-column label="计分车数" align="center" prop="vehicleCount" />
+      <el-table-column label="业务编号" align="center" prop="businessNo" />
+      <el-table-column label="开始时间" align="center" prop="workStartTime" width="180">
         <template slot-scope="scope">
-          <span>{{ scope.row.pointStandard.name+ '('+scope.row.pointStandard.score+')'}}</span>
+          <span>{{ parseTime(scope.row.workStartTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="作业小组" align="center" prop="group.name">
-
+      <el-table-column label="结束时间" align="center" prop="workOverTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.workOverTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+        </template>
       </el-table-column>
-      <el-table-column label="所获工分值" align="center" prop="score"/>
-      <el-table-column label="场所" align="center" prop="placeId"/>
-      <!--<el-table-column label="工单类型(入库单，出库单)" align="center" prop="docType"/>
-      <el-table-column label="工单编号" align="center" prop="docNo"/>-->
-     <!-- <el-table-column label="业务编号(一个编号对应多个单号)" align="center" prop="businessNo"/>-->
+      <el-table-column label="时间差(分钟)" align="center" prop="useTime" />
+      <el-table-column label="临时作业人员" align="center" prop="tempWorker" />
+      <el-table-column label="理货人/安全员" align="center" prop="tallyWorker" />
+      <el-table-column label="作业设备" align="center" prop="jobDevice" />
+      <el-table-column label="设备作业人员" align="center" prop="jobDeviceWorker" />
+      <el-table-column label="设备开始时间" align="center" prop="deviceStartTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.deviceStartTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="设备结束时间" align="center" prop="deviceOverTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.deviceOverTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="设备耗时(分钟)" align="center" prop="deviceUseTime" />
+      <el-table-column label="设备开始里程" align="center" prop="deviceStartMileage" />
+      <el-table-column label="设备结束里程" align="center" prop="deviceOverMileage" />
+      <el-table-column label="设备耗里程" align="center" prop="deviceUseMileage" />
+      <el-table-column label="设备开始油表" align="center" prop="deviceStartOil" />
+      <el-table-column label="设备结束油表" align="center" prop="deviceOverOil" />
+      <el-table-column label="设备耗油" align="center" prop="deviceUseOil" />
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
-          <!--<el-button
+          <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['workpoint:record:edit']"
-          >修改
-          </el-button>-->
+          >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['workpoint:record:remove']"
-          >删除
-          </el-button>
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-
+    
     <pagination
       v-show="total>0"
       :total="total"
@@ -193,101 +421,138 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改 工分记录对话框 -->
-    <el-dialog :title="title" :visible.sync="open" append-to-body>
+    <!-- 添加或修改工分记录对话框 -->
+    <el-dialog :title="title" :visible.sync="open"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-row :gutter="10">
-          <el-col :span="12">
-            <el-form-item label="场所" prop="placeId">
-              <el-select
-                v-model="form.placeId" placeholder="请选择场所" size="small" @change="getPointStandard">
-                <el-option
-                  v-for="dept in depts"
-                  :key="dept.deptId"
-                  :label="dept.deptName"
-                  :value="dept.deptId"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="工作日期" prop="workDate">
-              <el-date-picker clearable size="small" style="width: 200px"
-                              v-model="form.workDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="选择工作日期"
-                              :picker-options="pickerOptions">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="10">
-          <el-col :span="12">
-            <el-form-item label="工分标准" prop="pointStandardCode">
-              <el-select filterable
-                         v-model="form.pointStandardCode" placeholder="请选择工分标准" size="small">
-                <el-option
-                  v-for="stand in pointStandardList"
-                  :key="stand.code"
-                  :label="stand.name"
-                  :value="stand.code"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="作业小组" prop="jobGroupCode">
-              <el-select v-model="form.jobGroupCode" filterable placeholder="请选择工分标准" size="small"
-                         @change="getWorkerList">
-                <el-option
-                  v-for="stand in groupList"
-                  :key="stand.code"
-                  :label="stand.name"
-                  :value="stand.code"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <!--<el-row :gutter="10">
-          <el-col :span="12"></el-col>
-          <el-col :span="12"></el-col>
-        </el-row>-->
+        <el-form-item label="场所ID" prop="placeId">
+          <el-input v-model="form.placeId" placeholder="请输入场所ID" />
+        </el-form-item>
+        <el-form-item label="父级ID" prop="headId">
+          <el-input v-model="form.headId" placeholder="请输入父级ID" />
+        </el-form-item>
+        <el-form-item label="作业小组" prop="groupCode">
+          <el-input v-model="form.groupCode" placeholder="请输入作业小组" />
+        </el-form-item>
         <el-form-item label="作业人员" prop="workerCode">
-          <el-select multiple filterable v-model="form.workerCode" placeholder="作业小组成员" size="small" style="width:90%">
-            <el-option
-              v-for="worker in workerList"
-              :key="worker.wcode"
-              :label="worker.wname"
-              :value="worker.wcode">
-            </el-option>
+          <el-input v-model="form.workerCode" placeholder="请输入作业人员" />
+        </el-form-item>
+        <el-form-item label="核定工分" prop="vouchScore">
+          <el-input v-model="form.vouchScore" placeholder="请输入核定工分" />
+        </el-form-item>
+        <el-form-item label="扣除工分" prop="deductScore">
+          <el-input v-model="form.deductScore" placeholder="请输入扣除工分" />
+        </el-form-item>
+        <el-form-item label="结余工分" prop="surplusScore">
+          <el-input v-model="form.surplusScore" placeholder="请输入结余工分" />
+        </el-form-item>
+        <el-form-item label="通知单号" prop="docNo">
+          <el-input v-model="form.docNo" placeholder="请输入通知单号" />
+        </el-form-item>
+        <el-form-item label="单据类型">
+          <el-select v-model="form.docType" placeholder="请选择单据类型">
+            <el-option label="请选择字典生成" value="" />
           </el-select>
         </el-form-item>
-        <!--<el-form-item label="工分类型" prop="pointTypeCode">
-          <el-input v-model="form.pointTypeCode" placeholder="请输入工分类型"/>
-        </el-form-item>-->
-        <!-- <el-form-item label="工分标准" prop="pointStandardCode">
-           <el-input v-model="form.pointStandardCode" placeholder="请输入工分标准"/>
-         </el-form-item>-->
-        <!--<el-form-item label="工分值" prop="score">
-          <el-input v-model="form.score" placeholder="请输入工分值"/>
-        </el-form-item>-->
-        <!--<el-form-item label="场所" prop="placeId">
-          <el-input v-model="form.placeId" placeholder="请输入场所"/>
-        </el-form-item>-->
-        <!--<el-form-item label="工单类型(入库单，出库单)">
-          <el-select v-model="form.docType" placeholder="请选择工单类型(入库单，出库单)">
-            <el-option label="请选择字典生成" value=""/>
-          </el-select>
-        </el-form-item>-->
-        <!--<el-form-item label="工单编号" prop="docNo">
-          <el-input v-model="form.docNo" placeholder="请输入工单编号"/>
-        </el-form-item>-->
-
-        <!--<el-form-item label="业务编号(一个编号对应多个单号)" prop="businessNo">
-          <el-input v-model="form.businessNo" placeholder="请输入业务编号(一个编号对应多个单号)"/>
-        </el-form-item>-->
+        <el-form-item label="寄仓客户" prop="customerName">
+          <el-input v-model="form.customerName" placeholder="请输入寄仓客户" />
+        </el-form-item>
+        <el-form-item label="车牌号" prop="vehicleNo">
+          <el-input v-model="form.vehicleNo" placeholder="请输入车牌号" />
+        </el-form-item>
+        <el-form-item label="业务日期" prop="businessTime">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.businessTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择业务日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="工分类型" prop="pointTypeCode">
+          <el-input v-model="form.pointTypeCode" placeholder="请输入工分类型" />
+        </el-form-item>
+        <el-form-item label="工分标准" prop="pointStandardCode">
+          <el-input v-model="form.pointStandardCode" placeholder="请输入工分标准" />
+        </el-form-item>
+        <el-form-item label="标准分数" prop="standardSocre">
+          <el-input v-model="form.standardSocre" placeholder="请输入标准分数" />
+        </el-form-item>
+        <el-form-item label="计分车数" prop="vehicleCount">
+          <el-input v-model="form.vehicleCount" placeholder="请输入计分车数" />
+        </el-form-item>
+        <el-form-item label="业务编号" prop="businessNo">
+          <el-input v-model="form.businessNo" placeholder="请输入业务编号" />
+        </el-form-item>
+        <el-form-item label="开始时间" prop="workStartTime">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.workStartTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择开始时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="结束时间" prop="workOverTime">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.workOverTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择结束时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="时间差(分钟)" prop="useTime">
+          <el-input v-model="form.useTime" placeholder="请输入时间差(分钟)" />
+        </el-form-item>
+        <el-form-item label="临时作业人员" prop="tempWorker">
+          <el-input v-model="form.tempWorker" placeholder="请输入临时作业人员" />
+        </el-form-item>
+        <el-form-item label="理货人/安全员" prop="tallyWorker">
+          <el-input v-model="form.tallyWorker" placeholder="请输入理货人/安全员" />
+        </el-form-item>
+        <el-form-item label="作业设备" prop="jobDevice">
+          <el-input v-model="form.jobDevice" placeholder="请输入作业设备" />
+        </el-form-item>
+        <el-form-item label="设备作业人员" prop="jobDeviceWorker">
+          <el-input v-model="form.jobDeviceWorker" placeholder="请输入设备作业人员" />
+        </el-form-item>
+        <el-form-item label="设备开始时间" prop="deviceStartTime">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.deviceStartTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择设备开始时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="设备结束时间" prop="deviceOverTime">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.deviceOverTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择设备结束时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="设备耗时(分钟)" prop="deviceUseTime">
+          <el-input v-model="form.deviceUseTime" placeholder="请输入设备耗时(分钟)" />
+        </el-form-item>
+        <el-form-item label="设备开始里程" prop="deviceStartMileage">
+          <el-input v-model="form.deviceStartMileage" placeholder="请输入设备开始里程" />
+        </el-form-item>
+        <el-form-item label="设备结束里程" prop="deviceOverMileage">
+          <el-input v-model="form.deviceOverMileage" placeholder="请输入设备结束里程" />
+        </el-form-item>
+        <el-form-item label="设备耗里程" prop="deviceUseMileage">
+          <el-input v-model="form.deviceUseMileage" placeholder="请输入设备耗里程" />
+        </el-form-item>
+        <el-form-item label="设备开始油表" prop="deviceStartOil">
+          <el-input v-model="form.deviceStartOil" placeholder="请输入设备开始油表" />
+        </el-form-item>
+        <el-form-item label="设备结束油表" prop="deviceOverOil">
+          <el-input v-model="form.deviceOverOil" placeholder="请输入设备结束油表" />
+        </el-form-item>
+        <el-form-item label="设备耗油" prop="deviceUseOil">
+          <el-input v-model="form.deviceUseOil" placeholder="请输入设备耗油" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -298,10 +563,7 @@
 </template>
 
 <script>
-import {listRecord, getRecord, delRecord, addRecord, updateRecord} from "@/api/workpoint/record";
-import {getUserDepts} from "@/utils/charutils";
-import {listStandard} from "@/api/workpoint/standard";
-import {listGroup} from "@/api/workpoint/group";
+import { listRecord, getRecord, delRecord, addRecord, updateRecord } from "@/api/workpoint/record";
 
 export default {
   name: "Record",
@@ -317,7 +579,7 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
-      //  工分记录表格数据
+      // 工分记录表格数据
       recordList: [],
       // 弹出层标题
       title: "",
@@ -327,58 +589,52 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 20,
-        workDate: undefined,
+        placeId: undefined,
+        headId: undefined,
+        groupCode: undefined,
         workerCode: undefined,
+        vouchScore: undefined,
+        deductScore: undefined,
+        surplusScore: undefined,
+        docNo: undefined,
+        docType: undefined,
+        customerName: undefined,
+        vehicleNo: undefined,
+        businessTime: undefined,
         pointTypeCode: undefined,
         pointStandardCode: undefined,
-        score: undefined,
-        placeId: undefined,
-        docType: undefined,
-        docNo: undefined,
-        jobGroupCode: undefined,
+        standardSocre: undefined,
+        vehicleCount: undefined,
         businessNo: undefined,
-        orderByColumn: 'id',
-        isAsc: 'desc'
+        workStartTime: undefined,
+        workOverTime: undefined,
+        useTime: undefined,
+        tempWorker: undefined,
+        tallyWorker: undefined,
+        jobDevice: undefined,
+        jobDeviceWorker: undefined,
+        deviceStartTime: undefined,
+        deviceOverTime: undefined,
+        deviceUseTime: undefined,
+        deviceStartMileage: undefined,
+        deviceOverMileage: undefined,
+        deviceUseMileage: undefined,
+        deviceStartOil: undefined,
+        deviceOverOil: undefined,
+        deviceUseOil: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        placeId: [
-          {required: true, message: "场所不能为空", trigger: 'change'}
-        ],
-        workDate: [
-          {required: true, message: "作业日期不能为空", trigger: 'change'}
-        ],
-        pointStandardCode: [
-          {required: true, message: "工分标准不能为空", trigger: 'change'}
-        ],
-        jobGroupCode: [
-          {required: true, message: "作业小组不能为空", trigger: 'change'}
-        ],
-        /*workerCode:[
-          { required: true, message: "作业人员不能为空", trigger: 'change'}
-        ]*/
-
-      },
-      depts: [],
-      pointStandardList: [],
-      groupList: [],
-      workerList: [],
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        },
       }
     };
   },
   created() {
-    this.depts = getUserDepts('')
     this.getList();
-    this.getGroupList()
   },
   methods: {
-    /** 查询 工分记录列表 */
+    /** 查询工分记录列表 */
     getList() {
       this.loading = true;
       listRecord(this.queryParams).then(response => {
@@ -395,23 +651,45 @@ export default {
     // 表单重置
     reset() {
       this.form = {
+        id: undefined,
+        placeId: undefined,
+        headId: undefined,
+        groupCode: undefined,
+        workerCode: undefined,
+        vouchScore: undefined,
+        deductScore: undefined,
+        surplusScore: undefined,
+        docNo: undefined,
+        docType: undefined,
+        customerName: undefined,
+        vehicleNo: undefined,
+        businessTime: undefined,
+        pointTypeCode: undefined,
+        pointStandardCode: undefined,
+        standardSocre: undefined,
+        vehicleCount: undefined,
+        businessNo: undefined,
+        workStartTime: undefined,
+        workOverTime: undefined,
+        useTime: undefined,
+        tempWorker: undefined,
+        tallyWorker: undefined,
+        jobDevice: undefined,
+        jobDeviceWorker: undefined,
+        deviceStartTime: undefined,
+        deviceOverTime: undefined,
+        deviceUseTime: undefined,
+        deviceStartMileage: undefined,
+        deviceOverMileage: undefined,
+        deviceUseMileage: undefined,
+        deviceStartOil: undefined,
+        deviceOverOil: undefined,
+        deviceUseOil: undefined,
         createBy: undefined,
         createTime: undefined,
         updateBy: undefined,
         updateTime: undefined,
-        remark: undefined,
-        revision: undefined,
-        id: undefined,
-        workDate: undefined,
-        workerCode: undefined,
-        pointTypeCode: undefined,
-        pointStandardCode: undefined,
-        score: undefined,
-        placeId: undefined,
-        docType: undefined,
-        docNo: undefined,
-        jobGroupCode: undefined,
-        businessNo: undefined
+        remark: undefined
       };
       this.resetForm("form");
     },
@@ -428,14 +706,14 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length != 1
+      this.single = selection.length!=1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加 工分记录";
+      this.title = "添加工分记录";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -444,11 +722,11 @@ export default {
       getRecord(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改 工分记录";
+        this.title = "修改工分记录";
       });
     },
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
@@ -460,7 +738,6 @@ export default {
               }
             });
           } else {
-            this.form.workerCode = this.form.workerCode.join(',')
             addRecord(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
@@ -475,50 +752,22 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除 工分记录编号为"' + ids + '"的数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
-        return delRecord(ids);
-      }).then(() => {
-        this.getList();
-        this.msgSuccess("删除成功");
-      }).catch(function () {
-      });
+      this.$confirm('是否确认删除工分记录编号为"' + ids + '"的数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return delRecord(ids);
+        }).then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        }).catch(function() {});
     },
     /** 导出按钮操作 */
     handleExport() {
       this.download('workpoint/record/export', {
         ...this.queryParams
       }, `workpoint_record.xlsx`)
-    },
-    getPointStandard(event) { //场所变化，查询对应的工分标准
-      this.pointStandardList = []
-      listStandard({'placeId': event, 'state': '1'}).then(response => {
-        if (response.rows.length > 0) {
-          this.pointStandardList = response.rows;
-        } else {
-          this.$message.error('此场所暂未设置工分标准')
-        }
-      });
-    },
-    getGroupList() {//获取作业小组
-      listGroup({}).then(response => {
-        this.groupList = response.rows;
-      });
-    },
-    getWorkerList(event) {
-      let works = this.groupList.find(item => item.code === event)
-      if (works != null) {
-        this.workerList = works.jobWorkerList
-        this.form.workerCode = []
-        console.log(this.workerList)
-        for (let work of this.workerList) {
-          console.log(work)
-          this.form.workerCode.push(work.wcode)
-        }
-      }
     }
   }
 };

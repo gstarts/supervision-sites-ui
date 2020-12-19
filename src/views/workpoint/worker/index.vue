@@ -1,33 +1,48 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="人员姓名" prop="wname">
+      <!--      <el-form-item label="场所" prop="placeId">
+              <el-select
+                @change="handleQuery"
+                v-model="queryParams.placeId" placeholder="请选择场所" clearable size="small">
+                <el-option
+                  v-for="dept in depts"
+                  :key="dept.deptId"
+                  :label="dept.deptName"
+                  :value="dept.deptId"
+                />
+              </el-select>
+            </el-form-item>-->
+      <el-form-item label="人员姓名" prop="workerName">
         <el-input
-          v-model="queryParams.wname"
+          v-model="queryParams.workerName"
           placeholder="请输入工作人员姓名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="人员编号" prop="wcode">
+      <el-form-item label="人员编号" prop="workerCode">
         <el-input
-          v-model="queryParams.wcode"
+          v-model="queryParams.workerCode"
           placeholder="请输入人员编号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!--<el-form-item label="场所ID" prop="placeId">
-        <el-input
-          v-model="queryParams.placeId"
-          placeholder="请输入场所ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>-->
+      <el-form-item label="人员类型" prop="workerType">
+        <el-select
+          @change="handleQuery"
+          v-model="queryParams.workerType" placeholder="请选择人员类型" clearable size="small">
+          <el-option
+            v-for="dept in workerTypeOptions"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -42,7 +57,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['workpoint:worker:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -52,7 +68,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['workpoint:worker:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -62,7 +79,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['workpoint:worker:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -71,16 +89,18 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['workpoint:worker:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="workerList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
-      <el-table-column label="工作人员姓名" align="center" prop="wname" />
-      <el-table-column label="人员编号" align="center" prop="wcode" />
-      <el-table-column label="场所" align="center" prop="placeId" />
+      <el-table-column type="selection" width="55" align="center"/>
+      <!--<el-table-column label="ID" align="center" prop="id"/>-->
+      <el-table-column label="工作人员姓名" align="center" prop="workerName"/>
+      <el-table-column label="人员编号" align="center" prop="workerCode"/>
+      <el-table-column label="人员类型" align="center" prop="workerType" :formatter="workerTypeFormat" />
+      <!--      <el-table-column label="场所" align="center" prop="placeId"/>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -89,14 +109,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['workpoint:worker:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['workpoint:worker:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -110,24 +132,33 @@
     />
 
     <!-- 添加或修改工人名单 对话框 -->
-    <el-dialog :title="title" :visible.sync="open"  append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="人员姓名" prop="wname">
-              <el-input v-model="form.wname" placeholder="请输入工作人员姓名" />
+            <el-form-item label="人员姓名" prop="workerName">
+              <el-input v-model="form.workerName" placeholder="请输入工作人员姓名"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="人员编号" prop="wcode">
-              <el-input v-model="form.wcode" placeholder="请输入人员编号" />
+            <el-form-item label="人员编号" prop="workerCode">
+              <el-input v-model="form.workerCode" placeholder="请输入人员编号"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="场所ID" prop="placeId">
-              <el-input v-model="form.placeId" placeholder="请输入场所ID" />
+            <el-form-item label="人员类型" prop="workerType">
+              <el-select
+                @change="handleQuery"
+                v-model="form.workerType" placeholder="请选择人员类型" clearable size="small">
+                <el-option
+                  v-for="dept in workerTypeOptions"
+                  :key="dept.dictValue"
+                  :label="dept.dictLabel"
+                  :value="dept.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12"></el-col>
@@ -142,7 +173,8 @@
 </template>
 
 <script>
-import { listWorker, getWorker, delWorker, addWorker, updateWorker } from "@/api/workpoint/worker";
+import {listWorker, getWorker, delWorker, addWorker, updateWorker} from "@/api/workpoint/worker";
+import {getUserDepts} from "@/utils/charutils";
 
 export default {
   name: "Worker",
@@ -152,6 +184,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      depts: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -168,9 +201,10 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 20,
-        wname: undefined,
-        wcode: undefined,
+        workerName: undefined,
+        workerCode: undefined,
         placeId: undefined,
+        workerType: undefined,
         orderByColumn: 'id',
         isAsc: 'desc'
       },
@@ -178,17 +212,28 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        wname: [
-          { type:"string", required: true, message: "人员姓名不能为空", trigger: "blur"}
+        workerName: [
+          {type: "string", required: true, message: "人员姓名不能为空", trigger: "blur"}
         ],
-        wcode: [
-          { type:"string", required: true, message: "人员编号不能为空", trigger: "blur"}
+        workerCode: [
+          {type: "string", required: true, message: "人员编号不能为空", trigger: "blur"}
         ]
-      }
+      },
+      workerTypeOptions: []
     };
   },
   created() {
+    this.getDicts("job_worker_type").then(response => {
+      this.workerTypeOptions = response.data;
+    });
     this.getList();
+    //this.depts = getUserDepts('')
+    /*if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+
+    }*/
+    //workerTypeOptions 工人类型
+
   },
   methods: {
     /** 查询工人名单 列表 */
@@ -208,14 +253,15 @@ export default {
     // 表单重置
     reset() {
       this.form = {
+        id: undefined,
+        workerName: undefined,
+        workerCode: undefined,
+        workerType: undefined,
+        placeId: undefined,
         createBy: undefined,
         createTime: undefined,
         updateBy: undefined,
         updateTime: undefined,
-        id: undefined,
-        wname: undefined,
-        wcode: undefined,
-        placeId: undefined
       };
       this.resetForm("form");
     },
@@ -232,7 +278,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
+      this.single = selection.length != 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -252,7 +298,7 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
@@ -279,22 +325,26 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm('是否确认删除工人名单 编号为"' + ids + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delWorker(ids);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        }).catch(function() {});
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return delWorker(ids);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      }).catch(function () {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
       this.download('workpoint/worker/export', {
         ...this.queryParams
       }, `workpoint_worker.xlsx`)
-    }
+    },
+    workerTypeFormat(row, column) {
+      return this.selectDictLabel(this.workerTypeOptions, row.workerType);
+    },
   }
 };
 </script>

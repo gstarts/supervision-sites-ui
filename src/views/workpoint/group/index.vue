@@ -82,18 +82,19 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="groupList" >
+    <el-table v-loading="loading" :data="groupList">
       <!--<af-table-column type="selection" width="55" align="center"/>-->
-      <af-table-column label="ID" align="center" prop="id"/>
-      <af-table-column label="编号" align="center" prop="code"/>
-      <af-table-column label="名称" align="center" prop="name"/>
-      <af-table-column label="成员" align="center" prop="works">
+      <!--      <el-table-column label="ID" align="center" prop="id"/>-->
+      <el-table-column label="名称" align="center" prop="name"/>
+      <el-table-column label="编号" align="center" prop="code"/>
+      <el-table-column label="成员" align="center" prop="works">
         <template slot-scope="scope">
-          {{ scope.row.jobWorkerList != null ? scope.row.jobWorkerList.map(item => item.wname).join(',') : '' }}
+          {{ scope.row.jobWorkerList != null ? scope.row.jobWorkerList.map(item => item.workerName).join(',') : '' }}
         </template>
-      </af-table-column>
-      <af-table-column label="场所" align="center" prop="placeId"/>
-      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      </el-table-column>
+      <el-table-column label="场所" align="center" prop="placeId" :formatter="formatPlace"/>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right"
+                       style="width:140px">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -112,7 +113,7 @@
           >删除
           </el-button>
         </template>
-      </af-table-column>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -142,10 +143,10 @@
           <el-select multiple filterable v-model="form.works" placeholder="请选择成员" size="small" style="width:90%">
             <el-option
               v-for="worker in workerList"
-              :key="worker.wcode"
-              :label="worker.wname"
-              :value="worker.wcode">
-              <span style="float: left">{{ worker.wname }}</span>
+              :key="worker.workerCode"
+              :label="worker.workerName"
+              :value="worker.workerCode">
+              <span style="float: left">{{ worker.workerName }}</span>
             </el-option>
           </el-select>
         </el-form-item>
@@ -219,9 +220,11 @@ export default {
     };
   },
   created() {
+    this.depts = getUserDepts('')
     this.getWorkerList()
     this.getList();
-    this.depts = getUserDepts('')
+    //console.log('depts')
+    //console.log(this.depts)
     /*if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId
       this.getList();
@@ -355,9 +358,16 @@ export default {
       this.download('workpoint/group/export', {
         ...this.queryParams
       }, `workpoint_group.xlsx`)
+    },
+    formatPlace(row) {
+      let place = this.depts.find(item => item.deptId === row.placeId)
+      if (place) {
+        return place.deptName
+      }
+      return row.placeId
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

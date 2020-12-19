@@ -514,7 +514,7 @@ export default {
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
     });
-    this.getDicts("user_type").then(response => {
+    this.getDicts("system_user_type").then(response => {
       this.userTypeDic = response.data;
     });
     this.getDicts("sys_user_sex").then(response => {
