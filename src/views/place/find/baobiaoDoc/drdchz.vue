@@ -106,7 +106,7 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
-      // 出库明细单表格数据
+      // 调入调出汇总表格数据
       outstoreDocList: [],
       //时间查询类型
       timeQueryTypeOption:[],
@@ -524,9 +524,11 @@ export default {
     outStoreDocStateFormatter(row, column) {
       return this.selectDictLabel(this.outStoreDocStateOption, row.storeState);
     },
-    /*importExcel() {
-      this.$message("导出无效,请先查询数据是否为空");
-    },*/
+    importExcel() {
+      if(this.outstoreDocList.length == 0){
+        this.$message("导出无效,请先查询数据是否为空。");
+      }
+    },
     getSummaries (param) {
       const { columns, data } = param;
       const sums = [];

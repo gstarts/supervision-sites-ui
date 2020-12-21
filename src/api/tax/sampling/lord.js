@@ -16,7 +16,22 @@ export function getLord(id) {
     method: 'get'
   })
 }
+//通过LotNo查询
+export function LotNoList(LotNo){
+  return request({
+    url:'/tax/instore_doc_detail/ByLotNo/'+LotNo,
+    method:'get'
+  })
+}
+//新增子表数据
+export  function InsertListLotNo(data){
 
+  return request({
+    url:'/tax/body/InsertList',
+    method:'post',
+    data:data
+  })
+}
 // 新增取样管理 主
 export function addLord(data) {
   return request({

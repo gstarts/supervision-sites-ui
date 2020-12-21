@@ -96,7 +96,7 @@
         </el-form-item>
         <el-form-item label="取样总重量" prop="samplingWeight">
           <el-input
-            v-model="queryParams.samplingWeight"
+            v-model.number="queryParams.samplingWeight"
             placeholder="请输入取样总重量"
             clearable
             size="small"
@@ -203,107 +203,98 @@
 <!--      :limit.sync="queryParams.pageSize"-->
 <!--      @pagination="getList"-->
 <!--    />-->
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="BodyLotNo"
+          :disabled="LotNoDisabled"
+        >新增</el-button>
+      </el-col>
+    </el-row>
+    <el-card class="mb4">
+      <el-table v-loading="loading" :data="bodyList">
+<!--        <el-table-column type="selection" width="55" align="center" />-->
+        <el-table-column label="袋封号" align="center" prop="bagSealNo" />
+        <el-table-column label="库位号" align="center" prop="bookStoreCode" />
+        <el-table-column label="备注" align="center" prop="remark" />
+<!--        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
+<!--          <template slot-scope="scope">-->
+<!--            <el-button-->
+<!--              size="mini"-->
+<!--              type="text"-->
+<!--              icon="el-icon-edit"-->
+<!--              @click="handleUpdate(scope.row)"-->
+<!--              v-hasPermi="['tax:body:edit']"-->
+<!--            >修改</el-button>-->
+<!--            <el-button-->
+<!--              size="mini"-->
+<!--              type="text"-->
+<!--              icon="el-icon-delete"-->
+<!--              @click="handleDelete(scope.row)"-->
+<!--              v-hasPermi="['tax:body:remove']"-->
+<!--            >删除</el-button>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+      </el-table>
+<!--      <pagination-->
+<!--        v-show="total>0"-->
+<!--        :total="total"-->
+<!--        :page.sync="queryParams.pageNum"-->
+<!--        :limit.sync="queryParams.pageSize"-->
+<!--        @pagination="bodyList"-->
+<!--      />-->
+    </el-card>
 
-    <!-- 添加或修改取样管理 主对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
-      <el-form ref="form" :model="form"  label-width="120px">
-        <el-form-item label="单据号" prop="documentNo">
-          <el-input v-model="form.documentNo" placeholder="请输入单据号" />
-        </el-form-item>
-        <el-form-item label="LotNo" prop="lotNo">
-          <el-input v-model="form.lotNo" placeholder="请输入LotNo" />
-        </el-form-item>
-        <el-form-item label="客户" prop="client">
-          <el-input v-model="form.client" placeholder="请输入客户" />
-        </el-form-item>
-        <el-form-item label="入境日期" prop="entryTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.entryTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择入境日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="业务编号" prop="businessNumber">
-          <el-input v-model="form.businessNumber" placeholder="请输入业务编号" />
-        </el-form-item>
-        <el-form-item label="取样日期" prop="samplingTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.samplingTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择取样日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="取样单位" prop="samplingUnit">
-          <el-input v-model="form.samplingUnit" placeholder="请输入取样单位" />
-        </el-form-item>
-        <el-form-item label="取样人" prop="samplingPeople">
-          <el-input v-model="form.samplingPeople" placeholder="请输入取样人" />
-        </el-form-item>
-        <el-form-item label="取样总重量" prop="samplingWeight">
-          <el-input v-model.number="form.samplingWeight" placeholder="请输入取样总重量" />
-        </el-form-item>
-        <el-form-item label="返程日期" prop="returnTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.returnTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择返程日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="单据状态">
-          <el-radio-group v-model="form.documentsStatus">
-            <el-radio label="1">请选择字典生成</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="制单人" prop="makerPeople">
-          <el-input v-model="form.makerPeople" placeholder="请输入制单人" />
-        </el-form-item>
-        <el-form-item label="制单日期" prop="makerTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.makerTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择制单日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="创建人" prop="createBy">
-          <el-input v-model="form.createBy" placeholder="请输入创建人" />
-        </el-form-item>
-        <el-form-item label="创建时间" prop="createTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.createTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择创建时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="更新人" prop="updateBy">
-          <el-input v-model="form.updateBy" placeholder="请输入更新人" />
-        </el-form-item>
-        <el-form-item label="更新时间" prop="updateTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.updateTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择更新时间">
-          </el-date-picker>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="bodyGetLotNo"
+      >确定</el-button>
+      <el-table v-loading="loading" :data="bodyList" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" align="center" />
+<!--        <el-table-column label="主键ID" align="center" prop="id" />-->
+        <el-table-column label="袋封号" align="center" prop="bagSealNo" />
+        <el-table-column label="库位号" align="center" prop="bookStoreCode" />
+        <el-table-column label="备注" align="center" prop="remark" />
+<!--        <el-table-column label="主表关联ID" align="center" prop="taxSamplingLordId" />-->
+<!--        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
+<!--          <template slot-scope="scope">-->
+<!--            <el-button-->
+<!--              size="mini"-->
+<!--              type="text"-->
+<!--              icon="el-icon-edit"-->
+<!--              @click="handleUpdate(scope.row)"-->
+<!--              v-hasPermi="['tax:body:edit']"-->
+<!--            >修改</el-button>-->
+<!--            <el-button-->
+<!--              size="mini"-->
+<!--              type="text"-->
+<!--              icon="el-icon-delete"-->
+<!--              @click="handleDelete(scope.row)"-->
+<!--              v-hasPermi="['tax:body:remove']"-->
+<!--            >删除</el-button>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+      </el-table>
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        :page-sizes="[1,10,20,30,50]"
+        @pagination="bodyList"
+      />
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { listLord, getLord, delLord, addLord, updateLord } from "@/api/tax/sampling/lord";
+import {listLord, getLord, delLord, addLord, updateLord, LotNoList, InsertListLotNo} from "@/api/tax/sampling/lord";
 
 export default {
   name: "Lord",
@@ -311,18 +302,26 @@ export default {
     return {
       //按钮状态
       flag:false,
+      //关联查询
+      getLotNo:'',
       // 遮罩层
       loading: true,
       // 选中数组
       ids: [],
       // 非单个禁用
       single: true,
+      //子表新增按钮是否禁用
+      LotNoDisabled:true,
       // 非多个禁用
       multiple: true,
       // 总条数
       total: 0,
       // 取样管理 主表格数据
       lordList: [],
+      //取样管理 子表格数据
+      bodyList:[],
+      //向后台交互的数据
+      InsertLotNoList:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -332,7 +331,7 @@ export default {
         pageNum: 1,
         pageSize: 20,
         documentNo: undefined,
-        lotNo: undefined,
+        lotNo: '',
         client: undefined,
         entryTime: undefined,
         businessNumber: undefined,
@@ -372,22 +371,26 @@ export default {
           {type: "number", message: "取样总重量需为数字", trigger: "blur"}
 
         ],
-      }
+      },
+      //定义的关联ID
+      taxSamplingLordId:'',
     };
   },
   created() {
     this.getList();
     const  id =this.$route.query.id
     console.log("我是传输过来的id="+id)
-
+    this.taxSamplingLordId=id;
     const flag = this.$route.query.flag
     console.log("我是传输过来的flag="+flag)
     const single=this.$route.query.single
+    const LotNo=this.$route.query.LotNo
     if(id){
       getLord(id).then(response =>{
         this.queryParams=response.data
         this.flag=flag;
         this.single=single;
+        this.LotNoDisabled=false;
       })
     }
   },
@@ -463,6 +466,9 @@ export default {
       this.ids = selection.map(item => item.id)
       this.single = selection.length!=1
       this.multiple = !selection.length
+      this.InsertLotNoList=selection
+      console.log("我是InsertLotNoList")
+      console.log(this.InsertLotNoList)
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -472,12 +478,16 @@ export default {
       console.log(this.queryParams)
       addLord(this.queryParams).then(response => {
         if (response.code === 200) {
+          this.LotNoDisabled=false;
           this.msgSuccess("新增成功");
+          this.getLotNo=this.queryParams.lotNo
+          this.taxSamplingLordId=response.data.id
           this.open = false;
           this.getList();
+
         }
       });
-      this.reset();
+      // this.reset();
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -531,7 +541,36 @@ export default {
       this.download('tax/lord/export', {
         ...this.queryParams
       }, `tax_lord.xlsx`)
-    }
+    },
+
+    BodyLotNo(){
+      this.open=true;
+      LotNoList(this.queryParams.lotNo).then(response =>{
+        if(response.code === 200){
+          this.msgSuccess("查询成功,请选择数据")
+          this.bodyList=response.rows
+          this.total = response.total;
+        }
+      })
+    },
+    bodyGetLotNo(){
+      if(this.taxSamplingLordId == undefined){
+        this.taxSamplingLordId=this.queryParams.id
+      }
+      const data={
+       list: this.InsertLotNoList,
+        taxSamplingLordId:this.taxSamplingLordId
+      }
+      console.log("data数据")
+      console.log(data)
+      console.log("主键")
+      console.log(data.taxSamplingLordId)
+      InsertListLotNo(data).then(response =>{
+        if(response.code === 200){
+          this.msgSuccess("新增成功")
+        }
+      })
+    },
   }
 };
 </script>
