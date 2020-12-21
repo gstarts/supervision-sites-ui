@@ -1264,7 +1264,7 @@ export default {
 }
 
 #dayinMake {
-  height: 9.399cm;
+  height: 9.39cm;
   width: 21cm;
   /*border: 1px solid ;*/
 }
