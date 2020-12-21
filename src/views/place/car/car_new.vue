@@ -1084,7 +1084,7 @@ export default {
   padding-left: 2cm;
   padding-top: 10px;
   /*border: 1px solid ;*/
-  margin-top: 5px;
+  margin-top: 8px;
   //margin-top: 1cm;
 }
 
