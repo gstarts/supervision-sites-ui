@@ -1064,7 +1064,7 @@ export default {
   /*margin-top: 80px;*/
   margin-left: 5px;
   /*border: 1px solid ;*/
-  padding-top: 74px;
+  padding-top: 64px;
   /*margin-top: 1cm;*/
 }
 
@@ -1248,7 +1248,7 @@ export default {
   padding-left: 1cm;
   font-size: 22px;
   /*border: 1px solid ;*/
-  margin-top: 1.2cm;
+  margin-top: 1.1cm;
 }
 
 .nouse {
@@ -1258,13 +1258,13 @@ export default {
 }
 
 #dayin {
-  height: 9.40cm;
+  height: 9.39cm;
   width: 21cm;
   /*border: 1px solid ;*/
 }
 
 #dayinMake {
-  height: 9.40cm;
+  height: 9.399cm;
   width: 21cm;
   /*border: 1px solid ;*/
 }
