@@ -26,11 +26,11 @@
       <el-button
         type="info"
         size="small"
+        icon="el-icon-printer"
         v-print="'#dayin'"
         @click="print">
         <!-- v-show="this.form.netWeight !== undefined && this.form.netWeight !== '' &&  this.form.plateNum !== undefined && this.form.plateNum !==''
-         && this.form.locationNumber !== undefined &&  this.form.locationNumber !=='' && this.PoundForm.stationViaType ==='01'"-->
-        <i class="fa fa-print" aria-hidden="true">&nbsp;&nbsp;打印</i>
+         && this.form.locationNumber !== undefined &&  this.form.locationNumber !=='' && this.PoundForm.stationViaType ==='01'"-->打印
       </el-button>
     </div>
     <el-row :gutter="10">
