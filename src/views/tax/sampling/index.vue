@@ -171,7 +171,8 @@
 <!--      </el-col>-->
 <!--    </el-row>-->
 
-    <el-table v-loading="loading" :data="lordList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="lordList" @selection-change="handleSelectionChange" >
+      <el-table-column type="selection" width="55" align="center" />
 <!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="单据号" align="center" prop="documentNo" />
@@ -216,7 +217,6 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-delete"
             @click="handleSelect(scope.row)"
           >详情</el-button>
         </template>
@@ -383,7 +383,8 @@ export default {
       form: {},
       // 表单校验
       rules: {
-      }
+      },
+      TestList:[],
     };
   },
   created() {
@@ -405,8 +406,12 @@ export default {
         this.lordList = response.rows;
         this.total = response.total;
         this.loading = false;
-        this.EntryTime=[];
-        this.samplingTime=[];
+        // this.EntryTime=[];
+        // this.samplingTime=[];
+        this.queryParams.entryTimeBegin=undefined;
+        this.queryParams.entryTimeEnd=undefined;
+        this.queryParams.samplingTimeBegin=undefined;
+        this.queryParams.samplingTimeEnd=undefined;
       });
     },
     // 取消按钮
@@ -457,6 +462,9 @@ export default {
       this.ids = selection.map(item => item.id)
       this.single = selection.length!=1
       this.multiple = !selection.length
+      this.TestList.push(selection)
+      console.log("测试选中数据")
+      console.log(this.TestList)
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -467,7 +475,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       const id = row.id || this.ids
-      this.$router.push({path: '/tax/spamlingsmall', query: {id: id, flag: true,single:false}})
+      const LotNo=row.lotNo
+      this.$router.push({path: '/tax/spamlingsmall', query: {id: id, flag: true,single:false,LotNo:LotNo}})
     },
     /** 提交按钮 */
     submitForm: function() {
@@ -503,7 +512,7 @@ export default {
       this.download('tax/lord/export', {
         ...this.queryParams
       }, `tax_lord.xlsx`)
-    }
+    },
   }
 };
 </script>
