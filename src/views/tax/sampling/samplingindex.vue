@@ -220,7 +220,7 @@
         <el-table-column label="袋封号" align="center" prop="bagSealNo" />
         <el-table-column label="库位号" align="center" prop="bookStoreCode" />
         <el-table-column label="备注" align="center" prop="remark" />
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+<!--        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
 <!--          <template slot-scope="scope">-->
 <!--            <el-button-->
 <!--              size="mini"-->
@@ -237,15 +237,15 @@
 <!--              v-hasPermi="['tax:body:remove']"-->
 <!--            >删除</el-button>-->
 <!--          </template>-->
-        </el-table-column>
+<!--        </el-table-column>-->
       </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
-        :limit.sync="queryParams.pageSize"
-        @pagination="bodyList"
-      />
+<!--      <pagination-->
+<!--        v-show="total>0"-->
+<!--        :total="total"-->
+<!--        :page.sync="queryParams.pageNum"-->
+<!--        :limit.sync="queryParams.pageSize"-->
+<!--        @pagination="bodyList"-->
+<!--      />-->
     </el-card>
 
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
@@ -262,7 +262,7 @@
         <el-table-column label="库位号" align="center" prop="bookStoreCode" />
         <el-table-column label="备注" align="center" prop="remark" />
 <!--        <el-table-column label="主表关联ID" align="center" prop="taxSamplingLordId" />-->
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+<!--        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
 <!--          <template slot-scope="scope">-->
 <!--            <el-button-->
 <!--              size="mini"-->
@@ -279,21 +279,22 @@
 <!--              v-hasPermi="['tax:body:remove']"-->
 <!--            >删除</el-button>-->
 <!--          </template>-->
-        </el-table-column>
+<!--        </el-table-column>-->
       </el-table>
       <pagination
         v-show="total>0"
         :total="total"
         :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"
-        @pagination="getList"
+        :page-sizes="[1,10,20,30,50]"
+        @pagination="bodyList"
       />
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { listLord, getLord, delLord, addLord, updateLord,LotNoList } from "@/api/tax/sampling/lord";
+import {listLord, getLord, delLord, addLord, updateLord, LotNoList, InsertListLotNo} from "@/api/tax/sampling/lord";
 
 export default {
   name: "Lord",
@@ -319,6 +320,8 @@ export default {
       lordList: [],
       //取样管理 子表格数据
       bodyList:[],
+      //向后台交互的数据
+      InsertLotNoList:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -368,14 +371,16 @@ export default {
           {type: "number", message: "取样总重量需为数字", trigger: "blur"}
 
         ],
-      }
+      },
+      //定义的关联ID
+      taxSamplingLordId:'',
     };
   },
   created() {
     this.getList();
     const  id =this.$route.query.id
     console.log("我是传输过来的id="+id)
-
+    this.taxSamplingLordId=id;
     const flag = this.$route.query.flag
     console.log("我是传输过来的flag="+flag)
     const single=this.$route.query.single
@@ -461,6 +466,9 @@ export default {
       this.ids = selection.map(item => item.id)
       this.single = selection.length!=1
       this.multiple = !selection.length
+      this.InsertLotNoList=selection
+      console.log("我是InsertLotNoList")
+      console.log(this.InsertLotNoList)
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -470,11 +478,13 @@ export default {
       console.log(this.queryParams)
       addLord(this.queryParams).then(response => {
         if (response.code === 200) {
+          this.LotNoDisabled=false;
           this.msgSuccess("新增成功");
           this.getLotNo=this.queryParams.lotNo
+          this.taxSamplingLordId=response.data.id
           this.open = false;
           this.getList();
-          this.LotNoDisabled=false;
+
         }
       });
       // this.reset();
@@ -532,18 +542,35 @@ export default {
         ...this.queryParams
       }, `tax_lord.xlsx`)
     },
-    bodyGetLotNo(){
-      console.log("看我看我看我")
-    },
+
     BodyLotNo(){
       this.open=true;
       LotNoList(this.queryParams.lotNo).then(response =>{
         if(response.code === 200){
           this.msgSuccess("查询成功,请选择数据")
           this.bodyList=response.rows
+          this.total = response.total;
         }
       })
-    }
+    },
+    bodyGetLotNo(){
+      if(this.taxSamplingLordId == undefined){
+        this.taxSamplingLordId=this.queryParams.id
+      }
+      const data={
+       list: this.InsertLotNoList,
+        taxSamplingLordId:this.taxSamplingLordId
+      }
+      console.log("data数据")
+      console.log(data)
+      console.log("主键")
+      console.log(data.taxSamplingLordId)
+      InsertListLotNo(data).then(response =>{
+        if(response.code === 200){
+          this.msgSuccess("新增成功")
+        }
+      })
+    },
   }
 };
 </script>

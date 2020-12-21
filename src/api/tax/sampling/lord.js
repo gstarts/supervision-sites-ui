@@ -23,6 +23,15 @@ export function LotNoList(LotNo){
     method:'get'
   })
 }
+//新增子表数据
+export  function InsertListLotNo(data){
+
+  return request({
+    url:'/tax/body/InsertList',
+    method:'post',
+    data:data
+  })
+}
 // 新增取样管理 主
 export function addLord(data) {
   return request({
