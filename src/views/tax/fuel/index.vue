@@ -120,41 +120,75 @@
     <!-- 添加或修改加油费管理主对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="申请单编号" prop="applicationNumber">
-          <el-input v-model="form.applicationNumber" placeholder="请输入申请单编号" />
-        </el-form-item>
-        <el-form-item label="加油站加油员" prop="gasStation">
-          <el-input v-model="form.gasStation" placeholder="请输入加油站加油员" />
-        </el-form-item>
-        <el-form-item label="公司加油人" prop="companyCheer">
-          <el-input v-model="form.companyCheer" placeholder="请输入公司加油人" />
-        </el-form-item>
-        <el-form-item label="证明人" prop="witness">
-          <el-input v-model="form.witness" placeholder="请输入证明人" />
-        </el-form-item>
-        <el-form-item label="负责人" prop="principal">
-          <el-input v-model="form.principal" placeholder="请输入负责人" />
-        </el-form-item>
-        <el-form-item label="加油日期" prop="refuelingDate">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.refuelingDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择加油日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="加油量合计(公升)" prop="totalRefuelingAmount">
-          <el-input v-model="form.totalRefuelingAmount" placeholder="请输入加油量合计(公升)" />
-        </el-form-item>
-        <el-form-item label="单价" prop="unitPrice">
-          <el-input v-model="form.unitPrice" placeholder="请输入单价" />
-        </el-form-item>
-        <el-form-item label="总价" prop="totalPrice">
-          <el-input v-model="form.totalPrice" placeholder="请输入总价" />
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="申请单编号" prop="applicationNumber">
+              <el-input v-model="form.applicationNumber" placeholder="请输入申请单编号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="加油站加油员" prop="gasStation">
+              <el-input v-model="form.gasStation" placeholder="请输入加油站加油员" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="公司加油人" prop="companyCheer">
+              <el-input v-model="form.companyCheer" placeholder="请输入公司加油人" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="证明人" prop="witness">
+              <el-input v-model="form.witness" placeholder="请输入证明人" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="负责人" prop="principal">
+              <el-input v-model="form.principal" placeholder="请输入负责人" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="加油日期" prop="refuelingDate">
+              <el-date-picker clearable size="small" style="width: 200px"
+                              v-model="form.refuelingDate"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              placeholder="选择加油日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="加油量合计(公升)" prop="totalRefuelingAmount">
+              <el-input v-model="form.totalRefuelingAmount" placeholder="请输入加油量合计(公升)" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="单价" prop="unitPrice">
+              <el-input v-model="form.unitPrice" placeholder="请输入单价" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="总价" prop="totalPrice">
+              <el-input v-model="form.totalPrice" placeholder="请输入总价" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>

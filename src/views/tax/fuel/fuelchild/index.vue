@@ -135,8 +135,8 @@
         </el-col>
 
         <el-col :span="8">
-          <el-form-item label="备注" prop="remark">
-            <el-input type="textarea"
+          <el-form-item label="备注" prop="remark" >
+            <el-input type="textarea" :rows="2" style="width: 140px"
               v-model="queryParams.remark"
               placeholder="请输入备注"
               clearable
