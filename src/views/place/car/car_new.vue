@@ -1158,7 +1158,7 @@ export default {
   width: 1100px;
   padding-left: 2cm;
   /*border: 1px solid ;*/
-  margin-top: 10px;
+  margin-top: 7px;
   /*padding-top: 35px;*/
   font-size: 20px;
 
@@ -1194,7 +1194,7 @@ export default {
   padding-left: 2cm;
   /*border: 1px solid ;*/
   /*padding-top: 55px;*/
-  margin-top: 0px;
+  margin-top: -10px;
   /*float: right;*/
 }
 
