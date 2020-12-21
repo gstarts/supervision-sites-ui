@@ -1248,7 +1248,7 @@ export default {
   padding-left: 1cm;
   font-size: 22px;
   /*border: 1px solid ;*/
-  margin-top: 1.1cm;
+  margin-top: 1.3cm;
 }
 
 .nouse {
