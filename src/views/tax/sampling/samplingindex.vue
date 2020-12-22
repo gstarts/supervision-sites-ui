@@ -233,13 +233,13 @@
 <!--          </template>-->
 <!--        </el-table-column>-->
       </el-table>
-<!--      <pagination-->
-<!--        v-show="total>0"-->
-<!--        :total="total"-->
-<!--        :page.sync="bodyQueryParams.pageNum"-->
-<!--        :limit.sync="bodyQueryParams.pageSize"-->
-<!--        @pagination="indexBodyList"-->
-<!--      />-->
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="bodyQueryParams.pageNum"
+        :limit.sync="bodyQueryParams.pageSize"
+        @pagination="indexList"
+      />
     </el-card>
 
     <el-dialog :title="title" :visible.sync="open"  append-to-body >
