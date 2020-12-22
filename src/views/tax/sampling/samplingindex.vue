@@ -111,11 +111,11 @@
                           placeholder="选择返程日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="单据状态" prop="documentsStatus">
-          <el-select v-model="queryParams.documentsStatus" placeholder="请选择单据状态" clearable size="small">
-            <el-option label="请选择字典生成" value="" />
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="单据状态" prop="documentsStatus">-->
+<!--          <el-select v-model="queryParams.documentsStatus" placeholder="请选择单据状态" clearable size="small">-->
+<!--            <el-option label="请选择字典生成" value="" />-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
         <el-form-item label="制单人" prop="makerPeople">
           <el-input
             v-model="queryParams.makerPeople"
@@ -205,6 +205,7 @@
           size="mini"
           @click="BodyLotNo"
           :disabled="LotNoDisabled"
+          v-hasPermi="['tax:lord:lotNo']"
         >新增</el-button>
       </el-col>
     </el-row>
@@ -248,6 +249,7 @@
         icon="el-icon-plus"
         size="mini"
         @click="bodyGetLotNo"
+        v-hasPermi="['tax:body:add']"
       >确定</el-button>
       <el-table  :data="bodyList" @selection-change="handleSelectionChange" v-loading="bodyListLoading">
         <el-table-column type="selection" width="55" align="center" />
@@ -292,7 +294,7 @@ export default {
       //关联查询
       getLotNo:'',
       // 遮罩层
-      loading: true,
+      loading: false,
       bodyListLoading:true,
       // 选中数组
       ids: [],
@@ -374,7 +376,7 @@ export default {
     };
   },
   created() {
-    this.getList();
+    // this.getList();
     const  id =this.$route.query.id
     console.log("我是传输过来的id="+id)
     this.taxSamplingLordId=id;
@@ -492,6 +494,8 @@ export default {
         if(response.code === 200){
           this.queryParams = response.data;
           this.msgSuccess("修改成功");
+          this.$store.dispatch('tagsView/delView', this.$route)
+          this.$router.go(-1)
         }
       });
     },
@@ -578,10 +582,13 @@ export default {
 
     },
     indexList(){
+      this.loading=true;
       this.bodyQueryParams.taxSamplingLordId=this.taxSamplingLordId;
       listBody(this.bodyQueryParams).then(response =>{
         if(response.code === 200){
-          this.indexBodyList=response.rows
+          this.msgSuccess("查询成功")
+          this.loading=false;
+          this.indexBodyList=response.rows;
           this.total = response.total;
         }
       })
