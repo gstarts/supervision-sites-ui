@@ -1064,7 +1064,7 @@ export default {
   /*margin-top: 80px;*/
   margin-left: 5px;
   /*border: 1px solid ;*/
-  padding-top: 74px;
+  padding-top: 72px;
   /*margin-top: 1cm;*/
 }
 
@@ -1084,7 +1084,7 @@ export default {
   padding-left: 2cm;
   padding-top: 10px;
   /*border: 1px solid ;*/
-  margin-top: 15px;
+  margin-top: 8px;
   //margin-top: 1cm;
 }
 
@@ -1158,7 +1158,7 @@ export default {
   width: 1100px;
   padding-left: 2cm;
   /*border: 1px solid ;*/
-  margin-top: 20px;
+  margin-top: 10px;
   /*padding-top: 35px;*/
   font-size: 20px;
 
@@ -1194,7 +1194,7 @@ export default {
   padding-left: 2cm;
   /*border: 1px solid ;*/
   /*padding-top: 55px;*/
-  margin-top: 10px;
+  margin-top: 5px;
   /*float: right;*/
 }
 
@@ -1248,7 +1248,7 @@ export default {
   padding-left: 1cm;
   font-size: 22px;
   /*border: 1px solid ;*/
-  margin-top: 1.2cm;
+  margin-top: 1.3cm;
 }
 
 .nouse {
@@ -1258,13 +1258,13 @@ export default {
 }
 
 #dayin {
-  height: 9.40cm;
+  height: 9.39cm;
   width: 21cm;
   /*border: 1px solid ;*/
 }
 
 #dayinMake {
-  height: 9.40cm;
+  height: 9.39cm;
   width: 21cm;
   /*border: 1px solid ;*/
 }
