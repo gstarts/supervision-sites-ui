@@ -378,10 +378,8 @@ export default {
   created() {
     // this.getList();
     const  id =this.$route.query.id
-    console.log("我是传输过来的id="+id)
     this.taxSamplingLordId=id;
     const flag = this.$route.query.flag
-    console.log("我是传输过来的flag="+flag)
     const single=this.$route.query.single
     const LotNo=this.$route.query.LotNo
     if(id){
@@ -466,15 +464,11 @@ export default {
       this.single = selection.length!=1
       this.multiple = !selection.length
       this.InsertLotNoList=selection
-      console.log("我是InsertLotNoList")
-      console.log(this.InsertLotNoList)
     },
     /** 新增按钮操作 */
     handleAdd() {
       // this.open = true;
       // this.title = "添加取样管理 主";
-      console.log("==========")
-      console.log(this.queryParams)
       addLord(this.queryParams).then(response => {
         if (response.code === 200) {
           this.LotNoDisabled=false;
@@ -564,14 +558,10 @@ export default {
        //  taxSamplingLordId:this.taxSamplingLordId
       }
       this.InsertLotNoList.forEach((column, index) =>{
-        console.log("------------");
         this.$set(column, 'taxSamplingLordId', this.taxSamplingLordId)
 
       });
-      console.log("data数据")
-      console.log(data)
-      console.log("主键")
-      console.log(this.InsertLotNoList)
+
       InsertListLotNo(this.InsertLotNoList).then(response =>{
         if(response.code === 200){
           this.msgSuccess("新增成功")

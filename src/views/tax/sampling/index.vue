@@ -463,8 +463,6 @@ export default {
       this.single = selection.length!=1
       this.multiple = !selection.length
       this.TestList.push(selection)
-      console.log("测试选中数据")
-      console.log(this.TestList)
     },
     /** 新增按钮操作 */
     handleAdd() {
