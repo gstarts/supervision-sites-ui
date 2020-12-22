@@ -23,7 +23,7 @@
       </el-col>
     </el-row>
     <el-card class="mb5">
-      <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="68px" :rules="rules">
+      <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="95px" :rules="rules">
         <el-form-item label="单据号" prop="documentNo">
           <el-input
             v-model="queryParams.documentNo"
@@ -196,13 +196,7 @@
 <!--      </el-table-column>-->
 <!--    </el-table>-->
 
-<!--    <pagination-->
-<!--      v-show="total>0"-->
-<!--      :total="total"-->
-<!--      :page.sync="queryParams.pageNum"-->
-<!--      :limit.sync="queryParams.pageSize"-->
-<!--      @pagination="getList"-->
-<!--    />-->
+
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -215,7 +209,7 @@
       </el-col>
     </el-row>
     <el-card class="mb4">
-      <el-table v-loading="loading" :data="bodyList">
+      <el-table v-loading="loading" :data="indexBodyList">
 <!--        <el-table-column type="selection" width="55" align="center" />-->
         <el-table-column label="袋封号" align="center" prop="bagSealNo" />
         <el-table-column label="库位号" align="center" prop="bookStoreCode" />
@@ -242,20 +236,20 @@
 <!--      <pagination-->
 <!--        v-show="total>0"-->
 <!--        :total="total"-->
-<!--        :page.sync="queryParams.pageNum"-->
-<!--        :limit.sync="queryParams.pageSize"-->
-<!--        @pagination="bodyList"-->
+<!--        :page.sync="bodyQueryParams.pageNum"-->
+<!--        :limit.sync="bodyQueryParams.pageSize"-->
+<!--        @pagination="indexBodyList"-->
 <!--      />-->
     </el-card>
 
-    <el-dialog :title="title" :visible.sync="open"  append-to-body>
+    <el-dialog :title="title" :visible.sync="open"  append-to-body >
       <el-button
         type="primary"
         icon="el-icon-plus"
         size="mini"
         @click="bodyGetLotNo"
       >确定</el-button>
-      <el-table v-loading="loading" :data="bodyList" @selection-change="handleSelectionChange">
+      <el-table  :data="bodyList" @selection-change="handleSelectionChange" v-loading="bodyListLoading">
         <el-table-column type="selection" width="55" align="center" />
 <!--        <el-table-column label="主键ID" align="center" prop="id" />-->
         <el-table-column label="袋封号" align="center" prop="bagSealNo" />
@@ -281,21 +275,14 @@
 <!--          </template>-->
 <!--        </el-table-column>-->
       </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
-        :limit.sync="queryParams.pageSize"
-        :page-sizes="[1,10,20,30,50]"
-        @pagination="bodyList"
-      />
+
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {listLord, getLord, delLord, addLord, updateLord, LotNoList, InsertListLotNo} from "@/api/tax/sampling/lord";
-
+import {listLord, getLord, delLord, addLord, updateLord, LotNoList, InsertListLotNo,listBody} from "@/api/tax/sampling/lord";
+import Vue from 'vue'
 export default {
   name: "Lord",
   data() {
@@ -306,6 +293,7 @@ export default {
       getLotNo:'',
       // 遮罩层
       loading: true,
+      bodyListLoading:true,
       // 选中数组
       ids: [],
       // 非单个禁用
@@ -320,6 +308,8 @@ export default {
       lordList: [],
       //取样管理 子表格数据
       bodyList:[],
+      //取样管理 子表保存后的数据
+      indexBodyList:[],
       //向后台交互的数据
       InsertLotNoList:[],
       // 弹出层标题
@@ -343,6 +333,13 @@ export default {
         documentsStatus: undefined,
         makerPeople: undefined,
         makerTime: undefined,
+      },
+      bodyQueryParams: {
+        pageNum: 1,
+        pageSize: 20,
+        bagSealNo: undefined,
+        bookStoreCode: undefined,
+        taxSamplingLordId: undefined
       },
       // 表单参数
       form: {},
@@ -392,6 +389,7 @@ export default {
         this.single=single;
         this.LotNoDisabled=false;
       })
+      this.indexList()
     }
   },
   methods: {
@@ -400,7 +398,6 @@ export default {
       this.loading = true;
       listLord(this.queryParams).then(response => {
         this.lordList = response.rows;
-        this.total = response.total;
         this.loading = false;
       });
     },
@@ -545,11 +542,12 @@ export default {
 
     BodyLotNo(){
       this.open=true;
+      this.bodyListLoading=true;
       LotNoList(this.queryParams.lotNo).then(response =>{
         if(response.code === 200){
           this.msgSuccess("查询成功,请选择数据")
           this.bodyList=response.rows
-          this.total = response.total;
+          this.bodyListLoading=false;
         }
       })
     },
@@ -558,19 +556,36 @@ export default {
         this.taxSamplingLordId=this.queryParams.id
       }
       const data={
-       list: this.InsertLotNoList,
-        taxSamplingLordId:this.taxSamplingLordId
+       // list: this.InsertLotNoList,
+       //  taxSamplingLordId:this.taxSamplingLordId
       }
+      this.InsertLotNoList.forEach((column, index) =>{
+        console.log("------------");
+        this.$set(column, 'taxSamplingLordId', this.taxSamplingLordId)
+
+      });
       console.log("data数据")
       console.log(data)
       console.log("主键")
-      console.log(data.taxSamplingLordId)
-      InsertListLotNo(data).then(response =>{
+      console.log(this.InsertLotNoList)
+      InsertListLotNo(this.InsertLotNoList).then(response =>{
         if(response.code === 200){
           this.msgSuccess("新增成功")
+          this.indexList();
+          this.open=false;
         }
       })
+
     },
+    indexList(){
+      this.bodyQueryParams.taxSamplingLordId=this.taxSamplingLordId;
+      listBody(this.bodyQueryParams).then(response =>{
+        if(response.code === 200){
+          this.indexBodyList=response.rows
+          this.total = response.total;
+        }
+      })
+    }
   }
 };
 </script>

@@ -283,11 +283,11 @@
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
-        <el-form-item label="单据状态">
-          <el-radio-group v-model="form.documentsStatus">
-            <el-radio label="1">请选择字典生成</el-radio>
-          </el-radio-group>
-        </el-form-item>
+<!--        <el-form-item label="单据状态">-->
+<!--          <el-radio-group v-model="form.documentsStatus">-->
+<!--            <el-radio label="1">请选择字典生成</el-radio>-->
+<!--          </el-radio-group>-->
+<!--        </el-form-item>-->
         <el-form-item label="制单人" prop="makerPeople">
           <el-input v-model="form.makerPeople" placeholder="请输入制单人" />
         </el-form-item>

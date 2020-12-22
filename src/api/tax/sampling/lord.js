@@ -24,7 +24,7 @@ export function LotNoList(LotNo){
   })
 }
 //新增子表数据
-export  function InsertListLotNo(data){
+export function InsertListLotNo(data){
 
   return request({
     url:'/tax/body/InsertList',
@@ -32,6 +32,24 @@ export  function InsertListLotNo(data){
     data:data
   })
 }
+
+// 查询取样管理 子列表
+export function listBody(query) {
+  return request({
+    url: '/tax/body/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询取样管理 子详细
+export function getBody(id) {
+  return request({
+    url: '/tax/body/' + id,
+    method: 'get'
+  })
+}
+
 // 新增取样管理 主
 export function addLord(data) {
   return request({
