@@ -647,17 +647,28 @@
 
       </el-form-item>
       <el-form-item>
-        <download-excel
-          class="export-excel-wrapper"
-          :data="instoreDocList"
-          :fields="json_fields"
-          :title="titleList"
-          :footer="excelFooter"
-          :default-value="defaultValue"
-          name="嘉易达监管场所出库报表.xls">
-          <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
-          <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
-        </download-excel>
+<!--        <download-excel-->
+<!--          class="export-excel-wrapper"-->
+<!--          :data="instoreDocList"-->
+<!--          :fields="json_fields"-->
+<!--          :title="titleList"-->
+<!--          :footer="excelFooter"-->
+<!--          :default-value="defaultValue"-->
+<!--          name="嘉易达监管场所出库报表.xls">-->
+<!--          &lt;!&ndash; 上面可以自定义自己的样式，还可以引用其他组件button &ndash;&gt;-->
+<!--          <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>-->
+<!--        </download-excel>-->
+
+        <el-col :span="1.5">
+          <el-button
+            type="warning"
+            icon="el-icon-download"
+            size="mini"
+            @click="handleExport"
+
+          >导出
+          </el-button>
+        </el-col>
       </el-form-item>
     </el-form>
 
@@ -1673,7 +1684,7 @@ export default {
     handleExport() {
       this.download('place/instoreDoc/export', {
         ...this.queryParams
-      }, `place_instoreDoc.xlsx`)
+      }, `入库明细表报表.xlsx`)
     },
     getSummaries(param) {
       const {columns, data} = param;
