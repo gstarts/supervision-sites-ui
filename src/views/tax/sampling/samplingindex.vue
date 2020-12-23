@@ -162,13 +162,12 @@
         >修改</el-button>
       </el-col>
     </el-row>
-    <el-card class="mb4">
+    <el-card class="mb5">
       <el-form :model="bodyForm" ref="bodyForm"  label-width="68px">
         <el-form-item label="袋封号" prop="bagSealNo">
           <el-input
             v-model="bodyForm.bagSealNo"
             placeholder="请输入袋封号"
-            clearable
             size="small"
           />
         </el-form-item>
@@ -176,7 +175,6 @@
           <el-input
             v-model="bodyForm.bookStoreCode"
             placeholder="请输入库位号"
-            clearable
             size="small"
           />
         </el-form-item>
@@ -184,7 +182,6 @@
           <el-input
             v-model="bodyForm.remark"
             placeholder="请输入备注"
-            clearable
             size="small"
              />
         </el-form-item>
