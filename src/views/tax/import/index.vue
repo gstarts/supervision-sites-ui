@@ -168,12 +168,12 @@
             v-hasPermi="['tax:import:download']"
           >下载
           </el-button>
-          <el-button v-show="queryParams.templateType === '2' && scope.row.isGenReport !==0"
+          <el-button v-show="scope.row.templateType === '2' && scope.row.isGenReport !==0"
                      size="mini"
                      type="text"
                      icon="el-icon-delete"
                      @click="customsDelete(scope.row)"
-                     v-hasPermi="['tax:import:remove']"
+                     v-hasPermi="['tax:customs:remove']"
           >删除报关数据
           </el-button>
           <el-button v-show="scope.row.isGenReport ===0 && scope.row.isGenStoreNotice ===0"
