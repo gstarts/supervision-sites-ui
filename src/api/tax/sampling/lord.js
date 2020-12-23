@@ -50,6 +50,15 @@ export function getBody(id) {
   })
 }
 
+// 修改取样管理 子
+export function updateBody(data) {
+  return request({
+    url: '/tax/body',
+    method: 'put',
+    data: data
+  })
+}
+
 // 新增取样管理 主
 export function addLord(data) {
   return request({

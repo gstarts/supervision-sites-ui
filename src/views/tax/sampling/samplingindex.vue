@@ -206,11 +206,47 @@
           @click="BodyLotNo"
           :disabled="LotNoDisabled"
           v-hasPermi="['tax:lord:lotNo']"
-        >新增</el-button>
+        >请选择需要新增的数据</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          @click="updateBodyData"
+          :disabled="bodyUpdate"
+          v-hasPermi="['tax:body:edit']"
+        >修改</el-button>
       </el-col>
     </el-row>
     <el-card class="mb4">
-      <el-table v-loading="loading" :data="indexBodyList">
+      <el-form :model="bodyForm" ref="bodyForm"  label-width="68px">
+        <el-form-item label="袋封号" prop="bagSealNo">
+          <el-input
+            v-model="bodyForm.bagSealNo"
+            placeholder="请输入袋封号"
+            clearable
+            size="small"
+          />
+        </el-form-item>
+        <el-form-item label="库位号" prop="bookStoreCode">
+          <el-input
+            v-model="bodyForm.bookStoreCode"
+            placeholder="请输入库位号"
+            clearable
+            size="small"
+          />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input
+            v-model="bodyForm.remark"
+            placeholder="请输入备注"
+            clearable
+            size="small"
+             />
+        </el-form-item>
+      </el-form>
+      <el-table v-loading="loading" :data="indexBodyList" @row-click="rowBody">
 <!--        <el-table-column type="selection" width="55" align="center" />-->
         <el-table-column label="袋封号" align="center" prop="bagSealNo" />
         <el-table-column label="库位号" align="center" prop="bookStoreCode" />
@@ -283,7 +319,7 @@
 </template>
 
 <script>
-import {listLord, getLord, delLord, addLord, updateLord, LotNoList, InsertListLotNo,listBody} from "@/api/tax/sampling/lord";
+import {listLord, getLord, delLord, addLord, updateLord, LotNoList, InsertListLotNo,listBody,updateBody} from "@/api/tax/sampling/lord";
 import Vue from 'vue'
 export default {
   name: "Lord",
@@ -302,6 +338,7 @@ export default {
       single: true,
       //子表新增按钮是否禁用
       LotNoDisabled:true,
+      bodyUpdate:true,
       // 非多个禁用
       multiple: true,
       // 总条数
@@ -342,6 +379,12 @@ export default {
         bagSealNo: undefined,
         bookStoreCode: undefined,
         taxSamplingLordId: undefined
+      },
+      bodyForm:{
+        bagSealNo:undefined,
+        bookStoreCode:undefined,
+        remark:undefined,
+
       },
       // 表单参数
       form: {},
@@ -461,7 +504,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
+      // this.single = selection.length!=1
       this.multiple = !selection.length
       this.InsertLotNoList=selection
     },
@@ -472,6 +515,7 @@ export default {
       addLord(this.queryParams).then(response => {
         if (response.code === 200) {
           this.LotNoDisabled=false;
+          // this.single=false;
           this.msgSuccess("新增成功");
           this.getLotNo=this.queryParams.lotNo
           this.taxSamplingLordId=response.data.id
@@ -580,6 +624,19 @@ export default {
           this.loading=false;
           this.indexBodyList=response.rows;
           this.total = response.total;
+        }
+      })
+    },
+    rowBody(row){
+      this.bodyForm=row;
+      this.bodyUpdate=false;
+    },
+    updateBodyData(){
+      updateBody(this.bodyForm).then(response =>{
+        if(response.code === 200){
+          this.msgSuccess("查询成功")
+          this.indexList();
+          this.bodyUpdate=true;
         }
       })
     }

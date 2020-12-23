@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="68px">
       <el-form-item label="LotNo" prop="lotNo">
         <el-input
           v-model="queryParams.lotNo"
@@ -451,8 +451,8 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      // this.resetForm("queryForm");
       this.reset();
+      this.queryParams={};
       this.EntryTime=[];
       this.samplingTime=[];
       this.handleQuery();
