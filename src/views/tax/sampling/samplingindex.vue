@@ -140,63 +140,6 @@
       </el-form>
     </el-card>
 
-
-
-
-<!--    <el-table v-loading="loading" :data="lordList" @selection-change="handleSelectionChange">-->
-<!--      <el-table-column type="selection" width="55" align="center" />-->
-<!--      <el-table-column label="id" align="center" prop="id" />-->
-<!--      <el-table-column label="单据号" align="center" prop="documentNo" />-->
-<!--      <el-table-column label="LotNo" align="center" prop="lotNo" />-->
-<!--      <el-table-column label="客户" align="center" prop="client" />-->
-<!--      <el-table-column label="入境日期" align="center" prop="entryTime" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.entryTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="业务编号" align="center" prop="businessNumber" />-->
-<!--      <el-table-column label="取样日期" align="center" prop="samplingTime" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.samplingTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="取样单位" align="center" prop="samplingUnit" />-->
-<!--      <el-table-column label="取样人" align="center" prop="samplingPeople" />-->
-<!--      <el-table-column label="取样总重量" align="center" prop="samplingWeight" />-->
-<!--      <el-table-column label="返程日期" align="center" prop="returnTime" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.returnTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="备注" align="center" prop="remark" />-->
-<!--      <el-table-column label="单据状态" align="center" prop="documentsStatus" />-->
-<!--      <el-table-column label="制单人" align="center" prop="makerPeople" />-->
-<!--      <el-table-column label="制单日期" align="center" prop="makerTime" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.makerTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleUpdate(scope.row)"-->
-<!--            v-hasPermi="['tax:lord:edit']"-->
-<!--          >修改</el-button>-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-delete"-->
-<!--            @click="handleDelete(scope.row)"-->
-<!--            v-hasPermi="['tax:lord:remove']"-->
-<!--          >删除</el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--    </el-table>-->
-
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -251,24 +194,6 @@
         <el-table-column label="袋封号" align="center" prop="bagSealNo" />
         <el-table-column label="库位号" align="center" prop="bookStoreCode" />
         <el-table-column label="备注" align="center" prop="remark" />
-<!--        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
-<!--          <template slot-scope="scope">-->
-<!--            <el-button-->
-<!--              size="mini"-->
-<!--              type="text"-->
-<!--              icon="el-icon-edit"-->
-<!--              @click="handleUpdate(scope.row)"-->
-<!--              v-hasPermi="['tax:body:edit']"-->
-<!--            >修改</el-button>-->
-<!--            <el-button-->
-<!--              size="mini"-->
-<!--              type="text"-->
-<!--              icon="el-icon-delete"-->
-<!--              @click="handleDelete(scope.row)"-->
-<!--              v-hasPermi="['tax:body:remove']"-->
-<!--            >删除</el-button>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
       </el-table>
       <pagination
         v-show="total>0"
@@ -289,31 +214,10 @@
       >确定</el-button>
       <el-table  :data="bodyList" @selection-change="handleSelectionChange" v-loading="bodyListLoading">
         <el-table-column type="selection" width="55" align="center" />
-<!--        <el-table-column label="主键ID" align="center" prop="id" />-->
         <el-table-column label="袋封号" align="center" prop="bagSealNo" />
         <el-table-column label="库位号" align="center" prop="bookStoreCode" />
         <el-table-column label="备注" align="center" prop="remark" />
-<!--        <el-table-column label="主表关联ID" align="center" prop="taxSamplingLordId" />-->
-<!--        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
-<!--          <template slot-scope="scope">-->
-<!--            <el-button-->
-<!--              size="mini"-->
-<!--              type="text"-->
-<!--              icon="el-icon-edit"-->
-<!--              @click="handleUpdate(scope.row)"-->
-<!--              v-hasPermi="['tax:body:edit']"-->
-<!--            >修改</el-button>-->
-<!--            <el-button-->
-<!--              size="mini"-->
-<!--              type="text"-->
-<!--              icon="el-icon-delete"-->
-<!--              @click="handleDelete(scope.row)"-->
-<!--              v-hasPermi="['tax:body:remove']"-->
-<!--            >删除</el-button>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
       </el-table>
-
     </el-dialog>
   </div>
 </template>
