@@ -38,23 +38,54 @@
     <el-table v-loading="loading" :data="reportList" >
       <el-table-column label="入库" align="center">
         <el-table-column label="批数" align="center" prop="InStoreBatchNo" />
-        <el-table-column label="不含袋净重（kg)" align="center" prop="InStoreBagNetWeight" v-if="this.queryParams.deptId == 1 || this.queryParams.deptId == undefined ? true : false" />
-        <el-table-column label="含袋净重（kg)" align="center" prop="InStoreBagRoughWeight" v-if="this.queryParams.deptId == 0 || this.queryParams.deptId == undefined ? true : false" />
+        <el-table-column label="不含袋净重（kg)" align="center" prop="InStoreBagNetWeight" v-if="this.queryParams.deptId == 1 || this.queryParams.deptId == undefined ? true : false" >
+          <template slot-scope="scope">
+            {{ (scope.row.InStoreBagNetWeight).toFixed(2)}}
+          </template>
+        </el-table-column>
+        <el-table-column label="含袋净重（kg)" align="center" prop="InStoreBagRoughWeight" v-if="this.queryParams.deptId == 0 || this.queryParams.deptId == undefined ? true : false" >
+          <template slot-scope="scope">
+            {{ (scope.row.InStoreBagRoughWeight).toFixed(2)}}
+          </template>
+        </el-table-column>
       </el-table-column>
 
       <el-table-column label="出库" align="center">
         <el-table-column label="批数" align="center" prop="OutStoreBagSealNo" />
-        <el-table-column label="不含袋净重（kg)" align="center" prop="OutStoreBagNetWeight" v-if="this.queryParams.deptId == 1 || this.queryParams.deptId == undefined ? true : false" />
-        <el-table-column label="含袋净重（kg)" align="center" prop="OutStoreBagRoughWeight" v-if="this.queryParams.deptId == 0 || this.queryParams.deptId == undefined ? true : false" />
+        <el-table-column label="不含袋净重（kg)" align="center" prop="OutStoreBagNetWeight" v-if="this.queryParams.deptId == 1 || this.queryParams.deptId == undefined ? true : false" >
+        <template slot-scope="scope">
+          {{ (scope.row.OutStoreBagNetWeight).toFixed(2)}}
+        </template>
+        </el-table-column>
+        <el-table-column label="含袋净重（kg)" align="center" prop="OutStoreBagRoughWeight" v-if="this.queryParams.deptId == 0 || this.queryParams.deptId == undefined ? true : false" >
+          <template slot-scope="scope">
+            {{ (scope.row.OutStoreBagRoughWeight).toFixed(2)}}
+          </template>
+        </el-table-column>
       </el-table-column>
 
       <el-table-column label="库存" align="center">
         <el-table-column label="批数" align="center" prop="GoodsInfoBatchNo" />
-        <el-table-column label="不含袋净重（kg)" align="center" prop="GoodsInfoBagNetWeight" v-if="this.queryParams.deptId == 1 || this.queryParams.deptId == undefined ? true : false" />
-        <el-table-column label="含袋净重（kg)" align="center" prop="GoodsInfoBagRoughWeight" v-if="this.queryParams.deptId == 0 || this.queryParams.deptId == undefined ? true : false"/>
+        <el-table-column label="不含袋净重（kg)" align="center" prop="GoodsInfoBagNetWeight" v-if="this.queryParams.deptId == 1 || this.queryParams.deptId == undefined ? true : false" >
+          <template slot-scope="scope">
+            {{ (scope.row.GoodsInfoBagNetWeight).toFixed(2)}}
+          </template>
+        </el-table-column>
+        <el-table-column label="含袋净重（kg)" align="center" prop="GoodsInfoBagRoughWeight" v-if="this.queryParams.deptId == 0 || this.queryParams.deptId == undefined ? true : false">
+          <template slot-scope="scope">
+            {{ (scope.row.GoodsInfoBagRoughWeight).toFixed(2)}}
+          </template>
+        </el-table-column>
       </el-table-column>
-
     </el-table>
+    <el-row style="float:right;padding-top: 15px">
+      <el-col span="24">
+        <span>制表人：</span>{{this.$store.state.user.nickName}}
+      </el-col>
+      <el-col span="24">
+        <span>审核人：</span>
+      </el-col>
+    </el-row>
 
     <pagination
       v-show="total>0"
