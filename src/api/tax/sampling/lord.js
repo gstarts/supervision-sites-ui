@@ -67,7 +67,13 @@ export function addLord(data) {
     data: data
   })
 }
-
+export function selectAll(query){
+  return request({
+    url:'/tax/instore_doc_detail/selectAll',
+    method:'get',
+    params:query
+  })
+}
 // 修改取样管理 主
 export function updateLord(data) {
   return request({
