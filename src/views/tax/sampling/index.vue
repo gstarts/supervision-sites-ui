@@ -331,7 +331,7 @@
 </template>
 
 <script>
-import { listLord, getLord, delLord, addLord, updateLord } from "@/api/tax/sampling/lord";
+import { listLord, getLord, delLord, addLord, updateLord,selectAll} from "@/api/tax/sampling/lord";
 
 export default {
   name: "Lord",
@@ -448,6 +448,7 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.getList();
+
     },
     /** 重置按钮操作 */
     resetQuery() {
@@ -510,7 +511,7 @@ export default {
       this.download('tax/lord/export', {
         ...this.queryParams
       }, `tax_lord.xlsx`)
-    },
+    }
   }
 };
 </script>
