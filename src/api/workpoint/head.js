@@ -42,3 +42,10 @@ export function delHead(id) {
     method: 'delete'
   })
 }
+
+export function getRecordCountByHeadId(id) {
+  return request({
+    url: '/workpoint/head/recordCount/' + id,
+    method: 'get'
+  })
+}

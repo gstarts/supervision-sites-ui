@@ -42,3 +42,11 @@ export function delRecord(id) {
     method: 'delete'
   })
 }
+
+export function addListRecord(data) {
+  return request({
+    url: '/workpoint/record/addList',
+    method: 'post',
+    data: data
+  })
+}

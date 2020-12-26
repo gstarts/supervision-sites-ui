@@ -222,7 +222,7 @@ export default {
     };
   },
   created() {
-    this.depts = getUserDepts('0')
+    this.depts = getUserDepts('')
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId
       this.getList();
