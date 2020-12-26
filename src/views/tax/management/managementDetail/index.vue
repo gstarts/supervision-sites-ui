@@ -118,14 +118,24 @@
 
         <el-row>
           <el-col :span="6">
-            <el-form-item label="通知单车数" prop="fleetName" label-width="120px">
-              <el-input
-                v-model="queryParams.fleetName"
-                placeholder="请输入车队名称"
+<!--            <el-form-item label="通知单车数" prop="fleetName" label-width="120px">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.fleetName"-->
+<!--                placeholder="请输入车队名称"-->
+<!--                clearable-->
+<!--                size="small"-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
+
+            <el-form-item label="通知单车数" prop="carNumber" label-width="100px">
+               <el-input
+                v-model="queryParams.carNumber"
+               placeholder="请输入通知单车数"
                 clearable
                 size="small"
                 @keyup.enter.native="handleQuery"
-              />
+            />
             </el-form-item>
           </el-col>
 
