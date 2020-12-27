@@ -241,10 +241,8 @@
                      type="text"
                      icon="el-icon-delete"
                      @click="handleDelete(scope.row)"
-                     v-hasPermi="['workpoint:head:remove']"
-          >删除
+                     v-hasPermi="['workpoint:head:remove']">删除
           </el-button>
-
           <el-button v-show="scope.row.approveState === '1'"
                      size="mini"
                      type="text"
@@ -316,7 +314,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="业务日期" prop="businessTime">
-              <el-date-picker clearable size="small"
+              <el-date-picker clearable size="small" style="max-width:180px"
                               v-model="form.businessTime"
                               type="date"
                               value-format="yyyy-MM-dd"
@@ -384,7 +382,22 @@
         </af-table-column>
         <af-table-column label="寄仓客户" align="center" prop="checkConsumer"/>
         <af-table-column label="车牌号" align="center" prop="vehicleNo"/>
-        <af-table-column label="状态" align="center" prop="state"/>
+        <!--        <af-table-column label="状态" align="center" prop="state"/>-->
+      </el-table>
+      <el-table v-show="form.docType==='0'" v-loading="loading" :data="outstoreDocList" max-height="220px"
+                style="cursor: pointer"
+                @row-dblclick="copyToOutDoc">
+        <!--    <el-table-column label="ID" align="center" prop="id"/>-->
+        <af-table-column label="出库单号" align="center" prop="outDocNo"/>
+        <af-table-column label="业务编号" align="center" prop="businessNo"/>
+        <af-table-column label="业务日期" align="center" prop="updateTime">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+          </template>
+        </af-table-column>
+        <af-table-column label="寄仓客户" align="center" prop="checkConsumer"/>
+        <af-table-column label="车牌号" align="center" prop="vehicleNo"/>
+        <!--        <af-table-column label="状态" align="center" prop="state"/>-->
       </el-table>
     </el-dialog>
 
@@ -428,12 +441,80 @@
     </el-dialog>
 
     <!-- 修改审批信息对话框 -->
-    <el-dialog title="修改审批" :visible.sync="approveUpdateOpen" append-to-body>
-      <el-form ref="approveHead" :model="approveRecord" :rules="approveRules" label-width="120px">
+    <el-dialog title="审批" :visible.sync="approveUpdateOpen" append-to-body>
+      <el-form ref="approveRecord" :model="approveRecord" :rules="approveRules" label-width="120px">
         <el-row :gutter="10">
-          <el-col :span="12">
+          <el-col :span="8">
+            <el-form-item label="申请人" prop="">
+              {{ approveServerData.applyUser }}
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="申请时间" prop="">
+              {{ approveServerData.applyTime }}
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="24">
+            <el-form-item label="申请说明" prop="">
+              {{ approveServerData.applyReason }}
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <div v-for="(value,key,index) in approveServerData.approveRecords">
+          <el-row :gutter="10">
+            <el-col :span="8">
+              <el-form-item label="审批人" prop="">
+                {{ value.approveUser }}
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="审批时间" prop="">
+                {{ value.approveTime }}
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="审批结果" prop="">
+                {{ value.approveResult }}
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="24">
+              <el-form-item label="审批说明" prop="">
+                {{ value.approveReason }}
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+
+        <div v-show="continueApprove">
+          <el-row :gutter="10">
+            <el-col :span="8">
+              <el-form-item label="审批结果" prop="approveResult">
+                <el-select v-model="approveRecord.approveResult">
+                  <el-option v-for="dict in approveResultDic"
+                             :key="dict.dictValue"
+                             :value="dict.dictValue"
+                             :label="dict.dictLabel"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="16">
+              <el-form-item label="审批说明" prop="approveReason">
+                <el-input v-model="approveRecord.approveReason" placeholder="请输入内容"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+        <el-row :gutter="10"
+                v-show="approveRecord.approveResult==='1' && approveServerData.approveRecords && approveServerData.approveRecords.length<approveServerData.approveLevel">
+          <el-col :span="8">
             <el-form-item label="审批组" prop="auditGroup">
-              <el-select v-model="approveHead.auditGroup" filterable placeholder="请选择审批组" @change="groupChange">
+              <el-select v-model="approveRecord.auditGroup" filterable placeholder="请选择审批组" @change="groupChange">
                 <el-option
                   v-for="item in auditGroupList"
                   :key="item.groupCode"
@@ -443,9 +524,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="审批人" prop="approveUser">
-              <el-select v-model="approveHead.approveUser" filterable placeholder="请选择审批人">
+          <el-col :span="8">
+            <el-form-item label="下级审批人" prop="nextApproveUser">
+              <el-select v-model="approveRecord.nextApproveUser" filterable placeholder="请选择审批人">
                 <el-option
                   v-for="item in auditUserList"
                   :key="item.userName"
@@ -456,13 +537,13 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="提交说明" prop="remark">
-          <el-input v-model="approveHead.applyReason" type="textarea" placeholder="请输入内容"/>
-        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitApproveForm">确 定</el-button>
-        <el-button @click="approveCancel">取 消</el-button>
+        <el-button type="primary" v-hasPermi="['workpoint:approveHead:addRecord']" @click="submitApproveRecordForm">确
+          定
+        </el-button>
+        <el-button @click="approveRecordCancel">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -703,7 +784,7 @@
 </template>
 
 <script>
-import {listHead, getHead, delHead, addHead, updateHead, getRecordCountByHeadId} from "@/api/workpoint/head";
+import {addHead, delHead, getHead, getRecordCountByHeadId, listHead, updateHead} from "@/api/workpoint/head";
 import {getUserDepts} from "@/utils/charutils";
 import {listType} from "@/api/workpoint/type";
 import {listStandard} from "@/api/workpoint/standard";
@@ -715,8 +796,9 @@ import {listWorker} from "@/api/workpoint/worker";
 import {parseTime} from "@/utils/common";
 import {listDevice} from "@/api/workpoint/device";
 import {addListRecord, listRecord} from "@/api/workpoint/record";
-import {addApproveHead} from "@/api/workpoint/approveHead";
+import {addApproveHead, approveHeadAddRecord, listApproveHeadOne} from "@/api/workpoint/approveHead";
 import {listUser} from "@/api/system/user";
+import {listOutstore_doc} from "@/api/tax/outstore_doc";
 
 export default {
   name: "Head",
@@ -773,10 +855,10 @@ export default {
       instoreDocList: [],
       outstoreDocList: [],
       approveStateOptions: [
-        {'dictValue': '0', 'dictLabel': '未提交'},
-        {'dictValue': '1', 'dictLabel': '待审核'},
+        /*{'dictValue': '0', 'dictLabel': '未提交'},
+        {'dictValue': '1', 'dictLabel': '待审批'},
         {'dictValue': '2', 'dictLabel': '审核通过'},
-        {'dictValue': '3', 'dictLabel': '审核不通过'},
+        {'dictValue': '3', 'dictLabel': '审核不通过'},*/
       ],
       allWorkers: [],
       workers: {
@@ -864,7 +946,13 @@ export default {
       approveRules: {
         approveUser: [
           {required: true, message: '审批人不能为空', trigger: 'change'}
-        ]
+        ],
+        approveResult: [
+          {required: true, message: '审批结果不能为空', trigger: 'change'}
+        ],
+        approveReason: [
+          {required: true, message: '审批说明不能为空', trigger: 'blur'}
+        ],
       },
       auditGroupList: [],
       userList: [],
@@ -879,8 +967,17 @@ export default {
         approveUser: undefined,
         approveResult: undefined,
         approveReason: undefined,
-        remark: undefined
+        remark: undefined,
+        nextApproveUser: undefined,
       },
+      //审批查询时返回的数据
+      approveServerData: {},
+      continueApprove: true, //是否继续审 控制是否显示提交审批记录的表单
+      isFinallyApprove: false, //是否终审
+      approveResultDic: [
+        {dictValue: '1', dictLabel: '通过'},
+        {dictValue: '0', dictLabel: '不通过'},
+      ],
     }
   },
   watch: { //监听表单数据变化，自动计算值
@@ -912,6 +1009,9 @@ export default {
     //单据类型
     this.getDicts('workpoint_doc_type').then(response => {
       this.docTypeOptions = response.data;
+    });
+    this.getDicts('workpoint_approve_state').then(response => {
+      this.approveStateOptions = response.data;
     });
     //获取工分类型
     this.getWorkpointTypeList()
@@ -1150,15 +1250,30 @@ export default {
             }).then(response => {
               if (response.code === 200) {
                 console.log(response.rows)
-                this.instoreDocList = response.rows
+                if (response.rows.length === 0) {
+                  this.$message.warning("未找到对应的单据")
+                } else {
+                  this.instoreDocList = response.rows
+                }
               }
             }).catch(err => {
-              console.log(err)
-              this.$message.error("未找到对应的单据")
               return false
             })
             break
-          case '0':
+          case '0'://出库单
+            listOutstore_doc({
+              'state': '1',
+              'placeId': this.form.placeId,
+              'businessNo': this.form.businessNo
+            }).then(response => {
+              if (response.code === 200) {
+                if (response.rows.length === 0) {
+                  this.$message.warning("未找到对应的单据")
+                } else {
+                  this.outstoreDocList = response.rows
+                }
+              }
+            })
             break
           default:
             break
@@ -1168,6 +1283,16 @@ export default {
     //双击表格行，将row的信息赋值给工分信息表
     copyToInDoc(row) {
       this.form.docNo = row.inDocNo
+      this.form.costumerName = row.checkConsumer
+      this.form.vehicleNo = row.vehicleNo
+      this.form.vehicleCount = 1
+      this.form.state = row.state
+      this.form.businessTime = row.updateTime
+      this.form.businessNo = row.businessNo
+      this.form.docId = row.id
+    },
+    copyToOutDoc(row) {
+      this.form.docNo = row.outDocNo
       this.form.costumerName = row.checkConsumer
       this.form.vehicleNo = row.vehicleNo
       this.form.vehicleCount = 1
@@ -1544,6 +1669,34 @@ export default {
       this.approveHead.approveLevel = undefined
       this.approveHead.approveState = undefined
     },
+    submitApproveRecordForm() {
+      let that = this
+      this.$refs["approveRecord"].validate(valid => {
+        if (valid) {
+          approveHeadAddRecord(this.approveRecord).then(response => {
+            if (response.code === 200) {
+              that.$message.success(response.msg)
+              this.approveUpdateOpen = false
+              this.getList()
+            } else {
+              that.$message.error(response.msg)
+            }
+          })
+        }
+      })
+    },
+    approveRecordCancel() {
+      this.approveUpdateOpen = false
+      this.approveRecord.approveReason = undefined
+      this.approveRecord.parentId = undefined
+      this.approveRecord.approveState = undefined
+      this.approveRecord.isFinally = undefined
+      this.approveRecord.approveUser = undefined
+      this.approveRecord.approveResult = undefined
+      this.approveRecord.approveReason = undefined
+      this.approveRecord.remark = undefined
+      this.approveRecord.nextApproveUser = undefined
+    },
     getUserList() {
       listUser({'deptId': this.queryParams.placeId, 'delFlag': '0'}).then(response => {
         if (response.code === 200) {
@@ -1572,8 +1725,24 @@ export default {
         }
       }
     },
-    handleApproveUpdate(row){
-      //审批按钮
+    //审批按钮
+    handleApproveUpdate(row) {
+      let data = {
+        className: 'workPointHead',
+        classId: row.id,
+        placeId: row.placeId
+      }
+      listApproveHeadOne(data).then(response => {
+        console.log('approve')
+        console.log(response)
+        if (response.code === 200) {
+          this.approveUpdateOpen = true
+          this.approveServerData = response.data
+          this.approveRecord.parentId = this.approveServerData.id
+        } else {
+          this.$message.error(response.msg)
+        }
+      })
     }
   }
 }

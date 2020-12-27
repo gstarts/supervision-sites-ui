@@ -42,3 +42,21 @@ export function delApproveHead(id) {
     method: 'delete'
   })
 }
+
+// 查询审批主表，只返回一个对象
+export function listApproveHeadOne(query) {
+  return request({
+    url: '/workpoint/approveHead/listOne',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询审批主表，只返回一个对象
+export function approveHeadAddRecord(query) {
+  return request({
+    url: '/workpoint/approveHead/addRecord',
+    method: 'post',
+    data: query
+  })
+}
