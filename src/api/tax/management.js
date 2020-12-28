@@ -42,3 +42,11 @@ export function delManagement(id) {
     method: 'delete'
   })
 }
+
+export function listReportDate(query) {
+  return request({
+    url: '/tax/management/listReportDate',
+    method: 'get',
+    params: query
+  })
+}
