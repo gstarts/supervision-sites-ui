@@ -458,11 +458,26 @@
             </el-form-item>
           </el-col>
           <el-col :span="2" class="modifyTo">修改为</el-col>
-          <el-col :span="11">
+          <el-col :span="10">
             <!-- <el-input v-model="poundModify.modifyCoalBillNo" disabled></el-input>-->
             <el-form-item label="车牌号" prop="modifyVehicleNo">
               <el-input v-model="poundModify.modifyVehicleNo" :disabled="poundModify.modifyType!=='3'"></el-input>
             </el-form-item>
+          </el-col>
+          <!-- 蒙文键盘 -->
+          <el-col :span="1">
+            <el-popover placement="top" width="500" trigger="click">
+              <SimpleKeyboard
+                @onChange="mengwenInput"
+                :input="poundModify.modifyVehicleNo"
+              />
+              <el-button
+                slot="reference"
+                class="fa fa-keyboard-o"
+                size="mini"
+                :disabled="poundModify.modifyType!=='3'"
+              ></el-button>
+            </el-popover>
           </el-col>
         </el-row>
         <!--外调车时，显示 可以改提煤单号-->
@@ -506,7 +521,7 @@
                   <el-option
                     v-for="item in contractList"
                     :key="item.contractNo"
-                    :label="item.contractNo"
+                    :label="item.contractNo + ' ['+item.customerName+']'"
                     :value="item.contractNo">
                   </el-option>
                 </el-select>
@@ -793,9 +808,13 @@ import {listStoreContract} from "@/api/place/storeContract";
 import {addPrint, checkPrint, getPrint} from "@/api/place/print";
 import {listGroup} from "@/api/place/group";
 import {listInfo} from "@/api/basis/enterpriseInfo";
+import SimpleKeyboard from "@/components/SimpleKeyboard/SimpleKeyboard";
 
 export default {
   name: "Sheet",
+  components: {
+    SimpleKeyboard,
+  },
   data() {
     return {
       printObj: {
@@ -1362,6 +1381,9 @@ export default {
           }
         })
       }
+    },
+    mengwenInput(input) {
+      this.poundModify.modifyVehicleNo = input;
     },
     /** 导出按钮操作 */
     handleExport() {

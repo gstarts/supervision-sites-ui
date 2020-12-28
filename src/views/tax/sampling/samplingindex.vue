@@ -23,7 +23,7 @@
       </el-col>
     </el-row>
     <el-card class="mb5">
-      <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="68px" :rules="rules">
+      <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="95px" :rules="rules">
         <el-form-item label="单据号" prop="documentNo">
           <el-input
             v-model="queryParams.documentNo"
@@ -111,11 +111,11 @@
                           placeholder="选择返程日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="单据状态" prop="documentsStatus">
-          <el-select v-model="queryParams.documentsStatus" placeholder="请选择单据状态" clearable size="small">
-            <el-option label="请选择字典生成" value="" />
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="单据状态" prop="documentsStatus">-->
+<!--          <el-select v-model="queryParams.documentsStatus" placeholder="请选择单据状态" clearable size="small">-->
+<!--            <el-option label="请选择字典生成" value="" />-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
         <el-form-item label="制单人" prop="makerPeople">
           <el-input
             v-model="queryParams.makerPeople"
@@ -140,69 +140,6 @@
       </el-form>
     </el-card>
 
-
-
-
-<!--    <el-table v-loading="loading" :data="lordList" @selection-change="handleSelectionChange">-->
-<!--      <el-table-column type="selection" width="55" align="center" />-->
-<!--      <el-table-column label="id" align="center" prop="id" />-->
-<!--      <el-table-column label="单据号" align="center" prop="documentNo" />-->
-<!--      <el-table-column label="LotNo" align="center" prop="lotNo" />-->
-<!--      <el-table-column label="客户" align="center" prop="client" />-->
-<!--      <el-table-column label="入境日期" align="center" prop="entryTime" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.entryTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="业务编号" align="center" prop="businessNumber" />-->
-<!--      <el-table-column label="取样日期" align="center" prop="samplingTime" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.samplingTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="取样单位" align="center" prop="samplingUnit" />-->
-<!--      <el-table-column label="取样人" align="center" prop="samplingPeople" />-->
-<!--      <el-table-column label="取样总重量" align="center" prop="samplingWeight" />-->
-<!--      <el-table-column label="返程日期" align="center" prop="returnTime" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.returnTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="备注" align="center" prop="remark" />-->
-<!--      <el-table-column label="单据状态" align="center" prop="documentsStatus" />-->
-<!--      <el-table-column label="制单人" align="center" prop="makerPeople" />-->
-<!--      <el-table-column label="制单日期" align="center" prop="makerTime" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.makerTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleUpdate(scope.row)"-->
-<!--            v-hasPermi="['tax:lord:edit']"-->
-<!--          >修改</el-button>-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-delete"-->
-<!--            @click="handleDelete(scope.row)"-->
-<!--            v-hasPermi="['tax:lord:remove']"-->
-<!--          >删除</el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--    </el-table>-->
-
-<!--    <pagination-->
-<!--      v-show="total>0"-->
-<!--      :total="total"-->
-<!--      :page.sync="queryParams.pageNum"-->
-<!--      :limit.sync="queryParams.pageSize"-->
-<!--      @pagination="getList"-->
-<!--    />-->
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -211,91 +148,80 @@
           size="mini"
           @click="BodyLotNo"
           :disabled="LotNoDisabled"
-        >新增</el-button>
+          v-hasPermi="['tax:lord:lotNo']"
+        >请选择需要新增的数据</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          @click="updateBodyData"
+          :disabled="bodyUpdate"
+          v-hasPermi="['tax:body:edit']"
+        >修改</el-button>
       </el-col>
     </el-row>
-    <el-card class="mb4">
-      <el-table v-loading="loading" :data="bodyList">
+    <el-card class="mb5">
+      <el-form :model="bodyForm" ref="bodyForm"  label-width="68px">
+        <el-form-item label="袋封号" prop="bagSealNo">
+          <el-input
+            v-model="bodyForm.bagSealNo"
+            placeholder="请输入袋封号"
+            size="small"
+          />
+        </el-form-item>
+        <el-form-item label="库位号" prop="bookStoreCode">
+          <el-input
+            v-model="bodyForm.bookStoreCode"
+            placeholder="请输入库位号"
+            size="small"
+          />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input
+            v-model="bodyForm.remark"
+            placeholder="请输入备注"
+            size="small"
+             />
+        </el-form-item>
+      </el-form>
+      <el-table v-loading="loading" :data="indexBodyList" @row-click="rowBody">
 <!--        <el-table-column type="selection" width="55" align="center" />-->
         <el-table-column label="袋封号" align="center" prop="bagSealNo" />
         <el-table-column label="库位号" align="center" prop="bookStoreCode" />
         <el-table-column label="备注" align="center" prop="remark" />
-<!--        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
-<!--          <template slot-scope="scope">-->
-<!--            <el-button-->
-<!--              size="mini"-->
-<!--              type="text"-->
-<!--              icon="el-icon-edit"-->
-<!--              @click="handleUpdate(scope.row)"-->
-<!--              v-hasPermi="['tax:body:edit']"-->
-<!--            >修改</el-button>-->
-<!--            <el-button-->
-<!--              size="mini"-->
-<!--              type="text"-->
-<!--              icon="el-icon-delete"-->
-<!--              @click="handleDelete(scope.row)"-->
-<!--              v-hasPermi="['tax:body:remove']"-->
-<!--            >删除</el-button>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
       </el-table>
-<!--      <pagination-->
-<!--        v-show="total>0"-->
-<!--        :total="total"-->
-<!--        :page.sync="queryParams.pageNum"-->
-<!--        :limit.sync="queryParams.pageSize"-->
-<!--        @pagination="bodyList"-->
-<!--      />-->
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="bodyQueryParams.pageNum"
+        :limit.sync="bodyQueryParams.pageSize"
+        @pagination="indexList"
+      />
     </el-card>
 
-    <el-dialog :title="title" :visible.sync="open"  append-to-body>
+    <el-dialog :title="title" :visible.sync="open"  append-to-body >
       <el-button
         type="primary"
         icon="el-icon-plus"
         size="mini"
         @click="bodyGetLotNo"
+        v-hasPermi="['tax:body:add']"
       >确定</el-button>
-      <el-table v-loading="loading" :data="bodyList" @selection-change="handleSelectionChange">
+      <el-table  :data="bodyList" @selection-change="handleSelectionChange" v-loading="bodyListLoading">
         <el-table-column type="selection" width="55" align="center" />
-<!--        <el-table-column label="主键ID" align="center" prop="id" />-->
         <el-table-column label="袋封号" align="center" prop="bagSealNo" />
         <el-table-column label="库位号" align="center" prop="bookStoreCode" />
         <el-table-column label="备注" align="center" prop="remark" />
-<!--        <el-table-column label="主表关联ID" align="center" prop="taxSamplingLordId" />-->
-<!--        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">-->
-<!--          <template slot-scope="scope">-->
-<!--            <el-button-->
-<!--              size="mini"-->
-<!--              type="text"-->
-<!--              icon="el-icon-edit"-->
-<!--              @click="handleUpdate(scope.row)"-->
-<!--              v-hasPermi="['tax:body:edit']"-->
-<!--            >修改</el-button>-->
-<!--            <el-button-->
-<!--              size="mini"-->
-<!--              type="text"-->
-<!--              icon="el-icon-delete"-->
-<!--              @click="handleDelete(scope.row)"-->
-<!--              v-hasPermi="['tax:body:remove']"-->
-<!--            >删除</el-button>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
       </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
-        :limit.sync="queryParams.pageSize"
-        :page-sizes="[1,10,20,30,50]"
-        @pagination="bodyList"
-      />
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {listLord, getLord, delLord, addLord, updateLord, LotNoList, InsertListLotNo} from "@/api/tax/sampling/lord";
-
+import {listLord, getLord, delLord, addLord, updateLord, LotNoList, InsertListLotNo,listBody,updateBody} from "@/api/tax/sampling/lord";
+import Vue from 'vue'
 export default {
   name: "Lord",
   data() {
@@ -305,13 +231,15 @@ export default {
       //关联查询
       getLotNo:'',
       // 遮罩层
-      loading: true,
+      loading: false,
+      bodyListLoading:true,
       // 选中数组
       ids: [],
       // 非单个禁用
       single: true,
       //子表新增按钮是否禁用
       LotNoDisabled:true,
+      bodyUpdate:true,
       // 非多个禁用
       multiple: true,
       // 总条数
@@ -320,6 +248,8 @@ export default {
       lordList: [],
       //取样管理 子表格数据
       bodyList:[],
+      //取样管理 子表保存后的数据
+      indexBodyList:[],
       //向后台交互的数据
       InsertLotNoList:[],
       // 弹出层标题
@@ -343,6 +273,19 @@ export default {
         documentsStatus: undefined,
         makerPeople: undefined,
         makerTime: undefined,
+      },
+      bodyQueryParams: {
+        pageNum: 1,
+        pageSize: 20,
+        bagSealNo: undefined,
+        bookStoreCode: undefined,
+        taxSamplingLordId: undefined
+      },
+      bodyForm:{
+        bagSealNo:undefined,
+        bookStoreCode:undefined,
+        remark:undefined,
+
       },
       // 表单参数
       form: {},
@@ -377,12 +320,10 @@ export default {
     };
   },
   created() {
-    this.getList();
+    // this.getList();
     const  id =this.$route.query.id
-    console.log("我是传输过来的id="+id)
     this.taxSamplingLordId=id;
     const flag = this.$route.query.flag
-    console.log("我是传输过来的flag="+flag)
     const single=this.$route.query.single
     const LotNo=this.$route.query.LotNo
     if(id){
@@ -392,6 +333,7 @@ export default {
         this.single=single;
         this.LotNoDisabled=false;
       })
+      this.indexList()
     }
   },
   methods: {
@@ -400,7 +342,6 @@ export default {
       this.loading = true;
       listLord(this.queryParams).then(response => {
         this.lordList = response.rows;
-        this.total = response.total;
         this.loading = false;
       });
     },
@@ -464,21 +405,18 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
+      // this.single = selection.length!=1
       this.multiple = !selection.length
       this.InsertLotNoList=selection
-      console.log("我是InsertLotNoList")
-      console.log(this.InsertLotNoList)
     },
     /** 新增按钮操作 */
     handleAdd() {
       // this.open = true;
       // this.title = "添加取样管理 主";
-      console.log("==========")
-      console.log(this.queryParams)
       addLord(this.queryParams).then(response => {
         if (response.code === 200) {
           this.LotNoDisabled=false;
+          // this.single=false;
           this.msgSuccess("新增成功");
           this.getLotNo=this.queryParams.lotNo
           this.taxSamplingLordId=response.data.id
@@ -495,6 +433,8 @@ export default {
         if(response.code === 200){
           this.queryParams = response.data;
           this.msgSuccess("修改成功");
+          this.$store.dispatch('tagsView/delView', this.$route)
+          this.$router.go(-1)
         }
       });
     },
@@ -545,11 +485,12 @@ export default {
 
     BodyLotNo(){
       this.open=true;
+      this.bodyListLoading=true;
       LotNoList(this.queryParams.lotNo).then(response =>{
         if(response.code === 200){
           this.msgSuccess("查询成功,请选择数据")
           this.bodyList=response.rows
-          this.total = response.total;
+          this.bodyListLoading=false;
         }
       })
     },
@@ -558,19 +499,48 @@ export default {
         this.taxSamplingLordId=this.queryParams.id
       }
       const data={
-       list: this.InsertLotNoList,
-        taxSamplingLordId:this.taxSamplingLordId
+       // list: this.InsertLotNoList,
+       //  taxSamplingLordId:this.taxSamplingLordId
       }
-      console.log("data数据")
-      console.log(data)
-      console.log("主键")
-      console.log(data.taxSamplingLordId)
-      InsertListLotNo(data).then(response =>{
+      this.InsertLotNoList.forEach((column, index) =>{
+        this.$set(column, 'taxSamplingLordId', this.taxSamplingLordId)
+
+      });
+
+      InsertListLotNo(this.InsertLotNoList).then(response =>{
         if(response.code === 200){
           this.msgSuccess("新增成功")
+          this.indexList();
+          this.open=false;
+        }
+      })
+
+    },
+    indexList(){
+      this.loading=true;
+      this.bodyQueryParams.taxSamplingLordId=this.taxSamplingLordId;
+      listBody(this.bodyQueryParams).then(response =>{
+        if(response.code === 200){
+          this.msgSuccess("查询成功")
+          this.loading=false;
+          this.indexBodyList=response.rows;
+          this.total = response.total;
         }
       })
     },
+    rowBody(row){
+      this.bodyForm=row;
+      this.bodyUpdate=false;
+    },
+    updateBodyData(){
+      updateBody(this.bodyForm).then(response =>{
+        if(response.code === 200){
+          this.msgSuccess("查询成功")
+          this.indexList();
+          this.bodyUpdate=true;
+        }
+      })
+    }
   }
 };
 </script>

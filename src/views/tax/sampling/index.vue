@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="68px">
       <el-form-item label="LotNo" prop="lotNo">
         <el-input
           v-model="queryParams.lotNo"
@@ -49,7 +49,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery" v-hasPermi="['tax:lord:reset']">重置</el-button>
         </el-form-item>
       </el-row>
 
@@ -283,11 +283,11 @@
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
-        <el-form-item label="单据状态">
-          <el-radio-group v-model="form.documentsStatus">
-            <el-radio label="1">请选择字典生成</el-radio>
-          </el-radio-group>
-        </el-form-item>
+<!--        <el-form-item label="单据状态">-->
+<!--          <el-radio-group v-model="form.documentsStatus">-->
+<!--            <el-radio label="1">请选择字典生成</el-radio>-->
+<!--          </el-radio-group>-->
+<!--        </el-form-item>-->
         <el-form-item label="制单人" prop="makerPeople">
           <el-input v-model="form.makerPeople" placeholder="请输入制单人" />
         </el-form-item>
@@ -331,7 +331,7 @@
 </template>
 
 <script>
-import { listLord, getLord, delLord, addLord, updateLord } from "@/api/tax/sampling/lord";
+import { listLord, getLord, delLord, addLord, updateLord,selectAll} from "@/api/tax/sampling/lord";
 
 export default {
   name: "Lord",
@@ -448,11 +448,12 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.getList();
+
     },
     /** 重置按钮操作 */
     resetQuery() {
-      // this.resetForm("queryForm");
       this.reset();
+      this.queryParams={};
       this.EntryTime=[];
       this.samplingTime=[];
       this.handleQuery();
@@ -463,8 +464,6 @@ export default {
       this.single = selection.length!=1
       this.multiple = !selection.length
       this.TestList.push(selection)
-      console.log("测试选中数据")
-      console.log(this.TestList)
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -512,7 +511,7 @@ export default {
       this.download('tax/lord/export', {
         ...this.queryParams
       }, `tax_lord.xlsx`)
-    },
+    }
   }
 };
 </script>

@@ -75,8 +75,9 @@
 
     <el-table v-loading="loading" :data="deviceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="ID" align="center" prop="id"/>
+      <el-table-column label="编号" align="center" prop="id"/>
       <el-table-column label="设备名称" align="center" prop="name"/>
+      <el-table-column label="场所" align="center" prop="placeId" :formatter="formatPlace"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -110,9 +111,35 @@
     <!-- 添加或修改作业设备对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="设备名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入设备名称"/>
-        </el-form-item>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="设备编号" prop="id">
+              <el-input v-model.number="form.id" placeholder="请输入设备编号"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="设备名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入设备名称"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="场所" prop="placeId">
+              <el-select
+                v-model="form.placeId" placeholder="请选择场所" clearable size="small">
+                <el-option
+                  v-for="dept in depts"
+                  :key="dept.deptId"
+                  :label="dept.deptName"
+                  :value="dept.deptId"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12"></el-col>
+        </el-row>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -160,6 +187,12 @@ export default {
         name: [
           {required: true, message: "设备名称不能为空", trigger: "blur"}
         ],
+        id: [
+          {type: 'number', required: true, message: "设备编号不能为空", trigger: "blur"}
+        ],
+        placeId: [
+          {required: true, message: "场所不能为空", trigger: "change"}
+        ],
       }
     };
   },
@@ -190,6 +223,7 @@ export default {
       this.form = {
         id: undefined,
         name: undefined,
+        placeId: undefined,
         createTime: undefined,
         createBy: undefined,
         updateTime: undefined,
@@ -219,6 +253,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加作业设备";
+      this.form.placeId = this.queryParams.placeId
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -234,7 +269,7 @@ export default {
     submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != undefined) {
+          if (this.title === "修改作业设备") {
             updateDevice(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
@@ -274,6 +309,14 @@ export default {
       this.download('workpoint/device/export', {
         ...this.queryParams
       }, `workpoint_device.xlsx`)
+    },
+    formatPlace(row) {
+      let place = this.depts.find(item => item.deptId === row.placeId)
+      if (place) {
+        return place.deptName
+      } else {
+        return row.placeId
+      }
     }
   }
 };

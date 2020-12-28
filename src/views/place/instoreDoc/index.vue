@@ -515,7 +515,7 @@
       :data="instoreDocList"
       @selection-change="handleSelectionChange">
       <!--<af-table-column type="selection" width="55" align="center" />-->
-<!--      <af-table-column label="ID" align="center" prop="id"/>-->
+      <!--      <af-table-column label="ID" align="center" prop="id"/>-->
 
       <!--<af-table-column label="场所编号" align="center" prop="placeId"/>-->
       <!--<af-table-column label="业务编号" align="center" prop="storeCode" />-->
@@ -573,9 +573,9 @@
       <af-table-column label="批次号" align="center" prop="batchNo"/>
       <af-table-column label="通知单号" align="center" prop="docNo"/>
       <!--<af-table-column label="提运单号" align="center" prop="loadingBillNo" />-->
-<!--      <af-table-column label="生成舱单" align="center" prop="hasManifest"/>
-      <af-table-column label="生成集报清单" align="center" prop="hasDeclare"/>
-      <af-table-column label="生成进境确报" align="center" prop="hasTransit"/>-->
+      <!--      <af-table-column label="生成舱单" align="center" prop="hasManifest"/>
+            <af-table-column label="生成集报清单" align="center" prop="hasDeclare"/>
+            <af-table-column label="生成进境确报" align="center" prop="hasTransit"/>-->
       <af-table-column label="状态" align="center" prop="storeState">
         <template slot-scope="scope">
           {{
@@ -1083,16 +1083,16 @@
             />
           </el-select>
         </el-form-item>-->
-<!--        <el-form-item label="提煤单号" prop="coalBillNo" style="margin-top: 10px;">-->
-<!--          <el-select v-model="form.coalBillNo" placeholder="请选择提煤单号" filterable @change="getBigCanUse">-->
-<!--            <el-option-->
-<!--              v-for="item in BigList"-->
-<!--              :key="item.coalBillNo"-->
-<!--              :label="item.coalBillNo"-->
-<!--              :value="item.coalBillNo"-->
-<!--            ></el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="提煤单号" prop="coalBillNo" style="margin-top: 10px;">-->
+        <!--          <el-select v-model="form.coalBillNo" placeholder="请选择提煤单号" filterable @change="getBigCanUse">-->
+        <!--            <el-option-->
+        <!--              v-for="item in BigList"-->
+        <!--              :key="item.coalBillNo"-->
+        <!--              :label="item.coalBillNo"-->
+        <!--              :value="item.coalBillNo"-->
+        <!--            ></el-option>-->
+        <!--          </el-select>-->
+        <!--        </el-form-item>-->
         <!--<el-form-item label="承运单位" prop="transportUnitId">
           &lt;!&ndash;<el-input v-model="form.transportUnit" placeholder="请输入承运单位"/>&ndash;&gt;
           <el-select v-model="form.transportUnitId" filterable placeholder="请选择承运单位">
@@ -1124,9 +1124,9 @@
             </el-option>
           </el-select>
         </el-form-item>-->
-<!--        <el-row>-->
-<!--          <el-col :span="24">{{bigUseTip}}</el-col>-->
-<!--        </el-row>-->
+        <!--        <el-row>-->
+        <!--          <el-col :span="24">{{bigUseTip}}</el-col>-->
+        <!--        </el-row>-->
       </el-form>
 
     </el-dialog>
@@ -1183,7 +1183,7 @@ export default {
       // 弹出层标题
       title: "",
 
-      left:'left',
+      left: 'left',
       // 是否显示弹出层
       open: false,
       // 查询参数
@@ -1460,23 +1460,22 @@ export default {
       this.upload.open = true
       this.form.placeId = this.queryParams.placeId
     },
-      // 关闭导入弹框
+    // 关闭导入弹框
     closeDialog() {
       this.open = false
       this.upload.open = false
       this.cancel()
     },
 
-    importTemplate(){
-
+    importTemplate() {
+      window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=place&objectName=普通场所入库通知单模板.xlsx'
     },
-
     // 取消按钮
     uploadCancel() {
       this.upload.open = false
       this.reset()
       this.$refs.upload.clearFiles()
-    //  this.bigUseTip = ''
+      //  this.bigUseTip = ''
     },
 
     // 文件上传中处理
@@ -1688,7 +1687,7 @@ export default {
       }
     },
     placeChange() {
-      this.getContract(this.queryParams.placeId,'1')
+      this.getContract(this.queryParams.placeId, '1')
       this.getList()
     },
     packModeChange(event) {
