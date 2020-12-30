@@ -692,25 +692,25 @@
 											}
 										})
 									//}
-									if (this.PoundForm.stationViaType === '02') {//空进重出，生成出库单
-									  params.direction = 0
-										genStoreDoc(params).then(response => {
-											if (response.code === 200) {
-												this.msgSuccess("出库成功");
-                        updateSheet(this.form).then((response) => {
-                          if(response.code === 200){
-                            this.msgSuccess("出场成功");
-                            this.getListE();
-                          }else {
-                            this.msgError(response.msg);
-                          }
-                        })
-											} else {
-												this.msgError(response.msg);
-											}
-										})
-									}
 								}
+              if (this.PoundForm.stationViaType === '02') {//空进重出，生成出库单
+                params.direction = 0
+                genStoreDoc(params).then(response => {
+                  if (response.code === 200) {
+                    this.msgSuccess("出库成功");
+                    updateSheet(this.form).then((response) => {
+                      if(response.code === 200){
+                        this.msgSuccess("出场成功");
+                        this.getListE();
+                      }else {
+                        this.msgError(response.msg);
+                      }
+                    })
+                  } else {
+                    this.msgError(response.msg);
+                  }
+                })
+              }
 						}
 					}
 				});
