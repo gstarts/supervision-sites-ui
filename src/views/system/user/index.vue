@@ -770,10 +770,10 @@ export default {
           this.consumerOptions = []
         } else {
           let companyType = '2'
-          if (event === '01') {
+          if (event === '01') { //寄仓客户
             companyType = '2'
           } else {
-            companyType = '3'
+            companyType = '4' //承运单位
           }
           this.getCustomerList(this.form.deptId, companyType)
         }
