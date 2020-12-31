@@ -176,20 +176,41 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-form-item label="通道号" prop="channelNumber">
-              <el-select ref="channelNo"
-                         filterable
-                         v-model="PoundForm.channelNumber"
-                         placeholder="请选择通道号"
-                         @change="ChannelNumberChange">
-                <el-option
-                  v-for="dept in chnlConfigList"
-                  :key="dept.cChnlNo"
-                  :label="dept.cChnlName"
-                  :value="dept.cChnlNo"
-                />
-              </el-select>
-            </el-form-item>
+            <el-row :gutter="10">
+              <el-col :span="12">
+                <el-form-item label="通道号" prop="channelNumber">
+                  <el-select ref="channelNo"
+                             filterable
+                             v-model="PoundForm.channelNumber"
+                             placeholder="请选择通道号"
+                             @change="ChannelNumberChange">
+                    <el-option
+                      v-for="dept in chnlConfigList"
+                      :key="dept.cChnlNo"
+                      :label="dept.cChnlName"
+                      :value="dept.cChnlNo"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="刷新频率" prop="refreshRate">
+                  <el-select ref="channelNo" @change="changeRefreshRate"
+                             filterable
+                             v-model="refreshRate"
+                             placeholder="请选择刷新频率">
+                    <el-option
+                      v-for="dept in refreshRateDic"
+                      :key="dept.dictValue"
+                      :label="dept.dictLabel"
+                      :value="dept.dictValue"
+                    />
+                  </el-select>
+                </el-form-item>
+
+              </el-col>
+            </el-row>
+
             <!-- -->
             <el-form-item label="车辆类型" prop="stationViaType">
               <el-select filterable clearable v-model="PoundForm.stationViaType" placeholder="请选择车辆类型"
@@ -690,7 +711,14 @@ export default {
       //磅单修改页面的变量
       modifyOpen: false,
       transportModeDic: [],
-      printObject: {}
+      printObject: {},
+      refreshRate: 1000,
+      refreshRateDic: [
+        {'dictValue': 500, 'dictLabel': '0.5秒'},
+        {'dictValue': 1000, 'dictLabel': '1秒'},
+        {'dictValue': 1500, 'dictLabel': '1.5秒'},
+        {'dictValue': 2000, 'dictLabel': '2秒'},
+      ],
       /*poundModify: {
         poundId: undefined,
         poundState: undefined,
@@ -980,7 +1008,6 @@ export default {
         poundSelect(event).then((response) => {
           //if(response.data !== null){
           this.Poundweight = response.data.weight;
-
           //定时重量赋值到相应毛重 皮重 净重上 11.10修改 虎神
           //流向 进场  车辆类型 蒙煤车 有车牌号 反添毛重
           if (this.PoundForm.flowDirection == 'I' && this.PoundForm.stationViaType == '01' && this.form.plateNum != undefined) {
@@ -1008,16 +1035,21 @@ export default {
           }
 
           this.isStable = response.data.isStable;
+          //如果车辆列表为空，则刷车牌号
           if (this.plateNumOptions.length === 0) {
             this.getVehicleList()
           }
           //}
         });
-      }, 1000);
+      }, this.refreshRate);
       //离开当前页面定时器停止
       this.$once("hook:beforeDestroy", () => {
         clearInterval(this.ChannelNumberTimer);
       });
+    },
+
+    changeRefreshRate() {
+      this.ChannelNumberChange(this.PoundForm.channelNumber)
     },
     /** 暂存按钮 */
     AllADD() {
