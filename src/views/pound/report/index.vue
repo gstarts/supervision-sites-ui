@@ -140,7 +140,7 @@
 
       <el-form-item label="承运单位" prop="transportUnit">
         <!--<el-input v-model="form.transportUnit" placeholder="请输入承运单位"/>-->
-        <el-select v-model="queryParams.transportUnit" filterable clearable placeholder="请选择承运单位" @change="getUnitName">
+        <el-select v-model="queryParams.transportUnit" filterable clearable placeholder="请选择承运单位" >
           <el-option
             v-for="item in transUnitList"
             :key="item.eAbbreviation"
@@ -217,7 +217,7 @@
         <!--   checkConsumer   -->
         <!--      <af-table-column label="发货单位" align="center" prop="goodsName"/>-->
         <el-table-column label="序号" type="index"/>
-        <af-table-column label="客户11" align="center" prop="deliveryUnit"/>
+        <af-table-column label="客户" align="center" prop="deliveryUnit"/>
         <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
         <af-table-column label="煤种" align="center" prop="goodsName"/>
         <af-table-column :label="queryParams.statisticsMode===1?'车数':'车号'" align="center" prop="plateNum"/>
@@ -453,6 +453,7 @@ export default {
     this.getDicts("coal_type").then(response => {
       this.goodsNameList = response.data;
     });
+    this.getTransportUnitInfo();
   },
   methods: {
     /** 查询堆场报表列表 */
