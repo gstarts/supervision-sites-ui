@@ -313,7 +313,7 @@
           </el-col>
           <el-col :span="12" v-show="form.userType!=='' && form.userType!== '00'">
             <el-form-item label="单位名称" prop="companyId">
-              <el-select v-model="form.companyId" placeholder="请选择单位">
+              <el-select v-model="form.companyId" filterable clearable placeholder="请选择单位">
                 <el-option
                   v-for="item in consumerOptions"
                   :key="item.id"
