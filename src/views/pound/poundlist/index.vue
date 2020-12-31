@@ -564,7 +564,7 @@
 					//出场 调用自己的接口 查询数据库里的数据赋值给input。
 				} else if (this.PoundForm.flowDirection == "E") {
 					//调用后台查询API 通过选择的车号反添数据
-					getSheet(event, this.queryParams.stationId).then((response) => {
+					getSheet(event, this.queryParams.stationId,'I').then((response) => {
 						if (response.code === 200) {
 							this.form = response.data;
 						} else {

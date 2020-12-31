@@ -643,7 +643,7 @@ export default {
             this.msgSuccess("通知单生成成功");
             row.isGenStoreNotice = 1
           } else {
-            this.msgError("通知单生成失败");
+            this.msgError(response.msg);
           }
         }).catch(err => {
           this.loading = false

@@ -21,6 +21,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="业务编号" prop="businessNo">
+        <el-input v-model="queryParams.businessNo" placeholder="请输入业务编号" clearable size="small"
+                  @keyup.enter.native="handleQuery"/>
+      </el-form-item>
       <el-form-item label="入库通知单号" prop="inNoticeNo" label-width="100px">
         <el-input
           v-model="queryParams.inNoticeNo"
@@ -339,7 +343,7 @@
       <!--<af-table-column label="工组人员" align="center" prop="workGroup" />-->
       <af-table-column label="状态" align="center" prop="state">
         <template slot-scope="scope">
-          {{stateDic.find(item =>item.value === scope.row.state).label}}
+          {{ stateDic.find(item => item.value === scope.row.state).label }}
         </template>
       </af-table-column>
       <af-table-column label="产生时间" align="center" prop="genTime" width="180">
@@ -394,11 +398,11 @@
           >打印
           </el-button>
           <el-button v-show="scope.row.archiveTime === null"
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleNoticeArchive(scope.row)"
-            v-hasPermi="['tax:instore_notice:archive']"
+                     size="mini"
+                     type="text"
+                     icon="el-icon-edit"
+                     @click="handleNoticeArchive(scope.row)"
+                     v-hasPermi="['tax:instore_notice:archive']"
           >归档
           </el-button>
           <el-button v-show="scope.row.templateId == null"
@@ -522,23 +526,23 @@
             </el-form-item>
           </el-col>
         </el-row>
-       <!-- <el-row type="flex">
-          <el-col :span="12">
-            <el-form-item label="状态" prop="state">
-              <el-input v-model="form.state" placeholder="请输入状态"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="产生时间" prop="genTime">
-              <el-date-picker clearable size="small" style="width: 200px"
-                              v-model="form.genTime"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="选择通知单产生时间">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-row>-->
+        <!-- <el-row type="flex">
+           <el-col :span="12">
+             <el-form-item label="状态" prop="state">
+               <el-input v-model="form.state" placeholder="请输入状态"/>
+             </el-form-item>
+           </el-col>
+           <el-col :span="12">
+             <el-form-item label="产生时间" prop="genTime">
+               <el-date-picker clearable size="small" style="width: 200px"
+                               v-model="form.genTime"
+                               type="date"
+                               value-format="yyyy-MM-dd"
+                               placeholder="选择通知单产生时间">
+               </el-date-picker>
+             </el-form-item>
+           </el-col>
+         </el-row>-->
 
         <!--<el-row type="flex">
           <el-col :span="12">
@@ -597,267 +601,267 @@
 </template>
 
 <script>
-	import {
-		listInstore_notice,
-		getInstore_notice,
-		delInstore_notice,
-		addInstore_notice,
-		updateInstore_notice, genStoreDoc, updateDocNotice
-	} from "@/api/tax/instore_notice";
-	import {getUserDepts} from '@/utils/charutils'
+import {
+  listInstore_notice,
+  getInstore_notice,
+  delInstore_notice,
+  addInstore_notice,
+  updateInstore_notice, genStoreDoc, updateDocNotice
+} from "@/api/tax/instore_notice";
+import {getUserDepts} from '@/utils/charutils'
 
-	export default {
-		name: "Instore_notice",
-		data() {
-			return {
-				// 遮罩层
-				loading: false,
-				// 选中数组
-				ids: [],
-				depts: [],
-				// 非单个禁用
-				single: true,
-				// 非多个禁用
-				multiple: true,
-				// 总条数
-				total: 0,
-				// 入库通知单表格数据
-				instore_noticeList: [],
-				// 弹出层标题
-				title: "",
-				// 是否显示弹出层
-				open: false,
-				// 查询参数
-				queryParams: {
-					pageNum: 1,
-					pageSize: 20,
-					batchNo: undefined,
-					bookStoreCode: undefined,
-					businessNo: undefined,
-					checkConsumer: undefined,
-					contractNo: undefined,
-					convoyNo: undefined,
-					customsDeclarationNo: undefined,
-					deliveryNo: undefined,
-					driverName: undefined,
-					endTime: undefined,
-					fleetName: undefined,
-					genTime: undefined,
-					goodsCount: undefined,
-					inNoticeNo: undefined,
-					mechanicalNo: undefined,
-					mechanicalPerson: undefined,
-					placeId: undefined,
-					primeMoverNo: undefined,
-					saleContractNo: undefined,
-					soNo: undefined,
-					startTime: undefined,
-					state: undefined,
-					tallyClerk: undefined,
-					totalRoughWeight: undefined,
-					trailerNo: undefined,
-					unloadGroup: undefined,
-					vehicleNo: undefined,
-					workGroup: undefined,
-					orderByColumn: 'id',
-					isAsc: 'desc'
-				},
-				// 表单参数
-				form: {},
-				// 表单校验
-				rules: {
-					inNoticeNo: [
-						{required: true, message: "入库通知单号不能为空", trigger: "blur"}
-					],
-					placeId: [
-						{required: true, message: "场所ID不能为空", trigger: "blur"}
-					],
-				},
-				stateDic: [
-					{'value': '1', 'label': '生成'},
-					{'value': '2', 'label': '打印'},
-					{'value': '3', 'label': '磅单'},
-					{'value': '4', 'label': '完成'},
-					{'value': '5', 'label': '归档'},
-				]
-			};
-		},
-		created() {
-			this.depts = getUserDepts('1')
-			if (this.depts.length > 0) {
-				this.queryParams.placeId = this.depts[0].deptId
-				this.getList();
-			}
-		},
-		methods: {
-			/** 查询入库通知单列表 */
-			getList() {
-				this.loading = true;
-				listInstore_notice(this.queryParams).then(response => {
-					this.instore_noticeList = response.rows;
-					this.total = response.total;
-					this.loading = false;
-				});
-			},
-			// 取消按钮
-			cancel() {
-				this.open = false;
-				this.reset();
-			},
-			// 表单重置
-			reset() {
-				this.form = {
-					id: undefined,
-					createBy: undefined,
-					createTime: undefined,
-					remark: undefined,
-					updateBy: undefined,
-					updateTime: undefined,
-					batchNo: undefined,
-					bookStoreCode: undefined,
-					businessNo: undefined,
-					checkConsumer: undefined,
-					contractNo: undefined,
-					convoyNo: undefined,
-					customsDeclarationNo: undefined,
-					deliveryNo: undefined,
-					driverName: undefined,
-					endTime: undefined,
-					fleetName: undefined,
-					genTime: undefined,
-					goodsCount: undefined,
-					inNoticeNo: undefined,
-					mechanicalNo: undefined,
-					mechanicalPerson: undefined,
-					placeId: this.queryParams.placeId,
-					primeMoverNo: undefined,
-					saleContractNo: undefined,
-					soNo: undefined,
-					startTime: undefined,
-					state: undefined,
-					tallyClerk: undefined,
-					totalRoughWeight: undefined,
-					trailerNo: undefined,
-					unloadGroup: undefined,
-					vehicleNo: undefined,
-					workGroup: undefined
-				};
-				this.resetForm("form");
-			},
-			/** 搜索按钮操作 */
-			handleQuery() {
-				this.queryParams.pageNum = 1;
-				this.getList();
-			},
-			/** 重置按钮操作 */
-			resetQuery() {
-				this.resetForm("queryForm");
-				this.handleQuery();
-			},
-			// 多选框选中数据
-			handleSelectionChange(selection) {
-				this.ids = selection.map(item => item.id)
-				this.single = selection.length != 1
-				this.multiple = !selection.length
-			},
-			/** 新增按钮操作 */
-			handleAdd() {
-				this.reset();
-				this.open = true;
-				this.title = "添加入库通知单";
-			},
-			/** 修改按钮操作 */
-			handleUpdate(row) {
-				this.reset();
-				const id = row.id || this.ids
-				getInstore_notice(id).then(response => {
-					this.form = response.data;
-					this.open = true;
-					this.title = "修改入库通知单";
-				});
-			},
-			/** 提交按钮 */
-			submitForm: function () {
-				this.$refs["form"].validate(valid => {
-					if (valid) {
-						if (this.form.id != undefined) {
-							updateInstore_notice(this.form).then(response => {
-								if (response.code === 200) {
-									this.msgSuccess("修改成功");
-									this.open = false;
-									this.getList();
-								}
-							});
-						} else {
-							addInstore_notice(this.form).then(response => {
-								if (response.code === 200) {
-									this.msgSuccess("新增成功");
-									this.open = false;
-									this.getList();
-								}
-							});
-						}
-					}
-				});
-			},
-			/** 删除按钮操作 */
-			handleDelete(row) {
-				const ids = row.id || this.ids;
-				this.$confirm('是否确认删除入库通知单号为"' + row.inNoticeNo + '"的数据项及其子项?', "警告", {
-					confirmButtonText: "确定",
-					cancelButtonText: "取消",
-					type: "warning"
-				}).then(function () {
-					return delInstore_notice(ids);
-				}).then(() => {
-					this.getList();
-					this.msgSuccess("删除成功");
-				}).catch(function () {
-				});
-			},
-			handleNoticeDetail(row) {
-				console.log(row.inNoticeNo)
-				this.$router.push({
-					path: '/tax/instore/notice/detail',
-					query: {
-						'noticeNo': row.inNoticeNo,
-						'placeId': row.placeId
-					}
-				})
-			},
-			handleNoticePrint(row) {
-				console.log(row.inNoticeNo)
-				this.$router.push({
-					path: '/tax/instore/notice/print',
-					query: {
-						'noticeNo': row.inNoticeNo,
-						'placeId': row.placeId
-					}
-				})
-			},
-			/** 导出按钮操作 */
-			handleExport() {
-				this.download('tax/instore_notice/export', {
-					...this.queryParams
-				}, `tax_instore_notice.xlsx`)
-			},
-			handleNoticeArchive(row){
-				console.log(row)
-				updateDocNotice(row.placeId, row.inNoticeNo, 'innotice', 'archive').then(response=>{
-					if(response.code ===200){
-						this.$message.success("归档成功")
-            this.getList()
+export default {
+  name: "Instore_notice",
+  data() {
+    return {
+      // 遮罩层
+      loading: false,
+      // 选中数组
+      ids: [],
+      depts: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 总条数
+      total: 0,
+      // 入库通知单表格数据
+      instore_noticeList: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 20,
+        batchNo: undefined,
+        bookStoreCode: undefined,
+        businessNo: undefined,
+        checkConsumer: undefined,
+        contractNo: undefined,
+        convoyNo: undefined,
+        customsDeclarationNo: undefined,
+        deliveryNo: undefined,
+        driverName: undefined,
+        endTime: undefined,
+        fleetName: undefined,
+        genTime: undefined,
+        goodsCount: undefined,
+        inNoticeNo: undefined,
+        mechanicalNo: undefined,
+        mechanicalPerson: undefined,
+        placeId: undefined,
+        primeMoverNo: undefined,
+        saleContractNo: undefined,
+        soNo: undefined,
+        startTime: undefined,
+        state: undefined,
+        tallyClerk: undefined,
+        totalRoughWeight: undefined,
+        trailerNo: undefined,
+        unloadGroup: undefined,
+        vehicleNo: undefined,
+        workGroup: undefined,
+        orderByColumn: 'id',
+        isAsc: 'desc'
+      },
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {
+        inNoticeNo: [
+          {required: true, message: "入库通知单号不能为空", trigger: "blur"}
+        ],
+        placeId: [
+          {required: true, message: "场所ID不能为空", trigger: "blur"}
+        ],
+      },
+      stateDic: [
+        {'value': '1', 'label': '生成'},
+        {'value': '2', 'label': '打印'},
+        {'value': '3', 'label': '磅单'},
+        {'value': '4', 'label': '完成'},
+        {'value': '5', 'label': '归档'},
+      ]
+    };
+  },
+  created() {
+    this.depts = getUserDepts('1')
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+      this.getList();
+    }
+  },
+  methods: {
+    /** 查询入库通知单列表 */
+    getList() {
+      this.loading = true;
+      listInstore_notice(this.queryParams).then(response => {
+        this.instore_noticeList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        id: undefined,
+        createBy: undefined,
+        createTime: undefined,
+        remark: undefined,
+        updateBy: undefined,
+        updateTime: undefined,
+        batchNo: undefined,
+        bookStoreCode: undefined,
+        businessNo: undefined,
+        checkConsumer: undefined,
+        contractNo: undefined,
+        convoyNo: undefined,
+        customsDeclarationNo: undefined,
+        deliveryNo: undefined,
+        driverName: undefined,
+        endTime: undefined,
+        fleetName: undefined,
+        genTime: undefined,
+        goodsCount: undefined,
+        inNoticeNo: undefined,
+        mechanicalNo: undefined,
+        mechanicalPerson: undefined,
+        placeId: this.queryParams.placeId,
+        primeMoverNo: undefined,
+        saleContractNo: undefined,
+        soNo: undefined,
+        startTime: undefined,
+        state: undefined,
+        tallyClerk: undefined,
+        totalRoughWeight: undefined,
+        trailerNo: undefined,
+        unloadGroup: undefined,
+        vehicleNo: undefined,
+        workGroup: undefined
+      };
+      this.resetForm("form");
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id)
+      this.single = selection.length != 1
+      this.multiple = !selection.length
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "添加入库通知单";
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      const id = row.id || this.ids
+      getInstore_notice(id).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改入库通知单";
+      });
+    },
+    /** 提交按钮 */
+    submitForm: function () {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.id != undefined) {
+            updateInstore_notice(this.form).then(response => {
+              if (response.code === 200) {
+                this.msgSuccess("修改成功");
+                this.open = false;
+                this.getList();
+              }
+            });
+          } else {
+            addInstore_notice(this.form).then(response => {
+              if (response.code === 200) {
+                this.msgSuccess("新增成功");
+                this.open = false;
+                this.getList();
+              }
+            });
           }
-        })
-      }
-			/*genDoc(row) {
-				genStoreDoc(row.placeId, 1, row.inNoticeNo, 'A10103').then(response => {
-					console.log(response)
-          if(response.code === 200){
-          	this.getList()
-          }
-				})
-			}*/
-		}
-	};
+        }
+      });
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$confirm('是否确认删除入库通知单号为"' + row.inNoticeNo + '"的数据项及其子项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return delInstore_notice(ids);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      }).catch(function () {
+      });
+    },
+    handleNoticeDetail(row) {
+      console.log(row.inNoticeNo)
+      this.$router.push({
+        path: '/tax/instore/notice/detail',
+        query: {
+          'noticeNo': row.inNoticeNo,
+          'placeId': row.placeId
+        }
+      })
+    },
+    handleNoticePrint(row) {
+      console.log(row.inNoticeNo)
+      this.$router.push({
+        path: '/tax/instore/notice/print',
+        query: {
+          'noticeNo': row.inNoticeNo,
+          'placeId': row.placeId
+        }
+      })
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      this.download('tax/instore_notice/export', {
+        ...this.queryParams
+      }, `tax_instore_notice.xlsx`)
+    },
+    handleNoticeArchive(row) {
+      console.log(row)
+      updateDocNotice(row.placeId, row.inNoticeNo, 'innotice', 'archive').then(response => {
+        if (response.code === 200) {
+          this.$message.success("归档成功")
+          this.getList()
+        }
+      })
+    }
+    /*genDoc(row) {
+      genStoreDoc(row.placeId, 1, row.inNoticeNo, 'A10103').then(response => {
+        console.log(response)
+        if(response.code === 200){
+          this.getList()
+        }
+      })
+    }*/
+  }
+};
 </script>

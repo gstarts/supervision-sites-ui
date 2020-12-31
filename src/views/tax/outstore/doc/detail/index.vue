@@ -39,8 +39,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      
-      <el-form-item label="入库单号" prop="outstoreDocNo">
+
+      <el-form-item label="出库单号" prop="outstoreDocNo">
         <el-input
           v-model="queryParams.outstoreDocNo"
           placeholder="请输入入库单号"
@@ -117,7 +117,7 @@
     <el-table v-loading="loading" :data="outstore_doc_detailList">
       <!--<af-table-column type="selection" width="55" align="center" />-->
       <!--<af-table-column label="货位号" align="center" prop="id" />-->
-      <af-table-column label="入库单号" align="center" prop="outstoreDocNo" />
+      <af-table-column label="出库单号" align="center" prop="outstoreDocNo" />
       <af-table-column label="货位号" align="center" prop="storeCode" />
       <af-table-column label="品名" align="center" prop="goodsName" />
       <af-table-column label="袋封号" align="center" prop="bagSealNo" />
@@ -147,7 +147,7 @@
         </template>
       </af-table-column>-->
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"

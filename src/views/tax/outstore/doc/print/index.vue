@@ -33,7 +33,7 @@
         > 打印
         </el-button>
       </el-col>
-    
+
     </el-row>
     <div class="box-card" style="margin: 0 auto;font-size:18px;width:1600px;padding-left: 5px ;padding-top:20px"
          id="print">
@@ -196,10 +196,10 @@
       </el-row>
       <el-row :gutter="10" style="margin-bottom: 10px">
         <el-col :span="8" class="font14">
-          OT Supervisor Jinhang OT派驻金航主管
+          Customer Representative 客户代表
         </el-col>
         <el-col :span="8" class="font14">
-          Jinhang Representative 金航代表
+          Fleet Representative 车队代表
         </el-col>
       </el-row>
       <el-row :gutter="10" style="margin-bottom: 10px">
@@ -223,7 +223,7 @@
           Receiving Smelter收货冶炼厂 ( Only for Traders仅适用贸易商 )
         </el-col>
         <el-col :span="8" class="font14">
-          Jinhang Representative 金航代表
+
         </el-col>
       </el-row>
       <el-row :gutter="10" style="margin-bottom: 10px">
@@ -341,7 +341,7 @@
 							packingUnit: ""
 
 						}*/
-      
+
 						/*let row22 = {
 							bagSealNo: "",
 							bookStoreCode: "",
@@ -512,24 +512,24 @@
     margin-top: 8mm;
     margin-right: 20px;
   }
-  
+
   .font14 {
     font-size: 18px;
   }
-  
+
   .elTable td {
     padding: 1px !important;
   }
-  
+
   .elTable th {
     padding: 1px 10px !important;
   }
-  
+
   .el-table .cell {
     /*text-align: center;*/
     white-space: pre-line; /*保留换行符*/
   }
-  
+
   .weight {
     width: 120px;
     padding: 1px 8px;

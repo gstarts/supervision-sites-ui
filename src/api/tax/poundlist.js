@@ -37,9 +37,9 @@ export function analysis(query) {
 }
 
 // 通过车号查询数据
-export function getSheet(event, stationId) {
+export function getSheet(event, stationId, flowDirection) {
   return request({
-    url: '/tax/measurement/sheet/inrecord?vehicleNo=' + event + '&stationId=' + stationId,
+    url: '/tax/measurement/sheet/inrecord?vehicleNo=' + event + '&stationId=' + stationId + '&flowDirection=' + flowDirection,
     method: 'get'
   })
 }
