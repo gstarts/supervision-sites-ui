@@ -310,7 +310,7 @@
 		updateSheet,
 		getSheet,
 		listIESheet,
-	} from "@/api/pound/poundlist";
+	} from "@/api/tax/poundlist";
 	import {listVehicleNoList} from "@/api/system/vehicle_info";
 	import {genTimeCode} from "@/utils/common";
 	//获取实时重量
