@@ -260,14 +260,26 @@
                     style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
             <!--   checkConsumer   -->
             <!--      <af-table-column label="发货单位" align="center" prop="goodsName"/>-->
-            <el-table-column label="序号" type="index" align="center"    width="80px"/>
+            <el-table-column label="序号" type="index" align="center"  width="70px"/>
             <af-table-column label="客户" align="center" prop="deliveryUnit"/>
             <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
             <af-table-column label="煤种" align="center" prop="goodsName"/>
-            <af-table-column :label="queryParams.statisticsMode===1?'车数':'车号'" align="center" prop="plateNum"/>
-            <af-table-column label="毛重" align="center" prop="grossWeight"/>
-            <af-table-column label="皮重" align="center" prop="tare"/>
-            <af-table-column label="净重" align="center" prop="netWeight"/>
+            <af-table-column :label="queryParams.statisticsMode===1?'车数':'车号'" align="center" prop="plateNum" width="70px"/>
+            <af-table-column label="毛重" align="center" prop="grossWeight" width="140px">
+              <template slot-scope="scope">
+                {{scope.row.grossWeight.toFixed(2)}}
+              </template>
+            </af-table-column>
+            <af-table-column label="皮重" align="center" prop="tare" width="140px">
+              <template slot-scope="scope">
+                {{scope.row.tare.toFixed(2)}}
+              </template>
+            </af-table-column>
+            <af-table-column label="净重" align="center" prop="netWeight" width="140px">
+              <template slot-scope="scope">
+                {{scope.row.netWeight.toFixed(2)}}
+              </template>
+            </af-table-column>
           </el-table>
           <el-row class="countRow" v-show="index===newArray.length-1 ?  true : false">
             <span v-show="vehicleCount>0">总车数:{{ vehicleCount }}</span>

@@ -1668,8 +1668,9 @@ export default {
 }
 
 #dayin {
-  margin-top: 25px;
-  padding-top: 15px;
+  margin-top: 0;
+  /*padding-top: 25px;*/
+  padding-top: 40px;
   height: 500px;
   width: 1200px;
 }
