@@ -264,7 +264,7 @@
             <af-table-column label="客户" align="center" prop="deliveryUnit"/>
             <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
             <af-table-column label="煤种" align="center" prop="goodsName"/>
-            <af-table-column :label="queryParams.statisticsMode===1?'车数':'车号'" align="center" prop="plateNum" width="70px"/>
+            <af-table-column :label="queryParams.statisticsMode===1?'车数':'车号'" align="center" prop="plateNum" :width="queryParams.statisticsMode===1?70:110"/>
             <af-table-column label="毛重" align="center" prop="grossWeight" width="140px">
               <template slot-scope="scope">
                 {{scope.row.grossWeight.toFixed(2)}}
