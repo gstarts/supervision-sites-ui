@@ -949,10 +949,10 @@ export default {
     if (this.depts.length > 0) {
       this.queryParams.stationId = this.depts[0].deptId
       this.getList();
-      this.getGroupList()
-      this.getContractList()
-      this.getCoalBillList()
-      this.getTransportUnitInfo()
+      //this.getGroupList()
+      //this.getContractList()
+      //this.getCoalBillList()
+      //this.getTransportUnitInfo()
     }
     //煤种类型
     this.getDicts("coal_type").then(response => {
@@ -1270,10 +1270,10 @@ export default {
     //场所变化时，更新列表
     placeChange() {
       this.handleQuery()
-      this.getCoalBillList()
-      this.getGroupList()
-      this.getContractList()
-      this.getTransportUnitInfo()
+      //this.getCoalBillList()
+      //this.getGroupList()
+      //this.getContractList()
+      //this.getTransportUnitInfo()
     },
     //翻译用户名
     parseUserName(user) {

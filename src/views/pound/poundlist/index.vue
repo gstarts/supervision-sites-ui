@@ -1066,17 +1066,21 @@ export default {
 /*  !*border: 1px solid ;*!*/
 /*}*/
 
-/*改变车号字体大小的样式*/
+.coalPageSelect /deep/ .el-input.is-disabled .el-input__inner{
+  color: #070c17;
+}
+  /*改变车号字体大小的样式*/
 .coalPageSelect /deep/ .el-form-item__label {
-  font-size: 24px;
+  font-size: 18px;
 }
 
+
 .coalPageSelect /deep/ .el-input__inner {
-  font-size: 24px;
+  font-size: 18px;
 }
 
 .coalPageSelect /deep/ .el-select-dropdown__item {
-  font-size: 24px !important;
+  font-size: 18px !important;
 }
 @page {
   margin: 8mm;
