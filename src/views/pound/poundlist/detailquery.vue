@@ -1621,7 +1621,7 @@ export default {
 #area-right-style {
   height: 35px;
   width: 350px;
-  font-size: 20px;
+  font-size: 26px;
   margin-top: 28px;
   margin-left: 40px;
   float: left;
@@ -1639,7 +1639,7 @@ export default {
 #user-all-style {
   width: 800px;
   height: 40px;
-  font-size: 30px;
+  font-size: 26px;
   float: left;
   padding-left: 130px;
   margin-top: 10px;
