@@ -767,14 +767,13 @@
       </div>
       <div id="area-style">
         <span class="area-in-style">{{ this.printDate.goodsName }}</span>
-        <span class="area-in-style">{{ this.printDate.goodsName }}</span>
       </div>
       <div id="area-right-style">
         <span>{{ this.printDate.tare }} kg</span>
         <br/>
       </div>
       <div id="area-style">
-        <span class="area-in-style">{{ this.printDate.specification }}</span>
+        <span class="area-in-style"></span>
       </div>
       <div id="area-right-style">
         <span>{{ this.printDate.netWeight }} kg</span>
@@ -1297,7 +1296,6 @@ export default {
     handlePrint(row) {
       // 判断磅单时间 与当前时间 相差是否超过4小时
       if (((new Date().getTime() - new Date(row.outTime).getTime()) / 1000 / 60 / 60) <= 4) {
-
         this.printShow = true
         let date = parseTime(new Date())
         this.printDate.nowDate = date.substring(0, 10);
@@ -1531,6 +1529,8 @@ export default {
 /*}*/
 
 #dayin {
+  margin-top: 0;
+  padding-top: 10px;
   height: 500px;
   width: 1200px;
   /*border: 1px solid ;*/
