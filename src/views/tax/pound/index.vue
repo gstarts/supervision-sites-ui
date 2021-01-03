@@ -143,18 +143,17 @@
         <el-button v-print="'#dayin'" ref="printBtn" style="display: none"/>
       </el-form-item>
     </el-form>
-    <!--    <el-row :gutter="10" class="mb8">-->
-    <!--      <el-col :span="1.5">-->
-    <!--        <el-button-->
-    <!--          type="warning"-->
-    <!--          icon="el-icon-download"-->
-    <!--          size="mini"-->
-    <!--          @click="handleExport"-->
-    <!--          v-hasPermi="['place:sheet:export']"-->
-    <!--        >导出-->
-    <!--        </el-button>-->
-    <!--      </el-col>-->
-    <!--    </el-row>-->
+<!--        <el-row :gutter="10" class="mb8">
+          <el-col :span="1.5">
+            <el-button
+              type="warning"
+              icon="el-icon-download"
+              size="mini"
+              @click="handleExport"
+              v-hasPermi="['pound:sheet:export']">导出
+            </el-button>
+          </el-col>
+        </el-row>-->
 
     <el-table v-loading="loading" :data="sheetList" show-summary :summary-method="getSummaries" height="645">
       <!-- <af-table-column type="selection" width="55" align="center"/>-->
@@ -1257,9 +1256,11 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('place/sheet/export', {
-        ...this.queryParams
-      }, `place_sheet.xlsx`)
+      let obj = {...this.queryParams}
+      obj.pageNum = undefined
+      obj.pageSize = undefined
+
+      this.download('tax/measurement/sheet/export',obj, `tax_sheet.xlsx`)
     },
     //获取大提煤单列表
     getCoalBillList() {
