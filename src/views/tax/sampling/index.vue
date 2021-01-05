@@ -504,7 +504,7 @@ export default {
     /** 详情按钮操作 */
     handleSelect(row) {
       const id = row.id || this.ids;
-      this.$router.push({path: '/tax/spamlingsmall', query: {id: id, flag: true,single:true}})
+      this.$router.push({path: '/tax/spamlingsmall', query: {id: id, flag: true,single:true,LotNoDisabled:true}})
     },
     /** 导出按钮操作 */
     handleExport() {

@@ -326,12 +326,13 @@ export default {
     const flag = this.$route.query.flag
     const single=this.$route.query.single
     const LotNo=this.$route.query.LotNo
+    const LotNoDisabled=this.$route.query.LotNoDisabled
     if(id){
       getLord(id).then(response =>{
         this.queryParams=response.data
         this.flag=flag;
         this.single=single;
-        this.LotNoDisabled=false;
+        this.LotNoDisabled=LotNoDisabled;
       })
       this.indexList()
     }

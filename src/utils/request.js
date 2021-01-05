@@ -113,9 +113,9 @@ service.interceptors.response.use(res => {
 // 通用下载方法
 export function download(url, params, filename) {
 	return service.post(url, params, {
-		transformRequest: [(params) => {
-			return tansParams(params)
-		}],
+		// transformRequest: [(params) => {
+		// 	return tansParams(params)
+		// }],
 		responseType: 'blob'
 	}).then((data) => {
 		const content = data

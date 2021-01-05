@@ -140,20 +140,29 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-        <el-button v-print="'#dayin'" ref="printBtn" style="display: none"/>
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+
+        >导出
+        </el-button>
+<!--        <el-button v-print="'#dayin'" ref="printBtn" style="display: none"/>-->
       </el-form-item>
     </el-form>
-<!--        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
-            <el-button
-              type="warning"
-              icon="el-icon-download"
-              size="mini"
-              @click="handleExport"
-              v-hasPermi="['pound:sheet:export']">导出
-            </el-button>
-          </el-col>
-        </el-row>-->
+    <!--    <el-row :gutter="10" class="mb8">-->
+    <!--      <el-col :span="1.5">-->
+    <!--        <el-button-->
+    <!--          type="warning"-->
+    <!--          icon="el-icon-download"-->
+    <!--          size="mini"-->
+    <!--          @click="handleExport"-->
+    <!--          v-hasPermi="['place:sheet:export']"-->
+    <!--        >导出-->
+    <!--        </el-button>-->
+    <!--      </el-col>-->
+    <!--    </el-row>-->
 
     <el-table v-loading="loading" :data="sheetList" show-summary :summary-method="getSummaries" height="645">
       <!-- <af-table-column type="selection" width="55" align="center"/>-->
@@ -667,7 +676,7 @@
 </template>
 
 <script>
-import {listSheetLike, updatePrintState} from "@/api/tax/poundlist";
+import {listSheetLike, updatePrintState,report} from "@/api/tax/poundlist";
 import {getUserDepts} from "@/utils/charutils";
 import {applyModify} from "@/api/place/modify";
 import {selectCoalBillNo} from "@/api/place/big";
@@ -754,8 +763,8 @@ export default {
 
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 20,
+        // pageNum: 1,
+        // pageSize: 20,
         finalInspectionTime: undefined,
         measurementNum: undefined,
         plateNum: undefined,
@@ -1256,12 +1265,11 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      let obj = {...this.queryParams}
-      obj.pageNum = undefined
-      obj.pageSize = undefined
-
-      this.download('tax/measurement/sheet/export',obj, `tax_sheet.xlsx`)
+      this.download('tax/measurement/sheet/export', {
+        ...this.queryParams
+      }, `金航保税库磅单.xlsx`)
     },
+      // )},
     //获取大提煤单列表
     getCoalBillList() {
       selectCoalBillNo({'placeId': this.queryParams.stationId, 'status': '0'}).then(response => {
@@ -1289,8 +1297,6 @@ export default {
       listUser({'deptId': this.queryParams.stationId, 'delFlag': '0'}).then(response => {
         if (response.code === 200) {
           this.userList = response.rows
-          console.log("==============")
-          console.log(this.userList)
         }
       });
     },
@@ -1369,7 +1375,6 @@ export default {
       } else {
         this.rulesModifyNew = this.rulesModify
       }
-      console.log(this.rulesModifyNew)
       this.$forceUpdate()
     },
     //查承运单位

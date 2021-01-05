@@ -529,7 +529,7 @@ export default {
   #all {
     height:1638px;
     width: 1150px;
-    /*border: 1px solid ;*/
+    border: 1px solid ;
     /*margin-top: 1cm;*/
   }
   #headRow{
