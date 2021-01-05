@@ -165,7 +165,7 @@
     <el-table v-loading="loading" :data="reportList"  :border="true">
       <el-table-column label="寄仓客户" align="center" prop="column1"/>
       <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
-      <el-table-column label="合同" align="center" prop="column2"></el-table-column>
+<!--      <el-table-column label="合同" align="center" prop="column2"></el-table-column>-->
       <el-table-column label="放行单总量" align="center" prop="column6">
         <template slot-scope="scope">
           <span>{{ (scope.row.column6/1000).toFixed(2)}}</span>
