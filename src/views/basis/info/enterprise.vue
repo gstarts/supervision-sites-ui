@@ -71,7 +71,7 @@
         >删除
         </el-button>
       </el-col>
-      <!--<el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -80,7 +80,7 @@
           v-hasPermi="['enterprise:info:export']"
         >导出
         </el-button>
-      </el-col>-->
+      </el-col>
     </el-row>
     <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
@@ -449,12 +449,14 @@ export default {
       this.queryParams.deptId = this.depts[0].deptId
       this.getList();
     }
+    this.queryParams.deptId = this.depts[0].deptId
     /**获取企业类型 */
     this.getDicts("station_enterprise_type").then((response) => {
       this.eEnterpriseTypeOptions = response.data;
     });
     this.getList();
   },
+
   methods: {
     /** 查询企业信息备案列表 */
     getList() {
@@ -588,12 +590,13 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
+      console.log(this.queryParams)
       this.download(
-        "enterprise/info/export",
+        'place/enterprise/info/export',
         {
-          ...this.queryParams,
+          ...this.queryParams
         },
-        `enterprise_info.xlsx`
+        `企业信息备案.xlsx`
       );
     },
   },

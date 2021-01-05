@@ -76,14 +76,14 @@
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <!--        <el-button-->
-        <!--          type="warning"-->
-        <!--          icon="el-icon-download"-->
-        <!--          size="mini"-->
-        <!--          @click="handleExport"-->
-        <!--          v-hasPermi="['place:car:export']"-->
-        <!--        >导出-->
-        <!--        </el-button>-->
+                <el-button
+                  type="warning"
+                  icon="el-icon-download"
+                  size="mini"
+                  @click="handleExport"
+                  v-hasPermi="['place:car:export']"
+                >导出
+                </el-button>
         <el-button
           icon="el-icon-download"
           size="mini"
@@ -846,7 +846,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('place/car/export', {
+      this.download('place/outstoreDoc/export', {
         ...this.queryParams
       }, `place_car.xlsx`)
     },
