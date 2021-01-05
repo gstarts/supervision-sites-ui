@@ -673,6 +673,9 @@ export default {
           })
         }
       }
+      if (this.auditUserList.length === 1) { //如果组里只有一个人时，即直接把审批人显示出来
+        this.form.approveUser2 = this.auditUserList[0].userName
+      }
     },
     //审批状态变化时
     applyStatusChange(event) {

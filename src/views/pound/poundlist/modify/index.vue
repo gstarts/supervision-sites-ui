@@ -11,15 +11,16 @@
           />
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="磅单ID" prop="poundId">
-        <el-input
-          v-model="queryParams.poundId"
-          placeholder="请输入磅单ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
+      <el-form-item label="修改项" prop="modifyType">
+        <el-select v-model="queryParams.modifyType" clearable filterable placeholder="请选择修改项" @change="handleQuery">
+          <el-option
+            v-for="dept in modifyTypeDic"
+            :key="dept.dictValue"
+            :label="dept.dictLabel"
+            :value="dept.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="磅单状态" prop="poundState">
         <el-input
           v-model="queryParams.poundState"
@@ -565,9 +566,10 @@ export default {
         {'key': '2', 'value': '不通过'},
       ],
       modifyTypeDic: [
-        {'dictValue': '3', 'dictLabel': '车牌号'},
         {'dictValue': '1', 'dictLabel': '合同号'},
         {'dictValue': '2', 'dictLabel': '提煤单号'},
+        {'dictValue': '3', 'dictLabel': '车牌号'},
+        {'dictValue': '4', 'dictLabel': '重量'},
       ]
     }
   },

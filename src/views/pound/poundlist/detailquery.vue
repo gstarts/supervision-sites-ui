@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="场所" prop="placeId">
+      <el-form-item label="场所" prop="stationId">
         <el-select v-model="queryParams.stationId" placeholder="请选择场所" @change="placeChange">
           <el-option
             v-for="dept in depts"
@@ -516,6 +516,29 @@
         <div v-show="selectPound.viaType === '01'">
           <el-row :gutter="10">
             <el-col :span="11">
+              <el-form-item label="寄仓客户" prop="deliveryUnit">
+                {{ selectPound.deliveryUnit }}
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" class="modifyTo">修改为</el-col>
+            <el-col :span="11">
+              <!-- <el-input v-model="poundModify.modifyCoalBillNo" disabled></el-input>-->
+              <el-form-item label="寄仓客户" prop="modifyCheckCustomer">
+                <el-select v-model="poundModify.modifyCheckCustomer" filterable placeholder="请选择寄仓客户"
+                           :disabled="poundModify.modifyType!=='1'"
+                           @change="customerChange">
+                  <el-option
+                    v-for="item in customerList"
+                    :key="item.customerName"
+                    :label="item.customerName"
+                    :value="item.customerName">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="11">
               <el-form-item label="合同号" prop="contactNo">
                 {{ poundModify.contractNo }}
               </el-form-item>
@@ -528,9 +551,9 @@
                            :disabled="poundModify.modifyType!=='1'"
                            @change="contractChange">
                   <el-option
-                    v-for="item in contractList"
+                    v-for="item in contractSubList"
                     :key="item.contractNo"
-                    :label="item.contractNo + ' ['+item.customerName+']'"
+                    :label="item.contractNo"
                     :value="item.contractNo">
                   </el-option>
                 </el-select>
@@ -1000,7 +1023,8 @@ export default {
         modifyStoreCode: undefined,
         modifyVehicleNo: undefined,
         modifyType: undefined,
-        remark: undefined
+        remark: undefined,
+        modifyCheckCustomer: undefined,
       },
       //当前选中的磅单
       selectPound: {},
@@ -1043,11 +1067,14 @@ export default {
       contractList: [],
       storeCodeList: [],
       modifyTypeDic: [
-        {'dictValue': '3', 'dictLabel': '修改车号'},
         {'dictValue': '1', 'dictLabel': '修改合同'},
         {'dictValue': '2', 'dictLabel': '修改提煤单'},
+        {'dictValue': '3', 'dictLabel': '修改车号'},
+        {'dictValue': '4', 'dictLabel': '修改重量'},
       ],
-      transUnitList: []
+      transUnitList: [],
+      customerList: [],
+      contractSubList: [],
     }
   },
   computed: {
@@ -1248,6 +1275,7 @@ export default {
       //this.poundModify.modifyContractNo = this.selectPound.remark
       this.poundModify.storeCode = this.selectPound.locationNumber //库位号
       this.poundModify.modifyStoreCode = this.selectPound.locationNumber //修改后的库位号
+      this.poundModify.modifyCheckCustomer = this.selectPound.deliveryUnit
       /* console.log(this.poundModify)
        console.log("--------------")
        console.log(this.selectPound)*/
@@ -1285,6 +1313,9 @@ export default {
               this.$message.warning('请填写要修改的提煤单号')
               return false
             }
+          }
+          if (this.poundModify.modifyType === '4') {//改重量
+
           }
 
           applyModify(this.poundModify).then(response => {
@@ -1458,12 +1489,13 @@ export default {
       return sums;
     },
     getGroupList() {
-      listGroup({'placeId': this.queryParams.placeId, 'state': '1'}).then(response => {
+      listGroup({'placeId': this.queryParams.stationId, 'state': '1'}).then(response => {
         if (response.code === 200) {
           this.auditGroupList = response.rows
         }
       })
     },
+    //组变化时
     groupChange(event) {
       this.poundModify.auditUser = undefined
       this.auditUserList = []
@@ -1477,22 +1509,51 @@ export default {
           })
         }
       }
+      if (this.auditUserList.length === 1) { //如果组里只有一个人时，即直接把审批人显示出来
+        this.form.approvalUserName = this.auditUserList[0].userName
+      }
     },
     //获取场所合同列表
     getContractList() {
-      listStoreContract({'placeId': this.queryParams.placeId, 'status': '1'}).then(response => {
+      listStoreContract({'placeId': this.queryParams.stationId, 'status': '1'}).then(response => {
         if (response.code === 200) {
           this.contractList = response.rows
+          //合同对应的客户，就是本场所的客户列表
+          this.customerList = []
+          this.contractList.forEach((value, index) => {
+            //console.log(value)
+            //customerName
+            //
+            //debugger
+            let customer = this.customerList.find(item => item.customerName === value.customerName)
+            if (!customer) {
+              this.customerList.push(value)
+            }
+          })
+          //console.log(this.customerList)
         }
       })
     },
+    //合同号变化
     contractChange(event) {
       this.storeCodeList = []
-      this.poundModify.modifyStoreCode = ''
-      let contract = this.contractList.find(item => item.contractNo === event)
+      this.poundModify.modifyStoreCode = undefined
+      let contract = this.contractSubList.find(item => item.contractNo === event)
       if (contract) {
         this.storeCodeList = contract.params.contract
       }
+    },
+    //寄仓客户变化时
+    customerChange(event) {
+      this.poundModify.modifyContractNo = undefined
+      this.poundModify.modifyStoreCode = undefined
+      //this.contractSubList = []
+      debugger
+      this.contractSubList = this.contractList.filter(item => item.customerName === event)
+      /*let contract = this.contractSubList.find(item => item.customerName === event)
+      if (!contract) {
+        this.contractSubList.push(contract)
+      }*/
     },
     modifyTypeChange(event) {
       this.rulesModifyNew = {}
