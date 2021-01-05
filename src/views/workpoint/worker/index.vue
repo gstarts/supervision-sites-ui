@@ -16,7 +16,7 @@
       <el-form-item label="人员姓名" prop="workerName">
         <el-input
           v-model="queryParams.workerName"
-          placeholder="请输入工作人员姓名"
+          placeholder="请输人员姓名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -97,7 +97,7 @@
     <el-table v-loading="loading" :data="workerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <!--<el-table-column label="ID" align="center" prop="id"/>-->
-      <el-table-column label="工作人员姓名" align="center" prop="workerName"/>
+      <el-table-column label="人员姓名" align="center" prop="workerName"/>
       <el-table-column label="人员编号" align="center" prop="workerCode"/>
       <el-table-column label="人员类型" align="center" prop="workerType" :formatter="workerTypeFormat" />
       <!--      <el-table-column label="场所" align="center" prop="placeId"/>-->
@@ -285,7 +285,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加工人名单 ";
+      this.title = "添加作业人员信息";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -294,7 +294,7 @@ export default {
       getWorker(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改工人名单 ";
+        this.title = "修改作业人员信息";
       });
     },
     /** 提交按钮 */

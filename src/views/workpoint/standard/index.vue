@@ -134,7 +134,7 @@
       <el-table-column label="代码" align="center" prop="code"/>
       <el-table-column label="分值" align="center" prop="score"/>
       <el-table-column label="工分类型" align="center" prop="pointCode" :formatter="formatPointType"/>
-      <el-table-column label="场所ID" align="center" prop="placeId" :formatter="formatPlace"/>
+      <el-table-column label="场所" align="center" prop="placeId" :formatter="formatPlace"/>
       <el-table-column label="状态" align="center" prop="state" :formatter="formatState"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
@@ -214,7 +214,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="场所" prop="placeId">
-              <el-select v-model="form.placeId" placeholder="请选择场所" disabled>
+              <el-select v-model="form.placeId" placeholder="请选择场所" filterable>
                 <el-option
                   v-for="dept in depts"
                   :key="dept.deptId"

@@ -844,6 +844,8 @@ export default {
         state: undefined,
         businessDept: undefined,
         approveState: undefined,
+        orderByColumn: "id",
+        isAsc: "desc",
       },
       // 表单参数
       form: {},

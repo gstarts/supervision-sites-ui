@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="场所ID" prop="placeId">
+      <el-form-item label="场所" prop="placeId">
         <el-input
           v-model="queryParams.placeId"
           placeholder="请输入场所ID"
@@ -412,7 +412,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
