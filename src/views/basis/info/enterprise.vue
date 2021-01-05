@@ -49,7 +49,7 @@
         >新增
         </el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -59,7 +59,7 @@
           v-hasPermi="['enterprise:info:edit']"
         >修改
         </el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="danger"
