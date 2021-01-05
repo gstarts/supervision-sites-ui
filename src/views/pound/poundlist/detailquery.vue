@@ -270,7 +270,16 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+
         <el-button v-print="'#dayin'" ref="printBtn" style="display: none"/>
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['pound:sheet:export']"
+        >导出
+        </el-button>
       </el-form-item>
     </el-form>
     <!--    <el-row :gutter="10" class="mb8">-->
@@ -1385,9 +1394,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('place/sheet/export', {
-        ...this.queryParams
-      }, `place_sheet.xlsx`)
+      this.download('pound/measurement/sheet/export', {
+        ...this.addDateRange(this.queryParams, this.dateRange)
+      }, `磅单查询.xlsx`)
     },
     //获取大提煤单列表
     getCoalBillList() {

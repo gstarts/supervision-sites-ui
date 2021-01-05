@@ -62,13 +62,13 @@
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <!--        <el-button-->
-        <!--          type="warning"-->
-        <!--          icon="el-icon-download"-->
-        <!--          size="mini"-->
-        <!--          @click="handleExport"-->
-        <!--          v-hasPermi="['place:clearance:export']"-->
-        <!--        >导入</el-button>-->
+                <el-button
+                  type="warning"
+                  icon="el-icon-download"
+                  size="mini"
+                  @click="handleExport"
+                  v-hasPermi="['place:clearance:export']"
+                >导出</el-button>
         <el-button
           size="mini"
           icon="el-icon-download"
@@ -405,7 +405,7 @@ export default {
     handleExport() {
       this.download('place/clearance/export', {
         ...this.queryParams
-      }, `place_clearance.xlsx`)
+      }, `提运单.xlsx`)
     },
     /** 导入按钮操作 */
     handleImport() {

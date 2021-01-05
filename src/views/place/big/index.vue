@@ -125,7 +125,7 @@
               </el-button
               >
             </el-col>-->
-      <!-- <el-col :span="1.5">
+       <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -133,7 +133,7 @@
           @click="handleExport"
           v-hasPermi="['place:big:export']"
         >导出</el-button>
-      </el-col> -->
+      </el-col>
     </el-row>
 
     <el-table
@@ -1055,7 +1055,7 @@ export default {
         {
           ...this.queryParams
         },
-        `place_big.xlsx`
+        `大提煤单.xlsx`
       )
     },
     statusFormatter(row, column) {
