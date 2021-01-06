@@ -107,7 +107,7 @@
     <el-table v-loading="loading" :data="docList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" :selectable="checkboxInit"/>
       <el-table-column label="打印次数" align="center">
-        <template scope="scope">
+        <template slot-scope="scope">
           <span v-if="scope.row.inCardPrintState ==='0' || scope.row.inCardPrintState == null "
                 style="color:green">未打印</span>
           <span class="printSpan" v-else-if="scope.row.inCardPrintState !=='0'">{{ scope.row.inCardPrintState }}</span>
@@ -137,7 +137,7 @@
         align="center"
         class-name="small-padding fixed-width"
         fixed="right" width="140px">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
