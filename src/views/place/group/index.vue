@@ -71,21 +71,21 @@
     </el-row>
     <el-table v-loading="loading" :data="groupList">
       <!--<af-table-column type="selection" width="55" align="center"/>-->
-      <af-table-column label="ID" align="center" prop="id"/>
+      <el-table-column label="ID" align="center" prop="id" width="90px"/>
       <!--<af-table-column label="场所" align="center" prop="placeId"/>-->
-      <af-table-column label="组名" align="center" prop="groupName"/>
-      <af-table-column label="组编号" align="center" prop="groupCode"/>
-      <af-table-column label="成员" align="center" prop="userNames">
+      <el-table-column label="组名" align="center" prop="groupName" width="170px"/>
+      <el-table-column label="组编号" align="center" prop="groupCode" width="190px"/>
+      <el-table-column label="成员" align="center" prop="userNames">
         <template slot-scope="scope">
           {{ getUserNickName(scope.row.userNames) }}
         </template>
-      </af-table-column>
-      <af-table-column label="状态" align="center" prop="state">
+      </el-table-column>
+      <el-table-column label="状态" align="center" prop="state" width="80px">
         <template slot-scope="scope">
           {{ scope.row.state === '1' ? '正常' : '失效' }}
         </template>
-      </af-table-column>
-      <af-table-column label="备注" align="center" prop="remark"/>
+      </el-table-column>
+      <el-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" style="width:100px" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -126,7 +126,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="组编号" prop="groupCode">
-              <el-input v-model="form.groupCode" placeholder="请输入组编号"/>
+              <el-input v-model="form.groupCode" placeholder="请输入组编号" :disabled="form.id != undefined"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -384,15 +384,12 @@ export default {
         //系统已经自动加了，不用再加
         //this.userNames.push(user.userName)
       } else {
-        //val = true
-        //user.isChecked = true
-        this.userNames.push(user.userName)//不让删除
-        this.$message.warning('组内用户不能删除')
-
-        //如果是取消了，要删除，删除之前要判断，此用户是否在审批用户 里还有未审批的工作要作
-        //this.deleteItem(user.userName, this.userNames)
+        //this.userNames.push(user.userName)//不让删除
+        //this.$message.warning('组内用户不能删除')
+        //如果是取消了，要删除，删除之前要判断，此用户是否在审批用户 里还有未审批的工作要作 不判断了
+        this.deleteItem(user.userName, this.userNames)
       }
-      console.log(this.userNames)
+      //console.log(this.userNames)
       this.form.userNames = this.userNames.join(',')
     },
     deleteItem(item, list) {

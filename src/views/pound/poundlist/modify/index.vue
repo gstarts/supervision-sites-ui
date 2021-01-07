@@ -298,8 +298,8 @@
           <el-col :span="6" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
             车牌号:{{ selectModify.vehicleNo }}
           </el-col>
-          <el-col :span="3" :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
-          <el-col :span="10" :offset="0" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="6" :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
+          <el-col :span="7" :offset="0" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
             车牌号:{{ selectModify.modifyVehicleNo }}
           </el-col>
         </el-row>
@@ -307,8 +307,8 @@
           <el-col :span="6" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
             合同号:{{ selectModify.contractNo }}
           </el-col>
-          <el-col :span="3" :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
-          <el-col :span="10" :offset="0" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="6" :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
+          <el-col :span="7" :offset="0" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
             合同号:{{ selectModify.modifyContractNo }}
           </el-col>
         </el-row>
@@ -316,8 +316,8 @@
           <el-col :span="6" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
             提煤单号:{{ selectModify.coalBillNo }}
           </el-col>
-          <el-col :span="3" :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
-          <el-col :span="10" :offset="0" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="6" :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
+          <el-col :span="7" :offset="0" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
             提煤单号:{{ selectModify.modifyCoalBillNo }}
           </el-col>
         </el-row>

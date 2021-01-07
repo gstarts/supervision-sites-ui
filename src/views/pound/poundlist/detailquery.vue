@@ -404,10 +404,10 @@
         </el-row>
         <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold">
           <el-col :span="7" :offset="2">
-            收货单位:{{ selectPound.deliveryUnit }}
+            收货单位:{{ selectPound.receivingUnit }}
           </el-col>
           <el-col :span="5" :offset="1">
-            发货单位:{{ selectPound.receivingUnit }}
+            发货单位:{{ selectPound.deliveryUnit }}
           </el-col>
           <el-col :span="6" :offset="3">
             流向:{{ selectPound.flowDirection == 'E' ? '已完成' : '未完成' }}
@@ -441,7 +441,7 @@
         <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold"
                 v-show="selectPound.viaType === '02' && selectPound.flowDirection ==='I'">
           <el-col :span="24" :offset="2">
-            提煤单号:{{ selectPound.remark }}
+            提煤单号:{{ selectPound.coalBillNum }}
           </el-col>
         </el-row>
         <el-row :gutter="10">
@@ -490,28 +490,53 @@
           </el-col>
         </el-row>
         <!--外调车时，显示 可以改提煤单号-->
-        <el-row :gutter="10" v-show="selectPound.viaType === '02'">
-          <el-col :span="11">
-            <el-form-item label="提煤单号" prop="coalBillNo">
-              {{ poundModify.coalBillNo }}
-              <!--<el-input v-model="poundModify.coalBillNo" disabled></el-input>-->
-            </el-form-item>
-          </el-col>
-          <el-col :span="2" class="modifyTo">修改为</el-col>
-          <el-col :span="11">
-            <el-form-item label="提煤单号" prop="modifyCoalBillNo">
-              <el-select v-model="poundModify.modifyCoalBillNo" filterable placeholder="请选择提煤单号"
-                         :disabled="poundModify.modifyType!=='2'">
-                <el-option
-                  v-for="item in BigList"
-                  :key="item.coalBillNo"
-                  :label="item.coalBillNo"
-                  :value="item.coalBillNo">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <div v-show="selectPound.viaType === '02'">
+          <el-row :gutter="10">
+            <el-col :span="11">
+              <el-form-item label="寄仓客户" prop="deliveryUnit">
+                {{ selectPound.receivingUnit }}
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" class="modifyTo">修改为</el-col>
+            <el-col :span="11">
+              <!-- <el-input v-model="poundModify.modifyCoalBillNo" disabled></el-input>-->
+              <el-form-item label="寄仓客户" prop="modifyCheckCustomer">
+                <el-select v-model="poundModify.modifyCheckCustomer2" filterable placeholder="请选择寄仓客户"
+                           :disabled="poundModify.modifyType!=='2'"
+                           @change="customer2Change">
+                  <el-option
+                    v-for="item in customerList"
+                    :key="item.customerName"
+                    :label="item.customerName"
+                    :value="item.customerName">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="11">
+              <el-form-item label="提煤单号" prop="coalBillNo">
+                {{ poundModify.coalBillNo }}
+                <!--<el-input v-model="poundModify.coalBillNo" disabled></el-input>-->
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" class="modifyTo">修改为</el-col>
+            <el-col :span="11">
+              <el-form-item label="提煤单号" prop="modifyCoalBillNo">
+                <el-select v-model="poundModify.modifyCoalBillNo" filterable placeholder="请选择提煤单号"
+                           :disabled="poundModify.modifyType!=='2'">
+                  <el-option
+                    v-for="item in coalBillSubList"
+                    :key="item.coalBillNo"
+                    :label="item.coalBillNo"
+                    :value="item.coalBillNo">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
         <!--蒙煤车修改合同-->
         <div v-show="selectPound.viaType === '01'">
           <el-row :gutter="10">
@@ -691,10 +716,10 @@
         </el-form-item>
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="审批组" prop="auditGroup">
-              <el-select v-model="poundModify.auditGroup" filterable placeholder="请选择审批组" @change="groupChange">
+            <el-form-item label="审批组" prop="modifyGroup">
+              <el-select v-model="poundModify.modifyGroup" filterable placeholder="请选择审批组" @change="groupModifyChange">
                 <el-option
-                  v-for="item in auditGroupList"
+                  v-for="item in modifyGroupList"
                   :key="item.groupCode"
                   :label="item.groupName"
                   :value="item.groupCode">
@@ -706,7 +731,7 @@
             <el-form-item label="审批人" prop="auditUser">
               <el-select v-model="poundModify.auditUser" filterable placeholder="请选择审批人">
                 <el-option
-                  v-for="item in auditUserList"
+                  v-for="item in modifyUserList"
                   :key="item.userName"
                   :label="item.nickName"
                   :value="item.userName">
@@ -739,10 +764,10 @@
         </el-form-item>
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="审批组" prop="auditGroup">
-              <el-select v-model="poundModify.auditGroup" filterable placeholder="请选择审批组" @change="groupChange">
+            <el-form-item label="审批组" prop="printGroup">
+              <el-select v-model="poundModify.printGroup" filterable placeholder="请选择审批组" @change="groupPrintChange">
                 <el-option
-                  v-for="item in auditGroupList"
+                  v-for="item in printGroupList"
                   :key="item.groupCode"
                   :label="item.groupName"
                   :value="item.groupCode">
@@ -754,7 +779,7 @@
             <el-form-item label="审批人" prop="approvalUserName">
               <el-select v-model="form.approvalUserName" filterable placeholder="请选择审批人">
                 <el-option
-                  v-for="item in auditUserList"
+                  v-for="item in printUserList"
                   :key="item.userName"
                   :label="item.nickName"
                   :value="item.userName">
@@ -1062,8 +1087,8 @@ export default {
         applyFactor: '',
         placeId: '',
       },
-      auditGroupList: [],
-      auditUserList: [],
+      printGroupList: [],
+      printUserList: [],
       contractList: [],
       storeCodeList: [],
       modifyTypeDic: [
@@ -1075,6 +1100,9 @@ export default {
       transUnitList: [],
       customerList: [],
       contractSubList: [],
+      coalBillSubList: [],
+      modifyGroupList: [],
+      modifyUserList: [],
     }
   },
   computed: {
@@ -1109,15 +1137,12 @@ export default {
 
   },
   created() {
-    this.getUserList();
+
     this.depts = getUserDepts('0')
     if (this.depts.length > 0) {
       this.queryParams.stationId = this.depts[0].deptId
-      this.getList();
-      this.getGroupList()
-      this.getContractList()
-      this.getCoalBillList()
-      this.getTransportUnitInfo()
+      this.getUserList()
+
     }
     //煤种类型
     this.getDicts("coal_type").then(response => {
@@ -1163,7 +1188,7 @@ export default {
     printCancel() {
       this.printOpen = false;
       this.form = {};
-      this.poundModify.auditGroup = '';
+      //this.poundModify.auditGroup = '';
     },
     printSubmitForm: function () {
       this.$refs["form"].validate(valid => {
@@ -1276,6 +1301,7 @@ export default {
       this.poundModify.storeCode = this.selectPound.locationNumber //库位号
       this.poundModify.modifyStoreCode = this.selectPound.locationNumber //修改后的库位号
       this.poundModify.modifyCheckCustomer = this.selectPound.deliveryUnit
+      this.poundModify.modifyCheckCustomer2 = this.selectPound.receivingUnit
       /* console.log(this.poundModify)
        console.log("--------------")
        console.log(this.selectPound)*/
@@ -1284,7 +1310,7 @@ export default {
     //打印申请弹出框
     printApplication(row) {
       this.form = {};
-      this.poundModify.auditGroup = '';
+      //this.poundModify.auditGroup = '';
       this.printTitle = "磅单打印申请";
       this.printOpen = true;
       this.form.poundId = row.id;
@@ -1437,11 +1463,13 @@ export default {
     },
     //场所变化时，更新列表
     placeChange() {
-      this.handleQuery()
-      this.getCoalBillList()
-      this.getGroupList()
+      //this.handleQuery()
+      this.queryParams.pageNum = 1;
+      this.getUserList()
+      /*this.getCoalBillList()
+      this.getPrintGroupList()
       this.getContractList()
-      this.getTransportUnitInfo()
+      this.getTransportUnitInfo()*/
     },
     //翻译用户名
     parseUserName(user) {
@@ -1453,11 +1481,15 @@ export default {
       }
     },
     getUserList() {
-      listUser({'deptId': this.queryParams.stationId, 'delFlag': '0'}).then(response => {
+      listUser({'deptId': this.queryParams.stationId, 'delFlag': '0', 'userType': '00'}).then(response => {
         if (response.code === 200) {
           this.userList = response.rows
-          console.log("==============")
-          console.log(this.userList)
+          this.getList();
+          this.getContractList()
+          this.getCoalBillList()
+          this.getTransportUnitInfo()
+          this.getPrintGroupList()
+          this.getModifyGroupList()
         }
       });
     },
@@ -1470,7 +1502,6 @@ export default {
           sums[index] = '本页合计';
           return;
         }
-
         if (index === 6) {
           sums[index] = '车数:' + this.sheetList.length + '辆';
           return;
@@ -1488,29 +1519,75 @@ export default {
       sums[5] = sums[5] + '(KG)'
       return sums;
     },
-    getGroupList() {
-      listGroup({'placeId': this.queryParams.stationId, 'state': '1'}).then(response => {
+    //打印审批组
+    getPrintGroupList() {
+      listGroup({
+        'placeId': this.queryParams.stationId,
+        'state': '1',
+        'groupCode': 'poundPrintAuditGroup1'
+      }).then(response => {
+        //debugger
         if (response.code === 200) {
-          this.auditGroupList = response.rows
+          this.printGroupList = response.rows
+          if (this.printGroupList.length > 0) {
+            this.poundModify.printGroup = this.printGroupList[0].groupCode
+            console.log(this.printGroupList[0].groupCode)
+            this.groupPrintChange(this.printGroupList[0].groupCode)
+          }
+        }
+      })
+    },
+    //修改审批组
+    getModifyGroupList() {
+      listGroup({
+        'placeId': this.queryParams.stationId,
+        'state': '1',
+        'groupCode': 'poundModifyAuditGroup1'
+      }).then(response => {
+        //debugger
+        if (response.code === 200) {
+          this.modifyGroupList = response.rows
+          if (this.modifyGroupList.length > 0) {
+            this.poundModify.modifyGroup = this.modifyGroupList[0].groupCode
+            //console.log(this.modifyGroupList[0].groupCode)
+            this.groupModifyChange(this.modifyGroupList[0].groupCode)
+          }
         }
       })
     },
     //组变化时
-    groupChange(event) {
-      this.poundModify.auditUser = undefined
-      this.auditUserList = []
-      let group = this.auditGroupList.find(item => item.groupCode === event);
+    groupPrintChange(event) {
+      this.form.approvalUserName = undefined
+      this.printUserList = []
+      let group = this.printGroupList.find(item => item.groupCode === event);
       if (group) {
         let users = group.userNames.split(',')
         for (let name of users) {
-          this.auditUserList.push({
+          this.printUserList.push({
             'userName': name,
             'nickName': this.userList.find(item => item.userName === name).nickName
           })
         }
       }
-      if (this.auditUserList.length === 1) { //如果组里只有一个人时，即直接把审批人显示出来
-        this.form.approvalUserName = this.auditUserList[0].userName
+      if (this.printUserList.length === 1) { //如果组里只有一个人时，即直接把审批人显示出来
+        this.form.approvalUserName = this.printUserList[0].userName
+      }
+    },
+    groupModifyChange(event){
+      this.poundModify.auditUser = undefined
+      this.modifyUserList = []
+      let group = this.modifyGroupList.find(item => item.groupCode === event);
+      if (group) {
+        let users = group.userNames.split(',')
+        for (let name of users) {
+          this.modifyUserList.push({
+            'userName': name,
+            'nickName': this.userList.find(item => item.userName === name).nickName
+          })
+        }
+      }
+      if (this.modifyUserList.length === 1) { //如果组里只有一个人时，即直接把审批人显示出来
+        this.poundModify.auditUser = this.modifyUserList[0].userName
       }
     },
     //获取场所合同列表
@@ -1521,16 +1598,11 @@ export default {
           //合同对应的客户，就是本场所的客户列表
           this.customerList = []
           this.contractList.forEach((value, index) => {
-            //console.log(value)
-            //customerName
-            //
-            //debugger
             let customer = this.customerList.find(item => item.customerName === value.customerName)
             if (!customer) {
               this.customerList.push(value)
             }
           })
-          //console.log(this.customerList)
         }
       })
     },
@@ -1548,8 +1620,19 @@ export default {
       this.poundModify.modifyContractNo = undefined
       this.poundModify.modifyStoreCode = undefined
       //this.contractSubList = []
-      debugger
       this.contractSubList = this.contractList.filter(item => item.customerName === event)
+      /*let contract = this.contractSubList.find(item => item.customerName === event)
+      if (!contract) {
+        this.contractSubList.push(contract)
+      }*/
+    },
+    //寄仓客户变化时
+    customer2Change(event) {
+      this.poundModify.modifyCoalBillNo = undefined
+      //this.poundModify.modifyStoreCode = undefined
+      //this.contractSubList = []
+      // debugger
+      this.coalBillSubList = this.BigList.filter(item => item.customerName === event)
       /*let contract = this.contractSubList.find(item => item.customerName === event)
       if (!contract) {
         this.contractSubList.push(contract)

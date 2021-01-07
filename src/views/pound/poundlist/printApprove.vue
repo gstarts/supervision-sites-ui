@@ -404,7 +404,9 @@ export default {
         applyTime: undefined,
         approvalTime: undefined,
         revision: undefined,
-        placeId: undefined
+        placeId: undefined,
+        orderByColumn: 'apply_time',
+        isAsc: 'desc',
       },
       // 表单参数
       form: {
@@ -475,15 +477,14 @@ export default {
     }
     this.getList()
     this.getUserList()
-    this.getGroupList()
+
   },
   methods: {
     getUserList() {
-      listUser({'deptId': this.queryParams.placeId, 'delFlag': '0'}).then(response => {
+      listUser({'deptId': this.queryParams.placeId, 'delFlag': '0', 'userType': '00'}).then(response => {
         if (response.code === 200) {
           this.userList = response.rows
-          //console.log("==============")
-          //console.log(this.userList)
+          this.getGroupList()
         }
       });
     },
@@ -528,9 +529,12 @@ export default {
         updateBy: undefined,
         updateTime: undefined,
         remark: undefined,
-        revision: undefined
-      };
+        revision: undefined,
+      }
       this.resetForm("form");
+      if (this.auditUserList.length === 1) { //如果组里只有一个人时，即直接把审批人显示出来
+        this.form.approveUser2 = this.auditUserList[0].userName
+      }
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -550,13 +554,16 @@ export default {
     },
     /** 审批按钮操作 */
     handleUpdate(row) {
-      this.reset();
+      //this.reset();
       // const id = row.id || this.ids
       // getPrint(id).then(response => {
       //   this.form = response.data;
       // });
       this.form = {...row}
       this.approve1Status = row.applyStatus //1审状态保存起来
+      if (this.auditUserList.length === 1) { //如果组里只有一个人时，即直接把审批人显示出来
+        this.form.approveUser2 = this.auditUserList[0].userName
+      }
       //磅单ID
       /* this.form.poundId = row.poundId
        //申请人
@@ -654,9 +661,17 @@ export default {
       this.getUserList()//更新用户列表
     },
     getGroupList() {
-      listGroup({'placeId': this.queryParams.placeId, 'state': '1'}).then(response => {
+      listGroup({
+        'placeId': this.queryParams.placeId,
+        'state': '1',
+        'groupCode': 'poundPrintAuditGroup2'
+      }).then(response => {
         if (response.code === 200) {
           this.auditGroupList = response.rows
+          if (this.auditGroupList.length > 0) {
+            this.auditGroup = this.auditGroupList[0].groupCode
+            this.groupChange(this.auditGroup)
+          }
         }
       })
     },

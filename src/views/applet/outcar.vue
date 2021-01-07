@@ -25,7 +25,6 @@
           placeholder="请输入车牌号"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="打印状态" prop="inCardPrintState">
