@@ -173,6 +173,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="品名" prop="goodsName">
+              <el-input v-model="form.contractNo" style="display: none" />
               <el-select v-model="form.goodsName" placeholder="请选择煤种" @change="((val)=>{change(val, 'coalType')})"
                          :disabled="formUpdateMode">
                 <el-option
@@ -325,6 +326,7 @@ export default {
       // 表单参数
       form: {
         checkConsumer: undefined,
+        contractNo: undefined,
       },
       // 煤种
       coalTypeOptions: [],
@@ -685,6 +687,9 @@ export default {
         this.contractOptions.forEach(element => {
           if (element.goodsName === val) {
             this.weightParams.coalType = val
+            //获取合同号
+            this.form.contractNo = element.contractNo
+
           }
         })
       }
