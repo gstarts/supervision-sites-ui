@@ -116,7 +116,7 @@ export function getSheetById(id) {
 //redis获取实时地磅重量
 export function poundSelect(event) {
   return request({
-    url: '/pound/poundInfo/getWeight/' + event,
+    url: '/tax/poundInfo/getWeight/' + event,
     method: 'get',
   })
 }

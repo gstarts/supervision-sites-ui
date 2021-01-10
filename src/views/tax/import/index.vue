@@ -114,11 +114,11 @@
       <af-table-column label="结算客户" align="center" prop="settlementCustomer"/>
       <af-table-column label="发货单位" align="center" prop="sendName"/>
       <af-table-column label="收货单位" align="center" prop="receiveName"/>
-      <af-table-column label="运输方式" align="center" prop="transportMode">
-        <template slot-scope="scope">
-          {{ (scope.row.transportMode && scope.row.transportMode === '2') ? '短倒' : '长途' }}
-        </template>
-      </af-table-column>
+      <!--      <af-table-column label="运输方式" align="center" prop="transportMode">
+              <template slot-scope="scope">
+                {{ (scope.row.transportMode && scope.row.transportMode === '2') ? '上站' : '长途' }}
+              </template>
+            </af-table-column>-->
       <af-table-column label="文件路径" align="center" prop="path"/>
       <af-table-column label="文件名" align="center" prop="fileName"/>
       <!--<af-table-column label="是否生成报关数据" align="center" prop="isGenReport"/>
@@ -247,7 +247,7 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="模板类型" prop="templateType">
-              <el-select v-model="form.templateType" placeholder="请选择模板类型" @change="templateChange">
+              <el-select v-model="form.templateType" size="small" style="width: 100%" placeholder="请选择模板类型" @change="templateChange">
                 <el-option
                   v-for="type in importTypeDic"
                   :key="type.value"
@@ -260,8 +260,8 @@
           <el-col :span="12">
             <el-form-item label="业务编号" prop="businessNo" v-show="noticeType">
               <el-input v-model="form.businessNo" placeholder="请输入业务编号"
-                        clearable
-                        size="small">
+                        clearable size="small" style="width: 100%"
+                        @keyup.enter.native="getInstoreDocByBusinessNo">
               </el-input>
             </el-form-item>
           </el-col>
@@ -270,7 +270,7 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="寄仓客户" prop="storeCustomer" v-show="noticeType">
-              <el-select v-model="form.storeCustomer" placeholder="请选择寄仓客户" @change="setStoreCustomer">
+              <el-select v-model="form.storeCustomer" size="small" style="width: 100%" filterable clearable placeholder="请选择寄仓客户" @change="setStoreCustomer">
                 <el-option
                   v-for="type in contractList"
                   :key="type.id"
@@ -282,7 +282,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="结算客户" prop="settlementCustomer" v-show="noticeType">
-              <el-select v-model="form.settlementCustomer" placeholder="请选择结算客户" @change="setSettlementCustomer">
+              <el-select v-model="form.settlementCustomer" size="small" style="width: 100%" filterable clearable placeholder="请选择结算客户" @change="setSettlementCustomer">
                 <el-option
                   v-for="type in contractList"
                   :key="type.id"
@@ -296,33 +296,49 @@
         <el-row :gutter="10" v-show="noticeType">
           <el-col :span="12">
             <el-form-item label="发货单位" prop="sendName">
-              <el-autocomplete
+              <el-select v-model="form.sendName" size="small" style="width: 100%" filterable clearable placeholder="请选择发货单位">
+                <el-option
+                  v-for="type in nameList"
+                  :key="type.value"
+                  :label="type.value"
+                  :value="type.value"
+                />
+              </el-select>
+<!--              <el-autocomplete size="small" style="width: 100%"
                 class="inline-input"
                 v-model="form.sendName"
                 :fetch-suggestions="nameSearch"
                 placeholder="请输入发货单位"
                 @select="handleSelect"
                 clearable
-              ></el-autocomplete>
+              ></el-autocomplete>-->
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="收货单位" prop="receiveName">
-              <el-autocomplete
+              <el-select v-model="form.receiveName" size="small" style="width: 100%" filterable clearable placeholder="请选择发货单位">
+                <el-option
+                  v-for="type in nameList"
+                  :key="type.value"
+                  :label="type.value"
+                  :value="type.value"
+                />
+              </el-select>
+<!--              <el-autocomplete size="small" style="width: 100%"
                 class="inline-input"
                 v-model="form.receiveName"
                 :fetch-suggestions="nameSearch"
                 placeholder="请输入收货单位"
                 clearable
                 @select="handleSelect2"
-              ></el-autocomplete>
+              ></el-autocomplete>-->
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="10" v-show="transType">
           <el-col :span="12">
             <el-form-item label="运输方式" prop="transportMode">
-              <el-select v-model="form.transportMode" placeholder="请选择寄仓客户">
+              <el-select v-model="form.transportMode" placeholder="请选择运输方式" size="small" style="width: 100%">
                 <el-option
                   v-for="type in transportModeList"
                   :key="type.key"
@@ -378,6 +394,7 @@ import {listImport, getImport, delImport, customsDel, addImport, genNotice} from
 import {getUserDepts} from '@/utils/charutils'
 import {listContract} from '@/api/tax/contract'
 import {getToken} from '@/utils/auth'
+import {getCustomerByBusinessNo} from "@/api/tax/instore_doc";
 
 export default {
   name: "Import",
@@ -513,7 +530,10 @@ export default {
         ],
         transportMode: [
           {type: "string", required: true, message: "运输方式不能为空", trigger: "change"}
-        ]
+        ],
+        businessNo: [
+          {type: "string", required: true, message: "业务编号不能为空", trigger: "change"}
+        ],
       },
       uploadAction: process.env.VUE_APP_BASE_API + '/minio/files/tax/upload',
       uploadData: {},
@@ -528,7 +548,7 @@ export default {
       fileList: [],
       transportModeList: [
         {'key': '1', 'value': '长途'},
-        {'key': '2', 'value': '短倒'},
+        {'key': '2', 'value': '上站'},
       ]
     };
   },
@@ -801,38 +821,54 @@ export default {
       });
     },
     setStoreCustomer() {
-      this.form.storeContractId = this.contractList.find(item => item.customerName === this.form.storeCustomer).id
-      console.log(this.form)
+      let customer = this.contractList.find(item => item.customerName === this.form.storeCustomer)
+      if (customer) {
+        this.form.storeContractId = customer.id
+      }
+
     },
     setSettlementCustomer() {
-      this.form.settlementContractId = this.contractList.find(item => item.customerName === this.form.settlementCustomer).id
-      console.log(this.form)
+      let customer = this.contractList.find(item => item.customerName === this.form.settlementCustomer)
+      if (customer) {
+        this.form.settlementContractId = customer.id
+      }
     },
     templateChange() {
       console.log(this.form.templateType)
-      if (this.form.templateType === '1') {
+      if (this.form.templateType === '1') { //入库通知单
         this.rules = this.rules1
         this.noticeType = true
         this.transType = false
         this.templateDownTxt = '入库通知单模板下载'
+        this.form.settlementCustomer = '奥云陶勒盖 Oyu Tolgaoi Limited'
+        this.form.sendName = '奥云陶勒盖 Oyu Tolgoi Limited'
+        this.form.receiveName = '金航保税库 Jinhang Bonded Warehouse'
+        this.setStoreCustomer() //寄仓合同ID
+        this.setSettlementCustomer() //设置结算客户id
       } else if (this.form.templateType === '0') {
         this.rules = this.rules3
         this.noticeType = true
         this.transType = true
+        this.form.storeCustomer = undefined
+        this.form.settlementCustomer = undefined
         this.templateDownTxt = '出库通知单模板下载'
+        this.form.receiveName = undefined
+        this.form.sendName = '金航保税库'
       } else if (this.form.templateType === '2') {
         this.templateDownTxt = '报关数据单模板下载'
-        this.form.businessNo = ''
-        this.form.settlementCustomer = ''
-        this.form.storeCustomer = ''
-        this.form.storeContractId = ''
-        this.form.settlementContractId = ''
+        this.form.businessNo = undefined
+        this.form.settlementCustomer = undefined
+        this.form.storeCustomer = undefined
+        this.form.storeContractId = undefined
+        this.form.settlementContractId = undefined
         this.rules = this.rules2
-        this.form.sendName = ''
-        this.form.receiveName = ''
+        this.form.sendName = undefined
+        this.form.receiveName = undefined
         this.noticeType = false
         this.transType = false
       }
+
+      console.log(this.form)
     },
     // 收发货单位建议
     nameSearch(queryString, cb) {
@@ -868,6 +904,24 @@ export default {
       }
       window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=tax&objectName=' + objectName
     },
+    getInstoreDocByBusinessNo() {
+      console.log(this.form.businessNo)
+      //如果是出库单时，在业务编号中，回车
+      if (this.form.templateType === '0' && this.form.businessNo) {
+        //用业务编号，从出库单中获取寄仓客户和 结算客户 的数据
+        getCustomerByBusinessNo(this.queryParams.placeId, this.form.businessNo).then(response => {
+          if (response.code === 200) {
+            this.form.storeCustomer = response.data
+            this.form.settlementCustomer = response.data
+            this.setStoreCustomer()
+            this.setSettlementCustomer()
+          } else {
+            this.$message.warning(response.msg)
+            return false
+          }
+        })
+      }
+    }
   }
 }
 </script>
