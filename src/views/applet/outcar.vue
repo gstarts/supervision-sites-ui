@@ -248,8 +248,6 @@ export default {
         if (response.code === 200) {
           this.docList = response.rows
           this.total = response.total
-        } else {
-          this.$message.warning(response.msg)
         }
       })
     },
