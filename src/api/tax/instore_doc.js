@@ -43,9 +43,9 @@ export function delInstore_doc(id) {
   })
 }
 
-export function getCustomerByBusinessNo(placeId, businessNo) {
+export function getDocByBusinessNo(placeId, businessNo) {
   return request({
-    url: '/tax/instore_doc/getCustomerByBusinessNo/' + placeId + '/' + businessNo,
+    url: '/tax/instore_doc/businessNo/' + placeId + '/' + businessNo,
     method: 'post',
   })
 }

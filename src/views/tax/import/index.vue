@@ -176,13 +176,21 @@
                      v-hasPermi="['tax:customs:remove']"
           >删除报关数据
           </el-button>
+          <el-button v-show="scope.row.templateType === '1' && scope.row.isGenStoreNotice === 1 "
+                     size="mini"
+                     type="text"
+                     icon="el-icon-delete"
+                     @click="handleDeleteInstoreData(scope.row)"
+                     v-hasPermi="['tax:import:remove']"
+          >删除入库通知单数据及文件
+          </el-button>
           <el-button v-show="scope.row.isGenReport ===0 && scope.row.isGenStoreNotice ===0"
                      size="mini"
                      type="text"
                      icon="el-icon-delete"
                      @click="handleDelete(scope.row)"
                      v-hasPermi="['tax:import:remove']"
-          >删除
+          >删除文件
           </el-button>
         </template>
       </af-table-column>
@@ -247,7 +255,8 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="模板类型" prop="templateType">
-              <el-select v-model="form.templateType" size="small" style="width: 100%" placeholder="请选择模板类型" @change="templateChange">
+              <el-select v-model="form.templateType" size="small" style="width: 100%" placeholder="请选择模板类型"
+                         @change="templateChange">
                 <el-option
                   v-for="type in importTypeDic"
                   :key="type.value"
@@ -270,7 +279,8 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="寄仓客户" prop="storeCustomer" v-show="noticeType">
-              <el-select v-model="form.storeCustomer" size="small" style="width: 100%" filterable clearable placeholder="请选择寄仓客户" @change="setStoreCustomer">
+              <el-select v-model="form.storeCustomer" size="small" style="width: 100%" filterable clearable
+                         placeholder="请选择寄仓客户" @change="setStoreCustomer">
                 <el-option
                   v-for="type in contractList"
                   :key="type.id"
@@ -282,7 +292,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="结算客户" prop="settlementCustomer" v-show="noticeType">
-              <el-select v-model="form.settlementCustomer" size="small" style="width: 100%" filterable clearable placeholder="请选择结算客户" @change="setSettlementCustomer">
+              <el-select v-model="form.settlementCustomer" size="small" style="width: 100%" filterable clearable
+                         placeholder="请选择结算客户" @change="setSettlementCustomer">
                 <el-option
                   v-for="type in contractList"
                   :key="type.id"
@@ -296,7 +307,8 @@
         <el-row :gutter="10" v-show="noticeType">
           <el-col :span="12">
             <el-form-item label="发货单位" prop="sendName">
-              <el-select v-model="form.sendName" size="small" style="width: 100%" filterable clearable placeholder="请选择发货单位">
+              <el-select v-model="form.sendName" size="small" style="width: 100%" filterable clearable
+                         placeholder="请选择发货单位">
                 <el-option
                   v-for="type in nameList"
                   :key="type.value"
@@ -304,19 +316,20 @@
                   :value="type.value"
                 />
               </el-select>
-<!--              <el-autocomplete size="small" style="width: 100%"
-                class="inline-input"
-                v-model="form.sendName"
-                :fetch-suggestions="nameSearch"
-                placeholder="请输入发货单位"
-                @select="handleSelect"
-                clearable
-              ></el-autocomplete>-->
+              <!--              <el-autocomplete size="small" style="width: 100%"
+                              class="inline-input"
+                              v-model="form.sendName"
+                              :fetch-suggestions="nameSearch"
+                              placeholder="请输入发货单位"
+                              @select="handleSelect"
+                              clearable
+                            ></el-autocomplete>-->
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="收货单位" prop="receiveName">
-              <el-select v-model="form.receiveName" size="small" style="width: 100%" filterable clearable placeholder="请选择发货单位">
+              <el-select v-model="form.receiveName" size="small" style="width: 100%" filterable clearable
+                         placeholder="请选择发货单位">
                 <el-option
                   v-for="type in nameList"
                   :key="type.value"
@@ -324,14 +337,14 @@
                   :value="type.value"
                 />
               </el-select>
-<!--              <el-autocomplete size="small" style="width: 100%"
-                class="inline-input"
-                v-model="form.receiveName"
-                :fetch-suggestions="nameSearch"
-                placeholder="请输入收货单位"
-                clearable
-                @select="handleSelect2"
-              ></el-autocomplete>-->
+              <!--              <el-autocomplete size="small" style="width: 100%"
+                              class="inline-input"
+                              v-model="form.receiveName"
+                              :fetch-suggestions="nameSearch"
+                              placeholder="请输入收货单位"
+                              clearable
+                              @select="handleSelect2"
+                            ></el-autocomplete>-->
             </el-form-item>
           </el-col>
         </el-row>
@@ -390,11 +403,19 @@
 </template>
 
 <script>
-import {listImport, getImport, delImport, customsDel, addImport, genNotice} from "@/api/tax/import";
+import {
+  listImport,
+  getImport,
+  delImport,
+  customsDel,
+  addImport,
+  genNotice,
+  delInstoreDataAndFile
+} from "@/api/tax/import";
 import {getUserDepts} from '@/utils/charutils'
 import {listContract} from '@/api/tax/contract'
 import {getToken} from '@/utils/auth'
-import {getCustomerByBusinessNo} from "@/api/tax/instore_doc";
+import {getDocByBusinessNo} from "@/api/tax/instore_doc";
 
 export default {
   name: "Import",
@@ -904,24 +925,37 @@ export default {
       }
       window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=tax&objectName=' + objectName
     },
+    //通过业务编号获取入库单信息
     getInstoreDocByBusinessNo() {
       console.log(this.form.businessNo)
       //如果是出库单时，在业务编号中，回车
       if (this.form.templateType === '0' && this.form.businessNo) {
         //用业务编号，从出库单中获取寄仓客户和 结算客户 的数据
-        getCustomerByBusinessNo(this.queryParams.placeId, this.form.businessNo).then(response => {
+        getDocByBusinessNo(this.queryParams.placeId, this.form.businessNo).then(response => {
           if (response.code === 200) {
-            this.form.storeCustomer = response.data
-            this.form.settlementCustomer = response.data
+            this.form.storeCustomer = response.data.checkConsumer
+            this.form.settlementCustomer = response.data.checkConsumer
             this.setStoreCustomer()
             this.setSettlementCustomer()
-          } else {
-            this.$message.warning(response.msg)
-            return false
           }
         })
       }
-    }
+    },
+    /** 删除按钮操作 */
+    handleDeleteInstoreData(row) {
+      const ids = row.id || this.ids;
+      this.$confirm('是否确认删除业务编号为"' + row.businessNo + '"的入库通知单数据及文件?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return delInstoreDataAndFile(row);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      }).catch(function () {
+      });
+    },
   }
 }
 </script>

@@ -552,7 +552,7 @@
           //this.result = response
           if (response.code === 200) {
             this.reportList = response.data.list
-            if (this.reportList.length==0) {
+            if (this.reportList.length === 0) {
               this.$message.warning("没取到数据，请从新选取时间间隔")
             }
             //console.log(this.reportList)

@@ -59,9 +59,18 @@ export function downloadFile(bucketName, fileName) {
 	})
 }
 
+//生成通知单数据
 export function genNotice(id) {
  return request({
 	 url: '/tax/import/genNotice/'+id,
 	 method: 'post'
  })
+}
+
+export function delInstoreDataAndFile(data) {
+  return request({
+    url: '/tax/import/delInstoreData',
+    method: 'post',
+    data: data,
+  })
 }
