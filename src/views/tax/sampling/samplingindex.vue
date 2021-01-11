@@ -40,7 +40,6 @@
             placeholder="请输入单据号"
             clearable
             size="small"
-            @keyup.enter.native="handleQuery"
           />
         </el-form-item>
         <el-form-item label="LotNo" prop="lotNo">
@@ -69,13 +68,13 @@
                           placeholder="选择入境日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="业务编号" prop="businessNumber">
+        <el-form-item label="业务编号" prop="businessNumber" >
           <el-input
             v-model="queryParams.businessNumber"
             placeholder="请输入业务编号"
             clearable
             size="small"
-            @keyup.enter.native="handleQuery"
+            @keyup.enter.native="SelectbusinessNumber"
           />
         </el-form-item>
         <el-form-item label="取样日期" prop="samplingTime">
@@ -234,6 +233,7 @@ import {listLord, getLord, delLord, addLord, updateLord, LotNoList, InsertListLo
 import Vue from 'vue'
 import {formatDate} from "@/utils";
 import {getUserDepts} from "@/utils/charutils";
+import {getDocByBusinessNo} from "@/api/tax/instore_doc";
 export default {
   name: "Lord",
   data() {
@@ -434,6 +434,8 @@ export default {
     handleAdd() {
       // this.open = true;
       // this.title = "添加取样管理 主";
+      this.$refs["queryParams"].validate(valid => {
+        if (valid) {
       addLord(this.queryParams).then(response => {
         if (response.code === 200) {
           this.LotNoDisabled=false;
@@ -444,6 +446,8 @@ export default {
           this.open = false;
           this.getList();
 
+        }
+      });
         }
       });
       // this.reset();
@@ -560,6 +564,15 @@ export default {
           this.indexList();
           this.bodyUpdate=true;
         }
+      })
+    },
+    SelectbusinessNumber(){
+      getDocByBusinessNo(this.queryParams.placeId, this.queryParams.businessNumber).then(response => {
+      console.log("贾冬晴宝宝")
+      console.log(response)
+      this.queryParams.client=response.data.checkConsumer;
+      this.queryParams.entryTime=response.data.createTime;
+      this.queryParams.lotNo=response.data.batchNo;
       })
     }
   }
