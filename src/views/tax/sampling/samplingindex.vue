@@ -24,6 +24,16 @@
     </el-row>
     <el-card class="mb5">
       <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="95px" :rules="rules">
+        <el-form-item label="场站ID" prop="placeId">
+          <el-select v-model="queryParams.placeId" placeholder="请选择场所">
+            <el-option
+              v-for="dept in depts"
+              :key="dept.deptId"
+              :label="dept.deptName"
+              :value="dept.deptId"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="单据号" prop="documentNo">
           <el-input
             v-model="queryParams.documentNo"
@@ -116,23 +126,23 @@
 <!--            <el-option label="请选择字典生成" value="" />-->
 <!--          </el-select>-->
 <!--        </el-form-item>-->
-        <el-form-item label="制单人" prop="makerPeople">
-          <el-input
-            v-model="queryParams.makerPeople"
-            placeholder="请输入制单人"
-            clearable
-            size="small"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item label="制单日期" prop="makerTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="queryParams.makerTime"
-                          type="datetime"
-                          value-format="yyyy-MM-dd HH:mm:ss"
-                          placeholder="选择制单日期">
-          </el-date-picker>
-        </el-form-item>
+<!--        <el-form-item label="制单人" prop="makerPeople">-->
+<!--          <el-input-->
+<!--            v-model="queryParams.makerPeople"-->
+<!--            placeholder="请输入制单人"-->
+<!--            clearable-->
+<!--            size="small"-->
+<!--            @keyup.enter.native="handleQuery"-->
+<!--          />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="制单日期" prop="makerTime">-->
+<!--          <el-date-picker clearable size="small" style="width: 200px"-->
+<!--                          v-model="queryParams.makerTime"-->
+<!--                          type="datetime"-->
+<!--                          value-format="yyyy-MM-dd HH:mm:ss"-->
+<!--                          placeholder="选择制单日期">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
         <!--      <el-form-item>-->
         <!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
         <!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
@@ -222,6 +232,8 @@
 <script>
 import {listLord, getLord, delLord, addLord, updateLord, LotNoList, InsertListLotNo,listBody,updateBody} from "@/api/tax/sampling/lord";
 import Vue from 'vue'
+import {formatDate} from "@/utils";
+import {getUserDepts} from "@/utils/charutils";
 export default {
   name: "Lord",
   data() {
@@ -265,7 +277,7 @@ export default {
         client: undefined,
         entryTime: undefined,
         businessNumber: undefined,
-        samplingTime: undefined,
+        samplingTime: formatDate(new Date(),"yyyy-MM-dd hh:mm"),
         samplingUnit: undefined,
         samplingPeople: undefined,
         samplingWeight: undefined,
@@ -273,6 +285,7 @@ export default {
         documentsStatus: undefined,
         makerPeople: undefined,
         makerTime: undefined,
+        placeId:undefined,
       },
       bodyQueryParams: {
         pageNum: 1,
@@ -320,6 +333,10 @@ export default {
     };
   },
   created() {
+    this.depts = getUserDepts('1')
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+    }
     // this.getList();
     const  id =this.$route.query.id
     this.taxSamplingLordId=id;
@@ -334,8 +351,11 @@ export default {
         this.single=single;
         this.LotNoDisabled=LotNoDisabled;
       })
+
       this.indexList()
     }
+    console.log("-===========")
+    console.log(this.queryParams.samplingTime);
   },
   methods: {
     /** 查询取样管理 主列表 */
