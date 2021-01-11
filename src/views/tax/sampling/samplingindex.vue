@@ -95,13 +95,21 @@
           />
         </el-form-item>
         <el-form-item label="取样人" prop="samplingPeople">
-          <el-input
-            v-model="queryParams.samplingPeople"
-            placeholder="请输入取样人"
-            clearable
-            size="small"
-            @keyup.enter.native="handleQuery"
-          />
+<!--          <el-input-->
+<!--            v-model="queryParams.samplingPeople"-->
+<!--            placeholder="请输入取样人"-->
+<!--            clearable-->
+<!--            size="small"-->
+<!--            @keyup.enter.native="handleQuery"-->
+<!--          />-->
+          <el-select v-model="queryParams.samplingPeople" placeholder="请选择取样人">
+            <el-option
+              v-for="user in userList"
+              :key="user.userId"
+              :label="user.nickName"
+              :value="user.userId"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="取样总重量" prop="samplingWeight">
           <el-input
@@ -234,10 +242,15 @@ import Vue from 'vue'
 import {formatDate} from "@/utils";
 import {getUserDepts} from "@/utils/charutils";
 import {getDocByBusinessNo} from "@/api/tax/instore_doc";
+import {listUser} from "@/api/system/user";
 export default {
   name: "Lord",
   data() {
     return {
+      //用户名 全部
+      userList:[],
+      //用户
+      auditUserList:[],
       //按钮状态
       flag:false,
       //关联查询
@@ -336,6 +349,7 @@ export default {
     this.depts = getUserDepts('1')
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId
+      this.getUserList();
     }
     // this.getList();
     const  id =this.$route.query.id
@@ -351,13 +365,20 @@ export default {
         this.single=single;
         this.LotNoDisabled=LotNoDisabled;
       })
-
       this.indexList()
     }
-    console.log("-===========")
-    console.log(this.queryParams.samplingTime);
   },
   methods: {
+    getUserList() {
+      listUser({'deptId': this.queryParams.placeId, 'delFlag': '0'}).then(response => {
+        if (response.code === 200) {
+          this.userList = response.rows
+          console.log("贾冬晴 宝贝")
+          console.log(this.userList)
+        }
+      });
+    },
+
     /** 查询取样管理 主列表 */
     getList() {
       this.loading = true;
@@ -568,8 +589,6 @@ export default {
     },
     SelectbusinessNumber(){
       getDocByBusinessNo(this.queryParams.placeId, this.queryParams.businessNumber).then(response => {
-      console.log("贾冬晴宝宝")
-      console.log(response)
       this.queryParams.client=response.data.checkConsumer;
       this.queryParams.entryTime=response.data.createTime;
       this.queryParams.lotNo=response.data.batchNo;
