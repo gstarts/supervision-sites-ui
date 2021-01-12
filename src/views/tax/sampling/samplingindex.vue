@@ -22,6 +22,7 @@
         >修改</el-button>
       </el-col>
     </el-row>
+    <span style="color: red;font-size: 10px">注:请输入正确的业务编号后按回车键联想相应数据!!!!</span>
     <el-card class="mb5">
       <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="95px" :rules="rules">
         <el-form-item label="场站ID" prop="placeId">
