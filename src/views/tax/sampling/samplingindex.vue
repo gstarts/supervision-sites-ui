@@ -248,8 +248,6 @@ export default {
   name: "Lord",
   data() {
     return {
-      //单据号
-      DocumentNo:0,
       //用户名 全部
       userList:[],
       //用户
