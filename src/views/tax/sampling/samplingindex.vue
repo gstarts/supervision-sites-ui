@@ -373,8 +373,6 @@ export default {
       listUser({'deptId': this.queryParams.placeId, 'delFlag': '0'}).then(response => {
         if (response.code === 200) {
           this.userList = response.rows
-          console.log("贾冬晴 宝贝")
-          console.log(this.userList)
         }
       });
     },
