@@ -248,6 +248,8 @@ export default {
   name: "Lord",
   data() {
     return {
+      //单据号
+      DocumentNo:0,
       //用户名 全部
       userList:[],
       //用户
@@ -318,9 +320,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        documentNo:[
-          { required: true, message: '单据号不可为空', trigger: 'blur' },
-        ],
+        // documentNo:[
+        //   { required: true, message: '单据号不可为空', trigger: 'blur' },
+        // ],
         client:[
           { required: true, message: '客户不可为空', trigger: 'blur' },
         ],
@@ -465,7 +467,6 @@ export default {
           this.taxSamplingLordId=response.data.id
           this.open = false;
           this.getList();
-
         }
       });
         }
