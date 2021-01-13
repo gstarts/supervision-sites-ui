@@ -52,7 +52,13 @@ service.interceptors.response.use(res => {
         type: 'error'
       })
       return Promise.reject(new Error(message))
-    } else if (code !== 200 && code !== 240) {
+    } else if (code === 240) {
+      Message({
+        message: message,
+        type: 'warning'
+      })
+      return res.data
+    } else if (code !== 200) {
       Notification.error({
         title: message
       })

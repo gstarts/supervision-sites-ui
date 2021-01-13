@@ -160,12 +160,20 @@
 
       </el-row>
     </el-form>
-
-
     <el-table v-loading="loading" :data="reportList"  :border="true">
-      <el-table-column label="寄仓客户" align="center" prop="column1"/>
+      <el-table-column label="客户" align="center" prop="column1" />
       <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
-<!--      <el-table-column label="合同" align="center" prop="column2"></el-table-column>-->
+      <el-table-column label="合同" align="center" prop="column2" />
+      <el-table-column label="总入库量" align="center" prop="column7">
+        <template slot-scope="scope">
+          <span>{{ (scope.row.column7/1000).toFixed(2)}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="可申请放行量" align="center" prop="column8">
+        <template slot-scope="scope">
+          <span>{{ (scope.row.column8/1000).toFixed(2)}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="放行单总量" align="center" prop="column6">
         <template slot-scope="scope">
           <span>{{ (scope.row.column6/1000).toFixed(2)}}</span>
@@ -216,6 +224,16 @@
               <af-table-column label="寄仓客户" align="center" prop="column1"/>
               <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
               <af-table-column label="合同" align="center" prop="column2"></af-table-column>
+              <el-table-column label="总入库量" align="center" prop="column7">
+                <template slot-scope="scope">
+                  <span>{{ (scope.row.column7/1000).toFixed(2)}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="可申请放行量" align="center" prop="column8">
+                <template slot-scope="scope">
+                  <span>{{ (scope.row.column8/1000).toFixed(2)}}</span>
+                </template>
+              </el-table-column>
               <af-table-column label="放行单总量" align="center" prop="column6">
                 <template slot-scope="scope">
                   <span>{{ (scope.row.column6/1000).toFixed(2)}}</span>
@@ -282,6 +300,18 @@
         json_fields: {
           "寄仓客户": "column1",    //常规字段
           "合同": "column2", //支持嵌套属性
+          "总入库量": {
+            field: "column7",
+            callback: (value) => {
+              return value = (value / 1000).toFixed(2)
+            }
+          },
+          "可申请放行量": {
+            field: "column8",
+            callback: (value) => {
+              return value = (value / 1000).toFixed(2)
+            }
+          },
           "放行单总量": {
             field: "column6",
             callback: (value) => {
@@ -366,10 +396,10 @@
     },
     created() {
       //初始化数据
-      this.getInfo()
+      //this.getInfo()
       // this.titleList.push(this.prinTtitle);
       // 页面初始化获取时间0
-      this.dateRange = ['', '']
+      //this.dateRange = ['', '']
       // var aData = new Date();
       // this.nowDate =
       //   aData.getFullYear() +
@@ -386,10 +416,10 @@
       //   (aData.getDate()+1)+' '+'06:00:00';
       // this.dateRange[1] = this.nextDate;
       // this.dateRange[0]至{{this.dateRange[1]}}
-      this.queryParams.startTime = this.dateRange[0]
+      //this.queryParams.startTime = this.dateRange[0]
 
-      this.queryParams.endTime = this.dateRange[1]
-      this.timeTitle = this.dateRange[0] + '至' + this.dateRange[1] + '按客户统计'
+      //this.queryParams.endTime = this.dateRange[1]
+      //this.timeTitle = this.dateRange[0] + '至' + this.dateRange[1] + '按客户统计'
       // this.titleList.push(this.timeTitle)
       // this.titleList.push(this.shipper);
       // 0 监管场所，1保税库，2堆场，3企业
@@ -547,9 +577,11 @@
       //场所改变时，去查对应场所的
       changePlace(event) {
         this.getContract(event, '1')
+
       },
       // //场所变化 获取对应场所的合同
       getContract(placeId, status) {
+        this.loading = true
         //查找合同
         listStoreContract({'placeId': placeId, 'status': status}).then(response => {
           if (response.code === 200) {
@@ -560,12 +592,13 @@
               //重新给客户列表 赋值
               this.customerList = []
               for (let contract of this.contractList) {
-                if (!this.customerList.find(cus => cus.customerId === contract.customerId)) {
+                if (!this.customerList.find(cus => cus.customerName === contract.customerName)) {
                   this.customerList.push(contract)
                 }
               }
             }
           }
+          this.getInfo()
         });
       },
       /** 导出按钮操作 */
