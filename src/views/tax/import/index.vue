@@ -12,15 +12,15 @@
           />
         </el-select>
       </el-form-item>
-      <!--<el-form-item label="文件桶" prop="bucketName">
+      <el-form-item label="业务编号" prop="businessNo">
         <el-input
-          v-model="queryParams.bucketName"
-          placeholder="请输入文件桶名称"
+          v-model="queryParams.businessNo"
+          placeholder="请输入业务编号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
+      </el-form-item>
       <el-form-item label="文件名" prop="fileName">
         <el-input
           v-model="queryParams.fileName"
@@ -181,8 +181,16 @@
                      type="text"
                      icon="el-icon-delete"
                      @click="handleDeleteInstoreData(scope.row)"
-                     v-hasPermi="['tax:import:remove']"
+                     v-hasPermi="['tax:import:deleteInstoreData']"
           >删除入库通知单数据及文件
+          </el-button>
+          <el-button v-show="scope.row.templateType === '0' && scope.row.isGenStoreNotice === 1 "
+                     size="mini"
+                     type="text"
+                     icon="el-icon-delete"
+                     @click="handleDeleteOutstoreData(scope.row)"
+                     v-hasPermi="['tax:import:deleteOutstoreData']"
+          >删除出库通知单数据及文件
           </el-button>
           <el-button v-show="scope.row.isGenReport ===0 && scope.row.isGenStoreNotice ===0"
                      size="mini"
@@ -231,27 +239,10 @@
             placeholder="选择模板类型，1入库知单，0出库通知单">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="文件桶名称" prop="bucketName">
-          <el-input v-model="form.bucketName" placeholder="请输入文件桶名称" />
-        </el-form-item>
-        <el-form-item label="文件名" prop="fileName">
-          <el-input v-model="form.fileName" placeholder="请输入文件名" />
-        </el-form-item>
         <el-form-item label="是否生成报关数据" prop="isGenReport">
           <el-input v-model="form.isGenReport" placeholder="请输入是否生成报关数据" />
         </el-form-item>
-        <el-form-item label="是否生成出入库通知单" prop="isGenStoreNotice">
-          <el-input v-model="form.isGenStoreNotice" placeholder="请输入是否生成出入库通知单" />
-        </el-form-item>
-        <el-form-item label="对象名称" prop="objectName">
-          <el-input v-model="form.objectName" placeholder="请输入对象名称" />
-        </el-form-item>
-        <el-form-item label="文件路径" prop="path">
-          <el-input v-model="form.path" placeholder="请输入文件路径" />
-        </el-form-item>
-        <el-form-item label="场所编号" prop="placeId">
-          <el-input v-model="form.placeId" placeholder="请输入场所编号" />
-        </el-form-item>-->
+        -->
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="模板类型" prop="templateType">
@@ -410,7 +401,7 @@ import {
   customsDel,
   addImport,
   genNotice,
-  delInstoreDataAndFile
+  delInstoreDataAndFile, delOutstoreDataAndFile
 } from "@/api/tax/import";
 import {getUserDepts} from '@/utils/charutils'
 import {listContract} from '@/api/tax/contract'
@@ -482,7 +473,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 20,
-        bucketName: undefined,
+        businessNo: undefined,
         fileName: undefined,
         isGenReport: undefined,
         isGenStoreNotice: undefined,
@@ -683,8 +674,6 @@ export default {
           if (response.code === 200) {
             this.msgSuccess("通知单生成成功");
             row.isGenStoreNotice = 1
-          } else {
-            this.msgError(response.msg);
           }
         }).catch(err => {
           this.loading = false
@@ -927,7 +916,7 @@ export default {
     },
     //通过业务编号获取入库单信息
     getInstoreDocByBusinessNo() {
-      console.log(this.form.businessNo)
+      //console.log(this.form.businessNo)
       //如果是出库单时，在业务编号中，回车
       if (this.form.templateType === '0' && this.form.businessNo) {
         //用业务编号，从出库单中获取寄仓客户和 结算客户 的数据
@@ -941,7 +930,7 @@ export default {
         })
       }
     },
-    /** 删除按钮操作 */
+    /** 删除入库通知单数据及文件 */
     handleDeleteInstoreData(row) {
       const ids = row.id || this.ids;
       this.$confirm('是否确认删除业务编号为"' + row.businessNo + '"的入库通知单数据及文件?', "警告", {
@@ -950,6 +939,21 @@ export default {
         type: "warning"
       }).then(function () {
         return delInstoreDataAndFile(row);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      }).catch(function () {
+      });
+    },
+    //删除出库通知单及文件
+    handleDeleteOutstoreData(row) {
+      const ids = row.id || this.ids;
+      this.$confirm('是否确认删除业务编号为"' + row.businessNo + '"的出库通知单数据及文件?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return delOutstoreDataAndFile(row);
       }).then(() => {
         this.getList();
         this.msgSuccess("删除成功");
