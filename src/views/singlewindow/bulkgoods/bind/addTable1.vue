@@ -1,6 +1,7 @@
 <template>
   <!-- 表头信息 -->
   <div class="app-container">
+    <el-dialog title="散杂货新增" :visible.sync="detailVisible" :before-close="close" width="1200px">
       <span v-show="show==false" >
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -26,9 +27,9 @@
     <!-- 提运单表头 -->
     <el-form ref="form" :model="form" :rules="headRules" label-width="150px" size="mini" >
       <el-row v-if="show==true">
-        <el-col :span="6">
+        <el-col :span="8">
          <el-form-item label="报关企业"  >
-            <el-select v-model="form.enterpriseId"  placeholder="请选择报关企业信息" @change="change" >
+            <el-select v-model="form.enterpriseId"  placeholder="请先选择报关企业在进行后续操作" @change="change" >
               <el-option
                 v-for="dict in enterpriseOptions"
                 :key="dict.contractorCodeScc"
@@ -390,6 +391,7 @@
       </span>
     </el-form>
     <div slot="footer" class="dialog-footer"></div>
+    </el-dialog>
   </div>
 </template>
 
@@ -412,6 +414,12 @@ import {listStore} from "@/api/yard/store"
 import { listStoreCanUse } from '@/api/place/store'
 export default {
    name: "BindEdit",
+   props:{
+    detailVisible:{
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     /**校验船名 */
     var validateTransport = (rule, value, callback) => {
@@ -705,7 +713,7 @@ export default {
           });
         }
       });
-    },
+    },    
     /** 表体提交按钮 */
     submitBodyForm: function() {
       this.$refs["bodyForm"].validate(valid => {
