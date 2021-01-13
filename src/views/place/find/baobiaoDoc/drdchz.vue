@@ -1,6 +1,16 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+      <el-form-item label="场所" prop="placeId">
+        <el-select v-model="queryParams.placeId" placeholder="请选择场所" @change="changePlace">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="寄仓客户" prop="customerName">
         <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄仓客户" disabled/>-->
         <el-select
