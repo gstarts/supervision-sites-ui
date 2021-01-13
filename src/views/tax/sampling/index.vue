@@ -333,6 +333,7 @@
 <script>
 import { listLord, getLord, delLord, addLord, updateLord,selectAll} from "@/api/tax/sampling/lord";
 
+
 export default {
   name: "Lord",
   data() {

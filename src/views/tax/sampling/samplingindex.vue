@@ -22,15 +22,25 @@
         >修改</el-button>
       </el-col>
     </el-row>
+    <span style="color: red;font-size: 10px">注:请输入正确的业务编号后按回车键联想相应数据!!!!</span>
     <el-card class="mb5">
       <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="95px" :rules="rules">
+        <el-form-item label="场站ID" prop="placeId">
+          <el-select v-model="queryParams.placeId" placeholder="请选择场所">
+            <el-option
+              v-for="dept in depts"
+              :key="dept.deptId"
+              :label="dept.deptName"
+              :value="dept.deptId"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="单据号" prop="documentNo">
           <el-input
             v-model="queryParams.documentNo"
             placeholder="请输入单据号"
             clearable
             size="small"
-            @keyup.enter.native="handleQuery"
           />
         </el-form-item>
         <el-form-item label="LotNo" prop="lotNo">
@@ -59,13 +69,13 @@
                           placeholder="选择入境日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="业务编号" prop="businessNumber">
+        <el-form-item label="业务编号" prop="businessNumber" >
           <el-input
             v-model="queryParams.businessNumber"
             placeholder="请输入业务编号"
             clearable
             size="small"
-            @keyup.enter.native="handleQuery"
+            @keyup.enter.native="SelectbusinessNumber"
           />
         </el-form-item>
         <el-form-item label="取样日期" prop="samplingTime">
@@ -86,13 +96,21 @@
           />
         </el-form-item>
         <el-form-item label="取样人" prop="samplingPeople">
-          <el-input
-            v-model="queryParams.samplingPeople"
-            placeholder="请输入取样人"
-            clearable
-            size="small"
-            @keyup.enter.native="handleQuery"
-          />
+<!--          <el-input-->
+<!--            v-model="queryParams.samplingPeople"-->
+<!--            placeholder="请输入取样人"-->
+<!--            clearable-->
+<!--            size="small"-->
+<!--            @keyup.enter.native="handleQuery"-->
+<!--          />-->
+          <el-select v-model="queryParams.samplingPeople" placeholder="请选择取样人">
+            <el-option
+              v-for="user in userList"
+              :key="user.userId"
+              :label="user.nickName"
+              :value="user.userId"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="取样总重量" prop="samplingWeight">
           <el-input
@@ -116,23 +134,23 @@
 <!--            <el-option label="请选择字典生成" value="" />-->
 <!--          </el-select>-->
 <!--        </el-form-item>-->
-        <el-form-item label="制单人" prop="makerPeople">
-          <el-input
-            v-model="queryParams.makerPeople"
-            placeholder="请输入制单人"
-            clearable
-            size="small"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item label="制单日期" prop="makerTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="queryParams.makerTime"
-                          type="datetime"
-                          value-format="yyyy-MM-dd HH:mm:ss"
-                          placeholder="选择制单日期">
-          </el-date-picker>
-        </el-form-item>
+<!--        <el-form-item label="制单人" prop="makerPeople">-->
+<!--          <el-input-->
+<!--            v-model="queryParams.makerPeople"-->
+<!--            placeholder="请输入制单人"-->
+<!--            clearable-->
+<!--            size="small"-->
+<!--            @keyup.enter.native="handleQuery"-->
+<!--          />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="制单日期" prop="makerTime">-->
+<!--          <el-date-picker clearable size="small" style="width: 200px"-->
+<!--                          v-model="queryParams.makerTime"-->
+<!--                          type="datetime"-->
+<!--                          value-format="yyyy-MM-dd HH:mm:ss"-->
+<!--                          placeholder="选择制单日期">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
         <!--      <el-form-item>-->
         <!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
         <!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
@@ -222,10 +240,18 @@
 <script>
 import {listLord, getLord, delLord, addLord, updateLord, LotNoList, InsertListLotNo,listBody,updateBody} from "@/api/tax/sampling/lord";
 import Vue from 'vue'
+import {formatDate} from "@/utils";
+import {getUserDepts} from "@/utils/charutils";
+import {getDocByBusinessNo} from "@/api/tax/instore_doc";
+import {listUser} from "@/api/system/user";
 export default {
   name: "Lord",
   data() {
     return {
+      //用户名 全部
+      userList:[],
+      //用户
+      auditUserList:[],
       //按钮状态
       flag:false,
       //关联查询
@@ -265,7 +291,7 @@ export default {
         client: undefined,
         entryTime: undefined,
         businessNumber: undefined,
-        samplingTime: undefined,
+        samplingTime: formatDate(new Date(),"yyyy-MM-dd hh:mm"),
         samplingUnit: undefined,
         samplingPeople: undefined,
         samplingWeight: undefined,
@@ -273,6 +299,7 @@ export default {
         documentsStatus: undefined,
         makerPeople: undefined,
         makerTime: undefined,
+        placeId:undefined,
       },
       bodyQueryParams: {
         pageNum: 1,
@@ -291,9 +318,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        documentNo:[
-          { required: true, message: '单据号不可为空', trigger: 'blur' },
-        ],
+        // documentNo:[
+        //   { required: true, message: '单据号不可为空', trigger: 'blur' },
+        // ],
         client:[
           { required: true, message: '客户不可为空', trigger: 'blur' },
         ],
@@ -320,6 +347,11 @@ export default {
     };
   },
   created() {
+    this.depts = getUserDepts('1')
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+      this.getUserList();
+    }
     // this.getList();
     const  id =this.$route.query.id
     this.taxSamplingLordId=id;
@@ -338,6 +370,14 @@ export default {
     }
   },
   methods: {
+    getUserList() {
+      listUser({'deptId': this.queryParams.placeId, 'delFlag': '0'}).then(response => {
+        if (response.code === 200) {
+          this.userList = response.rows
+        }
+      });
+    },
+
     /** 查询取样管理 主列表 */
     getList() {
       this.loading = true;
@@ -414,6 +454,8 @@ export default {
     handleAdd() {
       // this.open = true;
       // this.title = "添加取样管理 主";
+      this.$refs["queryParams"].validate(valid => {
+        if (valid) {
       addLord(this.queryParams).then(response => {
         if (response.code === 200) {
           this.LotNoDisabled=false;
@@ -423,7 +465,8 @@ export default {
           this.taxSamplingLordId=response.data.id
           this.open = false;
           this.getList();
-
+        }
+      });
         }
       });
       // this.reset();
@@ -540,6 +583,13 @@ export default {
           this.indexList();
           this.bodyUpdate=true;
         }
+      })
+    },
+    SelectbusinessNumber(){
+      getDocByBusinessNo(this.queryParams.placeId, this.queryParams.businessNumber).then(response => {
+      this.queryParams.client=response.data.checkConsumer;
+      this.queryParams.entryTime=response.data.createTime;
+      this.queryParams.lotNo=response.data.batchNo;
       })
     }
   }
