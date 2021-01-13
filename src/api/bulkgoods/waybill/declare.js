@@ -155,5 +155,12 @@ export function artificial (id){
     url: '/manifest/declare/artificial/'+ id ,
     method: 'get'
   })
-
 }
+// 重新生成
+export function delBodyAll(id){
+  return request({
+    url: '/manifest/declare/delBody/' +id,
+    method: 'delete',
+  })
+}
+

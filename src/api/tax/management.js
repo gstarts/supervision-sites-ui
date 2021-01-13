@@ -43,6 +43,7 @@ export function delManagement(id) {
   })
 }
 
+
 export function listReportDate(query) {
   return request({
     url: '/tax/management/listReportDate',
