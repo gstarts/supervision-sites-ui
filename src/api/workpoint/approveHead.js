@@ -60,3 +60,11 @@ export function approveHeadAddRecord(query) {
     data: query
   })
 }
+
+export function approveHeadWorkPointRecordGroup(headId) {
+  return request({
+    url: '/workpoint/approveHead/record/' + headId,
+    method: 'get',
+  })
+}
+

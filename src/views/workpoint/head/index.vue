@@ -84,9 +84,9 @@
                      :label="type.dictLabel"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="寄仓客户" prop="costumerName">
+      <el-form-item label="寄仓客户" prop="customerName">
         <el-input
-          v-model="queryParams.costumerName"
+          v-model="queryParams.customerName"
           placeholder="请输入寄仓客户"
           clearable
           size="small"
@@ -116,15 +116,15 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>-->
-      <el-form-item label="业务部门" prop="businessDept">
-        <el-input
-          v-model="queryParams.businessDept"
-          placeholder="请输入业务部门"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+      <!--      <el-form-item label="业务部门" prop="businessDept">
+              <el-input
+                v-model="queryParams.businessDept"
+                placeholder="请输入业务部门"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>-->
       <el-form-item label="审批状态" prop="approveState">
         <el-select v-model="queryParams.approveState"
                    placeholder="请输入审批状态"
@@ -192,26 +192,26 @@
 
     <el-table v-loading="loading" :data="headList" @selection-change="handleSelectionChange">
       <!-- <el-table-column type="selection" width="55" align="center"/>-->
-      <af-table-column label="单据号" align="center" prop="id"/>
+      <el-table-column label="ID" align="center" prop="id"/>
       <!--      <af-table-column label="场所" align="center" prop="placeId"/>-->
-      <af-table-column label="业务日期" align="center" prop="businessTime">
+      <el-table-column label="业务日期" align="center" prop="businessTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.businessTime, '{y}-{m}-{d}') }}</span>
         </template>
-      </af-table-column>
-      <af-table-column label="工分类型" align="center" prop="pointType" :formatter="pointTypeFormatter"/>
+      </el-table-column>
+      <el-table-column label="工分类型" align="center" prop="pointType" :formatter="pointTypeFormatter"/>
       <af-table-column label="工分标准" align="center" prop="pointStandard" :formatter="pointStandardFormatter"/>
-      <af-table-column label="标准分值" align="center" prop="standardScore"/>
-      <af-table-column label="计分车数" align="center" prop="vehicleCount"/>
+      <el-table-column label="标准分值" align="center" prop="standardScore"/>
+      <!--      <af-table-column label="计分车数" align="center" prop="vehicleCount"/>-->
       <af-table-column label="通知单号" align="center" prop="docNo"/>
       <af-table-column label="通知单ID" align="center" prop="docId"/>
       <af-table-column label="业务编号" align="center" prop="businessNo"/>
       <af-table-column label="单据类型" align="center" prop="docType" :formatter="docTypeFormatter"/>
-      <af-table-column label="寄仓客户" align="center" prop="costumerName"/>
-      <af-table-column label="车牌号" align="center" prop="vehicleNo"/>
-      <af-table-column label="车型" align="center" prop="vehicleType"/>
+      <af-table-column label="寄仓客户" align="center" prop="customerName"/>
+      <!--      <af-table-column label="车牌号" align="center" prop="vehicleNo"/>-->
+      <!--      <af-table-column label="车型" align="center" prop="vehicleType"/>-->
       <!--<el-table-column label="状态" align="center" prop="state"/>-->
-      <af-table-column label="业务部门" align="center" prop="businessDept"/>
+      <!--      <af-table-column label="业务部门" align="center" prop="businessDept"/>-->
       <af-table-column label="审批状态" align="center" prop="approveState" :formatter="approveStateFormatter"/>
       <af-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="140px">
@@ -243,12 +243,12 @@
                      @click="handleDelete(scope.row)"
                      v-hasPermi="['workpoint:head:remove']">删除
           </el-button>
-          <el-button v-show="scope.row.approveState === '1'"
+<!--          <el-button v-show="scope.row.approveState === '1'"
                      size="mini"
                      type="text"
                      @click="handleApproveUpdate(scope.row)"
                      v-hasPermi="['workpoint:approveHead:edit']">审批
-          </el-button>
+          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -263,10 +263,10 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row :gutter="10">
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item label="单据类型" prop="docType">
-              <el-select
-                v-model="form.docType" placeholder="请选择单据类型" clearable size="small">
+              <el-select @change="docTypeChange"
+                         v-model="form.docType" placeholder="请选择单据类型" clearable size="small" style="width:100%">
                 <el-option
                   v-for="dic in docTypeOptions"
                   :key="dic.dictValue"
@@ -276,9 +276,17 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="12">
+            <el-form-item label="业务编号" prop="businessNo">
+              <el-input v-model="form.businessNo" placeholder="请输入业务编号" @keyup.enter.native="getDocByBusinessNo"
+                        style="width:100%"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
             <el-form-item label="工分类型" prop="pointType">
-              <el-select v-model="form.pointType" placeholder="请选择工分类型" @change="pointTypeChange">
+              <el-select v-model="form.pointType" placeholder="请选择工分类型" @change="pointTypeChange" style="width:100%">
                 <el-option
                   v-for="dept in workpointTypeList"
                   :key="dept.code"
@@ -288,9 +296,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item label="工分标准" prop="pointStandard">
-              <el-select v-model="form.pointStandard" placeholder="请选择工分标准" @change="standardChange">
+              <el-select v-model="form.pointStandard" placeholder="请选择工分标准" @change="standardChange" style="width:100%">
                 <el-option
                   v-for="dept in workpointStandardList"
                   :key="dept.code"
@@ -302,65 +310,29 @@
           </el-col>
         </el-row>
         <el-row :gutter="10">
-          <el-col :span="8">
-            <el-form-item label="业务编号" prop="businessNo">
-              <el-input v-model="form.businessNo" placeholder="请输入业务编号" @keyup.enter.native="getDocByBusinessNo"/>
+          <el-col :span="12">
+            <el-form-item label="寄仓客户" prop="customerName">
+              <el-input v-model="form.customerName" placeholder="请输入寄仓客户" style="width:100%"/>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item label="通知单号" prop="docNo">
-              <el-input v-model="form.docNo" placeholder="请输入通知单号"/>
+              <el-input v-model="form.docNo" placeholder="请输入通知单号" style="width:100%"/>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
             <el-form-item label="业务日期" prop="businessTime">
-              <el-date-picker clearable size="small" style="max-width:180px"
+              <el-date-picker clearable size="small"
                               v-model="form.businessTime"
                               type="date"
                               value-format="yyyy-MM-dd"
-                              placeholder="选择业务日期">
+                              placeholder="选择业务日期" style="width:100%">
               </el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="10">
-          <el-col :span="8">
-            <el-form-item label="寄仓客户" prop="costumerName">
-              <el-input v-model="form.costumerName" placeholder="请输入寄仓客户"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="车牌号" prop="vehicleNo">
-              <el-input v-model="form.vehicleNo" placeholder="请输入车牌号"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="车型">
-              <el-input v-model="form.vehicleType" placeholder="请输入车型">
-              </el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="10">
-          <el-col :span="8">
-            <el-form-item label="计分车数" prop="vehicleCount">
-              <el-input v-model="form.vehicleCount" placeholder="请输入计分车数"/>
-            </el-form-item>
-          </el-col>
-          <!--          <el-col :span="8">
-                      <el-form-item label="状态" prop="state">
-                        <el-input v-model="form.state" placeholder="请输入状态"/>
-                      </el-form-item>
-                    </el-col>-->
-          <el-col :span="8">
-            <el-form-item label="业务部门" prop="businessDept">
-              <el-input v-model="form.businessDept" placeholder="请输入业务部门"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <!--        <el-form-item label="审批状态" prop="approveState">
-                  <el-input v-model="form.approveState" placeholder="请输入审批状态"/>
-                </el-form-item>-->
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
@@ -369,36 +341,6 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-      <el-table v-show="form.docType==='1'" v-loading="loading" :data="instoreDocList" max-height="220px"
-                style="cursor: pointer"
-                @row-dblclick="copyToInDoc">
-        <!--    <el-table-column label="ID" align="center" prop="id"/>-->
-        <af-table-column label="入库单号" align="center" prop="inDocNo"/>
-        <af-table-column label="业务编号" align="center" prop="businessNo"/>
-        <af-table-column label="业务日期" align="center" prop="updateTime">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
-          </template>
-        </af-table-column>
-        <af-table-column label="寄仓客户" align="center" prop="checkConsumer"/>
-        <af-table-column label="车牌号" align="center" prop="vehicleNo"/>
-        <!--        <af-table-column label="状态" align="center" prop="state"/>-->
-      </el-table>
-      <el-table v-show="form.docType==='0'" v-loading="loading" :data="outstoreDocList" max-height="220px"
-                style="cursor: pointer"
-                @row-dblclick="copyToOutDoc">
-        <!--    <el-table-column label="ID" align="center" prop="id"/>-->
-        <af-table-column label="出库单号" align="center" prop="outDocNo"/>
-        <af-table-column label="业务编号" align="center" prop="businessNo"/>
-        <af-table-column label="业务日期" align="center" prop="updateTime">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
-          </template>
-        </af-table-column>
-        <af-table-column label="寄仓客户" align="center" prop="checkConsumer"/>
-        <af-table-column label="车牌号" align="center" prop="vehicleNo"/>
-        <!--        <af-table-column label="状态" align="center" prop="state"/>-->
-      </el-table>
     </el-dialog>
 
     <!-- 提交审批信息对话框 -->
@@ -439,114 +381,6 @@
         <el-button @click="approveCancel">取 消</el-button>
       </div>
     </el-dialog>
-
-    <!-- 修改审批信息对话框 -->
-    <el-dialog title="审批" :visible.sync="approveUpdateOpen" append-to-body>
-      <el-form ref="approveRecord" :model="approveRecord" :rules="approveRules" label-width="120px">
-        <el-row :gutter="10">
-          <el-col :span="8">
-            <el-form-item label="申请人" prop="">
-              {{ approveServerData.applyUser }}
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="申请时间" prop="">
-              {{ approveServerData.applyTime }}
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="10">
-          <el-col :span="24">
-            <el-form-item label="申请说明" prop="">
-              {{ approveServerData.applyReason }}
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <div v-for="(value,key,index) in approveServerData.approveRecords">
-          <el-row :gutter="10">
-            <el-col :span="8">
-              <el-form-item label="审批人" prop="">
-                {{ value.approveUser }}
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="审批时间" prop="">
-                {{ value.approveTime }}
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="审批结果" prop="">
-                {{ value.approveResult }}
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10">
-            <el-col :span="24">
-              <el-form-item label="审批说明" prop="">
-                {{ value.approveReason }}
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </div>
-
-        <div v-show="continueApprove">
-          <el-row :gutter="10">
-            <el-col :span="8">
-              <el-form-item label="审批结果" prop="approveResult">
-                <el-select v-model="approveRecord.approveResult">
-                  <el-option v-for="dict in approveResultDic"
-                             :key="dict.dictValue"
-                             :value="dict.dictValue"
-                             :label="dict.dictLabel"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="16">
-              <el-form-item label="审批说明" prop="approveReason">
-                <el-input v-model="approveRecord.approveReason" placeholder="请输入内容"/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </div>
-        <el-row :gutter="10"
-                v-show="approveRecord.approveResult==='1' && approveServerData.approveRecords && approveServerData.approveRecords.length<approveServerData.approveLevel">
-          <el-col :span="8">
-            <el-form-item label="审批组" prop="auditGroup">
-              <el-select v-model="approveRecord.auditGroup" filterable placeholder="请选择审批组" @change="groupChange">
-                <el-option
-                  v-for="item in auditGroupList"
-                  :key="item.groupCode"
-                  :label="item.groupName"
-                  :value="item.groupCode">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="下级审批人" prop="nextApproveUser">
-              <el-select v-model="approveRecord.nextApproveUser" filterable placeholder="请选择审批人">
-                <el-option
-                  v-for="item in auditUserList"
-                  :key="item.userName"
-                  :label="item.nickName"
-                  :value="item.userName">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" v-hasPermi="['workpoint:approveHead:addRecord']" @click="submitApproveRecordForm">确
-          定
-        </el-button>
-        <el-button @click="approveRecordCancel">取 消</el-button>
-      </div>
-    </el-dialog>
-
 
     <el-drawer
       title="工分明细"
@@ -629,21 +463,6 @@
                   <!--                  </el-form-item>-->
                 </template>
               </af-table-column>
-              <!--              </el-table-column>-->
-              <!-- <el-table-column label="通知单号" align="center" prop="docNo"/>
-                        <el-table-column label="单据类型" align="center" prop="docType"/>
-                        <el-table-column label="寄仓客户" align="center" prop="customerName"/>
-                        <el-table-column label="车牌号" align="center" prop="vehicleNo"/>
-                        <el-table-column label="业务日期" align="center" prop="businessTime" width="180">
-                          <template slot-scope="scope">
-                            <span>{{ parseTime(scope.row.businessTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
-                          </template>
-                        </el-table-column>-->
-              <!-- <el-table-column label="工分类型" align="center" prop="pointTypeCode"/>
-                        <el-table-column label="工分标准" align="center" prop="pointStandardCode"/>
-                        <el-table-column label="标准分数" align="center" prop="standardScore"/>
-                        <el-table-column label="计分车数" align="center" prop="vehicleCount"/>
-                        <el-table-column label="业务编号" align="center" prop="businessNo"/>-->
               <af-table-column label="开始时间" align="center" prop="workStartTime" width="200">
                 <template slot-scope="scope">
                   <el-date-picker v-model="scope.row.workStartTime" type="datetime"
@@ -789,14 +608,13 @@ import {getUserDepts} from "@/utils/charutils";
 import {listType} from "@/api/workpoint/type";
 import {listStandard} from "@/api/workpoint/standard";
 import {listInstore_doc} from "@/api/tax/instore_doc";
-import store from "@/store";
 import {listGroup as listAuditGroup} from '@/api/place/group'
 import {listGroup} from "@/api/workpoint/group";
 import {listWorker} from "@/api/workpoint/worker";
 import {parseTime} from "@/utils/common";
 import {listDevice} from "@/api/workpoint/device";
 import {addListRecord, listRecord} from "@/api/workpoint/record";
-import {addApproveHead, approveHeadAddRecord, listApproveHeadOne} from "@/api/workpoint/approveHead";
+import {addApproveHead} from "@/api/workpoint/approveHead";
 import {listUser} from "@/api/system/user";
 import {listOutstore_doc} from "@/api/tax/outstore_doc";
 
@@ -838,7 +656,7 @@ export default {
         docId: undefined,
         businessNo: undefined,
         docType: undefined,
-        costumerName: undefined,
+        customerName: undefined,
         vehicleNo: undefined,
         vehicleType: undefined,
         state: undefined,
@@ -851,6 +669,50 @@ export default {
       form: {},
       // 表单校验
       rules: {},
+      //工分主表校验
+      rulesHead: {
+        docType: [
+          {required: true, message: '请选择单据类型', trigger: 'change'}
+        ],
+        businessTime: [
+          {required: true, message: '请设置业务日期', trigger: 'blur'}
+        ],
+        pointType: [
+          {required: true, message: '请选择工分类型', trigger: 'change'}
+        ],
+        pointStandard: [
+          {required: true, message: '请选择工分标准', trigger: 'change'}
+        ],
+        customerName: [
+          {required: true, message: '请输入寄仓客户', trigger: 'blur'}
+        ],
+        /*docNo: [
+          { required: true, message:'请输入通知单号',trigger: 'blur'}
+        ],*/
+      },
+      rulesHead2: {
+        docType: [
+          {required: true, message: '请选择单据类型', trigger: 'change'}
+        ],
+        businessNo: [
+          {required: true, message: '请输入单据类型', trigger: 'blur'}
+        ],
+        pointType: [
+          {required: true, message: '请选择工分类型', trigger: 'change'}
+        ],
+        pointStandard: [
+          {required: true, message: '请选择工分标准', trigger: 'change'}
+        ],
+        customerName: [
+          {required: true, message: '请输入寄仓客户', trigger: 'blur'}
+        ],
+        docNo: [
+          {required: true, message: '请输入通知单号', trigger: 'blur'}
+        ],
+        businessTime: [
+          {required: true, message: '请设置业务日期', trigger: 'blur'}
+        ],
+      },
       workpointTypeList: [],
       workpointStandardList: [],
       docTypeOptions: [],
@@ -943,6 +805,7 @@ export default {
         applyReason: undefined,
         approveUser: undefined,
         attachments: undefined,
+        businessNo: undefined,
       },
       approveOpen: false,
       approveRules: {
@@ -1026,7 +889,7 @@ export default {
       this.getGroupList()
       //this.getWorkpointStandardList()
     }
-    this.sidebar = store.getters.sidebar
+    //this.sidebar = store.getters.sidebar
     //获取所有的工人名单
     listWorker({}).then(response => {
       this.allWorkers = response.rows
@@ -1034,6 +897,8 @@ export default {
     this.getDeviceList()
     this.getAuditGroupList()
     this.getUserList()
+
+    this.rules = this.rulesHead
   },
   methods: {
     /** 查询工分信息列表 */
@@ -1062,7 +927,7 @@ export default {
     reset() {
       this.form = {
         id: undefined,
-        placeId: undefined,
+        placeId: this.queryParams.placeId,
         businessTime: undefined,
         pointType: undefined,
         pointStandard: undefined,
@@ -1070,17 +935,13 @@ export default {
         docNo: undefined,
         docId: undefined,
         businessNo: undefined,
-        docType: undefined,
-        costumerName: undefined,
+        //docType: undefined,
+        customerName: undefined,
         vehicleNo: undefined,
         vehicleType: undefined,
         state: undefined,
         businessDept: undefined,
         approveState: undefined,
-        createTime: undefined,
-        createBy: undefined,
-        updateBy: undefined,
-        updateTime: undefined,
         remark: undefined,
         standardScore: undefined,
       };
@@ -1242,20 +1103,44 @@ export default {
       if (!this.form.placeId || !this.form.docType) {
         return false
       }
+
+      //this.form.businessNo = undefined
+      //this.form.pointType = undefined
+      this.form.pointStandard = undefined
+      this.form.customerName = undefined
+      this.form.docNo = undefined
+      this.form.businessTime = undefined
+      this.form.batchNo = undefined
+      this.form.remark = undefined
+      this.form.standardScore = undefined
+      this.form.docId = undefined
+      this.form.vehicleNo = undefined
+
       if (this.form.placeId === 104) {//金航
         switch (this.form.docType) {
           case '1': //入库单
             listInstore_doc({
+              'pageSize': 20,
+              'pageNum': 1,
               'state': '1',
               'placeId': this.form.placeId,
-              'businessNo': this.form.businessNo
+              'businessNo': this.form.businessNo,
+              'orderByColumn': 'createTime',
+              'isAsc': 'desc'
             }).then(response => {
               if (response.code === 200) {
                 console.log(response.rows)
                 if (response.rows.length === 0) {
                   this.$message.warning("未找到对应的单据")
                 } else {
-                  this.instoreDocList = response.rows
+                  let result = response.rows[0]
+                  this.form.customerName = result.checkConsumer
+                  this.form.businessTime = result.createTime
+                  this.form.docNo = result.inDocNo
+                  this.form.batchNo = result.batchNo
+                  this.form.docId = result.id
+                  this.form.vehicleNo = result.vehicleNo
+                  this.form.vehicleCount = response.rows.length
                 }
               }
             }).catch(err => {
@@ -1264,15 +1149,26 @@ export default {
             break
           case '0'://出库单
             listOutstore_doc({
+              'pageSize': 20,
+              'pageNum': 1,
               'state': '1',
               'placeId': this.form.placeId,
-              'businessNo': this.form.businessNo
+              'businessNo': this.form.businessNo,
+              'orderByColumn': 'createTime',
+              'isAsc': 'desc'
             }).then(response => {
               if (response.code === 200) {
                 if (response.rows.length === 0) {
                   this.$message.warning("未找到对应的单据")
                 } else {
-                  this.outstoreDocList = response.rows
+                  let result = response.rows[0]
+                  this.form.customerName = result.checkConsumer
+                  this.form.businessTime = result.createTime
+                  this.form.docNo = result.outDocNo
+                  this.form.batchNo = result.batchNo
+                  this.form.docId = result.id
+                  this.form.vehicleNo = result.vehicleNo
+                  this.form.vehicleCount = response.rows.length
                 }
               }
             })
@@ -1285,7 +1181,7 @@ export default {
     //双击表格行，将row的信息赋值给工分信息表
     copyToInDoc(row) {
       this.form.docNo = row.inDocNo
-      this.form.costumerName = row.checkConsumer
+      this.form.customerName = row.checkConsumer
       this.form.vehicleNo = row.vehicleNo
       this.form.vehicleCount = 1
       this.form.state = row.state
@@ -1295,7 +1191,7 @@ export default {
     },
     copyToOutDoc(row) {
       this.form.docNo = row.outDocNo
-      this.form.costumerName = row.checkConsumer
+      this.form.customerName = row.checkConsumer
       this.form.vehicleNo = row.vehicleNo
       this.form.vehicleCount = 1
       this.form.state = row.state
@@ -1639,6 +1535,7 @@ export default {
           this.approveHead.placeId = row.placeId
           this.approveHead.approveLevel = 2
           this.approveHead.approveState = '1'
+          this.approveHead.businessNo = row.businessNo
         }
       })
       // addApproveHead(head)
@@ -1671,34 +1568,6 @@ export default {
       this.approveHead.approveLevel = undefined
       this.approveHead.approveState = undefined
     },
-    submitApproveRecordForm() {
-      let that = this
-      this.$refs["approveRecord"].validate(valid => {
-        if (valid) {
-          approveHeadAddRecord(this.approveRecord).then(response => {
-            if (response.code === 200) {
-              that.$message.success(response.msg)
-              this.approveUpdateOpen = false
-              this.getList()
-            } else {
-              that.$message.error(response.msg)
-            }
-          })
-        }
-      })
-    },
-    approveRecordCancel() {
-      this.approveUpdateOpen = false
-      this.approveRecord.approveReason = undefined
-      this.approveRecord.parentId = undefined
-      this.approveRecord.approveState = undefined
-      this.approveRecord.isFinally = undefined
-      this.approveRecord.approveUser = undefined
-      this.approveRecord.approveResult = undefined
-      this.approveRecord.approveReason = undefined
-      this.approveRecord.remark = undefined
-      this.approveRecord.nextApproveUser = undefined
-    },
     getUserList() {
       listUser({'deptId': this.queryParams.placeId, 'delFlag': '0'}).then(response => {
         if (response.code === 200) {
@@ -1727,24 +1596,41 @@ export default {
         }
       }
     },
-    //审批按钮
-    handleApproveUpdate(row) {
-      let data = {
-        className: 'workPointHead',
-        classId: row.id,
-        placeId: row.placeId
+    docTypeChange(event) {
+      this.form.businessNo = undefined
+      this.form.pointType = undefined
+      this.form.pointStandard = undefined
+      this.form.customerName = undefined
+      this.form.docNo = undefined
+      this.form.businessTime = undefined
+      this.form.batchNo = undefined
+      this.form.remark = undefined
+      this.form.standardScore = undefined
+      switch (event) {
+        case '1': //入库单
+          this.form.pointType = 'A'
+          this.pointTypeChange('A')
+          this.rules = this.rulesHead2
+          break;
+        case '0': //出库单
+          this.form.pointType = 'B'
+          this.pointTypeChange('B')
+          this.rules = this.rulesHead2
+          break;
+        case '2': //移库
+          this.form.pointType = 'G'
+          this.pointTypeChange('G')
+          this.rules = this.rulesHead
+          break;
+        case '3': //加工
+          this.form.pointType = 'F'
+          this.pointTypeChange('F')
+          this.rules = this.rulesHead
+          break;
+        default:
+          this.rules = this.rulesHead
+          break;
       }
-      listApproveHeadOne(data).then(response => {
-        console.log('approve')
-        console.log(response)
-        if (response.code === 200) {
-          this.approveUpdateOpen = true
-          this.approveServerData = response.data
-          this.approveRecord.parentId = this.approveServerData.id
-        } else {
-          this.$message.error(response.msg)
-        }
-      })
     }
   }
 }

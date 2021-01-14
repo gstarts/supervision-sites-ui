@@ -125,8 +125,7 @@
                              v-model="form.locationNumber"
                              placeholder="请选择库位号"
                              prop="locationNumber"
-                             filterable
-                  >
+                             filterabl>
                     <el-option
                       v-for="dict in storeList"
                       :key="dict.value"
