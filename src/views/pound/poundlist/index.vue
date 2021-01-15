@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 按钮组 -->
     <div class="mb20">
-      <el-button type="primary" icon="el-icon-plus" size="small" @click="AllADD">暂存</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="small" :loading="saveLoading" @click="AllADD">暂存</el-button>
       <el-button type="success" icon="el-icon-edit" size="small" @click="generateAdd">生成</el-button>
       <el-button type="warning" icon="el-icon-refresh-right" size="small" @click="cancel">清空</el-button>
       <el-button type="danger" plain icon="el-icon-search" size="small" @click="getVehicleList">刷新车号</el-button>
@@ -436,6 +436,9 @@ export default {
         //netWeight: [{type: "number", message: "请输入数字"}],
         plateNum: [{required: true, message: "车号不可为空", trigger: "change"}],
         //locationNumber:[{required: true,message: "不可为空" , trigger: "blur"}]
+        deliveryUnit: [{required: true, message: "发货单位不可为空", trigger: "blur"}],
+        receivingUnit: [{required: true, message: "收货单位不可为空", trigger: "blur"}],
+        goodsName: [{required: true, message: "品名不可为空", trigger: "blur"}],
       },
       rulesIn2: { //进场 空进重出
         //grossWeight: [{type: "number", message: "毛重需为数字"}],
@@ -443,13 +446,19 @@ export default {
         //netWeight: [{type: "number", message: "请输入数字"}],
         plateNum: [{type: "string", required: true, message: "车号不可为空", trigger: "change"}],
         //locationNumber:[{required: true,message: "不可为空" , trigger: "blur"}]
+        deliveryUnit: [{required: true, message: "发货单位不可为空", trigger: "blur"}],
+        receivingUnit: [{required: true, message: "收货单位不可为空", trigger: "blur"}],
+        goodsName: [{required: true, message: "品名不可为空", trigger: "blur"}],
       },
       rulesOut1: { //出场 重进空出
         grossWeight: [{required: true, type: "number", message: "毛重需为数字", trigger: "blur"}],
         tare: [{required: true, type: "number", message: "请输入数字", trigger: "blur"}],
         netWeight: [{required: true, type: "number", message: "请输入数字", trigger: "blur"}],
         plateNum: [{type: "string", required: true, message: "车号不可为空", trigger: "change"}],
-        locationNumber: [{type: "string", required: true, message: "不可为空", trigger: "change"}]
+        locationNumber: [{type: "string", required: true, message: "不可为空", trigger: "change"}],
+        deliveryUnit: [{required: true, message: "发货单位不可为空", trigger: "blur"}],
+        receivingUnit: [{required: true, message: "收货单位不可为空", trigger: "blur"}],
+        goodsName: [{required: true, message: "品名不可为空", trigger: "blur"}],
       },
       rulesOut2: { //出场 空进重出
         grossWeight: [{required: true, type: "number", message: "毛重需为数字", trigger: "blur"}],
@@ -457,13 +466,20 @@ export default {
         netWeight: [{required: true, type: "number", message: "请输入数字", trigger: "blur"}],
         plateNum: [{type: "string", required: true, message: "车号不可为空", trigger: "change"}],
         //locationNumber:[{required: true,message: "不可为空" , trigger: "blur"}]
+        deliveryUnit: [{required: true, message: "发货单位不可为空", trigger: "blur"}],
+        receivingUnit: [{required: true, message: "收货单位不可为空", trigger: "blur"}],
+        goodsName: [{required: true, message: "品名不可为空", trigger: "blur"}],
       },
       ruless: {
         flowDirection: [{type: "string", required: true, message: "请选择流向", trigger: "change"}],
+        deliveryUnit: [{required: true, message: "发货单位不可为空", trigger: "blur"}],
+        receivingUnit: [{required: true, message: "收货单位不可为空", trigger: "blur"}],
+        goodsName: [{required: true, message: "品名不可为空", trigger: "blur"}],
       },
       storeList: [], //保存库位号.
       showStore: false,
-      noticeNo: ''
+      noticeNo: '',
+      saveLoading: false,
     };
   },
   created() {
@@ -668,6 +684,7 @@ export default {
       this.form.updateTime = genTimeCode(new Date(), "YYYY-MM-DD HH:mm:ss");
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          this.saveLoading = true
           if (this.PoundForm.flowDirection === "I") {
             //this.form.flowDirection = this.PoundForm.flowDirection;
             //this.form.noticeNo = this.noticeNo;
@@ -675,6 +692,7 @@ export default {
             console.log('新增磅单')
             console.log(this.form)
             addSheet(this.form).then((response) => {
+              this.saveLoading = false
               if (response.code === 200) {
                 this.msgSuccess("进场成功");
                 this.reset();
@@ -682,6 +700,8 @@ export default {
               } else {
                 this.msgError(response.msg);
               }
+            }).catch(e=>{
+              this.saveLoading = false
             });
           } else if (this.PoundForm.flowDirection === "E") {
             //this.form.flowDirection = this.PoundForm.flowDirection;
@@ -705,14 +725,17 @@ export default {
               params.direction = 1
               if (!this.form.id) {//如果form没有ID，说明数据来源不正确，需要人出出场流向中选择
                 this.$message.warning('请从出场流向中选择车牌来加载数据')
+                this.saveLoading = false
                 return false
               }
               genStoreDoc(params).then(response => {
                 if (response.code === 200) {
                   this.msgSuccess("入库成功");
-                  //更新一下库位
-                  this.getStoreCode(this.queryParams.stationId)
                   updateSheet(this.form).then((response) => {
+                    //更新一下库位
+
+                    this.getStoreCode(this.queryParams.stationId)
+                    this.saveLoading = false
                     if (response.code === 200) {
                       this.msgSuccess("出场成功");
                       this.getListE();
@@ -721,8 +744,11 @@ export default {
                     }
                   })
                 } else {
+                  this.saveLoading = false
                   this.msgError(response.msg);
                 }
+              }).catch(e=>{
+                this.saveLoading = false
               })
               //}
             }
@@ -730,12 +756,14 @@ export default {
               params.direction = 0
               if (!this.form.id) {//如果form没有ID，说明数据来源不正确，需要从出场流向中选择
                 this.$message.warning('请从出场流向中选择车牌来加载数据')
+                this.saveLoading = false
                 return false
               }
               genStoreDoc(params).then(response => {
                 if (response.code === 200) {
                   this.msgSuccess("出库成功");
                   updateSheet(this.form).then((response) => {
+                    this.saveLoading = false
                     if (response.code === 200) {
                       this.msgSuccess("出场成功");
                       this.getListE();
@@ -744,8 +772,11 @@ export default {
                     }
                   })
                 } else {
+                  this.saveLoading = false
                   this.msgError(response.msg);
                 }
+              }).catch(e=>{
+                this.saveLoading = false
               })
             }
           }
@@ -880,6 +911,7 @@ export default {
     },
     //查询可用的库位
     getStoreCode(placeId) {
+      this.form.locationNumber = undefined
       getStoreUsable(placeId).then(response => {
         console.log(response)
         if (response.code === 200) {

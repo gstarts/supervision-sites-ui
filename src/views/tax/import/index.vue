@@ -734,6 +734,10 @@ export default {
       this.form.placeId = this.queryParams.placeId
       this.form.fileLength = response.data.length
 
+      if(this.form.templateType === '1'){
+        this.form.transportMode = '1'
+      }
+
       addImport(this.form).then(response => {
         console.log('上传数据')
         if (response.code === 200) {
@@ -932,33 +936,38 @@ export default {
     },
     /** 删除入库通知单数据及文件 */
     handleDeleteInstoreData(row) {
+      let that = this
       const ids = row.id || this.ids;
       this.$confirm('是否确认删除业务编号为"' + row.businessNo + '"的入库通知单数据及文件?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return delInstoreDataAndFile(row);
+        return delInstoreDataAndFile(row).then(response => {
+          if (response.code === 200) {
+            that.msgSuccess("删除成功");
+            that.getList()
+          }
+        })
       }).then(() => {
-        this.getList();
-        this.msgSuccess("删除成功");
-      }).catch(function () {
-      });
+      }).catch(function () {})
     },
     //删除出库通知单及文件
     handleDeleteOutstoreData(row) {
+      let that = this
       const ids = row.id || this.ids;
       this.$confirm('是否确认删除业务编号为"' + row.businessNo + '"的出库通知单数据及文件?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return delOutstoreDataAndFile(row);
-      }).then(() => {
-        this.getList();
-        this.msgSuccess("删除成功");
-      }).catch(function () {
-      });
+        return delOutstoreDataAndFile(row).then(response => {
+          if (response.code === 200) {
+            that.msgSuccess("删除成功");
+            that.getList();
+          }
+        });
+      }).then(() => {}).catch(function () {})
     },
   }
 }
