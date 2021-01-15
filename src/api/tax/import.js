@@ -74,3 +74,12 @@ export function delInstoreDataAndFile(data) {
     data: data,
   })
 }
+export function delOutstoreDataAndFile(data) {
+  return request({
+    url: '/tax/import/delOutstoreData',
+    method: 'post',
+    data: data,
+  })
+}
+
+

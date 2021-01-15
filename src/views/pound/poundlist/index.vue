@@ -5,6 +5,7 @@
       <el-button type="primary" icon="el-icon-plus" size="small" @click="AllADD">暂存</el-button>
       <el-button type="success" icon="el-icon-edit" size="small" @click="generateAdd">生成</el-button>
       <el-button type="warning" icon="el-icon-refresh-right" size="small" @click="cancel">清空</el-button>
+      <el-button type="danger" plain icon="el-icon-search" size="small" @click="getVehicleList">刷新车号</el-button>
       <!-- <el-button
          type="primary"
          icon="el-icon-plus"
@@ -47,6 +48,7 @@
               <el-col :span="12">
                 <el-form-item label="车号" prop="plateNum" class="coalPageSelect">
                   <el-select class="coalPageSelect"
+                             ref="plateNum"
                              v-model="form.plateNum"
                              placeholder="请选择车号"
                              prop="plateNum"
@@ -123,8 +125,7 @@
                              v-model="form.locationNumber"
                              placeholder="请选择库位号"
                              prop="locationNumber"
-                             filterable
-                  >
+                             filterabl>
                     <el-option
                       v-for="dict in storeList"
                       :key="dict.value"
@@ -409,6 +410,7 @@ export default {
         measurementNum: undefined, //业务编号
         viaType: undefined,
         id: undefined,
+        finalInspectionTime: undefined, //模板Id
       },
       //通道配置
       PoundForm: {
@@ -558,6 +560,8 @@ export default {
               this.form.measurementNum = response.data.businessNo
               //批次号
               this.form.specification = response.data.batchNo
+              //用此变量保存 模板Id
+              this.form.finalInspectionTime = response.data.templateId
             } else {
               this.msgError(response.msg);
             }
@@ -630,6 +634,12 @@ export default {
       //离开当前页面定时器停止
       this.$once("hook:beforeDestroy", () => {
         clearInterval(this.ChannelNumberTimer);
+      });
+    },
+    getVehicleList(){
+      listVehicleNoList(this.queryParams.stationId).then((response) => {
+        this.plateNumOptions = response.data;
+        this.$refs['plateNum'].focus()
       });
     },
     /** 暂存按钮 */
