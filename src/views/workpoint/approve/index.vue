@@ -441,7 +441,6 @@ export default {
       this.approveStateOptions.splice(0,1)
     });
     this.getWorkpointTypeList()
-    //this.getWorkpointStandardDicList()
     this.depts = getUserDepts('')
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId
@@ -452,7 +451,6 @@ export default {
       this.getUserList()
       this.getAuditGroupList()
       this.getList();
-      //this.getWorkpointStandardList()
     }
     listWorker({}).then(response => {
       this.allWorkers = response.rows

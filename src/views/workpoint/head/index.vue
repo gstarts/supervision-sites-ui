@@ -243,12 +243,12 @@
                      @click="handleDelete(scope.row)"
                      v-hasPermi="['workpoint:head:remove']">删除
           </el-button>
-<!--          <el-button v-show="scope.row.approveState === '1'"
-                     size="mini"
-                     type="text"
-                     @click="handleApproveUpdate(scope.row)"
-                     v-hasPermi="['workpoint:approveHead:edit']">审批
-          </el-button>-->
+          <!--          <el-button v-show="scope.row.approveState === '1'"
+                               size="mini"
+                               type="text"
+                               @click="handleApproveUpdate(scope.row)"
+                               v-hasPermi="['workpoint:approveHead:edit']">审批
+                    </el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -394,7 +394,21 @@
       style="padding:10px"
       :before-close="drawBeforeClose"
       :with-header="true">
-
+      <div style="margin-left: 30px;">
+        作业起止时间:
+        <el-date-picker
+          v-model="timeRange"
+          @change="setTimeRange"
+          :clearable="false"
+          type="datetimerange"
+          align="right"
+          size="small"
+          format="yyyy-MM-dd HH:mm:ss"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :default-time="['00:00:00', '00:00:00']">
+        </el-date-picker>
+      </div>
       <el-form v-model="record" ref="record" :rules="rulesNew" :inline="true" label-width="68px">
         <el-tabs active-name="worker" v-loading="drawLoading" style="padding: 0 10px">
           <el-tab-pane label="作业人员" name="worker">
@@ -466,6 +480,7 @@
               <af-table-column label="开始时间" align="center" prop="workStartTime" width="200">
                 <template slot-scope="scope">
                   <el-date-picker v-model="scope.row.workStartTime" type="datetime"
+                                  format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择日期时间" size="mini" style="width:190px">
                   </el-date-picker>
                 </template>
@@ -473,6 +488,7 @@
               <af-table-column label="结束时间" align="center" prop="workOverTime" width="200">
                 <template slot-scope="scope">
                   <el-date-picker v-model="scope.row.workOverTime" type="datetime"
+                                  format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择日期时间" size="mini" style="width:190px">
                   </el-date-picker>
                 </template>
@@ -549,6 +565,7 @@
               <af-table-column label="设备开始时间" align="center" prop="deviceStartTime" width="200px">
                 <template slot-scope="scope">
                   <el-date-picker v-model="scope.row.deviceStartTime" type="datetime"
+                                  format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择日期时间" size="mini" style="width:190px">
                   </el-date-picker>
                 </template>
@@ -556,6 +573,7 @@
               <af-table-column label="设备结束时间" align="center" prop="deviceOverTime" width="200px">
                 <template slot-scope="scope">
                   <el-date-picker v-model="scope.row.deviceOverTime" type="datetime"
+                                  format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择日期时间" size="mini" style="width:190px">
                   </el-date-picker>
                 </template>
@@ -617,12 +635,14 @@ import {addListRecord, listRecord} from "@/api/workpoint/record";
 import {addApproveHead} from "@/api/workpoint/approveHead";
 import {listUser} from "@/api/system/user";
 import {listOutstore_doc} from "@/api/tax/outstore_doc";
+import {formatDate} from "@/utils";
 
 export default {
   name: "Head",
   data() {
     return {
-      sidebar: undefined,
+      timeRange: [formatDate(new Date(), 'yyy-MM-dd HH:mm:ss'), formatDate(new Date(), 'yyy-MM-dd HH:mm:ss')],
+      //sidebar: undefined,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -880,24 +900,22 @@ export default {
     });
     //获取工分类型
     this.getWorkpointTypeList()
-    this.getWorkpointStandardDicList()
     this.depts = getUserDepts('')
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId
       this.getList();
       //查询工分标准
       this.getGroupList()
-      //this.getWorkpointStandardList()
+      this.getWorkpointStandardDicList()
+      this.getAuditGroupList()
+      this.getUserList()
+      this.getDeviceList()
     }
     //this.sidebar = store.getters.sidebar
     //获取所有的工人名单
     listWorker({}).then(response => {
       this.allWorkers = response.rows
     })
-    this.getDeviceList()
-    this.getAuditGroupList()
-    this.getUserList()
-
     this.rules = this.rulesHead
   },
   methods: {
@@ -988,6 +1006,9 @@ export default {
       this.deviceRecordList = []
 
       this.currentRecord = row
+      if (row.businessTime) {
+        this.timeRange = [formatDate(new Date(row.businessTime), 'yyyy-MM-dd HH:mm:ss'), formatDate(new Date(row.businessTime), 'yyyy-MM-dd HH:mm:ss')]
+      }
       //设置表单内容
       listRecord({'headId': row.id}).then(response => {
         this.drawLoading = false
@@ -1000,10 +1021,15 @@ export default {
               this.deviceRecordList.push(item)
             }
           })
+          if (this.workerRecordList.length > 0) {
+            this.timeRange = [formatDate(new Date(this.workerRecordList[0].workStartTime), 'yyyy-MM-dd HH:mm:ss'), formatDate(new Date(this.workerRecordList[0].workOverTime), 'yyyy-MM-dd HH:mm:ss')]
+          } else if (this.deviceRecordList.length > 0) {
+            this.timeRange = [formatDate(new Date(this.deviceRecordList[0].deviceStartTime), 'yyyy-MM-dd HH:mm:ss'), formatDate(new Date(this.deviceRecordList[0].deviceOverTime), 'yyyy-MM-dd HH:mm:ss')]
+
+          }
         }
       })
       this.workerOpen = true
-      ///...
     },
     /** 提交按钮 */
     submitForm: function () {
@@ -1068,11 +1094,11 @@ export default {
         }
       })
     },
-
+    //工分标准列表
     getWorkpointStandardDicList() {
       //this.loading = true
       this.workpointStandardOptions = []
-      listStandard({'placeId': this.form.placeId, 'state': '1'}).then(response => {
+      listStandard({'placeId': this.queryParams.placeId, 'state': '1'}).then(response => {
         this.workpointStandardOptions = response.rows;
       });
     },
@@ -1252,6 +1278,9 @@ export default {
     plusWorker(worker) {
       let workerIn = this.workerRecordList.find(item => item.workerCode === worker.workerCode)
       if (!workerIn) {
+        worker.workStartTime = this.timeRange[0]
+        worker.workOverTime = this.timeRange[1]
+        worker.useTime = this.calculateMinutes(this.timeRange[0], this.timeRange[1])
         this.workerRecordList.push(worker)
       }
     },
@@ -1363,6 +1392,9 @@ export default {
       device.jobDevice = event
       let deviceIn = this.deviceRecordList.find(item => item.jobDevice === device.jobDevice)
       if (!deviceIn) {
+        device.deviceStartTime = this.timeRange[0]
+        device.deviceOverTime = this.timeRange[1]
+        device.deviceUseTime = this.calculateMinutes(this.timeRange[0], this.timeRange[1])
         this.deviceRecordList.push(device)
       }
     },
@@ -1501,9 +1533,24 @@ export default {
         }
       }
       //都验证完，提交
+      this.btnLoading = true
       //合并两个数组
       let list = this.workerRecordList.concat(this.deviceRecordList);
-      this.btnLoading = true
+      //转换时间格式
+      for (let item of list) {
+        if (item.workStartTime) {
+          item.workStartTime = formatDate(item.workStartTime, 'yyy-MM-dd HH:mm:ss')
+        }
+        if (item.workOverTime) {
+          item.workOverTime = formatDate(item.workOverTime, 'yyy-MM-dd HH:mm:ss')
+        }
+        if (item.deviceStartTime) {
+          item.deviceStartTime = formatDate(item.deviceStartTime, 'yyy-MM-dd HH:mm:ss')
+        }
+        if (item.deviceOverTime) {
+          item.deviceOverTime = formatDate(item.deviceOverTime, 'yyy-MM-dd HH:mm:ss')
+        }
+      }
       addListRecord(list).then(response => {
         this.btnLoading = false
         if (response.code === 200) {
@@ -1512,6 +1559,8 @@ export default {
         } else {
           this.$message.error(response.msg)
         }
+      }).catch(e => {
+        this.btnLoading = false
       })
       /*this.workerRecordList.forEach((item, index) => {
         item.vouchScore = perPoint
@@ -1631,6 +1680,30 @@ export default {
           this.rules = this.rulesHead
           break;
       }
+    },
+    setTimeRange() {
+      console.log(this.timeRange[0])
+      console.log(this.timeRange[1])
+
+      /*for (let i = 0; i < this.workerRecordList.length; i++) {
+        this.workerRecordList[i].workStartTime = this.timeRange[0]
+        this.workerRecordList[i].workOverTime = this.timeRange[1]
+        this.workerRecordList[i].useTime = this.calculateMinutes(this.timeRange[0], this.timeRange[1])
+      }*/
+
+      for (let worker of this.workerRecordList) {
+        worker.workStartTime = this.timeRange[0]
+        worker.workOverTime = this.timeRange[1]
+        worker.useTime = this.calculateMinutes(this.timeRange[0], this.timeRange[1])
+      }
+
+      for (let device of this.deviceRecordList) {
+        device.deviceUseTime = this.calculateMinutes(this.timeRange[0], this.timeRange[1])
+        device.deviceStartTime = this.timeRange[0]
+        device.deviceOverTime = this.timeRange[1]
+      }
+
+
     }
   }
 }
