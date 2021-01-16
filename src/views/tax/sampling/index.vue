@@ -1,6 +1,17 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="68px">
+      <el-form-item label="场所" prop="placeId">
+        <el-select
+          v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="LotNo" prop="lotNo">
         <el-input
           v-model="queryParams.lotNo"
@@ -55,129 +66,129 @@
 
 
     </el-form>
-<!--      <el-form-item label="单据号" prop="documentNo">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.documentNo"-->
-<!--          placeholder="请输入单据号"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+    <!--      <el-form-item label="单据号" prop="documentNo">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.documentNo"-->
+    <!--          placeholder="请输入单据号"-->
+    <!--          clearable-->
+    <!--          size="small"-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
 
-<!--      </el-form-item>-->
-
-
+    <!--      </el-form-item>-->
 
 
-<!--      <el-form-item label="取样单位" prop="samplingUnit">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.samplingUnit"-->
-<!--          placeholder="请输入取样单位"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="取样人" prop="samplingPeople">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.samplingPeople"-->
-<!--          placeholder="请输入取样人"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="取样总重量" prop="samplingWeight">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.samplingWeight"-->
-<!--          placeholder="请输入取样总重量"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="返程日期" prop="returnTime">-->
-<!--        <el-date-picker clearable size="small" style="width: 200px"-->
-<!--          v-model="queryParams.returnTime"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="选择返程日期">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="单据状态" prop="documentsStatus">-->
-<!--        <el-select v-model="queryParams.documentsStatus" placeholder="请选择单据状态" clearable size="small">-->
-<!--          <el-option label="请选择字典生成" value="" />-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="制单人" prop="makerPeople">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.makerPeople"-->
-<!--          placeholder="请输入制单人"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="制单日期" prop="makerTime">-->
-<!--        <el-date-picker clearable size="small" style="width: 200px"-->
-<!--          v-model="queryParams.makerTime"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="选择制单日期">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
 
-<!--    </el-form>-->
 
-<!--    <el-row :gutter="10" class="mb8">-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['tax:lord:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="success"-->
-<!--          icon="el-icon-edit"-->
-<!--          size="mini"-->
-<!--          :disabled="single"-->
-<!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['tax:lord:edit']"-->
-<!--        >修改</el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="danger"-->
-<!--          icon="el-icon-delete"-->
-<!--          size="mini"-->
-<!--          :disabled="multiple"-->
-<!--          @click="handleDelete"-->
-<!--          v-hasPermi="['tax:lord:remove']"-->
-<!--        >删除</el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="warning"-->
-<!--          icon="el-icon-download"-->
-<!--          size="mini"-->
-<!--          @click="handleExport"-->
-<!--          v-hasPermi="['tax:lord:export']"-->
-<!--        >导出</el-button>-->
-<!--      </el-col>-->
-<!--    </el-row>-->
+    <!--      <el-form-item label="取样单位" prop="samplingUnit">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.samplingUnit"-->
+    <!--          placeholder="请输入取样单位"-->
+    <!--          clearable-->
+    <!--          size="small"-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="取样人" prop="samplingPeople">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.samplingPeople"-->
+    <!--          placeholder="请输入取样人"-->
+    <!--          clearable-->
+    <!--          size="small"-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="取样总重量" prop="samplingWeight">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.samplingWeight"-->
+    <!--          placeholder="请输入取样总重量"-->
+    <!--          clearable-->
+    <!--          size="small"-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="返程日期" prop="returnTime">-->
+    <!--        <el-date-picker clearable size="small" style="width: 200px"-->
+    <!--          v-model="queryParams.returnTime"-->
+    <!--          type="date"-->
+    <!--          value-format="yyyy-MM-dd"-->
+    <!--          placeholder="选择返程日期">-->
+    <!--        </el-date-picker>-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="单据状态" prop="documentsStatus">-->
+    <!--        <el-select v-model="queryParams.documentsStatus" placeholder="请选择单据状态" clearable size="small">-->
+    <!--          <el-option label="请选择字典生成" value="" />-->
+    <!--        </el-select>-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="制单人" prop="makerPeople">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.makerPeople"-->
+    <!--          placeholder="请输入制单人"-->
+    <!--          clearable-->
+    <!--          size="small"-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="制单日期" prop="makerTime">-->
+    <!--        <el-date-picker clearable size="small" style="width: 200px"-->
+    <!--          v-model="queryParams.makerTime"-->
+    <!--          type="date"-->
+    <!--          value-format="yyyy-MM-dd"-->
+    <!--          placeholder="选择制单日期">-->
+    <!--        </el-date-picker>-->
+    <!--      </el-form-item>-->
+
+    <!--    </el-form>-->
+
+    <!--    <el-row :gutter="10" class="mb8">-->
+    <!--      <el-col :span="1.5">-->
+    <!--        <el-button-->
+    <!--          type="primary"-->
+    <!--          icon="el-icon-plus"-->
+    <!--          size="mini"-->
+    <!--          @click="handleAdd"-->
+    <!--          v-hasPermi="['tax:lord:add']"-->
+    <!--        >新增</el-button>-->
+    <!--      </el-col>-->
+    <!--      <el-col :span="1.5">-->
+    <!--        <el-button-->
+    <!--          type="success"-->
+    <!--          icon="el-icon-edit"-->
+    <!--          size="mini"-->
+    <!--          :disabled="single"-->
+    <!--          @click="handleUpdate"-->
+    <!--          v-hasPermi="['tax:lord:edit']"-->
+    <!--        >修改</el-button>-->
+    <!--      </el-col>-->
+    <!--      <el-col :span="1.5">-->
+    <!--        <el-button-->
+    <!--          type="danger"-->
+    <!--          icon="el-icon-delete"-->
+    <!--          size="mini"-->
+    <!--          :disabled="multiple"-->
+    <!--          @click="handleDelete"-->
+    <!--          v-hasPermi="['tax:lord:remove']"-->
+    <!--        >删除</el-button>-->
+    <!--      </el-col>-->
+    <!--      <el-col :span="1.5">-->
+    <!--        <el-button-->
+    <!--          type="warning"-->
+    <!--          icon="el-icon-download"-->
+    <!--          size="mini"-->
+    <!--          @click="handleExport"-->
+    <!--          v-hasPermi="['tax:lord:export']"-->
+    <!--        >导出</el-button>-->
+    <!--      </el-col>-->
+    <!--    </el-row>-->
 
     <el-table v-loading="loading" :data="lordList" @selection-change="handleSelectionChange" >
       <el-table-column type="selection" width="55" align="center" />
-<!--      <el-table-column type="selection" width="55" align="center" />-->
-      <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="单据号" align="center" prop="documentNo" />
-      <el-table-column label="LotNo" align="center" prop="lotNo" />
-      <el-table-column label="客户" align="center" prop="client" />
+      <!--      <el-table-column type="selection" width="55" align="center" />-->
+      <el-table-column label="ID" align="center" prop="id" />
+      <el-table-column label="单据号" align="center" prop="documentNo" width="140" />
+      <el-table-column label="LotNo" align="center" prop="lotNo" width="110" />
+      <af-table-column label="客户" align="center" prop="client" />
       <el-table-column label="入境日期" align="center" prop="entryTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.entryTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
@@ -191,7 +202,7 @@
       </el-table-column>
       <el-table-column label="取样单位" align="center" prop="samplingUnit" />
       <el-table-column label="取样人" align="center" prop="samplingPeople" />
-      <el-table-column label="取样总重量" align="center" prop="samplingWeight" />
+      <el-table-column label="取样总重量" align="center" prop="samplingWeight" width="90" />
       <el-table-column label="返程日期" align="center" prop="returnTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.returnTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
@@ -205,7 +216,7 @@
           <span>{{ parseTime(scope.row.makerTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="140">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -228,7 +239,6 @@
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
-      :page-sizes="[100, 200, 300, 400,500]"
       @pagination="getList"
     />
 
@@ -246,10 +256,10 @@
         </el-form-item>
         <el-form-item label="入境日期" prop="entryTime">
           <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.entryTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择入境日期">
+                          v-model="form.entryTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="选择入境日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="业务编号" prop="businessNumber">
@@ -257,10 +267,10 @@
         </el-form-item>
         <el-form-item label="取样日期" prop="samplingTime">
           <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.samplingTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择取样日期">
+                          v-model="form.samplingTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="选择取样日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="取样单位" prop="samplingUnit">
@@ -274,29 +284,29 @@
         </el-form-item>
         <el-form-item label="返程日期" prop="returnTime">
           <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.returnTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择返程日期">
+                          v-model="form.returnTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="选择返程日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
-<!--        <el-form-item label="单据状态">-->
-<!--          <el-radio-group v-model="form.documentsStatus">-->
-<!--            <el-radio label="1">请选择字典生成</el-radio>-->
-<!--          </el-radio-group>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="单据状态">-->
+        <!--          <el-radio-group v-model="form.documentsStatus">-->
+        <!--            <el-radio label="1">请选择字典生成</el-radio>-->
+        <!--          </el-radio-group>-->
+        <!--        </el-form-item>-->
         <el-form-item label="制单人" prop="makerPeople">
           <el-input v-model="form.makerPeople" placeholder="请输入制单人" />
         </el-form-item>
         <el-form-item label="制单日期" prop="makerTime">
           <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.makerTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择制单日期">
+                          v-model="form.makerTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="选择制单日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="创建人" prop="createBy">
@@ -304,10 +314,10 @@
         </el-form-item>
         <el-form-item label="创建时间" prop="createTime">
           <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.createTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择创建时间">
+                          v-model="form.createTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="选择创建时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="更新人" prop="updateBy">
@@ -315,10 +325,10 @@
         </el-form-item>
         <el-form-item label="更新时间" prop="updateTime">
           <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.updateTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择更新时间">
+                          v-model="form.updateTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="选择更新时间">
           </el-date-picker>
         </el-form-item>
       </el-form>
@@ -332,6 +342,7 @@
 
 <script>
 import { listLord, getLord, delLord, addLord, updateLord,selectAll} from "@/api/tax/sampling/lord";
+import {getUserDepts} from "@/utils/charutils";
 
 
 export default {
@@ -346,6 +357,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      depts: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -379,6 +391,8 @@ export default {
         entryTimeEnd:undefined,
         samplingTimeBegin:undefined,
         samplingTimeEnd:undefined,
+        orderByColumn: 'id',
+        isAsc: 'desc',
       },
       // 表单参数
       form: {},
@@ -389,7 +403,11 @@ export default {
     };
   },
   created() {
-    this.getList();
+    this.depts = getUserDepts('1')
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+      this.getList();
+    }
   },
   methods: {
     /** 查询取样管理 主列表 */
