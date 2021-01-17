@@ -49,3 +49,28 @@ export function getRecordCountByHeadId(id) {
     method: 'get'
   })
 }
+
+//全部
+export function statisticsAll(data) {
+  return request({
+    url: '/workpoint/head/statistics/all',
+    method: 'get',
+    params: data
+  })
+}
+//工分类型分组
+export function statisticsType(data) {
+  return request({
+    url: '/workpoint/head/statistics/type',
+    method: 'get',
+    params: data
+  })
+}
+//明细
+export function statisticsDetail(data) {
+  return request({
+    url: '/workpoint/head/statistics/detail',
+    method: 'get',
+    params: data
+  })
+}

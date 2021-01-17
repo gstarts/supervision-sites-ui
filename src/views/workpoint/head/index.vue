@@ -338,7 +338,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button :loading="btnLoading" type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -377,7 +377,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitApproveForm">确 定</el-button>
+        <el-button type="primary" :loading="btnLoading" @click="submitApproveForm">确 定</el-button>
         <el-button @click="approveCancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -404,6 +404,7 @@
           align="right"
           size="small"
           format="yyyy-MM-dd HH:mm:ss"
+          value-format="yyyy-MM-dd HH:mm:ss"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           :default-time="['00:00:00', '00:00:00']">
@@ -481,6 +482,7 @@
                 <template slot-scope="scope">
                   <el-date-picker v-model="scope.row.workStartTime" type="datetime"
                                   format="yyyy-MM-dd HH:mm:ss"
+                                  value-format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择日期时间" size="mini" style="width:190px">
                   </el-date-picker>
                 </template>
@@ -489,6 +491,7 @@
                 <template slot-scope="scope">
                   <el-date-picker v-model="scope.row.workOverTime" type="datetime"
                                   format="yyyy-MM-dd HH:mm:ss"
+                                  value-format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择日期时间" size="mini" style="width:190px">
                   </el-date-picker>
                 </template>
@@ -566,6 +569,7 @@
                 <template slot-scope="scope">
                   <el-date-picker v-model="scope.row.deviceStartTime" type="datetime"
                                   format="yyyy-MM-dd HH:mm:ss"
+                                  value-format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择日期时间" size="mini" style="width:190px">
                   </el-date-picker>
                 </template>
@@ -574,6 +578,7 @@
                 <template slot-scope="scope">
                   <el-date-picker v-model="scope.row.deviceOverTime" type="datetime"
                                   format="yyyy-MM-dd HH:mm:ss"
+                                  value-format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择日期时间" size="mini" style="width:190px">
                   </el-date-picker>
                 </template>
@@ -768,7 +773,7 @@ export default {
         pointTypeCode: undefined,
         pointStandardCode: undefined,
         standardScore: undefined,
-        vehicleCount: undefined,
+        vehicleCount: 0,
         businessNo: undefined,
         workStartTime: undefined,
         workOverTime: undefined,
@@ -949,7 +954,7 @@ export default {
         businessTime: undefined,
         pointType: undefined,
         pointStandard: undefined,
-        vehicleCount: undefined,
+        vehicleCount: 0,
         docNo: undefined,
         docId: undefined,
         businessNo: undefined,
@@ -1025,7 +1030,6 @@ export default {
             this.timeRange = [formatDate(new Date(this.workerRecordList[0].workStartTime), 'yyyy-MM-dd HH:mm:ss'), formatDate(new Date(this.workerRecordList[0].workOverTime), 'yyyy-MM-dd HH:mm:ss')]
           } else if (this.deviceRecordList.length > 0) {
             this.timeRange = [formatDate(new Date(this.deviceRecordList[0].deviceStartTime), 'yyyy-MM-dd HH:mm:ss'), formatDate(new Date(this.deviceRecordList[0].deviceOverTime), 'yyyy-MM-dd HH:mm:ss')]
-
           }
         }
       })
@@ -1035,21 +1039,28 @@ export default {
     submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          this.btnLoading = true
           if (this.form.id != undefined) {
             updateHead(this.form).then(response => {
+              this.btnLoading = false
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
                 this.getList();
               }
+            }).catch(e => {
+              this.btnLoading = false
             });
           } else {
             addHead(this.form).then(response => {
+              this.btnLoading = false
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
                 this.getList();
               }
+            }).catch(e => {
+              this.btnLoading = false
             });
           }
         }
@@ -1157,6 +1168,7 @@ export default {
               if (response.code === 200) {
                 console.log(response.rows)
                 if (response.rows.length === 0) {
+                  this.form.vehicleCount = 0
                   this.$message.warning("未找到对应的单据")
                 } else {
                   let result = response.rows[0]
@@ -1592,7 +1604,9 @@ export default {
     submitApproveForm() {
       this.$refs["approveHead"].validate(valid => {
         if (valid) {
+          this.btnLoading = true
           addApproveHead(this.approveHead).then(response => {
+            this.btnLoading = false
             if (response.code === 200) {
               this.$message.success(response.msg)
               this.approveOpen = false
@@ -1600,6 +1614,8 @@ export default {
             } else {
               this.$message.error(response.msg)
             }
+          }).catch(e => {
+            this.btnLoading = false
           })
         }
       })

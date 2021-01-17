@@ -141,46 +141,46 @@
 
     <!--    </el-form>-->
 
-    <!--    <el-row :gutter="10" class="mb8">-->
-    <!--      <el-col :span="1.5">-->
-    <!--        <el-button-->
-    <!--          type="primary"-->
-    <!--          icon="el-icon-plus"-->
-    <!--          size="mini"-->
-    <!--          @click="handleAdd"-->
-    <!--          v-hasPermi="['tax:lord:add']"-->
-    <!--        >新增</el-button>-->
-    <!--      </el-col>-->
-    <!--      <el-col :span="1.5">-->
-    <!--        <el-button-->
-    <!--          type="success"-->
-    <!--          icon="el-icon-edit"-->
-    <!--          size="mini"-->
-    <!--          :disabled="single"-->
-    <!--          @click="handleUpdate"-->
-    <!--          v-hasPermi="['tax:lord:edit']"-->
-    <!--        >修改</el-button>-->
-    <!--      </el-col>-->
-    <!--      <el-col :span="1.5">-->
-    <!--        <el-button-->
-    <!--          type="danger"-->
-    <!--          icon="el-icon-delete"-->
-    <!--          size="mini"-->
-    <!--          :disabled="multiple"-->
-    <!--          @click="handleDelete"-->
-    <!--          v-hasPermi="['tax:lord:remove']"-->
-    <!--        >删除</el-button>-->
-    <!--      </el-col>-->
-    <!--      <el-col :span="1.5">-->
-    <!--        <el-button-->
-    <!--          type="warning"-->
-    <!--          icon="el-icon-download"-->
-    <!--          size="mini"-->
-    <!--          @click="handleExport"-->
-    <!--          v-hasPermi="['tax:lord:export']"-->
-    <!--        >导出</el-button>-->
-    <!--      </el-col>-->
-    <!--    </el-row>-->
+        <el-row :gutter="10" class="mb8">
+          <el-col :span="1.5">
+            <el-button
+              type="primary"
+              icon="el-icon-plus"
+              size="mini"
+              @click="handleAdd"
+              v-hasPermi="['tax:lord:add']"
+            >新增</el-button>
+          </el-col>
+<!--          <el-col :span="1.5">
+            <el-button
+              type="success"
+              icon="el-icon-edit"
+              size="mini"
+              :disabled="single"
+              @click="handleUpdate"
+              v-hasPermi="['tax:lord:edit']"
+            >修改</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              :disabled="multiple"
+              @click="handleDelete"
+              v-hasPermi="['tax:lord:remove']"
+            >删除</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button
+              type="warning"
+              icon="el-icon-download"
+              size="mini"
+              @click="handleExport"
+              v-hasPermi="['tax:lord:export']"
+            >导出</el-button>
+          </el-col>-->
+        </el-row>
 
     <el-table v-loading="loading" :data="lordList" @selection-change="handleSelectionChange" >
       <el-table-column type="selection" width="55" align="center" />
@@ -486,9 +486,11 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
+      this.$router.push({path: "/tax/spamlingsmall"});
+
+      /*this.reset();
       this.open = true;
-      this.title = "添加取样管理 主";
+      this.title = "添加取样管理 主";*/
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
