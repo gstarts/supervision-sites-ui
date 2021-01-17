@@ -640,7 +640,9 @@
           lunchCount: undefined,
           dinnerCount: undefined,
           remarks: undefined,
-          status: undefined
+          status: undefined,
+          orderByColumn: 'id',
+          isAsc: 'desc'
         },
         // 表单参数
         form: {},
