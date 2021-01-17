@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-row>
         <el-col :span="4.8">
-        <el-form-item label="场站ID" prop="placeId">
+        <el-form-item label="场所" prop="placeId">
           <el-select v-model="queryParams.placeId" placeholder="请选择场所">
             <el-option
               v-for="dept in depts"
@@ -60,9 +60,6 @@
           />
         </el-form-item>
         </el-col>
-
-
-
       </el-row>
 
         <el-form-item label="车队名称" prop="fleetName">
@@ -71,10 +68,8 @@
           placeholder="请输入车队名称"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          @keyup.enter.native="handleQuery"/>
       </el-form-item>
-
           <el-form-item label="录入时间" prop="inputTime">
             <el-date-picker clearable size="small" style="width: 200px"
                             v-model="queryParams.inputTime"
@@ -83,8 +78,6 @@
                             placeholder="选择录入时间">
             </el-date-picker>
           </el-form-item>
-
-
 
   <!--          <el-form-item label="审核日期" prop="reviewDate">-->
   <!--            <el-date-picker clearable size="small" style="width: 200px"-->
@@ -98,11 +91,6 @@
 
 <!--          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
 <!--          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
-
-
-
-
-
 
 <!--        <el-col :span="6">-->
 <!--          <el-form-item label="业务时间" prop="businessDate">-->
@@ -662,7 +650,13 @@
           {dictValue: 1, dictLabel: '执行'}
         ],
         // 表单校验
-        rules: {}
+        rules: {
+          businessDepartment: [{required: true,message:'业务编号不能为空',trigger: 'blur'}],
+          businessDate: [{required: true,message:'业务时间不能为空',trigger: 'change'}],
+          lotNo: [{required: true,message:'lotNo不能为空',trigger: 'blur'}],
+          entryTime: [{required: true,message:'入境时间不能为空',trigger: 'change'}],
+          departureTime: [{required: true,message:'出境时间不能为空',trigger: 'change'}],
+        }
       };
     },
     created() {
@@ -712,7 +706,8 @@
           lunchCount: undefined,
           dinnerCount: undefined,
           remarks: undefined,
-          status: 0
+          status: 0,
+          placeId: this.queryParams.placeId,
         };
         this.resetForm("form");
       },
@@ -739,6 +734,7 @@
         this.reset();
         this.open = true;
         this.title = "添加司机食宿管理";
+        this.form.placeId = this.queryParams.placeId
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
@@ -784,9 +780,6 @@
           this.form.lotNo = response .data.batchNo;
           this.form.fleetName = response.data.fleetName;
           this.form.carNumber = response.data.vehicleCount;
-
-
-
         })
 
       },
