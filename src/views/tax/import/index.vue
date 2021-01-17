@@ -302,9 +302,9 @@
                          placeholder="请选择发货单位">
                 <el-option
                   v-for="type in nameList"
-                  :key="type.value"
+                  :key="type.key"
                   :label="type.value"
-                  :value="type.value"
+                  :value="type.key"
                 />
               </el-select>
               <!--              <el-autocomplete size="small" style="width: 100%"
@@ -320,12 +320,12 @@
           <el-col :span="12">
             <el-form-item label="收货单位" prop="receiveName">
               <el-select v-model="form.receiveName" size="small" style="width: 100%" filterable clearable
-                         placeholder="请选择发货单位">
+                         placeholder="请选择收货单位">
                 <el-option
                   v-for="type in nameList"
-                  :key="type.value"
+                  :key="type.key"
                   :label="type.value"
-                  :value="type.value"
+                  :value="type.key"
                 />
               </el-select>
               <!--              <el-autocomplete size="small" style="width: 100%"
@@ -421,34 +421,35 @@ export default {
       //客户合同
       contractList: [],
       nameList: [
-        {"value": "金航保税库 Jinhang Bonded Warehouse"},
-        {"value": "奥云陶勒盖 Oyu Tolgoi Limited"},
-        {"value": "金航保税库"},
-        {"value": "飞尚铜业"},
-        {"value": "东营方圆"},
-        {"value": "山东方泰"},
-        {"value": "紫金铜业"},
-        {"value": "阳谷祥光"},
-        {"value": "山东恒邦"},
-        {"value": "赤峰云铜"},
-        {"value": "赤峰金剑"},
-        {"value": "金川集团"},
-        {"value": "包头华鼎"},
-        {"value": "托克中国"},
-        {"value": "青岛方泰"},
-        {"value": "灵宝黄金"},
-        {"value": "浙江和鼎"},
-        {"value": "浙江富冶"},
-        {"value": "中原黄金"},
-        {"value": "东营鲁方"},
-        {"value": "北方铜业"},
-        {"value": "江西铜业"},
-        {"value": "豫光金铅"},
-        {"value": "深圳江铜"},
-        {"value": "富冶和鼎"},
-        {"value": "青海铜业"},
-        {"value": "白银有色"},
-        {"value": "吉林紫金"},
+        {"key":"金航保税库 Jinhang Bonded Warehouse","value": "金航保税库 Jinhang Bonded Warehouse"},
+        {"key": "奥云陶勒盖 Oyu Tolgoi Limited","value": "奥云陶勒盖 Oyu Tolgoi Limited"},
+        {"key": "金航保税库","value": "金航保税库"},
+        {"key": "飞尚铜业","value": "飞尚铜业"},
+        {"key": "东营方圆","value": "东营方圆"},
+        {"key": "山东方泰","value": "山东方泰"},
+        {"key": "紫金铜业","value": "紫金铜业"},
+        {"key": "阳谷祥光","value": "阳谷祥光"},
+        {"key": "山东恒邦","value": "山东恒邦"},
+        {"key": "赤峰云铜","value": "赤峰云铜"},
+        {"key": "赤峰金剑","value": "赤峰金剑"},
+        {"key": "金川集团","value": "金川集团"},
+        {"key": "包头华鼎","value": "包头华鼎"},
+        {"key": "托克中国","value": "托克中国"},
+        {"key": "青岛方泰","value": "青岛方泰"},
+        {"key": "灵宝黄金","value": "灵宝黄金"},
+        {"key": "浙江和鼎","value": "浙江和鼎"},
+        {"key": "浙江富冶","value": "浙江富冶"},
+        {"key": "中原黄金","value": "中原黄金"},
+        {"key": "东营鲁方","value": "东营鲁方"},
+        {"key": "北方铜业","value": "北方铜业"},
+        {"key": "江西铜业","value": "江西铜业"},
+        {"key": "豫光金铅","value": "豫光金铅"},
+        {"key": "深圳江铜","value": "深圳江铜"},
+        {"key": "富冶和鼎","value": "富冶和鼎"},
+        {"key": "青海铜业","value": "青海铜业"},
+        {"key": "白银有色","value": "白银有色"},
+        {"key": "吉林紫金","value": "吉林紫金"},
+
       ],
       //机构列表
       depts: [],
@@ -486,14 +487,26 @@ export default {
       },
       // 表单参数
       form: {
-        templateType: '',
-        businessNo: '',
-        storeCustomer: '',
-        settlementCustomer: '',
-        storeContractId: '',
-        settlementContractId: '',
-        sendName: '',
-        receiveName: ''
+        templateType: undefined,
+        storeCustomer: undefined,
+        settlementCustomer: undefined,
+        storeContractId: undefined,
+        settlementContractId: undefined,
+        id: undefined,
+        createBy: undefined,
+        createTime: undefined,
+        remark: undefined,
+        updateBy: undefined,
+        updateTime: undefined,
+        bucketName: undefined,
+        fileName: undefined,
+        isGenReport: undefined,
+        isGenStoreNotice: undefined,
+        objectName: undefined,
+        path: undefined,
+        placeId: undefined,
+        sendName: undefined,
+        receiveName: undefined,
       },
       noticeType: true,
       transType: false,
@@ -620,6 +633,8 @@ export default {
         objectName: undefined,
         path: undefined,
         placeId: undefined,
+        sendName: undefined,
+        receiveName: undefined,
 
       };
       this.uploading = false
@@ -859,6 +874,7 @@ export default {
         this.form.receiveName = '金航保税库 Jinhang Bonded Warehouse'
         this.setStoreCustomer() //寄仓合同ID
         this.setSettlementCustomer() //设置结算客户id
+        this.$forceUpdate()
       } else if (this.form.templateType === '0') {
         this.rules = this.rules3
         this.noticeType = true
@@ -868,6 +884,7 @@ export default {
         this.templateDownTxt = '出库通知单模板下载'
         this.form.receiveName = undefined
         this.form.sendName = '金航保税库'
+        this.$forceUpdate()
       } else if (this.form.templateType === '2') {
         this.templateDownTxt = '报关数据单模板下载'
         this.form.businessNo = undefined
@@ -880,8 +897,9 @@ export default {
         this.form.receiveName = undefined
         this.noticeType = false
         this.transType = false
+        this.$forceUpdate()
       }
-
+      //this.$forceUpdate()
       console.log(this.form)
     },
     // 收发货单位建议
