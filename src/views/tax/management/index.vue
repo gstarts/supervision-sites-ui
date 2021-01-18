@@ -371,12 +371,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="业务时间" prop="businessDate">
+            <el-form-item label="录入时间" prop="inputTime">
               <el-date-picker clearable size="small" style="width: 200px"
-                              v-model="form.businessDate"
+                              v-model="form.inputTime"
                               type="datetime"
                               value-format="yyyy-MM-dd HH:mm:ss"
-                              placeholder="选择业务时间">
+                              placeholder="选择录入时间">
               </el-date-picker>
             </el-form-item>
           </el-col>
@@ -437,10 +437,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="备注" prop="remarks">
-              <el-input v-model="form.remarks" placeholder="请输入备注"/>
+            <el-form-item label="录入人" prop="entryPerson">
+              <el-input v-model="form.entryPerson" placeholder="请输入录入人"/>
             </el-form-item>
           </el-col>
+
 
         </el-row>
         <el-row>
@@ -472,19 +473,23 @@
         <!--        <el-form-item label="录入人" prop="entryPerson">-->
         <!--          <el-input v-model="form.entryPerson" placeholder="请输入录入人"/>-->
         <!--        </el-form-item>-->
-        <!--        <el-form-item label="录入时间" prop="inputTime">-->
-        <!--          <el-date-picker clearable size="small" style="width: 200px"-->
-        <!--                          v-model="form.inputTime"-->
-        <!--                          type="date"-->
-        <!--                          value-format="yyyy-MM-dd"-->
-        <!--                          placeholder="选择录入时间">-->
-        <!--          </el-date-picker>-->
-        <!--        </el-form-item>-->
+<!--                <el-form-item label="录入时间" prop="inputTime">-->
+<!--                  <el-date-picker clearable size="small" style="width: 200px"-->
+<!--                                  v-model="form.inputTime"-->
+<!--                                  type="date"-->
+<!--                                  value-format="yyyy-MM-dd"-->
+<!--                                  placeholder="选择录入时间">-->
+<!--                  </el-date-picker>-->
+<!--                </el-form-item>-->
+
+<!--        <el-form-item label="场所Id" prop="remarks">-->
+<!--          <el-input v-model="form.placeId" placeholder="请输入备注"/>-->
+<!--        </el-form-item>-->
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="修改人" prop="updatePerson">
-              <el-input v-model="form.updatePerson" placeholder="请输入修改人"/>
+            <el-form-item label="备注" prop="remarks">
+              <el-input v-model="form.remarks" placeholder="请输入备注"/>
             </el-form-item>
           </el-col>
           <!--        <el-form-item label="最终修改时间" prop="updateTime">-->
@@ -681,7 +686,11 @@
           {dictValue: 1, dictLabel: '执行'}
         ],
         // 表单校验
-        rules: {}
+        rules: {
+          businessDepartment: [{required: true, message: "业务编号不能为空", trigger: "blur"},],
+          entryTime: [{type: "string", required: true, message: "入境时间不能为空", trigger: "change",},],
+          departureTime: [{type: "string", required: true, message: "入境时间不能为空", trigger: "change",},],
+        }
       };
     },
     created() {
@@ -702,13 +711,18 @@
           this.loading = false;
         });
       },
-
+    //根据入境时间 出境时间计算住宿天数跟饭数
       dateChange(){
-        var day1 = new Date(this.queryParams.departureTime);
-        var day2 = new Date(this.queryParams.entryTime).toString().replace("-", "/");
+        var day1 = new Date(this.form.departureTime);
+        var day2 = new Date(this.form.entryTime);
         console.log(day2)
-        // console.log((Date.parse(this.queryParams.departureTime)-Date.parse(this.queryParams.entryTime))/(1*24*60*60*1000))
-
+        var iDays = parseFloat((Math.abs(day1 - day2) / 1000 / 60 / 60 /24)) ;
+        var count = parseInt(Math.ceil(iDays))
+         this.form.breakfastCount = count;
+         this.form.lunchCount = count;
+         this.form.dinnerCount = count;
+         this.form.dayNum = count;
+         this.form.placeId = this.queryParams.placeId;
       },
       // 取消按钮
       cancel() {
