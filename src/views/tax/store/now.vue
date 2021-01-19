@@ -113,7 +113,7 @@
     <el-table row-key="id" :tree-props="{children: 'children'}" :height="height"
               v-loading="loading" :data="goodsList" style="margin-right: 10px">
 <!--      <el-table-column label="ID" align="center" prop="id"/>-->
-      <el-table-column label="客户" align="center" prop="checkConsumer" fixed="left" min-width="180"/>
+      <el-table-column label="客户" align="left" prop="checkConsumer" fixed="left" min-width="180"/>
       <el-table-column label="批次号" align="center" prop="goodsBatchNo" min-width="140"/>
       <el-table-column label="库位" align="center" prop="storeCode" min-width="80"/>
       <el-table-column label="品名" align="center" prop="goodsName" min-width="160"/>

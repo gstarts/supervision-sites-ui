@@ -48,45 +48,45 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-<!--      <el-form-item label="品名" prop="goodsName">
-        <el-select v-model="queryParams.goodsName" placeholder="请选择货物名称" size="small" clearable @change="handleQuery">
-          <el-option
-            v-for="dict in coalTypeOptions"
-            :key="dict.dictLabel"
-            :label="dict.dictLabel"
-            :value="dict.dictLabel"/>
-        </el-select>
-      </el-form-item>-->
-<!--      <el-form-item label="提煤单号" prop="remark">
-        <el-input
-          v-model="queryParams.remark"
-          placeholder="请输入提煤单号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>-->
+      <!--      <el-form-item label="品名" prop="goodsName">
+              <el-select v-model="queryParams.goodsName" placeholder="请选择货物名称" size="small" clearable @change="handleQuery">
+                <el-option
+                  v-for="dict in coalTypeOptions"
+                  :key="dict.dictLabel"
+                  :label="dict.dictLabel"
+                  :value="dict.dictLabel"/>
+              </el-select>
+            </el-form-item>-->
+      <!--      <el-form-item label="提煤单号" prop="remark">
+              <el-input
+                v-model="queryParams.remark"
+                placeholder="请输入提煤单号"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>-->
 
-<!--      <el-form-item label="运输方式" prop="transportMode">
-        <el-select v-model="queryParams.transportMode" filterable clearable placeholder="请选择运输方式">
-          <el-option
-            v-for="item in transportModeDic"
-            :key="item.dictValue"
-            :label="item.dictLabel"
-            :value="item.dictValue">
-          </el-option>
-        </el-select>
-      </el-form-item>-->
-<!--      <el-form-item label="承运单位" prop="transportUnit">
-        <el-select v-model="queryParams.transportUnit" filterable clearable placeholder="请选择承运单位">
-          <el-option
-            v-for="item in transUnitList"
-            :key="item.eAbbreviation"
-            :label="item.eAbbreviation"
-            :value="item.eAbbreviation">
-          </el-option>
-        </el-select>
-      </el-form-item>-->
+      <!--      <el-form-item label="运输方式" prop="transportMode">
+              <el-select v-model="queryParams.transportMode" filterable clearable placeholder="请选择运输方式">
+                <el-option
+                  v-for="item in transportModeDic"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue">
+                </el-option>
+              </el-select>
+            </el-form-item>-->
+      <!--      <el-form-item label="承运单位" prop="transportUnit">
+              <el-select v-model="queryParams.transportUnit" filterable clearable placeholder="请选择承运单位">
+                <el-option
+                  v-for="item in transUnitList"
+                  :key="item.eAbbreviation"
+                  :label="item.eAbbreviation"
+                  :value="item.eAbbreviation">
+                </el-option>
+              </el-select>
+            </el-form-item>-->
       <el-form-item label="车辆类型" prop="viaType">
         <el-select v-model="queryParams.viaType" placeholder="请选择进出车辆类型" clearable size="small" @change="handleQuery">
           <el-option
@@ -97,16 +97,16 @@
           />
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="磅单状态 " prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small" @change="handleQuery">
-          <el-option
-            v-for="dept in poundStateDic"
-            :key="dept.key"
-            :label="dept.value"
-            :value="dept.key"
-          />
-        </el-select>
-      </el-form-item>-->
+      <!--      <el-form-item label="磅单状态 " prop="status">
+              <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small" @change="handleQuery">
+                <el-option
+                  v-for="dept in poundStateDic"
+                  :key="dept.key"
+                  :label="dept.value"
+                  :value="dept.key"
+                />
+              </el-select>
+            </el-form-item>-->
       <el-form-item label="称重状态" prop="flowDirection">
         <el-select v-model="queryParams.flowDirection" placeholder="称重状态" @change="handleQuery">
           <el-option
@@ -148,7 +148,7 @@
 
         >导出
         </el-button>
-<!--        <el-button v-print="'#dayin'" ref="printBtn" style="display: none"/>-->
+        <!--        <el-button v-print="'#dayin'" ref="printBtn" style="display: none"/>-->
       </el-form-item>
     </el-form>
     <!--    <el-row :gutter="10" class="mb8">-->
@@ -171,7 +171,7 @@
       <af-table-column label="业务编号" align="center" prop="measurementNum"/>
       <af-table-column label="批次号" align="center" prop="specification"/>
       <af-table-column label="车牌号" align="center" width="130" prop="plateNum"/>
-<!--      <af-table-column label="品名" align="center" prop="goodsName"/>-->
+      <!--      <af-table-column label="品名" align="center" prop="goodsName"/>-->
       <!--<af-table-column label="承运人" align="center" prop="carrier"/>-->
       <af-table-column label="毛重" align="center" prop="grossWeight"/>
       <af-table-column label="皮重" align="center" prop="tare"/>
@@ -179,21 +179,21 @@
       <af-table-column label="净重" width="150" align="center" prop="netWeight"/>
       <af-table-column label="供货单位" align="center" prop="deliveryUnit"/>
       <af-table-column label="收货单位" align="center" prop="receivingUnit"/>
-<!--      <af-table-column label="承运单位" align="center" prop="transportUnit"/>-->
+      <!--      <af-table-column label="承运单位" align="center" prop="transportUnit"/>-->
       <af-table-column label="称重状态" align="center" prop="flowDirection">
         <template slot-scope="scope">
           {{ scope.row.flowDirection === 'I' ? '未完成' : '已完成' }}
         </template>
       </af-table-column>
-<!--      <af-table-column label="磅单状态" align="center" prop="status">
-        <template slot-scope="scope">
-          {{ scope.row.status === '0' ? '正常' : '修改' }}
-        </template>
-      </af-table-column>-->
-<!--      <af-table-column label="提煤单号" align="center" prop="coalBillNum"/>-->
+      <!--      <af-table-column label="磅单状态" align="center" prop="status">
+              <template slot-scope="scope">
+                {{ scope.row.status === '0' ? '正常' : '修改' }}
+              </template>
+            </af-table-column>-->
+      <!--      <af-table-column label="提煤单号" align="center" prop="coalBillNum"/>-->
       <!--<af-table-column label="保管员" align="center" prop="keeper"/>-->
       <!--<af-table-column label="计量员" align="center" prop="measurer"/>-->
-<!--      <af-table-column label="出入库单号" align="center" prop="remark"/>-->
+      <!--      <af-table-column label="出入库单号" align="center" prop="remark"/>-->
       <af-table-column label="库位号" align="center" prop="locationNumber"/>
       <!--<af-table-column label="通道号" align="center" prop="channelNumber"/>-->
       <!--<af-table-column label="场所ID" align="center" prop="stationId"/>-->
@@ -203,16 +203,16 @@
           {{ scope.row.viaType === '01' ? '蒙煤车' : '外调车' }}
         </template>
       </af-table-column>
-<!--      <af-table-column label="包装类型" align="center" prop="packMode">
-        <template slot-scope="scope">
-          {{ scope.row.packMode === '1' ? '集装箱' : '散装' }}
-        </template>
-      </af-table-column>-->
-<!--      <af-table-column label="打印状态" align="center" prop="printState">
-        <template slot-scope="scope">
-          {{ scope.row.printState === '0' ? '未打' : '已打' }}
-        </template>
-      </af-table-column>-->
+      <!--      <af-table-column label="包装类型" align="center" prop="packMode">
+              <template slot-scope="scope">
+                {{ scope.row.packMode === '1' ? '集装箱' : '散装' }}
+              </template>
+            </af-table-column>-->
+      <!--      <af-table-column label="打印状态" align="center" prop="printState">
+              <template slot-scope="scope">
+                {{ scope.row.printState === '0' ? '未打' : '已打' }}
+              </template>
+            </af-table-column>-->
       <!--<af-table-column label="集装箱号1" align="center" prop="containerNum"/>
       <af-table-column label="集装箱号2" align="center" prop="containerNum2"/>
       <af-table-column label="集装箱号3" align="center" prop="containerNum3"/>
@@ -221,34 +221,34 @@
       <af-table-column label="入场司磅员" align="center" prop="inUser"/>
       <af-table-column label="出场时间" align="center" prop="outTime"/>
       <af-table-column label="出场司磅员" align="center" prop="outUser"/>
-<!--      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
-        <template slot-scope="scope">
-&lt;!&ndash;          <el-button v-show="scope.row.status === '0'"
-                     size="mini"
-                     type="text"
-                     icon="el-icon-edit"
-                     @click="handleApply(scope.row)"
-                     v-hasPermi="['place:modify:apply']"
-          >申请修改
-          </el-button>&ndash;&gt;
-          &lt;!&ndash;  <el-button v-show="scope.row.status === '0'"
-                               size="mini"
-                               type="text"
-                               icon="el-icon-edit"
-                               @click="printApplication(scope.row)"
-                               v-hasPermi="['place:print:add']"
-                    >打印申请
-                    </el-button>&ndash;&gt;
-          <el-button v-show="scope.row.flowDirection === 'E'"
-                     size="mini"
-                     type="text"
-                     icon="el-icon-printer"
-                     @click="handlePrint(scope.row)"
-                     v-hasPermi="['place:sheet:print']"
-          >{{ scope.row.printState === '0' ? '打印' : '补打' }}
-          </el-button>
-        </template>
-      </af-table-column>-->
+      <!--      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+              <template slot-scope="scope">
+      &lt;!&ndash;          <el-button v-show="scope.row.status === '0'"
+                           size="mini"
+                           type="text"
+                           icon="el-icon-edit"
+                           @click="handleApply(scope.row)"
+                           v-hasPermi="['place:modify:apply']"
+                >申请修改
+                </el-button>&ndash;&gt;
+                &lt;!&ndash;  <el-button v-show="scope.row.status === '0'"
+                                     size="mini"
+                                     type="text"
+                                     icon="el-icon-edit"
+                                     @click="printApplication(scope.row)"
+                                     v-hasPermi="['place:print:add']"
+                          >打印申请
+                          </el-button>&ndash;&gt;
+                <el-button v-show="scope.row.flowDirection === 'E'"
+                           size="mini"
+                           type="text"
+                           icon="el-icon-printer"
+                           @click="handlePrint(scope.row)"
+                           v-hasPermi="['place:sheet:print']"
+                >{{ scope.row.printState === '0' ? '打印' : '补打' }}
+                </el-button>
+              </template>
+            </af-table-column>-->
     </el-table>
 
     <pagination
@@ -676,14 +676,14 @@
 </template>
 
 <script>
-import {listSheetLike, updatePrintState,report} from "@/api/tax/poundlist";
+import {listSheetLike, updatePrintState} from "@/api/tax/poundlist";
 import {getUserDepts} from "@/utils/charutils";
 import {applyModify} from "@/api/place/modify";
 import {selectCoalBillNo} from "@/api/place/big";
 import {parseTime} from "@/utils/common";
 import {listUser} from "@/api/system/user";
 import {listStoreContract} from "@/api/place/storeContract";
-import {addPrint, checkPrint, getPrint} from "@/api/place/print";
+import {addPrint, checkPrint} from "@/api/place/print";
 import {listGroup} from "@/api/place/group";
 import {listInfo} from "@/api/basis/enterpriseInfo";
 import SimpleKeyboard from "@/components/SimpleKeyboard/SimpleKeyboard";
@@ -756,15 +756,10 @@ export default {
         //补打 当前操作员标识
 
       },
-
-      UserOption: [{'Key': 'admin', 'Value': '老板'},
-        {'Key': 'song', 'Value': '宋'}
-      ],
-
       // 查询参数
       queryParams: {
-        // pageNum: 1,
-        // pageSize: 20,
+        pageNum: 1,
+        pageSize: 20,
         finalInspectionTime: undefined,
         measurementNum: undefined,
         plateNum: undefined,
@@ -930,26 +925,6 @@ export default {
       return this.poundModify.modifyTareWeight
     },
 
-    //进场司磅员名称翻译
-    InUserWeighmanNameOption() {
-      this.UserOption.forEach(item => {
-        if (item.Key == this.printDate.inUser) {
-          this.printDate.inUser = item.Value
-        }
-      })
-      return this.printDate.inUser
-    },
-    // //出场司磅员名称翻译
-    // outUserWeighmanNameOption(){
-    //   this.UserOption.forEach(item =>{
-    //     if(item.Key == this.printDate.outUser){
-    //       this.printDate.outUser=item.Value
-    //     }
-    //   })
-    //   return this.printDate.outUser
-    // }
-
-
   },
   created() {
     this.getUserList();
@@ -990,7 +965,6 @@ export default {
     /** 查询计量单列表 */
     getList() {
       this.loading = true;
-
       listSheetLike(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.sheetList = response.rows;
         this.total = response.total;
@@ -1269,7 +1243,7 @@ export default {
         ...this.queryParams
       }, `金航保税库磅单.xlsx`)
     },
-      // )},
+    // )},
     //获取大提煤单列表
     getCoalBillList() {
       selectCoalBillNo({'placeId': this.queryParams.stationId, 'status': '0'}).then(response => {

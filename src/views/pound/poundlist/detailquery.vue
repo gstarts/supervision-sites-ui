@@ -858,7 +858,6 @@ import {listSheetLike, updatePrintState} from "@/api/pound/poundlist";
 import {getUserDepts} from "@/utils/charutils";
 import {applyModify} from "@/api/place/modify";
 import {selectCoalBillNo} from "@/api/place/big";
-import {parseTime} from "@/utils/common";
 import {listUser} from "@/api/system/user";
 import {listStoreContract} from "@/api/place/storeContract";
 import {addPrint, checkPrint, getPrint} from "@/api/place/print";
@@ -935,9 +934,9 @@ export default {
 
       },
 
-      UserOption: [{'Key': 'admin', 'Value': '老板'},
+      /*UserOption: [{'Key': 'admin', 'Value': '老板'},
         {'Key': 'song', 'Value': '宋'}
-      ],
+      ],*/
 
       // 查询参数
       queryParams: {
@@ -1115,7 +1114,7 @@ export default {
       return this.poundModify.modifyTareWeight
     },
 
-    //进场司磅员名称翻译
+    /*//进场司磅员名称翻译
     InUserWeighmanNameOption() {
       this.UserOption.forEach(item => {
         if (item.Key == this.printDate.inUser) {
@@ -1123,7 +1122,7 @@ export default {
         }
       })
       return this.printDate.inUser
-    },
+    },*/
     // //出场司磅员名称翻译
     // outUserWeighmanNameOption(){
     //   this.UserOption.forEach(item =>{

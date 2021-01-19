@@ -312,7 +312,7 @@ import {addSheet, getSheet, listIESheet, poundSelect, updateSheet,} from "@/api/
 import {listVehicleNoList} from "@/api/system/vehicle_info";
 import {genTimeCode} from "@/utils/common";
 import {listChnlConfig} from "@/api/basis/chnlConfig";
-import {getUserDepts} from "@/utils/charutils";
+import {getUserDepts, isChina} from "@/utils/charutils";
 import {genStoreDoc, getNoticeByVehicle} from "@/api/tax/instore_notice";
 import {getStoreUsable} from '@/api/tax/store'
 
@@ -505,7 +505,6 @@ export default {
     //进场记录
     this.getListI();
 
-
     //库位号
     this.getStoreCode(this.queryParams.stationId)
 
@@ -524,6 +523,12 @@ export default {
     },
     //车号Change
     CarNumberChange(event) {
+      //判断车辆是中国车还是蒙古车
+      if(isChina(event)){
+        this.PoundForm.stationViaType = "02"
+      }else{
+        this.PoundForm.stationViaType = "01"
+      }
       //进场 调用接口 连带数据赋值给input
       this.form.grossWeight = 0
       this.form.tare = 0
@@ -589,7 +594,7 @@ export default {
         getSheet(event, this.queryParams.stationId, 'I').then((response) => {
           if (response.code === 200) {
             console.log("车号：" + event)
-            console.log(response.data)
+            //console.log(response.data)
             this.form = response.data;
           } else {
             this.msgError(response.msg);

@@ -62,3 +62,9 @@ export function cloneObject(obj) { // 对象复制
   return JSON.parse(JSON.stringify(obj))
 }
 
+//判断是否包含中文字符
+export function isChina(s) {
+  let pattern = /[\u4E00-\u9FA5]|[\uFE30-\uFFA0]/gi;
+  return pattern.exec(s);
+}
+
