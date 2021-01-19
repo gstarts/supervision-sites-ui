@@ -103,9 +103,11 @@
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="放行单号" align="center" prop="passNo"/>
       <el-table-column label="寄仓客户" align="center" prop="checkConsumer"/>
+      <el-table-column label="合同号" align="center" prop="contractNo"/>
+      <el-table-column label="品名" align="center" prop="goodsName"/>
       <el-table-column label="放行量(KGS)" align="center" prop="passVolume"/>
-      <el-table-column label="放行状态" align="center" prop="passState" :formatter="ReleaseStatusFormat"/>
-      <el-table-column label="所属场所" align="center" prop="placeId" :formatter="corporationFormat"/>
+<!--      <el-table-column label="放行状态" align="center" prop="passState" :formatter="ReleaseStatusFormat"/>-->
+<!--      <el-table-column label="所属场所" align="center" prop="placeId" :formatter="corporationFormat"/>-->
       <el-table-column label="报送日期" align="center" prop="submitDate"/>
       <el-table-column label="送来日期" align="center" prop="submitBackDate"/>
       <el-table-column label="建单时间" align="center" prop="createTime"/>
@@ -588,7 +590,7 @@ export default {
     handleExport() {
       this.download('place/passDoc/export', {
         ...this.queryParams
-      }, `place_passDoc.xlsx`)
+      }, `放行单.xlsx`)
     },
     /**详情按钮 */
     detail(row) {

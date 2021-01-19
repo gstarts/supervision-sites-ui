@@ -117,7 +117,7 @@
       <af-table-column label="车牌号" align="center" prop="vehicleNo"/>
       <af-table-column label="货净重(KG)" align="center" prop="vehicleGoodsNetWeight"/>
       <af-table-column label="车皮重(KG)" align="center" prop="vehicleTareWeight"/>
-      <af-table-column label="备注" align="center" prop="remark"/>
+<!--      <af-table-column label="备注" align="center" prop="remark"/>-->
 <!--      <af-table-column label="分配序号" align="center" prop="serialNo"/>-->
       <af-table-column label="提煤单号" align="center" prop="coalBillNo"/>
       <af-table-column label="包装方式" align="center" prop="packMode" :formatter="packModeFormatter"/>
@@ -552,7 +552,7 @@ export default {
         storeState: '0',
         orderByColumn: 'id',
         isAsc: 'desc',
-        inCardPrintState: 1,
+        inCardPrintState: undefined,
       },
       fileList: [],
       transUnitList: [],//承运单位列表
@@ -846,9 +846,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('place/outstoreDoc/export', {
+      this.download('place/outstoreDoc/exportOutCar', {
         ...this.queryParams
-      }, `place_car.xlsx`)
+      }, `派车单.xlsx`)
     },
     /** 导入按钮操作 */
     handleImport() {

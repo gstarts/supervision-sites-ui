@@ -17,7 +17,7 @@ export function getClearance(id) {
   })
 }
 
-// 新增通关单 
+// 新增通关单
 export function addClearance(data) {
   return request({
     url: '/place/clearance',
@@ -26,7 +26,7 @@ export function addClearance(data) {
   })
 }
 
-// 修改通关单 
+// 修改通关单
 export function updateClearance(data) {
   return request({
     url: '/place/clearance',
@@ -35,10 +35,18 @@ export function updateClearance(data) {
   })
 }
 
-// 删除通关单 
+// 删除通关单
 export function delClearance(id) {
   return request({
     url: '/place/clearance/' + id,
     method: 'delete'
+  })
+}
+
+export function listClearanceLike(query) {
+  return request({
+    url: '/place/clearance/listLike',
+    method: 'get',
+    params: query
   })
 }

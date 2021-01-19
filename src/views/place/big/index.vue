@@ -82,14 +82,10 @@
           type="primary"
           icon="el-icon-search"
           size="small"
-          @click="handleQuery"
-        >搜索
-        </el-button
-        >
-        <el-button icon="el-icon-refresh" size="small" @click="resetQuery"
-        >重置
-        </el-button
-        >
+          @click="handleQuery">搜索
+        </el-button>
+        <el-button icon="el-icon-refresh" size="small" @click="resetQuery">重置
+        </el-button>
       </el-form-item>
     </el-form>
 
@@ -146,6 +142,7 @@
       <af-table-column label="提煤客户" align="center" prop="receiveName"/>
       <af-table-column label="品名" align="center" prop="goodsName"/>
       <af-table-column label="提煤重量" align="center" prop="coalWeight"/>
+      <af-table-column label="库位号" align="center" prop="storeCode"/>
       <af-table-column label="销售合同号" align="center" prop="salesContract"/>
       <af-table-column label="状态" align="center" prop="status" :formatter="statusFormatter"/>
       <af-table-column label="建单时间" align="center" prop="createTime"/>

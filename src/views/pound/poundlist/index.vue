@@ -529,8 +529,8 @@ export default {
       }else{
         this.PoundForm.stationViaType = "01"
       }
-
       this.vehicleChange()
+      this.form.plateNum = event
       //进场 调用接口 连带数据赋值给input
       this.form.grossWeight = 0
       this.form.tare = 0

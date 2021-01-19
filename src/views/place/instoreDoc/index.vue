@@ -516,7 +516,6 @@
       @selection-change="handleSelectionChange">
       <!--<af-table-column type="selection" width="55" align="center" />-->
       <!--      <af-table-column label="ID" align="center" prop="id"/>-->
-
       <!--<af-table-column label="场所编号" align="center" prop="placeId"/>-->
       <!--<af-table-column label="业务编号" align="center" prop="storeCode" />-->
       <!-- <af-table-column label="发货客户" align="center" prop="sendName"/>-->
@@ -524,87 +523,76 @@
       <af-table-column label="寄仓合同号" align="center" prop="checkContractNo"/>
       <af-table-column label="品名" align="center" prop="goodsName"/>
       <!--<af-table-column label="库位号" align="center" prop="storeCode"/>-->
-      <!--<af-table-column label="蒙方磅单号" align="center" prop="mongoliaBillNo" />-->
       <af-table-column label="车号" align="center" prop="vehicleNo"/>
+      <af-table-column label="蒙方磅单号" align="center" prop="mongoliaBillNo" />
 
-      <!--<af-table-column label="挂车号1 挂车号1" align="center" prop="trailerNo1" />
-      <af-table-column label="挂车号2 挂车号2" align="center" prop="trailerNo2" />-->
+
       <!-- <af-table-column label="蒙古磅毛重" align="center" prop="mongoliaRoughWeight" />-->
-      <af-table-column label="蒙方皮重" align="center" prop="mongoliaTareWeight"/>
       <af-table-column label="蒙方净重" align="center" prop="mongoliaNetWeight"/>
-      <af-table-column label="集装箱号1" align="center" prop="containerNo1"/>
-      <af-table-column label="集装箱号2" align="center" prop="containerNo2"/>
-      <af-table-column label="集装箱号3" align="center" prop="containerNo3"/>
-      <af-table-column label="集装箱号4" align="center" prop="containerNo4"/>
+      <af-table-column label="蒙方皮重" align="center" prop="mongoliaTareWeight"/>
+      <af-table-column label="计量单位" align="center" prop="measuringUnit"/>
+
       <af-table-column label="库位号" align="center" prop="storeCode"/>
-      <af-table-column label="库位号2" align="center" prop="storeCode2"/>
-      <af-table-column label="库位号3" align="center" prop="storeCode3"/>
-      <af-table-column label="库位号4" align="center" prop="storeCode4"/>
-      <!--<af-table-column label="车辆数量" align="center" prop="vehicleCount" />-->
-      <af-table-column label="车队名" align="center" prop="vehicleTeam"/>
-      <af-table-column label="司机姓名" align="center" prop="driverName"/>
-      <af-table-column label="车队联系人" align="center" prop="vehicleTeamContact"/>
-      <af-table-column label="车队联系电话" align="center" prop="vehicleTeamTel"/>
-      <!--<af-table-column label="车型(双挂，单挂)" align="center" prop="vehicleType"/>-->
-      <af-table-column label="计量单位(KG)" align="center" prop="measuringUnit"/>
+
       <af-table-column label="包装方式" align="center" prop="packMode">
         <template slot-scope="scope">
           <span>{{ scope.row.packMode === "1" ? "集装箱" : "散装" }}</span>
         </template>
       </af-table-column>
-
+      <af-table-column label="车型" align="center" prop="vehicleType"/>
       <!-- <af-table-column label="备注" align="center" prop="remark" />-->
-      <af-table-column label="生成时间" align="center" prop="genTime" width="180">
-        <template slot-scope="scope">
-          <span>{{
-              parseTime(scope.row.genTime, "{y}-{m}-{d} {hh}:{mm}:{ss}")
-            }}</span>
-        </template>
-      </af-table-column>
+      <af-table-column label="生成时间" align="center" prop="genTime" width="180" />
       <af-table-column label="生成人" align="center" prop="genBy"/>
-      <af-table-column label="磅单打印时间" align="center" prop="poundTime" width="180">
+      <af-table-column label="状态" align="center" prop="storeState">
         <template slot-scope="scope">
-          <span>{{
-              parseTime(scope.row.poundTime, "{y}-{m}-{d} {hh}:{mm}:{ss}")
-            }}</span>
+          {{storeStateDic.find((item) => item.key === scope.row.storeState).label }}
         </template>
       </af-table-column>
-      <!--<af-table-column label="磅单号" align="center" prop="poundNo" />-->
-      <af-table-column label="批次号" align="center" prop="batchNo"/>
-      <af-table-column label="通知单号" align="center" prop="docNo"/>
+      <af-table-column label="净重" align="center" prop="netWeight"/>
+      <af-table-column label="皮重" align="center" prop="tareWeight"/>
+      <af-table-column label="毛重" align="center" prop="roughWeight"/>
+      <af-table-column label="磅单号" align="center" prop="poundNo" />
+      <af-table-column label="磅单打印时间" align="center" prop="poundTime" width="180" />
+<!--      <af-table-column label="批次号" align="center" prop="batchNo"/>
+      <af-table-column label="通知单号" align="center" prop="docNo"/>-->
       <!--<af-table-column label="提运单号" align="center" prop="loadingBillNo" />-->
       <!--      <af-table-column label="生成舱单" align="center" prop="hasManifest"/>
             <af-table-column label="生成集报清单" align="center" prop="hasDeclare"/>
             <af-table-column label="生成进境确报" align="center" prop="hasTransit"/>-->
-      <af-table-column label="状态" align="center" prop="storeState">
-        <template slot-scope="scope">
-          {{
-            storeStateDic.find((item) => item.key === scope.row.storeState).label
-          }}
-        </template>
-      </af-table-column>
-      <af-table-column label="毛重" align="center" prop="roughWeight"/>
-      <af-table-column label="皮重" align="center" prop="tareWeight"/>
-      <af-table-column label="净重" align="center" prop="netWeight"/>
-      <af-table-column label="进场时间" align="center" prop="inTime">
-        <template slot-scope="scope">
-          <span>{{
-              parseTime(scope.row.inTime, "{y}-{m}-{d} {hh}:{mm}:{ss}")
-            }}</span>
-        </template>
-      </af-table-column>
+      <af-table-column label="进场时间" align="center" prop="inTime" />
       <af-table-column label="进场通道" align="center" prop="inChannel"/>
-      <af-table-column label="出场时间" align="center" prop="outTime">
-        <template slot-scope="scope">
-          <span>{{
-              parseTime(scope.row.outTime, "{y}-{m}-{d} {hh}:{mm}:{ss}")
-            }}</span>
-        </template>
-      </af-table-column>
+      <af-table-column label="进场司磅员" align="center" prop="inUser"/>
+      <af-table-column label="出场时间" align="center" prop="outTime" />
       <af-table-column label="出场通道" align="center" prop="outChannel"/>
+      <af-table-column label="出场司磅员" align="center" prop="outUser"/>
       <!--<af-table-column label="文件ID" align="center" prop="fileId" />-->
       <!--<af-table-column label="放行单号" align="center" prop="passNo"/>-->
       <!-- <af-table-column label="乐观锁" align="center" prop="revision" />-->
+
+      <!--      <af-table-column label="库位号2" align="center" prop="storeCode2"/>
+            <af-table-column label="库位号3" align="center" prop="storeCode3"/>
+            <af-table-column label="库位号4" align="center" prop="storeCode4"/>-->
+      <!--<af-table-column label="车辆数量" align="center" prop="vehicleCount" />-->
+      <af-table-column label="采购合同号" align="center" prop="purchaseContractNumber"/>
+      <af-table-column label="供应商" align="center" prop="supplier"/>
+      <af-table-column label="境外发车日期" align="center" prop="overseasDepartureDate"/>
+      <af-table-column label="境外出库日期" align="center" prop="mongolianDeliveryDate"/>
+
+      <af-table-column label="车队名" align="center" prop="vehicleTeam"/>
+      <af-table-column label="驾驶员" align="center" prop="driverName"/>
+      <af-table-column label="车队联系人" align="center" prop="vehicleTeamContact"/>
+      <af-table-column label="车队联系电话" align="center" prop="vehicleTeamTel"/>
+      <af-table-column label="挂车号1" align="center" prop="trailerNo1" />
+     <af-table-column label="挂车号2" align="center" prop="trailerNo2" />
+     <af-table-column label="货物单价" align="center" prop="purPrice" />
+     <af-table-column label="货物运输批次号" align="center" prop="batchNo" />
+     <af-table-column label="提运单号" align="center" prop="loadingBillNo" />
+     <af-table-column label="是否录入海关系统" align="center" prop="isReportCustoms" />
+      <af-table-column label="箱号1" align="center" prop="containerNo1"/>
+      <af-table-column label="箱号2" align="center" prop="containerNo2"/>
+      <af-table-column label="箱号3" align="center" prop="containerNo3"/>
+      <af-table-column label="箱号4" align="center" prop="containerNo4"/>
+      <af-table-column label="备注" align="center" prop="memo"/>
       <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -1670,11 +1658,11 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       this.download(
-        "place/instoreDoc/export",
+        "place/instoreDoc/exportExcel",
         {
           ...this.queryParams,
         },
-        `place_instoreDoc.xlsx`
+        `入库通知单.xlsx`
       );
     },
     mengwenInput(input) {

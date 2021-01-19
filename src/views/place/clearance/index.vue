@@ -1,6 +1,16 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="所属场所" prop="placeId">
+        <el-select v-model="queryParams.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
+          <el-option
+            v-for="dept in depts"
+            :key="dept.deptId"
+            :label="dept.deptName"
+            :value="dept.deptId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="提运单号" prop="customsNo">
         <el-input
           v-model="queryParams.customsNo"
@@ -62,13 +72,14 @@
         </el-button>
       </el-col>
       <el-col :span="1.5">
-                <el-button
-                  type="warning"
-                  icon="el-icon-download"
-                  size="mini"
-                  @click="handleExport"
-                  v-hasPermi="['place:clearance:export']"
-                >导出</el-button>
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['place:clearance:export']"
+        >导出
+        </el-button>
         <el-button
           size="mini"
           icon="el-icon-download"
@@ -82,15 +93,12 @@
 
     <el-table v-loading="loading" :data="clearanceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="寄仓客户" align="center" prop="customerName"/>
       <el-table-column label="提运单号" align="center" prop="customsNo"/>
       <el-table-column label="运输批次号" align="center" prop="batchNo"/>
-<!--      <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>-->
+      <!--      <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>-->
       <el-table-column label="提运单重量" align="center" prop="wieght"/>
-      <el-table-column label="已使用重量" align="center" prop="oldWieght">
-        <template slot-scope="scope">
-          <span>{{ scope.row.wieght - scope.row.lastWieght }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="已使用重量" align="center" prop="oldWieght" />
       <el-table-column label="剩余重量" align="center" prop="lastWieght"/>
       <el-table-column label="建单时间" align="center" prop="createTime"/>
     </el-table>
@@ -106,37 +114,49 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body :before-close="closeDialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="120px" size="mini">
         <!-- 所属场所 -->
-        <el-form-item label="所属场所" prop="placeId">
-          <el-select v-model="form.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
-            <el-option
-              v-for="dept in depts"
-              :key="dept.deptId"
-              :label="dept.deptName"
-              :value="dept.deptId"
-            />
-          </el-select>
-        </el-form-item>
-       <!-- 应急需求变更       -->
-        <el-form-item label="寄仓客户" prop="customsId">
-          <el-select v-model="form.customsId" filterable placeholder="请选择寄仓客户">
-            <el-option
-              v-for="item in consumerOptions"
-              :key="item.id"
-              :label="item.eName"
-              :value="item.id"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="提运单号" prop="customsNo">
-          <el-input v-model="form.customsNo" placeholder="请输入提运单号"/>
-        </el-form-item>
-        <el-form-item label="运输批次号" prop="batchNo">
-          <el-input v-model="form.batchNo" placeholder="请输入运输批次号"/>
-        </el-form-item>
-        <el-form-item label="提运单重量" prop="wieght">
-          <el-input v-model.number="form.wieght" placeholder="请输入提运单重量"/>
-        </el-form-item>
+<!--                <el-form-item label="所属场所" prop="placeId">
+                  <el-select v-model="form.placeId" placeholder="请选择所属场所">
+                    <el-option
+                      v-for="dept in depts"
+                      :key="dept.deptId"
+                      :label="dept.deptName"
+                      :value="dept.deptId"
+                    />
+                  </el-select>
+                </el-form-item>-->
+        <!-- 应急需求变更       -->
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="寄仓客户" prop="customsId">
+              <el-select v-model="form.customsId" filterable placeholder="请选择寄仓客户">
+                <el-option
+                  v-for="item in consumerOptions"
+                  :key="item.id"
+                  :label="item.eName"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="提运单号" prop="customsNo">
+              <el-input v-model="form.customsNo" placeholder="请输入提运单号"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="运输批次号" prop="batchNo">
+              <el-input v-model="form.batchNo" placeholder="请输入运输批次号"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="提运单重量" prop="wieght">
+              <el-input v-model.number="form.wieght" placeholder="请输入提运单重量"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -177,7 +197,7 @@
       <el-form ref="form" :model="form" :label-position="left" label-width="80px" size="mini">
         <!-- 所属场所 -->
         <el-form-item label="所属场所" prop="placeId">
-          <el-select v-model="form.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
+          <el-select v-model="form.placeId" placeholder="请选择所属场所" disabled>
             <el-option
               v-for="dept in depts"
               :key="dept.deptId"
@@ -187,8 +207,8 @@
           </el-select>
         </el-form-item>
         <el-form-item label="寄仓客户" prop="customsId">
-<!--          应急-->
-          <el-select v-model="form.customsId" filterable placeholder="请选择寄仓客户" @change="((val)=>{change(val, 'customs')})">
+          <!--          应急-->
+          <el-select v-model="form.customsId" filterable placeholder="请选择寄仓客户">
             <el-option
               v-for="item in consumerOptions"
               :key="item.id"
@@ -204,11 +224,18 @@
 </template>
 
 <script>
-import { addClearance, delClearance, getClearance, listClearance, updateClearance } from '@/api/place/clearance'
-import { selectCoalBillNo } from '@/api/place/big'
-import { getToken } from '@/utils/auth'
-import { getUserDepts } from '@/utils/charutils'
-import { listInfo } from '@/api/basis/enterpriseInfo'
+import {
+  addClearance,
+  delClearance,
+  getClearance,
+  listClearance,
+  listClearanceLike,
+  updateClearance
+} from '@/api/place/clearance'
+import {selectCoalBillNo} from '@/api/place/big'
+import {getToken} from '@/utils/auth'
+import {getUserDepts} from '@/utils/charutils'
+import {listInfo} from '@/api/basis/enterpriseInfo'
 
 export default {
   name: 'Clearance',
@@ -228,13 +255,13 @@ export default {
       // 弹出层标题
       title: '',
       //时间组件
-      dateRange:[],
+      dateRange: [],
       //场所列表
       depts: [],
       // 是否显示弹出层
       open: false,
       // 寄仓客户
-      consumerOptions:[],
+      consumerOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -259,7 +286,7 @@ export default {
         // 是否更新已经存在的用户数据
         updateSupport: 0,
         // 设置上传的请求头部
-        headers: { Authorization: 'Bearer ' + getToken() },
+        headers: {Authorization: 'Bearer ' + getToken()},
         // 上传的地址
         url: process.env.VUE_APP_BASE_API + '/place/clearance/importData'
       },
@@ -268,17 +295,17 @@ export default {
       // 表单校验
       rules: {
         coalBillNo: [
-          { required: true, message: '请选择提煤单', trigger: 'blur' }
+          {required: true, message: '请选择提煤单', trigger: 'blur'}
         ],
         customsNo: [
-          { required: true, message: '请选择提运单号', trigger: 'blur' }
+          {required: true, message: '请选择提运单号', trigger: 'blur'}
         ],
         batchNo: [
-          { required: true, message: '请选择运输批次号', trigger: 'blur' }
+          {required: true, message: '请选择运输批次号', trigger: 'blur'}
         ],
         wieght: [
-          { required: true, message: '请输入', trigger: 'blur' },
-          { type: 'number', message: '必须为数字值' }
+          {required: true, message: '请输入', trigger: 'blur'},
+          {type: 'number', message: '必须为数字值'}
         ]
       },
       //提煤单号
@@ -290,13 +317,17 @@ export default {
   created() {
     // 获取场所
     this.depts = getUserDepts('0')
-    this.getList()
+    if (this.depts.length > 0) {
+      this.queryParams.placeId = this.depts[0].deptId
+      this.form.placeId = this.queryParams.placeId
+      this.getList()
+    }
   },
   methods: {
     /** 查询提运单 列表 */
     getList() {
       this.loading = true
-      listClearance(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
+      listClearanceLike(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.clearanceList = response.rows
         this.total = response.total
         this.loading = false
@@ -324,9 +355,11 @@ export default {
         updateBy: undefined,
         updateTime: undefined,
         remark: undefined,
-        revision: undefined
+        revision: undefined,
+        placeId: this.queryParams.placeId
       }
       this.resetForm('form')
+      this.form.placeId = this.queryParams.placeId
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -349,8 +382,8 @@ export default {
       this.reset()
       this.open = true
       this.title = '添加提运单 '
-      this.form.placeId=this.depts[0].deptId
-      this.getConsumerInfo(this.form.placeId)
+      this.form.placeId = this.queryParams.placeId
+      //this.getConsumerInfo(this.form.placeId)
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -363,7 +396,7 @@ export default {
       })
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
@@ -393,17 +426,17 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function() {
+      }).then(function () {
         return delClearance(ids)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function() {
+      }).catch(function () {
       })
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('place/clearance/export', {
+      this.download('place/clearance/exportExcel', {
         ...this.queryParams
       }, `提运单.xlsx`)
     },
@@ -412,8 +445,8 @@ export default {
       this.upload.title = '提运单申报导入'
       this.upload.open = true
       this.reset()
-      this.form.placeId=this.depts[0].deptId
-      this.getConsumerInfo(this.form.placeId)
+      this.form.placeId = this.queryParams.placeId
+      //this.getConsumerInfo(this.form.placeId)
     },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
@@ -424,12 +457,12 @@ export default {
       this.upload.open = false
       this.upload.isUploading = false
       this.$refs.upload.clearFiles()
-      this.$alert(response.msg, '导入结果', { dangerouslyUseHTMLString: true })
+      this.$alert(response.msg, '导入结果', {dangerouslyUseHTMLString: true})
       this.getList()
     },
     // 提交上传文件
     submitFileForm() {
-      if (this.form.coalBillNo&&this.form.placeId) {
+      if (this.form.coalBillNo && this.form.placeId) {
         this.$refs.upload.submit()
       } else {
         this.$alert('请选择场所和寄仓客户')
@@ -437,25 +470,26 @@ export default {
     },
     /** 客户信息列表 */
     getConsumerInfo(placeId) {
-      let consumerParams = { eType: '2',deptId:placeId }
+      let consumerParams = {eType: '2', deptId: placeId}
       listInfo(consumerParams).then(response => {
         this.consumerOptions = response.rows
-        console.log( this.consumerOptions )
+        console.log(this.consumerOptions)
       })
     },
     change(val, name) {
       // 场所
       if (name === 'placeId') {
+        this.form.placeId = val
         //查询场所下的大提煤单中的所有提煤单号
         this.getConsumerInfo(val)
-
+        this.getList()
       }
-      if(name==='customs'){
-        this.form.coalBillNo =val
+      if (name === 'customs') {
+        this.form.coalBillNo = val
       }
     },
     closeDialog() {
-        this.open = false,
+      this.open = false,
         this.upload.open = false,
         this.cancel()
     },

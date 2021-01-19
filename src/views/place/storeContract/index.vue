@@ -640,7 +640,7 @@ export default {
     handleExport() {
       this.download('place/storeContract/export', {
         ...this.queryParams
-      }, `place_storeContract.xlsx`)
+      }, `仓储合同.xlsx`)
     },
     getZoneCode() {
       this.zoneCodeList = []
