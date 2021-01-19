@@ -125,7 +125,7 @@
                              v-model="form.locationNumber"
                              placeholder="请选择库位号"
                              prop="locationNumber"
-                             filterabl>
+                             filterable >
                     <el-option
                       v-for="dict in storeList"
                       :key="dict.value"
@@ -529,6 +529,8 @@ export default {
       }else{
         this.PoundForm.stationViaType = "01"
       }
+
+      this.vehicleChange()
       //进场 调用接口 连带数据赋值给input
       this.form.grossWeight = 0
       this.form.tare = 0
