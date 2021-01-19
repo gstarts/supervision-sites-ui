@@ -35,14 +35,14 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="单据号" prop="documentNo">
-          <el-input
-            v-model="queryParams.documentNo"
-            placeholder="请输入单据号"
-            clearable
-            size="small"
-          />
-        </el-form-item>
+<!--        <el-form-item label="单据号" prop="documentNo">-->
+<!--          <el-input-->
+<!--            v-model="queryParams.documentNo"-->
+<!--            placeholder="请输入单据号"-->
+<!--            clearable-->
+<!--            size="small"-->
+<!--          />-->
+<!--        </el-form-item>-->
         <el-form-item label="LotNo" prop="lotNo">
           <el-input
             v-model="queryParams.lotNo"
@@ -184,6 +184,7 @@
       <el-form :model="bodyForm" ref="bodyForm"  label-width="68px">
         <el-form-item label="袋封号" prop="bagSealNo">
           <el-input
+          disabled
             v-model="bodyForm.bagSealNo"
             placeholder="请输入袋封号"
             size="small"
@@ -191,6 +192,7 @@
         </el-form-item>
         <el-form-item label="库位号" prop="bookStoreCode">
           <el-input
+          disabled
             v-model="bodyForm.bookStoreCode"
             placeholder="请输入库位号"
             size="small"
@@ -374,6 +376,7 @@ export default {
       listUser({'deptId': this.queryParams.placeId, 'delFlag': '0'}).then(response => {
         if (response.code === 200) {
           this.userList = response.rows
+          console.log(this.userList)
         }
       });
     },
@@ -473,7 +476,9 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      updateLord(this.queryParams).then(response => {
+      this.$refs["queryParams"].validate(valid => {
+        if(valid){
+        updateLord(this.queryParams).then(response => {
         if(response.code === 200){
           this.queryParams = response.data;
           this.msgSuccess("修改成功");
@@ -481,6 +486,9 @@ export default {
           this.$router.go(-1)
         }
       });
+        }
+
+      })
     },
     /** 提交按钮 */
     submitForm: function() {
@@ -532,7 +540,7 @@ export default {
       this.bodyListLoading=true;
       LotNoList(this.queryParams.lotNo).then(response =>{
         if(response.code === 200){
-          this.msgSuccess("查询成功,请选择数据")
+          // this.msgSuccess("查询成功,请选择数据")
           this.bodyList=response.rows
           this.bodyListLoading=false;
         }
@@ -565,7 +573,7 @@ export default {
       this.bodyQueryParams.taxSamplingLordId=this.taxSamplingLordId;
       listBody(this.bodyQueryParams).then(response =>{
         if(response.code === 200){
-          this.msgSuccess("查询成功")
+          // this.msgSuccess("查询成功")
           this.loading=false;
           this.indexBodyList=response.rows;
           this.total = response.total;
@@ -579,7 +587,7 @@ export default {
     updateBodyData(){
       updateBody(this.bodyForm).then(response =>{
         if(response.code === 200){
-          this.msgSuccess("查询成功")
+          // this.msgSuccess("查询成功")
           this.indexList();
           this.bodyUpdate=true;
         }

@@ -17,10 +17,19 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="info"
+          size="small"
+          v-print="'#testdayin'"
+          @click="testprint">
+          <!-- v-show="this.form.netWeight !== undefined && this.form.netWeight !== '' &&  this.form.plateNum !== undefined && this.form.plateNum !==''
+           && this.form.locationNumber !== undefined &&  this.form.locationNumber !=='' && this.PoundForm.stationViaType ==='01'"-->
+          <i class="fa fa-print" aria-hidden="true">&nbsp;&nbsp;测试打印</i>
+        </el-button>
       </el-form-item>
     </el-form>
 
-    <el-table  v-loading="loading" :data="analysisList" @selection-change="handleSelectionChange ">
+    <el-table  v-loading="loading" :data="analysisList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="过磅时间" align="center" prop="finalInspectionTime" />
       <el-table-column label="货物名称" align="center" prop="goodsName" />
@@ -36,6 +45,16 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+
+
+    <!--    获取实时重量-->
+    <div id="testdayin">
+      <div v-for="(item,index) in viewArr">
+        <div :id="gennerateId(index)"></div>
+        <div>{{item.goodsName}}</div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -58,6 +77,9 @@ export default {
       total: 0,
       // 计量单表格数据
       sheetList: [],
+      // 测试数据
+      viewArr:[],
+
       // 统计表格数据
       analysisList:[],
       // 磅单状态
@@ -175,11 +197,13 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
+
+      this.viewArr = selection
       this.ids = selection.map(item => item.id)
       this.single = selection.length!=1
       this.multiple = !selection.length
     },
-  
+
     /** 申请作废按钮 */
     abolition(row) {
       const ids = row.id || this.ids;
@@ -200,7 +224,7 @@ export default {
         }else{
             this.msgSuccess("申请中... 请稍后")
         }
-      
+
     },
 
     /** 导出按钮操作 */
@@ -208,7 +232,18 @@ export default {
       this.download('pound/sheet/export', {
         ...this.queryParams
       }, `pound_sheet.xlsx`)
-    }
+    },
+
+    // testprint(){
+    //
+    //
+    // },
+
+
+
+    gennerateId:function (index) {
+      return "printDiv"+index
+    },
   }
 };
 </script>
