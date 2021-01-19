@@ -35,14 +35,14 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="单据号" prop="documentNo">
-          <el-input
-            v-model="queryParams.documentNo"
-            placeholder="请输入单据号"
-            clearable
-            size="small"
-          />
-        </el-form-item>
+<!--        <el-form-item label="单据号" prop="documentNo">-->
+<!--          <el-input-->
+<!--            v-model="queryParams.documentNo"-->
+<!--            placeholder="请输入单据号"-->
+<!--            clearable-->
+<!--            size="small"-->
+<!--          />-->
+<!--        </el-form-item>-->
         <el-form-item label="LotNo" prop="lotNo">
           <el-input
             v-model="queryParams.lotNo"
@@ -487,7 +487,7 @@ export default {
         }
       });
         }
-      
+
       })
     },
     /** 提交按钮 */
