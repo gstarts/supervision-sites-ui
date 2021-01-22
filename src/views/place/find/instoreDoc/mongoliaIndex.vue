@@ -450,7 +450,7 @@
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
-      :page-sizes="[20,30,50,200,300]"
+      :page-sizes="[20,30,50,200,400,500,1000,2000,3000,5000]"
       @pagination="getList"
     />
   </div>

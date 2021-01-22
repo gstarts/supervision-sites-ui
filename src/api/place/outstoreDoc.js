@@ -81,3 +81,13 @@ export function multiVoidCar(vehicleNos) {
     method: 'post'
   })
 }
+
+
+// 查询出库明细单列表
+export function listOutstoreDocReportLike(query) {
+  return request({
+    url: '/place/outstoreDoc/listReportLike',
+    method: 'get',
+    params: query
+  })
+}
