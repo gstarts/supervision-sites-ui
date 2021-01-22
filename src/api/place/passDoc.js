@@ -17,7 +17,7 @@ export function getPassDoc(id) {
   })
 }
 
-// 新增放行单 
+// 新增放行单
 export function addPassDoc(data) {
   return request({
     url: '/place/passDoc',
@@ -26,7 +26,7 @@ export function addPassDoc(data) {
   })
 }
 
-// 修改放行单 
+// 修改放行单
 export function updatePassDoc(data) {
   return request({
     url: '/place/passDoc',
@@ -35,10 +35,18 @@ export function updatePassDoc(data) {
   })
 }
 
-// 删除放行单 
+// 删除放行单
 export function delPassDoc(id) {
   return request({
     url: '/place/passDoc/' + id,
     method: 'delete'
+  })
+}
+
+export function listPassDocLike(query) {
+  return request({
+    url: '/place/passDoc/listLike',
+    method: 'get',
+    params: query
   })
 }

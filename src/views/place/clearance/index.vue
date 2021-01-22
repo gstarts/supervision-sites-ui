@@ -98,7 +98,7 @@
       <el-table-column label="运输批次号" align="center" prop="batchNo"/>
       <!--      <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>-->
       <el-table-column label="提运单重量" align="center" prop="wieght"/>
-      <el-table-column label="已使用重量" align="center" prop="oldWieght" />
+      <el-table-column label="已使用重量" align="center" prop="oldWieght"/>
       <el-table-column label="剩余重量" align="center" prop="lastWieght"/>
       <el-table-column label="建单时间" align="center" prop="createTime"/>
     </el-table>
@@ -114,16 +114,16 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body :before-close="closeDialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="120px" size="mini">
         <!-- 所属场所 -->
-<!--                <el-form-item label="所属场所" prop="placeId">
-                  <el-select v-model="form.placeId" placeholder="请选择所属场所">
-                    <el-option
-                      v-for="dept in depts"
-                      :key="dept.deptId"
-                      :label="dept.deptName"
-                      :value="dept.deptId"
-                    />
-                  </el-select>
-                </el-form-item>-->
+        <!--                <el-form-item label="所属场所" prop="placeId">
+                          <el-select v-model="form.placeId" placeholder="请选择所属场所">
+                            <el-option
+                              v-for="dept in depts"
+                              :key="dept.deptId"
+                              :label="dept.deptName"
+                              :value="dept.deptId"
+                            />
+                          </el-select>
+                        </el-form-item>-->
         <!-- 应急需求变更       -->
         <el-row :gutter="10">
           <el-col :span="12">
@@ -213,8 +213,7 @@
               v-for="item in consumerOptions"
               :key="item.id"
               :label="item.eName"
-              :value="item.id"
-            >
+              :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -462,7 +461,7 @@ export default {
     },
     // 提交上传文件
     submitFileForm() {
-      if (this.form.coalBillNo && this.form.placeId) {
+      if (this.form.customsId && this.form.placeId) {
         this.$refs.upload.submit()
       } else {
         this.$alert('请选择场所和寄仓客户')

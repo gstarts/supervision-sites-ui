@@ -1001,15 +1001,13 @@ export default {
             this.form.customerId = element.id
             this.weightParams.id = element.id
             //this.queryParams.customerId = element.id
-            listStoreContract({'placeId': this.queryParams.placeId, 'customerId': element.id}).then((response) => {
+            listStoreContract({'placeId': this.queryParams.placeId, 'customerId': element.id,status: '1'}).then((response) => {
               this.contractOptions = response.rows
               //this.queryParams.customerId = undefined
             })
           }
         })
       }
-
-
       // 合同
       if (name === 'contractNo') {
         this.form.storeCode = undefined

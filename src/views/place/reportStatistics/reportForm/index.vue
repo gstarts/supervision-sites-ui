@@ -110,7 +110,8 @@
             align="right"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            value-format="yyyy-MM-dd HH:mm:ss">
+            value-format="yyyy-MM-dd HH:mm:ss"
+            :default-time="['00:00:00', '23:59:59']">
           </el-date-picker>
         </el-form-item>
 
@@ -662,7 +663,7 @@
               //重新给客户列表 赋值
               this.customerList = []
               for (let contract of this.contractList) {
-                if (!this.customerList.find(cus => cus.customerId === contract.customerId)) {
+                if (!this.customerList.find(cus => cus.customerName === contract.customerName)) {
                   this.customerList.push(contract)
                 }
               }

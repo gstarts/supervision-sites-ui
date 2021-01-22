@@ -17,9 +17,42 @@
           placeholder="请输入放行单号"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="寄仓客户" prop="checkConsumer">
+        <el-input
+          v-model="queryParams.checkConsumer"
+          placeholder="请输入寄仓客户"
+          clearable
+          size="small"
+        />
+      </el-form-item>
+      <!--        <el-select
+                v-model="queryParams.checkConsumer" placeholder="请选择寄仓客户" filterable clearable>
+                <el-option
+                  v-for="dict in consumerOptions"
+                  :key="dict.id"
+                  :label="dict.eName"
+                  :value="dict.eName"
+                />
+              </el-select>-->
+      <el-form-item label="煤种" prop="goodsName">
+        <el-input
+          v-model="queryParams.goodsName"
+          placeholder="请输入煤种"
+          clearable
+          size="small"
+        />
+      </el-form-item>
+      <!--        <el-select
+                v-model="queryParams.goodsName" placeholder="请选择煤种" filterable clearable>
+                <el-option
+                  v-for="dict in consumerOptions"
+                  :key="dict.id"
+                  :label="dict.eName"
+                  :value="dict.eName"
+                />
+              </el-select>-->
       <el-form-item label="建单时间" prop="createTime">
         <el-date-picker
           v-model="dateRange"
@@ -106,8 +139,8 @@
       <el-table-column label="合同号" align="center" prop="contractNo"/>
       <el-table-column label="品名" align="center" prop="goodsName"/>
       <el-table-column label="放行量(KGS)" align="center" prop="passVolume"/>
-<!--      <el-table-column label="放行状态" align="center" prop="passState" :formatter="ReleaseStatusFormat"/>-->
-<!--      <el-table-column label="所属场所" align="center" prop="placeId" :formatter="corporationFormat"/>-->
+      <!--      <el-table-column label="放行状态" align="center" prop="passState" :formatter="ReleaseStatusFormat"/>-->
+      <!--      <el-table-column label="所属场所" align="center" prop="placeId" :formatter="corporationFormat"/>-->
       <el-table-column label="报送日期" align="center" prop="submitDate"/>
       <el-table-column label="送来日期" align="center" prop="submitBackDate"/>
       <el-table-column label="建单时间" align="center" prop="createTime"/>
@@ -175,7 +208,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="品名" prop="goodsName">
-              <el-input v-model="form.contractNo" style="display: none" />
+              <el-input v-model="form.contractNo" style="display: none"/>
               <el-select v-model="form.goodsName" placeholder="请选择煤种" @change="((val)=>{change(val, 'coalType')})"
                          :disabled="formUpdateMode">
                 <el-option
@@ -264,7 +297,7 @@
 </template>
 
 <script>
-import {addPassDoc, delPassDoc, getPassDoc, listPassDoc, updatePassDoc} from '@/api/place/passDoc'
+import {addPassDoc, delPassDoc, getPassDoc, listPassDocLike, updatePassDoc} from '@/api/place/passDoc'
 import {listStoreContract} from '@/api/place/storeContract'
 import {getUserDepts} from '@/utils/charutils'
 import {listInfo} from '@/api/basis/enterpriseInfo'
@@ -395,7 +428,7 @@ export default {
       /*this.addDateRange(this.queryParams, this.dateRange)
       this.queryParams.beginTime = this.dateRange[0]
       this.queryParams.endTime = this.dateRange[1]*/
-      listPassDoc(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+      listPassDocLike(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.passDocList = response.rows
         this.total = response.total
         this.loading = false
@@ -702,7 +735,9 @@ export default {
             this.form.customerId = element.id
             this.weightParams.id = element.id
             this.queryParams.customerId = element.id
-            listStoreContract(this.queryParams).then((response) => {
+            let query = {...this.queryParams}
+            query.status = '1' //查询有效的合同
+            listStoreContract(query).then((response) => {
               this.form.goodsName = ''
               this.contractOptions = response.rows
               this.queryParams.customerId = undefined

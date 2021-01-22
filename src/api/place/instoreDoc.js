@@ -17,6 +17,16 @@ export function listInstoreDocLike(query) {
     params: query
   })
 }
+// 查询入库通知单列表
+export function listInstoreReportLike(query) {
+  return request({
+    url: '/place/instoreDoc/listReportLike',
+    method: 'get',
+    params: query
+  })
+}
+
+
 
 // 查询入库通知单详细
 export function getInstoreDoc(id) {

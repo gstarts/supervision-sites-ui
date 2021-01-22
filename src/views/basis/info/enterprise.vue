@@ -32,12 +32,21 @@
         </el-select>
       </el-form-item>
 
+      <el-form-item label="公司类型" prop="companyType" >
+        <el-select v-model="queryParams.companyType" placeholder="请选择公司类型" clearable>
+          <el-option
+            v-for="dict in companyTypeDic"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -84,20 +93,20 @@
     </el-row>
     <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="序号" type="index"/>
+      <el-table-column label="ID" align="center" prop="id"/>
       <el-table-column label="公司名称" align="center" prop="eName"/>
       <el-table-column label="公司性质" align="center" prop="eType" :formatter="statusFormat"/>
       <el-table-column label="公司类型" align="center" prop="companyType" :formatter="companyTypeFormat"/>
       <el-table-column label="公司地址" align="center" prop="eAddress"/>
       <el-table-column label="法人" align="center" prop="eLegalPerson"/>
       <el-table-column label="营业范围" align="center" prop="eBusinessScope"/>
+      <el-table-column label="计费日" align="center" prop="billDay"/>
       <el-table-column label="备注信息" align="center" prop="remark" :show-overflow-tooltip="true"/>
       <el-table-column
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
-        fixed="right"
-      >
+        fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -112,8 +121,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['enterprise:info:remove']"
-          >删除
+            v-hasPermi="['enterprise:info:remove']">删除
           </el-button>
         </template>
       </el-table-column>
@@ -123,8 +131,7 @@
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+      @pagination="getList"/>
 
     <!-- 添加或修改企业信息备案对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
@@ -150,7 +157,7 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item label="监管场所" prop="deptId">
+            <el-form-item label="监管场所" prop="deptId" v-show="false">
               <el-select v-model="form.deptId" placeholder="请选择场站">
                 <el-option
                   v-for="dept in depts"
@@ -162,27 +169,40 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
+            <el-form-item label="公司简称" prop="eAbbreviation">
+              <el-input v-model="form.eAbbreviation" placeholder="请输入公司简称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="公司英文名称" prop="eEname">
               <el-input v-model="form.eEname" placeholder="请输入公司英文名称"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="公司简称" prop="eAbbreviation">
-              <el-input v-model="form.eAbbreviation" placeholder="请输入公司简称"/>
+            <el-form-item label="公司类型" prop="companyType" >
+              <el-select v-model="form.companyType" placeholder="请选择公司类型" @change="changeCompanyType">
+                <el-option
+                  v-for="dict in companyTypeDic"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="10">
+        <el-row>
           <el-col :span="16">
             <el-form-item label="公司地址" prop="eAddress">
               <el-input v-model="form.eAddress" placeholder="请输入公司地址"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="公司类型" prop="companyType">
-              <el-select v-model="form.companyType" placeholder="请选择公司类型">
+            <el-form-item label="计费日" prop="billDay" v-show="form.companyType === '2'"
+                          :rules="form.companyType==='2'?rules.billDay:[{ required: false}]">
+              <el-select v-model="form.billDay" placeholder="请选择计费日期" filterable clearable>
                 <el-option
-                  v-for="dict in companyTypeDic"
+                  v-for="dict in billDayOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
                   :value="dict.dictValue"
@@ -235,69 +255,70 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <div v-show="form.eType === '1'">
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="海关编号" prop="customsMaster"
+                            :rules="form.eType==='1'?rules.customsMaster:[{ required: false}]">
+                <el-input v-model="form.customsMaster" placeholder="请输入海关编号"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="组织机构代码" prop="contractorCode"
+                            :rules="form.eType==='1'?rules.contractorCode:[{ required: false}]">
+                <el-input v-model="form.contractorCode" placeholder="请输入组织机构代码"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item
+                label="统一社会信用代码"
+                prop="contractorCodeScc"
+                label-width="150px"
+                :rules="form.eType==='1'?rules.contractorCodeScc:[{ required: false}]">
+                <el-input v-model="form.contractorCodeScc" placeholder="请输入统一社会信用代码"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
 
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="海关编号" prop="customsMaster"
-                          :rules="form.eType==='1'?rules.customsMaster:[{ required: false}]">
-              <el-input v-model="form.customsMaster" placeholder="请输入海关编号"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="组织机构代码" prop="contractorCode"
-                          :rules="form.eType==='1'?rules.contractorCode:[{ required: false}]">
-              <el-input v-model="form.contractorCode" placeholder="请输入组织机构代码"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item
-              label="统一社会信用代码"
-              prop="contractorCodeScc"
-              label-width="150px"
-              :rules="form.eType==='1'?rules.contractorCodeScc:[{ required: false}]">
-              <el-input v-model="form.contractorCodeScc" placeholder="请输入统一社会信用代码"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="作业场所编号" prop="supvLoctCode"
+                            :rules="form.eType==='1'?rules.supvLoctCode:[{ required: false}]">
+                <el-input v-model="form.supvLoctCode" placeholder="请输入作业场所编号"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="操作人ID" prop="opUserId" :rules="form.eType==='1'?rules.opUserId:[{ required: false}]">
+                <el-input v-model="form.opUserId" placeholder="请输入操作人ID"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="发送ID" prop="senderId" :rules="form.eType==='1'?rules.senderId:[{ required: false}]">
+                <el-input v-model="form.senderId" placeholder="请输入发送ID"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="接收ID" prop="receiverId"
+                            :rules="form.eType==='1'?rules.receiverId:[{ required: false}]">
+                <el-input v-model="form.receiverId" placeholder="请输入接收ID"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="接口协议版本号" prop="version" :rules="form.eType==='1'?rules.version:[{ required: false}]">
+                <el-input v-model="form.version" placeholder="请输入接口协议版本号"/>
+              </el-form-item>
+            </el-col>
 
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="作业场所编号" prop="supvLoctCode"
-                          :rules="form.eType==='1'?rules.supvLoctCode:[{ required: false}]">
-              <el-input v-model="form.supvLoctCode" placeholder="请输入作业场所编号"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="操作人ID" prop="opUserId" :rules="form.eType==='1'?rules.opUserId:[{ required: false}]">
-              <el-input v-model="form.opUserId" placeholder="请输入操作人ID"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="发送ID" prop="senderId" :rules="form.eType==='1'?rules.senderId:[{ required: false}]">
-              <el-input v-model="form.senderId" placeholder="请输入发送ID"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="接收ID" prop="receiverId"
-                          :rules="form.eType==='1'?rules.receiverId:[{ required: false}]">
-              <el-input v-model="form.receiverId" placeholder="请输入接收ID"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="接口协议版本号" prop="version" :rules="form.eType==='1'?rules.version:[{ required: false}]">
-              <el-input v-model="form.version" placeholder="请输入接口协议版本号"/>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="确保传输人名称" prop="stationPersonName"
-                          :rules="form.eType==='1'?rules.stationPersonName:[{ required: false}]">
-              <el-input v-model="form.stationPersonName" placeholder="请输入确保传输人名称"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
+            <el-col :span="8">
+              <el-form-item label="确保传输人名称" prop="stationPersonName"
+                            :rules="form.eType==='1'?rules.stationPersonName:[{ required: false}]">
+                <el-input v-model="form.stationPersonName" placeholder="请输入确保传输人名称"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
         <el-form-item label="备注信息" prop="remark">
           <el-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"/>
         </el-form-item>
@@ -344,10 +365,10 @@ export default {
 
       eEnterpriseTypeOptions: [],
       companyTypeDic: [
-        {'dictValue':'1','dictLabel':'场所'},
-        {'dictValue':'2','dictLabel':'寄仓客户'},
-        {'dictValue':'3','dictLabel':'销售客户'},
-        {'dictValue':'4','dictLabel':'承运单位'},
+        {'dictValue': '1', 'dictLabel': '场所'},
+        {'dictValue': '2', 'dictLabel': '寄仓客户'},
+        {'dictValue': '3', 'dictLabel': '销售客户'},
+        {'dictValue': '4', 'dictLabel': '承运单位'},
       ],
       // 弹出层标题
       title: "",
@@ -376,10 +397,13 @@ export default {
         senderId: undefined,
         receiverId: undefined,
         deptId: undefined,
+        orderByColumn: 'id',
+        isAsc: 'desc',
       },
       // 表单参数
       form: {
         version: "1.0",
+        billDay: undefined,
       },
       // 表单校验
       rules: {
@@ -432,13 +456,17 @@ export default {
         stationPersonName: [
           {required: true, message: "确保传输人名称不能为空", trigger: "blur"},
         ],
-        eLegalPersonPhone: [
+        /*eLegalPersonPhone: [
           {required: true, message: "法人电话不能为空", trigger: "blur"},
-        ],
-        companyType:[
+        ],*/
+        companyType: [
           {required: true, message: "公司类型不能为空", trigger: "change"},
+        ],
+        billDay: [
+          {required: true, message: "计费日期不能为空", trigger: "change"},
         ]
       },
+      billDayOptions: [],
     };
   },
   created() {
@@ -450,11 +478,16 @@ export default {
       this.getList();
     }
     this.queryParams.deptId = this.depts[0].deptId
-    /**获取企业类型 */
+    /**获取企业类型 1 报关企业，2非报关企业 */
     this.getDicts("station_enterprise_type").then((response) => {
       this.eEnterpriseTypeOptions = response.data;
     });
     this.getList();
+    for (let i = 1; i <= 31; i++) {
+      this.billDayOptions.push(
+        {'dictValue': i, 'dictLabel': i}
+      )
+    }
   },
 
   methods: {
@@ -496,7 +529,8 @@ export default {
         receiverId: undefined,
         version: "1.0",
         remark: undefined,
-        companyType: undefined
+        companyType: undefined,
+        billDay: undefined
       };
       this.resetForm("form");
     },
@@ -599,6 +633,15 @@ export default {
         `企业信息备案.xlsx`
       );
     },
+    changeCompanyType(event) {
+      if (event === '2') {
+        if (!this.form.billDay) {
+          this.form.billDay = 1
+        }
+      } else {
+        this.form.billDay = undefined
+      }
+    }
   },
 };
 </script>

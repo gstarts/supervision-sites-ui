@@ -68,3 +68,14 @@ export function isChina(s) {
   return pattern.exec(s);
 }
 
+export function compareDate(dateTime1, dateTime2) {
+  let formatDate1 = new Date(dateTime1)
+  let formatDate2 = new Date(dateTime2)
+  if (formatDate1 > formatDate2) {
+    return 1
+  } else if (formatDate1 < formatDate2) {
+    return -1;
+  } else {
+    return 0
+  }
+}
