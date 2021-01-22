@@ -104,7 +104,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -301,7 +301,7 @@ export default {
     handleExport() {
       this.download('yard/container/attribute/export', {
         ...this.queryParams
-      }, `yard_container_attribute.xlsx`)
+      }, `yard_container_attribute.xls`)
     }
   }
 };

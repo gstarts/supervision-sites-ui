@@ -148,6 +148,9 @@
 
         >导出
         </el-button>
+        <el-button type="info" icon="fa fa-print" v-print="'#allPrint'" size="mini" @click="print"> 打印
+        </el-button>
+
         <!--        <el-button v-print="'#dayin'" ref="printBtn" style="display: none"/>-->
       </el-form-item>
     </el-form>
@@ -671,831 +674,911 @@
       </div>
     </div>
 
+
+    <!--    打印区域-->
+
+    <div id="allPrint">
+      <div v-for="(item,index) in newArray" style="page-break-after:always">
+        <div :id="gennerateId(index)"></div>
+        <div class="box-card" style="margin: 0 auto;font-size:18px;width:1500px;padding-left: 1px ;padding-top:50px">
+          <el-table v-loading="loading" :data="item" id="analyouttable"
+                    :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'13px',padding:'3 -3px',margin:'-3'}"
+                    :cell-style="{border:'solid .5px black',fontSize:'10px',padding:'12px 0',color:'black'}"
+                    style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
+            <!--   checkConsumer   -->
+            <!--      <af-table-column label="发货单位" align="center" prop="goodsName"/>-->
+            <af-table-column label="ID" align="center" prop="id"/>
+            <af-table-column label="业务编号" align="center" prop="measurementNum" width="70%"/>
+            <af-table-column label="批次号" align="center" prop="specification" width="100%"/>
+            <af-table-column label="车牌号" align="center"  prop="plateNum" width="70%"/>
+            <af-table-column label="毛重" align="center" prop="grossWeight" width="70%"/>
+            <af-table-column label="皮重" align="center" prop="tare" width="70%"/>
+            <af-table-column label="净重" align="center" prop="netWeight" width="70%"/>
+            <af-table-column label="供货单位" align="center" prop="deliveryUnit" width="150%"/>
+            <af-table-column label="收货单位" align="center" prop="receivingUnit" width="150%"/>
+            <af-table-column label="称重状态" align="center" prop="flowDirection" width="70%">
+              <template slot-scope="scope">
+                {{ scope.row.flowDirection === 'I' ? '未完成' : '已完成' }}
+              </template>
+            </af-table-column>
+
+            <af-table-column label="库位号" align="center" prop="locationNumber" width="70%"/>
+            <af-table-column label="出入库单" align="center" prop="noticeNo" width="120%"/>
+            <af-table-column label="车辆类型" align="center" prop="viaType" width="70%">
+              <template slot-scope="scope">
+                {{ scope.row.viaType === '01' ? '蒙煤车' : '外调车' }}
+              </template>
+            </af-table-column>
+
+            <af-table-column label="入场时间" align="center" prop="inTime" width="100%"/>
+            <af-table-column label="入场司磅员" align="center" prop="inUser" width="70%"/>
+            <af-table-column label="出场时间" align="center" prop="outTime" width="100%"/>
+            <af-table-column label="出场司磅员" align="center" prop="outUser" width="70%"/>
+          </el-table>
+
+        </div>
+      </div>
+    </div>
   </div>
 
 </template>
 
 <script>
-import {listSheetLike, updatePrintState} from "@/api/tax/poundlist";
-import {getUserDepts} from "@/utils/charutils";
-import {applyModify} from "@/api/place/modify";
-import {selectCoalBillNo} from "@/api/place/big";
-import {parseTime} from "@/utils/common";
-import {listUser} from "@/api/system/user";
-import {listStoreContract} from "@/api/place/storeContract";
-import {addPrint, checkPrint} from "@/api/place/print";
-import {listGroup} from "@/api/place/group";
-import {listInfo} from "@/api/basis/enterpriseInfo";
-import SimpleKeyboard from "@/components/SimpleKeyboard/SimpleKeyboard";
+  import {listSheetLike, updatePrintState} from "@/api/tax/poundlist";
+  import {getUserDepts} from "@/utils/charutils";
+  import {applyModify} from "@/api/place/modify";
+  import {selectCoalBillNo} from "@/api/place/big";
+  import {parseTime} from "@/utils/common";
+  import {listUser} from "@/api/system/user";
+  import {listStoreContract} from "@/api/place/storeContract";
+  import {addPrint, checkPrint} from "@/api/place/print";
+  import {listGroup} from "@/api/place/group";
+  import {listInfo} from "@/api/basis/enterpriseInfo";
+  import SimpleKeyboard from "@/components/SimpleKeyboard/SimpleKeyboard";
 
-export default {
-  name: "Sheet",
-  components: {
-    SimpleKeyboard,
-  },
-  data() {
-    return {
-      printObj: {
-        id: '#dayin',
-        endCallback: (err => {
-          console.log('打印完成')
-        })
-      },
-      // 遮罩层
-      loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
-      // 总条数
-      total: 0,
-      //
-      userList: [],
-      // 计量单表格数据
-      sheetList: [],
-      BigList: [],//提煤单列表
-      dateRange: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示磅单修改弹出层
-      open: false,
-      //是否显示磅单打印申请弹出层
-      printOpen: false,
-      printTitle: "",
-      //打印区域显示隐藏
-      printShow: false,
-      printDate: {
-        poundTotal: "",
-        // 时间
-        nowDate: '',
-        nowTime: '',
-        // 发货单位
-        deliveryUnit: '',
-        //车号
-        plateNum: '',
-        //收货单位
-        receivingUnit: '',
-        grossWeight: '',
-        //货物名称
-        goodsName: '',
-        tare: '',
-        specification: '',
-        netWeight: '',
-        // 备注
-        remark: '',
-        carrier: '',
-        transportMode: '',
-        // 进场司磅员
-        inUser: '',
-        //出场司磅员
-        outUser: '',
-        //补打标识
-        printState: '',
-        //补打 当前操作员标识
-
-      },
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 20,
-        finalInspectionTime: undefined,
-        measurementNum: undefined,
-        plateNum: undefined,
-        goodsName: undefined,
-        specification: undefined,
-        carrier: undefined,
-        grossWeight: undefined,
-        tare: undefined,
-        tareWeight: undefined,
-        netWeight: undefined,
-        deliveryUnit: undefined,
-        receivingUnit: undefined,
-        flowDirection: 'E',
-        status: undefined,
-        coalBillNum: undefined,
-        containerNum: undefined,
-        keeper: undefined,
-        measurer: undefined,
-        locationNumber: undefined,
-        channelNumber: undefined,
-        stationId: undefined,
-        noticeNo: undefined,
-        viaType: undefined,   //01为蒙煤  02 为外调
-        packMode: undefined,
-        containerNum2: undefined,
-        containerNum3: undefined,
-        containerNum4: undefined,
-        printState: undefined,
-        transportMode: undefined, //运输方式
-        transportUnit: undefined,//承运单位
-        orderByColumn: 'id',
-        isAsc: 'desc',
-        id: undefined
-      },
-      // 表单校验
-      rulesModifyNew: {},
-      rules: {approvalUserName: [{type: 'string', required: true, message: '审批人不能为空', trigger: 'change'}],},
-      rulesModify: {
-        //tareWeight: [{type: 'number', required: true, message: '皮重不能为空', trigger: 'blur'}],
-        //roughWeight: [{type: 'number', required: true, message: '毛重不能为空', trigger: 'blur'}],
-        //netWeight: [{type: 'number', required: true, message: '净重不能为空', trigger: 'blur'}],
-        modifyTareWeight: [{required: true, message: '皮重不能为空', trigger: 'blur'},
-          {type: "number", message: "皮重需为数字", trigger: "blur"}],
-        modifyRoughWeight: [{required: true, message: '毛重不能为空', trigger: 'blur'},
-          {type: "number", message: "毛重需为数字", trigger: "blur"}],
-        modifyNetWeight: [{required: true, message: '净重不能为空', trigger: 'blur'},
-          {type: "number", message: "净重需为数字", trigger: "blur"}],
-        applyReason: [{type: 'string', required: true, message: '修改原因不能为空', trigger: 'blur'}],
-        auditUser: [{type: 'string', required: true, message: '审批人不能为空', trigger: 'change'}],
-        modifyType: [{type: 'string', required: true, message: '修改项不能为空', trigger: 'change'}],
-      },
-
-      ruleVehicleNo: {
-        modifyVehicleNo: [{required: true, message: '车号不能为空', trigger: 'blur'}],
-      },
-
-      ruleContractNo: {
-        modifyContractNo: [{type: 'string', required: true, message: '合同号不能为空', trigger: 'change'}],
-        modifyStoreCode: [{type: 'string', required: true, message: '库位号不能为空', trigger: 'change'}],
-      },
-      ruleCoalBillNo: {
-        modifyCoalBillNo: [{type: 'string', required: true, message: '提煤单号不能为空', trigger: 'change'}],
-      },
-      //磅单打印申请的表单验证
-      rulesPrint: {
-        poundId: [{required: true, message: '磅单编号不能为空', trigger: 'blur'}],
-        applyFactor: [{type: 'string', required: true, message: '申请原因不能为空', trigger: 'blur'}],
-        approvalUserName: [{required: true, message: '审批人不能为空', trigger: 'change'}],
-      },
-      poundModify: {
-        id: undefined,
-        poundId: undefined,
-        viaType: undefined,
-        tareWeight: 0,
-        roughWeight: 0,
-        netWeight: 0,
-        modifyTareWeight: 0,
-        modifyRoughWeight: 0,
-        modifyNetWeight: 0,
-        modifyReason: undefined,
-        applyReason: undefined,
-        vehicleNo: undefined,
-        packMode: undefined,
-        containerNo1: undefined,
-        containerNo2: undefined,
-        containerNo3: undefined,
-        containerNo4: undefined,
-        noticeNo: undefined,
-        docId: undefined,
-        placeId: undefined,
-        flow: undefined,
-        modifyContainerNo1: undefined,
-        modifyContainerNo2: undefined,
-        modifyContainerNo3: undefined,
-        modifyContainerNo4: undefined,
-        coalBillNo: undefined,
-        modifyCoalBillNo: undefined,
-        auditGroup: undefined,
-        auditUser: undefined,
-        storeCode: undefined,
-        contractNo: undefined,
-        modifyContractNo: undefined,
-        modifyStoreCode: undefined,
-        modifyVehicleNo: undefined,
-        modifyType: undefined,
-        remark: undefined
-      },
-      //当前选中的磅单
-      selectPound: {},
-      poundStateDic: [
-        {'key': '0', 'value': '正常'},
-        {'key': '1', 'value': '修改'},
-      ],
-      flowDic: [
-        {'key': 'A', 'value': '全部'},
-        {'key': 'I', 'value': '未完成'},
-        {'key': 'E', 'value': '已完成'},
-      ],
-      viaTypeDic: [
-        {'key': '01', 'value': '蒙煤车'},
-        {'key': '02', 'value': '外调车'},
-      ],
-      packModeDic: [
-        {'key': '1', 'value': '集装箱'},
-        {'key': '2', 'value': '散杂货'},
-      ],
-      coalTypeOptions: [], //煤种
-      transportModeDic: [], //运输方式
-
-      //磅单打印审批 JSON
-      form: {
-        //磅单id
-        poundId: '',
-        //申请人名称
-        applyUserName: '',
-        //审批用户名称
-        approvalUserName: '',
-        //备注
-        remark: '',
-        //申请原因
-        applyFactor: '',
-        placeId: '',
-      },
-      auditGroupList: [],
-      auditUserList: [],
-      contractList: [],
-      storeCodeList: [],
-      modifyTypeDic: [
-        {'dictValue': '3', 'dictLabel': '修改车号'},
-        {'dictValue': '1', 'dictLabel': '修改合同'},
-        {'dictValue': '2', 'dictLabel': '修改提煤单'},
-      ],
-      transUnitList: []
-    }
-  },
-  computed: {
-    //毛重监听
-    modifyRoughWeightWatch() {
-      return this.poundModify.modifyRoughWeight;
+  export default {
+    name: "Sheet",
+    components: {
+      SimpleKeyboard,
     },
-    //皮重监听
-    modifyTareWeightWatch01() {
-      return this.poundModify.modifyTareWeight
-    },
-
-  },
-  created() {
-    this.getUserList();
-    this.depts = getUserDepts('1')
-    if (this.depts.length > 0) {
-      this.queryParams.stationId = this.depts[0].deptId
-      this.getList();
-      //this.getGroupList()
-      //this.getContractList()
-      //this.getCoalBillList()
-      //this.getTransportUnitInfo()
-    }
-    //煤种类型
-    this.getDicts("coal_type").then(response => {
-      this.coalTypeOptions = response.data;
-    });
-    //运输方式
-    this.getDicts("place_transport_type").then((response) => {
-      this.transportModeDic = response.data;
-    });
-    this.rulesModifyNew = this.rulesModify
-  },
-  watch: {
-    //毛重监听
-    modifyRoughWeightWatch(val) {
-      if (this.selectPound.flowDirection === 'E') {
-        this.poundModify.modifyNetWeight = this.poundModify.modifyRoughWeight - this.poundModify.modifyTareWeight;
-      }
-    },
-    //皮重监听
-    modifyTareWeightWatch01(val) {
-      if (this.selectPound.flowDirection === 'E') {
-        this.poundModify.modifyNetWeight = this.poundModify.modifyRoughWeight - this.poundModify.modifyTareWeight;
-      }
-    },
-  },
-  methods: {
-    /** 查询计量单列表 */
-    getList() {
-      this.loading = true;
-      listSheetLike(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-        this.sheetList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    //磅单打印审批操作相关
-    printCancel() {
-      this.printOpen = false;
-      this.form = {};
-      this.poundModify.auditGroup = '';
-    },
-    printSubmitForm: function () {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          this.form.placeId = this.queryParams.stationId
-          addPrint(this.form).then(response => {
-            if (response.code === 200) {
-              this.msgSuccess("申请成功");
-              this.printOpen = false;
-              this.getList();
-            } else {
-              this.msgError(response.msg);
-            }
-          });
-        }
-      });
-    },
-    // 表单重置
-    reset() {
-      this.formModify = {
-        id: undefined,
-        poundId: undefined,
-        viaType: undefined,
-        tareWeight: 0,
-        roughWeight: 0,
-        netWeight: 0,
-        modifyTareWeight: 0,
-        modifyRoughWeight: 0,
-        modifyNetWeight: 0,
-        modifyReason: undefined,
-        applyReason: undefined,
-        vehicleNo: undefined,
-        packMode: undefined,
-        containerNo1: undefined,
-        containerNo2: undefined,
-        containerNo3: undefined,
-        containerNo4: undefined,
-        noticeNo: undefined,
-        docId: undefined,
-        placeId: undefined,
-        flow: undefined,
-        modifyContainerNo1: undefined,
-        modifyContainerNo2: undefined,
-        modifyContainerNo3: undefined,
-        modifyContainerNo4: undefined,
-        coalBillNo: undefined,
-        modifyCoalBillNo: undefined,
-        delivery_unit: undefined
-      };
-      this.resetForm("formModify");
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length != 1
-      this.multiple = !selection.length
-    },
-    /** 新增按钮操作 */
-    handleApply(row) {
-      this.reset();
-      this.open = true;
-      this.title = "磅单修改申请";
-      this.selectPound = {...row}
-
-      this.poundModify.netWeight = this.selectPound.netWeight
-      this.poundModify.poundId = this.selectPound.id
-      this.poundModify.poundState = this.selectPound.status
-      this.poundModify.tareWeight = this.selectPound.tare
-      this.poundModify.roughWeight = this.selectPound.grossWeight
-      this.poundModify.netWeight = this.selectPound.netWeight
-      this.poundModify.modifyTareWeight = this.selectPound.tare
-      this.poundModify.modifyRoughWeight = this.selectPound.grossWeight
-      this.poundModify.modifyNetWeight = this.selectPound.netWeight
-      this.poundModify.vehicleNo = this.selectPound.plateNum
-      this.poundModify.packMode = this.selectPound.packMode
-      this.poundModify.containerNo1 = this.selectPound.containerNum
-      this.poundModify.containerNo2 = this.selectPound.containerNum2
-      this.poundModify.containerNo3 = this.selectPound.containerNum3
-      this.poundModify.containerNo4 = this.selectPound.containerNum4
-      this.poundModify.modifyContainerNo1 = this.selectPound.containerNum
-      this.poundModify.modifyContainerNo2 = this.selectPound.containerNum2
-      this.poundModify.modifyContainerNo3 = this.selectPound.containerNum3
-      this.poundModify.modifyContainerNo4 = this.selectPound.containerNum4
-      this.poundModify.viaType = this.selectPound.viaType
-      this.poundModify.placeId = this.selectPound.stationId
-      this.poundModify.flow = this.selectPound.flowDirection
-      this.poundModify.docId = this.selectPound.noticeNo
-      this.poundModify.coalBillNo = this.selectPound.coalBillNum
-      this.poundModify.modifyCoalBillNo = this.selectPound.coalBillNum
-      this.poundModify.vehicleNo = this.selectPound.plateNum
-      this.poundModify.modifyVehicleNo = this.selectPound.plateNum
-      this.poundModify.contractNo = this.selectPound.remark
-      //if (this.poundModify.viaType === '01') {
-      this.poundModify.modifyContractNo = this.selectPound.remark
-      //} else {
-      this.poundModify.modifyCoalBillNo = this.selectPound.coalBillNum
-      //}
-      //this.poundModify.contractNo = this.selectPound.remark
-      //this.poundModify.modifyContractNo = this.selectPound.remark
-      this.poundModify.storeCode = this.selectPound.locationNumber //库位号
-      this.poundModify.modifyStoreCode = this.selectPound.locationNumber //修改后的库位号
-      /* console.log(this.poundModify)
-       console.log("--------------")
-       console.log(this.selectPound)*/
-
-    },
-    //打印申请弹出框
-    printApplication(row) {
-      this.form = {};
-      this.poundModify.auditGroup = '';
-      this.printTitle = "磅单打印申请";
-      this.printOpen = true;
-      this.form.poundId = row.id;
-    },
-    /** 提交按钮 */
-    submitForm: function () {
-      // if (this.poundModify.modifyNetWeight >= 0) {
-      this.$refs["formModify"].validate(valid => {
-        if (valid) {
-          if (this.poundModify.modifyType === '3') {//改车牌
-            if (!this.poundModify.modifyVehicleNo || this.poundModify.modifyVehicleNo === this.poundModify.vehicleNo) {
-              this.$message.warning('请填写要修改的车牌号')
-              return false
-            }
-          }
-
-          if (this.poundModify.modifyType === '1') {//改合同
-            if (!this.poundModify.modifyStoreCode || this.poundModify.modifyStoreCode === this.poundModify.storeCode) {
-              this.$message.warning('请填写要修改的合同号和库位号')
-              return false
-            }
-          }
-
-          if (this.poundModify.modifyType === '2') {//改提煤单
-            if (!this.poundModify.modifyCoalBillNo || this.poundModify.modifyCoalBillNo === this.poundModify.coalBillNo) {
-              this.$message.warning('请填写要修改的提煤单号')
-              return false
-            }
-          }
-
-          applyModify(this.poundModify).then(response => {
-            if (response.code === 200) {
-              this.msgSuccess("申请成功");
-              this.open = false;
-              //可以不刷，只把 状态改了
-              this.getList();
-            }
+    data() {
+      return {
+        printObj: {
+          id: '#dayin',
+          endCallback: (err => {
+            console.log('打印完成')
           })
-        }
-      })
-      //} else {
-      //  this.msgError("净重不能小于0,请检查！")
-      //}
-    },
-    /** 打印按钮操作 */
-    handlePrint(row) {
-      // 判断磅单时间 与当前时间 相差是否超过4小时
-      if (((new Date().getTime() - new Date(row.outTime).getTime()) / 1000 / 60 / 60) <= 4) {
+        },
+        // 遮罩层
+        loading: true,
+        // 选中数组
+        ids: [],
+        // 非单个禁用
+        single: true,
+        // 非多个禁用
+        multiple: true,
+        // 总条数
+        total: 0,
+        //
+        userList: [],
+        // 计量单表格数据
+        sheetList: [],
+        BigList: [],//提煤单列表
+        dateRange: [],
+        // 弹出层标题
+        title: "",
+        // 是否显示磅单修改弹出层
+        open: false,
+        //是否显示磅单打印申请弹出层
+        printOpen: false,
+        printTitle: "",
+        //打印区域显示隐藏
+        printShow: false,
+        //
+        newArray :[],
+        printDate: {
+          poundTotal: "",
+          // 时间
+          nowDate: '',
+          nowTime: '',
+          // 发货单位
+          deliveryUnit: '',
+          //车号
+          plateNum: '',
+          //收货单位
+          receivingUnit: '',
+          grossWeight: '',
+          //货物名称
+          goodsName: '',
+          tare: '',
+          specification: '',
+          netWeight: '',
+          // 备注
+          remark: '',
+          carrier: '',
+          transportMode: '',
+          // 进场司磅员
+          inUser: '',
+          //出场司磅员
+          outUser: '',
+          //补打标识
+          printState: '',
+          //补打 当前操作员标识
 
-        this.printShow = true
-        let date = parseTime(new Date())
-        this.printDate.nowDate = date.substring(0, 10);
-        this.printDate.nowTime = date.substring(10, 19);
-        //发货单位
-        this.printDate.deliveryUnit = row.deliveryUnit;
-        this.printDate.plateNum = row.plateNum;
-        this.printDate.receivingUnit = row.receivingUnit;
-        this.printDate.grossWeight = row.grossWeight;
-        this.printDate.goodsName = row.goodsName;
-        this.printDate.tare = row.tare;
-        this.printDate.specification = row.tare;
-        this.printDate.netWeight = row.netWeight;
-        this.printDate.remark = row.remark;
-        this.printDate.carrier = row.carrier;
-        this.printDate.transportMode = row.transportMode;
-        this.printDate.inUser = row.inUser;
-        this.printDate.outUser = row.outUser;
-        this.printDate.printState = row.printState;
-        clearTimeout(this.timer1);
-        //清除延迟执行
-        this.timer1 = setTimeout(() => {
-          //设置延迟执行
-          this.printShow = false
-        }, 2000);
-        // 没超过4小时，直接可以打印，并更新打印状态
-        updatePrintState(row.id).then(response => {
-          if (response.code === 200) {
-            this.getList()
+        },
+        // 查询参数
+        queryParams: {
+          pageNum: 1,
+          pageSize: 20,
+          finalInspectionTime: undefined,
+          measurementNum: undefined,
+          plateNum: undefined,
+          goodsName: undefined,
+          specification: undefined,
+          carrier: undefined,
+          grossWeight: undefined,
+          tare: undefined,
+          tareWeight: undefined,
+          netWeight: undefined,
+          deliveryUnit: undefined,
+          receivingUnit: undefined,
+          flowDirection: 'E',
+          status: undefined,
+          coalBillNum: undefined,
+          containerNum: undefined,
+          keeper: undefined,
+          measurer: undefined,
+          locationNumber: undefined,
+          channelNumber: undefined,
+          stationId: undefined,
+          noticeNo: undefined,
+          viaType: undefined,   //01为蒙煤  02 为外调
+          packMode: undefined,
+          containerNum2: undefined,
+          containerNum3: undefined,
+          containerNum4: undefined,
+          printState: undefined,
+          transportMode: undefined, //运输方式
+          transportUnit: undefined,//承运单位
+          orderByColumn: 'id',
+          isAsc: 'desc',
+          id: undefined
+        },
+        // 表单校验
+        rulesModifyNew: {},
+        rules: {approvalUserName: [{type: 'string', required: true, message: '审批人不能为空', trigger: 'change'}],},
+        rulesModify: {
+          //tareWeight: [{type: 'number', required: true, message: '皮重不能为空', trigger: 'blur'}],
+          //roughWeight: [{type: 'number', required: true, message: '毛重不能为空', trigger: 'blur'}],
+          //netWeight: [{type: 'number', required: true, message: '净重不能为空', trigger: 'blur'}],
+          modifyTareWeight: [{required: true, message: '皮重不能为空', trigger: 'blur'},
+            {type: "number", message: "皮重需为数字", trigger: "blur"}],
+          modifyRoughWeight: [{required: true, message: '毛重不能为空', trigger: 'blur'},
+            {type: "number", message: "毛重需为数字", trigger: "blur"}],
+          modifyNetWeight: [{required: true, message: '净重不能为空', trigger: 'blur'},
+            {type: "number", message: "净重需为数字", trigger: "blur"}],
+          applyReason: [{type: 'string', required: true, message: '修改原因不能为空', trigger: 'blur'}],
+          auditUser: [{type: 'string', required: true, message: '审批人不能为空', trigger: 'change'}],
+          modifyType: [{type: 'string', required: true, message: '修改项不能为空', trigger: 'change'}],
+        },
+
+        ruleVehicleNo: {
+          modifyVehicleNo: [{required: true, message: '车号不能为空', trigger: 'blur'}],
+        },
+
+        ruleContractNo: {
+          modifyContractNo: [{type: 'string', required: true, message: '合同号不能为空', trigger: 'change'}],
+          modifyStoreCode: [{type: 'string', required: true, message: '库位号不能为空', trigger: 'change'}],
+        },
+        ruleCoalBillNo: {
+          modifyCoalBillNo: [{type: 'string', required: true, message: '提煤单号不能为空', trigger: 'change'}],
+        },
+        //磅单打印申请的表单验证
+        rulesPrint: {
+          poundId: [{required: true, message: '磅单编号不能为空', trigger: 'blur'}],
+          applyFactor: [{type: 'string', required: true, message: '申请原因不能为空', trigger: 'blur'}],
+          approvalUserName: [{required: true, message: '审批人不能为空', trigger: 'change'}],
+        },
+        poundModify: {
+          id: undefined,
+          poundId: undefined,
+          viaType: undefined,
+          tareWeight: 0,
+          roughWeight: 0,
+          netWeight: 0,
+          modifyTareWeight: 0,
+          modifyRoughWeight: 0,
+          modifyNetWeight: 0,
+          modifyReason: undefined,
+          applyReason: undefined,
+          vehicleNo: undefined,
+          packMode: undefined,
+          containerNo1: undefined,
+          containerNo2: undefined,
+          containerNo3: undefined,
+          containerNo4: undefined,
+          noticeNo: undefined,
+          docId: undefined,
+          placeId: undefined,
+          flow: undefined,
+          modifyContainerNo1: undefined,
+          modifyContainerNo2: undefined,
+          modifyContainerNo3: undefined,
+          modifyContainerNo4: undefined,
+          coalBillNo: undefined,
+          modifyCoalBillNo: undefined,
+          auditGroup: undefined,
+          auditUser: undefined,
+          storeCode: undefined,
+          contractNo: undefined,
+          modifyContractNo: undefined,
+          modifyStoreCode: undefined,
+          modifyVehicleNo: undefined,
+          modifyType: undefined,
+          remark: undefined
+        },
+        //当前选中的磅单
+        selectPound: {},
+        poundStateDic: [
+          {'key': '0', 'value': '正常'},
+          {'key': '1', 'value': '修改'},
+        ],
+        flowDic: [
+          {'key': 'A', 'value': '全部'},
+          {'key': 'I', 'value': '未完成'},
+          {'key': 'E', 'value': '已完成'},
+        ],
+        viaTypeDic: [
+          {'key': '01', 'value': '蒙煤车'},
+          {'key': '02', 'value': '外调车'},
+        ],
+        packModeDic: [
+          {'key': '1', 'value': '集装箱'},
+          {'key': '2', 'value': '散杂货'},
+        ],
+        coalTypeOptions: [], //煤种
+        transportModeDic: [], //运输方式
+
+        //磅单打印审批 JSON
+        form: {
+          //磅单id
+          poundId: '',
+          //申请人名称
+          applyUserName: '',
+          //审批用户名称
+          approvalUserName: '',
+          //备注
+          remark: '',
+          //申请原因
+          applyFactor: '',
+          placeId: '',
+        },
+        auditGroupList: [],
+        auditUserList: [],
+        contractList: [],
+        storeCodeList: [],
+        modifyTypeDic: [
+          {'dictValue': '3', 'dictLabel': '修改车号'},
+          {'dictValue': '1', 'dictLabel': '修改合同'},
+          {'dictValue': '2', 'dictLabel': '修改提煤单'},
+        ],
+        transUnitList: []
+      }
+    },
+    computed: {
+      //毛重监听
+      modifyRoughWeightWatch() {
+        return this.poundModify.modifyRoughWeight;
+      },
+      //皮重监听
+      modifyTareWeightWatch01() {
+        return this.poundModify.modifyTareWeight
+      },
+
+    },
+    created() {
+      this.getUserList();
+      this.depts = getUserDepts('1')
+      if (this.depts.length > 0) {
+        this.queryParams.stationId = this.depts[0].deptId
+        this.getList();
+        this.getPrintList()
+        //this.getGroupList()
+        //this.getContractList()
+        //this.getCoalBillList()
+        //this.getTransportUnitInfo()
+      }
+      //煤种类型
+      this.getDicts("coal_type").then(response => {
+        this.coalTypeOptions = response.data;
+      });
+      //运输方式
+      this.getDicts("place_transport_type").then((response) => {
+        this.transportModeDic = response.data;
+      });
+      this.rulesModifyNew = this.rulesModify
+    },
+    watch: {
+      //毛重监听
+      modifyRoughWeightWatch(val) {
+        if (this.selectPound.flowDirection === 'E') {
+          this.poundModify.modifyNetWeight = this.poundModify.modifyRoughWeight - this.poundModify.modifyTareWeight;
+        }
+      },
+      //皮重监听
+      modifyTareWeightWatch01(val) {
+        if (this.selectPound.flowDirection === 'E') {
+          this.poundModify.modifyNetWeight = this.poundModify.modifyRoughWeight - this.poundModify.modifyTareWeight;
+        }
+      },
+    },
+    methods: {
+      /** 查询计量单列表 */
+      getList() {
+        this.loading = true;
+        listSheetLike(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+          this.sheetList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        });
+      },
+
+      getPrintList() {
+        listSheetLike(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+          this.sheetList = response.rows;
+
+          if(this.sheetList.length>300){
+            this.$message.warning("数据量有点大，打印建议选择当日的数据")
           }
-        })
-        this.$refs['printBtn'].$el.click()
-        //阻塞操作
-      } else {
-        checkPrint(row.id).then(response => {
-          //101 待审批 102 通过 103 未通过 104 无单号
-          /**
-           * int canPrint = 0; //可以打印
-           int needApply = 1; //需要申请
-           int approving = 2; //审批中
-           */
-          if (response.data === 2) {
-            this.$message.info(response.msg);
-            return false
-          } else if (response.data === 0) { //可以打印的
-            //this.$message.success(response.msg);
-            this.printShow = true
-            let date = parseTime(new Date())
-            this.printDate.nowDate = date.substring(0, 10);
-            this.printDate.nowTime = date.substring(10, 19);
-            //发货单位
-            this.printDate.deliveryUnit = row.deliveryUnit;
-            this.printDate.plateNum = row.plateNum;
-            this.printDate.receivingUnit = row.receivingUnit;
-            this.printDate.grossWeight = row.grossWeight;
-            this.printDate.goodsName = row.goodsName;
-            this.printDate.tare = row.tare;
-            this.printDate.specification = row.tare;
-            this.printDate.netWeight = row.netWeight;
-            this.printDate.remark = row.remark;
-            this.printDate.carrier = row.carrier;
-            this.printDate.transportMode = row.transportMode;
-            this.printDate.inUser = row.inUser;
-            this.printDate.outUser = row.outUser;
-            this.printDate.printState = row.printState;
-            clearTimeout(this.timer1);
-            //清除延迟执行
-            this.timer1 = setTimeout(() => {
-              //设置延迟执行
-              this.printShow = false
-            }, 2000);
-            updatePrintState(row.id).then(response => {
+
+          //打印数据，把数组拆分成多个数组放进一个新的数组
+          let index = 0
+          this.newArray = [];
+          while (index < this.sheetList.length) {
+            this.newArray.push(this.sheetList.slice(index, index += 12));
+          }
+
+
+
+        });
+      },
+      // 取消按钮
+      cancel() {
+        this.open = false;
+        this.reset();
+      },
+      //磅单打印审批操作相关
+      printCancel() {
+        this.printOpen = false;
+        this.form = {};
+        this.poundModify.auditGroup = '';
+      },
+      printSubmitForm: function () {
+        this.$refs["form"].validate(valid => {
+          if (valid) {
+            this.form.placeId = this.queryParams.stationId
+            addPrint(this.form).then(response => {
               if (response.code === 200) {
-                this.getList()
+                this.msgSuccess("申请成功");
+                this.printOpen = false;
+                this.getList();
+              } else {
+                this.msgError(response.msg);
+              }
+            });
+          }
+        });
+      },
+      // 表单重置
+      reset() {
+        this.formModify = {
+          id: undefined,
+          poundId: undefined,
+          viaType: undefined,
+          tareWeight: 0,
+          roughWeight: 0,
+          netWeight: 0,
+          modifyTareWeight: 0,
+          modifyRoughWeight: 0,
+          modifyNetWeight: 0,
+          modifyReason: undefined,
+          applyReason: undefined,
+          vehicleNo: undefined,
+          packMode: undefined,
+          containerNo1: undefined,
+          containerNo2: undefined,
+          containerNo3: undefined,
+          containerNo4: undefined,
+          noticeNo: undefined,
+          docId: undefined,
+          placeId: undefined,
+          flow: undefined,
+          modifyContainerNo1: undefined,
+          modifyContainerNo2: undefined,
+          modifyContainerNo3: undefined,
+          modifyContainerNo4: undefined,
+          coalBillNo: undefined,
+          modifyCoalBillNo: undefined,
+          delivery_unit: undefined
+        };
+        this.resetForm("formModify");
+      },
+      /** 搜索按钮操作 */
+      handleQuery() {
+        this.queryParams.pageNum = 1;
+        this.getList();
+        this.getPrintList()
+      },
+      /** 重置按钮操作 */
+      resetQuery() {
+        this.resetForm("queryForm");
+        this.handleQuery();
+      },
+      // 多选框选中数据
+      handleSelectionChange(selection) {
+        this.ids = selection.map(item => item.id)
+        this.single = selection.length != 1
+        this.multiple = !selection.length
+      },
+      /** 新增按钮操作 */
+      handleApply(row) {
+        this.reset();
+        this.open = true;
+        this.title = "磅单修改申请";
+        this.selectPound = {...row}
+
+        this.poundModify.netWeight = this.selectPound.netWeight
+        this.poundModify.poundId = this.selectPound.id
+        this.poundModify.poundState = this.selectPound.status
+        this.poundModify.tareWeight = this.selectPound.tare
+        this.poundModify.roughWeight = this.selectPound.grossWeight
+        this.poundModify.netWeight = this.selectPound.netWeight
+        this.poundModify.modifyTareWeight = this.selectPound.tare
+        this.poundModify.modifyRoughWeight = this.selectPound.grossWeight
+        this.poundModify.modifyNetWeight = this.selectPound.netWeight
+        this.poundModify.vehicleNo = this.selectPound.plateNum
+        this.poundModify.packMode = this.selectPound.packMode
+        this.poundModify.containerNo1 = this.selectPound.containerNum
+        this.poundModify.containerNo2 = this.selectPound.containerNum2
+        this.poundModify.containerNo3 = this.selectPound.containerNum3
+        this.poundModify.containerNo4 = this.selectPound.containerNum4
+        this.poundModify.modifyContainerNo1 = this.selectPound.containerNum
+        this.poundModify.modifyContainerNo2 = this.selectPound.containerNum2
+        this.poundModify.modifyContainerNo3 = this.selectPound.containerNum3
+        this.poundModify.modifyContainerNo4 = this.selectPound.containerNum4
+        this.poundModify.viaType = this.selectPound.viaType
+        this.poundModify.placeId = this.selectPound.stationId
+        this.poundModify.flow = this.selectPound.flowDirection
+        this.poundModify.docId = this.selectPound.noticeNo
+        this.poundModify.coalBillNo = this.selectPound.coalBillNum
+        this.poundModify.modifyCoalBillNo = this.selectPound.coalBillNum
+        this.poundModify.vehicleNo = this.selectPound.plateNum
+        this.poundModify.modifyVehicleNo = this.selectPound.plateNum
+        this.poundModify.contractNo = this.selectPound.remark
+        //if (this.poundModify.viaType === '01') {
+        this.poundModify.modifyContractNo = this.selectPound.remark
+        //} else {
+        this.poundModify.modifyCoalBillNo = this.selectPound.coalBillNum
+        //}
+        //this.poundModify.contractNo = this.selectPound.remark
+        //this.poundModify.modifyContractNo = this.selectPound.remark
+        this.poundModify.storeCode = this.selectPound.locationNumber //库位号
+        this.poundModify.modifyStoreCode = this.selectPound.locationNumber //修改后的库位号
+        /* console.log(this.poundModify)
+         console.log("--------------")
+         console.log(this.selectPound)*/
+
+      },
+      //打印申请弹出框
+      printApplication(row) {
+        this.form = {};
+        this.poundModify.auditGroup = '';
+        this.printTitle = "磅单打印申请";
+        this.printOpen = true;
+        this.form.poundId = row.id;
+      },
+      /** 提交按钮 */
+      submitForm: function () {
+        // if (this.poundModify.modifyNetWeight >= 0) {
+        this.$refs["formModify"].validate(valid => {
+          if (valid) {
+            if (this.poundModify.modifyType === '3') {//改车牌
+              if (!this.poundModify.modifyVehicleNo || this.poundModify.modifyVehicleNo === this.poundModify.vehicleNo) {
+                this.$message.warning('请填写要修改的车牌号')
+                return false
+              }
+            }
+
+            if (this.poundModify.modifyType === '1') {//改合同
+              if (!this.poundModify.modifyStoreCode || this.poundModify.modifyStoreCode === this.poundModify.storeCode) {
+                this.$message.warning('请填写要修改的合同号和库位号')
+                return false
+              }
+            }
+
+            if (this.poundModify.modifyType === '2') {//改提煤单
+              if (!this.poundModify.modifyCoalBillNo || this.poundModify.modifyCoalBillNo === this.poundModify.coalBillNo) {
+                this.$message.warning('请填写要修改的提煤单号')
+                return false
+              }
+            }
+
+            applyModify(this.poundModify).then(response => {
+              if (response.code === 200) {
+                this.msgSuccess("申请成功");
+                this.open = false;
+                //可以不刷，只把 状态改了
+                this.getList();
               }
             })
-            this.$refs['printBtn'].$el.click()
-            //阻塞操作
-          } else { //弹出申请框
-            this.printApplication(row)
           }
         })
-      }
-    },
-    mengwenInput(input) {
-      this.poundModify.modifyVehicleNo = input;
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('tax/measurement/sheet/export', {
-        ...this.queryParams
-      }, `金航保税库磅单.xlsx`)
-    },
-    // )},
-    //获取大提煤单列表
-    getCoalBillList() {
-      selectCoalBillNo({'placeId': this.queryParams.stationId, 'status': '0'}).then(response => {
-        this.BigList = response.rows
-      })
-    },
-    //场所变化时，更新列表
-    placeChange() {
-      this.handleQuery()
-      //this.getCoalBillList()
-      //this.getGroupList()
-      //this.getContractList()
-      //this.getTransportUnitInfo()
-    },
-    //翻译用户名
-    parseUserName(user) {
-      let u = this.userList.find(item => item.userName === user)
-      if (u) {
-        return u.nickName
-      } else {
-        return user
-      }
-    },
-    getUserList() {
-      listUser({'deptId': this.queryParams.stationId, 'delFlag': '0'}).then(response => {
-        if (response.code === 200) {
-          this.userList = response.rows
-        }
-      });
-    },
-    // 合计
-    getSummaries(param) {
-      const {columns, data} = param;
-      const sums = [];
-      columns.forEach((column, index) => {
-        if (index === 1) {
-          sums[index] = '本页合计';
-          return;
-        }
+        //} else {
+        //  this.msgError("净重不能小于0,请检查！")
+        //}
+      },
+      //打印
+      print(){
 
-        if (index === 6) {
-          sums[index] = '车数:' + this.sheetList.length + '辆';
-          return;
-        }
-        const values = data.map(item => Number(item[column.property]));
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr);
-            if (!isNaN(value) && index === 5) {
-              return prev + curr;
+      },
+
+
+      // 打印操作，生成divID
+      gennerateId: function (index) {
+        return "printDiv" + index
+
+      },
+      /** 打印按钮操作 */
+      handlePrint(row) {
+        // 判断磅单时间 与当前时间 相差是否超过4小时
+        if (((new Date().getTime() - new Date(row.outTime).getTime()) / 1000 / 60 / 60) <= 4) {
+
+          this.printShow = true
+          let date = parseTime(new Date())
+          this.printDate.nowDate = date.substring(0, 10);
+          this.printDate.nowTime = date.substring(10, 19);
+          //发货单位
+          this.printDate.deliveryUnit = row.deliveryUnit;
+          this.printDate.plateNum = row.plateNum;
+          this.printDate.receivingUnit = row.receivingUnit;
+          this.printDate.grossWeight = row.grossWeight;
+          this.printDate.goodsName = row.goodsName;
+          this.printDate.tare = row.tare;
+          this.printDate.specification = row.tare;
+          this.printDate.netWeight = row.netWeight;
+          this.printDate.remark = row.remark;
+          this.printDate.carrier = row.carrier;
+          this.printDate.transportMode = row.transportMode;
+          this.printDate.inUser = row.inUser;
+          this.printDate.outUser = row.outUser;
+          this.printDate.printState = row.printState;
+          clearTimeout(this.timer1);
+          //清除延迟执行
+          this.timer1 = setTimeout(() => {
+            //设置延迟执行
+            this.printShow = false
+          }, 2000);
+          // 没超过4小时，直接可以打印，并更新打印状态
+          updatePrintState(row.id).then(response => {
+            if (response.code === 200) {
+              this.getList()
             }
-          }, 0);
-        }
-      });
-      sums[5] = sums[5] + '(KG)'
-      return sums;
-    },
-    getGroupList() {
-      listGroup({'placeId': this.queryParams.placeId, 'state': '1'}).then(response => {
-        if (response.code === 200) {
-          this.auditGroupList = response.rows
-        }
-      })
-    },
-    groupChange(event) {
-      this.poundModify.auditUser = undefined
-      this.auditUserList = []
-      let group = this.auditGroupList.find(item => item.groupCode === event);
-      if (group) {
-        let users = group.userNames.split(',')
-        for (let name of users) {
-          this.auditUserList.push({
-            'userName': name,
-            'nickName': this.userList.find(item => item.userName === name).nickName
+          })
+          this.$refs['printBtn'].$el.click()
+          //阻塞操作
+        } else {
+          checkPrint(row.id).then(response => {
+            //101 待审批 102 通过 103 未通过 104 无单号
+            /**
+             * int canPrint = 0; //可以打印
+             int needApply = 1; //需要申请
+             int approving = 2; //审批中
+             */
+            if (response.data === 2) {
+              this.$message.info(response.msg);
+              return false
+            } else if (response.data === 0) { //可以打印的
+              //this.$message.success(response.msg);
+              this.printShow = true
+              let date = parseTime(new Date())
+              this.printDate.nowDate = date.substring(0, 10);
+              this.printDate.nowTime = date.substring(10, 19);
+              //发货单位
+              this.printDate.deliveryUnit = row.deliveryUnit;
+              this.printDate.plateNum = row.plateNum;
+              this.printDate.receivingUnit = row.receivingUnit;
+              this.printDate.grossWeight = row.grossWeight;
+              this.printDate.goodsName = row.goodsName;
+              this.printDate.tare = row.tare;
+              this.printDate.specification = row.tare;
+              this.printDate.netWeight = row.netWeight;
+              this.printDate.remark = row.remark;
+              this.printDate.carrier = row.carrier;
+              this.printDate.transportMode = row.transportMode;
+              this.printDate.inUser = row.inUser;
+              this.printDate.outUser = row.outUser;
+              this.printDate.printState = row.printState;
+              clearTimeout(this.timer1);
+              //清除延迟执行
+              this.timer1 = setTimeout(() => {
+                //设置延迟执行
+                this.printShow = false
+              }, 2000);
+              updatePrintState(row.id).then(response => {
+                if (response.code === 200) {
+                  this.getList()
+                }
+              })
+              this.$refs['printBtn'].$el.click()
+              //阻塞操作
+            } else { //弹出申请框
+              this.printApplication(row)
+            }
           })
         }
-      }
-    },
-    //获取场所合同列表
-    getContractList() {
-      listStoreContract({'placeId': this.queryParams.placeId, 'status': '1'}).then(response => {
-        if (response.code === 200) {
-          this.contractList = response.rows
+      },
+      mengwenInput(input) {
+        this.poundModify.modifyVehicleNo = input;
+      },
+      /** 导出按钮操作 */
+      handleExport() {
+        this.download('tax/measurement/sheet/export', {
+          ...this.queryParams
+        }, `金航保税库磅单.xlsx`)
+      },
+      // )},
+      //获取大提煤单列表
+      getCoalBillList() {
+        selectCoalBillNo({'placeId': this.queryParams.stationId, 'status': '0'}).then(response => {
+          this.BigList = response.rows
+        })
+      },
+      //场所变化时，更新列表
+      placeChange() {
+        this.handleQuery()
+        //this.getCoalBillList()
+        //this.getGroupList()
+        //this.getContractList()
+        //this.getTransportUnitInfo()
+      },
+      //翻译用户名
+      parseUserName(user) {
+        let u = this.userList.find(item => item.userName === user)
+        if (u) {
+          return u.nickName
+        } else {
+          return user
         }
-      })
-    },
-    contractChange(event) {
-      this.storeCodeList = []
-      this.poundModify.modifyStoreCode = ''
-      let contract = this.contractList.find(item => item.contractNo === event)
-      if (contract) {
-        this.storeCodeList = contract.params.contract
-      }
-    },
-    modifyTypeChange(event) {
-      this.rulesModifyNew = {}
-      if (event === '3') {
-        this.rulesModifyNew = Object.assign(this.rulesModify, this.ruleVehicleNo)
-      } else if (event === '1') {
-        this.rulesModifyNew = Object.assign(this.rulesModify, this.ruleContractNo)
-      } else if (event === '2') {//改提煤单
-        this.rulesModifyNew = Object.assign(this.rulesModify, this.ruleCoalBillNo)
-      } else {
-        this.rulesModifyNew = this.rulesModify
-      }
-      this.$forceUpdate()
-    },
-    //查承运单位
-    getTransportUnitInfo() {
-      this.queryParams.transportUnit = undefined
-      this.loading = true;
-      let info = {"eType": '2', 'deptId': this.queryParams.stationId, 'companyType': '4'}
-      listInfo(info).then(response => {
-        this.transUnitList = response.rows;
-        this.loading = false;
-      });
-    },
-  }
-};
+      },
+      getUserList() {
+        listUser({'deptId': this.queryParams.stationId, 'delFlag': '0'}).then(response => {
+          if (response.code === 200) {
+            this.userList = response.rows
+          }
+        });
+      },
+      // 合计
+      getSummaries(param) {
+        const {columns, data} = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 1) {
+            sums[index] = '本页合计';
+            return;
+          }
+
+          if (index === 6) {
+            sums[index] = '车数:' + this.sheetList.length + '辆';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value) && index === 5) {
+                return prev + curr;
+              }
+            }, 0);
+          }
+        });
+        sums[5] = sums[5] + '(KG)'
+        return sums;
+      },
+      getGroupList() {
+        listGroup({'placeId': this.queryParams.placeId, 'state': '1'}).then(response => {
+          if (response.code === 200) {
+            this.auditGroupList = response.rows
+          }
+        })
+      },
+      groupChange(event) {
+        this.poundModify.auditUser = undefined
+        this.auditUserList = []
+        let group = this.auditGroupList.find(item => item.groupCode === event);
+        if (group) {
+          let users = group.userNames.split(',')
+          for (let name of users) {
+            this.auditUserList.push({
+              'userName': name,
+              'nickName': this.userList.find(item => item.userName === name).nickName
+            })
+          }
+        }
+      },
+      //获取场所合同列表
+      getContractList() {
+        listStoreContract({'placeId': this.queryParams.placeId, 'status': '1'}).then(response => {
+          if (response.code === 200) {
+            this.contractList = response.rows
+          }
+        })
+      },
+      contractChange(event) {
+        this.storeCodeList = []
+        this.poundModify.modifyStoreCode = ''
+        let contract = this.contractList.find(item => item.contractNo === event)
+        if (contract) {
+          this.storeCodeList = contract.params.contract
+        }
+      },
+      modifyTypeChange(event) {
+        this.rulesModifyNew = {}
+        if (event === '3') {
+          this.rulesModifyNew = Object.assign(this.rulesModify, this.ruleVehicleNo)
+        } else if (event === '1') {
+          this.rulesModifyNew = Object.assign(this.rulesModify, this.ruleContractNo)
+        } else if (event === '2') {//改提煤单
+          this.rulesModifyNew = Object.assign(this.rulesModify, this.ruleCoalBillNo)
+        } else {
+          this.rulesModifyNew = this.rulesModify
+        }
+        this.$forceUpdate()
+      },
+      //查承运单位
+      getTransportUnitInfo() {
+        this.queryParams.transportUnit = undefined
+        this.loading = true;
+        let info = {"eType": '2', 'deptId': this.queryParams.stationId, 'companyType': '4'}
+        listInfo(info).then(response => {
+          this.transUnitList = response.rows;
+          this.loading = false;
+        });
+      },
+    }
+  };
 </script>
 <style scoped>
 
-@page {
-  margin: 8mm;
-}
+  @page {
+    margin: 8mm;
+  }
 
-/*.Pound {*/
-/*font-size: 70px;*/
-/*width: 100%;*/
-/*color: red;*/
-/*margin-bottom: 15px;*/
-/*text-align: center;*/
-/*padding: 11px;*/
-/*background: #1e1e1e;*/
-/*}*/
+  /*.Pound {*/
+  /*font-size: 70px;*/
+  /*width: 100%;*/
+  /*color: red;*/
+  /*margin-bottom: 15px;*/
+  /*text-align: center;*/
+  /*padding: 11px;*/
+  /*background: #1e1e1e;*/
+  /*}*/
 
-#dayin {
-  height: 500px;
-  width: 1200px;
-  /*border: 1px solid ;*/
-}
+  #dayin {
+    height: 500px;
+    width: 1200px;
+    /*border: 1px solid ;*/
+  }
 
-/*标题*/
-.poundTotal11 {
-  font-size: 35px;
-  padding-left: 240px;
-  /*border: 1px solid ;*/
-}
+  /*标题*/
+  .poundTotal11 {
+    font-size: 35px;
+    padding-left: 240px;
+    /*border: 1px solid ;*/
+  }
 
-/*时间*/
-.area-in-style {
-  padding-left: 3cm;
-  margin-top: 10px;
-  /*border: 1px solid ;*/
+  /*时间*/
+  .area-in-style {
+    padding-left: 3cm;
+    margin-top: 10px;
+    /*border: 1px solid ;*/
 
-}
+  }
 
-#area {
-  width: 300px;
-  height: 10px;
-  margin-top: 60px;
-  float: left;
-  font-size: 25px;
-  /*border: 1px solid ;*/
-}
+  #area {
+    width: 300px;
+    height: 10px;
+    margin-top: 60px;
+    float: left;
+    font-size: 25px;
+    /*border: 1px solid ;*/
+  }
 
-#areadate {
-  width: 300px;
-  height: 10px;
-  margin-top: 60px;
-  padding-left: 40px;
-  float: left;
-  margin-left: 15px;
-  font-size: 25px;
-  /*border: 1px solid ;*/
-}
+  #areadate {
+    width: 300px;
+    height: 10px;
+    margin-top: 60px;
+    padding-left: 40px;
+    float: left;
+    margin-left: 15px;
+    font-size: 25px;
+    /*border: 1px solid ;*/
+  }
 
-#serialNumber {
-  width: 300px;
-  height: 10px;
-  margin-top: 10px;
-  float: left;
-  font-size: 25px;
-}
+  #serialNumber {
+    width: 300px;
+    height: 10px;
+    margin-top: 10px;
+    float: left;
+    font-size: 25px;
+  }
 
-/*第二页*/
-#area1 {
-  width: 300px;
-  height: 10px;
-  margin-left: 20px;
-  /*float: left;*/
-  font-size: 25px;
-}
+  /*第二页*/
+  #area1 {
+    width: 300px;
+    height: 10px;
+    margin-left: 20px;
+    /*float: left;*/
+    font-size: 25px;
+  }
 
-#serialNumber1 {
-  width: 300px;
-  height: 10px;
-  margin-top: 10px;
-  margin-left: 610px;
-  /*float: left;*/
-  font-size: 25px;
-}
-
-
-/*第二页*/
-#areadate1 {
-  width: 400px;
-  height: 10px;
-
-  padding-left: 340px;
-  /*float: left;*/
-  margin-left: 15px;
-  font-size: 25px;
-}
-
-#area-style {
-  width: 600px;
-  height: 30px;
-  font-size: 26px;
-  margin-top: 30px;
-  float: left;
-}
+  #serialNumber1 {
+    width: 300px;
+    height: 10px;
+    margin-top: 10px;
+    margin-left: 610px;
+    /*float: left;*/
+    font-size: 25px;
+  }
 
 
-#area-right-style {
-  height: 35px;
-  width: 350px;
-  font-size: 20px;
-  margin-top: 28px;
-  margin-left: 40px;
-  float: left;
-}
+  /*第二页*/
+  #areadate1 {
+    width: 400px;
+    height: 10px;
+
+    padding-left: 340px;
+    /*float: left;*/
+    margin-left: 15px;
+    font-size: 25px;
+  }
+
+  #area-style {
+    width: 600px;
+    height: 30px;
+    font-size: 26px;
+    margin-top: 30px;
+    float: left;
+  }
 
 
-#area-all-style {
-  width: 800px;
-  height: 40px;
-  font-size: 20px;
-  float: left;
-  margin-top: 10px;
-}
+  #area-right-style {
+    height: 35px;
+    width: 350px;
+    font-size: 20px;
+    margin-top: 28px;
+    margin-left: 40px;
+    float: left;
+  }
 
-#user-all-style {
-  width: 800px;
-  height: 40px;
-  font-size: 30px;
-  float: left;
-  padding-left: 130px;
-  margin-top: 10px;
-}
 
-.modifyTo {
-  padding-top: 10px
-}
+  #area-all-style {
+    width: 800px;
+    height: 40px;
+    font-size: 20px;
+    float: left;
+    margin-top: 10px;
+  }
+
+  #user-all-style {
+    width: 800px;
+    height: 40px;
+    font-size: 30px;
+    float: left;
+    padding-left: 130px;
+    margin-top: 10px;
+  }
+
+  .modifyTo {
+    padding-top: 10px
+  }
 </style>
