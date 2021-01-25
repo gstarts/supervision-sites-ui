@@ -530,6 +530,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
+      this.fileList = []
       this.open = true
       this.title = '添加放行单 '
       this.form.placeId = this.queryParams.placeId
@@ -594,7 +595,7 @@ export default {
           } else {
             this.form.remark = this.attachmentList.join(',')
             addPassDoc(this.form).then(response => {
-              if (response.code === 200) {
+              if (response.code === 200) {                
                 this.msgSuccess('新增成功')
                 this.open = false
                 this.getList()
