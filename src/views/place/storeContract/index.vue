@@ -192,14 +192,14 @@
             v-hasPermi="['place:storeContract:edit']"
           >修改
           </el-button>
-          <el-button
+<!--          <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleRules(scope.row)"
             v-hasPermi="['place:costRules:edit']"
           >计费规则
-          </el-button>
+          </el-button>-->
           <el-button
             size="mini"
             type="text"

@@ -595,7 +595,7 @@ export default {
           } else {
             this.form.remark = this.attachmentList.join(',')
             addPassDoc(this.form).then(response => {
-              if (response.code === 200) {                
+              if (response.code === 200) {
                 this.msgSuccess('新增成功')
                 this.open = false
                 this.getList()
@@ -676,27 +676,26 @@ export default {
     beforeUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 10     //这里做文件大小限制
       if (!isLt2M) {
-        this.fileList = []
-        this.$message({
-          message: '上传文件大小不能超过 10MB!',
-          type: 'error'
-        });
+        //this.fileList = []
+        /*不用清空，验证失败，会自动调用删除方法，删除前又会触发beforeRemove方法*/
+        this.$message.warning('上传文件大小不能超过 10MB!');
+        return false
       }
     },
-//删除之前的钩子
+    //删除之前的钩子
     beforeRemove(file, fileList) {
-      /* console.log(fileList)
-       console.log(file)*/
+      /* console.log(fileList)*/
       let index = fileList.indexOf(file)
       //console.log(index)
       let attachmentId = this.attachmentList[index];
-      console.log(attachmentId)
+      //console.log(attachmentId)
       //console.log(this.attachmentList)
-      //删除指定位置的元素
-      this.attachmentList.splice(index, 1)
-      //console.log(this.attachmentList)
-      //删除文件 及附件记录
-      delAttachment(attachmentId)
+      if (attachmentId) {
+        //删除指定位置的元素
+        this.attachmentList.splice(index, 1)
+        //删除文件 及附件记录
+        delAttachment(attachmentId)
+      }
     },
     handleExceed() {
       this.$message.warning('最多只能上传10个附件')
