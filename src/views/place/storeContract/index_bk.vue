@@ -115,28 +115,28 @@
         >新增
         </el-button>
       </el-col>
-      <!--      <el-col :span="1.5">
-              <el-button
-                type="success"
-                icon="el-icon-edit"
-                size="mini"
-                :disabled="single"
-                @click="handleUpdate"
-                v-hasPermi="['place:storeContract:edit']"
-              >修改
-              </el-button>
-            </el-col>-->
-      <!--      <el-col :span="1.5">
-              <el-button
-                type="danger"
-                icon="el-icon-delete"
-                size="mini"
-                :disabled="multiple"
-                @click="handleDelete"
-                v-hasPermi="['place:storeContract:remove']"
-              >删除
-              </el-button>
-            </el-col>-->
+<!--      <el-col :span="1.5">
+        <el-button
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="['place:storeContract:edit']"
+        >修改
+        </el-button>
+      </el-col>-->
+<!--      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['place:storeContract:remove']"
+        >删除
+        </el-button>
+      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -191,14 +191,6 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['place:storeContract:edit']"
           >修改
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleRules(scope.row)"
-            v-hasPermi="['place:costRules:edit']"
-          >计费规则
           </el-button>
           <el-button
             size="mini"
@@ -377,231 +369,12 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-
-    <el-drawer
-      title="计费规则"
-      :visible.sync="billRulesView"
-      :append-to-body="true"
-      :close-on-press-escape="true"
-      direction="btt"
-      size="100%"
-      :wrapperClosable="true"
-      :style="{marginLeft:'200px'}"
-      style="padding:10px"
-      :with-header="true">
-      <el-row style="padding: 0 20px 10px 20px;font-size: 14px">
-        <el-col :span="12">
-          客户名称：{{ currentContract.customerName }}
-          合同编号：{{ currentContract.contractNo }}
-          品名：{{ currentContract.goodsName }}
-        </el-col>
-        <el-col :span="12" style="text-align: right;padding-right: 30px">
-          <el-button
-            size="mini"
-            type=""
-            @click="checkRules"
-          >规则校验
-          </el-button>
-          <el-button
-            :loading="saveLoading"
-            size="mini"
-            type="primary"
-            @click="saveRules"
-          >保存规则
-          </el-button>
-        </el-col>
-      </el-row>
-      <el-table v-loading="loading" :data="rulesList" height="350" max-height="350">
-        <el-table-column label="序号" type="index" align="center"/>
-        <!--        <el-table-column label="合同编号" align="center" prop="contactId"/>-->
-        <!--        <el-table-column label="客户名称" align="center" prop="customerName"/>
-                <el-table-column label="合同编号" align="center" prop="contactNo"/>-->
-        <el-table-column label="计费项目" align="center" prop="billOption" :formatter="billOptionFormat"/>
-        <el-table-column label="计费周期" align="center" prop="billCycle" :formatter="billCycleFormat"/>
-        <el-table-column label="计费类型" align="center" prop="billType" :formatter="billTypeFormat"/>
-        <el-table-column label="计费名称" align="center" prop="billName"/>
-        <el-table-column label="计费单位" align="center" prop="billUnit" :formatter="billUnitFormat"/>
-        <el-table-column label="费率(元)" align="center" prop="billPrice"/>
-        <el-table-column label="议价费率(元)" align="center" prop="conferPrice"/>
-        <el-table-column label="计量单位" align="center" prop="quantityUnit" :formatter="quantityUnitFormat"/>
-        <!--        <el-table-column label="阶梯单位" align="center" prop="stageUnit"/>-->
-        <el-table-column label="计量起始" align="center" prop="quantityBegin"/>
-        <el-table-column label="计量结束" align="center" prop="quantityEnd"/>
-        <el-table-column label="计时单位" align="center" prop="timeUnit" :formatter="timeUnitFormat"/>
-        <el-table-column label="计时起始" align="center" prop="timeBegin"/>
-        <el-table-column label="计时结束" align="center" prop="timeEnd"/>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-edit"
-              @click="handleRuleCopy(scope.row)"
-              v-hasPermi="['place:rules:edit']"
-            >复制
-            </el-button>
-            <!--            <el-button
-                          size="mini"
-                          type="text"
-                          icon="el-icon-edit"
-                          @click="handleRuleUpdate(scope.$index, scope.row)"
-                          v-hasPermi="['place:rules:edit']"
-                        >修改
-                        </el-button>-->
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-delete"
-              @click="handleRuleDelete(scope.$index, scope.row)"
-              v-hasPermi="['place:rules:remove']"
-            >删除
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <div style="margin-right:5px;margin-top:20px;overflow: auto;height: 260px">
-        <el-form ref="ruleForm" :model="ruleForm" :rules="baseRules" label-width="120px">
-          <el-row :gutter="10">
-            <el-col :span="6">
-              <el-form-item label="计费项目" prop="billOption">
-                <el-select v-model="ruleForm.billOption" placeholder="请选择计费项目" style="width: 100%" size="small"
-                           filterable>
-                  <el-option v-for="item in billOptions" :key="item.dictValue" :value="item.dictValue"
-                             :label="item.dictLabel"/>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="计费周期" prop="billCycle">
-                <el-select v-model="ruleForm.billCycle" placeholder="请选择计费周期" size="small" style="width: 100%"
-                           filterable>
-                  <el-option v-for="item in billCycles" :key="item.dictValue" :value="item.dictValue"
-                             :label="item.dictLabel"/>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6" v-show="ruleForm.billOption === '5' || ruleForm.billType === '1'">
-              <el-form-item label="计费名称" prop="billName">
-                <el-input v-model="ruleForm.billName" placeholder="请输入计费名称"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6" style="text-align: center">
-              <el-button type="primary" @click="addRule" size="mini">{{ operationBtnName }}</el-button>
-              <el-button @click="resetRule" size="mini">重 置</el-button>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10">
-            <el-col :span="6">
-              <el-form-item label="计费类型" prop="billType">
-                <el-select v-model="ruleForm.billType" placeholder="请选择计费类型" size="small" style="width: 100%"
-                           filterable @change="billTypeChange">
-                  <el-option v-for="item in billTypes" :key="item.dictValue" :value="item.dictValue"
-                             :label="item.dictLabel"/>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6" v-show="ruleForm.billType !== '1'">
-              <el-form-item label="计费单位" prop="billUnit">
-                <el-select v-model="ruleForm.billUnit" placeholder="请输入计费单位" size="small" style="width: 100%" clearable
-                           filterable>
-                  <el-option v-for="item in billUnits" :key="item.dictValue" :value="item.dictValue"
-                             :label="item.dictLabel"/>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="费率(元)" prop="billPrice">
-                <el-input v-model="ruleForm.billPrice" placeholder="请输入费率(元)" size="small"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6"></el-col>
-          </el-row>
-          <el-row :gutter="10" v-show="ruleForm.billType==='3'">
-            <el-col :span="6">
-              <el-form-item label="计量单位" prop="quantityUnit">
-                <el-select v-model="ruleForm.quantityUnit" placeholder="请输入数量单位" size="small" filterable
-                           style="width:100%">
-                  <el-option v-for="item in quantityUnits" :key="item.dictValue" :value="item.dictValue"
-                             :label="item.dictLabel"/>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="计量起始" prop="quantityBegin">
-                <el-input v-model="ruleForm.quantityBegin" placeholder="请输入计量起始" size="small"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="计量结束" prop="quantityEnd">
-                <el-input v-model="ruleForm.quantityEnd" placeholder="请输入计量结束" size="small"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6"></el-col>
-          </el-row>
-          <el-row :gutter="10" v-show="ruleForm.billType==='4'">
-            <el-col :span="6">
-              <el-form-item label="计时单位" prop="timeUnit">
-                <el-select v-model="ruleForm.timeUnit" placeholder="请输入计时单位" size="small" style="width: 100%">
-                  <el-option v-for="item in timeUnits" :key="item.dictValue" :value="item.dictValue"
-                             :label="item.dictLabel"/>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="计时起始" prop="timeBegin">
-                <el-input v-model="ruleForm.timeBegin" placeholder="请输入计时起始"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="计时结束" prop="timeEnd">
-                <el-input v-model="ruleForm.timeEnd" placeholder="请输入计时结束"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6"></el-col>
-          </el-row>
-          <el-row :gutter="10" v-show="ruleForm.billType === '5'">
-            <el-col :span="6">
-              <el-form-item label="计时单位" prop="timeUnit">
-                <el-select v-model="ruleForm.timeUnit" placeholder="请输入计时单位" size="small" style="width: 100%">
-                  <el-option v-for="item in timeUnits" :key="item.dictValue" :value="item.dictValue"
-                             :label="item.dictLabel"/>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="计时结束" prop="timeEnd">
-                <el-input v-model="ruleForm.timeEnd" placeholder="请输入计时结束"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="计量结束" prop="quantityEnd">
-                <el-input v-model="ruleForm.quantityEnd" placeholder="请输入计量结束" size="small"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="议价费率(元)" prop="conferPrice">
-                <el-input v-model="ruleForm.conferPrice" placeholder="请输入议价费率" size="small"/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <!--          <el-form-item label="合同编号" prop="contactId">
-                      <el-input v-model="form.contactId" placeholder="请输入合同编号" />
-                    </el-form-item>
-                    <el-form-item label="客户名称" prop="customerName">
-                      <el-input v-model="form.customerName" placeholder="请输入客户名称" />
-                    </el-form-item>-->
-          <!--          <el-form-item label="阶梯单位" prop="stageUnit">
-                      <el-input v-model="form.stageUnit" placeholder="请输入阶梯单位"/>
-                    </el-form-item>-->
-        </el-form>
-      </div>
-    </el-drawer>
   </div>
 </template>
 
 <script>
 import {
+  listStoreContract,
   getStoreContract,
   delStoreContract,
   addStoreContract,
@@ -612,14 +385,13 @@ import {compareDate, getUserDepts} from "@/utils/charutils";
 import {getZoneList} from "@/api/place/zone";
 import {listStore} from "@/api/place/store";
 import {listInfo} from "@/api/basis/enterpriseInfo";
-import {addCostRuleList, listCostRule} from "@/api/place/bill/rule";
 
 export default {
   name: "StoreContract",
   data() {
     return {
       // 遮罩层
-      loading: false,
+      loading: true,
       // 选中数组
       ids: [],
       depts: [],
@@ -716,7 +488,6 @@ export default {
           {required: true, message: "有效期止不能为空", trigger: "change"}
         ]
       },
-
       zoneCodeList: [],
       storeList: [],
       idList: [],
@@ -730,123 +501,7 @@ export default {
         {dictValue: '1', dictLabel: '是'},
         {dictValue: '0', dictLabel: '否'},
       ],
-      rulesList: [],
-      billRulesView: false,
-      currentContract: {},
-      ruleForm: {
-        id: undefined,
-        customerId: undefined,
-        customerName: undefined,
-        contractId: undefined,
-        contractNo: undefined,
-        placeId: undefined,
-        billOption: undefined,
-        billCycle: undefined,
-        billName: undefined,
-        billType: undefined,
-        billUnit: undefined,
-        billPrice: undefined,
-        quantityUnit: undefined,
-        quantityBegin: undefined,
-        quantityEnd: undefined,
-        timeUnit: undefined,
-        timeBegin: undefined,
-        timeEnd: undefined,
-        conferPrice: undefined,
-      },
-      //form验证规则
-      baseRules: {},
-      rulesFormRules: {
-        billOption: [
-          {'required': true, message: '计费项目不能为空', trigger: 'change'},
-        ],
-        billCycle: [
-          {'required': true, message: '计费周期不能为空', trigger: 'change'},
-        ],
-        billType: [
-          {'required': true, message: '计费类型不能为空', trigger: 'change'},
-        ],
-        billUnit: [
-          {'required': true, message: '计费单位不能为空', trigger: 'change'},
-        ],
-        billPrice: [
-          {
-            'required': true,
-            pattern: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
-            message: '费率不能为空',
-            trigger: 'change'
-          },
-        ],
-        conferPrice: [
-          {
-            'required': true,
-            pattern: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
-            message: '议价费率不能为空',
-            trigger: 'blur'
-          },
-        ],
-        billName: [
-          {'required': true, message: '计费名称不能为空', trigger: 'blur'},
-        ],
-        timeUnit: [
-          {'required': true, message: '计时单位不能为空', trigger: 'change'},
-        ],
-        timeBegin: [
-          {required: true, pattern: /^[1-9]\d*$/, message: '请填写正确的数值', trigger: 'blur'}
-        ],
-        timeEnd: [
-          {required: true, pattern: /^[1-9]\d*$/, message: '请填写正确的数值', trigger: 'blur'}
-        ],
-        quantityUnit: [
-          {'required': true, message: '计量单位不能为空', trigger: 'change'},
-        ],
-        quantityBegin: [
-          {required: true, pattern: /^[1-9]\d*$/, message: '请填写正确的数值', trigger: 'blur'}
-        ],
-        quantityEnd: [
-          {required: true, pattern: /^[1-9]\d*$/, message: '请填写正确的数值', trigger: 'blur'}
-        ],
-      },
-      rules1: {},
-
-      billOptions: [ //计费项目
-        {dictValue: '1', dictLabel: '仓储费'},
-        {dictValue: '2', dictLabel: '装货费'},
-        {dictValue: '3', dictLabel: '卸货费'},
-        {dictValue: '4', dictLabel: '超期仓储费'},
-        {dictValue: '5', dictLabel: '其他费用'},
-      ],
-      billCycles: [//计费周期
-        {dictValue: '1', dictLabel: '自然月'},
-        {dictValue: '2', dictLabel: '合同周期'},
-      ],
-      billTypes: [//计费类型
-        {dictValue: '1', dictLabel: '固定费'},
-        {dictValue: '2', dictLabel: '计量费'},
-        {dictValue: '3', dictLabel: '计量阶梯费'},
-        {dictValue: '4', dictLabel: '计时阶梯费'},
-        {dictValue: '5', dictLabel: '议价费'},
-      ],
-      billUnits: [//计费单位
-        {dictValue: '1', dictLabel: '入库量(吨)'},
-        {dictValue: '2', dictLabel: '出库量(吨)'},
-        {dictValue: '3', dictLabel: '入库车(辆)'},
-        {dictValue: '4', dictLabel: '出库车(辆)'},
-        {dictValue: '5', dictLabel: '入库箱(箱)'},
-        {dictValue: '6', dictLabel: '出库箱(箱)'},
-      ],
-      quantityUnits: [//计量单位
-        {dictValue: '1', dictLabel: '吨'},
-        {dictValue: '2', dictLabel: '辆'},
-      ],
-      timeUnits: [
-        {dictValue: '1', dictLabel: '天'},
-      ],
-      //当前选中的规则数据索引
-      currentIndex: undefined,
-      operationBtnName: '添 加',
-      saveLoading: false
-    }
+    };
   },
   created() {
     // 0 监管场所，1保税库，2堆场，3企业
@@ -858,6 +513,7 @@ export default {
       this.getListInfo()
       this.getStoreList()
     }
+
     //煤种类型
     this.getDicts("coal_type").then(response => {
       this.coalTypeOptions = response.data;
@@ -909,36 +565,9 @@ export default {
         coalShed: undefined,
         cashPledge: undefined,
         packMode: undefined,
-      }
+      };
       this.resetForm("form");
       this.storeList = []
-    },
-    resetRuleForm() {
-      this.ruleForm = {
-        billOption: undefined,
-        billCycle: undefined,
-        billName: undefined,
-        billType: undefined,
-        billUnit: undefined,
-        billPrice: undefined,
-        quantityUnit: undefined,
-        quantityBegin: undefined,
-        quantityEnd: undefined,
-        timeUnit: undefined,
-        timeBegin: undefined,
-        timeEnd: undefined,
-        conferPrice: undefined,
-      }
-      this.resetForm("ruleForm");
-      this.initRuleForm()
-    },
-    initRuleForm() {
-      //基本值
-      this.ruleForm.customerName = this.currentContract.customerName
-      this.ruleForm.customerId = this.currentContract.customerId
-      this.ruleForm.contractId = this.currentContract.id
-      this.ruleForm.contractNo = this.currentContract.contractNo
-      this.ruleForm.placeId = this.currentContract.placeId
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -991,8 +620,12 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
+
+
       this.$refs["form"].validate(valid => {
         if (valid) {
+
+          debugger
           if (compareDate(this.form.startDate, this.form.endDate) >= 0) {
             this.$message.error('有效期起日期应小于有效期止日期')
             return false
@@ -1098,6 +731,7 @@ export default {
           }
         })
       }
+
       if (name === 'placeId') {
         this.handleQuery()
         this.getStoreList()
@@ -1119,212 +753,6 @@ export default {
       }
       return row.packMode
     },
-    handleRules(row) {
-      this.currentContract = {...row}
-      this.billRulesView = true
-      this.initRuleForm()
-      this.baseRules = this.rulesFormRules
-      //获s取合同的规则
-      listCostRule({'placeId': this.queryParams.placeId, 'contractId': row.id}).then(response => {
-        if (response.code === 200) {
-          this.rulesList = response.rows
-        }
-      })
-    },
-    billOptionFormat(row, column) {
-      return this.selectDictLabel(this.billOptions, row.billOption);
-    },
-    billCycleFormat(row, column) {
-      return this.selectDictLabel(this.billCycles, row.billCycle);
-    },
-    billTypeFormat(row, column) {
-      return this.selectDictLabel(this.billTypes, row.billType);
-    },
-    billUnitFormat(row, column) {
-      return this.selectDictLabel(this.billUnits, row.billUnit);
-    },
-    quantityUnitFormat(row, column) {
-      return this.selectDictLabel(this.quantityUnits, row.quantityUnit);
-    },
-    timeUnitFormat(row, column) {
-      return this.selectDictLabel(this.timeUnits, row.timeUnit);
-    },
-    //向列表中添加规则
-    addRule() {
-      this.$refs["ruleForm"].validate(valid => {
-        if (valid) {
-          if (this.currentIndex === undefined) { //如果没有，是新增
-            this.rulesList.push({...this.ruleForm})
-          } else {//修改
-            //this.rulesList[this.currentIndex] = {}
-            this.rulesList[this.currentIndex] = {...this.ruleForm}
-            console.log(this.rulesList)
-            this.$forceUpdate()
-          }
-          this.resetRule()
-        }
-      })
-    },
-    resetRule() {
-      this.resetRuleForm()
-      this.currentIndex = undefined
-      this.operationBtnName = '添 加'
-    },
-    handleRuleCopy(row) {
-      this.ruleForm = {...row}
-    },
-    handleRuleUpdate(index, row) {
-      //这时变为修改状态
-      this.currentIndex = index
-      this.operationBtnName = '修 改'
-      this.ruleForm = {...this.rulesList[index]}
-    },
-    handleRuleDelete(index, row) {
-      if (this.rulesList.length > 0) {
-        this.rulesList.splice(index, 1)
-      }
-    },
-    //校验规则
-    checkRules() {
-
-    },
-    //保存计费规则l
-    saveRules() {
-      if (this.rulesList.length > 0) {
-        this.saveLoading = true
-        //保存
-        addCostRuleList(this.rulesList).then(response => {
-          this.saveLoading = false
-          if (response.code === 200) {
-            this.$message.success(response.msg)
-          } else {
-            this.$message.error('保存失败，请重新尝试')
-          }
-        }).catch(e => {
-          this.saveLoading = false
-        })
-      } else {
-        this.$message.warning('请添加计费规则')
-        return false
-      }
-    },
-    billTypeChange(event) {
-      this.baseRules = {}
-      this.baseRules.billOption = this.rulesFormRules.billOption
-      this.baseRules.billCycle = this.rulesFormRules.billCycle
-      this.baseRules.billType = this.rulesFormRules.billType
-      this.baseRules.billPrice = this.rulesFormRules.billPrice
-
-      /*this.baseRules.billUnit = undefined
-      this.baseRules.quantityUnit = undefined
-      this.baseRules.quantityBegin = undefined
-      this.baseRules.quantityEnd = undefined
-      this.baseRules.timeUnit = undefined
-      this.baseRules.timeBegin = undefined
-      this.baseRules.timeEnd = undefined
-      this.baseRules.conferPrice = undefined
-      this.baseRules.billName = undefined*/
-
-      switch (event) {
-        case '1'://固定费
-          this.baseRules.billName = this.rulesFormRules.billName
-          this.baseRules.billUnit = undefined
-          this.baseRules.quantityUnit = undefined
-          this.baseRules.quantityBegin = undefined
-          this.baseRules.quantityEnd = undefined
-          this.baseRules.timeUnit = undefined
-          this.baseRules.timeBegin = undefined
-          this.baseRules.timeEnd = undefined
-          this.baseRules.conferPrice = undefined
-
-          this.ruleForm.billUnit = undefined
-          this.ruleForm.quantityUnit = undefined
-          this.ruleForm.quantityBegin = undefined
-          this.ruleForm.quantityEnd = undefined
-          this.ruleForm.timeUnit = undefined
-          this.ruleForm.timeBegin = undefined
-          this.ruleForm.timeEnd = undefined
-          this.ruleForm.conferPrice = undefined
-          break;
-        case '2': //计量费
-          this.baseRules.billUnit = this.rulesFormRules.billUnit
-          this.baseRules.billName = undefined
-          this.baseRules.quantityUnit = undefined
-          this.baseRules.quantityBegin = undefined
-          this.baseRules.quantityEnd = undefined
-          this.baseRules.timeUnit = undefined
-          this.baseRules.timeBegin = undefined
-          this.baseRules.timeEnd = undefined
-          this.baseRules.conferPrice = undefined
-
-          this.ruleForm.billName = undefined
-          this.ruleForm.billUnit = undefined
-          this.ruleForm.quantityUnit = undefined
-          this.ruleForm.quantityBegin = undefined
-          this.ruleForm.quantityEnd = undefined
-          this.ruleForm.timeUnit = undefined
-          this.ruleForm.timeBegin = undefined
-          this.ruleForm.timeEnd = undefined
-          this.ruleForm.conferPrice = undefined
-          break;
-        case '3': //计量阶梯
-          this.baseRules.billUnit = this.rulesFormRules.billUnit
-          this.baseRules.quantityUnit = this.rulesFormRules.quantityUnit
-          this.baseRules.quantityBegin = this.rulesFormRules.quantityBegin
-          this.baseRules.quantityEnd = this.rulesFormRules.quantityEnd
-          this.baseRules.timeUnit = undefined
-          this.baseRules.timeBegin = undefined
-          this.baseRules.timeEnd = undefined
-          this.baseRules.conferPrice = undefined
-          this.baseRules.billName = undefined
-
-          this.ruleForm.timeUnit = undefined
-          this.ruleForm.timeBegin = undefined
-          this.ruleForm.timeEnd = undefined
-          this.ruleForm.billName = undefined
-          this.ruleForm.conferPrice = undefined
-          break;
-        case '4': //计时阶梯
-          this.baseRules.billUnit = this.rulesFormRules.billUnit
-          this.baseRules.timeUnit = this.rulesFormRules.timeUnit
-          this.baseRules.timeBegin = this.rulesFormRules.timeBegin
-          this.baseRules.timeEnd = this.rulesFormRules.timeEnd
-          this.baseRules.quantityUnit = undefined
-          this.baseRules.quantityBegin = undefined
-          this.baseRules.quantityEnd = undefined
-          this.baseRules.conferPrice = undefined
-          this.baseRules.billName = undefined
-
-          this.ruleForm.quantityUnit = undefined
-          this.ruleForm.quantityBegin = undefined
-          this.ruleForm.quantityEnd = undefined
-          this.ruleForm.conferPrice = undefined
-          this.ruleForm.billName = undefined
-          break;
-        case '5': //议价费
-          this.baseRules.billUnit = this.rulesFormRules.billUnit
-          this.baseRules.timeBegin = this.rulesFormRules.timeBegin
-          this.baseRules.quantityEnd = this.rulesFormRules.quantityEnd
-          this.baseRules.conferPrice = this.rulesFormRules.conferPrice
-          this.baseRules.quantityUnit = undefined
-          this.baseRules.quantityBegin = undefined
-          this.baseRules.timeUnit = undefined
-          this.baseRules.timeEnd = undefined
-          this.baseRules.billName = undefined
-
-          this.ruleForm.quantityUnit = undefined
-          this.ruleForm.quantityBegin = undefined
-          this.ruleForm.timeUnit = undefined
-          this.ruleForm.timeEnd = undefined
-          this.ruleForm.billName = undefined
-          break;
-      }
-    },
   }
 }
 </script>
-<style scoped="scoped">
-.el-drawer__container /deep/ .el-drawer__header {
-  margin-bottom: 12px;
-}
-</style>
