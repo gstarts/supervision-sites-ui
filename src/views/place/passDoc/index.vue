@@ -676,8 +676,9 @@ export default {
     beforeUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 10     //这里做文件大小限制
       if (!isLt2M) {
+        this.fileList = []
         this.$message({
-          message: '上传文件大小不能超过 10MB!请等待读条完毕,并重新上传',
+          message: '上传文件大小不能超过 10MB!',
           type: 'error'
         });
       }
