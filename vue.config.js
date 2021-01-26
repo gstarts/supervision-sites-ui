@@ -37,6 +37,8 @@ module.exports = {
 	      //target: `http://10.0.130.51:9090`,
 	      // target: `http://39.105.36.197:9090`,
         target: `http://192.168.11.199:9090`,
+        //远程地址
+        // target:'http://169.254.154.82:9090',
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
