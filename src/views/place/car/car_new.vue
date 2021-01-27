@@ -76,14 +76,14 @@
         </el-button>
       </el-col>
       <el-col :span="1.5">
-                <el-button
-                  type="warning"
-                  icon="el-icon-download"
-                  size="mini"
-                  @click="handleExport"
-                  v-hasPermi="['place:car:export']"
-                >导出
-                </el-button>
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['place:car:export']"
+        >导出
+        </el-button>
         <el-button
           icon="el-icon-download"
           size="mini"
@@ -117,8 +117,8 @@
       <af-table-column label="车牌号" align="center" prop="vehicleNo"/>
       <af-table-column label="货净重(KG)" align="center" prop="vehicleGoodsNetWeight"/>
       <af-table-column label="车皮重(KG)" align="center" prop="vehicleTareWeight"/>
-<!--      <af-table-column label="备注" align="center" prop="remark"/>-->
-<!--      <af-table-column label="分配序号" align="center" prop="serialNo"/>-->
+      <!--      <af-table-column label="备注" align="center" prop="remark"/>-->
+      <!--      <af-table-column label="分配序号" align="center" prop="serialNo"/>-->
       <af-table-column label="提煤单号" align="center" prop="coalBillNo"/>
       <af-table-column label="包装方式" align="center" prop="packMode" :formatter="packModeFormatter"/>
       <af-table-column label="车辆类型" align="center" prop="vehicleType"/>
@@ -127,11 +127,12 @@
       <af-table-column label="申报海关" align="center" prop="isReportCustoms" :formatter="isReportFormatter"/>
       <af-table-column label="制单人" align="center" prop="makerBy"/>
       <af-table-column label="制单时间" align="center" prop="makerTime"/>
-
+      <af-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="作废人" align="center" prop="voidUser"
                        v-if="queryParams.storeState === '3'"></el-table-column>
       <el-table-column label="作废时间" align="center" width="180px" prop="voidDate"
                        v-if="queryParams.storeState === '3'"></el-table-column>
+
       <el-table-column
         label="操作"
         align="center"

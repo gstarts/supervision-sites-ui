@@ -1,11 +1,8 @@
 <template>
-<!--
- 2021-01-20 计费功能以前的页面，留个备份
--->
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="场所" prop="placeId">
-        <el-select @change="handleQuery"
+        <el-select @change="((val)=>{change(val, 'placeId')})"
                    v-model="queryParams.placeId" placeholder="请选择场所" size="small">
           <el-option
             v-for="dept in depts"
@@ -118,7 +115,7 @@
         >新增
         </el-button>
       </el-col>
-      <el-col :span="1.5">
+<!--      <el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -128,8 +125,8 @@
           v-hasPermi="['place:storeContract:edit']"
         >修改
         </el-button>
-      </el-col>
-      <el-col :span="1.5">
+      </el-col>-->
+<!--      <el-col :span="1.5">
         <el-button
           type="danger"
           icon="el-icon-delete"
@@ -139,7 +136,7 @@
           v-hasPermi="['place:storeContract:remove']"
         >删除
         </el-button>
-      </el-col>
+      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -155,40 +152,37 @@
     <el-table v-loading="loading" :data="storeContractList">
       <af-table-column label="ID" align="center" prop="id"/>
       <!--<af-table-column label="场所ID" align="center" prop="placeId"/>-->
-      <af-table-column label="合同编号" align="center" prop="contractNo"/>
       <af-table-column label="客户名称" align="center" prop="customerName"/>
+      <af-table-column label="合同编号" align="center" prop="contractNo"/>
       <af-table-column label="品名" align="center" prop="goodsName"/>
       <af-table-column label="散货库位" align="center" width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.params.contract.map(item => item.storeCode) }}</span>
         </template>
       </af-table-column>
-      <af-table-column label="计费方式" align="center" prop="chargeMethod"/>
-      <af-table-column label="计费方式" align="center" prop="chargeMode"/>
-      <af-table-column label="计费周期" align="center" prop="chargePeriod"/>
-      <af-table-column label="失效日期" align="center" prop="endDate" width="180">
+      <af-table-column label="仓储方式" align="center" prop="packMode" :formatter="packModeFormatter"/>
+      <af-table-column label="煤棚仓储" align="center" prop="coalShed">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.endDate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+          <span>{{ scope.row.coalShed === '1' ? '是' : '否' }}</span>
         </template>
       </af-table-column>
-      <af-table-column label="结算周期" align="center" prop="settlementPeriod"/>
-      <af-table-column label="签订日期" align="center" prop="signDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.signDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </af-table-column>
-      <af-table-column label="生效日期" align="center" prop="startDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.startDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </af-table-column>
-      <af-table-column label="状态" align="center" prop="status">
+      <af-table-column label="押金金额" align="center" prop="cashPledge"/>
+      <!--      <af-table-column label="计费方式" align="center" prop="chargeMethod"/>
+            <af-table-column label="计费方式" align="center" prop="chargeMode"/>
+            <af-table-column label="计费周期" align="center" prop="chargePeriod"/>
+
+            <af-table-column label="结算周期" align="center" prop="settlementPeriod"/>-->
+      <af-table-column label="签订日期" align="center" prop="signDate"/>
+      <af-table-column label="有效期起" align="center" prop="startDate"/>
+      <af-table-column label="有效期止" align="center" prop="endDate"/>
+      <af-table-column label="延期至" align="center" prop="delayToDate"/>
+      <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <span>{{ scope.row.status === '1' ? '有效' : '无效' }}</span>
         </template>
-      </af-table-column>
-      <af-table-column label="备注" align="center" prop="remark"/>
-      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      </el-table-column>
+      <el-table-column label="备注" align="center" prop="remark"/>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="140">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -207,7 +201,7 @@
           >删除
           </el-button>
         </template>
-      </af-table-column>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -223,17 +217,30 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="场所" prop="placeId">
-              <el-select
-                v-model="form.placeId" placeholder="请选择场所" size="small" @change="getStoreList">
+            <el-form-item label="客户名称" prop="customerName">
+              <el-select style="width: 100%"
+                         filterable clearable
+                         v-model="form.customerName" placeholder="请选择客户名称" size="small"
+                         @change="((val)=>{change(val, 'eName')})">
                 <el-option
-                  v-for="dept in depts"
-                  :key="dept.deptId"
-                  :label="dept.deptName"
-                  :value="dept.deptId"
+                  v-for="dict in clientNameList"
+                  :key="dict.eName"
+                  :label="dict.eName"
+                  :value="dict.eName"
                 />
               </el-select>
             </el-form-item>
+            <!--            <el-form-item label="场所" prop="placeId">
+                          <el-select
+                            v-model="form.placeId" placeholder="请选择场所" size="small" @change="getStoreList">
+                            <el-option
+                              v-for="dept in depts"
+                              :key="dept.deptId"
+                              :label="dept.deptName"
+                              :value="dept.deptId"
+                            />
+                          </el-select>
+                        </el-form-item>-->
           </el-col>
           <el-col :span="12">
             <el-form-item label="合同编号" prop="contractNo">
@@ -243,25 +250,9 @@
         </el-row>
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="客户名称" prop="customerName">
-              <el-select
-                filterable
-                clearable
-                v-model="form.customerName" placeholder="请选择客户名称" size="small"
-                @change="((val)=>{change(val, 'eName')})">
-                <el-option
-                  v-for="dict in clientNameList"
-                  :key="dict.eName"
-                  :label="dict.eName"
-                  :value="dict.eName"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
             <el-form-item label="品名" prop="goodsName">
               <!-- <el-input v-model="form.goodsName" placeholder="请输入品名"/>-->
-              <el-select v-model="form.goodsName" placeholder="请选择品名">
+              <el-select v-model="form.goodsName" placeholder="请选择品名" style="width:100%">
                 <el-option
                   v-for="dict in coalTypeOptions"
                   :key="dict.dictLabel"
@@ -270,20 +261,13 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="押金金额" prop="cashPledge">
+              <el-input v-model="form.cashPledge" placeholder="请输入押金金额"/>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row :gutter="10">
-          <el-col :span="12">
-            <!--<el-form-item label="散货区域" prop="zoneCode">
-              <el-select v-model="form.zoneCode" placeholder="请选择散货区域" >
-                <el-option
-                  v-for="str in zoneCodeList"
-                  :key="str"
-                  :label="str"
-                  :value="str"
-                />
-              </el-select>
-            </el-form-item>-->
-          </el-col>
           <el-col :span="24">
             <el-form-item label="散货库位" prop="storeIds">
               <el-select v-model="form.storeIds" filterable multiple placeholder="请选择散货库位" style="width: 100%">
@@ -299,32 +283,46 @@
         </el-row>
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="计费方法" prop="chargeMethod">
-              <el-input v-model="form.chargeMethod" placeholder="请输入计费方法"/>
+            <el-form-item label="仓储方式" prop="packMode">
+              <el-select v-model="form.packMode" placeholder="请选择仓储方式" clearable
+                         @change="(val)=>change(val,'packMode')">
+                <el-option v-for="item in packModeOptions" :value="item.dictValue"
+                           :label="item.dictLabel" :key="item.dictValue"/>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="计费方式" prop="chargeMode">
-              <el-input v-model="form.chargeMode" placeholder="请输入计费方式"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="计费周期" prop="chargePeriod">
-              <el-input v-model="form.chargePeriod" placeholder="请输入计费周期"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="计费方法" prop="chargeMethod">
-              <el-input v-model="form.chargeMethod" placeholder="请输入计费方法"/>
+            <el-form-item label="煤棚仓储" prop="coalShed">
+              <el-select v-model="form.coalShed" placeholder="请选择是否使用煤棚仓储" clearable>
+                <el-option v-for="item in coalShedOptions" :value="item.dictValue"
+                           :label="item.dictLabel" :key="item.dictValue"/>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="结算周期" prop="settlementPeriod">
-              <el-input v-model="form.settlementPeriod" placeholder="请输入结算周期"/>
+            <el-form-item label="有效期起" prop="startDate">
+              <el-date-picker clearable size="small" style="width: 100%"
+                              v-model="form.startDate"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              placeholder="选择有效期起始日期">
+              </el-date-picker>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="有效期止" prop="endDate">
+              <el-date-picker clearable size="small" style="width: 100%"
+                              v-model="form.endDate"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              placeholder="选择有效日期终止日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="签订日期" prop="signDate">
               <el-date-picker clearable size="small" style="width: 100%"
@@ -335,30 +333,18 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="生效日期" prop="startDate">
+            <el-form-item label="延期至" prop="delayToDate">
               <el-date-picker clearable size="small" style="width: 100%"
-                              v-model="form.startDate"
+                              v-model="form.delayToDate"
                               type="date"
                               value-format="yyyy-MM-dd"
-                              placeholder="选择生效日期">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="失效日期" prop="endDate">
-              <el-date-picker clearable size="small" style="width: 100%"
-                              v-model="form.endDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="选择失效日期">
+                              placeholder="选择延期至日期">
               </el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="10">
+        <el-row :gutter="10" v-show="false">
           <el-col :span="12">
             <el-form-item label="状态" prop="status">
               <el-select
@@ -374,16 +360,9 @@
           </el-col>
           <el-col :span="12"></el-col>
         </el-row>
-        <el-row :gutter="10">
-          <el-col :span="12"></el-col>
-          <el-col :span="12"></el-col>
-        </el-row>
-
-
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -402,7 +381,7 @@ import {
   updateStoreContract,
   listStoreContractLike
 } from "@/api/place/storeContract";
-import {getUserDepts} from "@/utils/charutils";
+import {compareDate, getUserDepts} from "@/utils/charutils";
 import {getZoneList} from "@/api/place/zone";
 import {listStore} from "@/api/place/store";
 import {listInfo} from "@/api/basis/enterpriseInfo";
@@ -449,15 +428,15 @@ export default {
       },
       // 表单参数
       form: {},
+      rules: {},
       // 表单校验
-      rules: {
+      rulesCoal: {
         placeId: [
           {required: true, message: "场所ID不能为空", trigger: "blur"}
         ],
         contractNo: [
           {required: true, message: "合同编号不能为空", trigger: "blur"}
         ],
-
         customerName: [
           {required: true, message: "客户名称不能为空", trigger: "blur"}
         ],
@@ -467,26 +446,72 @@ export default {
         storeIds: [
           {required: true, message: "散杂库位不能为空", trigger: "blur"}
         ],
-        status: [
+        /*status: [
           {required: true, message: "状态不能为空", trigger: "change"}
+        ],*/
+        coalShed: [
+          {required: true, message: "是否使用煤棚仓储不能为空", trigger: "change"}
+        ],
+        packMode: [
+          {required: true, message: "仓储方式不能为空", trigger: "change"}
+        ],
+        startDate: [
+          {required: true, message: "有效期起不能为空", trigger: "change"}
+        ],
+        endDate: [
+          {required: true, message: "有效期止不能为空", trigger: "change"}
         ]
-
+      },
+      rulesContainer: {
+        placeId: [
+          {required: true, message: "场所ID不能为空", trigger: "blur"}
+        ],
+        contractNo: [
+          {required: true, message: "合同编号不能为空", trigger: "blur"}
+        ],
+        customerName: [
+          {required: true, message: "客户名称不能为空", trigger: "blur"}
+        ],
+        goodsName: [
+          {required: true, message: "品名不能为空", trigger: "blur"}
+        ],
+        /*status: [
+          {required: true, message: "状态不能为空", trigger: "change"}
+        ],*/
+        packMode: [
+          {required: true, message: "仓储方式不能为空", trigger: "change"}
+        ],
+        startDate: [
+          {required: true, message: "有效期起不能为空", trigger: "change"}
+        ],
+        endDate: [
+          {required: true, message: "有效期止不能为空", trigger: "change"}
+        ]
       },
       zoneCodeList: [],
       storeList: [],
       idList: [],
       coalTypeOptions: [], //煤种
-      statusList: [{'key': '1', 'value': '有效'}, {'key': '0', 'value': '无效'}]
+      statusList: [{'key': '1', 'value': '有效'}, {'key': '0', 'value': '无效'}],
+      packModeOptions: [
+        {dictValue: '2', dictLabel: '散装'},
+        {dictValue: '1', dictLabel: '集装箱'},
+      ],
+      coalShedOptions: [
+        {dictValue: '1', dictLabel: '是'},
+        {dictValue: '0', dictLabel: '否'},
+      ],
     };
   },
   created() {
-
     // 0 监管场所，1保税库，2堆场，3企业
     this.depts = getUserDepts('0')
+    this.rules = this.rulesCoal
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId
-      this.getList();
-      this.getListInfo();
+      this.getList()
+      this.getListInfo()
+      this.getStoreList()
     }
 
     //煤种类型
@@ -507,7 +532,7 @@ export default {
     },
     getListInfo() {
       this.loading = true;
-      let info = {"eType": '2','deptId': this.queryParams.placeId,companyType: '2'}
+      let info = {"eType": '2', 'deptId': this.queryParams.placeId, companyType: '2'}
       listInfo(info).then(response => {
         this.clientNameList = response.rows;
         this.loading = false;
@@ -535,7 +560,11 @@ export default {
         remark: undefined,
         zoneCode: undefined,
         storeIds: undefined,
-        status: undefined
+        status: undefined,
+        delayToDate: undefined,
+        coalShed: undefined,
+        cashPledge: undefined,
+        packMode: undefined,
       };
       this.resetForm("form");
       this.storeList = []
@@ -591,8 +620,20 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
+
+
       this.$refs["form"].validate(valid => {
         if (valid) {
+
+          debugger
+          if (compareDate(this.form.startDate, this.form.endDate) >= 0) {
+            this.$message.error('有效期起日期应小于有效期止日期')
+            return false
+          }
+          //如果集装箱，就不设置煤棚变量
+          if (this.form.packMode === '1') {
+            this.form.coalShed = undefined
+          }
           this.idList = this.form.storeIds
           let ids = ''
           for (let id of this.idList) {
@@ -659,7 +700,7 @@ export default {
     },
     getStoreList() {
       this.storeList = []
-      let params = {'placeId': this.form.placeId, 'zoneType': '2', 'storeState': '0'}//取空闲
+      let params = {'placeId': this.queryParams.placeId, 'zoneType': '2', 'storeState': '0'}//取空闲
       listStore(params).then(response => {
         if (response.code === 200) {
           if (this.storeList.length === 0) { //如果没有值，
@@ -690,7 +731,28 @@ export default {
           }
         })
       }
-    }
+
+      if (name === 'placeId') {
+        this.handleQuery()
+        this.getStoreList()
+        this.form.placeId = this.queryParams.placeId
+      }
+      if (name === 'packMode') {
+        if (val === '1') {
+          this.rules = this.rulesContainer
+          this.form.coalShed = undefined
+        } else {
+          this.rules = this.rulesCoal
+        }
+      }
+    },
+    packModeFormatter(row, column) {
+      let mode = this.packModeOptions.find(item => item.dictValue === row.packMode)
+      if (mode) {
+        return mode.dictLabel
+      }
+      return row.packMode
+    },
   }
-};
+}
 </script>

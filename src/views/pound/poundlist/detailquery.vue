@@ -864,6 +864,7 @@ import {addPrint, checkPrint, getPrint} from "@/api/place/print";
 import {listGroup} from "@/api/place/group";
 import {listInfo} from "@/api/basis/enterpriseInfo";
 import SimpleKeyboard from "@/components/SimpleKeyboard/SimpleKeyboard";
+import {parseTime} from "@/utils/common";
 
 export default {
   name: "Sheet",
