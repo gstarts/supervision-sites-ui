@@ -104,3 +104,12 @@ export function updateDocNotice(placeId, noticeNo, type, state) {
 	})
 }
 
+// 查询入库通知单列表
+export function selectNumberOfBatch(query) {
+  return request({
+    url: '/tax/instore_notice/selectNumberOfBatch',
+    method: 'get',
+    params: query
+  })
+}
+
