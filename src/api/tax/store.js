@@ -53,7 +53,7 @@ export function getStoreUsable(placeId) {
 
 export function getStoreNow(data) {
   return request({
-    url: '/tax/store/now/',
+    url: '/tax/store/now',
     method: 'post',
     data: data
   })
