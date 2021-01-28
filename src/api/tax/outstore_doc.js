@@ -44,8 +44,13 @@ export function delOutstore_doc(id) {
 }
 
 export function getOutstore_doc_with_details(placeId, noticeNo) {
+  let data = {
+    'placeId': placeId,
+    'noticeNos': noticeNo,
+  }
 	return request({
-		url: '/tax/outstore_doc/' + placeId + '/' + noticeNo,
-		method: 'get'
+		url: '/tax/outstore_doc/print/test',
+		method: 'post',
+    data: data,
 	})
 }
