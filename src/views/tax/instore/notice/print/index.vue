@@ -34,7 +34,10 @@
         </el-button>
       </el-col>
     </el-row>
-    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1600px;padding-left: 3px ;padding-top:50px" id="print">
+    <div id="print">
+    <div v-for="(instoreNotice,index) in instoreNoticeList" class="all" style="page-break-after:always" >
+      <div :id="gennerateId(index)"></div>
+    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1600px;padding-left: 3px ;padding-top:50px" >
       <el-row :gutter="10" style="font-size:32px;">
         <el-col :span="7" style="text-align: center">入 库 通 知 单</el-col>
         <el-col :span="1">GR</el-col>
@@ -65,7 +68,7 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="14">
-          <el-table  v-loading="loading" :data="instore_notice_detailList" :span-method="arraySpanMethod"
+          <el-table  v-loading="loading" :data="instoreNotice.detailList" :span-method="arraySpanMethod"
                     :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'16px',padding:'3 -3px',margin:'-3'}"
                     :cell-style="{border:'solid .5px black',fontSize:'18px',padding:'12px 0',color:'black'}"
                     style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black"
@@ -98,6 +101,8 @@
         <el-col :span="3">理货员签字:</el-col>
       </el-row>
     </div>
+    </div>
+  </div>
   </div>
 </template>
 
@@ -122,6 +127,8 @@
 				ids: [],
 				depts: [],
 				instoreNotice: {},
+
+        instoreNoticeList: [],
 				// 入库通知单明细表格数据
 				instore_notice_detailList: [],
 				// 弹出层标题
@@ -155,6 +162,7 @@
 		created() {
 			let queryPlaceId = this.$route.query.placeId
 			let queryNoticeNo = this.$route.query.noticeNo
+      console.log(queryNoticeNo);
 
 			// 参数不为空，并非参数在用户权限范围内
 			if (typeof (queryPlaceId) != 'undefined' && this.depts.findIndex((v) => {
@@ -174,16 +182,28 @@
 		methods: {
 			/** 查询入库通知单明细列表 */
 			getList() {
-				this.loading = true;
+				// this.loading = true;
 				//listInstore_notice_detail(this.queryParams).then(response => {
 				getInstore_notice_with_details(this.queryParams.placeId, this.queryParams.instoreNoticeNo).then(response => {
-					console.log(response)
+					console.log(this.queryParams.instoreNoticeNo)
 					if (response.code === 200) {
-						this.instoreNotice = response.data
-						this.instore_notice_detailList = response.data.detailList;
+
+					  let instoreNoticeList01= response.data;
+            console.log(instoreNoticeList01)
+            for (let i = 0; i < instoreNoticeList01.length; i++) {
+              console.log("2")
+              // debugger
+              this.instoreNotice = instoreNoticeList01[i];
+              this.instore_notice_detailList = instoreNoticeList01[i].detailList;
+              // console.log(i.detailList)
+              // console.log(this.instore_notice_detailList)
+              // console.log("22222222")
+						// this.instoreNotice = response.data
+						// this.instore_notice_detailList = response.data.detailList;
+
 						let row21 = {
 							bagSealNo: "",
-							bookStoreCode: response.data.detailList.length,
+							bookStoreCode: instoreNoticeList01[i].detailList.length,
 							goodsName: "合计",
 							batchNo: "",
 							packingUnit: ""
@@ -205,14 +225,21 @@
 							packingUnit: ""
 
 						}
-						this.instore_notice_detailList.push(row21)
-						this.instore_notice_detailList.push(row22)
-						this.instore_notice_detailList.push(row23)
-						this.total = response.data.detailList.length;
-						this.loading = false;
+              instoreNoticeList01[i].detailList.push(row21);
+              instoreNoticeList01[i].detailList.push(row22);
+              instoreNoticeList01[i].detailList.push(row23);
+						// this.instore_notice_detailList.push(row22)
+						// this.instore_notice_detailList.push(row23)
+						this.total = instoreNoticeList01[i].detailList;
+						// this.loading = false;
 					}
+            console.log("444444")
+            this.instoreNoticeList =instoreNoticeList01
+            console.log(this.instoreNoticeList)
+          }
 				});
 			},
+
 			//合并单元格
 			arraySpanMethod({row, column, rowIndex, columnIndex}) {
 				if ((rowIndex === 21 || rowIndex === 22) && columnIndex === 1) {
@@ -222,8 +249,9 @@
 					}
 				}
 			},
+
 			getIndex(index) {
-				console.log(index)
+				// console.log(index)
 				if (index <= 19) return index + 1
 				return this.instore_notice_detailList[index].batchNo
 			},
@@ -266,6 +294,10 @@
 					updateDocNotice(this.instoreNotice.placeId, this.instoreNotice.inNoticeNo, 'innotice', 'print')
 				}
 			},
+      // 打印操作，生成divID
+      gennerateId: function (index) {
+        return "printDiv" + index
+      },
 			/** 重置按钮操作 */
 			resetQuery() {
 				this.queryParams.instoreNoticeNo = ''
@@ -349,7 +381,7 @@
 </script>
 
 <style scoped>
- 
+
  /* @page {
     size: auto A4 landscape;
     margin-left: 1.5cm;

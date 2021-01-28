@@ -211,7 +211,15 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="客户名称" prop="customerName">
-              <el-input v-model="form.customerName" placeholder="请输入客户名称"/>
+              <el-select v-model="form.customerName" style="width: 100%" filterable clearable
+                         placeholder="请输入客户名称" @change="setStoreCustomer">
+                <el-option
+                  v-for="type in contractList1"
+                  :key="type.id"
+                  :label="type.eName"
+                  :value="type.eName"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -292,7 +300,8 @@
 
 <script>
 	import {listContract, getContract, delContract, addContract, updateContract} from "@/api/tax/contract";
-	import {getUserDepts} from '@/utils/charutils'
+  import {getUserDepts} from '@/utils/charutils'
+  import {listInfo} from "@/api/basis/enterpriseInfo";
 
 	export default {
 		name: "Contract",
@@ -310,7 +319,9 @@
 				// 总条数
 				total: 0,
 				// 仓储合同表格数据
-				contractList: [],
+        contractList: [],
+      	// 寄舱客户
+        contractList1: [],
 				// 弹出层标题
 				title: "",
 				// 是否显示弹出层
@@ -328,7 +339,10 @@
 					placeId: undefined,
 					settlementEriod: undefined,
 					signDate: undefined,
-					startDate: undefined
+          startDate: undefined,
+          // 寄仓客户类型
+          companyType: '2',
+          deptId: undefined
 				},
 				// 表单参数
 				form: {},
@@ -351,7 +365,11 @@
 			if (this.depts.length > 0) {
 				this.queryParams.placeId = this.depts[0].deptId
 				this.getList();
-			}
+      }
+      this.queryParams.deptId = this.queryParams.placeId
+      listInfo(this.queryParams).then(response => {
+        this.contractList1 = response.rows;
+      });
 		},
 		methods: {
 			/** 查询仓储合同列表 */
@@ -386,10 +404,20 @@
 					placeId: this.queryParams.placeId,
 					settlementPeriod: undefined,
 					signDate: undefined,
-					startDate: undefined
+          startDate: undefined,
+          customerId: undefined
 				};
 				this.resetForm("form");
-			},
+      },
+      setStoreCustomer() {
+        let customer = this.contractList1.find(item => item.eName === this.form.customerName)
+        if (customer) {          
+          this.form.customerName = customer.eName
+          this.form.customerId = customer.id
+          console.log(this.form)
+        }
+
+      },
 			/** 搜索按钮操作 */
 			handleQuery() {
 				this.queryParams.pageNum = 1;
@@ -436,6 +464,7 @@
 								}
 							});
 						} else {
+              console.log(this.form)
 							addContract(this.form).then(response => {
 								if (response.code === 200) {
 									this.msgSuccess("新增成功");

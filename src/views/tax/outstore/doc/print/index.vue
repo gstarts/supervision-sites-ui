@@ -35,8 +35,11 @@
       </el-col>
 
     </el-row>
+    <div id="print">
+      <div v-for="(instoreNotice,index) in instoreNoticeList" class="all" style="page-break-after:always" >
+        <div :id="gennerateId(index)"></div>
     <div class="box-card" style="margin: 0 auto;font-size:18px;width:1600px;padding-left: 5px ;padding-top:20px"
-         id="print">
+        >
       <el-row :gutter="10" style="margin-bottom: 20px">
         <el-col :span="14" style="text-align: center;font-size: 30px">
           OUTBOUND SHEET <br/>出库单
@@ -135,7 +138,7 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="14">
-          <el-table  v-loading="loading" :data="instore_notice_detailList"
+          <el-table  v-loading="loading" :data="instoreNotice.detailList"
                     :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'14px',padding:'3 -3px',margin:'-3'}"
                     :cell-style="{border:'solid .5px black',fontSize:'16px',padding:'8px 0',color:'black'}"
                     style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black"
@@ -167,7 +170,7 @@
           <p>Total Valid Gross Weight 经以下各方确认有效总重量<span class="weight">{{instoreNotice.realRoughWeight}}</span> incl.wt
             of bag（含袋）</p>
           <p>OT provided gross weight for reference ( prior to inbound ) 以上货物OT入库前提供参考重量 <span
-            class="weight">{{sum(instore_notice_detailList)}}</span>incl.wt of bag（含袋）</p>
+            class="weight">{{sum(instoreNotice.detailList)}}</span>incl.wt of bag（含袋）</p>
         </el-col>
       </el-row>
       <el-row :gutter="10" style="margin-bottom: 10px">
@@ -240,6 +243,8 @@
         </el-col>
       </el-row>
     </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -268,6 +273,8 @@
 				instoreNotice: {},
 				// 入库通知单明细表格数据
 				instore_notice_detailList: [],
+
+        instoreNoticeList:[],
 				// 弹出层标题
 				title: "",
 				// 是否显示弹出层
@@ -331,9 +338,15 @@
 				getOutstore_doc_with_details(this.queryParams.placeId, this.queryParams.outstoreNoticeNo).then(response => {
 					console.log(response)
 					if (response.code === 200) {
-						this.instoreNotice = response.data
-						this.instore_notice_detailList = response.data.detailList;
-						/*let row17 = {
+
+            let instoreNoticeList01 = response.data;
+            for (let i = 0; i < instoreNoticeList01.length; i++) {
+              this.instoreNotice = instoreNoticeList01[i];
+              this.instore_notice_detailList = instoreNoticeList01[i].detailList;
+
+              // this.instoreNotice = response.data
+              // this.instore_notice_detailList = response.data.detailList;
+              /*let row17 = {
 							bagSealNo: "",
 							remark: response.data.detailList.length,
 							goodsName: "合计",
@@ -342,14 +355,14 @@
 
 						}*/
 
-						/*let row22 = {
+              /*let row22 = {
 							bagSealNo: "",
 							bookStoreCode: "",
 							goodsName: "",
 							batchNo: "备注",
 							packingUnit: ""
 						}*/
-						/*let row23 = {
+              /*let row23 = {
 							bagSealNo: "",
 							bookStoreCode: "",
 							goodsName: "",
@@ -357,12 +370,14 @@
 							packingUnit: ""
 
 						}*/
-						//this.instore_notice_detailList.push(row17)
-						//this.instore_notice_detailList.push(row22)
-						//this.instore_notice_detailList.push(row23)
-						//this.total = response.data.detailList.length;
-						this.loading = false;
-					}
+              //this.instore_notice_detailList.push(row17)
+              //this.instore_notice_detailList.push(row22)
+              //this.instore_notice_detailList.push(row23)
+              //this.total = response.data.detailList.length;
+              this.loading = false;
+            }
+            this.instoreNoticeList =instoreNoticeList01
+          }
 				});
 			},
 			//合并单元格
@@ -419,6 +434,11 @@
 					updateDocNotice(this.instoreNotice.placeId, this.instoreNotice.outNoticeNo, 'outnotice', 'print')
 				}
 			},
+
+      // 打印操作，生成divID
+      gennerateId: function (index) {
+        return "printDiv" + index
+      },
 			/** 重置按钮操作 */
 			resetQuery() {
 				this.queryParams.instoreNoticeNo = ''
