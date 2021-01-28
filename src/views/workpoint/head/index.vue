@@ -211,7 +211,7 @@
       <!--      <af-table-column label="车牌号" align="center" prop="vehicleNo"/>-->
       <!--      <af-table-column label="车型" align="center" prop="vehicleType"/>-->
       <!--<el-table-column label="状态" align="center" prop="state"/>-->
-      <!--      <af-table-column label="业务部门" align="center" prop="businessDept"/>-->
+      <af-table-column label="待审批人" align="center" prop="businessDept"/>
       <af-table-column label="审批状态" align="center" prop="approveState" :formatter="approveStateFormatter"/>
       <af-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="140px">
@@ -402,7 +402,7 @@
           :clearable="false"
           type="datetimerange"
           align="right"
-          size="small"
+
           format="yyyy-MM-dd HH:mm:ss"
           value-format="yyyy-MM-dd HH:mm:ss"
           start-placeholder="开始日期"

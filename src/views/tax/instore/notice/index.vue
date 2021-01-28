@@ -300,10 +300,19 @@
         >导出
         </el-button>
       </el-col>
+
+      <el-button
+        size="mini"
+        @click="print"
+        type="info"
+        :disabled="multiple"
+        icon="el-icon-printer">
+        打印
+      </el-button>
     </el-row>
 
     <el-table v-loading="loading" :data="instore_noticeList" @selection-change="handleSelectionChange">
-      <!--<af-table-column type="selection" align="center" />-->
+      <af-table-column type="selection" align="center" />
       <!--<af-table-column label="ID" align="center" prop="id" />-->
       <af-table-column label="入库通知单号" align="center" prop="inNoticeNo" width="190px"/>
       <!--<af-table-column label="备注" align="center" prop="remark" />-->
@@ -627,6 +636,10 @@ export default {
       total: 0,
       // 入库通知单表格数据
       instore_noticeList: [],
+
+      inNoticeNoList:[],
+
+
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -760,6 +773,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
+      this.inNoticeNoList = selection.map(item=>item.inNoticeNo);
       this.ids = selection.map(item => item.id)
       this.single = selection.length != 1
       this.multiple = !selection.length
@@ -780,6 +794,8 @@ export default {
         this.title = "修改入库通知单";
       });
     },
+
+
     /** 提交按钮 */
     submitForm: function () {
       this.$refs["form"].validate(valid => {
@@ -831,13 +847,27 @@ export default {
     },
     handleNoticePrint(row) {
       console.log(row.inNoticeNo)
+      this.inNoticeNoList.push(row.inNoticeNo)
       this.$router.push({
         path: '/tax/instore/notice/print',
         query: {
-          'noticeNo': row.inNoticeNo,
+          'noticeNo': this.inNoticeNoList,
           'placeId': row.placeId
         }
       })
+    },
+
+  // 批量打印
+    print(){
+      this.$router.push({
+        path: '/tax/instore/notice/print',
+        query: {
+          'noticeNo': this.inNoticeNoList,
+          'placeId': this.queryParams.placeId
+        }
+      })
+      console.log(this.inNoticeNoList.length)
+
     },
     /** 导出按钮操作 */
     handleExport() {
