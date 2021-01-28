@@ -143,8 +143,8 @@
           <span>{{ parseTime(scope.row.odate, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
         </template>
       </af-table-column>
-      <af-table-column label="寄仓客户" align="center" prop="customer"  :show-overflow-tooltip="true"/>
-      <af-table-column label="合同号" align="center" prop="contractNo"  :show-overflow-tooltip="true"/>
+      <af-table-column label="寄仓客户" align="center" prop="customer" :show-overflow-tooltip="true"/>
+      <af-table-column label="合同号" align="center" prop="contractNo" :show-overflow-tooltip="true"/>
       <af-table-column label="货物名称" align="center" prop="goodsName" :show-overflow-tooltip="true"/>
       <af-table-column label="亏吨重量(KGS)" align="center" prop="netWeight"/>
       <af-table-column label="库位号" align="center" prop="storeCode"/>
@@ -457,7 +457,7 @@ export default {
         minPath: undefined,
         minFileLength: undefined,
         minObjectName: undefined,
-        orderByColumn:'id',
+        orderByColumn: 'id',
         isAsc: 'desc'
       },
       // 表单参数
@@ -886,7 +886,9 @@ export default {
       //删除指定位置的元素
       this.attachmentList.splice(index, 1)
       //删除文件 及附件记录
-      delAttachment(attachmentId)
+      if (attachmentId) {
+        delAttachment(attachmentId)
+      }
     },
     handleExceed() {
       this.$message.warning('最多只能上传10个附件')
