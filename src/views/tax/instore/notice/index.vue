@@ -305,6 +305,7 @@
         size="mini"
         @click="print"
         type="info"
+        :disabled="multiple"
         icon="el-icon-printer">
         打印
       </el-button>

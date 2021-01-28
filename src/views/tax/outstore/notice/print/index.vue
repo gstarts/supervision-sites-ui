@@ -32,9 +32,12 @@
         > 打印
         </el-button>
       </el-col>
-    
+
     </el-row>
-    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1600px;padding-left: 5px ;padding-top:50px" id="print">
+    <div id="print">
+      <div v-for="(instoreNotice,index) in instoreNoticeList" class="all" style="page-break-after:always" >
+        <div :id="gennerateId(index)"></div>
+    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1600px;padding-left: 5px ;padding-top:50px" >
       <el-row :gutter="10" style="font-size:32px;">
         <el-col :span="7" style="text-align: center">出 库 通 知 单</el-col>
         <el-col :span="1">GR</el-col>
@@ -65,7 +68,7 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="14">
-          <el-table v-loading="loading" :data="instore_notice_detailList" :span-method="arraySpanMethod"
+          <el-table v-loading="loading" :data="instoreNotice.detailList" :span-method="arraySpanMethod"
                     :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'16px',padding:'3 -3px',margin:'-3'}"
                     :cell-style="{border:'solid .5px black',fontSize:'18px',padding:'15px 0',color:'black'}"
                     style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
@@ -105,6 +108,8 @@
         <el-col :span="2">&nbsp;</el-col>
       </el-row>
     </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -131,6 +136,8 @@
 				instoreNotice: {},
 				// 入库通知单明细表格数据
 				instore_notice_detailList: [],
+        // 批量打印
+        instoreNoticeList:[],
 				// 弹出层标题
 				title: "",
 				// 是否显示弹出层
@@ -189,29 +196,33 @@
 		methods: {
 			/** 查询入库通知单明细列表 */
 			getList() {
-				this.loading = true;
+				// this.loading = true;
 				//listInstore_notice_detail(this.queryParams).then(response => {
 				getOutstore_notice_with_details(this.queryParams.placeId, this.queryParams.outstoreNoticeNo).then(response => {
 					console.log(response)
 					if (response.code === 200) {
-						this.instoreNotice = response.data
-						this.instore_notice_detailList = response.data.detailList;
-						let row17 = {
-							bagSealNo: "",
-							remark: response.data.detailList.length,
-							goodsName: "合计",
-							batchNo: "",
-							packingUnit: ""
+            let instoreNoticeList01 = response.data;
+            for (let i = 0; i < instoreNoticeList01.length; i++) {
+              this.instoreNotice = instoreNoticeList01[i];
+              this.instore_notice_detailList = instoreNoticeList01[i].detailList;
+              // this.instoreNotice = response.data
+              // this.instore_notice_detailList = response.data.detailList;
+              let row17 = {
+                bagSealNo: "",
+                remark: instoreNoticeList01[i].detailList.length,
+                goodsName: "合计",
+                batchNo: "",
+                packingUnit: ""
 
-						}
-						let row22 = {
-							bagSealNo: "",
-							bookStoreCode: "",
-							goodsName: "",
-							batchNo: "备注",
-							packingUnit: ""
-						}
-						/*let row23 = {
+              }
+              let row22 = {
+                bagSealNo: "",
+                bookStoreCode: "",
+                goodsName: "",
+                batchNo: "备注",
+                packingUnit: ""
+              }
+              /*let row23 = {
 							bagSealNo: "",
 							bookStoreCode: "",
 							goodsName: "",
@@ -219,12 +230,14 @@
 							packingUnit: ""
 
 						}*/
-						this.instore_notice_detailList.push(row17)
-						this.instore_notice_detailList.push(row22)
-						//this.instore_notice_detailList.push(row23)
-						//this.total = response.data.detailList.length;
-						this.loading = false;
-					}
+              instoreNoticeList01[i].detailList.push(row17)
+              instoreNoticeList01[i].detailList.push(row22)
+              //this.instore_notice_detailList.push(row23)
+              //this.total = response.data.detailList.length;
+              // this.loading = false;
+            }
+            this.instoreNoticeList =instoreNoticeList01
+          }
 				});
 			},
 			//合并单元格
@@ -240,6 +253,12 @@
 				if (index <= 15) return index + 1
 				return this.instore_notice_detailList[index].batchNo
 			},
+
+
+      // 打印操作，生成divID
+      gennerateId: function (index) {
+        return "printDiv" + index
+      },
 			// 取消按钮
 			cancel() {
 				this.open = false;
@@ -359,7 +378,7 @@
 </script>
 
 <style scoped media="dayin">
-  
+
   /*@page {
     size: auto A4 landscape;
     margin-left: 1.5cm;
