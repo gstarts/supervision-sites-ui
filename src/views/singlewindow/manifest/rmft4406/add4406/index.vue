@@ -21,7 +21,7 @@
       </el-button>
       <el-button type="danger" icon="el-icon-thumb" size="mini" @click="declare" style="float:right" disabled>申报
       </el-button>
-    </el-row>    
+    </el-row>
     <el-card class="mb20">
       <div slot="header" class="clearfix">
         <span>基本信息</span>
@@ -217,7 +217,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-      </el-form>     
+      </el-form>
     </el-card>
     <!-- <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -393,7 +393,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>        
+        </el-row>
       </el-form>
     </el-card>
   </div>
@@ -427,7 +427,7 @@ export default {
       bodyIndex: -1,
       // 当前操作集装箱表体数据
       coalIndex: -1,
-      // 已选择数据      
+      // 已选择数据
       selectBodyForm: [],
       // 按钮禁用状态
       btnDisable: false,
@@ -715,15 +715,15 @@ export default {
     }
   },
   watch: {
-    'representativePerson.name': {      
-      handler: function(newVal) {     
-        const data = this.enterpriseOptions.find(el => el.stationPersonName === newVal)  
-        // console.log(data)    
+    'representativePerson.name': {
+      handler: function(newVal) {
+        const data = this.enterpriseOptions.find(el => el.stationPersonName === newVal)
+        // console.log(data)
         if(data != undefined) {
           this.form.head.contractorCodeScc = data.contractorCodeScc
           this.head.customsMaster = data.customsMaster
           this.form.head = data
-        }          
+        }
       }
     }
   },
@@ -733,12 +733,12 @@ export default {
       queryDetailsById(id).then(res =>{
        if(res.code ==200){
         //  this.nemsInvtHeadType = res.data.nemsInvtHeadType;
-        //  this.headList = res.data.headList;        
+        //  this.headList = res.data.headList;
         this.declaration = res.data.declaration
         this.declaration.mtHeadId = res.data.declaration.mtHeadId
         // console.log(res.data.declaration)
         this.additionalInformation = res.data.declaration.additionalInformation
-        this.carrier = res.data.declaration.carrier        
+        this.carrier = res.data.declaration.carrier
         this.representativePerson = res.data.declaration.representativePerson
         this.borderTransportMeans = res.data.declaration.consignment.borderTransportMeans
         this.governmentprocedure = res.data.declaration.consignment.governmentprocedure
@@ -959,7 +959,7 @@ export default {
         }
       });
       this.reset();
-      this.clearHead() 
+      this.clearHead()
 
     },
     /** 挂车表体提交按钮 */
@@ -1047,7 +1047,7 @@ export default {
         this.coalIndex = -1
         this.transportequipment = {}
       }
-      
+
     },
     // 删除
     handleDelete(e, name) {
@@ -1077,7 +1077,7 @@ export default {
   }
 }
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .el-select {
   width: 100%
 }

@@ -7,7 +7,7 @@
         icon="el-icon-plus"
         size="mini"
         :disabled="btnDisable.addBtn"
-        @click="headHandleAdd"        
+        @click="headHandleAdd"
       >新增</el-button>
       <el-button
         type="success"
@@ -52,7 +52,7 @@
               ></el-input>
             </el-form-item>
           </el-col>
-         
+
 
           <el-col :span="6">
             <el-form-item label="清单编号" prop="bondInvtNo">
@@ -74,7 +74,7 @@
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
                   :value="dict.dictValue"
-                  
+
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -478,7 +478,7 @@
               />
             </el-form-item>
           </el-col>
-          
+
            <el-col :span="1" style="margin-top : 5px">
             <el-button size="mini" style="background-color:#00BFFF;color:#FFFFFF">刷新</el-button>
           </el-col>
@@ -733,7 +733,7 @@
                 placeholder="备案序号"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -744,7 +744,7 @@
                 placeholder="商品料号"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -758,7 +758,7 @@
                 placeholder="报关单商品序号"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -770,7 +770,7 @@
                 placeholder="流转申报表序号"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -781,7 +781,7 @@
                 placeholder="商品编码"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -795,7 +795,7 @@
                 placeholder="商品名称"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -807,7 +807,7 @@
                 placeholder="规格型号"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -818,7 +818,7 @@
                 placeholder="币制"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -832,7 +832,7 @@
                 placeholder="申报计量单位"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -844,7 +844,7 @@
                 placeholder="法定计量单位"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -855,7 +855,7 @@
                 placeholder="法定第二计量单位"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -869,7 +869,7 @@
                 placeholder="申报数量"
                 clearable
                 size="mini"
-              
+
               />
             </el-form-item>
           </el-col>
@@ -881,7 +881,7 @@
                 placeholder="法定数量"
                 clearable
                 size="mini"
-              
+
               />
             </el-form-item>
           </el-col>
@@ -892,7 +892,7 @@
                 placeholder="第二法定数量"
                 clearable
                 size="mini"
-             
+
               />
             </el-form-item>
           </el-col>
@@ -906,7 +906,7 @@
                 placeholder="企业申报单价"
                 clearable
                 size="mini"
-              
+
               />
             </el-form-item>
           </el-col>
@@ -918,7 +918,7 @@
                 placeholder="企业申报总价"
                 clearable
                 size="mini"
-              
+
               />
             </el-form-item>
           </el-col>
@@ -929,7 +929,7 @@
                 placeholder="原产国(地区)"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -954,7 +954,7 @@
                 placeholder="第一比例因子"
                 clearable
                 size="mini"
-            
+
               />
             </el-form-item>
           </el-col>
@@ -965,7 +965,7 @@
                 placeholder="第二比例因子"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -979,7 +979,7 @@
                 placeholder="毛重"
                 clearable
                 size="mini"
-             
+
               />
             </el-form-item>
           </el-col>
@@ -991,7 +991,7 @@
                 placeholder="净重"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -1002,7 +1002,7 @@
                 placeholder="最终目的国(地区)"
                 clearable
                 size="mini"
-              
+
               />
             </el-form-item>
           </el-col>
@@ -1016,7 +1016,7 @@
                 placeholder="征免方式"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -1028,7 +1028,7 @@
                 placeholder="单耗版本号"
                 clearable
                 size="mini"
-             
+
               />
             </el-form-item>
           </el-col>
@@ -1039,7 +1039,7 @@
                 placeholder="自动备案序号"
                 clearable
                 size="mini"
-              
+
               />
             </el-form-item>
           </el-col>
@@ -1053,7 +1053,7 @@
                 placeholder="修改标志"
                 clearable
                 size="mini"
-              
+
               />
             </el-form-item>
           </el-col>
@@ -1065,7 +1065,7 @@
                 placeholder="备注"
                 clearable
                 size="mini"
-               
+
               />
             </el-form-item>
           </el-col>
@@ -1086,7 +1086,7 @@
               size="mini"
               :disabled="btnDisable.saveBtn"
               @click="handleChange($event,'body')"
-            >修改</el-button>            
+            >修改</el-button>
             <el-button
               type="danger"
               icon="el-icon-delete"
@@ -1745,7 +1745,7 @@
                 </el-form-item>
               </el-col>
 
-              
+
             </el-row>
 
             <el-row type="flex" style="margin-top : -18px">
@@ -1788,7 +1788,7 @@
               </el-col>
 
 
-           
+
             </el-row>
           </el-form>
           <div style="background-color:#FFA07A">
@@ -1897,7 +1897,7 @@ export default {
       fileList:[],
       // 清单类型
       invtTypeOptions:[],
-      
+
       //料件、成品标志
       mtpckEndprdMarkcdOptions:[],
       // 监管方式
@@ -2067,7 +2067,7 @@ export default {
       statusOptions: [],
       dateTimeVal: "",
       dateTimeValOne: "",
-      // 已选择数据      
+      // 已选择数据
       selectBodyForm: [],
       data: [],
     };
@@ -2090,7 +2090,7 @@ export default {
         refBtn: true,
       }
     }
-   
+
      /**清单类型 */
     this.getDicts("station_enterprise_type").then((response) => {
       this.invtTypeOptions = response.data;
@@ -2133,18 +2133,18 @@ export default {
       this.getDicts("station_enterprise_type").then((response) => {
       this.genDecFlagOptions = response.data;
     });
-    
+
     /** 报关类型*/
       this.getDicts("station_enterprise_type").then((response) => {
       this.dclcusTypecdOptions = response.data;
     });
-    
-    
+
+
   },
   methods: {
     async init() {
       // await this.depParaList()
-    },   
+    },
     // 表格样式设置
     rowClass () {
        return 'text-align: center;'
@@ -2158,7 +2158,7 @@ export default {
        }
       })
     },
-    
+
     // 新增
     handleAdd() {},
     // 暂存
@@ -2186,21 +2186,21 @@ export default {
     //表头新增
     headHandleAdd() {
       this.nemsInvtHeadType = {}
-      
+
     },
     //表头暂存
-    nemsInvtHeadTypeSave:function() {    
+    nemsInvtHeadTypeSave:function() {
       this.form.nemsInvtHeadType=this.nemsInvtHeadType;
       this.form.nemsInvtListType = this.nemsInvtListType;
       console.log(JSON.stringify(this.form));
             add(this.form).then(response => {
               if (response.code === 200) {
-                this.msgSuccess("操作成功");   
+                this.msgSuccess("操作成功");
               } else {
                 this.msgError(response.msg);
               }
-            });       
-            this.reset()    
+            });
+            this.reset()
     },
 
     //表体新增
@@ -2251,7 +2251,7 @@ export default {
      reset() {
       this.nemsInvtHeadType = {}
       this.bodyForm = {};
-      this.bodyForm = {};  
+      this.bodyForm = {};
      },
     // handleExceed(files, fileList) {
     //     this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
@@ -2270,9 +2270,9 @@ export default {
         return this.$confirm(`确定移除 ${ file.name }？`);
       },
 
-      beforeAvatarUpload(file) {                 
-                var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)                
-                
+      beforeAvatarUpload(file) {
+                var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
+
                 const isLt2M = file.size / 1024 / 1024 < 4
                 if(!isLt2M) {
                     this.$message({
@@ -2320,7 +2320,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .right {
   text-align: right;
 }
