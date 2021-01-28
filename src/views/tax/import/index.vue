@@ -286,7 +286,7 @@
               <el-select v-model="form.settlementCustomer" size="small" style="width: 100%" filterable clearable
                          placeholder="请选择结算客户" @change="setSettlementCustomer">
                 <el-option
-                  v-for="type in contractList"
+                  v-for="type in contractList1"
                   :key="type.id"
                   :label="type.customerName"
                   :value="type.customerName"
@@ -420,6 +420,10 @@ export default {
       ids: [],
       //客户合同
       contractList: [],
+      //客户合同
+      contractList1: [
+        {id: "奥云陶勒盖 [OT]",customerName: "奥云陶勒盖 [OT]"}
+      ],
       nameList: [
         {"key":"金航保税库 Jinhang Bonded Warehouse","value": "金航保税库 Jinhang Bonded Warehouse"},
         {"key": "奥云陶勒盖 Oyu Tolgoi Limited","value": "奥云陶勒盖 Oyu Tolgoi Limited"},
@@ -869,7 +873,7 @@ export default {
         this.noticeType = true
         this.transType = false
         this.templateDownTxt = '入库通知单模板下载'
-        this.form.settlementCustomer = '奥云陶勒盖 Oyu Tolgaoi Limited'
+        this.form.settlementCustomer = '奥云陶勒盖 [OT]'
         this.form.sendName = '奥云陶勒盖 Oyu Tolgoi Limited'
         this.form.receiveName = '金航保税库 Jinhang Bonded Warehouse'
         this.setStoreCustomer() //寄仓合同ID
@@ -880,7 +884,7 @@ export default {
         this.noticeType = true
         this.transType = true
         this.form.storeCustomer = undefined
-        this.form.settlementCustomer = undefined
+        this.form.settlementCustomer = '奥云陶勒盖 [OT]'
         this.templateDownTxt = '出库通知单模板下载'
         this.form.receiveName = undefined
         this.form.sendName = '金航保税库'
@@ -888,7 +892,7 @@ export default {
       } else if (this.form.templateType === '2') {
         this.templateDownTxt = '报关数据单模板下载'
         this.form.businessNo = undefined
-        this.form.settlementCustomer = undefined
+        this.form.settlementCustomer = '奥云陶勒盖 [OT]'
         this.form.storeCustomer = undefined
         this.form.storeContractId = undefined
         this.form.settlementContractId = undefined
@@ -945,7 +949,7 @@ export default {
         getDocByBusinessNo(this.queryParams.placeId, this.form.businessNo).then(response => {
           if (response.code === 200) {
             this.form.storeCustomer = response.data.checkConsumer
-            this.form.settlementCustomer = response.data.checkConsumer
+            this.form.settlementCustomer = '奥云陶勒盖 [OT]'
             this.setStoreCustomer()
             this.setSettlementCustomer()
           }
