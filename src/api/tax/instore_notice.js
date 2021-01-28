@@ -45,9 +45,14 @@ export function delInstore_notice(id) {
 
 
 export function getInstore_notice_with_details(placeId, noticeNo) {
+  let data = {
+    'placeId': placeId,
+    'noticeNos': noticeNo,
+  }
 	return request({
-		url: '/tax/instore_notice/' + placeId + '/' + noticeNo,
-		method: 'get'
+		url: '/tax/instore_notice/print/test' ,
+		method: 'post',
+    data: data
 	})
 }
 
