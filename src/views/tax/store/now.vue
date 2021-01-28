@@ -11,15 +11,61 @@
           />
         </el-select>
       </el-form-item>
-      <!--<el-form-item label="净重" prop="bagNetWeight">
+      <el-form-item label="寄仓客户" prop="checkConsumer">
         <el-input
-          v-model="queryParams.bagNetWeight"
-          placeholder="请输入净重"
+          v-model="queryParams.checkConsumer"
+          placeholder="请输入寄仓客户"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
+      </el-form-item>
+      <el-form-item label="批次号" prop="goodsBatchNo">
+        <el-input
+          v-model="queryParams.goodsBatchNo"
+          placeholder="请输入批次号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="业务编号" prop="businessNo">
+        <el-input
+          v-model="queryParams.businessNo"
+          placeholder="请输入业务编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="车牌号" prop="vehicleNo">
+        <el-input
+          v-model="queryParams.vehicleNo"
+          placeholder="请输入车牌号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="库位" prop="storeCode">
+        <el-input
+          v-model="queryParams.storeCode"
+          placeholder="请输入库位"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="时间" prop="createTime">
+        <el-date-picker
+          v-model="dateRange"
+          type="daterange"
+          align="right"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd">
+        </el-date-picker>
+      </el-form-item>
       <!--      <el-form-item label="袋号" prop="bagNumber">
               <el-input
                 v-model="queryParams.bagNumber"
@@ -93,10 +139,10 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>-->
-      <!--      <el-form-item>
+       <el-form-item>
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-            </el-form-item>-->
+            </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -110,6 +156,7 @@
            >导出</el-button>
          </el-col>-->
     </el-row>
+
     <el-table row-key="id" :tree-props="{children: 'children'}" :height="height"
               v-loading="loading" :data="goodsList" style="margin-right: 10px">
 <!--      <el-table-column label="ID" align="center" prop="id"/>-->
@@ -150,9 +197,17 @@ export default {
       // 选中数组
       depts: [],
       goodsList: [],
+      //children:undefined,
       queryParams: {
         placeId: undefined,
+        checkConsumer:undefined,
+        goodsBatchNo:undefined,
+        businessNo:undefined,
+        vehicleNo:undefined,
+        storeCode:undefined,
       },
+      //gen_time
+      dateRange:[],
     };
   },
   created() {
@@ -166,11 +221,11 @@ export default {
     /** 查询货物信息列表 */
     getList() {
       this.loading = true;
-      getStoreNow(this.queryParams.placeId).then(response => {
+      getStoreNow(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
         this.goodsList = response.data;
-        //console.log("-----多级数据----")
-        //console.log(this.goodsList)
-        //console.log("---------")
+        // console.log("-----多级数据----")
+        // console.log(this.goodsList)
+        // console.log("---------")
         this.loading = false;
       });
     },
