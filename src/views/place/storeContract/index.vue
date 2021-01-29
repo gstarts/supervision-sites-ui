@@ -352,7 +352,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="10" v-show="false">
+        <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="状态" prop="status">
               <el-select
@@ -366,11 +366,12 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12"></el-col>
+          <el-col :span="12">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
+            </el-form-item>
+          </el-col>
         </el-row>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>

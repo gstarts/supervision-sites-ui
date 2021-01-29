@@ -514,7 +514,11 @@ export default {
     this.initWebSocket();
   },
   destroyed() {
-    this.websock.close() //离开路由之后断开websocket连接
+    this.$once('hook:beforeDestroy',()=>{
+      //离开路由之后断开websocket连接
+      clearInterval(this.websock.close());
+    })
+
   },
   methods: {
     initWebSocket(){ //初始化weosocket

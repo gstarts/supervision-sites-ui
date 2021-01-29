@@ -44,8 +44,13 @@ export function delOutstore_notice(id) {
 }
 
 export function getOutstore_notice_with_details(placeId, noticeNo) {
+  let data = {
+    'placeId': placeId,
+    'noticeNos': noticeNo,
+  }
 	return request({
-		url: '/tax/outstore_notice/' + placeId + '/' + noticeNo,
-		method: 'get'
+		url: '/tax/outstore_notice/print/test',
+    method: 'post',
+    data: data
 	})
 }

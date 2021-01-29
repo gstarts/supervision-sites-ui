@@ -45,9 +45,14 @@ export function delInstore_notice(id) {
 
 
 export function getInstore_notice_with_details(placeId, noticeNo) {
+  let data = {
+    'placeId': placeId,
+    'noticeNos': noticeNo,
+  }
 	return request({
-		url: '/tax/instore_notice/' + placeId + '/' + noticeNo,
-		method: 'get'
+		url: '/tax/instore_notice/print/test' ,
+		method: 'post',
+    data: data
 	})
 }
 
@@ -102,5 +107,14 @@ export function updateDocNotice(placeId, noticeNo, type, state) {
 		url: '/tax/notice/update/' + placeId + '/' + noticeNo + '/' + type + '/' + state,
 		method: 'post'
 	})
+}
+
+// 查询入库通知单列表
+export function selectNumberOfBatch(query) {
+  return request({
+    url: '/tax/instore_notice/selectNumberOfBatch',
+    method: 'get',
+    params: query
+  })
 }
 

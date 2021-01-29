@@ -17,6 +17,14 @@ export function getInstore_doc(id) {
   })
 }
 
+// 查询是否可修改库位
+export function getStore(inDocNo) {
+  return request({
+    url: '/tax/instore_doc/getStore/' + inDocNo,
+    method: 'get'
+  })
+}
+
 // 新增入库单
 export function addInstore_doc(data) {
   return request({
