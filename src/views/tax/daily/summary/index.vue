@@ -2,29 +2,29 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
 
-      <el-form-item label="批次" prop="lotNo">
-        <el-input
-          v-model="queryParams.lotNo"
-          placeholder="请输入批次"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="批次" prop="lotNo">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.lotNo"-->
+<!--          placeholder="请输入批次"-->
+<!--          clearable-->
+<!--          size="small"-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
 
-      <el-form-item label="创建时间" prop="createdTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.createdTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择创建时间">
-        </el-date-picker>
-      </el-form-item>
+<!--      <el-form-item label="创建时间" prop="createdTime">-->
+<!--        <el-date-picker clearable size="small" style="width: 200px"-->
+<!--          v-model="queryParams.createdTime"-->
+<!--          type="date"-->
+<!--          value-format="yyyy-MM-dd"-->
+<!--          placeholder="选择创建时间">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
 
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+<!--      </el-form-item>-->
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -81,12 +81,12 @@
       <el-table-column label="预计达货日" align="center" prop="etaGqmd" />
       <el-table-column label="实际达到日" align="center" prop="ataGqmd" />
       <!-- 多级表头  -->
-      <el-table-column label="OT 单据重量/WT PER OT DOC(kg)">
-      <el-table-column label="毛重" align="center" prop="otGw" />
+      <el-table-column  align="center" :label="'OT 单据重量/ \n WT PER OT DOC(kg)'">
+      <el-table-column label="毛重" align="center" prop="otGw"  />
       <el-table-column label="袋净重" align="center" prop="otBagNetWt" />
       <el-table-column label="袋毛重" align="center" prop="otBagGrossWt" />
       </el-table-column>
-      <el-table-column label="金航入库磅单重量/WT PER JH WEIGHING RECORD">
+      <el-table-column align="center" :label="'金航入库磅单重量/ \n WT PER JH WEIGHING RECORD'">
       <el-table-column label="毛重" align="center" prop="gw" />
       <el-table-column label="袋净重" align="center" prop="bagNetWt" />
       <el-table-column label="袋毛重" align="center" prop="bagGrossWt" />
@@ -99,9 +99,9 @@
       <el-table-column label="离开金航时间" align="center" prop="timeOfFleetDepartingJh" />
       <el-table-column label="破损袋数" align="center" prop="quantityOfDamagedBag" />
       <el-table-column label="实际出库时间" align="center" prop="atdJhBt" />
-      <el-table-column label="金航出库磅单重量/ WT PER JH OUTBOUND WEIGHING RECORD（kg）">
-      <el-table-column label="袋净重" align="center" prop="outBagNetWt"  min-width="150px"/>
-      <el-table-column label="袋毛重" align="center" prop="outBagGrossWt" min-width="150px" />
+      <el-table-column align="center" :label="'金航出库磅单重量/ \n  WT PER JH OUTBOUND WEIGHING RECORD（kg）'">
+      <el-table-column label="袋净重" align="center" prop="outBagNetWt"  min-width="180px"/>
+      <el-table-column label="袋毛重" align="center" prop="outBagGrossWt" min-width="180px" />
       </el-table-column>
       <el-table-column label="商检样品返还日期" align="center" prop="timeOfCiqSampleReturn" />
       <el-table-column label="备注" align="center" prop="remarks" />
@@ -498,3 +498,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+.app-container>>>.el-table .cell{
+  white-space:pre-line;
+}
+</style>
