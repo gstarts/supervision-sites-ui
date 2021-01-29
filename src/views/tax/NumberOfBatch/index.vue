@@ -29,7 +29,7 @@
 
         <el-form-item label="货物流向" prop="templateId">
           <el-select
-            v-model="queryParams.templateId" placeholder="请选择进出场类型">
+            v-model="queryParams.templateId" placeholder="请选择进出场类型" @change="directionDicChange">
             <el-option
               v-for="type in directionDic"
               :key="type.key"
@@ -39,8 +39,8 @@
           </el-select>
         </el-form-item>
 
-        <el-radio v-model="this.queryParams.radio" label= "1">未入场车辆数量大于0</el-radio>
-        <el-radio v-model="this.queryParams.radio" label= "2">未出场车辆数量大于0</el-radio>
+        <el-radio v-model="radio" label= "1" @change="radioChange">未入场车辆数量大于0</el-radio>
+        <el-radio v-model="radio" label= "2" @change="radioChange">未出场车辆数量大于0</el-radio>
 
       </el-row>
 
@@ -58,53 +58,60 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          <el-button
+            type="warning"
+            icon="el-icon-download"
+            size="mini"
+            @click="handleExport"
+          >导出
+          </el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['tax:instore_notice:add']"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['tax:instore_notice:edit']"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['tax:instore_notice:remove']"
-        >删除
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['tax:instore_notice:export']"
-        >导出
-        </el-button>
-      </el-col>
-    </el-row>
+<!--    <el-row :gutter="10" class="mb8">-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          icon="el-icon-plus"-->
+<!--          size="mini"-->
+<!--          @click="handleAdd"-->
+<!--          v-hasPermi="['tax:instore_notice:add']"-->
+<!--        >新增-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['tax:instore_notice:edit']"-->
+<!--        >修改-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="danger"-->
+<!--          icon="el-icon-delete"-->
+<!--          size="mini"-->
+<!--          :disabled="multiple"-->
+<!--          @click="handleDelete"-->
+<!--          v-hasPermi="['tax:instore_notice:remove']"-->
+<!--        >删除-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['tax:instore_notice:export']"-->
+<!--        >导出-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--    </el-row>-->
 
     <el-table v-loading="loading" :data="instore_noticeList" @selection-change="handleSelectionChange">
       <!--<af-table-column type="selection" align="center" />-->
@@ -143,8 +150,29 @@
 
       <af-table-column label="寄仓合同编号" align="center" prop="contractNo"/>
       <af-table-column label="销售合同编号" align="center" prop="saleContractNo"/>
-      <af-table-column label="入场详情" align="center" prop="driverName"/>
-      <af-table-column label="出厂详情" align="center" prop="vehicleNo" width="90px"/>
+      <af-table-column label="入场详情" align="center" >
+      <template slot-scope="scope">
+        <el-button
+          size="mini"
+          type="text"
+          icon="el-icon-edit"
+          @click="admittanceDetail(scope.row)"
+        >入场详情
+        </el-button>
+      </template>
+      </af-table-column>
+
+      <af-table-column label="出厂详情" align="center" prop="vehicleNo" width="90px">
+      <template slot-scope="scope">
+        <el-button
+          size="mini"
+          type="text"
+          icon="el-icon-edit"
+          @click="chuDetail(scope.row)"
+        >出场详情
+        </el-button>
+      </template>
+      </af-table-column>
 
 
     </el-table>
@@ -226,14 +254,16 @@
           unloadGroup: undefined,
           vehicleNo: undefined,
           workGroup: undefined,
+          templateId: '0',
           radio: '2',
           orderByColumn: 'id',
           isAsc: 'desc'
         },
 
         directionDic: [
-          {'key': '1', 'value': '入场'},
-          {'key': '2', 'value': '出场'},
+          {'key': '0' , 'value':'全部'},
+          {'key': '1', 'value': '入库'},
+          {'key': '2', 'value': '出库'},
         ],
         // 表单参数
         form: {},
@@ -249,6 +279,8 @@
       };
     },
     created() {
+
+      // this.queryParams.templateId =this.directionDic[0].key
       this.depts = getUserDepts('1')
       if (this.depts.length > 0) {
         this.queryParams.placeId = this.depts[0].deptId
@@ -315,6 +347,11 @@
         this.queryParams.pageNum = 1;
         this.getList();
       },
+
+      radioChange(){
+       this.queryParams.radio = this.radio;
+       this.getList()
+      },
       /** 重置按钮操作 */
       resetQuery() {
         this.resetForm("queryForm");
@@ -342,6 +379,12 @@
           this.title = "修改入库通知单";
         });
       },
+      //
+      // directionDicChange(){
+      //   this.queryParams.templateId =this.directionDic[0].key;
+      //   this.getList()
+      //
+      // },
       /** 提交按钮 */
       submitForm: function () {
         this.$refs["form"].validate(valid => {
@@ -403,7 +446,7 @@
       },
       /** 导出按钮操作 */
       handleExport() {
-        this.download('tax/instore_notice/export', {
+        this.download('tax/instore_notice/export/test', {
           ...this.queryParams
         }, `tax_instore_notice.xlsx`)
       },
@@ -415,6 +458,16 @@
             this.getList()
           }
         })
+      },
+
+      //路由跳转
+
+      admittanceDetail(){
+
+      },
+
+      chuDetail(){
+
       }
       /*genDoc(row) {
         genStoreDoc(row.placeId, 1, row.inNoticeNo, 'A10103').then(response => {
