@@ -2272,7 +2272,7 @@ export default {
       this.loading = true;
       //将表头id 保存
       this.queryParams.id = headId;
-      // 获取表详细信息      
+      // 获取表详细信息
       listAll(this.queryParams).then((response) => {
         this.dechead = response.rows[0];
         this.decfreetxt = this.dechead.goodsdeclareDecfreetxt;
@@ -2514,7 +2514,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .right {
   text-align: right;
 }

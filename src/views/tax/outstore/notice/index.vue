@@ -273,6 +273,14 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          size="mini"
+          @click="print"
+          type="info"
+          :disabled="multiple"
+          icon="el-icon-printer">
+          打印
+        </el-button>
       </el-form-item>
     </el-form>
 
@@ -321,8 +329,8 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="outstore_noticeList">
-      <!-- <af-table-column type="selection" width="55" align="center" />-->
+    <el-table v-loading="loading" :data="outstore_noticeList" @selection-change="handleSelectionChange">
+       <af-table-column type="selection" width="55" align="center" />
       <!--<af-table-column label="ID" align="center" prop="id" />-->
       <af-table-column label="出库通知单号" align="center" prop="outNoticeNo"/>
       <!--<af-table-column label="备注" align="center" prop="remark" />-->
@@ -625,6 +633,8 @@
 				total: 0,
 				// 出库通知单表格数据
 				outstore_noticeList: [],
+
+        inNoticeNoList:[],
 				// 弹出层标题
 				title: "",
 				// 是否显示弹出层
@@ -759,6 +769,7 @@
 			},
 			// 多选框选中数据
 			handleSelectionChange(selection) {
+			  this.inNoticeNoList = selection.map(item => item.outNoticeNo)
 				this.ids = selection.map(item => item.id)
 				this.single = selection.length != 1
 				this.multiple = !selection.length
@@ -824,16 +835,32 @@
 					...this.queryParams
 				}, `tax_outstore_notice.xlsx`)
 			},
+      //打印
 			handleNoticePrint(row) {
+        this.inNoticeNoList.push(row .outNoticeNo)
 				console.log(row.outNoticeNo)
 				this.$router.push({
 					path: '/tax/outstore/notice/print',
 					query: {
-						'noticeNo': row.outNoticeNo,
+						'noticeNo': this.inNoticeNoList,
 						'placeId': row.placeId
 					}
 				})
 			},
+
+
+      // 批量打印
+      print(){
+        this.$router.push({
+          path: '/tax/outstore/notice/print',
+          query: {
+            'noticeNo': this.inNoticeNoList,
+            'placeId': this.queryParams.placeId
+          }
+        })
+        console.log(this.inNoticeNoList.length)
+
+      },
 			handleNoticeDetail(row) {
 				console.log(row.outNoticeNo)
 				this.$router.push({

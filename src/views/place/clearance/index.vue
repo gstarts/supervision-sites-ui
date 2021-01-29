@@ -310,7 +310,7 @@ export default {
       //提煤单号
       BigList: [],
       //查询列表List
-      clearanceList: []
+      clearanceList: [],
     }
   },
   created() {
@@ -320,6 +320,7 @@ export default {
       this.queryParams.placeId = this.depts[0].deptId
       this.form.placeId = this.queryParams.placeId
       this.getList()
+      this.getConsumerInfo(this.queryParams.placeId)
     }
   },
   methods: {
@@ -456,7 +457,7 @@ export default {
       this.upload.open = false
       this.upload.isUploading = false
       this.$refs.upload.clearFiles()
-      this.$alert(response.msg, '导入结果', {dangerouslyUseHTMLString: true})
+      this.$alert(response.msg, '导入结果', {dangerouslyUseHTMLString: true, customClass: 'clearanceAlertSize'})
       this.getList()
     },
     // 提交上传文件
@@ -500,8 +501,17 @@ export default {
   }
 }
 </script>
-<style lang="scss" scope>
+<style lang="scss">
 .el-select {
   width: 100%;
 }
+
+.clearanceAlertSize {
+  overflow-y: scroll;
+  max-height: 400px;
+}
+/*.el-message-box__container /deep/.el-message-box__message{
+  max-height: 400px;
+  overflow-y: scroll;
+}*/
 </style>

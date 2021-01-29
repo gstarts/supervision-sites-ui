@@ -146,7 +146,7 @@
 					batchNo: undefined,
 					goodsName: undefined,
 					hasProcess: undefined,
-					instoreNoticeNo: [],
+					instoreNoticeNo: undefined,
 					packingUnit: undefined,
 					placeId: undefined,
 					bookStoreCode: undefined,
