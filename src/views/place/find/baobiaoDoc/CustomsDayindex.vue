@@ -1799,7 +1799,7 @@ export default {
       return this.selectDictLabel(this.outStoreDocStateOption, row.storeState);
     },
     importExcel() {
-      this.$message("导出无效,请先查询数据是否为空");
+      //this.$message("导出无效,请先查询数据是否为空");
     },
   }
 };

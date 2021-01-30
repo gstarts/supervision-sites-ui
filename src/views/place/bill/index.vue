@@ -211,7 +211,7 @@
                      type="text"
                      icon="el-icon-edit"
                      @click="openDetail(scope.row)"
-                     v-hasPermi="['place:bill:edit']"
+                     v-hasPermi="['place:billDetail:list']"
           >明细
           </el-button>
           <el-button v-show="scope.row.approveState === '0'"
@@ -219,7 +219,7 @@
                      type="text"
                      icon="el-icon-edit"
                      @click="handleUpdate(scope.row)"
-                     v-hasPermi="['place:bill:edit']"
+                     v-hasPermi="['place:bill:apply']"
           >提交审批
           </el-button>
           <el-button v-show="scope.row.upState === '0'"
@@ -227,7 +227,7 @@
                      type="text"
                      icon="el-icon-edit"
                      @click="handleUpdate(scope.row)"
-                     v-hasPermi="['place:bill:edit']"
+                     v-hasPermi="['place:bill:up']"
           >上报
           </el-button>
           <el-button v-show="scope.row.approveState === '0' || scope.row.upState === '0'"
