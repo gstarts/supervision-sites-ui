@@ -1510,10 +1510,10 @@ export default {
       this.titleList=[];
       customsDayList(this.queryParams,this.dateRange).then(response => {
         this.outstoreDocList = response.data;
-        this.printTitle = '场所日报'
+        this.printTitle = '场站日报'
         this.titleList.push(this.printTitle)
         this.titleList.push(this.queryParams.beginTime);
-        this.total = response.total;
+        //this.total = response.total;
         this.loading = false;
       });
     },
