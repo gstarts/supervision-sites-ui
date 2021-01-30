@@ -192,14 +192,14 @@
             v-hasPermi="['place:storeContract:edit']"
           >修改
           </el-button>
-<!--          <el-button
+          <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleRules(scope.row)"
             v-hasPermi="['place:costRules:edit']"
           >计费规则
-          </el-button>-->
+          </el-button>
           <el-button
             size="mini"
             type="text"
@@ -431,7 +431,7 @@
         <el-table-column label="计时单位" align="center" prop="timeUnit" :formatter="timeUnitFormat"/>
         <el-table-column label="计时起始" align="center" prop="timeBegin"/>
         <el-table-column label="计时结束" align="center" prop="timeEnd"/>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" style="width:140px" fixed="right">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -467,7 +467,7 @@
             <el-col :span="6">
               <el-form-item label="计费项目" prop="billOption">
                 <el-select v-model="ruleForm.billOption" placeholder="请选择计费项目" style="width: 100%" size="small"
-                           filterable>
+                           filterable @change="billOptionChange">
                   <el-option v-for="item in billOptions" :key="item.dictValue" :value="item.dictValue"
                              :label="item.dictLabel"/>
                 </el-select>
@@ -770,11 +770,11 @@ export default {
         billUnit: [
           {'required': true, message: '计费单位不能为空', trigger: 'change'},
         ],
-        billPrice: [
+        billPrice: [ //费率，应该为正浮点数，保留两位小数
           {
             'required': true,
             pattern: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
-            message: '费率不能为空',
+            message: '费率须为整数或两位小数',
             trigger: 'change'
           },
         ],
@@ -782,8 +782,8 @@ export default {
           {
             'required': true,
             pattern: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
-            message: '议价费率不能为空',
-            trigger: 'blur'
+            message: '费率须为整数或两位小数',
+            trigger: 'change'
           },
         ],
         billName: [
@@ -793,19 +793,19 @@ export default {
           {'required': true, message: '计时单位不能为空', trigger: 'change'},
         ],
         timeBegin: [
-          {required: true, pattern: /^[1-9]\d*$/, message: '请填写正确的数值', trigger: 'blur'}
+          {required: true, pattern: /^[1-9]\d*|0$/, message: '请填写正确的数值', trigger: 'blur'}
         ],
         timeEnd: [
-          {required: true, pattern: /^[1-9]\d*$/, message: '请填写正确的数值', trigger: 'blur'}
+          {required: true, pattern: /^[1-9]\d*|-1$/, message: '请填写正确的整数值，-1表示无穷大', trigger: 'blur'}
         ],
         quantityUnit: [
           {'required': true, message: '计量单位不能为空', trigger: 'change'},
         ],
         quantityBegin: [
-          {required: true, pattern: /^[1-9]\d*$/, message: '请填写正确的数值', trigger: 'blur'}
+          {required: true, pattern: /^[1-9]\d*|0$/, message: '请填写正确的数值', trigger: 'blur'}
         ],
         quantityEnd: [
-          {required: true, pattern: /^[1-9]\d*$/, message: '请填写正确的数值', trigger: 'blur'}
+          {required: true, pattern: /^[1-9]\d*|-1$/, message: '请填写正确的整数值，-1表示无穷大', trigger: 'blur'}
         ],
       },
       rules1: {},
@@ -1304,23 +1304,29 @@ export default {
           break;
         case '5': //议价费
           this.baseRules.billUnit = this.rulesFormRules.billUnit
-          this.baseRules.timeBegin = this.rulesFormRules.timeBegin
+          this.baseRules.timeEnd = this.rulesFormRules.timeEnd
           this.baseRules.quantityEnd = this.rulesFormRules.quantityEnd
           this.baseRules.conferPrice = this.rulesFormRules.conferPrice
           this.baseRules.quantityUnit = undefined
           this.baseRules.quantityBegin = undefined
           this.baseRules.timeUnit = undefined
-          this.baseRules.timeEnd = undefined
           this.baseRules.billName = undefined
+          this.baseRules.timeBegin = undefined
 
           this.ruleForm.quantityUnit = undefined
           this.ruleForm.quantityBegin = undefined
           this.ruleForm.timeUnit = undefined
-          this.ruleForm.timeEnd = undefined
           this.ruleForm.billName = undefined
+          this.ruleForm.timeBegin = undefined
           break;
       }
     },
+    billOptionChange(event) {//计费项目变化时，给其他值默认值
+      this.ruleForm.billCycle = '1'
+      this.ruleForm.billType = '2'
+      this.ruleForm.billUnit = '1'
+      this.billTypeChange(this.ruleForm.billType)
+    }
   }
 }
 </script>
