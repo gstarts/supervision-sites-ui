@@ -240,17 +240,17 @@
         >新增
         </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['tax:management:edit']"
-        >修改
-        </el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['tax:management:edit']"-->
+<!--        >修改-->
+<!--        </el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -274,10 +274,10 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="managementList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="managementList" @selection-change="handleSelectionChange" @row-dblclick="selectDetails">
       <el-table-column type="selection" width="55" align="center"/>
       <!--      <el-table-column label="主键" align="center" prop="id"/>-->
-      <el-table-column label="单据号" align="center" prop="documentNo"/>
+        <el-table-column label="单据号" align="center" prop="documentNo" />
       <el-table-column label="业务编号" align="center" prop="businessDepartment"/>
       <el-table-column label="业务时间" align="center" prop="businessDate" width="180">
         <template slot-scope="scope">
@@ -303,12 +303,12 @@
       </el-table-column>
       <el-table-column label="入境时间" align="center" prop="entryTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.entryTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+          <span>{{ parseTime(scope.row.entryTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="出境时间" align="center" prop="departureTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.departureTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+          <span>{{ parseTime(scope.row.departureTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="住宿天数" align="center" prop="dayNum"/>
@@ -326,6 +326,13 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['tax:management:edit']"
           >修改
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="selectDetails(scope.row)"
+          >详情
           </el-button>
           <el-button
             size="mini"
@@ -390,19 +397,19 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="lot_no" prop="lotNo">
-              <el-input v-model="form.lotNo" placeholder="请输入lot_no"/>
+              <el-input v-model="form.lotNo" placeholder="请输入lot_no" disabled/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="通知单车数" prop="carNumber">
-              <el-input v-model="form.carNumber" placeholder="请输入通知单车数"/>
+              <el-input v-model="form.carNumber" placeholder="请输入通知单车数" disabled/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="车队名称" prop="fleetName">
-              <el-input v-model="form.fleetName" placeholder="请输入车队名称"/>
+              <el-input v-model="form.fleetName" placeholder="请输入车队名称" disabled/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -412,8 +419,8 @@
             <el-form-item label="入境时间" prop="entryTime">
               <el-date-picker clearable size="small" style="width: 200px"
                               v-model="form.entryTime"
-                              type="datetime"
-                              value-format="yyyy-MM-dd HH:mm:ss"
+                              type="date"
+                              value-format="yyyy-MM-dd"
                               placeholder="选择入境时间">
               </el-date-picker>
             </el-form-item>
@@ -422,9 +429,9 @@
             <el-form-item label="出境时间" prop="departureTime">
               <el-date-picker clearable size="small" style="width: 200px"
                               v-model="form.departureTime"
-                              type="datetime"
+                              type="date"
                               @change="dateChange"
-                              value-format="yyyy-MM-dd HH:mm:ss"
+                              value-format="yyyy-MM-dd"
                               placeholder="选择出境时间">
               </el-date-picker>
             </el-form-item>
@@ -531,10 +538,187 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+        <!--详情页-->
+    <el-dialog :title="title" :visible.sync="openDetails" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <!--        <el-form-item label="单据号" prop="documentNo">-->
+        <!--          <el-input v-model="form.documentNo" placeholder="请输入单据号"/>-->
+        <!--        </el-form-item>-->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="业务编号" prop="businessDepartment">
+              <el-input v-model="form.businessDepartment" placeholder="请输入业务编号"
+                        @keyup.enter.native="getByBusinessNo" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="录入时间" prop="inputTime">
+              <el-date-picker clearable size="small" style="width: 200px"
+                              v-model="form.inputTime"
+                              type="datetime"
+                              value-format="yyyy-MM-dd HH:mm:ss"
+                              placeholder="选择录入时间" disabled>
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="shipment_no" prop="shipmentNo">
+              <el-input v-model="form.shipmentNo" placeholder="请输入shipment no" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="lot_no" prop="lotNo">
+              <el-input v-model="form.lotNo" placeholder="请输入lot_no" disabled/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="通知单车数" prop="carNumber">
+              <el-input v-model="form.carNumber" placeholder="请输入通知单车数" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="车队名称" prop="fleetName">
+              <el-input v-model="form.fleetName" placeholder="请输入车队名称" disabled/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="入境时间" prop="entryTime">
+              <el-date-picker clearable size="small" style="width: 200px"
+                              v-model="form.entryTime"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              placeholder="选择入境时间" disabled>
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="出境时间" prop="departureTime">
+              <el-date-picker clearable size="small" style="width: 200px"
+                              v-model="form.departureTime"
+                              type="date"
+                              @change="dateChange"
+                              value-format="yyyy-MM-dd"
+                              placeholder="选择出境时间" disabled>
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="审核人" prop="reviewer">
+              <el-input v-model="form.reviewer" placeholder="请输入审核人" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="录入人" prop="entryPerson">
+              <el-input v-model="form.entryPerson" placeholder="请输入录入人" disabled/>
+            </el-form-item>
+          </el-col>
+
+
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="早餐次数" prop="breakfastCount">
+              <el-input v-model="form.breakfastCount" placeholder="请输入早餐次数" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="午餐次数" prop="lunchCount">
+              <el-input v-model="form.lunchCount" placeholder="请输入午餐次数" disabled/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="晚餐次数" prop="dinnerCount">
+              <el-input v-model="form.dinnerCount" placeholder="请输入晚餐次数" disabled/>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="住宿天数" prop="dayNum">
+              <el-input v-model="form.dayNum" placeholder="请输入住宿天数" disabled/>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <!--        <el-form-item label="录入人" prop="entryPerson">-->
+        <!--          <el-input v-model="form.entryPerson" placeholder="请输入录入人"/>-->
+        <!--        </el-form-item>-->
+        <!--                <el-form-item label="录入时间" prop="inputTime">-->
+        <!--                  <el-date-picker clearable size="small" style="width: 200px"-->
+        <!--                                  v-model="form.inputTime"-->
+        <!--                                  type="date"-->
+        <!--                                  value-format="yyyy-MM-dd"-->
+        <!--                                  placeholder="选择录入时间">-->
+        <!--                  </el-date-picker>-->
+        <!--                </el-form-item>-->
+
+        <!--        <el-form-item label="场所Id" prop="remarks">-->
+        <!--          <el-input v-model="form.placeId" placeholder="请输入备注"/>-->
+        <!--        </el-form-item>-->
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="备注" prop="remarks">
+              <el-input v-model="form.remarks" placeholder="请输入备注" disabled/>
+            </el-form-item>
+          </el-col>
+          <!--        <el-form-item label="最终修改时间" prop="updateTime">-->
+          <!--          <el-date-picker clearable size="small" style="width: 200px"-->
+          <!--                          v-model="form.updateTime"-->
+          <!--                          type="date"-->
+          <!--                          value-format="yyyy-MM-dd"-->
+          <!--                          placeholder="选择最终修改时间">-->
+          <!--          </el-date-picker>-->
+          <!--        </el-form-item>-->
+
+          <!--        <el-form-item label="审核日期" prop="reviewDate">-->
+          <!--          <el-date-picker clearable size="small" style="width: 200px"-->
+          <!--                          v-model="form.reviewDate"-->
+          <!--                          type="date"-->
+          <!--                          value-format="yyyy-MM-dd"-->
+          <!--                          placeholder="选择审核日期">-->
+          <!--          </el-date-picker>-->
+          <!--        </el-form-item>-->
+
+
+          <el-col :span="12">
+            <el-form-item label="状态" prop="status">
+              <el-select v-model="form.status" placeholder="请选择执行" clearable size="small" disabled>
+                <el-option
+                  v-for="item in statusList"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="deleteDetails" style="float: left" type="danger" icon="el-icon-delete">删除</el-button>
+        <el-button  @click="printDetails" v-print="'#dayin'" type="warning" icon="el-icon-printer">打印</el-button>
+        <el-button @click="updateDetails" type="success" icon="el-icon-edit">修 改</el-button>
+        <el-button @click="cancelDetails" type="info" icon="el-icon-refresh-right">取 消</el-button>
+      </div>
+    </el-dialog>
+
     <div>
       <div id="dayin" v-show="printShow">
         <div align="center">
-          <span style="font-size: 30px">{{this.printParams.inputTime}}金航保税库客户费用统计表</span>
+          <span style="font-size: 30px">{{parseTime(this.printParams.inputTime,'{y}年{m}月')}}金航保税库客户费用统计表</span>
         </div>
         <table border="1px" cellspacing="0" class="tableClass">
           <tr>
@@ -565,11 +749,11 @@
           </tr>
           <tr>
             <td>住宿 & 就餐 Accommodation & meal</td>
-            <td>{{this.printParams.lotNo}}</td>
-            <td>司机({{this.printParams.carNumber}})人</td>
+            <td>{{this.printParams.lotNo}}<br>({{this.printParams.businessDepartment}})</td>
+            <td>司机({{this.printParams.carNumber}})人<br>{{this.printParams.carNumber}}Drivers</td>
             <td>{{this.printParams.fileName}}</td>
-            <td>{{this.printParams.entryTime}}</td>
-            <td>{{this.printParams.departureTime}}</td>
+            <td>{{parseTime(this.printParams.entryTime,'{y}-{m}-{d}')}}</td>
+            <td>{{parseTime(this.printParams.departureTime,'{y}-{m}-{d}')}}</td>
             <td>{{this.printParams.dayNum}}</td>
             <td>{{this.printParams.breakfastCount}}</td>
             <td>{{this.printParams.lunchCount}}</td>
@@ -616,6 +800,8 @@
     name: "Management",
     data() {
       return {
+        //详情弹窗ID(为了详情页跳转修改页取数据)
+        DetailsID:undefined,
         // 遮罩层
         loading: true,
         // 选中数组
@@ -637,6 +823,8 @@
         depts: "",
         // 是否显示弹出层
         open: false,
+        //详情页弹出框
+        openDetails:false,
         // 查询参数
         queryParams: {
           pageNum: 1,
@@ -664,7 +852,7 @@
           status: undefined
         },
 
-        printParams: {
+         printParams: {
           inputTime: undefined,
           lotNo: undefined,
           carNumber: undefined,
@@ -729,6 +917,10 @@
         this.open = false;
         this.reset();
       },
+      cancelDetails() {
+        this.openDetails = false;
+        this.reset();
+      },
       // 表单重置
       reset() {
         this.form = {
@@ -790,6 +982,39 @@
           this.open = true;
           this.title = "修改司机食宿管理";
         });
+
+      },
+      /** 详情弹出框*/
+      selectDetails(row) {
+        this.printParams={};
+        this.reset();
+        const id = row.id || this.ids
+        this.DetailsID=id;
+        getManagement(id).then(response => {
+          this.form = response.data;
+          this.openDetails = true;
+          this.title = "详情司机食宿管理";
+          this.printParams=this.form;
+        });
+      },
+      /**
+       详情页跳转修改页*/
+      updateDetails(){
+        this.openDetails=false
+        getManagement(this.DetailsID).then(response => {
+          this.form = response.data;
+          this.open = true;
+          this.title = "修改司机食宿管理";
+        });
+      },
+      deleteDetails(){
+        delManagement(this.DetailsID).then(response =>{
+          if(response.code === 200){
+            this.msgSuccess("删除成功");
+            this.openDetails=false
+            this.getList();
+          }
+        })
       },
       /** 提交按钮 */
       submitForm: function () {
@@ -852,16 +1077,21 @@
       },
       // 打印
       print(row) {
-
+        this.printParams={};
         this.printShow = true;
         this.printParams = row;
         this.timer1 = setTimeout(() => {
           //设置延迟执行
           this.printShow = false;
         }, 3000);
-
       },
-
+      printDetails(){
+        this.printShow = true;
+        this.timer1 = setTimeout(() => {
+          //设置延迟执行
+          this.printShow = false;
+        }, 3000);
+      },
       /** 导出按钮操作 */
       handleExport() {
         this.download('tax/management/export', {

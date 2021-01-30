@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <!-- 所属场所 -->
-      <el-form-item label="所属场所" prop="placeId">
+      <!-- <el-form-item label="所属场所" prop="placeId">
         <el-select v-model="queryParams.placeId" placeholder="请选择所属场所" @change="((val)=>{change(val, 'placeId')})">
           <el-option
             v-for="dept in depts"
@@ -10,11 +10,19 @@
             :label="dept.deptName"
             :value="dept.deptId"/>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="提煤单号" prop="coalBillNo">
         <el-input
           v-model="queryParams.coalBillNo"
           placeholder="请输入提煤单号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="承运单位" prop="transportUnit">
+        <el-input
+          v-model="queryParams.transportUnit"
+          placeholder="请输入承运单位"
           clearable
           @keyup.enter.native="handleQuery"
         />

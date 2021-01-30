@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="100px"
+    >
       <!--      <el-form-item label="场所编号" prop="placeId">-->
       <!--        <el-input-->
       <!--          v-model="queryParams.placeId"-->
@@ -211,7 +216,8 @@
           v-model="queryParams.beginTime"
           type="date"
           placeholder="选择日期"
-          value-format="yyyy-MM-dd">
+          value-format="yyyy-MM-dd"
+        >
         </el-date-picker>
       </el-form-item>
       <!--      <el-form-item label="寄仓客户ID" prop="customerId">-->
@@ -659,8 +665,6 @@
       <!--        />-->
       <!--      </el-form-item>-->
 
-
-
       <!--      <el-form-item label="运输单位" prop="transportUnit">-->
       <!--        <el-input-->
       <!--          v-model="queryParams.transportUnit"-->
@@ -742,8 +746,15 @@
       <!--        </el-date-picker>-->
       <!--      </el-form-item>-->
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery" v-hasPermi="['place:inStoreDoc:customsDay']">搜索</el-button>
-<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          v-hasPermi="['place:inStoreDoc:customsDay']"
+          >搜索</el-button
+        >
+        <!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
       </el-form-item>
       <el-form-item>
         <download-excel
@@ -753,9 +764,12 @@
           :title="titleList"
           :footer="excelFooter"
           :default-value="defaultValue"
-          name="场所日报.xls">
+          name="场所日报.xls"
+        >
           <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
-          <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
+          <el-button type="primary" size="mini" @click="importExcel"
+            >导出EXCEL</el-button
+          >
         </download-excel>
       </el-form-item>
     </el-form>
@@ -801,44 +815,126 @@
     <!--      </el-col>-->
     <!--    </el-row>-->
 
-    <el-table v-loading="loading" :data="outstoreDocList" @selection-change="handleSelectionChange" max-height="645" show-summary>
+    <el-table
+      v-loading="loading"
+      :data="outstoreDocList"
+      @selection-change="handleSelectionChange"
+      max-height="800"
+      show-summary
+    >
+      <el-table-column label="公司名称" align="center" prop="寄仓客户" />
+      <el-table-column label="客户全称" align="center" prop="寄仓客户" />
+      <el-table-column label="煤种" align="center" prop="煤种" />
 
-      <el-table-column label="寄仓客户" align="center" prop="column1" />
-      <el-table-column label="煤种" align="center" prop="column2" />
-      <el-table-column label="当日入库" align="center">
-        <el-table-column label="车数" align="center" prop="column3" />
-        <el-table-column label="调入"  align="center" prop="column4" />
+      <el-table-column label="当日入库(露天存放)" align="center">
+        <el-table-column label="车数" align="center" prop="当日入库车数露天" />
+        <el-table-column
+          label="调入"
+          align="center"
+          prop="当日调入数量Kg露天"
+        />
       </el-table-column>
 
-      <el-table-column label="当日出库" align="center">
-        <el-table-column label="车数" align="center" prop="column5" />
-        <el-table-column label="调出" align="center" prop="column6" />
+      <el-table-column label="当日出库(露天存放)" align="center">
+        <el-table-column label="车数" align="center" prop="当日出库车数露天" />
+        <el-table-column
+          label="调出"
+          align="center"
+          prop="当日调出数量Kg露天"
+        />
       </el-table-column>
 
-      <el-table-column label="库存" align="center" prop="column7" />
-      <el-table-column label="累计损耗" align="center" prop="column8" />
-      <el-table-column label="备注" align="center" prop="column9" />
+      <el-table-column label="当日入库(1#煤棚)" align="center">
+        <el-table-column
+          label="车数"
+          align="center"
+          prop="当日入库车数1号煤棚"
+        />
+        <el-table-column
+          label="调入"
+          align="center"
+          prop="当日调入数量Kg1号煤棚"
+        />
+      </el-table-column>
+      <el-table-column label="当日出库(1#煤棚)" align="center">
+        <el-table-column
+          label="车数"
+          align="center"
+          prop="当日出库车数1号煤棚"
+        />
+        <el-table-column
+          label="调出"
+          align="center"
+          prop="当日调出数量Kg1号煤棚"
+        />
+      </el-table-column>
+      <el-table-column label="当日入库(2#煤棚)" align="center">
+        <el-table-column
+          label="车数"
+          align="center"
+          prop="当日入库车数2号煤棚"
+        />
+        <el-table-column
+          label="调入"
+          align="center"
+          prop="当日调入数量Kg2号煤棚"
+        />
+      </el-table-column>
+      <el-table-column label="当日出库(2#煤棚)" align="center">
+        <el-table-column
+          label="车数"
+          align="center"
+          prop="当日出库车数2号煤棚"
+        />
+        <el-table-column
+          label="调出"
+          align="center"
+          prop="当日调出数量Kg2号煤棚"
+        />
+      </el-table-column>
+
+      <el-table-column
+        label="库存(露天存放)"
+        align="center"
+        prop="库存Kg露天"
+      />
+      <el-table-column
+        label="库存(1#库存煤棚)"
+        align="center"
+        prop="库存Kg1号煤棚"
+      />
+      <el-table-column
+        label="库存(2#库存煤棚)"
+        align="center"
+        prop="库存Kg2号煤棚"
+      />
+      <el-table-column label="库存(合计)" align="center" prop="库存合计" />
+      <el-table-column label="累计损耗" align="center" prop="累计损耗Kg" />
+      <el-table-column label="备注" align="center" prop="备注" />
 
       <el-table-column label="本月累计调入" align="center">
-        <el-table-column label="车数" align="center" prop="column10" />
-        <el-table-column label="吨数" align="center" prop="column11" />
+        <el-table-column label="车数" align="center" prop="当月入库车数" />
+        <el-table-column label="吨数" align="center" prop="当月调入数量Kg" />
       </el-table-column>
 
       <el-table-column label="本月累计调出" align="center">
-        <el-table-column label="车数" align="center" prop="column12" />
-        <el-table-column label="吨数" align="center" prop="column13" />
+        <el-table-column label="车数" align="center" prop="当月出库车数" />
+        <el-table-column label="吨数" align="center" prop="当月调出数量Kg" />
       </el-table-column>
-      <el-table-column label="期初转入" align="center" prop="column18" />
+      <el-table-column label="期初转入" align="center" prop="期初转入Kg" />
 
       <el-table-column label="本年累计" align="center">
-        <el-table-column label="调入" width="130" align="center" prop="column15" />
-        <el-table-column label="调出" align="center" prop="column17" />
+        <el-table-column
+          label="调入"
+          width="130"
+          align="center"
+          prop="本年调入数量Kg"
+        />
+        <el-table-column label="调出" align="center" prop="本年调出数量Kg" />
       </el-table-column>
-
-
+      <el-table-column label="累计损耗" align="center" prop="累计损耗Kg" />
 
       <!--   ------------------------------完美的分割线-----------------------------   -->
-
 
       <!--      <af-table-column label="出库单号" align="center" prop="id" />-->
       <!--      <el-table-column label="状态" width="110" align="center" prop="storeState" :formatter="outStoreDocStateFormatter"/>-->
@@ -953,7 +1049,6 @@
       <!--      <el-table-column label="出场通道号" align="center" prop="chnlNoE" />-->
       <!--      <el-table-column label="库位别名" align="center" prop="locationAlias" />-->
 
-
       <!--      <el-table-column label="作废原因" align="center" prop="voidReason" />-->
       <!--      <el-table-column label="司机手机号" align="center" prop="driverMobileNo" />-->
       <!--      <el-table-column label="制单人" align="center" prop="makerBy" />-->
@@ -988,16 +1083,29 @@
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
-      :page-sizes="[20,30,50,200,300,400,500,1000,2000,3000,5000,10000]"
+      :page-sizes="[
+        20,
+        30,
+        50,
+        200,
+        300,
+        400,
+        500,
+        1000,
+        2000,
+        3000,
+        5000,
+        10000,
+      ]"
       @pagination="getList"
     />
 
     <!-- 添加或修改出库明细单对话框 -->
-    <el-dialog :title="title" :visible.sync="open"  append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="场所编号" prop="placeId">
           <el-input v-model="form.placeId" placeholder="请输入场所编号" />
@@ -1021,10 +1129,16 @@
           <el-input v-model="form.receiveName" placeholder="请输入客户名称" />
         </el-form-item>
         <el-form-item label="寄仓合同号" prop="checkContractNo">
-          <el-input v-model="form.checkContractNo" placeholder="请输入寄仓合同号" />
+          <el-input
+            v-model="form.checkContractNo"
+            placeholder="请输入寄仓合同号"
+          />
         </el-form-item>
         <el-form-item label="蒙方磅单号 蒙方磅单号" prop="mongoliaBillNo">
-          <el-input v-model="form.mongoliaBillNo" placeholder="请输入蒙方磅单号 蒙方磅单号" />
+          <el-input
+            v-model="form.mongoliaBillNo"
+            placeholder="请输入蒙方磅单号 蒙方磅单号"
+          />
         </el-form-item>
         <el-form-item label="车号 " prop="vehicleNo">
           <el-input v-model="form.vehicleNo" placeholder="请输入车号 " />
@@ -1039,10 +1153,16 @@
           <el-input v-model="form.vehicleTeam" placeholder="请输入车队名 " />
         </el-form-item>
         <el-form-item label="蒙古磅净重 净重" prop="mongoliaNetWeight">
-          <el-input v-model="form.mongoliaNetWeight" placeholder="请输入蒙古磅净重 净重" />
+          <el-input
+            v-model="form.mongoliaNetWeight"
+            placeholder="请输入蒙古磅净重 净重"
+          />
         </el-form-item>
         <el-form-item label="蒙古磅皮重 皮重" prop="mongoliaTareWeight">
-          <el-input v-model="form.mongoliaTareWeight" placeholder="请输入蒙古磅皮重 皮重" />
+          <el-input
+            v-model="form.mongoliaTareWeight"
+            placeholder="请输入蒙古磅皮重 皮重"
+          />
         </el-form-item>
         <el-form-item label="车辆数量 " prop="vehicleCount">
           <el-input v-model="form.vehicleCount" placeholder="请输入车辆数量 " />
@@ -1051,21 +1171,36 @@
           <el-input v-model="form.driverName" placeholder="请输入司机姓名 " />
         </el-form-item>
         <el-form-item label="车队联系人 " prop="vehicleTeamContact">
-          <el-input v-model="form.vehicleTeamContact" placeholder="请输入车队联系人 " />
+          <el-input
+            v-model="form.vehicleTeamContact"
+            placeholder="请输入车队联系人 "
+          />
         </el-form-item>
         <el-form-item label="车队联系电话" prop="vehicleTeamTel">
-          <el-input v-model="form.vehicleTeamTel" placeholder="请输入车队联系电话" />
+          <el-input
+            v-model="form.vehicleTeamTel"
+            placeholder="请输入车队联系电话"
+          />
         </el-form-item>
         <el-form-item label="车型(双挂，单挂)">
-          <el-select v-model="form.vehicleType" placeholder="请选择车型(双挂，单挂)">
+          <el-select
+            v-model="form.vehicleType"
+            placeholder="请选择车型(双挂，单挂)"
+          >
             <el-option label="请选择字典生成" value="" />
           </el-select>
         </el-form-item>
         <el-form-item label="计量单位(KG)" prop="measuringUnit">
-          <el-input v-model="form.measuringUnit" placeholder="请输入计量单位(KG)" />
+          <el-input
+            v-model="form.measuringUnit"
+            placeholder="请输入计量单位(KG)"
+          />
         </el-form-item>
         <el-form-item label="包装方式(集装箱，散装)" prop="packMode">
-          <el-input v-model="form.packMode" placeholder="请输入包装方式(集装箱，散装)" />
+          <el-input
+            v-model="form.packMode"
+            placeholder="请输入包装方式(集装箱，散装)"
+          />
         </el-form-item>
         <el-form-item label="集装箱号1" prop="containerNo1">
           <el-input v-model="form.containerNo1" placeholder="请输入集装箱号1" />
@@ -1089,25 +1224,37 @@
           <el-input v-model="form.roughWeight" placeholder="请输入毛重" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.remark"
+            type="textarea"
+            placeholder="请输入内容"
+          />
         </el-form-item>
         <el-form-item label="生成时间" prop="genTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.genTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择生成时间">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
+            v-model="form.genTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择生成时间"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="生成人" prop="genBy">
           <el-input v-model="form.genBy" placeholder="请输入生成人" />
         </el-form-item>
         <el-form-item label="磅单打印时间" prop="poundTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.poundTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择磅单打印时间">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
+            v-model="form.poundTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择磅单打印时间"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="磅单号" prop="poundNo">
@@ -1132,16 +1279,28 @@
           <el-input v-model="form.storeCode4" placeholder="请输入库位号4" />
         </el-form-item>
         <el-form-item label="生成舱单(0未生成，1已生成)" prop="hasManifest">
-          <el-input v-model="form.hasManifest" placeholder="请输入生成舱单(0未生成，1已生成)" />
+          <el-input
+            v-model="form.hasManifest"
+            placeholder="请输入生成舱单(0未生成，1已生成)"
+          />
         </el-form-item>
         <el-form-item label="生成集报清单" prop="hasDeclare">
-          <el-input v-model="form.hasDeclare" placeholder="请输入生成集报清单" />
+          <el-input
+            v-model="form.hasDeclare"
+            placeholder="请输入生成集报清单"
+          />
         </el-form-item>
         <el-form-item label="生成进境确报" prop="hasTransit">
-          <el-input v-model="form.hasTransit" placeholder="请输入生成进境确报" />
+          <el-input
+            v-model="form.hasTransit"
+            placeholder="请输入生成进境确报"
+          />
         </el-form-item>
         <el-form-item label="状态(0,待入场，2已入场，1已出场" prop="storeState">
-          <el-input v-model="form.storeState" placeholder="请输入状态(0,待入场，2已入场，1已出场" />
+          <el-input
+            v-model="form.storeState"
+            placeholder="请输入状态(0,待入场，2已入场，1已出场"
+          />
         </el-form-item>
         <el-form-item label="文件ID" prop="fileId">
           <el-input v-model="form.fileId" placeholder="请输入文件ID" />
@@ -1153,22 +1312,30 @@
           <el-input v-model="form.createBy" placeholder="请输入创建人" />
         </el-form-item>
         <el-form-item label="创建时间" prop="createTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.createTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择创建时间">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
+            v-model="form.createTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择创建时间"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="更新人" prop="updateBy">
           <el-input v-model="form.updateBy" placeholder="请输入更新人" />
         </el-form-item>
         <el-form-item label="更新时间" prop="updateTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.updateTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择更新时间">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
+            v-model="form.updateTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择更新时间"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="乐观锁" prop="revision">
@@ -1178,7 +1345,10 @@
           <el-input v-model="form.memo" placeholder="请输入文件中的备注" />
         </el-form-item>
         <el-form-item label="蒙古毛重" prop="mongoliaRoughWeight">
-          <el-input v-model="form.mongoliaRoughWeight" placeholder="请输入蒙古毛重" />
+          <el-input
+            v-model="form.mongoliaRoughWeight"
+            placeholder="请输入蒙古毛重"
+          />
         </el-form-item>
         <el-form-item label="货物名称" prop="goodsName">
           <el-input v-model="form.goodsName" placeholder="请输入货物名称" />
@@ -1187,19 +1357,27 @@
           <el-input v-model="form.sendName" placeholder="请输入发货方" />
         </el-form-item>
         <el-form-item label="进场时间" prop="inTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.inTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择进场时间">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
+            v-model="form.inTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择进场时间"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="出场时间" prop="outTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.outTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择出场时间">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
+            v-model="form.outTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择出场时间"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="预留1" prop="reserved1">
@@ -1224,7 +1402,10 @@
           <el-input v-model="form.locationAlias" placeholder="请输入库位别名" />
         </el-form-item>
         <el-form-item label="销售合同号" prop="salesContractNo">
-          <el-input v-model="form.salesContractNo" placeholder="请输入销售合同号" />
+          <el-input
+            v-model="form.salesContractNo"
+            placeholder="请输入销售合同号"
+          />
         </el-form-item>
         <el-form-item label="提煤单号" prop="coalBillNo">
           <el-input v-model="form.coalBillNo" placeholder="请输入提煤单号" />
@@ -1248,7 +1429,10 @@
           <el-input v-model="form.voidReason" placeholder="请输入作废原因" />
         </el-form-item>
         <el-form-item label="司机手机号" prop="driverMobileNo">
-          <el-input v-model="form.driverMobileNo" placeholder="请输入司机手机号" />
+          <el-input
+            v-model="form.driverMobileNo"
+            placeholder="请输入司机手机号"
+          />
         </el-form-item>
         <el-form-item label="制单人" prop="makerBy">
           <el-input v-model="form.makerBy" placeholder="请输入制单人" />
@@ -1257,19 +1441,27 @@
           <el-input v-model="form.boxTareWeight" placeholder="请输入箱皮重" />
         </el-form-item>
         <el-form-item label="作废日期" prop="voidDate">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.voidDate"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择作废日期">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
+            v-model="form.voidDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择作废日期"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="制单时间" prop="makerTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.makerTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择制单时间">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
+            v-model="form.makerTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择制单时间"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="入场司磅员" prop="inUser">
@@ -1288,19 +1480,27 @@
 </template>
 
 <script>
-import { listOutstoreDoc,listOutstoreDocLike, getOutstoreDoc, delOutstoreDoc, addOutstoreDoc, updateOutstoreDoc } from "@/api/place/outstoreDoc";
-import {getUserDepts} from "@/utils/charutils";
-import {listStoreContract} from "@/api/place/storeContract";
-import {customsDayList} from "@/api/place/instoreDoc";
+import {
+  listOutstoreDoc,
+  listOutstoreDocLike,
+  getOutstoreDoc,
+  delOutstoreDoc,
+  addOutstoreDoc,
+  updateOutstoreDoc,
+} from "@/api/place/outstoreDoc";
+import { getUserDepts } from "@/utils/charutils";
+import { listStoreContract } from "@/api/place/storeContract";
+import { customsDayList } from "@/api/place/instoreDoc";
+import { listDaily } from "@/api/place/daily";
 export default {
   name: "OutstoreDoc",
   data() {
     return {
-      titleList:[],
+      titleList: [],
       // Excel 页脚
-      excelFooter: '',
+      excelFooter: "",
       // 默认值
-      defaultValue: '0',
+      defaultValue: undefined,
       // 遮罩层
       loading: false,
       // 选中数组
@@ -1314,22 +1514,22 @@ export default {
       // 出库明细单表格数据
       outstoreDocList: [],
       //时间查询类型
-      timeQueryTypeOption:[],
+      timeQueryTypeOption: [],
       //车型字典集
-      outStoreVehicleTypesOption:[],
+      outStoreVehicleTypesOption: [],
       //运输方式字典集
-      transportModeDic:[],
+      transportModeDic: [],
       //数据来源字典集
-      outStoreDataSourcesOption:[],
+      outStoreDataSourcesOption: [],
       //状态字典集
-      outStoreDocStateOption:[],
+      outStoreDocStateOption: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
       // 查询参数
       queryParams: {
-        queryLogo:'I',
+        queryLogo: "I",
         pageNum: 1,
         pageSize: 20,
         placeId: undefined,
@@ -1406,47 +1606,82 @@ export default {
         makerTime: undefined,
         inUser: undefined,
         outUser: undefined,
-        beginTime:'',
+        beginTime: "",
       },
-      customerList:[],
+      customerList: [],
       depts: [],
       contractSubList: [],
-      dateRange:[],
-      dataRange01:['',''],
+      dateRange: [],
+      dataRange01: ["", ""],
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         placeId: [
-          { required: true, message: "场所编号不能为空", trigger: "blur" }
+          { required: true, message: "场所编号不能为空", trigger: "blur" },
         ],
         docNo: [
-          { required: true, message: "提煤单号不能为空", trigger: "blur" }
+          { required: true, message: "提煤单号不能为空", trigger: "blur" },
         ],
         vehicleNo: [
-          { required: true, message: "车号 不能为空", trigger: "blur" }
+          { required: true, message: "车号 不能为空", trigger: "blur" },
         ],
         storeState: [
-          { required: true, message: "状态(0,待入场，2已入场，1已出场不能为空", trigger: "blur" }
+          {
+            required: true,
+            message: "状态(0,待入场，2已入场，1已出场不能为空",
+            trigger: "blur",
+          },
         ],
       },
-      json_fields:{
-        "寄仓客户":"column1",
-        "煤种":"column2",
-        "当日入库车数":"column3",
-        "当日入库调入":"column4",
-        "当日出库车数":"column5",
-        "当日出库调出":"column6",
-        "库存":"column7",
-        "累计损耗":"column8",
-        "备注":"column9",
-        "本月累计调入车数":"column10",
-        "本月累计调入吨数":"column11",
-        "本月累计调出车数":"column12",
-        "本月累计调出吨数":"column13",
-        "期初转入":"column18",
-        "本年累计调入":"column15",
-        "本年累计调出":"column17",
+      json_fields: {
+        // "寄仓客户":"寄仓客户",
+        // "煤种":"煤种",
+        // "当日入库车数":"column3",
+        // "当日入库调入":"column4",
+        // "当日出库车数":"column5",
+        // "当日出库调出":"column6",
+        // "库存":"column7",
+        // "累计损耗":"column8",
+        // "备注":"column9",
+        // "本月累计调入车数":"column10",
+        // "本月累计调入吨数":"column11",
+        // "本月累计调出车数":"column12",
+        // "本月累计调出吨数":"column13",
+        // "期初转入":"column18",
+        // "本年累计调入":"column15",
+        // "本年累计调出":"column17",
+
+        "公司名称": "寄仓客户",
+        "客户全称": "寄仓客户",
+        "煤种": "煤种",
+        "当日入库(露天存放)车数": "当日入库车数露天",
+        "当日入库(露天存放)调入": "当日调入数量Kg露天",
+        "当日出库(露天存放)车数": "当日出库车数露天",
+        "当日出库(露天存放)调出": "当日调出数量Kg露天",
+        "当日入库(1#煤棚)车数": "当日入库车数1号煤棚",
+        "当日入库(1#煤棚)调入": "当日调入数量Kg1号煤棚",
+        "当日出库(1#煤棚)车数": "当日出库车数1号煤棚",
+        "当日出库(1#煤棚)调出": "当日调出数量Kg1号煤棚",
+        "当日入库(2#煤棚)车数": "当日入库车数2号煤棚",
+        "当日入库(2#煤棚)调入": "当日调入数量Kg2号煤棚",
+        "当日出库(2#煤棚)车数": "当日出库车数2号煤棚",
+        "当日出库(2#煤棚)调出": "当日调出数量Kg2号煤棚",
+        "库存(露天存放)": "库存Kg露天",
+        "库存(库存1#煤棚)": "库存Kg1号煤棚",
+        "库存(库存2#煤棚)": "库存Kg2号煤棚",
+        "库存(合计)": "库存合计",
+        "累计损耗": "累计损耗Kg",
+        "备注": "备注",
+        "本月累计调入车数": "当月入库车数",
+        "本月累计调入吨数": "当月调入数量Kg",
+        "本月累计调出车数": "当月出库车数",
+        "吨数": "当月调出数量Kg",
+        "期初转入": "期初转入Kg",
+        "本年累计调入": "本年调入数量Kg",
+        "本年累计调出": "本年调出数量Kg",
+        "累计损耗": "累计损耗Kg",
+
         // "箱皮重":"boxTareWeight",
         // "净重":"netWeight",
         // "进场时间":"inTime",
@@ -1472,17 +1707,16 @@ export default {
   },
   created() {
     // 0 监管场所，1保税库，2堆场，3企业
-    this.depts = getUserDepts('0')
+    this.depts = getUserDepts("0");
     if (this.depts.length > 0) {
-      this.queryParams.placeId = this.depts[0].deptId
-      this.getContract(this.queryParams.placeId, '1')
+      this.queryParams.placeId = this.depts[0].deptId;
+      this.getContract(this.queryParams.placeId, "1");
     }
-    this.getDicts("time_query_type").then(response => {
+    this.getDicts("time_query_type").then((response) => {
       this.timeQueryTypeOption = response.data;
-
     });
     //车辆类型翻译
-    this.getDicts("outStore_vehicle_types").then(response => {
+    this.getDicts("outStore_vehicle_types").then((response) => {
       this.outStoreVehicleTypesOption = response.data;
     });
     //运输方式
@@ -1502,18 +1736,18 @@ export default {
   methods: {
     /** 查询出库明细单列表 */
     getList() {
-      if(this.queryParams.beginTime==''){
+      if (this.queryParams.beginTime == "") {
         this.msgError("时间选择不可为空");
-        return
+        return;
       }
       this.loading = true;
-      this.titleList=[];
-      customsDayList(this.queryParams,this.dateRange).then(response => {
-        this.outstoreDocList = response.data;
-        this.printTitle = '场站日报'
-        this.titleList.push(this.printTitle)
+      this.titleList = [];
+      listDaily(this.queryParams, this.dateRange).then((response) => {
+        this.outstoreDocList = response.rows;
+        this.printTitle = "场所日报";
+        this.titleList.push(this.printTitle);
         this.titleList.push(this.queryParams.beginTime);
-        //this.total = response.total;
+        this.total = response.total;
         this.loading = false;
       });
     },
@@ -1604,7 +1838,7 @@ export default {
         voidDate: undefined,
         makerTime: undefined,
         inUser: undefined,
-        outUser: undefined
+        outUser: undefined,
       };
       //   this.queryParams={
       //     queryLogo:'I',
@@ -1695,20 +1929,19 @@ export default {
       //   return
       // }
 
-
       this.getList();
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.dateRange=[];
+      this.dateRange = [];
       this.resetForm("queryForm");
       this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length != 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -1719,19 +1952,19 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getOutstoreDoc(id).then(response => {
+      const id = row.id || this.ids;
+      getOutstoreDoc(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改出库明细单";
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateOutstoreDoc(this.form).then(response => {
+            updateOutstoreDoc(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -1739,7 +1972,7 @@ export default {
               }
             });
           } else {
-            addOutstoreDoc(this.form).then(response => {
+            addOutstoreDoc(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -1753,46 +1986,63 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除出库明细单编号为"' + ids + '"的数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function() {
-        return delOutstoreDoc(ids);
-      }).then(() => {
-        this.getList();
-        this.msgSuccess("删除成功");
-      }).catch(function() {});
+      this.$confirm(
+        '是否确认删除出库明细单编号为"' + ids + '"的数据项?',
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(function () {
+          return delOutstoreDoc(ids);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        })
+        .catch(function () {});
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('place/outstoreDoc/export', {
-        ...this.queryParams
-      }, `place_outstoreDoc.xlsx`)
+      this.download(
+        "place/outstoreDoc/export",
+        {
+          ...this.queryParams,
+        },
+        `place_outstoreDoc.xlsx`
+      );
     },
     //场所改变时，去查对应场所的
     changePlace(event) {
-      this.getContract(event, '1')
+      this.getContract(event, "1");
     },
     // //场所变化 获取对应场所的合同
     getContract(placeId, status) {
       //查找合同
-      listStoreContract({'placeId': placeId, 'status': status}).then(response => {
-        if (response.code === 200) {
-          this.contractList = response.rows;
-          if (this.contractList.length === 0) {
-            //this.$message.warning('此场所没有有效的合同')
-          } else {
-            //重新给客户列表 赋值
-            this.customerList = []
-            for (let contract of this.contractList) {
-              if (!this.customerList.find(cus => cus.customerId === contract.customerId)) {
-                this.customerList.push(contract)
+      listStoreContract({ placeId: placeId, status: status }).then(
+        (response) => {
+          if (response.code === 200) {
+            this.contractList = response.rows;
+            if (this.contractList.length === 0) {
+              //this.$message.warning('此场所没有有效的合同')
+            } else {
+              //重新给客户列表 赋值
+              this.customerList = [];
+              for (let contract of this.contractList) {
+                if (
+                  !this.customerList.find(
+                    (cus) => cus.customerId === contract.customerId
+                  )
+                ) {
+                  this.customerList.push(contract);
+                }
               }
             }
           }
         }
-      });
+      );
     },
     changeCustomer(event) {
       //改变客户时
@@ -1807,14 +2057,17 @@ export default {
       return this.selectDictLabel(this.transportModeDic, row.transportMode);
     },
     outStoreDataSourcesFormatter(row, column) {
-      return this.selectDictLabel(this.outStoreDataSourcesOption, row.dataSources);
+      return this.selectDictLabel(
+        this.outStoreDataSourcesOption,
+        row.dataSources
+      );
     },
     outStoreDocStateFormatter(row, column) {
       return this.selectDictLabel(this.outStoreDocStateOption, row.storeState);
     },
     importExcel() {
-      this.$message("导出无效,请先查询数据是否为空");
+      // this.$message("导出无效,请先查询数据是否为空");
     },
-  }
+  },
 };
 </script>
