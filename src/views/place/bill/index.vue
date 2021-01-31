@@ -198,13 +198,14 @@
       <el-table-column label="总金额" align="center" prop="totalAmount"/>
       <el-table-column label="计费周期开始时间" align="center" prop="timeStart" width="180"/>
       <el-table-column label="计费周期结束时间" align="center" prop="timeEnd" width="180"/>
-      <!--      <el-table-column label="状态" align="center" prop="state"/>-->
+      <!-- <el-table-column label="状态" align="center" prop="state"/>-->
       <el-table-column label="审批状态" align="center" prop="approveState" :formatter="approveStateFormat"/>
       <el-table-column label="上报状态" align="center" prop="upState" width="180" :formatter="upStateFormat"/>
       <el-table-column label="上报人" align="center" prop="upUser"/>
       <el-table-column label="上报时间" align="center" prop="upTime" width="180"/>
-      <el-table-column label="备注" align="center" prop="remark"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180" fixed="right">
+      <!--      <el-table-column label="备注" align="center" prop="remark"/>-->
+      <el-table-column label="生成时间" align="center" prop="createTime" width="180"/>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="280" fixed="right">
         <template slot-scope="scope">
           <el-button v-show="scope.row.approveState === '0'"
                      size="mini"
@@ -213,6 +214,14 @@
                      @click="openDetail(scope.row)"
                      v-hasPermi="['place:billDetail:list']"
           >明细
+          </el-button>
+          <el-button v-show="scope.row.approveState === '0'"
+                     size="mini"
+                     type="text"
+                     icon="el-icon-edit"
+                     @click="reCalcBillCost(scope.row)"
+                     v-hasPermi="['place:bill:recalc']"
+          >重新计算
           </el-button>
           <el-button v-show="scope.row.approveState === '0'"
                      size="mini"
@@ -353,7 +362,7 @@
           </div>
         </el-dialog>-->
     <el-drawer
-      title="计费规则"
+      title="计费明细"
       :visible.sync="billDetailView"
       :append-to-body="true"
       :close-on-press-escape="true"
@@ -375,16 +384,16 @@
                 <el-table-column label="ID" align="center" prop="id"/>
                 <el-table-column label="账单ID" align="center" prop="billId"/>
                 <el-table-column label="寄仓客户ID" align="center" prop="customerId"/>-->
-        <el-table-column label="寄仓客户" align="center" prop="customerName"/>
+        <af-table-column label="寄仓客户" align="center" prop="customerName"/>
         <!--        <el-table-column label="合同ID" align="center" prop="contactId"/>-->
-        <el-table-column label="合同编号" align="center" prop="contactNo"/>
+        <af-table-column label="合同编号" align="center" prop="contactNo"/>
         <el-table-column label="计费项目" align="center" prop="billOption" :formatter="billOptionFormat"/>
         <el-table-column label="计费类型" align="center" prop="costRule.billType" :formatter="billTypeFormat"/>
-        <el-table-column label="单价" align="center" prop="price"/>
-        <el-table-column label="数量" align="center" prop="quantity"/>
-        <el-table-column label="总金额" align="center" prop="amount"/>
+        <el-table-column label="单价(元)" align="center" prop="price"/>
+        <el-table-column label="数量(吨)" align="center" prop="quantity"/>
+        <el-table-column label="总金额(元)" align="center" prop="amount"/>
         <el-table-column label="来源" align="center" prop="dataSource" :formatter="dataSourceFormat"/>
-<!--        <el-table-column label="计费规则" align="center" prop="ruleId"/>-->
+        <!--        <el-table-column label="计费规则" align="center" prop="ruleId"/>-->
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
           <template slot-scope="scope">
             <el-button v-show="scope.row.dataSource === '2'"
@@ -540,7 +549,7 @@
 </template>
 
 <script>
-import {listBillLike, getBill, delBill, addBill, updateBill} from "@/api/place/bill/bill";
+import {addBill, delBill, getBill, listBillLike, reCalcBillCost, updateBill} from "@/api/place/bill/bill";
 import {getUserDepts} from "@/utils/charutils";
 import {listBillDetail} from "@/api/place/bill/detail";
 
@@ -784,6 +793,29 @@ export default {
     billTypeFormat(row, column) {
       return this.selectDictLabel(this.billTypes, row.costRule.billType);
     },
+    //重新计算
+    reCalcBillCost(row) {
+      this.$confirm('是否确认要重新计算"' + row.contractNo + '"的计费单?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+
+      }).then(() => {
+        this.loading = true
+        reCalcBillCost(row.contractId, row.billMonth).then(response => {
+          this.loading = false
+          if (response.code === 200) {
+            this.msgSuccess(response.msg)
+            this.getList();
+          }
+        }).catch(e => {
+          this.loading = false
+        })
+      }).catch(function () {
+        this.loading = false
+      })
+    }
   }
 };
 </script>
