@@ -655,6 +655,7 @@ import {
   updateStore,
 } from "@/api/tax/instore_doc";
 import { getUserDepts } from "@/utils/charutils";
+import { addModify } from "@/api/tax/modify";
 
 export default {
   name: "Instore_doc",
@@ -849,9 +850,16 @@ export default {
         }
       });
     },
-    /** 提交按钮 */
+    /** 修改库位提交按钮 */
     updateForm: function () {
       console.log(this.storeForm)
+      addModify(this.storeForm).then((response) => {
+              if (response.code === 200) {
+                this.msgSuccess("新增成功");
+                this.openStore = false;
+                this.getList();
+              }
+            });
       // updateStore(this.form).then((response) => {
       //   if (response.code === 200) {
       //     this.msgSuccess("修改成功");
@@ -901,6 +909,7 @@ export default {
       getStore(row.inDocNo).then((response) => {
         if (response.code === 200) {
           this.storeForm = row
+          this.storeForm.storeCode = row.bookStoreCode;
           this.openStore = true;
           this.title = "修改库位号";
         }
