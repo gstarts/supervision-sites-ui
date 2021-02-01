@@ -2,18 +2,18 @@
   <div class="app-container">
     <!-- 按钮组 -->
     <div class="mb20">
-      <el-button type="primary" icon="el-icon-plus" size="small" :loading="dataLoading" @click="AllADD">保存 (F2)
+      <el-button type="primary" icon="el-icon-plus" size="small" :loading="dataLoading" @click="AllADD">称重 (F2)
       </el-button>
       <!--      <el-button type="success" icon="el-icon-edit" size="small" @click="generateAdd">生成</el-button>-->
       <el-button type="warning" icon="el-icon-refresh-right" size="small" :loading="dataLoading" @click="cancel">清空
         (F4)
       </el-button>
       <el-button type="primary" @click="getVehicleList" size="small">刷车号(F9)</el-button>
-      <el-button
+      <el-button style="display:none"
         ref="printBtn"
         type="info"
         size="small"
-        v-print="printObj"
+        v-print="printObject"
         @click="print">
         <i class="fa fa-print" aria-hidden="true">&nbsp;&nbsp;打印</i>
       </el-button>
@@ -366,6 +366,7 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
+
     <div id="dayin" v-show="Explicit">
       <div style="align-content: center;">
         <span class="poundTotal11">{{ poundTotal }}</span>
@@ -377,44 +378,44 @@
         <span>{{ nowTime }}</span>
       </div>
       <div id="serialNumber">
-        <span>{{ this.pad(this.form.id) }}</span>
+        <span>{{ pad(printObj.id) }}</span>
       </div>
       <div id="area-style">
-        <span class="area-in-style">{{ form.deliveryUnit }}</span>
+        <span class="area-in-style">{{ printObj.deliveryUnit }}</span>
       </div>
       <div id="area-right-style">
-        <span>{{ form.plateNum }}</span>
+        <span>{{ printObj.plateNum }}</span>
       </div>
       <br/>
       <div id="area-style">
-        <span class="area-in-style">{{ form.receivingUnit }}</span>
+        <span class="area-in-style">{{ printObj.receivingUnit }}</span>
       </div>
       <div id="area-right-style">
-        <span>{{ form.grossWeight }} kg</span>
+        <span>{{ printObj.grossWeight }} kg</span>
       </div>
       <div id="area-style">
-        <span class="area-in-style">{{ form.goodsName }}</span>
+        <span class="area-in-style">{{ printObj.goodsName }}</span>
       </div>
       <div id="area-right-style">
-        <span>{{ form.tare }} kg</span>
+        <span>{{ printObj.tare }} kg</span>
         <br/>
       </div>
       <div id="area-style">
-        <span class="area-in-style">{{ form.specification }}</span>
+        <span class="area-in-style">{{ printObj.specification }}</span>
       </div>
       <div id="area-right-style">
-        <span>{{ form.netWeight }} kg</span>
+        <span>{{ printObj.netWeight }} kg</span>
         <br/>
       </div>
       <div id="area-all-style">
         <span class="area-in-style">{{
-            form.viaType === '02' ? form.remark + '  ' + form.transportUnit + '  ' + transportModeFormat(form.transportMode) : ''
+            printObj.viaType === '02' ? printObj.remark + '  ' + printObj.transportUnit + '  ' + transportModeFormat(printObj.transportMode) : ''
           }}</span>
         <br/>
       </div>
       <div id="user-all-style">
-        <span>{{ parseUserName(form.inUser) }}</span>
-        <span>{{ parseUserName(form.outUser == '' ? this.$store.state.user.nickName : form.outUser) }}</span>
+        <span>{{ parseUserName(printObj.inUser) }}</span>
+        <span>{{ parseUserName(printObj.outUser == '' ? this.$store.state.user.nickName : printObj.outUser) }}</span>
       </div>
       <!--   v-if判断 车辆类型是否为重进空出  标识为01   -->
       <div id="dayin1" v-if="this.PoundForm.stationViaType ==='01'">
@@ -431,46 +432,46 @@
           </div>
         </div>
         <div id="serialNumber1">
-          <span>{{ this.pad(this.form.id) }}</span>
+          <span>{{ pad(printObj.id) }}</span>
         </div>
         <div id="area-style1">
-          <span class="area-in-style">{{ form.deliveryUnit }}</span>
+          <span class="area-in-style">{{ printObj.deliveryUnit }}</span>
         </div>
         <div id="area-right-style1">
-          <span>{{ form.plateNum }}</span>
+          <span>{{ printObj.plateNum }}</span>
         </div>
         <br/>
         <div id="area-style1">
-          <span class="area-in-style">{{ form.receivingUnit }}</span>
+          <span class="area-in-style">{{ printObj.receivingUnit }}</span>
         </div>
         <div id="area-right-style1">
-          <span>{{ form.grossWeight }}kg</span>
+          <span>{{ printObj.grossWeight }}kg</span>
         </div>
         <div id="area-style1">
-          <span class="area-in-style">{{ form.goodsName }}</span>
+          <span class="area-in-style">{{ printObj.goodsName }}</span>
         </div>
         <div id="area-right-style1">
-          <span>{{ form.tare }}kg</span>
+          <span>{{ printObj.tare }}kg</span>
           <br/>
         </div>
         <div id="area-style1">
-          <span class="area-in-style">{{ form.specification }}</span>
+          <span class="area-in-style">{{ printObj.specification }}</span>
         </div>
         <div id="area-right-style1">
-          <span>{{ form.netWeight }}kg</span>
+          <span>{{ printObj.netWeight }}kg</span>
           <br/>
         </div>
         <div id="area-all-style1">
           <span class="area-in-style">
           {{
-              form.viaType === '02' ? form.remark + '  ' + form.transportUnit + '  ' + transportModeFormat(form.transportMode) + ' 补' : '补'
+              printObj.viaType === '02' ? printObj.remark + '  ' + printObj.transportUnit + '  ' + transportModeFormat(printObj.transportMode) + ' 补' : '补'
             }}
           </span>
           <br/>
         </div>
         <div id="user-all-style1">
-          <span>{{ parseUserName(form.inUser) }}</span>
-          <span>{{ parseUserName(form.outUser == '' ? this.$store.state.user.nickName : form.outUser) }}</span>
+          <span>{{ parseUserName(printObj.inUser) }}</span>
+          <span>{{ parseUserName(printObj.outUser == '' ? this.$store.state.user.nickName : printObj.outUser) }}</span>
         </div>
       </div>
     </div>
@@ -490,7 +491,7 @@ import {
 } from "@/api/pound/poundlist";
 import {genTimeCode, parseTime} from "@/utils/common";
 import {listChnlConfig} from "@/api/basis/chnlConfig";
-import {getUserDepts} from "@/utils/charutils";
+import {getUserDepts, isChina} from "@/utils/charutils";
 import {listUser} from "@/api/system/user";
 import store from '@/store/index'
 import {setPoundConfig} from "@/utils/auth";
@@ -500,10 +501,10 @@ export default {
   data() {
     return {
       isProduct: true,//开发时可以设置为false
-      printObj: {
+      printObject: {
         id: '#dayin',
         endCallback: (err => {
-          console.log('印完成')
+          console.log('打印完成')
         })
       },
       poundState: [
@@ -711,7 +712,8 @@ export default {
       //磅单修改页面的变量
       modifyOpen: false,
       transportModeDic: [],
-      printObject: {},
+      //称重用的数据，每次称重，锁定值
+      printObj: {},
       refreshRate: 1000,
       refreshRateDic: [
         {'dictValue': 500, 'dictLabel': '0.5秒'},
@@ -719,6 +721,7 @@ export default {
         {'dictValue': 1500, 'dictLabel': '1.5秒'},
         {'dictValue': 2000, 'dictLabel': '2秒'},
       ],
+
       /*poundModify: {
         poundId: undefined,
         poundState: undefined,
@@ -884,6 +887,12 @@ export default {
       this.form.packMode = '2' //默认散货
       this.preWeight = 0
       if (!event || event === '') return
+
+      if (isChina(event)) {
+        this.PoundForm.stationViaType = "02"
+      } else {
+        this.PoundForm.stationViaType = "01"
+      }
       //如果是进场
       if (this.PoundForm.flowDirection === "I") {
         /**
@@ -1173,7 +1182,8 @@ export default {
     },
     print1() {
       this.Explicit = true;
-      this.printObject = {...this.form}
+      //更新之前已给此变量赋值
+      //this.printObject = {...this.form}
 
       //let date = new Date();
       /*let year = date.getFullYear();
@@ -1242,7 +1252,9 @@ export default {
         }
       })
     },*/
-    vehicleChange() {
+    vehicleChange(event) {
+      console.log(event)
+      if (event === '') this.PoundForm.stationViaType = undefined
       this.flowCheck()
       //console.log(this.PoundForm.flowDirection)
       /*if (this.PoundForm.stationViaType === '01' && this.PoundForm.flowDirection === 'E') { //重进空出
@@ -1480,8 +1492,13 @@ export default {
                 this.dataLoading = false
                 return false
               }
-              //进场 新增
-              addSheet(this.form).then((response) => {
+              //todo 更新之前将变量锁定
+              this.printObj = {...this.form} //解构赋值
+              //console.log('---新增磅单提交的数据')
+              // console.log(this.printObj)
+              //console.log('----------')
+              //进场 新增 tod
+              addSheet(this.printObj).then((response) => {
                 if (response.code === 200) {
                   this.msgSuccess("进场成功");
                   //更新单证入场时间
@@ -1494,6 +1511,7 @@ export default {
                   if (this.activeName === 'end') {
                     this.getListE();
                   }*/
+                  this.reset()
                   this.getListI();
                   this.getListE();
                   this.getVehicleList() //重新加载车辆
@@ -1510,12 +1528,18 @@ export default {
                 if (this.autoPrint) {
                   this.form.printState = '1' //如果设置了自动打印，将打印状态设置为1
                 }
-                updateSheet(this.form).then(response => {
+                // 更新之前将变量锁定
+                this.printObj = {...this.form} //解构赋值
+                //console.log('---更新磅单提交的数据')
+                //console.log(this.printObj)
+                //console.log('----------')
+                updateSheet(this.printObj).then(response => {
                   if (response.code === 200) {
                     this.msgSuccess("出场成功");
                     console.log("================")
                     console.log(this.form)
                     this.dataLoading = false
+                    this.reset()
                     this.getListI();
                     this.getListE();
                     /*if (this.activeName === 'Approach') {
