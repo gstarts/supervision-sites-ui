@@ -195,9 +195,9 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            icon="el-icon-notebook-1"
             @click="handleRules(scope.row)"
-            v-hasPermi="['place:costRules:edit']"
+            v-hasPermi="['place:costRule:edit']"
           >计费规则
           </el-button>
           <el-button
@@ -408,6 +408,7 @@
             size="mini"
             type="primary"
             @click="saveRules"
+            v-hasPermi="['place:costRule:add']"
           >保存规则
           </el-button>
         </el-col>
@@ -436,9 +437,8 @@
             <el-button
               size="mini"
               type="text"
-              icon="el-icon-edit"
+              icon="el-icon-copy-document"
               @click="handleRuleCopy(scope.row)"
-              v-hasPermi="['place:rules:edit']"
             >复制
             </el-button>
             <!--            <el-button
@@ -454,7 +454,6 @@
               type="text"
               icon="el-icon-delete"
               @click="handleRuleDelete(scope.$index, scope.row)"
-              v-hasPermi="['place:rules:remove']"
             >删除
             </el-button>
           </template>
