@@ -413,7 +413,13 @@
             </el-form-item>
           </el-col>
         </el-row>
-
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="实际车数" prop="vehicleCount">
+              <el-input v-model="form.vehicleCount" placeholder="请输入实际车数" />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="入境时间" prop="entryTime">
@@ -587,7 +593,13 @@
             </el-form-item>
           </el-col>
         </el-row>
-
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="实际车数" prop="vehicleCount">
+              <el-input v-model="form.vehicleCount" placeholder="请输入实际车数" disabled/>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="入境时间" prop="entryTime">
@@ -979,6 +991,8 @@
         const id = row.id || this.ids
         getManagement(id).then(response => {
           this.form = response.data;
+          console.log("---------------")
+          console.log(this.form)
           this.open = true;
           this.title = "修改司机食宿管理";
         });
@@ -992,6 +1006,8 @@
         this.DetailsID=id;
         getManagement(id).then(response => {
           this.form = response.data;
+          console.log("---------------")
+          console.log(this.form)
           this.openDetails = true;
           this.title = "详情司机食宿管理";
           this.printParams=this.form;
@@ -1048,9 +1064,8 @@
           this.form.entryTime = response.data.createTime;
           this.form.lotNo = response.data.batchNo;
           this.form.fleetName = response.data.fleetName;
+          this.form.vehicleCount=response.data.vehicleCount;
           this.form.carNumber = response.data.vehicleCount;
-
-
         })
 
       },
