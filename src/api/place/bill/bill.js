@@ -51,3 +51,12 @@ export function listBillLike(query) {
     params: query
   })
 }
+
+// 重新计费账单
+export function reCalcBillCost(contractId, yearMonth) {
+  return request({
+    url: '/place/bill/reCalcBillCost/' + contractId + '/' + yearMonth,
+    method: 'post'
+  })
+}
+
