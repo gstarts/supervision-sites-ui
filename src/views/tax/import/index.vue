@@ -422,7 +422,7 @@ export default {
       contractList: [],
       //客户合同
       contractList1: [
-        {id: "奥云陶勒盖 [OT]",customerName: "奥云陶勒盖 [OT]"}
+        {id: "奥云陶勒盖 Oyu Tolgaoi Limited",customerName: "奥云陶勒盖 Oyu Tolgaoi Limited"}
       ],
       nameList: [
         {"key":"金航保税库 Jinhang Bonded Warehouse","value": "金航保税库 Jinhang Bonded Warehouse"},

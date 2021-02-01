@@ -1499,7 +1499,7 @@ export default {
         this.printTitle = '海关日报'
         this.titleList.push(this.printTitle)
         this.titleList.push(this.queryParams.beginTime);
-        this.total = response.total;
+        //this.total = response.total;
         this.loading = false;
       });
     },
@@ -1799,7 +1799,7 @@ export default {
       return this.selectDictLabel(this.outStoreDocStateOption, row.storeState);
     },
     importExcel() {
-      this.$message("导出无效,请先查询数据是否为空");
+      //this.$message("导出无效,请先查询数据是否为空");
     },
   }
 };

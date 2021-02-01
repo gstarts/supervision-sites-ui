@@ -65,6 +65,9 @@
             @click="handleExport"
           >导出
           </el-button>
+
+          <el-button type="info" icon="fa fa-print" v-print="'#allPrint'" size="mini" @click="print"> 打印
+          </el-button>
       </el-form-item>
     </el-form>
 
@@ -185,6 +188,74 @@
       @pagination="getList"
     />
 
+
+
+    <!--     打印区域-->
+    <!--    v-show="printShow"-->
+    <!--    <div id="allPrint" v-show="printShow">-->
+    <!--    <hr size="20px">-->
+
+    <div id="allPrint">
+      <div v-for="(item,index) in newArray" style="page-break-after:always">
+        <div :id="gennerateId(index)"></div>
+        <div class="box-card" style="margin: 0 auto;font-size:18px;width:1600px;padding-left: 1px ;padding-top:50px"
+            >
+          <!--      <div v-show="printSmallTitle">-->
+
+<!--          <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">-->
+<!--            <span>{{prinTtitle}}</span><br>-->
+<!--          </div>-->
+<!--          <div>-->
+<!--            <span>{{timeTitle}}</span>-->
+<!--          </div>-->
+<!--          <div>-->
+<!--            <span>{{shipper}}</span>-->
+<!--          </div>-->
+
+
+          <el-table v-loading="loading" :data="item" id="analyouttable"
+                    :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'10px',padding:'3 -3px',margin:'-3'}"
+                    :cell-style="{border:'solid .5px black',fontSize:'8px',padding:'12px 0',color:'black'}"
+                    style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
+            <af-table-column label="批次号" align="center" prop="batchNo"/>
+            <!--<af-table-column label="备注" align="center" prop="remark" />-->
+            <!--<af-table-column label="预订库位号" align="center" prop="bookStoreCode" width="180" />-->
+            <af-table-column label="业务编号" align="center" prop="businessNo"/>
+            <af-table-column label="货物流向" align="center" prop="direction" />
+            <af-table-column label="寄仓客户" align="center" prop="contractNo"/>
+
+            <af-table-column label="时间" align="center" prop="genTime" >
+              <template slot-scope="scope">
+                <span>{{ parseTime(scope.row.genTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+              </template>
+            </af-table-column>
+            <af-table-column label="本批次车辆总数" align="center" prop="totalNumber"/>
+
+            <af-table-column label="已入场车辆数量" align="center">
+              <template slot-scope="scope">
+                <span>{{scope.row.finishNumber+scope.row.changNeiNumber}}</span>
+              </template>
+            </af-table-column>
+
+            <af-table-column label="未入场车辆数量" align="center" prop="weiRuNumber" width="80px"/>
+
+            <af-table-column label="已完成车辆数量" align="center" prop="finishNumber" width="80px"/>
+
+            <af-table-column label="场内车辆数量" align="center" prop="changNeiNumber" width="80px"/>
+
+            <af-table-column label="未出场车辆数量" align="center" prop="weichuNumber" width="80px" />
+            <!--        <template slot-scope="scope">-->
+            <!--          <span>{{scope.row.totalNumber-scope.row.finishNumber}}</span>-->
+            <!--        </template>-->
+            <!--      </af-table-column>-->
+
+            <af-table-column label="寄仓合同编号" align="center" prop="contractNo"/>
+            <af-table-column label="销售合同编号" align="center" prop="saleContractNo"/>
+
+      </el-table>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -214,6 +285,8 @@
         multiple: true,
         // 总条数
         total: 0,
+
+        newArray:[],
 
         radio: '2',
         // 入库通知单表格数据
@@ -284,17 +357,33 @@
       this.depts = getUserDepts('1')
       if (this.depts.length > 0) {
         this.queryParams.placeId = this.depts[0].deptId
+
         this.getList();
+        this.getPrintList()
       }
     },
     methods: {
       /** 查询入库通知单列表 */
       getList() {
-        // this.loading = true;
+        this.loading = true;
         selectNumberOfBatch(this.queryParams).then(response => {
           this.instore_noticeList = response.rows;
           this.total = response.total;
-          // this.loading = false;
+          this.loading = false;
+      });
+      },
+
+      getPrintList() {
+        this.loading = true;
+        selectNumberOfBatch(this.queryParams).then(response => {
+          this.instore_noticeList = response.rows;
+          this.total = response.total;
+          let index = 0
+          this.newArray = [];
+          while (index < this.instore_noticeList.length) {
+            this.newArray.push(this.instore_noticeList.slice(index, index += 23));
+          }
+          this.loading = false;
         });
       },
       // 取消按钮
@@ -458,6 +547,16 @@
             this.getList()
           }
         })
+      },
+
+      // 打印操作，生成divID
+      gennerateId: function (index) {
+        return "printDiv" + index
+
+      },
+
+      print(){
+
       },
 
       //路由跳转
