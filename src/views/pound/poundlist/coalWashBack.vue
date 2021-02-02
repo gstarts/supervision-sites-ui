@@ -10,11 +10,11 @@
       </el-button>
       <el-button type="primary" @click="getVehicleList" size="small">刷车号(F9)</el-button>
       <el-button style="display:none"
-        ref="printBtn"
-        type="info"
-        size="small"
-        v-print="printObject"
-        @click="print">
+                 ref="printBtn"
+                 type="info"
+                 size="small"
+                 v-print="printObject"
+                 @click="print">
         <i class="fa fa-print" aria-hidden="true">&nbsp;&nbsp;打印</i>
       </el-button>
 
@@ -482,19 +482,19 @@
 //获取实时重量
 import {
   addSheet,
+  getNoticeByVehicle,
   getSheet,
+  getVehicleList,
   listIESheet,
   poundSelect,
-  updateSheet,
-  getVehicleList,
-  getNoticeByVehicle, updatePoundErr
+  updatePoundErr,
+  updateSheet
 } from "@/api/pound/poundlist";
 import {genTimeCode, parseTime} from "@/utils/common";
 import {listChnlConfig} from "@/api/basis/chnlConfig";
 import {getUserDepts, isChina} from "@/utils/charutils";
 import {listUser} from "@/api/system/user";
 import store from '@/store/index'
-import {setPoundConfig} from "@/utils/auth";
 
 export default {
   name: "Client",
@@ -1499,11 +1499,11 @@ export default {
               //console.log('----------')
               //进场 新增 tod
               addSheet(this.printObj).then((response) => {
+                this.dataLoading = false
                 if (response.code === 200) {
                   this.msgSuccess("进场成功");
                   //更新单证入场时间
                   //this.updateDocTime(response.data.poundId)
-                  this.dataLoading = false
                   //如果是进进场激活，刷新列表
                   /*if (this.activeName === 'Approach') {
                     this.getListI();
@@ -1516,9 +1516,11 @@ export default {
                   this.getListE();
                   this.getVehicleList() //重新加载车辆
                 } else {
-                  this.dataLoading = false
+                  //this.dataLoading = false
                   this.msgError(response.msg);
                 }
+              }).catch(e => {
+                this.dataLoading = false
               });
             } else if (this.PoundForm.flowDirection === "E") {//如果是出场
               this.form.flowDirection = this.PoundForm.flowDirection;
@@ -1534,11 +1536,12 @@ export default {
                 //console.log(this.printObj)
                 //console.log('----------')
                 updateSheet(this.printObj).then(response => {
+                  this.dataLoading = false
                   if (response.code === 200) {
                     this.msgSuccess("出场成功");
                     console.log("================")
                     console.log(this.form)
-                    this.dataLoading = false
+                    //this.dataLoading = false
                     this.reset()
                     this.getListI();
                     this.getListE();
