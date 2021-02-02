@@ -822,8 +822,14 @@
       max-height="800"
       show-summary
     >
-      <el-table-column label="公司名称" align="center" prop="寄仓客户" />
-      <el-table-column label="客户全称" align="center" prop="寄仓客户" />
+      <el-table-column label="公司简称" align="center" prop="寄仓客户" fixed width="120" >
+        <template slot-scope="scope">
+          <el-tooltip effect="light" :content="scope.row.寄仓客户" placement="top-start">
+             <span>{{ scope.row.寄仓客户.substring(0,6) }}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="客户全称" align="center" prop="寄仓客户" fixed/> -->
       <el-table-column label="煤种" align="center" prop="煤种" />
 
       <el-table-column label="当日入库(露天存放)" align="center">
@@ -932,7 +938,7 @@
         />
         <el-table-column label="调出" align="center" prop="本年调出数量Kg" />
       </el-table-column>
-      <el-table-column label="累计损耗" align="center" prop="累计损耗Kg" />
+      <!-- <el-table-column label="累计损耗" align="center" prop="累计损耗Kg" /> -->
 
       <!--   ------------------------------完美的分割线-----------------------------   -->
 
@@ -1475,7 +1481,7 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog>    
   </div>
 </template>
 

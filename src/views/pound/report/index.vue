@@ -26,9 +26,9 @@
         </el-form-item>
       </el-row>
       <el-row>
-        <el-form-item label="进/出场" prop="direction">
+        <el-form-item label="车辆状态" prop="direction">
           <el-select
-            v-model="queryParams.direction" placeholder="请选择进出场类型">
+            v-model="queryParams.direction" placeholder="请选择进车辆状态">
             <el-option
               v-for="type in directionDic"
               :key="type.key"
@@ -140,7 +140,7 @@
 
       <el-form-item label="承运单位" prop="transportUnit">
         <!--<el-input v-model="form.transportUnit" placeholder="请输入承运单位"/>-->
-        <el-select v-model="queryParams.transportUnit" filterable clearable placeholder="请选择承运单位" >
+        <el-select v-model="queryParams.transportUnit" filterable clearable placeholder="请选择承运单位">
           <el-option
             v-for="item in transUnitList"
             :key="item.eAbbreviation"
@@ -197,87 +197,88 @@
       <!--      </download-excel>-->
     </el-form>
 
-    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1000px;padding-left: 1px ;padding-top:50px"
-         v-show="false">
-      <!--      <div v-show="printSmallTitle">-->
-      <!--        <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">-->
-      <!--          &lt;!&ndash;        <span>{{this.prinTtitle}}</span><br>&ndash;&gt;-->
-      <!--        </div>-->
-      <!--        <div>-->
-      <!--          <span>{{timeTitle}}</span>-->
-      <!--        </div>-->
-      <!--        <div>-->
-      <!--          <span>{{shipper}}</span>-->
-      <!--        </div>-->
-      <!--      </div>-->
-      <el-table v-loading="loading" :data="reportList" id="analyouttable1"
-                :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'16px',padding:'3 -3px',margin:'-3'}"
-                :cell-style="{border:'solid .5px black',fontSize:'18px',padding:'12px 0',color:'black'}"
-                style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
-        <!--   checkConsumer   -->
-        <!--      <af-table-column label="发货单位" align="center" prop="goodsName"/>-->
-        <el-table-column label="序号" type="index"/>
-        <af-table-column label="客户" align="center" prop="deliveryUnit"/>
-        <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
-        <af-table-column label="煤种" align="center" prop="goodsName"/>
-        <af-table-column :label="queryParams.statisticsMode===1?'车数':'车号'" align="center" prop="plateNum"/>
-        <af-table-column label="毛重" align="center" prop="grossWeight"/>
-        <af-table-column label="皮重" align="center" prop="tare"/>
-        <af-table-column label="净重" align="center" prop="netWeight"/>
-      </el-table>
-      <el-row class="countRow" v-show="reportList.length>0">
-        <span v-show="vehicleCount>0">总车数:{{ vehicleCount }}</span>
-        <span>毛重合计:{{ totalRoughWeight }}</span>
-        <span>皮重合计:{{ totalTareWeight }}</span>
-        <span>净重合计:{{ totalNetWeight }}</span>
-      </el-row>
-    </div>
+    <!--    <div class="box-card" style="margin: 0 auto;font-size:18px;width:1000px;padding-left: 1px ;padding-top:50px"
+             v-show="false">
+          &lt;!&ndash;      <div v-show="printSmallTitle">&ndash;&gt;
+          &lt;!&ndash;        <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">&ndash;&gt;
+          &lt;!&ndash;          &lt;!&ndash;        <span>{{this.printTitle}}</span><br>&ndash;&gt;&ndash;&gt;
+          &lt;!&ndash;        </div>&ndash;&gt;
+          &lt;!&ndash;        <div>&ndash;&gt;
+          &lt;!&ndash;          <span>{{timeTitle}}</span>&ndash;&gt;
+          &lt;!&ndash;        </div>&ndash;&gt;
+          &lt;!&ndash;        <div>&ndash;&gt;
+          &lt;!&ndash;          <span>{{shipper}}</span>&ndash;&gt;
+          &lt;!&ndash;        </div>&ndash;&gt;
+          &lt;!&ndash;      </div>&ndash;&gt;
+          <el-table v-loading="loading" :data="reportList" id="analyouttable1"
+                    :row-style="{height:'20px'}"
+                    :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'14px',padding:'2 -3px',margin:'-2'}"
+                    :cell-style="{border:'solid .5px black',fontSize:'14px',padding:'0',color:'black'}"
+                    style="border-right: solid 2px black; border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
+            &lt;!&ndash;   checkConsumer   &ndash;&gt;
+            &lt;!&ndash;      <af-table-column label="发货单位" align="center" prop="goodsName"/>&ndash;&gt;
+            <el-table-column label="序号" type="index"/>
+            <af-table-column label="客户" align="center" prop="deliveryUnit"/>
+            &lt;!&ndash;<af-table-column label="合同号" align="center" prop="checkContractNo"/>&ndash;&gt;
+            <af-table-column label="煤种" align="center" prop="goodsName"/>
+            <af-table-column :label="queryParams.statisticsMode===1?'车数':'车号'" align="center" prop="plateNum"/>
+            <af-table-column label="毛重" align="center" prop="grossWeight"/>
+            <af-table-column label="皮重" align="center" prop="tare"/>
+            <af-table-column label="净重" align="center" prop="netWeight"/>
+          </el-table>
+          <el-row class="countRow" v-show="reportList.length>0">
+            <span v-show="vehicleCount>0">总车数:{{ vehicleCount }}</span>
+            <span>毛重合计:{{ totalRoughWeight }}</span>
+            <span>皮重合计:{{ totalTareWeight }}</span>
+            <span>净重合计:{{ totalNetWeight }}</span>
+          </el-row>
+        </div>-->
     <!--     打印区域-->
     <!--    v-show="printShow"-->
     <!--    <div id="allPrint" v-show="printShow">-->
     <!--    <hr size="20px">-->
     <div id="allPrint">
       <div v-for="(item,index) in newArray" style="page-break-after:always">
-        <div :id="gennerateId(index)"></div>
-        <div class="box-card" style="margin: 0 auto;font-size:18px;width:1000px;padding-left: 1px ;padding-top:50px"
+        <div :id="generateId(index)"></div>
+        <div class="box-card"
+             style="margin: 0 auto 30px auto;font-size:18px;width:1000px;padding-left: 1px ;padding-top:10px;"
              v-show="true">
           <!--      <div v-show="printSmallTitle">-->
-
-          <div style="padding-left: 300px;font-size: 20px;margin-bottom: 50px">
-            <span>{{ prinTtitle }}</span><br>
+          <div style="padding-left: 300px;font-size: 20px;margin-bottom: 20px">
+            <span>{{ printTitle }}</span><br>
           </div>
-          <div>
+          <div style="font-size: 16px;margin-bottom: 5px;">
             <span>{{ timeTitle }}</span>
           </div>
-          <div>
+          <div style="font-size: 16px;margin-bottom: 5px;">
             <span>{{ shipper }}</span>
           </div>
-
-
           <el-table v-loading="loading" :data="item" id="analyouttable"
-                    :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'16px',padding:'3 -3px',margin:'-3'}"
-                    :cell-style="{border:'solid .5px black',fontSize:'18px',padding:'12px 0',color:'black'}"
+                    :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'14px',padding:'0 -3px',margin:'-3'}"
+                    :cell-style="{border:'solid .5px black',fontSize:'14px',padding:'0',color:'black'}"
                     style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
             <!--   checkConsumer   -->
             <!--      <af-table-column label="发货单位" align="center" prop="goodsName"/>-->
-            <el-table-column label="序号" type="index" align="center"  width="70px"/>
-            <af-table-column label="客户" align="center" prop="deliveryUnit"/>
+            <el-table-column label="序 号" type="index" align="center" width="70px">
+              <template slot-scope="scope">{{ (scope.$index + 1) + 50 * index }}</template>
+            </el-table-column>
+            <af-table-column label="客 户" align="center" prop="deliveryUnit"/>
             <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
-            <af-table-column label="煤种" align="center" prop="goodsName"/>
-            <af-table-column :label="queryParams.statisticsMode===1?'车数':'车号'" align="center" prop="plateNum" :width="queryParams.statisticsMode===1?70:110"/>
-            <af-table-column label="毛重" align="center" prop="grossWeight" width="140px">
+            <af-table-column label="煤 种" align="center" prop="goodsName"/>
+            <af-table-column :label="vehicleColumnName" align="center" prop="plateNum"/>
+            <af-table-column label="毛 重" align="right" prop="grossWeight" width="140px">
               <template slot-scope="scope">
-                {{scope.row.grossWeight.toFixed(2)}}
+                {{ scope.row.grossWeight.toFixed(2) }}
               </template>
             </af-table-column>
-            <af-table-column label="皮重" align="center" prop="tare" width="140px">
+            <af-table-column label="皮 重" align="right" prop="tare" width="140px">
               <template slot-scope="scope">
-                {{scope.row.tare.toFixed(2)}}
+                {{ scope.row.tare.toFixed(2) }}
               </template>
             </af-table-column>
-            <af-table-column label="净重" align="center" prop="netWeight" width="140px">
+            <af-table-column label="净 重" align="right" prop="netWeight" width="140px">
               <template slot-scope="scope">
-                {{scope.row.netWeight.toFixed(2)}}
+                {{ scope.row.netWeight.toFixed(2) }}
               </template>
             </af-table-column>
           </el-table>
@@ -329,8 +330,7 @@ export default {
       titleList: [],
 
       printShow: false,
-
-
+      vehicleColumnName: '车 数',
       //发货单位
       shipper: '',
       // 导出格式
@@ -358,7 +358,7 @@ export default {
       excelFooter: '',
       // 选中数组
       // 打印标题
-      prinTtitle: '内蒙古嘉易达矿业有限公司统计报表',
+      printTitle: '内蒙古嘉易达矿业有限公司统计报表',
       // 标题时间
       timeTitle: '',
       ids: [],
@@ -380,8 +380,8 @@ export default {
       open: false,
       directionDic: [
         {'key': '', 'value': '全部'},
-        {'key': 'I', 'value': '入场'},
-        {'key': 'E', 'value': '出场'},
+        {'key': 'I', 'value': '未出场'},
+        {'key': 'E', 'value': '已出场'},
       ],
       statisticsModeDic: [
         {'key': 1, 'value': '寄仓客户汇总'},
@@ -430,10 +430,10 @@ export default {
     };
   },
   created() {
-    //this.titleList.push(this.prinTtitle);
+    //this.titleList.push(this.printTitle);
     // 页面初始化获取时间0
     this.dateRange = ['', '']
-    var aData = new Date();
+    let aData = new Date();
     this.nowDate =
       aData.getFullYear() +
       "-" +
@@ -547,9 +547,17 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
+      this.vehicleColumnName = this.queryParams.statisticsMode === 1 ? '车 数' : '车 号'
       //先判断条件，再查询
+      if (!this.dateRange || !this.dateRange[0] || !this.dateRange[1]) {
+        this.$message.warning('请选择时间范围')
+        return false
+      }
+
       this.queryParams.startTime = this.dateRange[0]
       this.queryParams.endTime = this.dateRange[1]
+
+      console.log(this.queryParams.startTime)
 
       if (!this.queryParams.startTime || !this.queryParams.endTime) {
         this.$message.warning('请选择时间范围')
@@ -581,7 +589,7 @@ export default {
         //this.result = response
         if (response.code === 200) {
           this.reportList = response.data.list
-          if (this.reportList.length == 0) {
+          if (this.reportList.length === 0) {
             this.$message.warning("没取到数据，请从新选取时间间隔")
           }
           //console.log(this.reportList)
@@ -594,23 +602,22 @@ export default {
           let index = 0
           this.newArray = [];
           while (index < this.reportList.length) {
-            this.newArray.push(this.reportList.slice(index, index += 23));
+            this.newArray.push(this.reportList.slice(index, index += 50));
           }
           this.titleList = [];
-          this.timeTitle = this.dateRange[0] + '至' + this.dateRange[1] + '磅单统计';
+          this.timeTitle = this.dateRange[0] + ' 至 ' + this.dateRange[1] + ' 磅单统计';
           this.titleList.push(this.timeTitle);
 
           if (this.queryParams.direction == '1') {
-            this.shipper = '收货单位=嘉易达'
+            this.shipper = '收货单位 : 嘉易达'
             this.titleList.push(this.shipper);
           } else {
-            this.shipper = '发货单位=嘉易达'
+            this.shipper = '发货单位 : 嘉易达'
             this.titleList.push(this.shipper);
           }
 
           this.excelFooter = '总车数' + ':' + this.vehicleCount + "    " + '毛重合计' + ':' +
-            this.totalRoughWeight + "  " +'皮重合计'+':'+this.totalTareWeight+ "  " + '净重合计' + ':' + this.totalNetWeight
-
+            this.totalRoughWeight + "  " + '皮重合计' + ':' + this.totalTareWeight + "  " + '净重合计' + ':' + this.totalNetWeight
         }
       })
     },
@@ -622,9 +629,8 @@ export default {
     },
 
     // 打印操作，生成divID
-    gennerateId: function (index) {
+    generateId: function (index) {
       return "printDiv" + index
-
     },
     //场所变化 获取对应场所的合同
     getContract(placeId, status) {
@@ -638,7 +644,7 @@ export default {
             //重新给客户列表 赋值
             this.customerList = []
             for (let contract of this.contractList) {
-              if (!this.customerList.find(cus => cus.customerId === contract.customerId)) {
+              if (!this.customerList.find(cus => cus.customerName === contract.customerName)) {
                 this.customerList.push(contract)
               }
             }
@@ -661,7 +667,16 @@ export default {
       this.loading = true;
       let info = {"eType": '2', 'deptId': this.queryParams.placeId, 'companyType': '4'}
       listInfo(info).then(response => {
-        this.transUnitList = response.rows;
+        this.transUnitList = []
+        if (response.code === 200 && response.rows.length > 0) {
+          for (let item of response.rows) {
+            if (!this.transUnitList.find(unit => unit.eAbbreviation === item.eAbbreviation)) {
+              this.transUnitList.push(item)
+            }
+          }
+        }
+
+        //this.transUnitList = response.rows;
         this.loading = false;
       });
     },
