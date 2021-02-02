@@ -15,7 +15,7 @@
         </el-form-item>
         <el-form-item label="统计方式" prop="statisticsMode">
           <el-select @change="changeStatistics"
-                     v-model="queryParams.statisticsMode" placeholder="请选择统计方式">
+                     v-model="queryParams.statisticsMode" placeholder="请选择统计方式" size="small">
             <el-option
               v-for="type in statisticsModeDic"
               :key="type.key"
@@ -27,7 +27,7 @@
       </el-row>
       <el-row>
         <el-form-item label="车辆状态" prop="direction">
-          <el-select
+          <el-select size="small"
             v-model="queryParams.direction" placeholder="请选择进车辆状态">
             <el-option
               v-for="type in directionDic"
@@ -40,7 +40,7 @@
 
         <el-form-item label="寄仓客户" prop="deliveryUnit">
           <!--<el-input v-model="form.storeCustomer" placeholder="请输入寄仓客户" disabled/>-->
-          <el-select
+          <el-select size="small"
             filterable
             clearable
             v-model="queryParams.deliveryUnit" placeholder="请选择寄仓客户">
@@ -80,7 +80,7 @@
           <!--          </el-date-picker>-->
 
           <el-date-picker
-            v-model="dateRange"
+            v-model="dateRange"  size="small"
             type="datetimerange"
             align="right"
             start-placeholder="开始日期"
@@ -127,7 +127,7 @@
         </el-select>
       </el-form-item>-->
       <el-form-item label="车辆类型" prop="viaType">
-        <el-select
+        <el-select  size="small"
           v-model="queryParams.viaType" placeholder="请选择车辆类型">
           <el-option
             v-for="type in viaTypeDic"
@@ -140,7 +140,7 @@
 
       <el-form-item label="承运单位" prop="transportUnit">
         <!--<el-input v-model="form.transportUnit" placeholder="请输入承运单位"/>-->
-        <el-select v-model="queryParams.transportUnit" filterable clearable placeholder="请选择承运单位">
+        <el-select v-model="queryParams.transportUnit" filterable clearable placeholder="请选择承运单位"  size="small">
           <el-option
             v-for="item in transUnitList"
             :key="item.eAbbreviation"
@@ -241,7 +241,7 @@
       <div v-for="(item,index) in newArray" style="page-break-after:always">
         <div :id="generateId(index)"></div>
         <div class="box-card"
-             style="margin: 0 auto 30px auto;font-size:18px;width:1000px;padding-left: 1px ;padding-top:10px;"
+             style="margin: 0 auto 30px auto;font-size:18px;width:1000px;padding-left: 1px ;padding-top:20px;"
              v-show="true">
           <!--      <div v-show="printSmallTitle">-->
           <div style="padding-left: 300px;font-size: 20px;margin-bottom: 20px">
@@ -266,27 +266,27 @@
             <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
             <af-table-column label="煤 种" align="center" prop="goodsName"/>
             <af-table-column :label="vehicleColumnName" align="center" prop="plateNum"/>
-            <af-table-column label="毛 重" align="right" prop="grossWeight" width="140px">
+            <af-table-column label="毛 重 (吨)" align="right" prop="grossWeight" width="120px">
               <template slot-scope="scope">
                 {{ scope.row.grossWeight.toFixed(2) }}
               </template>
             </af-table-column>
-            <af-table-column label="皮 重" align="right" prop="tare" width="140px">
+            <af-table-column label="皮 重 (吨)" align="right" prop="tare" width="120px">
               <template slot-scope="scope">
                 {{ scope.row.tare.toFixed(2) }}
               </template>
             </af-table-column>
-            <af-table-column label="净 重" align="right" prop="netWeight" width="140px">
+            <af-table-column label="净 重 (吨)" align="right" prop="netWeight" width="120px">
               <template slot-scope="scope">
                 {{ scope.row.netWeight.toFixed(2) }}
               </template>
             </af-table-column>
           </el-table>
           <el-row class="countRow" v-show="index===newArray.length-1 ?  true : false">
-            <span v-show="vehicleCount>0">总车数:{{ vehicleCount }}</span>
-            <span>毛重合计:{{ totalRoughWeight }}</span>
-            <span>皮重合计:{{ totalTareWeight }}</span>
-            <span>净重合计:{{ totalNetWeight }}</span>
+            <span v-show="vehicleCount>0">总车数:{{ vehicleCount }} (辆)</span>
+            <span>毛重合计:{{ totalRoughWeight }} (吨)</span>
+            <span>皮重合计:{{ totalTareWeight }} (吨)</span>
+            <span>净重合计:{{ totalNetWeight }} (吨)</span>
           </el-row>
         </div>
       </div>

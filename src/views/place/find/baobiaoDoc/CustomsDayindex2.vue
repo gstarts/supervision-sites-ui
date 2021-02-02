@@ -822,7 +822,7 @@
       max-height="800"
       show-summary
     >
-      <el-table-column label="公司简称" align="center" prop="寄仓客户" fixed width="120" >
+      <el-table-column label="公司简称" align="center" prop="寄仓客户" fixed="left" width="120" >
         <template slot-scope="scope">
           <el-tooltip effect="light" :content="scope.row.寄仓客户" placement="top-start">
              <span>{{ scope.row.寄仓客户.substring(0,6) }}</span>
@@ -830,7 +830,7 @@
         </template>
       </el-table-column>
       <!-- <el-table-column label="客户全称" align="center" prop="寄仓客户" fixed/> -->
-      <el-table-column label="煤种" align="center" prop="煤种" />
+      <el-table-column label="煤种" align="center" prop="煤种" fixed="left" />
 
       <el-table-column label="当日入库(露天存放)" align="center">
         <el-table-column label="车数" align="center" prop="当日入库车数露天" />
@@ -1481,7 +1481,7 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog>    
+    </el-dialog>
   </div>
 </template>
 
