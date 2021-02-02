@@ -372,10 +372,10 @@
         <span class="poundTotal11">{{ poundTotal }}</span>
       </div>
       <div id="area">
-        <span class="area-in-style">{{ nowDate }}</span>
+        <span class="area-in-style">{{ printObj.nowDate }}</span>
       </div>
       <div id="areadate">
-        <span>{{ nowTime }}</span>
+        <span>{{ printObj.nowTime }}</span>
       </div>
       <div id="serialNumber">
         <span>{{ pad(printObj.id) }}</span>
@@ -424,11 +424,11 @@
           <span class="poundTotal111">{{ poundTotal }}</span>
         </div>
         <div id="area1">
-          <span class="area-in-style">{{ nowDate }}</span>
+          <span class="area-in-style">{{ printObj.nowDate }}</span>
         </div>
         <div style="margin-bottom: 4px;">
           <div class="areadate1">
-            <span>{{ nowTime }}</span>
+            <span>{{ printObj.nowTime }}</span>
           </div>
         </div>
         <div id="serialNumber1">
@@ -791,6 +791,10 @@ export default {
   created() {
     //console.log("------")
     console.log(this.$store.state.user.nickName)
+    console.log("时间转字符串")
+    console.log(parseTime(new Date()))
+    console.log(parseTime(new Date()))
+    console.log(parseTime(new Date()))
     //监听键盘事件
     document.addEventListener('keydown', this.handleKeyDown)
     document.addEventListener('keyup', this.handleKeyUp)
@@ -1532,6 +1536,10 @@ export default {
                 }
                 // 更新之前将变量锁定
                 this.printObj = {...this.form} //解构赋值
+                let date = parseTime(new Date())
+                this.printObj.endTime = date
+                this.printObj.nowDate = date.substring(0, 10)
+                this.printObj.nowTime = date.substring(10, 19)
                 //console.log('---更新磅单提交的数据')
                 //console.log(this.printObj)
                 //console.log('----------')
