@@ -790,11 +790,7 @@ export default {
   },
   created() {
     //console.log("------")
-    console.log(this.$store.state.user.nickName)
-    console.log("时间转字符串")
-    console.log(parseTime(new Date()))
-    console.log(parseTime(new Date()))
-    console.log(parseTime(new Date()))
+    //console.log(this.$store.state.user.nickName)
     //监听键盘事件
     document.addEventListener('keydown', this.handleKeyDown)
     document.addEventListener('keyup', this.handleKeyUp)
@@ -1634,6 +1630,7 @@ export default {
             type: 'info',
             message: '此车辆状态异常，不放行'
           });
+          return false
         });
       } else {
         this.outStoreUpdate()
