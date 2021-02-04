@@ -17,6 +17,13 @@ export function getManagement(id) {
   })
 }
 
+//单据号返回
+export  function DocumentNo(){
+  return request({
+    url:'/tax/management/DocumentNo',
+    method:'get'
+  })
+}
 // 新增司机食宿管理
 export function addManagement(data) {
   return request({

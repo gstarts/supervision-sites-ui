@@ -39,6 +39,7 @@
       </el-form-item>-->
       <el-form-item label="寄仓客户" prop="checkConsumer">
         <el-select clearable
+                   filterable
                    v-model="queryParams.checkConsumer"
                    placeholder="请选择寄仓客户"
                    size="small">
@@ -53,6 +54,7 @@
       </el-form-item>
       <el-form-item label="寄仓合同" prop="checkContractNo">
         <el-select clearable
+                   filterable
                    v-model="queryParams.checkContractNo"
                    placeholder="请选择寄仓合同"
                    size="small">
@@ -68,6 +70,7 @@
       <el-form-item label="品名" prop="goodsName">
         <el-select
           clearable
+          filterable
           v-model="queryParams.goodsName"
           placeholder="请选择品名"
           size="small">
@@ -515,7 +518,7 @@
       :data="instoreDocList"
       @selection-change="handleSelectionChange">
       <!--<af-table-column type="selection" width="55" align="center" />-->
-      <!--      <af-table-column label="ID" align="center" prop="id"/>-->
+            <af-table-column label="ID" align="center" prop="id"/>
       <!--<af-table-column label="场所编号" align="center" prop="placeId"/>-->
       <!--<af-table-column label="业务编号" align="center" prop="storeCode" />-->
       <!-- <af-table-column label="发货客户" align="center" prop="sendName"/>-->
@@ -523,7 +526,7 @@
       <af-table-column label="寄仓合同号" align="center" prop="checkContractNo"/>
       <af-table-column label="品名" align="center" prop="goodsName"/>
       <!--<af-table-column label="库位号" align="center" prop="storeCode"/>-->
-      <af-table-column label="车号" align="center" prop="vehicleNo"/>
+      <af-table-column label="车号" align="center" prop="vehicleNo" width="90"/>
       <af-table-column label="蒙方磅单号" align="center" prop="mongoliaBillNo" />
 
 
@@ -593,7 +596,7 @@
       <af-table-column label="箱号3" align="center" prop="containerNo3"/>
       <af-table-column label="箱号4" align="center" prop="containerNo4"/>
       <af-table-column label="备注" align="center" prop="memo"/>
-      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="140">
         <template slot-scope="scope">
           <el-button
             v-show="scope.row.storeState === '0'"

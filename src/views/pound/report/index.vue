@@ -160,7 +160,7 @@
       <el-form-item>
         <el-row :gutter="5">
           <el-col :span="6">
-            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery" :loading="loading">搜索</el-button>
           </el-col>
           <el-col :span="6">
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -619,7 +619,7 @@ export default {
           this.excelFooter = '总车数' + ':' + this.vehicleCount + "    " + '毛重合计' + ':' +
             this.totalRoughWeight + "  " + '皮重合计' + ':' + this.totalTareWeight + "  " + '净重合计' + ':' + this.totalNetWeight
         }
-      })
+      }).catch(e=>{this.loading = false})
     },
 
     //场所改变时，去查对应场所的
