@@ -19,6 +19,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="寄仓客户" prop="customerName">
+        <el-input
+          v-model="queryParams.customerName"
+          placeholder="请输入寄仓客户"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="承运单位" prop="transportUnit">
         <el-input
           v-model="queryParams.transportUnit"
@@ -114,6 +122,8 @@
 
     <el-table v-loading="loading" :data="docList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" :selectable="checkboxInit"/>
+      <af-table-column label="寄仓客户" align="center" prop="customerName" fixed="left"/>
+      <af-table-column label="车牌号" align="center" prop="vehicleNo" fixed="left"/>
       <el-table-column label="打印次数" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.inCardPrintState ==='0' || scope.row.inCardPrintState == null "
@@ -122,7 +132,6 @@
         </template>
       </el-table-column>
       <af-table-column label="ID" align="center" prop="id"/>
-      <af-table-column label="车牌号" align="center" prop="vehicleNo"/>
       <af-table-column label="货净重(KG)" align="center" prop="vehicleGoodsNetWeight"/>
       <af-table-column label="车皮重(KG)" align="center" prop="vehicleTareWeight"/>
       <!--      <af-table-column label="备注" align="center" prop="remark"/>-->

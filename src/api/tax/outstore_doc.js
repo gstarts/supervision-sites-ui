@@ -9,6 +9,15 @@ export function listOutstore_doc(query) {
   })
 }
 
+// 查询出库单列表
+export function listOutstore_docNo(query) {
+  return request({
+    url: '/tax/outstore_doc/list/no',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询出库单详细
 export function getOutstore_doc(id) {
   return request({

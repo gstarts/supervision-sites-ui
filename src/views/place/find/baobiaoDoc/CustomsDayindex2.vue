@@ -819,32 +819,59 @@
       v-loading="loading"
       :data="outstoreDocList"
       @selection-change="handleSelectionChange"
-      max-height="800"
+      max-height="100%"
       show-summary
     >
-      <el-table-column label="公司简称" align="center" prop="寄仓客户" fixed width="120" >
+      <el-table-column
+        label="序号"
+        align="center"
+        prop="序号"
+        type="index"
+        fixed="left"
+      >
         <template slot-scope="scope">
-          <el-tooltip effect="light" :content="scope.row.寄仓客户" placement="top-start">
-             <span>{{ scope.row.寄仓客户.substring(0,6) }}</span>
+          <span>{{ scope.$index + 1 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="公司简称"
+        align="center"
+        prop="寄仓客户"
+        fixed="left"
+        width="120"
+      >
+        <template slot-scope="scope">
+          <el-tooltip
+            effect="light"
+            :content="scope.row.寄仓客户"
+            placement="top-start"
+          >
+            <span>{{ scope.row.寄仓客户.substring(0, 6) }}</span>
           </el-tooltip>
         </template>
       </el-table-column>
       <!-- <el-table-column label="客户全称" align="center" prop="寄仓客户" fixed/> -->
-      <el-table-column label="煤种" align="center" prop="煤种" />
+      <el-table-column
+        label="煤种"
+        align="center"
+        prop="煤种"
+        fixed="left"
+        width="130"
+      />
 
       <el-table-column label="当日入库(露天存放)" align="center">
-        <el-table-column label="车数" align="center" prop="当日入库车数露天" />
+        <el-table-column label="车数(辆)" align="center" prop="当日入库车数露天" />
         <el-table-column
-          label="调入"
+          label="调入(吨)"
           align="center"
           prop="当日调入数量Kg露天"
         />
       </el-table-column>
 
       <el-table-column label="当日出库(露天存放)" align="center">
-        <el-table-column label="车数" align="center" prop="当日出库车数露天" />
+        <el-table-column label="车数(辆)" align="center" prop="当日出库车数露天" />
         <el-table-column
-          label="调出"
+          label="调出(吨)"
           align="center"
           prop="当日调出数量Kg露天"
         />
@@ -852,91 +879,99 @@
 
       <el-table-column label="当日入库(1#煤棚)" align="center">
         <el-table-column
-          label="车数"
+          label="车数(辆)"
           align="center"
           prop="当日入库车数1号煤棚"
         />
         <el-table-column
-          label="调入"
+          label="调入(吨)"
           align="center"
           prop="当日调入数量Kg1号煤棚"
         />
       </el-table-column>
       <el-table-column label="当日出库(1#煤棚)" align="center">
         <el-table-column
-          label="车数"
+          label="车数(辆)"
           align="center"
           prop="当日出库车数1号煤棚"
         />
         <el-table-column
-          label="调出"
+          label="调出(吨)"
           align="center"
           prop="当日调出数量Kg1号煤棚"
         />
       </el-table-column>
       <el-table-column label="当日入库(2#煤棚)" align="center">
         <el-table-column
-          label="车数"
+          label="车数(辆)"
           align="center"
           prop="当日入库车数2号煤棚"
         />
         <el-table-column
-          label="调入"
+          label="调入(吨)"
           align="center"
           prop="当日调入数量Kg2号煤棚"
         />
       </el-table-column>
       <el-table-column label="当日出库(2#煤棚)" align="center">
         <el-table-column
-          label="车数"
+          label="车数(辆)"
           align="center"
           prop="当日出库车数2号煤棚"
         />
         <el-table-column
-          label="调出"
+          label="调出(吨)"
           align="center"
           prop="当日调出数量Kg2号煤棚"
         />
       </el-table-column>
 
       <el-table-column
-        label="库存(露天存放)"
+        label="库存(露天存放(吨))"
         align="center"
         prop="库存Kg露天"
+        width="130"
       />
       <el-table-column
-        label="库存(1#库存煤棚)"
+        label="库存(1#库存煤棚(吨))"
         align="center"
         prop="库存Kg1号煤棚"
+        width="150"
       />
       <el-table-column
-        label="库存(2#库存煤棚)"
+        label="库存(2#库存煤棚(吨))"
         align="center"
         prop="库存Kg2号煤棚"
+        width="150"
       />
-      <el-table-column label="库存(合计)" align="center" prop="库存合计" />
-      <el-table-column label="累计损耗" align="center" prop="累计损耗Kg" />
+      <el-table-column
+        label="库存(合计(吨))"
+        align="center"
+        prop="库存合计"
+        width="120"
+      />
+      <!-- <el-table-column label="累计损耗" align="center" prop="累计损耗Kg" /> -->
       <el-table-column label="备注" align="center" prop="备注" />
 
       <el-table-column label="本月累计调入" align="center">
-        <el-table-column label="车数" align="center" prop="当月入库车数" />
-        <el-table-column label="吨数" align="center" prop="当月调入数量Kg" />
+        <el-table-column label="车数(辆)" align="center" prop="当月入库车数" />
+        <el-table-column label="吨数(吨)" align="center" prop="当月调入数量Kg" />
       </el-table-column>
 
       <el-table-column label="本月累计调出" align="center">
-        <el-table-column label="车数" align="center" prop="当月出库车数" />
-        <el-table-column label="吨数" align="center" prop="当月调出数量Kg" />
+        <el-table-column label="车数(辆)" align="center" prop="当月出库车数" />
+        <el-table-column label="吨数(吨)" align="center" prop="当月调出数量Kg" />
       </el-table-column>
-      <el-table-column label="期初转入" align="center" prop="期初转入Kg" />
+      <el-table-column label="期初转入(吨)" align="center" prop="期初转入Kg" width="120"/>
 
       <el-table-column label="本年累计" align="center">
         <el-table-column
-          label="调入"
+          label="调入(吨)"
           width="130"
           align="center"
           prop="本年调入数量Kg"
         />
-        <el-table-column label="调出" align="center" prop="本年调出数量Kg" />
+        <el-table-column label="调出(吨)" align="center" prop="本年调出数量Kg" />
       </el-table-column>
       <!-- <el-table-column label="累计损耗" align="center" prop="累计损耗Kg" /> -->
 
@@ -1481,7 +1516,7 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog>    
+    </el-dialog>
   </div>
 </template>
 
@@ -1617,6 +1652,7 @@ export default {
       customerList: [],
       depts: [],
       contractSubList: [],
+      num: 0,
       dateRange: [],
       dataRange01: ["", ""],
       // 表单参数
@@ -1657,10 +1693,17 @@ export default {
         // "期初转入":"column18",
         // "本年累计调入":"column15",
         // "本年累计调出":"column17",
-
-        "公司名称": "寄仓客户",
-        "客户全称": "寄仓客户",
-        "煤种": "煤种",
+        序号: {
+          callback: (scope) => {
+            if (scope) {
+              this.num++;
+            }
+            return this.num;
+          },
+        },
+        公司名称: "寄仓客户",
+        客户全称: "寄仓客户",
+        煤种: "煤种",
         "当日入库(露天存放)车数": "当日入库车数露天",
         "当日入库(露天存放)调入": "当日调入数量Kg露天",
         "当日出库(露天存放)车数": "当日出库车数露天",
@@ -1677,16 +1720,16 @@ export default {
         "库存(库存1#煤棚)": "库存Kg1号煤棚",
         "库存(库存2#煤棚)": "库存Kg2号煤棚",
         "库存(合计)": "库存合计",
-        "累计损耗": "累计损耗Kg",
-        "备注": "备注",
-        "本月累计调入车数": "当月入库车数",
-        "本月累计调入吨数": "当月调入数量Kg",
-        "本月累计调出车数": "当月出库车数",
-        "吨数": "当月调出数量Kg",
-        "期初转入": "期初转入Kg",
-        "本年累计调入": "本年调入数量Kg",
-        "本年累计调出": "本年调出数量Kg",
-        "累计损耗": "累计损耗Kg",
+        累计损耗: "累计损耗Kg",
+        备注: "备注",
+        本月累计调入车数: "当月入库车数",
+        本月累计调入吨数: "当月调入数量Kg",
+        本月累计调出车数: "当月出库车数",
+        吨数: "当月调出数量Kg",
+        期初转入: "期初转入Kg",
+        本年累计调入: "本年调入数量Kg",
+        本年累计调出: "本年调出数量Kg",
+        累计损耗: "累计损耗Kg",
 
         // "箱皮重":"boxTareWeight",
         // "净重":"netWeight",

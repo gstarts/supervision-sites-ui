@@ -10,11 +10,11 @@
       </el-button>
       <el-button type="primary" @click="getVehicleList" size="small">刷车号(F9)</el-button>
       <el-button style="display:none"
-        ref="printBtn"
-        type="info"
-        size="small"
-        v-print="printObject"
-        @click="print">
+                 ref="printBtn"
+                 type="info"
+                 size="small"
+                 v-print="printObject"
+                 @click="print">
         <i class="fa fa-print" aria-hidden="true">&nbsp;&nbsp;打印</i>
       </el-button>
 
@@ -372,10 +372,10 @@
         <span class="poundTotal11">{{ poundTotal }}</span>
       </div>
       <div id="area">
-        <span class="area-in-style">{{ nowDate }}</span>
+        <span class="area-in-style">{{ printObj.nowDate }}</span>
       </div>
       <div id="areadate">
-        <span>{{ nowTime }}</span>
+        <span>{{ printObj.nowTime }}</span>
       </div>
       <div id="serialNumber">
         <span>{{ pad(printObj.id) }}</span>
@@ -424,11 +424,11 @@
           <span class="poundTotal111">{{ poundTotal }}</span>
         </div>
         <div id="area1">
-          <span class="area-in-style">{{ nowDate }}</span>
+          <span class="area-in-style">{{ printObj.nowDate }}</span>
         </div>
         <div style="margin-bottom: 4px;">
           <div class="areadate1">
-            <span>{{ nowTime }}</span>
+            <span>{{ printObj.nowTime }}</span>
           </div>
         </div>
         <div id="serialNumber1">
@@ -482,19 +482,19 @@
 //获取实时重量
 import {
   addSheet,
+  getNoticeByVehicle,
   getSheet,
+  getVehicleList,
   listIESheet,
   poundSelect,
-  updateSheet,
-  getVehicleList,
-  getNoticeByVehicle, updatePoundErr
+  updatePoundErr,
+  updateSheet
 } from "@/api/pound/poundlist";
 import {genTimeCode, parseTime} from "@/utils/common";
 import {listChnlConfig} from "@/api/basis/chnlConfig";
 import {getUserDepts, isChina} from "@/utils/charutils";
 import {listUser} from "@/api/system/user";
 import store from '@/store/index'
-import {setPoundConfig} from "@/utils/auth";
 
 export default {
   name: "Client",
@@ -790,7 +790,7 @@ export default {
   },
   created() {
     //console.log("------")
-    console.log(this.$store.state.user.nickName)
+    //console.log(this.$store.state.user.nickName)
     //监听键盘事件
     document.addEventListener('keydown', this.handleKeyDown)
     document.addEventListener('keyup', this.handleKeyUp)
@@ -1499,11 +1499,11 @@ export default {
               //console.log('----------')
               //进场 新增 tod
               addSheet(this.printObj).then((response) => {
+                this.dataLoading = false
                 if (response.code === 200) {
                   this.msgSuccess("进场成功");
                   //更新单证入场时间
                   //this.updateDocTime(response.data.poundId)
-                  this.dataLoading = false
                   //如果是进进场激活，刷新列表
                   /*if (this.activeName === 'Approach') {
                     this.getListI();
@@ -1516,9 +1516,11 @@ export default {
                   this.getListE();
                   this.getVehicleList() //重新加载车辆
                 } else {
-                  this.dataLoading = false
+                  //this.dataLoading = false
                   this.msgError(response.msg);
                 }
+              }).catch(e => {
+                this.dataLoading = false
               });
             } else if (this.PoundForm.flowDirection === "E") {//如果是出场
               this.form.flowDirection = this.PoundForm.flowDirection;
@@ -1530,15 +1532,20 @@ export default {
                 }
                 // 更新之前将变量锁定
                 this.printObj = {...this.form} //解构赋值
+                let date = parseTime(new Date())
+                this.printObj.endTime = date
+                this.printObj.nowDate = date.substring(0, 10)
+                this.printObj.nowTime = date.substring(10, 19)
                 //console.log('---更新磅单提交的数据')
                 //console.log(this.printObj)
                 //console.log('----------')
                 updateSheet(this.printObj).then(response => {
+                  this.dataLoading = false
                   if (response.code === 200) {
                     this.msgSuccess("出场成功");
                     console.log("================")
                     console.log(this.form)
-                    this.dataLoading = false
+                    //this.dataLoading = false
                     this.reset()
                     this.getListI();
                     this.getListE();
@@ -1623,6 +1630,7 @@ export default {
             type: 'info',
             message: '此车辆状态异常，不放行'
           });
+          return false
         });
       } else {
         this.outStoreUpdate()

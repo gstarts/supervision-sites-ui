@@ -25,16 +25,16 @@
     <span style="color: red;font-size: 10px">注:请输入正确的业务编号后按回车键联想相应数据!!!!</span>
     <el-card class="mb5">
       <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="95px" :rules="rules">
-        <el-form-item label="场站ID" prop="placeId">
-          <el-select v-model="queryParams.placeId" placeholder="请选择场所">
-            <el-option
-              v-for="dept in depts"
-              :key="dept.deptId"
-              :label="dept.deptName"
-              :value="dept.deptId"
-            />
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="场站ID" prop="placeId">-->
+<!--          <el-select v-model="queryParams.placeId" placeholder="请选择场所">-->
+<!--            <el-option-->
+<!--              v-for="dept in depts"-->
+<!--              :key="dept.deptId"-->
+<!--              :label="dept.deptName"-->
+<!--              :value="dept.deptId"-->
+<!--            />-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
 <!--        <el-form-item label="单据号" prop="documentNo">-->
 <!--          <el-input-->
 <!--            v-model="queryParams.documentNo"-->
@@ -43,6 +43,17 @@
 <!--            size="small"-->
 <!--          />-->
 <!--        </el-form-item>-->
+
+        <el-form-item label="业务编号" prop="businessNumber" >
+          <el-input
+            v-model="queryParams.businessNumber"
+            placeholder="请输入业务编号"
+            clearable
+            size="small"
+            @keyup.enter.native="SelectbusinessNumber"
+          />
+        </el-form-item>
+
         <el-form-item label="LotNo" prop="lotNo">
           <el-input
             v-model="queryParams.lotNo"
@@ -69,15 +80,7 @@
                           placeholder="选择入境日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="业务编号" prop="businessNumber" >
-          <el-input
-            v-model="queryParams.businessNumber"
-            placeholder="请输入业务编号"
-            clearable
-            size="small"
-            @keyup.enter.native="SelectbusinessNumber"
-          />
-        </el-form-item>
+
         <el-form-item label="取样日期" prop="samplingTime">
           <el-date-picker clearable size="small" style="width: 200px"
                           v-model="queryParams.samplingTime"
@@ -103,7 +106,7 @@
 <!--            size="small"-->
 <!--            @keyup.enter.native="handleQuery"-->
 <!--          />-->
-          <el-select v-model="queryParams.samplingPeople" placeholder="请选择取样人">
+          <el-select v-model="queryParams.samplingPeople" multiple   placeholder="请选择取样人">
             <el-option
               v-for="user in userList"
               :key="user.userId"
@@ -128,6 +131,37 @@
                           value-format="yyyy-MM-dd HH:mm:ss"
                           placeholder="选择返程日期">
           </el-date-picker>
+        </el-form-item>
+
+
+
+        <el-form-item label="制单人" prop="makerPeople">
+                  <el-input
+                    v-model="queryParams.makerPeople"
+                    placeholder="请输入制单人"
+                    clearable
+                    size="small"
+                    @keyup.enter.native="handleQuery"
+                  />
+                </el-form-item>
+                <el-form-item label="制单日期" prop="makerTime">
+                  <el-date-picker clearable size="small" style="width: 200px"
+                    v-model="queryParams.makerTime"
+                    type="date"
+                    value-format="yyyy-MM-dd"
+                    placeholder="选择制单日期">
+                  </el-date-picker>
+                </el-form-item>
+
+
+        <el-form-item label="备注" prop="makerPeople">
+          <el-input
+            v-model="queryParams.remark"
+            placeholder="请输入备注"
+            clearable
+            size="small"
+            @keyup.enter.native="handleQuery"
+          />
         </el-form-item>
 <!--        <el-form-item label="单据状态" prop="documentsStatus">-->
 <!--          <el-select v-model="queryParams.documentsStatus" placeholder="请选择单据状态" clearable size="small">-->
@@ -294,7 +328,7 @@ export default {
         entryTime: undefined,
         businessNumber: undefined,
         samplingTime: formatDate(new Date(),"yyyy-MM-dd hh:mm"),
-        samplingUnit: undefined,
+        samplingUnit: '乌拉特出入境检验检疫局',
         samplingPeople: undefined,
         samplingWeight: undefined,
         returnTime: undefined,
@@ -363,7 +397,10 @@ export default {
     const LotNoDisabled=this.$route.query.LotNoDisabled
     if(id){
       getLord(id).then(response =>{
+
         this.queryParams=response.data
+        var array = response.data.samplingPeople.split(",")
+        this.queryParams.samplingPeople = array;
         this.flag=flag;
         this.single=single;
         this.LotNoDisabled=LotNoDisabled;
@@ -457,6 +494,12 @@ export default {
     handleAdd() {
       // this.open = true;
       // this.title = "添加取样管理 主";
+      // this.queryParams.makerPeople = this.queryParams.samplingPeople;
+
+      this.queryParams.samplingPeople= this.queryParams.samplingPeople.toString();
+      this.queryParams.makerPeople  = this.$store.state.user.nickName
+      console.log(this.makerPeople)
+   // console.log(this.queryParams.samplingPeople.join(","));
       this.$refs["queryParams"].validate(valid => {
         if (valid) {
       addLord(this.queryParams).then(response => {
@@ -476,6 +519,7 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.queryParams.samplingPeople= this.queryParams.samplingPeople.toString();
       this.$refs["queryParams"].validate(valid => {
         if(valid){
         updateLord(this.queryParams).then(response => {

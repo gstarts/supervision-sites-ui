@@ -271,7 +271,7 @@
           <el-col :span="12">
             <el-form-item label="寄仓客户" prop="storeCustomer" v-show="noticeType">
               <el-select v-model="form.storeCustomer" size="small" style="width: 100%" filterable clearable
-                         placeholder="请选择寄仓客户" @change="setStoreCustomer">
+                         placeholder="请选择寄仓客户" @change="setStoreCustomer" :disabled="form.templateType==='0'?true:false">
                 <el-option
                   v-for="type in contractList"
                   :key="type.id"
@@ -284,7 +284,7 @@
           <el-col :span="12">
             <el-form-item label="结算客户" prop="settlementCustomer" v-show="noticeType">
               <el-select v-model="form.settlementCustomer" size="small" style="width: 100%" filterable clearable
-                         placeholder="请选择结算客户" @change="setSettlementCustomer">
+                         placeholder="请选择结算客户" @change="setSettlementCustomer" disabled>
                 <el-option
                   v-for="type in contractList1"
                   :key="type.id"
@@ -299,7 +299,7 @@
           <el-col :span="12">
             <el-form-item label="发货单位" prop="sendName">
               <el-select v-model="form.sendName" size="small" style="width: 100%" filterable clearable
-                         placeholder="请选择发货单位">
+                         placeholder="请选择发货单位" disabled>
                 <el-option
                   v-for="type in nameList"
                   :key="type.key"
@@ -320,7 +320,7 @@
           <el-col :span="12">
             <el-form-item label="收货单位" prop="receiveName">
               <el-select v-model="form.receiveName" size="small" style="width: 100%" filterable clearable
-                         placeholder="请选择收货单位">
+                         placeholder="请选择收货单位" disabled>
                 <el-option
                   v-for="type in nameList"
                   :key="type.key"
@@ -407,12 +407,16 @@ import {getUserDepts} from '@/utils/charutils'
 import {listContract} from '@/api/tax/contract'
 import {getToken} from '@/utils/auth'
 import {getDocByBusinessNo} from "@/api/tax/instore_doc";
+import {listOutstore_docNo} from "@/api/tax/outstore_doc";
+import {getInfo} from "@/api/basis/enterpriseInfo";
+
 
 export default {
   name: "Import",
   data() {
     return {
       templateDownTxt: '',
+      enterpriseInfoId: undefined,
       // 遮罩层
       loading: false,
       noticeGening: false,
@@ -575,6 +579,7 @@ export default {
         'bucketName': ''
       },
       fileList: [],
+      disabled: false,
       transportModeList: [
         {'key': '1', 'value': '长途'},
         {'key': '2', 'value': '上站'},
@@ -873,7 +878,9 @@ export default {
         this.noticeType = true
         this.transType = false
         this.templateDownTxt = '入库通知单模板下载'
-        this.form.settlementCustomer = '奥云陶勒盖 [OT]'
+        this.form.storeCustomer = undefined
+        this.form.businessNo = undefined
+        this.form.settlementCustomer = '奥云陶勒盖 Oyu Tolgoi Limited'
         this.form.sendName = '奥云陶勒盖 Oyu Tolgoi Limited'
         this.form.receiveName = '金航保税库 Jinhang Bonded Warehouse'
         this.setStoreCustomer() //寄仓合同ID
@@ -884,7 +891,7 @@ export default {
         this.noticeType = true
         this.transType = true
         this.form.storeCustomer = undefined
-        this.form.settlementCustomer = '奥云陶勒盖 [OT]'
+        this.form.settlementCustomer = '奥云陶勒盖 Oyu Tolgoi Limited'
         this.templateDownTxt = '出库通知单模板下载'
         this.form.receiveName = undefined
         this.form.sendName = '金航保税库'
@@ -892,7 +899,7 @@ export default {
       } else if (this.form.templateType === '2') {
         this.templateDownTxt = '报关数据单模板下载'
         this.form.businessNo = undefined
-        this.form.settlementCustomer = '奥云陶勒盖 [OT]'
+        this.form.settlementCustomer = '奥云陶勒盖 Oyu Tolgoi Limited'
         this.form.storeCustomer = undefined
         this.form.storeContractId = undefined
         this.form.settlementContractId = undefined
@@ -946,16 +953,31 @@ export default {
       //如果是出库单时，在业务编号中，回车
       if (this.form.templateType === '0' && this.form.businessNo) {
         //用业务编号，从出库单中获取寄仓客户和 结算客户 的数据
-        getDocByBusinessNo(this.queryParams.placeId, this.form.businessNo).then(response => {
+        listOutstore_docNo(this.form).then(response => {
           if (response.code === 200) {
-            this.form.storeCustomer = response.data.checkConsumer
-            this.form.settlementCustomer = '奥云陶勒盖 [OT]'
-            this.setStoreCustomer()
-            this.setSettlementCustomer()
+            this.enterpriseInfoId = response.rows[0].customerId
+            this.getEnterpriseInfo();
+            // this.form.storeCustomer = response.data.checkConsumer
+            // this.form.settlementCustomer = '奥云陶勒盖 Oyu Tolgoi Limited'
+            // this.setStoreCustomer()
+            // this.setSettlementCustomer()
           }
         })
       }
     },
+    //获取企业信息备案表信息
+    getEnterpriseInfo() {
+      console.log(this.enterpriseInfoId)
+        getInfo(this.enterpriseInfoId).then(response => {
+          if (response.code === 200) {
+            this.form.receiveName = response.data.eName
+            this.form.storeCustomer = response.data.eEname
+            // this.form.settlementCustomer = '奥云陶勒盖 Oyu Tolgoi Limited'
+            // this.setStoreCustomer()
+            // this.setSettlementCustomer()
+          }
+        })
+      },
     /** 删除入库通知单数据及文件 */
     handleDeleteInstoreData(row) {
       let that = this

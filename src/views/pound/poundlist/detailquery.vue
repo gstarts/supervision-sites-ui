@@ -1363,9 +1363,9 @@ export default {
       // 判断磅单时间 与当前时间 相差是否超过4小时
       if (((new Date().getTime() - new Date(row.outTime).getTime()) / 1000 / 60 / 60) <= 4) {
         this.printShow = true
-        let date = parseTime(new Date())
-        this.printDate.nowDate = date.substring(0, 10);
-        this.printDate.nowTime = date.substring(10, 19);
+        //let date = parseTime(new Date())
+        this.printDate.nowDate = row.outTime.substring(0, 10);
+        this.printDate.nowTime = row.outTime.substring(10, 19);
         //发货单位
         this.printDate.deliveryUnit = row.deliveryUnit;
         this.printDate.plateNum = row.plateNum;
@@ -1409,9 +1409,9 @@ export default {
           } else if (response.data === 0) { //可以打印的
             //this.$message.success(response.msg);
             this.printShow = true
-            let date = parseTime(new Date())
-            this.printDate.nowDate = date.substring(0, 10);
-            this.printDate.nowTime = date.substring(10, 19);
+            //let date = parseTime(new Date())
+            this.printDate.nowDate = row.outTime.substring(0, 10);
+            this.printDate.nowTime = row.outTime.substring(10, 19);
             //发货单位
             this.printDate.deliveryUnit = row.deliveryUnit;
             this.printDate.plateNum = row.plateNum;

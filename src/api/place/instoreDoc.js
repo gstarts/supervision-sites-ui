@@ -94,3 +94,15 @@ export function customsMonthHz(params) {
     data: params
   })
 }
+
+
+// 参数 {placeId,contractNo,storeCode || businessNo}
+//如果 多个库位IDS，用businessNo 变量来接收
+//如果单个 库位，用storeCode
+export function getStockByCondition(params) {
+  return request({
+    url: '/place/instoreDoc/stockByCondition',
+    method: 'post',
+    data: params
+  })
+}

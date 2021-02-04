@@ -121,14 +121,15 @@
               </el-button
               >
             </el-col>-->
-       <el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
           size="small"
           @click="handleExport"
           v-hasPermi="['place:big:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
     </el-row>
 
@@ -401,26 +402,26 @@
               <el-button size="small" type="primary" plain>上传附件</el-button>
               <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“.png”或“.jpg”或“.jpeg”或“.pdf”格式文件！</div>
             </el-upload>
-<!--         <div>
-              <span v-show="updateForm.minFileName">{{ updateForm.minBucketName }}{{ updateForm.minFileName }}</span>
-              <el-button
-                size="small"
-                type="text"
-                icon="el-icon-download"
-                @click="handleDownload()"
-                v-show="updateForm.minFileName"
-              >下载
-              </el-button>
-              <el-button
-                size="small"
-                type="text"
-                icon="el-icon-delete"
-                @click="deleteBig()"
-                v-show="updateForm.minFileName"
-                v-hasPermi="['place:big:remove']"
-              >删除
-              </el-button>
-            </div>-->
+            <!--         <div>
+                          <span v-show="updateForm.minFileName">{{ updateForm.minBucketName }}{{ updateForm.minFileName }}</span>
+                          <el-button
+                            size="small"
+                            type="text"
+                            icon="el-icon-download"
+                            @click="handleDownload()"
+                            v-show="updateForm.minFileName"
+                          >下载
+                          </el-button>
+                          <el-button
+                            size="small"
+                            type="text"
+                            icon="el-icon-delete"
+                            @click="deleteBig()"
+                            v-show="updateForm.minFileName"
+                            v-hasPermi="['place:big:remove']"
+                          >删除
+                          </el-button>
+                        </div>-->
           </el-col>
         </el-row>
       </el-form>
@@ -440,6 +441,7 @@ import {getStoreByIds} from '@/api/place/store'
 import {getUserDepts} from '@/utils/charutils'
 import {listInfo, listInfoIn} from '@/api/basis/enterpriseInfo'
 import {delAttachment, getPreview} from "@/api/place/attachment";
+import {getStockByCondition} from "@/api/place/instoreDoc";
 
 export default {
   name: 'Big',
@@ -740,6 +742,9 @@ export default {
       getReleaseWeight(this.weightParams).then(response => {
         if (response.code === 200) {
           this.form.distribution = response.data.distribution
+          if (this.form.distribution < 0) {
+            this.form.distribution = 0
+          }
           this.$forceUpdate()
         }
       })
@@ -790,11 +795,11 @@ export default {
     submitForm: function () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          if (this.form.coalWeight > this.form.netWeight) {
+          if (this.form.coalWeight > this.form.netWeight || this.form.netWeight <= 0) {
             return this.msgError('库存容量不足!')
           }
-          if (this.form.coalWeight > this.form.distribution) {
-            return this.msgError('超出可分配重量')
+          if (this.form.coalWeight > this.form.distribution || this.form.distribution <= 0) {
+            return this.msgError('可分配重量不足')
           }
           if (this.form.id != undefined) {
             this.form.remark = this.attachmentList.join(',')
@@ -1001,16 +1006,22 @@ export default {
             this.form.customerId = element.id
             this.weightParams.id = element.id
             //this.queryParams.customerId = element.id
-            listStoreContract({'placeId': this.queryParams.placeId, 'customerId': element.id,status: '1'}).then((response) => {
+            listStoreContract({
+              'placeId': this.queryParams.placeId,
+              'customerId': element.id,
+              status: '1'
+            }).then((response) => {
               this.contractOptions = response.rows
               //this.queryParams.customerId = undefined
             })
           }
         })
       }
-      // 合同
+      // 合同改变时，去获取对应库位中的库存，原来是从库位中取，
+      // 2021-02-02 改为从出入库表中统计
       if (name === 'contractNo') {
         this.form.storeCode = undefined
+        this.form.netWeight = undefined
         this.contractOptions.forEach(element => {
           if (element.contractNo === val) {
             // 品名
@@ -1019,9 +1030,18 @@ export default {
             this.checkWeight()
             this.storeIds = element.params.contract
             const ids = element.storeIds
-            getStoreByIds(ids).then(response => {
-              this.storeIds = response.data
+            getStockByCondition({
+              placeId: this.form.placeId,
+              checkContractNo: element.contractNo,
+              businessNo: ids
+            }).then(response => {
+              if (response.code === 200) {
+                this.storeIds = response.data
+              }
             })
+            /*getStoreByIds(ids).then(response => {
+              this.storeIds = response.data
+            })*/
           }
         })
       }
