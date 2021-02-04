@@ -821,6 +821,7 @@
       @selection-change="handleSelectionChange"
       max-height="100%"
       show-summary
+      :summary-method="getTotal"
     >
       <el-table-column
         label="序号"
@@ -833,23 +834,16 @@
           <span>{{ scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="公司简称"
-        align="center"
-        prop="寄仓客户"
-        fixed="left"
-        width="120"
-      >
-        <template slot-scope="scope">
-          <el-tooltip
-            effect="light"
-            :content="scope.row.寄仓客户"
-            placement="top-start"
-          >
-            <span>{{ scope.row.寄仓客户.substring(0, 6) }}</span>
-          </el-tooltip>
+
+      <el-table-column label="公司简称" align="center" prop="公司名称" fixed="left" width="120">
+        <template slot-scope="scope" >
+            <el-popover placement="top-start" width="200" trigger="hover" ref="popover5">
+              <slot>{{ scope.row.寄仓客户 }}</slot>
+            </el-popover>
+            <span v-popover:popover5>{{ chang(scope.row) }}</span>
         </template>
       </el-table-column>
+
       <!-- <el-table-column label="客户全称" align="center" prop="寄仓客户" fixed/> -->
       <el-table-column
         label="煤种"
@@ -860,21 +854,37 @@
       />
 
       <el-table-column label="当日入库(露天存放)" align="center">
-        <el-table-column label="车数(辆)" align="center" prop="当日入库车数露天" />
+        <el-table-column
+          label="车数(辆)"
+          align="center"
+          prop="当日入库车数露天"
+        ></el-table-column>
         <el-table-column
           label="调入(吨)"
           align="center"
           prop="当日调入数量Kg露天"
-        />
+        >
+        <template slot-scope="scope">
+          {{ scope.row.当日调入数量Kg露天.toFixed(2) }}
+        </template>
+        </el-table-column>
       </el-table-column>
 
       <el-table-column label="当日出库(露天存放)" align="center">
-        <el-table-column label="车数(辆)" align="center" prop="当日出库车数露天" />
+        <el-table-column
+          label="车数(辆)"
+          align="center"
+          prop="当日出库车数露天"
+        ></el-table-column>
         <el-table-column
           label="调出(吨)"
           align="center"
           prop="当日调出数量Kg露天"
-        />
+        >
+        <template slot-scope="scope">
+          {{ scope.row.当日调出数量Kg露天.toFixed(2) }}
+        </template>
+        </el-table-column>
       </el-table-column>
 
       <el-table-column label="当日入库(1#煤棚)" align="center">
@@ -882,87 +892,151 @@
           label="车数(辆)"
           align="center"
           prop="当日入库车数1号煤棚"
-        />
+        ></el-table-column>
         <el-table-column
           label="调入(吨)"
           align="center"
           prop="当日调入数量Kg1号煤棚"
-        />
+        >
+        <template slot-scope="scope">
+          {{ scope.row.当日调入数量Kg1号煤棚.toFixed(2) }}
+        </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="当日出库(1#煤棚)" align="center">
         <el-table-column
           label="车数(辆)"
           align="center"
           prop="当日出库车数1号煤棚"
-        />
+        ></el-table-column>
         <el-table-column
           label="调出(吨)"
           align="center"
           prop="当日调出数量Kg1号煤棚"
-        />
+        >
+        <template slot-scope="scope">
+          {{ scope.row.当日调出数量Kg1号煤棚.toFixed(2) }}
+        </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="当日入库(2#煤棚)" align="center">
         <el-table-column
           label="车数(辆)"
           align="center"
           prop="当日入库车数2号煤棚"
-        />
+        ></el-table-column>
         <el-table-column
           label="调入(吨)"
           align="center"
           prop="当日调入数量Kg2号煤棚"
-        />
+        >
+        <template slot-scope="scope">
+          {{ scope.row.当日调入数量Kg2号煤棚.toFixed(2) }}
+        </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="当日出库(2#煤棚)" align="center">
         <el-table-column
           label="车数(辆)"
           align="center"
           prop="当日出库车数2号煤棚"
-        />
+        ></el-table-column>
         <el-table-column
           label="调出(吨)"
           align="center"
           prop="当日调出数量Kg2号煤棚"
-        />
+        >
+        <template slot-scope="scope">
+          {{ scope.row.当日调出数量Kg2号煤棚.toFixed(2) }}
+        </template>
+        </el-table-column>
       </el-table-column>
-
-      <el-table-column
-        label="库存(露天存放(吨))"
-        align="center"
-        prop="库存Kg露天"
-        width="130"
-      />
-      <el-table-column
-        label="库存(1#库存煤棚(吨))"
-        align="center"
-        prop="库存Kg1号煤棚"
-        width="150"
-      />
-      <el-table-column
-        label="库存(2#库存煤棚(吨))"
-        align="center"
-        prop="库存Kg2号煤棚"
-        width="150"
-      />
-      <el-table-column
-        label="库存(合计(吨))"
-        align="center"
-        prop="库存合计"
-        width="120"
-      />
-      <!-- <el-table-column label="累计损耗" align="center" prop="累计损耗Kg" /> -->
+      <el-table-column label="库存(吨)" align="center">
+        <el-table-column
+          label="露天存放"
+          align="center"
+          prop="库存Kg露天"
+          width="130"
+        >
+        <template slot-scope="scope">
+            {{ scope.row.库存Kg露天.toFixed(2) }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="1#煤棚"
+          align="center"
+          prop="库存Kg1号煤棚"
+          width="150"
+        >
+        <template slot-scope="scope">
+            {{ scope.row.库存Kg1号煤棚.toFixed(2) }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="2#煤棚"
+          align="center"
+          prop="库存Kg2号煤棚"
+          width="150"
+        >
+        <template slot-scope="scope">
+            {{ scope.row.库存Kg2号煤棚.toFixed(2) }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="合计"
+          align="center"
+          prop="库存合计"
+          width="120"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.库存合计.toFixed(2) }}
+          </template>
+        </el-table-column>
+      </el-table-column>
+      <el-table-column label="累计损耗(吨)" align="center" prop="累计损耗Kg" width="120">
+        <template slot-scope="scope">
+            {{ scope.row.累计损耗Kg.toFixed(2) }}
+          </template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="备注" />
 
       <el-table-column label="本月累计调入" align="center">
-        <el-table-column label="车数(辆)" align="center" prop="当月入库车数" />
-        <el-table-column label="吨数(吨)" align="center" prop="当月调入数量Kg" />
+        <el-table-column label="车数(辆)" align="center" prop="当月入库车数"  ></el-table-column>
+        <el-table-column
+          label="吨数(吨)"
+          align="center"
+          prop="当月调入数量Kg"
+          width="130"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.当月调入数量Kg.toFixed(2) }}
+          </template>
+        </el-table-column>
       </el-table-column>
 
       <el-table-column label="本月累计调出" align="center">
-        <el-table-column label="车数(辆)" align="center" prop="当月出库车数" />
-        <el-table-column label="吨数(吨)" align="center" prop="当月调出数量Kg" />
+        <el-table-column label="车数(辆)" align="center" prop="当月出库车数" ></el-table-column>
+        <el-table-column
+          label="吨数(吨)"
+          align="center"
+          prop="当月调出数量Kg"
+          width="130"
+        >
+        <template slot-scope="scope">
+            {{ scope.row.当月调出数量Kg.toFixed(2) }}
+          </template>
+        </el-table-column>
       </el-table-column>
-      <el-table-column label="期初转入(吨)" align="center" prop="期初转入Kg" width="120"/>
+      <el-table-column
+        label="期初转入(吨)"
+        align="center"
+        prop="期初转入Kg"
+        width="130"
+      >
+      <template slot-scope="scope">
+            {{ scope.row.期初转入Kg.toFixed(2) }}
+          </template>
+      </el-table-column>
 
       <el-table-column label="本年累计" align="center">
         <el-table-column
@@ -970,10 +1044,23 @@
           width="130"
           align="center"
           prop="本年调入数量Kg"
-        />
-        <el-table-column label="调出(吨)" align="center" prop="本年调出数量Kg" />
+        >
+        <template slot-scope="scope">
+            {{ scope.row.本年调入数量Kg.toFixed(2) }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="调出(吨)"
+          align="center"
+          prop="本年调出数量Kg"
+          width="130"
+        >
+        <template slot-scope="scope">
+            {{ scope.row.本年调出数量Kg.toFixed(2) }}
+          </template>
+        </el-table-column>
       </el-table-column>
-      <!-- <el-table-column label="累计损耗" align="center" prop="累计损耗Kg" /> -->
+      
 
       <!--   ------------------------------完美的分割线-----------------------------   -->
 
@@ -1701,7 +1788,7 @@ export default {
             return this.num;
           },
         },
-        公司名称: "寄仓客户",
+        公司名称: "公司名称",
         客户全称: "寄仓客户",
         煤种: "煤种",
         "当日入库(露天存放)车数": "当日入库车数露天",
@@ -1717,19 +1804,19 @@ export default {
         "当日出库(2#煤棚)车数": "当日出库车数2号煤棚",
         "当日出库(2#煤棚)调出": "当日调出数量Kg2号煤棚",
         "库存(露天存放)": "库存Kg露天",
-        "库存(库存1#煤棚)": "库存Kg1号煤棚",
-        "库存(库存2#煤棚)": "库存Kg2号煤棚",
+        "库存(1#煤棚)": "库存Kg1号煤棚",
+        "库存(2#煤棚)": "库存Kg2号煤棚",
         "库存(合计)": "库存合计",
         累计损耗: "累计损耗Kg",
         备注: "备注",
         本月累计调入车数: "当月入库车数",
         本月累计调入吨数: "当月调入数量Kg",
         本月累计调出车数: "当月出库车数",
-        吨数: "当月调出数量Kg",
+        本月累计调出吨数: "当月调出数量Kg",
         期初转入: "期初转入Kg",
         本年累计调入: "本年调入数量Kg",
         本年累计调出: "本年调出数量Kg",
-        累计损耗: "累计损耗Kg",
+        // 累计损耗: "累计损耗Kg",
 
         // "箱皮重":"boxTareWeight",
         // "净重":"netWeight",
@@ -1985,6 +2072,50 @@ export default {
       this.dateRange = [];
       this.resetForm("queryForm");
       this.handleQuery();
+    },
+    chang(row){
+      let name = row.公司名称
+      if(name && name.length >= 6){
+        return name.substring(0,6);
+      }else{
+        return name;
+      }
+    },
+    // 自定义合计栏
+    getTotal(param) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "合计";
+          return;
+        }
+        const values = data.map((item) => Number(item[column.property]));
+        if (!values.every(value =>isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0);
+          // sums[index];
+          if(index === 1 || index === 2){
+            return sums[index] = ''
+          }          
+          if(index === 3 || index === 5 || index === 7 || index === 9 || index === 11 || index === 13 || index === 21 || index === 23  || index === 20){
+           return sums[index]
+          }
+          if(index !== 0 || index !== 1 || index !== 2 || index !== 3 || index !== 5 || index !== 7 || index !== 9 || index !== 11 || index !== 13 || index !== 21 || index !== 23  || index !== 20){
+           return  sums[index] = sums[index].toFixed(2);
+          }         
+        } else {
+         sums[index] = '';
+        }
+      });
+
+      return sums;
     },
     // 多选框选中数据
     handleSelectionChange(selection) {

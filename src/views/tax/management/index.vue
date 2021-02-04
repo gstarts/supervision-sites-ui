@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-row>
         <el-col :span="4.8">
@@ -719,7 +720,14 @@
 </template>
 
 <script>
-  import {listManagement, getManagement, delManagement, addManagement, updateManagement} from "@/api/tax/management";
+import {
+  listManagement,
+  getManagement,
+  delManagement,
+  addManagement,
+  updateManagement,
+  DocumentNo
+} from "@/api/tax/management";
   import {getUserDepts} from "@/utils/charutils";
   import {getDocByBusinessNo} from "@/api/tax/instore_doc";
   import {formatDate} from "@/utils";
@@ -818,8 +826,14 @@
         this.queryParams.placeId = this.depts[0].deptId
       }
       this.getList();
+
     },
     methods: {
+      getDocumentNo(){
+        DocumentNo().then(response =>{
+          this.form.documentNo=response
+        })
+      },
       /** 查询司机食宿管理列表 */
       getList() {
         this.loading = true;
@@ -902,6 +916,7 @@
       /** 新增按钮操作 */
       handleAdd() {
         this.reset();
+        this.getDocumentNo();
         this.open = true;
         this.title = "添加司机食宿管理";
       },

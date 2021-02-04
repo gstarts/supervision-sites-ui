@@ -142,7 +142,11 @@
       <af-table-column label="运输方式" align="center" prop="transportMode" :formatter="transModeFormatter" width="120px"/>
       <af-table-column label="承运单位" align="center" prop="transportUnit"/>
       <af-table-column label="申报海关" align="center" prop="isReportCustoms" :formatter="isReportFormatter"/>
-      <af-table-column label="制单人" align="center" prop="makerBy"/>
+      <af-table-column label="制单人" align="center" prop="makerBy">
+        <template slot-scope="scope">
+          {{parseUserName(scope.row.makerBy)}}
+          </template>
+      </af-table-column>
       <af-table-column label="制单时间" align="center" prop="makerTime"/>
       <af-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="作废人" align="center" prop="voidUser"
@@ -533,6 +537,7 @@ import {
   updateVoidCar
 } from "@/api/place/outstoreDoc";
 import {listInfo} from "@/api/basis/enterpriseInfo";
+import {listUser} from "@/api/system/user";
 
 export default {
   name: 'Car',
@@ -553,6 +558,8 @@ export default {
       total: 0,
       // 外调车 表格数据
       carList: [],
+
+      userList: [],
       // 弹出层标题
       title: '',
       left: 'left',
@@ -700,6 +707,7 @@ export default {
         this.BigList = response.rows
       })
       this.getList()
+      this.getUser()
       this.getTransportUnitInfo()
     }
     // 外调车车牌号列表
@@ -725,6 +733,26 @@ export default {
         this.plateNoList = res.data
       })
     },*/
+
+  getUser() {
+      listUser({'deptId': this.queryParams.placeId, 'delFlag': '0'}).then(response => {
+        if (response.code === 200) {
+          this.userList = response.rows
+
+        }
+      })
+    },
+
+    parseUserName(makerBy) {
+      // debugger
+      // console.log(this.userList)
+      let u = this.userList.find(item => item.userName === makerBy)
+      if (u) {
+        return u.nickName
+      } else {
+        return makerBy
+      }
+    },
     // 取消按钮
     cancel() {
       this.open = false
@@ -755,6 +783,7 @@ export default {
         transportUnitId: undefined,
         transportNum: undefined,
         isReportCustoms: undefined,
+        businessNo:undefined,
       }
       this.resetForm('form')
     },
@@ -1046,6 +1075,7 @@ export default {
 
           //{ "badVehicleCount": 0, "total": 914150, "validVehicleCount": 15, "noUseVehicleCount": 7, "noUse": 850246, "hasUseVehicleCount": 8, "hasUse": 63904 }
           this.canAlloc = response.data.canAlloc
+          this.form.businessNo = response.data.businessNo
         }
       })
     },
