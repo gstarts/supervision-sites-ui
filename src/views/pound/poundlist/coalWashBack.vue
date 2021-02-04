@@ -12,10 +12,10 @@
       <el-button style="display:none"
                  ref="printBtn"
                  type="info"
+                 icon="fa fa-print"
                  size="small"
                  v-print="printObject"
-                 @click="print">
-        <i class="fa fa-print" aria-hidden="true">&nbsp;&nbsp;打印</i>
+                 @click="print"> 打印
       </el-button>
 
       <!--自动打印按钮-->
