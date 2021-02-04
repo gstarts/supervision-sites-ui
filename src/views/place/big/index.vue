@@ -237,6 +237,10 @@
     <!-- </el-dialog> -->
     <el-dialog :title="title" :visible.sync="open" append-to-body :before-close="closeDialog">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="120px">
+        <el-form-item label="业务编号" prop="businessNo">
+          <el-input v-model="form.businessNo" placeholder="请输入业务编号"/>
+        </el-form-item>
+
         <el-row>
           <el-col :span="12">
             <el-form-item label="所属场所" prop="placeId">
@@ -696,7 +700,8 @@ export default {
         updateBy: undefined,
         updateTime: undefined,
         remark: undefined,
-        revision: undefined
+        revision: undefined,
+        businessNo: undefined
       }
       this.resetForm('form')
     },
