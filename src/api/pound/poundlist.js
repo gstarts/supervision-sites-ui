@@ -175,3 +175,14 @@ export function report(params) {
   })
 }
 
+export function poundReport(data) {
+  return request({
+    url: '/place/notice/pound/report',
+    method: 'post',
+    params: data
+  })
+}
+
+
+
+

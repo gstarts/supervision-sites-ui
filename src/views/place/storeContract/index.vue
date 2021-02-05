@@ -157,7 +157,7 @@
       <af-table-column label="品名" align="center" prop="goodsName"/>
       <af-table-column label="散货库位" align="center" width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.params.contract.map(item => item.storeCode) }}</span>
+          <span>{{(scope.row.params.contract.map(item => item.storeCode)).toString().replace(',','、')}}</span>
         </template>
       </af-table-column>
       <af-table-column label="仓储方式" align="center" prop="packMode" :formatter="packModeFormatter"/>
@@ -176,13 +176,13 @@
       <af-table-column label="有效期起" align="center" prop="startDate"/>
       <af-table-column label="有效期止" align="center" prop="endDate"/>
       <af-table-column label="延期至" align="center" prop="delayToDate"/>
-      <el-table-column label="状态" align="center" prop="status">
+      <af-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <span>{{ scope.row.status === '1' ? '有效' : '无效' }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="140">
+      </af-table-column>
+      <af-table-column label="备注" align="center" prop="remark"/>
+      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="250px">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -208,8 +208,9 @@
             v-hasPermi="['place:storeContract:remove']"
           >删除
           </el-button>
+
         </template>
-      </el-table-column>
+      </af-table-column>
     </el-table>
 
     <pagination
@@ -945,6 +946,11 @@ export default {
       this.queryParams.pageNum = 1;
       this.getList();
       this.getListInfo();
+    },
+
+    parseUserName(contract) {
+      console.log(contract.toString())
+
     },
     /** 重置按钮操作 */
     resetQuery() {
