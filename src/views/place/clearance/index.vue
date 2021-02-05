@@ -272,7 +272,9 @@ export default {
         lastWieght: undefined,
         outWieght: undefined,
         revision: undefined,
-        oldwieght: 0
+        oldwieght: 0,
+        orderByColumn: 'id',
+        isAsc: 'desc',
       },
       //文件导入参数
       upload: {
