@@ -1,8 +1,8 @@
-import { parseTime } from './'
-
 /**
  * 表格时间格式化
  */
+import {parseTime} from "@/utils/common";
+
 export function formatDate(cellValue) {
   if (cellValue == null || cellValue == "") return "";
   var date = new Date(cellValue)
