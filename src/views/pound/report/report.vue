@@ -202,7 +202,7 @@
       </af-table-column>
       <af-table-column label="毛重时间" align="center" width="180" :formatter="roughTimeFormatter"/>
       <af-table-column label="皮重时间" align="center" width="180" :formatter="tareTimeFormatter"/>
-      <af-table-column label="净重时间" align="center" width="180" :formatter="tareTimeFormatter"/>
+      <af-table-column label="净重时间" align="center" width="180" :formatter="netTimeFormatter"/>
     </el-table>
     <el-row class="countRow" v-show="reportList.length>0" style="color:#606266">
       <span>总车数: {{ vehicleCount }} 辆 </span>
@@ -395,6 +395,7 @@ export default {
       // 查询参数
       queryParams: {
         placeId: undefined,
+        checkConsumer: undefined,
         customerName: undefined,
         beginTime: undefined,
         endTime: undefined,
@@ -479,17 +480,15 @@ export default {
         return this.$message.warning("请在有搜索结果之后,再进行打印")
       }
 
-      if (this.queryParams.vehicleType === '01') {
+      this.queryParams.checkConsumer = this.queryParams.customerName
+      this.queryParams.vehicleTeam = this.queryParams.transportUnit
+      /*if (this.queryParams.vehicleType === '01') {
         this.queryParams.checkConsumer = this.queryParams.customerName
-      } else {
-        this.queryParams.checkConsumer = undefined
-      }
-      if (this.queryParams.vehicleType === '02') {
         this.queryParams.vehicleTeam = this.queryParams.transportUnit
       } else {
+        this.queryParams.checkConsumer = undefined
         this.queryParams.vehicleTeam = undefined
-      }
-
+      }*/
       //如果未分页或只有一页，则不用再查询，直接可以打印了
       if (this.total === 0 || this.total / this.queryParams.pageSize <= 1) {
         this.printList = this.setPrintData(this.reportList)
@@ -574,21 +573,28 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
-      this.handleQuery();
+      // this.handleQuery();
+      this.reportList = []
+      this.printList = []
     },
     getInfo() {
       this.loading = true
       this.reportList = []
-      if (this.queryParams.vehicleType === '01') {
-        this.queryParams.checkConsumer = this.queryParams.customerName
-      } else {
+      //if (this.queryParams.vehicleType === '01') {
+      this.queryParams.checkConsumer = this.queryParams.customerName
+      this.queryParams.vehicleTeam = this.queryParams.transportUnit
+      //} else {
+      //  this.queryParams.checkConsumer = undefined
+      //  this.queryParams.vehicleTeam = undefined
+      //}
+      /*if (this.queryParams.vehicleType === '02') {
+        //this.queryParams.vehicleTeam = this.queryParams.transportUnit
         this.queryParams.checkConsumer = undefined
-      }
-      if (this.queryParams.vehicleType === '02') {
-        this.queryParams.vehicleTeam = this.queryParams.transportUnit
-      } else {
         this.queryParams.vehicleTeam = undefined
-      }
+      } else {
+        this.queryParams.checkConsumer = this.queryParams.customerName
+        this.queryParams.vehicleTeam = this.queryParams.transportUnit
+      }*/
       poundReport(this.queryParams).then(response => {
         this.loading = false
         //this.result = response
@@ -660,16 +666,16 @@ export default {
         return false
       }
 
-      if (this.queryParams.vehicleType === '01') {
+      this.queryParams.checkConsumer = this.queryParams.customerName
+      this.queryParams.vehicleTeam = this.queryParams.transportUnit
+
+      /*if (this.queryParams.vehicleType === '01') {
         this.queryParams.checkConsumer = this.queryParams.customerName
-      } else {
-        this.queryParams.checkConsumer = undefined
-      }
-      if (this.queryParams.vehicleType === '02') {
         this.queryParams.vehicleTeam = this.queryParams.transportUnit
       } else {
+        this.queryParams.checkConsumer = undefined
         this.queryParams.vehicleTeam = undefined
-      }
+      }*/
 
       this.download('place/notice/pound/export', {
         ...this.queryParams
@@ -713,26 +719,40 @@ export default {
         this.loading = false;
       });
     },
+    //毛重时间
     roughTimeFormatter(row, column) {
       if (this.queryParams.businessNo === 1) {
         return ''
       } else {
-        if (this.queryParams.viaType === '01') {
+        if (this.queryParams.vehicleType === '01') {
           return row.inTime
         } else {
           return row.outTime
         }
       }
     },
+    //皮重时间
     tareTimeFormatter(row, column) {
       if (this.queryParams.statisticsMode === 1) {
         return ''
       } else {
-        if (this.queryParams.viaType === '01') {
+        if (this.queryParams.vehicleType === '01') {
           return row.outTime
         } else {
           return row.inTime
         }
+      }
+    },
+    //净重时间
+    netTimeFormatter(row, column) {
+      if (this.queryParams.statisticsMode === 1) {
+        return ''
+      } else {
+        //if (this.queryParams.viaType === '01') {
+        return row.outTime
+        // else {
+        //return row.outTime
+        //}
       }
     },
   }
