@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+
       <el-form-item label="时间" prop="startTime">
         <el-date-picker
           v-model="queryParams.beginTime"
@@ -12,26 +13,26 @@
 
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery"
-                   v-hasPermi="['place:inStoreDoc:customsDay']" :loading="loading">搜索
+                   v-hasPermi="['place:daily:list']" :loading="loading">搜索
         </el-button>
         <!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
       </el-form-item>
       <el-form-item>
         <download-excel
           class="export-excel-wrapper"
-          :data="outstoreDocList"
+          :data="outstoreDocList2"
           :fields="json_fields"
           :title="titleList"
           :footer="excelFooter"
           :default-value="defaultValue"
           :name="'海关日报-'+queryParams.beginTime+'.xls'">
           <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
-          <el-button type="primary" size="mini" @click="exportExcel" :loading="loading">导出EXCEL</el-button>
+          <el-button type="primary" size="mini" @click="importExcel" :loading="loading">导出EXCEL</el-button>
         </download-excel>
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" :data="outstoreDocList" max-height="645">
+    <el-table v-loading="loading" :data="outstoreDocList" max-height="750" show-summary :summary-method="getSummaries">
       <!--      <el-table-column label="序号" align="center"  type="index" min-width="70" />-->
       <af-table-column label="寄仓客户" align="center" prop="column1"/>
       <el-table-column label="煤种" align="center" prop="column2"/>
@@ -43,6 +44,7 @@
           </template>
         </el-table-column>
       </el-table-column>
+
       <el-table-column label="当日出库" align="center">
         <el-table-column label="车数" align="center" prop="column5"/>
         <el-table-column label="调出" align="center" prop="column6">
@@ -80,25 +82,15 @@
         </template>
       </el-table-column>
     </el-table>
-
   </div>
 </template>
 
 <script>
-import {
-  listOutstoreDoc,
-  listOutstoreDocLike,
-  getOutstoreDoc,
-  delOutstoreDoc,
-  addOutstoreDoc,
-  updateOutstoreDoc
-} from "@/api/place/outstoreDoc";
 import {getUserDepts} from "@/utils/charutils";
-import {listStoreContract} from "@/api/place/storeContract";
 import {customsDayList} from "@/api/place/instoreDoc";
 
 export default {
-  name: "CustomsDay1",
+  name: "OutstoreDoc",
   data() {
     return {
       titleList: [],
@@ -108,9 +100,11 @@ export default {
       defaultValue: '',
       // 遮罩层
       loading: false,
-
+      // 总条数
       // 出库明细单表格数据
       outstoreDocList: [],
+      outstoreDocList2: [],
+
       lastRow: {},
       // 查询参数
       queryParams: {
@@ -121,8 +115,6 @@ export default {
         beginTime: '',
       },
       depts: [],
-
-      dateRange: [],
       json_fields: {
         "寄仓客户": "column1",
         "煤种": "column2",
@@ -136,6 +128,7 @@ export default {
         "本年累计调出车数": "column16",
         "本年累计调出吨数": "column17",
         "期初转入": "column18",
+
       },
     };
   },
@@ -144,88 +137,95 @@ export default {
     this.depts = getUserDepts('0')
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId
-      // this.getContract(this.queryParams.placeId, '1')
     }
-
   },
   methods: {
     /** 查询出库明细单列表 */
     getList() {
       if (this.queryParams.beginTime === '') {
-        this.$message.warning("时间选择不可为空");
+        this.msgError("时间选择不可为空");
         return
       }
-      this.loading = true
-      this.titleList = []
+      this.loading = true;
+      this.titleList = [];
       this.outstoreDocList = []
-      customsDayList(this.queryParams, this.dateRange).then(response => {
+      customsDayList(this.queryParams).then(response => {
         this.outstoreDocList = response.data;
         this.printTitle = '海关日报'
         this.titleList.push(this.printTitle)
         this.titleList.push(this.queryParams.beginTime);
-
-        //y计算每列的总和
-        this.lastRow.column1 = '总计'
-        this.lastRow.column2 = undefined
-        this.lastRow.column3 = this.outstoreDocList.reduce(function (total, item, index, arr) {
-          return total + Number(item.column3)
-        }, 0)
-        this.lastRow.column4 = Number((this.outstoreDocList.reduce(function (total, item, index, arr) {
-          return total + item.column4
-        }, 0)).toFixed(2))
-
-        this.lastRow.column5 = this.outstoreDocList.reduce(function (total, item, index, arr) {
-          return total + item.column5
-        }, 0)
-
-        this.lastRow.column6 = Number((this.outstoreDocList.reduce(function (total, item, index, arr) {
-          return total + item.column4
-        }, 0)).toFixed(2))
-
-        this.lastRow.column7 = Number((this.outstoreDocList.reduce(function (total, item, index, arr) {
-          return total + item.column7
-        }, 0)).toFixed(2))
-
-        this.lastRow.column14 = this.outstoreDocList.reduce(function (total, item, index, arr) {
-          return total + item.column14
-        }, 0)
-
-        this.lastRow.column15 = Number((this.outstoreDocList.reduce(function (total, item, index, arr) {
-          return total + item.column15
-        }, 0)).toFixed(2))
-
-        this.lastRow.column16 = this.outstoreDocList.reduce(function (total, item, index, arr) {
-          return total + item.column16
-        }, 0)
-
-        this.lastRow.column17 = Number((this.outstoreDocList.reduce(function (total, item, index, arr) {
-          return total + item.column17
-        }, 0)).toFixed(2))
-        this.lastRow.column18 = Number((this.outstoreDocList.reduce(function (total, item, index, arr) {
-          return total + item.column18
-        }, 0)).toFixed(2))
-
-        this.outstoreDocList.push(this.lastRow)
-
+        //this.total = response.total;
         this.loading = false;
-      })
+      });
     },
-
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1
       this.getList();
     },
+
     /** 导出按钮操作 */
     handleExport() {
       this.download('place/outstoreDoc/export', {
         ...this.queryParams
       }, `place_outstoreDoc.xlsx`)
     },
-    exportExcel() {
+
+    importExcel() {
       if (this.outstoreDocList.length === 0) {
         return this.$message.warning("导出无效,请先查询数据是否为空");
       }
+      this.outstoreDocList2 = [...this.outstoreDocList]
+      this.outstoreDocList2.push(this.lastRow)
+    },
+    getSummaries(param) {
+      const {columns, data} = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '总计'
+          return
+        }
+        if (index === 1) {
+          sums[index] = ''
+          return
+        }
+        const values = data.map(item => Number(item[column.property]))
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0);
+          if (index === 2 || index === 4 || index === 7 || index === 9) {
+            return sums[index]
+          }
+          if (index === 3 || index === 5 || index === 6 || index === 8 || index === 10 || index === 11) {
+           // console.log(index + '=' + sums[index])
+            return sums[index] = sums[index].toFixed(2)
+          }
+        } else {
+          sums[index] = '';
+        }
+      });
+
+      this.lastRow.column1 = '总计'
+      this.lastRow.column2 = ''
+      this.lastRow.column3 = sums[2]
+      this.lastRow.column4 = Number(sums[3])
+      this.lastRow.column5 = sums[4]
+      this.lastRow.column6 = Number(sums[5])
+      this.lastRow.column7 = Number(sums[6])
+      this.lastRow.column14 = sums[7]
+      this.lastRow.column15 = Number(sums[8])
+      this.lastRow.column16 = sums[9]
+      this.lastRow.column17 = Number(sums[10])
+      this.lastRow.column18 = Number(sums[11])
+      //console.log(this.lastRow)
+      return sums;
     },
   }
 };

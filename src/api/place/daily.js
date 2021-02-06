@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询【请填写功能名称】列表
+// 查询场站日报列表
 export function listDaily(query) {
   return request({
     url: '/place/daily/list',
@@ -9,7 +9,7 @@ export function listDaily(query) {
   })
 }
 
-// 查询【请填写功能名称】详细
+// 查询场站日报详细
 export function getDaily(id) {
   return request({
     url: '/place/daily/' + id,
@@ -17,7 +17,7 @@ export function getDaily(id) {
   })
 }
 
-// 新增【请填写功能名称】
+// 新增场站日报
 export function addDaily(data) {
   return request({
     url: '/place/daily',
@@ -26,7 +26,7 @@ export function addDaily(data) {
   })
 }
 
-// 修改【请填写功能名称】
+// 修改场站日报
 export function updateDaily(data) {
   return request({
     url: '/place/daily',
@@ -35,7 +35,7 @@ export function updateDaily(data) {
   })
 }
 
-// 删除【请填写功能名称】
+// 删除场站日报
 export function delDaily(id) {
   return request({
     url: '/place/daily/' + id,
@@ -43,7 +43,7 @@ export function delDaily(id) {
   })
 }
 
-// 模糊查询【请填写功能名称】列表
+// 模糊查询场站日报列表
 export function listDailyLike(query) {
   return request({
     url: '/place/daily/listLike',
