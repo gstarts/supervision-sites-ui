@@ -146,15 +146,15 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <!--<el-col :span="1.5">
+     <el-col :span="1.5">
            <el-button
              type="warning"
              icon="el-icon-download"
              size="mini"
              @click="handleExport"
-             v-hasPermi="['tax:goods_info:export']"
-           >导出</el-button>
-         </el-col>-->
+             v-hasPermi="['daily:summary:export']"
+           >日报下载</el-button>
+         </el-col>
     </el-row>
 
     <el-table row-key="id" :tree-props="{children: 'children'}" :height="height"
@@ -241,9 +241,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('tax/goods_info/export', {
+      this.download('tax/summary/export', {
         ...this.queryParams
-      }, `tax_goods_info.xlsx`)
+      }, `daily_summary.xlsx`)
     }
   },
   mounted() {
