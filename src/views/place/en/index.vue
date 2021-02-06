@@ -20,7 +20,7 @@
             :title="titleList"
             :footer="excelFooter"
             :default-value="defaultValue"
-            name="海关日报.xls">
+            :name=excelName>
             <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
             <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>
           </download-excel>
@@ -33,7 +33,7 @@
       <el-table-column
         label="序号"
         align="center"
-        prop="序号"
+        prop="index"
         type="index"
         fixed="left"
 
@@ -44,12 +44,12 @@
       </el-table-column>
 
       <el-table-column label="公司简称" align="center" prop="companyName" fixed="left" width="120">
-<!--        <template slot-scope="scope" >-->
-<!--          <el-popover placement="top-start" width="200" trigger="hover" ref="popover5">-->
-<!--            <slot>{{ scope.row.customerName }}</slot>-->
-<!--          </el-popover>-->
-<!--          <span v-popover:popover5>{{ chang(scope.row) }}</span>-->
-<!--        </template>-->
+        <template slot-scope="scope" >
+          <el-popover placement="top-start" width="200" trigger="hover" ref="popover5">
+            <slot>{{ scope.row.customerName }}</slot>
+          </el-popover>
+          <span v-popover:popover5>{{ chang(scope.row) }}</span>
+        </template>
       </el-table-column>
 
       <el-table-column
@@ -299,14 +299,14 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
-      // 场站日报表格数据
-      enList: [],
       // 出库明细单表格数据
       outstoreDocList: [],
+      excelName:undefined,
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      num:0,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -357,6 +357,7 @@ export default {
       json_fields: {
         序号: {
           callback: (scope) => {
+            debugger
             if (scope) {
               this.num++;
             }
@@ -395,7 +396,6 @@ export default {
         期初转入Kg:"coalInitWtKg",
         本年调入数量Kg:"lorryIntThisYearQty",
         本年调出数量Kg:"coalInThisYearWtKg",
-
       },
     };
   },
@@ -415,9 +415,8 @@ export default {
       listEn(this.queryParams).then(response => {
         this.outstoreDocList = response.rows;
         this.printTitle = "场站日报";
-        this.total = response.total;
         this.titleList.push(this.printTitle);
-        this.titleList.push(this.queryParams.beginTime);
+        this.titleList.push(this.queryParams.reportDate);
         this.loading = false;
       });
     },
@@ -427,7 +426,7 @@ export default {
       this.reset();
     },
     chang(row){
-      let name = row.公司名称
+      let name = row.companyName
       if(name && name.length >= 6){
         return name.substring(0,6);
       }else{
@@ -437,7 +436,9 @@ export default {
 
     //
     tongji :{
+      companyName:undefined,
       customerName:undefined,
+      index:undefined,
       coalKind:undefined,
       lorryInTodayQtyYard:undefined,
       coalInTodayWtKgYard:undefined,
@@ -551,6 +552,7 @@ export default {
       );
     },
     importExcel() {
+      this.excelName="场站日报"+this.queryParams.reportDate+".xls"
       this.outstoreDocList.push(this.tongji)
     },
     // 自定义合计栏
@@ -562,7 +564,6 @@ export default {
           sums[index] = "合计";
           return;
         }
-
         if (index === 18) {
           sums[index] = (Number(sums[16])+Number(sums[17])).toFixed(2);
           return;
@@ -591,7 +592,10 @@ export default {
           sums[index] = '';
         }
       });
+
       this.tongji.customerName = sums[0];
+      this.tongji.companyName = " ";
+      this.tongji.coalKind = " ";
       this.tongji.lorryInTodayQtyYard = sums[3];
       this.tongji.coalInTodayWtKgYard = sums[4];
       this.tongji.lorryOutTodayQtyYard = sums[5];
