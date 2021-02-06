@@ -39,6 +39,7 @@
       </el-form-item>-->
       <el-form-item label="寄仓客户" prop="checkConsumer">
         <el-select clearable
+                   @change="placeChange"
                    filterable
                    v-model="queryParams.checkConsumer"
                    placeholder="请选择寄仓客户"
@@ -54,6 +55,7 @@
       </el-form-item>
       <el-form-item label="寄仓合同" prop="checkContractNo">
         <el-select clearable
+                   @change="placeChange"
                    filterable
                    v-model="queryParams.checkContractNo"
                    placeholder="请选择寄仓合同"
@@ -70,6 +72,7 @@
       <el-form-item label="品名" prop="goodsName">
         <el-select
           clearable
+          @change="placeChange"
           filterable
           v-model="queryParams.goodsName"
           placeholder="请选择品名"
@@ -96,6 +99,7 @@
           v-model="queryParams.vehicleNo"
           placeholder="请输入车号"
           clearable
+          @keyup.enter.native="getList"
           size="small"/>
       </el-form-item>
       <!--<el-form-item label="挂车号1 挂车号1" prop="trailerNo1">
@@ -326,6 +330,7 @@
           v-model="queryParams.storeCode"
           placeholder="请输入库位号"
           clearable
+          @keyup.enter.native="getList"
           size="small"
         />
       </el-form-item>
@@ -386,6 +391,7 @@
       <el-form-item label="状态" prop="storeState">
         <el-select
           clearable
+          @change="placeChange"
           v-model="queryParams.storeState"
           placeholder="请选择状态"
           size="small">
@@ -545,7 +551,11 @@
       <af-table-column label="车型" align="center" prop="vehicleType"/>
       <!-- <af-table-column label="备注" align="center" prop="remark" />-->
       <af-table-column label="生成时间" align="center" prop="genTime" width="180" />
-      <af-table-column label="生成人" align="center" prop="genBy"/>
+      <el-table-column label="生成人" align="center" prop="genBy">
+        <template slot-scope="scope">
+          {{parseUserName(scope.row.genBy)}}
+        </template>
+      </el-table-column>
       <af-table-column label="状态" align="center" prop="storeState">
         <template slot-scope="scope">
           {{storeStateDic.find((item) => item.key === scope.row.storeState).label }}
@@ -563,11 +573,19 @@
             <af-table-column label="生成集报清单" align="center" prop="hasDeclare"/>
             <af-table-column label="生成进境确报" align="center" prop="hasTransit"/>-->
       <af-table-column label="进场时间" align="center" prop="inTime" />
-      <af-table-column label="进场通道" align="center" prop="inChannel"/>
-      <af-table-column label="进场司磅员" align="center" prop="inUser"/>
+      <af-table-column label="进场通道" align="center" prop="inChannel" width="180"/>
+      <el-table-column label="进场司磅员" align="center" prop="inUser" width="130">
+        <template slot-scope="scope">
+          {{parseUserName(scope.row.inUser)}}
+        </template>
+      </el-table-column>
       <af-table-column label="出场时间" align="center" prop="outTime" />
-      <af-table-column label="出场通道" align="center" prop="outChannel"/>
-      <af-table-column label="出场司磅员" align="center" prop="outUser"/>
+      <af-table-column label="出场通道" align="center" prop="outChannel" width="180"/>
+      <af-table-column label="出场司磅员" align="center" prop="outUser">
+        <template slot-scope="scope">
+          {{parseUserName(scope.row.outUser)}}
+        </template>
+      </af-table-column>
       <!--<af-table-column label="文件ID" align="center" prop="fileId" />-->
       <!--<af-table-column label="放行单号" align="center" prop="passNo"/>-->
       <!-- <af-table-column label="乐观锁" align="center" prop="revision" />-->
@@ -599,11 +617,12 @@
       <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="140">
         <template slot-scope="scope">
           <el-button
-            v-show="scope.row.storeState === '0'"
+
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
+            :disabled="scope.row.storeState != 0"
             v-hasPermi="['place:instoreDoc:edit']">修改
           </el-button>
           <el-button
@@ -1135,6 +1154,7 @@ import {getUserDepts} from "@/utils/charutils";
 import {listStoreContract} from "@/api/place/storeContract";
 import SimpleKeyboard from "@/components/SimpleKeyboard/SimpleKeyboard";
 import {getToken} from '@/utils/auth';
+import {listUser} from "@/api/system/user";
 
 export default {
   name: "InstoreDoc",
@@ -1143,6 +1163,7 @@ export default {
   },
   data() {
     return {
+      userList:[],
       dateRange: ['', ''],
       timeDic: [
         {'key': '1', 'value': '进场时间'},
@@ -1347,6 +1368,7 @@ export default {
       this.goodsNameList = response.data;
     });
     this.formRule = this.rules
+    this.getUserList();
   },
   methods: {
     /** 查询入库通知单列表 */
@@ -1584,6 +1606,7 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      console.log(row.storeState)
       this.reset();
       const id = row.id || this.ids;
       getInstoreDoc(id).then((response) => {
@@ -1687,7 +1710,23 @@ export default {
       } else {
         this.formRule = this.rules
       }
-    }
+    },
+    //翻译用户名
+    parseUserName(user) {
+      let u = this.userList.find(item => item.userName === user)
+      if (u) {
+        return u.nickName
+      } else {
+        return user
+      }
+    },
+    getUserList() {
+      listUser({'deptId': this.queryParams.stationId}).then(response => {
+        if (response.code === 200) {
+          this.userList = response.rows
+        }
+      });
+    },
   },
 };
 </script>
