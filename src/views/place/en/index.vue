@@ -69,7 +69,7 @@
         <el-table-column
           label="调入(吨)"
           align="center"
-          prop="当日调入数量Kg露天"
+          prop="coalInTodayWtKgYard"
         >
           <template slot-scope="scope">
             {{ scope.row.coalInTodayWtKgYard.toFixed(2) }}
@@ -103,6 +103,7 @@
         <el-table-column
           label="调入(吨)"
           align="center"
+          prop="coalInTodayWtKgShed1"
         >
           <template slot-scope="scope">
             {{ scope.row.coalInTodayWtKgShed1.toFixed(2) }}
@@ -118,6 +119,7 @@
         <el-table-column
           label="调出(吨)"
           align="center"
+          prop="coalOutTodayWtKgShed1"
         >
           <template slot-scope="scope">
             {{ scope.row.coalOutTodayWtKgShed1.toFixed(2) }}
@@ -133,6 +135,7 @@
         <el-table-column
           label="调入(吨)"
           align="center"
+          prop="coalInTodayWtKgShed2"
         >
           <template slot-scope="scope">
             {{ scope.row.coalInTodayWtKgShed2.toFixed(2) }}
@@ -148,6 +151,7 @@
         <el-table-column
           label="调出(吨)"
           align="center"
+          prop="coalOutTodayWtKgShed2"
         >
           <template slot-scope="scope">
             {{ scope.row.coalOutTodayWtKgShed2.toFixed(2) }}
@@ -158,6 +162,7 @@
         <el-table-column
           label="露天存放"
           align="center"
+          prop="stockWtKgYard"
           width="130"
         >
           <template slot-scope="scope">
@@ -167,7 +172,7 @@
         <el-table-column
           label="1#煤棚"
           align="center"
-          prop="库存Kg1号煤棚"
+          prop="stockWtKgShed1"
           width="150"
         >
           <template slot-scope="scope">
@@ -177,6 +182,7 @@
         <el-table-column
           label="2#煤棚"
           align="center"
+          prop="stockWtKgShed2"
           width="150"
         >
           <template slot-scope="scope">
@@ -186,7 +192,7 @@
         <el-table-column
           label="合计"
           align="center"
-
+          prop="stockWt"
           width="120"
         >
           <template slot-scope="scope">
@@ -194,7 +200,7 @@
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="累计损耗(吨)" align="center" prop="累计损耗Kg" width="120">
+      <el-table-column label="累计损耗(吨)" align="center" prop="coalLossWtKg" width="120">
         <template slot-scope="scope">
           {{ scope.row.coalLossWtKg.toFixed(2) }}
         </template>
@@ -206,6 +212,7 @@
         <el-table-column
           label="吨数(吨)"
           align="center"
+          prop="coalInThisMonthWtKg"
           width="130"
         >
           <template slot-scope="scope">
@@ -219,7 +226,7 @@
         <el-table-column
           label="吨数(吨)"
           align="center"
-          prop="当月调出数量Kg"
+          prop="coalOutThisMonthWtKg"
           width="130"
         >
           <template slot-scope="scope">
@@ -230,7 +237,7 @@
       <el-table-column
         label="期初转入(吨)"
         align="center"
-        prop="期初转入Kg"
+        prop="coalInitWtKg"
         width="130"
       >
         <template slot-scope="scope">
@@ -243,6 +250,7 @@
           label="调入(吨)"
           width="130"
           align="center"
+          prop="coalInThisYearWtKg"
         >
           <template slot-scope="scope">
             {{ scope.row.coalInThisYearWtKg.toFixed(2) }}
@@ -252,6 +260,7 @@
           label="调出(吨)"
           align="center"
           width="130"
+          prop="coalOutThisYearWtKg"
         >
           <template slot-scope="scope">
             {{ scope.row.coalOutThisYearWtKg.toFixed(2) }}
@@ -358,34 +367,35 @@ export default {
             }
           },
         },
-        companyName: "公司名称",
-        customerName: "寄仓客户",
-        coalKind: "煤种",
-        lorryInTodayQtyYard: "当日入库车数露天",
-        coalInTodayWtKgYard: "当日调入数量Kg露天",
-        lorryOutTodayQtyYard: "当日出库车数露天",
-        coalOutTodayWtKgYard: "当日调出数量Kg露天",
-        lorryInTodayQtyShed1: "当日入库车数1号煤棚",
-        coalInTodayWtKgShed1: "当日调入数量Kg1号煤棚",
-        lorryOutTodayQtyShed1: "当日出库车数1号煤棚",
-        coalOutTodayWtKgShed1: "当日调出数量Kg1号煤棚",
-        lorryInTodayQtyShed2: "当日入库车数2号煤棚",
-        coalInTodayWtKgShed2: "当日调入数量Kg2号煤棚",
-        lorryOutTodayQtyShed2: "当日出库车数2号煤棚",
-        coalOutTodayWtKgShed2: "当日调出数量Kg2号煤棚",
-        stockWtKgYard: "库存Kg露天",
-        stockWtKgShed1: "库存Kg1号煤棚",
-        stockWtKgShed2: "库存Kg2号煤棚",
-        "库存(合计)": "库存合计",
-        coalLossWtKg: "累计损耗Kg",
-        note: "备注",
-        lorryInThisMonthQty: "当月入库车数",
-        coalInThisMonthWtKg: "当月调入数量Kg",
-        lorryOutThisMonthQty: "当月出库车数",
-        coalOutThisMonthWtKg: "当月调出数量Kg",
-        coalInitWtKg: "期初转入Kg",
-        lorryIntThisYearQty: "本年调入数量Kg",
-        coalInThisYearWtKg: "本年调出数量Kg",
+        公司名称:"companyName",
+        寄仓客户:"customerName",
+        煤种:"coalKind",
+        当日入库车数露天:"lorryInTodayQtyYard",
+        当日调入数量Kg露天:"coalInTodayWtKgYard",
+        当日出库车数露天:"lorryOutTodayQtyYard",
+        当日调出数量Kg露天:"coalOutTodayWtKgYard",
+        当日入库车数1号煤棚:"lorryInTodayQtyShed1",
+        当日调入数量Kg1号煤棚:"coalInTodayWtKgShed1",
+        当日出库车数1号煤棚:"lorryOutTodayQtyShed1",
+        当日调出数量Kg1号煤棚:"coalOutTodayWtKgShed1",
+        当日入库车数2号煤棚:"lorryInTodayQtyShed2",
+        当日调入数量Kg2号煤棚:"coalInTodayWtKgShed2",
+        当日出库车数2号煤棚:"lorryOutTodayQtyShed2",
+        当日调出数量Kg2号煤棚:"coalOutTodayWtKgShed2",
+        库存Kg露天:"stockWtKgYard",
+        库存Kg1号煤棚:"stockWtKgShed1",
+        库存Kg2号煤棚:"stockWtKgShed2",
+        库存合计:"stockWt",
+        累计损耗Kg:"coalLossWtKg",
+        备注:"note",
+        当月入库车数:"lorryInThisMonthQty",
+        当月调入数量Kg:"coalInThisMonthWtKg",
+        当月出库车数:"lorryOutThisMonthQty",
+        当月调出数量Kg:"coalOutThisMonthWtKg",
+        期初转入Kg:"coalInitWtKg",
+        本年调入数量Kg:"lorryIntThisYearQty",
+        本年调出数量Kg:"coalInThisYearWtKg",
+
       },
     };
   },
@@ -396,7 +406,6 @@ export default {
   methods: {
     /** 查询场站日报列表 */
     getList() {
-      debugger
       if (typeof this.queryParams.reportDate == "undefined"||this.queryParams.reportDate == "") {
         this.msgError("时间选择不可为空");
         return;
@@ -446,7 +455,7 @@ export default {
       stockWtKgYard :undefined,
       stockWtKgShed1 :undefined,
       stockWtKgShed2 :undefined,
-      库存合计 :undefined,
+      stockWt :undefined,
       coalLossWtKg :undefined,
       lorryInThisMonthQty :undefined,
       coalInThisMonthWtKg :undefined,
@@ -553,6 +562,11 @@ export default {
           sums[index] = "合计";
           return;
         }
+
+        if (index === 18) {
+          sums[index] = (Number(sums[16])+Number(sums[17])).toFixed(2);
+          return;
+        }
         const values = data.map((item) => Number(item[column.property]));
         if (!values.every(value =>isNaN(value))) {
           sums[index] = values.reduce((prev, curr) => {
@@ -594,7 +608,7 @@ export default {
       this.tongji.stockWtKgYard = sums[15];
       this.tongji.stockWtKgShed1 = sums[16];
       this.tongji.stockWtKgShed2 = sums[17];
-      this.tongji.库存合计 = sums[18];
+      this.tongji.stockWt =  sums[18];
       this.tongji.coalLossWtKg = sums[19];
       this.tongji.lorryInThisMonthQty = sums[21];
       this.tongji.coalInThisMonthWtKg = sums[22];
@@ -605,9 +619,6 @@ export default {
       this.tongji.coalInThisYearWtKg = sums[27];
       return sums;
     },
-
-
-
 
     /** 修改按钮操作 */
     handleUpdate(row) {
