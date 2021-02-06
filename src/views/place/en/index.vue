@@ -11,7 +11,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="getList">搜索</el-button>
         <el-form-item>
           <download-excel
             class="export-excel-wrapper"
@@ -281,7 +281,7 @@ export default {
   data() {
     return {
       // 遮罩层
-      loading: true,
+      loading: false,
       // 选中数组
       ids: [],
       // 非单个禁用
@@ -391,13 +391,19 @@ export default {
   },
   created() {
 
-    this.getList();
+    // this.getList();
   },
   methods: {
     /** 查询场站日报列表 */
     getList() {
+      debugger
+      if (typeof this.queryParams.reportDate == "undefined"||this.queryParams.reportDate == "") {
+        this.msgError("时间选择不可为空");
+        return;
+      }
       this.loading = true;
-      listEn(this.queryParams, this.dateRange).then(response => {
+      this.titleList = [];
+      listEn(this.queryParams).then(response => {
         this.outstoreDocList = response.rows;
         this.printTitle = "场站日报";
         this.total = response.total;
