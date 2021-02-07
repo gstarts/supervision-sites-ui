@@ -130,7 +130,7 @@
               <!--                </el-form-item>-->
               <!--              </el-col>-->
             </el-row>
-            <span style="display:none"> 单号：{{ form.noticeNo }} 预计皮重： {{form.preWeight}} </span>
+            <span style="display:none"> 单号：{{ form.noticeNo }} 预计皮重： {{ form.preWeight }} </span>
           </el-form>
         </el-card>
       </el-col>
@@ -240,36 +240,36 @@
             style="width: 100%"
             :row-class-name="tableRowClassName"
             @row-dblclick="dbRow">
-            <af-table-column label="车号" align="center" prop="plateNum" width='130px' fixed>
-              <template slot-scope="scope">
-                <span>
-                  {{ scope.row.plateNum }}
-<!--                  <el-tooltip class="item" effect="dark" content="标记异常" placement="top-start">
-                    <i class="fa fa-pencil-square-o errPoint" aria-hidden="true"
-                       @click="markError(scope.row)"></i>
-                  </el-tooltip>-->
-                </span>
-              </template>
-            </af-table-column>
-            <af-table-column label="毛重(KG)" align="center" prop="grossWeight" width='100px'/>
-            <af-table-column label="皮重(KG)" align="center" prop="tare" width='100px'>
+            <af-table-column label="车号" align="center" prop="plateNum" width='140px' fixed>
               <template slot-scope="scope">
                 <div v-if="scope.row.errState==='1'">
-                  <span style='color:red'>{{ scope.row.tare }}</span>
+                  <el-tooltip class="item" effect="light" :content="scope.row.errReason" placement="right">
+                    <span>{{ scope.row.plateNum }} <i class="fa fa-exclamation-circle" style='color:red'
+                                                      aria-hidden="true"></i></span>
+                  </el-tooltip>
                 </div>
-                <div v-else>{{ scope.row.tare }}</div>
+                <div v-else>
+                  {{ scope.row.plateNum }}
+                  <el-tooltip class="item" effect="dark" content="标记异常" placement="top-start">
+                    <i class="fa fa-pencil-square-o errPoint" aria-hidden="true"
+                       @click="markError(scope.row)"></i>
+                  </el-tooltip>
+                </div>
               </template>
             </af-table-column>
-            <af-table-column label="净重(KG)" align="center" prop="netWeight" width='100px'/>
+            <af-table-column label="毛重" align="center" prop="grossWeight" width='100px'/>
+            <af-table-column label="皮重" align="center" prop="tare" width='100px'>
+              <template slot-scope="scope">
+                <div v-if="scope.row.errState === '1'"><span style="color:red">{{ scope.row.tare }}</span></div>
+                <div v-else><span>{{ scope.row.tare }}</span></div>
+              </template>
+            </af-table-column>
+            <af-table-column label="净重" align="center" prop="netWeight" width='100px'/>
             <af-table-column label="发货单位" align="center" prop="deliveryUnit" :show-overflow-tooltip="true"/>
             <af-table-column label="收货单位" align="center" prop="receivingUnit" :show-overflow-tooltip="true"/>
             <af-table-column label="货物名称" align="center" prop="goodsName" :show-overflow-tooltip="true"/>
             <af-table-column label="规格型号" align="center" prop="specification"/>
-            <af-table-column label="进场时间" align="center" prop="inTime" width="180">
-              <template slot-scope="scope">
-                <span>{{ parseTime(scope.row.createTime) }}</span>
-              </template>
-            </af-table-column>
+            <af-table-column label="进场时间" align="center" prop="inTime" width="180" />
             <!--<af-table-column label="出场时间" align="center" prop="outTime" width="180"></af-table-column>-->
             <af-table-column label="库位号" align="center" prop="locationNumber"/>
             <af-table-column label="通道号" align="center" prop="channelNumber">
@@ -314,30 +314,27 @@
             v-loading="loading"
             tooltip-effect="dark"
             style="width: 100%"
-
             :row-class-name="tableRowClassName"
-            @row-dblclick="dbRow"
-          >
-            <af-table-column label="车号" align="center" prop="plateNum" width='100px' fixed>
-              <template slot-scope="scope">
-<!--                <div v-if="scope.row.errState==='1'">
-                  <el-tooltip class="item" effect="light" :content="scope.row.errReason" placement="top-start">
-                    <span style='color:red'>{{ scope.row.plateNum }}</span>
-                  </el-tooltip>
-                </div>-->
-                <span>{{ scope.row.plateNum }}</span>
-              </template>
-            </af-table-column>
-            <af-table-column label="毛重(KG)" align="center" prop="grossWeight" width='100px'/>
-            <af-table-column label="皮重(KG)" align="center" prop="tare" width='100px'>
+            @row-dblclick="dbRow">
+            <af-table-column label="车号" align="center" prop="plateNum" width='140px' fixed>
               <template slot-scope="scope">
                 <div v-if="scope.row.errState==='1'">
-                  <span style='color:red'>{{ scope.row.tare }}</span>
+                  <el-tooltip class="item" effect="light" :content="scope.row.errReason" placement="top-start">
+                    <span>{{ scope.row.plateNum }} <i class="fa fa-exclamation-circle" style='color:red'
+                                                      aria-hidden="true"/> </span>
+                  </el-tooltip>
                 </div>
-                <div v-else>{{ scope.row.tare }}</div>
+                <div v-else>{{ scope.row.plateNum }}</div>
               </template>
             </af-table-column>
-            <af-table-column label="净重(KG)" align="center" prop="netWeight" width='100px'/>
+            <af-table-column label="毛重" align="center" prop="grossWeight" width='100px'/>
+            <af-table-column label="皮重" align="center" prop="tare" width='100px'>
+              <template slot-scope="scope">
+                <div v-if="scope.row.errState === '1'"><span style="color:red">{{ scope.row.tare }}</span></div>
+                <div v-else><span>{{ scope.row.tare }}</span></div>
+              </template>
+            </af-table-column>
+            <af-table-column label="净重" align="center" prop="netWeight" width='100px'/>
             <af-table-column label="发货单位" align="center" prop="deliveryUnit" :show-overflow-tooltip="true"/>
             <af-table-column label="收货单位" align="center" prop="receivingUnit" :show-overflow-tooltip="true"/>
             <af-table-column label="货物名称" align="center" prop="goodsName" :show-overflow-tooltip="true"/>

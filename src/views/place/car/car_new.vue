@@ -27,6 +27,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="数据来源" prop="dataSources">
+      <el-select v-model="queryParams.dataSources" placeholder="请选择数据来源" clearable @change="handleQuery">
+        <el-option
+          v-for="item in dataSourcesOptions"
+          :key="item.dictValue"
+          :label="item.dictLabel"
+          :value="item.dictValue"/>
+      </el-select>
+      </el-form-item>
       <el-form-item label="承运单位" prop="transportUnit">
         <el-input
           v-model="queryParams.transportUnit"
@@ -123,7 +132,8 @@
     <el-table v-loading="loading" :data="docList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" :selectable="checkboxInit"/>
       <af-table-column label="寄仓客户" align="center" prop="customerName" fixed="left"/>
-      <af-table-column label="车牌号" align="center" prop="vehicleNo" fixed="left"/>
+      <af-table-column label="车牌号" align="center" prop="vehicleNo" fixed="left" width="100"/>
+      <af-table-column label="数据来源" align="center" prop="dataSources" :formatter="dataSourceFormatter"/>
       <el-table-column label="打印次数" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.inCardPrintState ==='0' || scope.row.inCardPrintState == null "
@@ -140,7 +150,7 @@
       <af-table-column label="包装方式" align="center" prop="packMode" :formatter="packModeFormatter"/>
       <af-table-column label="车辆类型" align="center" prop="vehicleType"/>
       <af-table-column label="运输方式" align="center" prop="transportMode" :formatter="transModeFormatter" width="120px"/>
-      <af-table-column label="承运单位" align="center" prop="transportUnit"/>
+      <af-table-column label="承运单位" align="center" prop="transportUnit" style="min-width: 120px"/>
       <af-table-column label="申报海关" align="center" prop="isReportCustoms" :formatter="isReportFormatter"/>
       <af-table-column label="制单人" align="center" prop="makerBy">
         <template slot-scope="scope">
@@ -578,6 +588,7 @@ export default {
         orderByColumn: 'id',
         isAsc: 'desc',
         inCardPrintState: undefined,
+        dataSource: undefined,
       },
       fileList: [],
       transUnitList: [],//承运单位列表
@@ -610,6 +621,11 @@ export default {
          {'dictValue': '4', dictLabel: '汽运短倒-集装箱'},
          {'dictValue': '5', dictLabel: '全程汽运-散装'},
          {'dictValue': '6', dictLabel: '全程汽运-集装箱'},*/
+      ],
+      dataSourcesOptions: [
+        {dictValue: '1', dictLabel: '页面录入'},
+        {dictValue: '2', dictLabel: '页面导入'},
+        {dictValue: '3', dictLabel: '手机App'},
       ],
       // 表单校验
       rules: {
@@ -1008,6 +1024,9 @@ export default {
     },
     isReportFormatter(row, column) {
       return this.selectDictLabel(this.reportTypes, row.isReportCustoms);
+    },
+    dataSourceFormatter(row, column) {
+      return this.selectDictLabel(this.dataSourcesOptions, row.dataSources);
     },
     getTransportUnitInfo() { //查承运单位
       this.loading = true;
