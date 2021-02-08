@@ -626,15 +626,30 @@
         :rules="rules"
         label-width="120px"
       >
-        <!-- <el-form-item label="修改前库位" prop="storeCode">
-          <el-input v-model="storeForm.storeCode" placeholder="请输入修改前库位"/>
-        </el-form-item>  -->
-        <el-form-item label="修改后库位" prop="modifyStoreCode">
-          <el-input
-            v-model="storeForm.modifyStoreCode"
-            placeholder="修改后库位"
-          />
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="修改前库位" prop="storeCode">
+              <el-input v-model="storeForm.storeCode" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="修改后库位" prop="modifyStoreCode">
+              <el-select
+                v-model="storeForm.modifyStoreCode"
+                placeholder="请选择修改后库位"
+                size="small"
+                filterable
+              >
+                <el-option
+                  v-for="item in storeList"
+                  :key="item.storeCode"
+                  :label="item.storeCode"
+                  :value="item.storeCode"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="updateForm">确 定</el-button>
@@ -656,6 +671,7 @@ import {
 } from "@/api/tax/instore_doc";
 import { getUserDepts } from "@/utils/charutils";
 import { addModify } from "@/api/tax/modify";
+import { getListStore } from "@/api/tax/store";
 
 export default {
   name: "Instore_doc",
@@ -674,6 +690,10 @@ export default {
       total: 0,
       // 入库单表格数据
       instore_docList: [],
+      // 默认库位状态
+      storeState: "0",
+      // 库位信息
+      storeList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -711,6 +731,7 @@ export default {
         unloadGroup: undefined,
         vehicleNo: undefined,
         workGroup: undefined,
+        storeState: "0",
         orderByColumn: "id",
         isAsc: "desc",
       },
@@ -737,6 +758,10 @@ export default {
       this.queryParams.placeId = this.depts[0].deptId;
       this.getList();
     }
+    /** 获取空闲库位 */
+    getListStore(this.queryParams).then((res) => {
+      this.storeList = res.rows;
+    });
   },
   methods: {
     /** 查询入库单列表 */
@@ -748,6 +773,7 @@ export default {
         this.loading = false;
       });
     },
+
     // 取消按钮
     cancel() {
       this.open = false;
@@ -852,14 +878,17 @@ export default {
     },
     /** 修改库位提交按钮 */
     updateForm: function () {
-      console.log(this.storeForm)
-      addModify(this.storeForm).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.openStore = false;
-                this.getList();
-              }
-            });
+      this.$refs["storeForm"].validate((valid) => {
+        if (valid) {
+          addModify(this.storeForm).then((response) => {
+            if (response.code === 200) {
+              this.msgSuccess("新增成功");
+              this.openStore = false;
+              this.getList();
+            }
+          });
+        }
+      });
       // updateStore(this.form).then((response) => {
       //   if (response.code === 200) {
       //     this.msgSuccess("修改成功");
@@ -908,7 +937,7 @@ export default {
     handleLocationUpdate(row) {
       getStore(row.inDocNo).then((response) => {
         if (response.code === 200) {
-          this.storeForm = row
+          this.storeForm = row;
           this.storeForm.storeCode = row.bookStoreCode;
           this.openStore = true;
           this.title = "修改库位号";
