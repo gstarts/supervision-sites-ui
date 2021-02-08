@@ -229,37 +229,11 @@
             @click="handleApprove(scope.row)"
             v-hasPermi="['tax:modify:edit']"
             v-show="scope.row.auditState == '0'"
-            >同意</el-button
-          >
-          <!-- <el-popover placement="right" width="400" trigger="click" v-model="visible">
-              
+            >同意</el-button>
+            <el-button v-show="scope.row.auditState == '0'" slot="reference" size="mini" type="text" @click="refuse(scope.row)">驳回</el-button>
 
-              <div style="text-align: right; margin: 0">
-                  <el-button type="primary" @click="submitForm">确 定</el-button>
-                  <el-button @click="visible = false">取 消</el-button>
-                </div>
-              
-              <el-button
-                slot="reference"
-                size="mini"
-                v-hasPermi="['tax:modify:remove']"
-                type="text"                
-                >删除</el-button
-              >
-            </el-popover> -->
-
-          <el-popover
-            placement="right"
-            width="400"
-            :ref="`popover-${scope.$index}`"
-            :visible.sync="reviewVisible"
-          >
-            <el-form
-              ref="form"
-              :model="form"
-              :rules="rules"
-              label-width="120px"
-            >
+          <!-- <el-popover placement="right" width="400" :ref="`popover-${scope.$index}`" :visible.sync="reviewVisible">
+            <el-form ref="form" :model="form" :rules="rules" label-width="120px">
               <el-form-item label="审批失败说明" prop="auditReason">
                 <el-input
                   v-model="form.auditReason"
@@ -277,11 +251,8 @@
               <el-button type="primary" size="mini" @click="submitRefuse(scope)"
                 >确定</el-button
               >
-            </div>
-            <el-button slot="reference" size="mini" type="text" @click="refuse(scope.row)"
-              >驳回</el-button
-            >
-          </el-popover>
+            </div>            
+          </el-popover> -->
         </template>
       </el-table-column>
     </el-table>
@@ -297,7 +268,7 @@
     <!-- 添加或修改库位修改记录 对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="申请时间" prop="applyTime">
+        <!-- <el-form-item label="申请时间" prop="applyTime">
           <el-date-picker
             clearable
             size="small"
@@ -336,14 +307,14 @@
         </el-form-item>
         <el-form-item label="审批状态" prop="auditState">
           <el-input v-model="form.auditState" placeholder="请输入审批状态" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="审批说明(不通过)" prop="auditReason">
           <el-input
             v-model="form.auditReason"
             placeholder="请输入审批说明(不通过)"
           />
         </el-form-item>
-        <el-form-item label="创建时间" prop="createTime">
+        <!-- <el-form-item label="创建时间" prop="createTime">
           <el-date-picker
             clearable
             size="small"
@@ -397,10 +368,10 @@
             v-model="form.modifyStoreCode"
             placeholder="请输入修改后的库位号"
           />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitRefuse()">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -556,28 +527,29 @@ export default {
     },
     /** 审批同意操作 */
     handleApprove(row) {
-      modifyAgree(row).then((response) => {
-        this.getList();
-      });
+      modifyAgree(row);
+      this.getList();
     },
-    /** 弹窗取消 */
-    handleCloseReview(scope) {
-      this.form.auditReason = undefined;
-      this.$refs[`popover-${scope.$index}`].doClose();
-    },
+    // /** 弹窗取消 */
+    // handleCloseReview(scope) {
+    //   this.form.auditReason = undefined;
+    //   this.$refs[`popover-${scope.$index}`].doClose();
+    // },
     /** 审批拒绝操作 */
-    submitRefuse(scope) {
+    submitRefuse() {
       this.form.auditState = "2";
       updateModify(this.form).then((response) => {
         if (response.code === 200) {
           this.msgSuccess("操作成功,已驳回");
-          this.$refs[`popover-${scope.$index}`].doClose();
-          this.getList();
+          // this.$refs[`popover-${scope.$index}`].doClose();
+          this.cancel();
+          this.getList();          
         }
       });
     },
     refuse(row) {
       this.form = row;
+      this.open = true
     },
     /** 提交按钮 */
     submitForm: function () {

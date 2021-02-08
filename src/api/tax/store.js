@@ -9,6 +9,15 @@ export function listStore(query) {
   })
 }
 
+// 查询空闲库位
+export function getListStore(query) {
+  return request({
+    url: '/tax/store/listStore',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询库存库位详细
 export function getStore(id) {
   return request({
