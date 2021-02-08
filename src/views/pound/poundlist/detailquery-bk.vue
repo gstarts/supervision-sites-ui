@@ -89,6 +89,144 @@
         </el-select>
       </el-form-item>
 
+      <!-- <el-form-item label="规格" prop="specification">
+         <el-input
+           v-model="queryParams.specification"
+           placeholder="请输入规格"
+           clearable
+           size="small"
+           @keyup.enter.native="handleQuery"
+         />
+       </el-form-item>-->
+
+      <!--<el-form-item label="毛重" prop="grossWeight">
+        <el-input
+          v-model="queryParams.grossWeight"
+          placeholder="请输入毛重"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="皮重" prop="tare">
+        <el-input
+          v-model="queryParams.tare"
+          placeholder="请输入皮重"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="箱皮重" prop="tareWeight">
+        <el-input
+          v-model="queryParams.tareWeight"
+          placeholder="请输入箱皮重"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="净重" prop="netWeight">
+        <el-input
+          v-model="queryParams.netWeight"
+          placeholder="请输入净重"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="供货单位" prop="deliveryUnit">
+        <el-input
+          v-model="queryParams.deliveryUnit"
+          placeholder="请输入供货单位"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="收货单位" prop="receivingUnit">
+        <el-input
+          v-model="queryParams.receivingUnit"
+          placeholder="请输入收货单位"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--      <el-form-item label="箱号" prop="containerNum">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.containerNum"-->
+      <!--          placeholder="请输入箱号"-->
+      <!--          clearable-->
+      <!--          size="small"-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--<el-form-item label="保管员" prop="keeper">
+        <el-input
+          v-model="queryParams.keeper"
+          placeholder="请输入保管员"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!-- <el-form-item label="计量员" prop="measurer">
+         <el-input
+           v-model="queryParams.measurer"
+           placeholder="请输入计量员"
+           clearable
+           size="small"
+           @keyup.enter.native="handleQuery"
+         />
+       </el-form-item>-->
+      <!--      <el-form-item label="库位号" prop="locationNumber">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.locationNumber"-->
+      <!--          placeholder="请输入库位号"-->
+      <!--          clearable-->
+      <!--          size="small"-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--<el-form-item label="通道号" prop="channelNumber">
+        <el-input
+          v-model="queryParams.channelNumber"
+          placeholder="请输入通道号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="场站ID" prop="stationId">
+        <el-input
+          v-model="queryParams.stationId"
+          placeholder="请输入场站ID"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <!--<el-form-item label="出入库的通知单号" prop="noticeNo">
+        <el-input
+          v-model="queryParams.noticeNo"
+          placeholder="请输入出入库的通知单号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+
+      <!--      <el-form-item label="包装类型" prop="packMode">-->
+      <!--        <el-select v-model="queryParams.packMode" placeholder="请选择包装类型" clearable size="small" @change="handleQuery">-->
+      <!--          <el-option-->
+      <!--            v-for="dept in packModeDic"-->
+      <!--            :key="dept.key"-->
+      <!--            :label="dept.value"-->
+      <!--            :value="dept.key"-->
+      <!--          />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
       <el-form-item label="磅单状态 " prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small" @change="handleQuery">
           <el-option
@@ -214,7 +352,7 @@
       <af-table-column label="入场司磅员" align="center" prop="inUser"/>
       <af-table-column label="出场时间" align="center" prop="outTime"/>
       <af-table-column label="出场司磅员" align="center" prop="outUser"/>
-      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="180">
+      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button v-show="scope.row.status === '0'"
                      size="mini"
@@ -272,7 +410,7 @@
             发货单位:{{ selectPound.deliveryUnit }}
           </el-col>
           <el-col :span="6" :offset="3">
-            流向:{{ selectPound.flowDirection === 'E' ? '已完成' : '未完成' }}
+            流向:{{ selectPound.flowDirection == 'E' ? '已完成' : '未完成' }}
           </el-col>
 
         </el-row>
@@ -294,10 +432,10 @@
             货物名称:{{ selectPound.goodsName }}
           </el-col>
           <el-col :span="6" :offset="2">
-            包装方式:{{ selectPound.packMode === '1' ? '集装箱' : '散装' }}
+            包装方式:{{ selectPound.packMode == '1' ? '集装箱' : '散装' }}
           </el-col>
           <el-col :span="6" :offset="2">
-            车辆类型:{{ selectPound.viaType === '01' ? '蒙煤车' : '外调车' }}
+            车辆类型:{{ selectPound.viaType == '01' ? '蒙煤车' : '外调车' }}
           </el-col>
         </el-row>
         <el-row :gutter="10" style="margin-bottom: 14px;font-size: 14px;font-weight: bold"
@@ -309,14 +447,14 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="修改项" prop="modifyType">
-              <!--              <el-select v-model="poundModify.modifyType" filterable placeholder="请选择修改项" @change="modifyTypeChange">
-                              <el-option
-                                v-for="item in modifyTypeDic"
-                                :key="item.dictValue"
-                                :label="item.dictLabel"
-                                :value="item.dictValue">
-                              </el-option>
-                            </el-select>-->
+              <el-select v-model="poundModify.modifyType" filterable placeholder="请选择修改项" @change="modifyTypeChange">
+                <el-option
+                  v-for="item in modifyTypeDic"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -332,7 +470,7 @@
           <el-col :span="10">
             <!-- <el-input v-model="poundModify.modifyCoalBillNo" disabled></el-input>-->
             <el-form-item label="车牌号" prop="modifyVehicleNo">
-              <el-input v-model="poundModify.modifyVehicleNo"></el-input>
+              <el-input v-model="poundModify.modifyVehicleNo" :disabled="poundModify.modifyType!=='3'"></el-input>
             </el-form-item>
           </el-col>
           <!-- 蒙文键盘 -->
@@ -340,11 +478,13 @@
             <el-popover placement="top" width="500" trigger="click">
               <SimpleKeyboard
                 @onChange="mengwenInput"
-                :input="poundModify.modifyVehicleNo"/>
+                :input="poundModify.modifyVehicleNo"
+              />
               <el-button
                 slot="reference"
                 class="fa fa-keyboard-o"
                 size="mini"
+                :disabled="poundModify.modifyType!=='3'"
               ></el-button>
             </el-popover>
           </el-col>
@@ -362,6 +502,7 @@
               <!-- <el-input v-model="poundModify.modifyCoalBillNo" disabled></el-input>-->
               <el-form-item label="寄仓客户" prop="modifyCheckCustomer">
                 <el-select v-model="poundModify.modifyCheckCustomer2" filterable placeholder="请选择寄仓客户"
+                           :disabled="poundModify.modifyType!=='2'"
                            @change="customer2Change">
                   <el-option
                     v-for="item in customerList"
@@ -383,7 +524,8 @@
             <el-col :span="2" class="modifyTo">修改为</el-col>
             <el-col :span="11">
               <el-form-item label="提煤单号" prop="modifyCoalBillNo">
-                <el-select v-model="poundModify.modifyCoalBillNo" filterable placeholder="请选择提煤单号">
+                <el-select v-model="poundModify.modifyCoalBillNo" filterable placeholder="请选择提煤单号"
+                           :disabled="poundModify.modifyType!=='2'">
                   <el-option
                     v-for="item in coalBillSubList"
                     :key="item.coalBillNo"
@@ -408,7 +550,8 @@
               <!-- <el-input v-model="poundModify.modifyCoalBillNo" disabled></el-input>-->
               <el-form-item label="寄仓客户" prop="modifyCheckCustomer">
                 <el-select v-model="poundModify.modifyCheckCustomer" filterable placeholder="请选择寄仓客户"
-                           @change="customerChange" style="width:100%">
+                           :disabled="poundModify.modifyType!=='1'"
+                           @change="customerChange">
                   <el-option
                     v-for="item in customerList"
                     :key="item.customerName"
@@ -430,7 +573,8 @@
               <!-- <el-input v-model="poundModify.modifyCoalBillNo" disabled></el-input>-->
               <el-form-item label="合同号" prop="modifyContractNo">
                 <el-select v-model="poundModify.modifyContractNo" filterable placeholder="请选择合同号"
-                           @change="contractChange" style="width:100%">
+                           :disabled="poundModify.modifyType!=='1'"
+                           @change="contractChange">
                   <el-option
                     v-for="item in contractSubList"
                     :key="item.contractNo"
@@ -452,7 +596,8 @@
             <el-col :span="11">
               <!-- <el-input v-model="poundModify.modifyCoalBillNo" disabled></el-input>-->
               <el-form-item label="库位号" prop="modifyStoreCode">
-                <el-select v-model="poundModify.modifyStoreCode" filterable placeholder="请选择库位号" style="width:100%">
+                <el-select v-model="poundModify.modifyStoreCode" filterable placeholder="请选择库位号"
+                           :disabled="poundModify.modifyType!=='1'">
                   <el-option
                     v-for="item in storeCodeList"
                     :key="item.storeCode"
@@ -507,8 +652,7 @@
           <el-col :span="2" class="modifyTo">修改为</el-col>
           <el-col :span="11">
             <el-form-item label="净重" prop="modifyNetWeight">
-              <el-input :min="0" :step="1" v-model.number="poundModify.modifyNetWeight" placeholder="请输入修改后净重"
-                        disabled/>
+              <el-input :min="0" :step="1" v-model.number="poundModify.modifyNetWeight" placeholder="请输入修改后净重"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -788,7 +932,13 @@ export default {
         //补打标识
         printState: '',
         //补打 当前操作员标识
+
       },
+
+      /*UserOption: [{'Key': 'admin', 'Value': '老板'},
+        {'Key': 'song', 'Value': '宋'}
+      ],*/
+
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -830,36 +980,32 @@ export default {
       // 表单校验
       rulesModifyNew: {},
       rules: {approvalUserName: [{type: 'string', required: true, message: '审批人不能为空', trigger: 'change'}],},
-      //基础的验证规则，
       rulesModify: {
+        //tareWeight: [{type: 'number', required: true, message: '皮重不能为空', trigger: 'blur'}],
+        //roughWeight: [{type: 'number', required: true, message: '毛重不能为空', trigger: 'blur'}],
+        //netWeight: [{type: 'number', required: true, message: '净重不能为空', trigger: 'blur'}],
         modifyTareWeight: [{required: true, message: '皮重不能为空', trigger: 'blur'},
           {type: "number", message: "皮重需为数字", trigger: "blur"}],
         modifyRoughWeight: [{required: true, message: '毛重不能为空', trigger: 'blur'},
           {type: "number", message: "毛重需为数字", trigger: "blur"}],
         modifyNetWeight: [{required: true, message: '净重不能为空', trigger: 'blur'},
           {type: "number", message: "净重需为数字", trigger: "blur"}],
-
         applyReason: [{type: 'string', required: true, message: '修改原因不能为空', trigger: 'blur'}],
         auditUser: [{type: 'string', required: true, message: '审批人不能为空', trigger: 'change'}],
-        modifyVehicleNo: [{required: true, message: '车号不能为空', trigger: 'blur'}],
-
-        modifyContractNo: [{type: 'string', required: true, message: '合同号不能为空', trigger: 'change'}],
-        modifyStoreCode: [{type: 'string', required: true, message: '库位号不能为空', trigger: 'change'}],
-        modifyCoalBillNo: [{type: 'string', required: true, message: '提煤单号不能为空', trigger: 'change'}],
-        //modifyType: [{type: 'string', required: true, message: '修改项不能为空', trigger: 'change'}],
+        modifyType: [{type: 'string', required: true, message: '修改项不能为空', trigger: 'change'}],
       },
-      /*ruleVehicleNo: {
-        modifyVehicleNo: [{required: true, message: '车号不能为空', trigger: 'blur'}],
 
+      ruleVehicleNo: {
+        modifyVehicleNo: [{required: true, message: '车号不能为空', trigger: 'blur'}],
       },
+
       ruleContractNo: {
         modifyContractNo: [{type: 'string', required: true, message: '合同号不能为空', trigger: 'change'}],
         modifyStoreCode: [{type: 'string', required: true, message: '库位号不能为空', trigger: 'change'}],
       },
       ruleCoalBillNo: {
-        //modifyCustomerName: [{type: 'string', required: true, message: '寄仓客户不能为空', trigger: 'change'}],
         modifyCoalBillNo: [{type: 'string', required: true, message: '提煤单号不能为空', trigger: 'change'}],
-      },*/
+      },
       //磅单打印申请的表单验证
       rulesPrint: {
         poundId: [{required: true, message: '磅单编号不能为空', trigger: 'blur'}],
@@ -1006,7 +1152,7 @@ export default {
     this.getDicts("place_transport_type").then((response) => {
       this.transportModeDic = response.data;
     });
-    //this.rulesModifyNew = {...this.rulesModify}
+    this.rulesModifyNew = this.rulesModify
   },
   watch: {
     //毛重监听
@@ -1021,12 +1167,6 @@ export default {
         this.poundModify.modifyNetWeight = this.poundModify.modifyRoughWeight - this.poundModify.modifyTareWeight;
       }
     },
-    //净重监听
-    /*modifyNetWeightWatch01(val) {
-      if (this.selectPound.flowDirection === 'E') {
-        this.poundModify.modifyNetWeight = this.poundModify.modifyRoughWeight - this.poundModify.modifyTareWeight;
-      }
-    },*/
   },
   methods: {
     /** 查询计量单列表 */
@@ -1154,24 +1294,17 @@ export default {
       //if (this.poundModify.viaType === '01') {
       this.poundModify.modifyContractNo = this.selectPound.remark
       //} else {
-      //this.poundModify.modifyCoalBillNo = this.selectPound.coalBillNum
+      this.poundModify.modifyCoalBillNo = this.selectPound.coalBillNum
       //}
       //this.poundModify.contractNo = this.selectPound.remark
       //this.poundModify.modifyContractNo = this.selectPound.remark
       this.poundModify.storeCode = this.selectPound.locationNumber //库位号
       this.poundModify.modifyStoreCode = this.selectPound.locationNumber //修改后的库位号
-      this.poundModify.modifyCheckCustomer = this.selectPound.deliveryUnit //发货单位
-      this.poundModify.modifyCheckCustomer2 = this.selectPound.receivingUnit //收货单位
+      this.poundModify.modifyCheckCustomer = this.selectPound.deliveryUnit
+      this.poundModify.modifyCheckCustomer2 = this.selectPound.receivingUnit
       /* console.log(this.poundModify)
        console.log("--------------")
        console.log(this.selectPound)*/
-      this.rulesModifyNew = {...this.rulesModify}
-      if (this.poundModify.viaType === '01') {
-        this.rulesModifyNew.modifyCoalBillNo = undefined
-      } else {
-        this.rulesModifyNew.modifyContractNo = undefined
-        this.rulesModifyNew.modifyStoreCode = undefined
-      }
 
     },
     //打印申请弹出框
@@ -1187,7 +1320,7 @@ export default {
       // if (this.poundModify.modifyNetWeight >= 0) {
       this.$refs["formModify"].validate(valid => {
         if (valid) {
-          /*if (this.poundModify.modifyType === '3') {//改车牌
+          if (this.poundModify.modifyType === '3') {//改车牌
             if (!this.poundModify.modifyVehicleNo || this.poundModify.modifyVehicleNo === this.poundModify.vehicleNo) {
               this.$message.warning('请填写要修改的车牌号')
               return false
@@ -1209,7 +1342,7 @@ export default {
           }
           if (this.poundModify.modifyType === '4') {//改重量
 
-          }*/
+          }
 
           applyModify(this.poundModify).then(response => {
             if (response.code === 200) {
@@ -1440,7 +1573,7 @@ export default {
         this.form.approvalUserName = this.printUserList[0].userName
       }
     },
-    groupModifyChange(event) {
+    groupModifyChange(event){
       this.poundModify.auditUser = undefined
       this.modifyUserList = []
       let group = this.modifyGroupList.find(item => item.groupCode === event);
@@ -1523,13 +1656,9 @@ export default {
     getTransportUnitInfo() {
       this.queryParams.transportUnit = undefined
       this.loading = true;
-      this.transUnitList = []
       let info = {"eType": '2', 'deptId': this.queryParams.stationId, 'companyType': '4'}
       listInfo(info).then(response => {
-        for (let e of response.rows) {
-          if (!this.transUnitList.find(item => item.eAbbreviation === e.eAbbreviation))
-            this.transUnitList.push(e)
-        }
+        this.transUnitList = response.rows;
         this.loading = false;
       });
     },

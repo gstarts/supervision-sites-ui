@@ -11,86 +11,42 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="修改项" prop="modifyType">
-        <el-select v-model="queryParams.modifyType" clearable filterable placeholder="请选择修改项" @change="handleQuery">
+      <el-form-item label="车辆类型" prop="viaType">
+        <el-select v-model="queryParams.viaType" placeholder="请选择车辆类型" @change="handleQuery" clearable>
           <el-option
-            v-for="dept in modifyTypeDic"
+            v-for="dept in viaTypeOptions"
             :key="dept.dictValue"
             :label="dept.dictLabel"
             :value="dept.dictValue"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="磅单状态" prop="poundState">
+      <el-form-item label="车号" prop="vehicleNo">
         <el-input
-          v-model="queryParams.poundState"
-          placeholder="请输入磅单状态"
+          v-model="queryParams.vehicleNo"
+          placeholder="请输入车号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!-- <el-form-item label="修改前皮重" prop="tareWeight">
+      <el-form-item label="提煤单号" prop="coalBillNo">
         <el-input
-          v-model="queryParams.tareWeight"
-          placeholder="请输入修改前皮重"
+          v-model="queryParams.coalBillNo"
+          placeholder="请输入提煤单号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="修改前毛重" prop="roughWeight">
+      <el-form-item label="合同号" prop="contractNo">
         <el-input
-          v-model="queryParams.roughWeight"
-          placeholder="请输入修改前毛重"
+          v-model="queryParams.contractNo"
+          placeholder="请输入合同号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="修改前净重" prop="netWeight">
-        <el-input
-          v-model="queryParams.netWeight"
-          placeholder="请输入修改前净重"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="修改后皮重" prop="modifyTareWeight">
-        <el-input
-          v-model="queryParams.modifyTareWeight"
-          placeholder="请输入修改后皮重"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="修改后毛重" prop="modifyRoughWeight">
-        <el-input
-          v-model="queryParams.modifyRoughWeight"
-          placeholder="请输入修改后毛重"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="修改后净重" prop="modifyNetWeight">
-        <el-input
-          v-model="queryParams.modifyNetWeight"
-          placeholder="请输入修改后净重"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
-      <el-form-item label="申请时间" prop="applyTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-                        v-model="queryParams.applyTime"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="选择申请时间">
-        </el-date-picker>
       </el-form-item>
       <el-form-item label="申请用户" prop="applyUser">
         <el-input
@@ -101,31 +57,17 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="审批人" prop="auditUser">
-        <el-input
-          v-model="queryParams.auditUser"
-          placeholder="请输入审批人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="审批时间" prop="auditTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-                        v-model="queryParams.auditTime"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="选择审批时间">
-        </el-date-picker>
-      </el-form-item>
       <el-form-item label="审批状态" prop="auditState">
-        <el-input
-          v-model="queryParams.auditState"
-          placeholder="请输入审批状态"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.auditState" clearable
+                   size="small"
+                   @change="handleQuery">
+          <el-option v-for="item in auditStateOptions"
+                     :key="item.dictValue"
+                     :label="item.dictLabel"
+                     :value="item.dictValue"
+          />
+        </el-select>
+
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -133,76 +75,40 @@
       </el-form-item>
     </el-form>
 
-    <!-- <el-row :gutter="10" class="mb8">
-       <el-col :span="1.5">
-         <el-button
-           type="success"
-           icon="el-icon-edit"
-           size="mini"
-           :disabled="single"
-           @click="handleUpdate"
-           v-hasPermi="['place:modify:edit']"
-         >修改
-         </el-button>
-       </el-col>
-       <el-col :span="1.5">
-         <el-button
-           type="danger"
-           icon="el-icon-delete"
-           size="mini"
-           :disabled="multiple"
-           @click="handleDelete"
-           v-hasPermi="['place:modify:remove']"
-         >删除
-         </el-button>
-       </el-col>
-       <el-col :span="1.5">
-         <el-button
-           type="warning"
-           icon="el-icon-download"
-           size="mini"
-           @click="handleExport"
-           v-hasPermi="['place:modify:export']"
-         >导出
-         </el-button>
-       </el-col>
-     </el-row>-->
-
-    <el-table v-loading="loading" :data="modifyList">
+    <el-table v-loading="loading" :data="modifyList" height="600">
       <!--<af-table-column type="selection" width="55" align="center"/>-->
       <!-- <af-table-column label="ID" align="center" prop="id" /> -->
-      <af-table-column label="修改项" align="center" prop="modifyType" format="">
+      <!--      <af-table-column label="修改项" align="center" prop="modifyType" format="">
+              <template slot-scope="scope">
+                {{ formatModifyType(scope.row.modifyType) }}
+              </template>
+            </af-table-column>-->
+      <af-table-column label="车号" align="center" prop="vehicleNo" fixed="left" width="100"/>
+      <af-table-column label="修改后车号" align="center" prop="modifyVehicleNo" fixed="left" width="100"/>
+      <af-table-column label="车辆类型" align="center" prop="viaType">
         <template slot-scope="scope">
-          {{ formatModifyType(scope.row.modifyType) }}
+          {{ scope.row.viaType === '01' ? '蒙煤车' : '外调车' }}
         </template>
       </af-table-column>
       <af-table-column label="磅单ID" align="center" prop="poundId"/>
-      <af-table-column label="车号" align="center" prop="vehicleNo"/>
-      <af-table-column label="车辆类型" align="center" prop="viaType"/>
+      <af-table-column label="提煤单号" align="center" prop="coalBillNo"/>
+      <af-table-column label="修改后提煤单号" align="center" prop="modifyCoalBillNo"/>
+      <af-table-column label="合同号" align="center" prop="contractNo"/>
+      <af-table-column label="修改后合同号" align="center" prop="modifyContractNo"/>
+      <af-table-column label="库位号" align="center" prop="storeCode"/>
+      <af-table-column label="修改后库位号" align="center" prop="modifyStoreCode"/>
       <af-table-column label="修改前皮重" align="center" prop="tareWeight"/>
       <af-table-column label="修改前毛重" align="center" prop="roughWeight"/>
       <af-table-column label="修改前净重" align="center" prop="netWeight"/>
       <af-table-column label="修改后皮重" align="center" prop="modifyTareWeight"/>
       <af-table-column label="修改后毛重" align="center" prop="modifyRoughWeight"/>
       <af-table-column label="修改后净重" align="center" prop="modifyNetWeight"/>
-      <af-table-column label="申请时间" align="center" prop="applyTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.applyTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
-        </template>
-      </af-table-column>
+      <af-table-column label="申请时间" align="center" prop="applyTime" width="180"/>
       <af-table-column label="申请用户" align="center" prop="applyUser"/>
       <af-table-column label="申请说明" align="center" prop="applyReason"/>
       <af-table-column label="审批人" align="center" prop="auditUser"/>
-      <af-table-column label="审批时间" align="center" prop="auditTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.auditTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
-        </template>
-      </af-table-column>
-      <af-table-column label="审批状态" align="center" prop="auditState">
-        <template slot-scope="scope">
-          {{ auditStateTopDic.find(item => item.key === scope.row.auditState).value }}
-        </template>
-      </af-table-column>
+      <af-table-column label="审批时间" align="center" prop="auditTime" width="180"/>
+      <af-table-column label="审批状态" align="center" prop="auditState" :formatter="auditStateFormatter"/>
       <af-table-column label="审批说明" align="center" prop="auditReason"/>
       <!-- <af-table-column label="审批人2" align="center" prop="auditUser2" />
       <af-table-column label="审批时间2" align="center" prop="auditTime2" width="180">
@@ -290,75 +196,80 @@
         </el-row>
 
         <el-row :gutter="10">
-          <el-col :span="20" :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
-            修改项：{{ formatModifyType(selectModify.modifyType) }}
+          <el-col :span="20" :offset="1" class="modify">
+            修改项
           </el-col>
         </el-row>
         <el-row :gutter="10">
-          <el-col :span="6" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="6" :offset="2" class="modify">
             车牌号:{{ selectModify.vehicleNo }}
           </el-col>
-          <el-col :span="6" :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
-          <el-col :span="7" :offset="0" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="6" :offset="1" class="modify">修改为</el-col>
+          <el-col :span="7" :offset="0" class="modify"
+                  :style="{color:selectModify.modifyVehicleNo!==selectModify.vehicleNo?'red':'#606266'}">
             车牌号:{{ selectModify.modifyVehicleNo }}
           </el-col>
         </el-row>
         <el-row :gutter="10">
-          <el-col :span="6" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="6" :offset="2" class="modify">
             合同号:{{ selectModify.contractNo }}
           </el-col>
-          <el-col :span="6" :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
-          <el-col :span="7" :offset="0" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="6" :offset="1" class="modify">修改为</el-col>
+          <el-col :span="7" :offset="0" class="modify"
+                  :style="{color:selectModify.contractNo!==selectModify.modifyContractNo?'red':'#606266'}">
             合同号:{{ selectModify.modifyContractNo }}
           </el-col>
         </el-row>
         <el-row :gutter="10">
-          <el-col :span="6" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="6" :offset="2" class="modify">
             提煤单号:{{ selectModify.coalBillNo }}
           </el-col>
-          <el-col :span="6" :offset="1" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
-          <el-col :span="7" :offset="0" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="6" :offset="1" class="modify">修改为</el-col>
+          <el-col :span="7" :offset="0" class="modify"
+                  :style="{color:selectModify.coalBillNo!==selectModify.modifyCoalBillNo?'red':'#606266'}">
             提煤单号:{{ selectModify.modifyCoalBillNo }}
           </el-col>
         </el-row>
         <el-row :gutter="10">
-          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="5" :offset="2" class="modify">
             皮重:{{ selectModify.tareWeight }}
           </el-col>
-          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
-          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="5" :offset="2" class="modify">修改为</el-col>
+          <el-col :span="5" :offset="2" class="modify"
+                  :style="{color:selectModify.tareWeight!==selectModify.modifyTareWeight?'red':'#606266'}">
             皮重:{{ selectModify.modifyTareWeight }}
           </el-col>
         </el-row>
         <el-row :gutter="10">
-          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="5" :offset="2" class="modify">
             毛重:{{ selectModify.roughWeight }}
           </el-col>
-          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
-          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="5" :offset="2" class="modify">修改为</el-col>
+          <el-col :span="5" :offset="2" class="modify"
+                  :style="{color:selectModify.roughWeight!==selectModify.modifyRoughWeight?'red':'#606266'}">
             毛重:{{ selectModify.modifyRoughWeight }}
           </el-col>
         </el-row>
         <el-row :gutter="10">
-          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="5" :offset="2" class="modify">
             净重:{{ selectModify.netWeight }}
           </el-col>
-          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
-          <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+          <el-col :span="5" :offset="2" class="modify">修改为</el-col>
+          <el-col :span="5" :offset="2" class="modify"
+                  :style="{color:selectModify.netWeight!==selectModify.modifyNetWeight?'red':'#606266'}">
             净重:{{ selectModify.modifyNetWeight }}
           </el-col>
         </el-row>
         <el-row v-show="selectPound.packMode === '1'">
           <el-row :gutter="10">
-            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            <el-col :span="5" :offset="2" class="modify">
               集装箱号1:{{ selectModify.containerNo1 }}
             </el-col>
-            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">修改为</el-col>
-            <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
+            <el-col :span="5" :offset="2" class="modify">修改为</el-col>
+            <el-col :span="5" :offset="2" class="modify">
               集装箱号1:{{ selectModify.modifyContainerNo1 }}
             </el-col>
           </el-row>
-
           <el-row :gutter="10">
             <el-col :span="5" :offset="2" style="margin-bottom: 14px;font-size: 18px;font-weight: bold">
               集装箱号2:{{ selectModify.containerNo2 }}
@@ -492,26 +403,10 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 20,
-        poundId: undefined,
-        poundState: undefined,
-        tareWeight: undefined,
-        roughWeight: undefined,
-        netWeight: undefined,
-        modifyTareWeight: undefined,
-        modifyRoughWeight: undefined,
-        modifyNetWeight: undefined,
-        applyTime: undefined,
-        applyUser: undefined,
-        applyReason: undefined,
-        auditUser: undefined,
-        auditTime: undefined,
         auditState: undefined,
-        auditReason: undefined,
-        auditUser2: undefined,
-        auditTime2: undefined,
-        auditResult2: undefined,
-        auditReason2: undefined,
-        revision: undefined,
+        vehicleNo: undefined,
+        coalBillNo: undefined,
+        contractNo: undefined,
         orderByColumn: 'id',
         isAsc: 'desc'
       },
@@ -527,7 +422,6 @@ export default {
       form: {
         auditState: undefined,
         auditReason: undefined,
-
       },
       // 表单校验
       rules: {
@@ -556,14 +450,18 @@ export default {
         auditState: [{required: true, message: "审批结果不能为空", trigger: "change"}],
         auditReason: [{required: true, message: "审批说明不能为空", trigger: "blur"}]
       },
-      auditStateTopDic: [
-        {'key': '0', 'value': '申请中'},
-        {'key': '1', 'value': '审批通过'},
-        {'key': '2', 'value': '审批不通过'},
+      auditStateOptions: [
+        {'dictValue': '0', 'dictLabel': '申请中'},
+        {'dictValue': '1', 'dictLabel': '审批通过'},
+        {'dictValue': '2', 'dictLabel': '审批不通过'},
       ],
       auditStateFormDic: [
         {'key': '1', 'value': '通过'},
         {'key': '2', 'value': '不通过'},
+      ],
+      viaTypeOptions: [
+        {'dictValue': '01', 'dictLabel': '蒙煤车'},
+        {'dictValue': '02', 'dictLabel': '外调车'},
       ],
       modifyTypeDic: [
         {'dictValue': '1', 'dictLabel': '合同号'},
@@ -724,7 +622,18 @@ export default {
       } else {
         return val
       }
-    }
+    },
+    auditStateFormatter(row, column) {
+      return this.selectDictLabel(this.auditStateOptions, row.auditState);
+    },
   }
 };
 </script>
+<style scoped>
+.modify {
+  margin-bottom: 14px;
+  font-size: 16px;
+  font-weight: bold
+}
+
+</style>

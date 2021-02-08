@@ -269,7 +269,7 @@
             <af-table-column label="收货单位" align="center" prop="receivingUnit" :show-overflow-tooltip="true"/>
             <af-table-column label="货物名称" align="center" prop="goodsName" :show-overflow-tooltip="true"/>
             <af-table-column label="规格型号" align="center" prop="specification"/>
-            <af-table-column label="进场时间" align="center" prop="inTime" width="180" />
+            <af-table-column label="进场时间" align="center" prop="inTime" width="180"/>
             <!--<af-table-column label="出场时间" align="center" prop="outTime" width="180"></af-table-column>-->
             <af-table-column label="库位号" align="center" prop="locationNumber"/>
             <af-table-column label="通道号" align="center" prop="channelNumber">
@@ -890,6 +890,7 @@ export default {
       //单号 从保税库接口中返回的
       this.noticeNo = ''
       this.form.noticeNo = ''
+      this.form.status = '0'
       this.form.packMode = '2' //默认散货
       this.preWeight = 0
       if (!event || event === '') return
@@ -994,7 +995,19 @@ export default {
     },
     //双击列表赋值form表单
     dbRow(row, column) {
-      this.form = {...row}
+      //this.form = {...row}
+      this.form.status = '0'
+      this.form.plateNum = row.plateNum
+      this.form.grossWeight = row.grossWeight
+      this.form.tare = row.tare
+      this.form.netWeight = row.netWeight
+      this.form.deliveryUnit = row.deliveryUnit
+      this.form.receivingUnit = row.receivingUnit
+      this.form.goodsName = row.goodsName
+      this.form.remark = row.remark
+      this.from.specification = row.specification
+      this.form.noticeNo = row.noticeNo
+      this.form.packMode = row.packMode
       //console.log(this.form)
       //this.form
     },
