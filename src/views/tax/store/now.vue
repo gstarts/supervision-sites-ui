@@ -241,9 +241,12 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('tax/summary/export', {
-        ...this.queryParams
-      }, `daily_summary.xlsx`)
+      // let a=new Date().toLocaleDateString();
+      // console.log(a)
+      // let date = "";
+      // let objectName = "保税库，日报表，CUCON DAILY REPORT OF JIN HANG BONDED WAREHOUSE -Feb  9 2021";
+      let objectName = "保税库，日报表.xlsx";
+      window.location.href = process.env.VUE_APP_BASE_API + '/minio/files/download?bucketName=tax' + '&objectName=' + objectName
     }
   },
   mounted() {
