@@ -43,6 +43,14 @@ export function delBillDetail(id) {
   })
 }
 
+export function delBillDetailByObject(detail) {
+  return request({
+    url: '/place/billDetail/',
+    method: 'delete',
+    data: detail
+  })
+}
+
 // 模糊查询计费单明细列表
 export function listBillDetailLike(query) {
   return request({
