@@ -95,7 +95,7 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="zoneList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="zoneList" @selection-change="handleSelectionChange" :height="tableHeight">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="区域类型" align="center" prop="zoneType" :formatter="zoneTypeFormat"/>
       <el-table-column label="区域名称" align="center" prop="zoneName"/>
@@ -255,6 +255,16 @@
   </div>
 </template>
 
+<style>
+
+.el-table th.gutter{
+
+  display: table-cell !important;
+
+}
+
+</style>
+
 <script>
 import {listZone, getZone, delZone, addZone, updateZone} from "@/api/tax/zone";
 import {genEnglishChar, genNumChar, getUserDepts} from "@/utils/charutils";
@@ -329,7 +339,10 @@ export default {
        /* storeLevel: [
           {required: true, message: "货位层数不能为空", trigger: "blur"}
         ],*/
-      }
+      },
+      // tableHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight - 475,
+      tableHeight: window.innerHeight - 280,
+      // tableHeight: 600,
     };
   },
   created() {
@@ -469,6 +482,30 @@ export default {
         ...this.queryParams
       }, `tax_zone.xlsx`)
     }
-  }
-};
+  },
+  mounted() {
+    const that = this
+    window.onresize = () => {
+      return (() => {
+        window.tableHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+        that.tableHeight = window.tableHeight - that.$refs.queryHeight.offsetHeight - 280
+      })()
+    }
+  },
+  watch: {
+    // 这里的定时器是为了优化，如果频繁调用window.onresize方法会造成页面卡顿，增加定时器会避免频繁调用window.onresize方法
+    // timer默认值设置为false，这里相当于一个按钮，防止频繁改变时引起卡顿
+    tableHeight(val) {
+      if (!this.timer) {
+        this.tableHeight = val
+        this.timer = true
+        const that = this
+        setTimeout(function () {
+          that.timer = false
+        }, 400)
+      }
+    }
+  },
+}
+;
 </script>
