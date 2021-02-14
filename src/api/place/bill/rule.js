@@ -26,9 +26,9 @@ export function addCostRule(data) {
   })
 }
 // 新增计费规则记录
-export function addCostRuleList(data) {
+export function addCostRuleList(data,contractId) {
   return request({
-    url: '/place/costRule/addList',
+    url: '/place/costRule/addList/'+contractId,
     method: 'post',
     data: data
   })

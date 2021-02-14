@@ -157,7 +157,7 @@
       <af-table-column label="品名" align="center" prop="goodsName"/>
       <af-table-column label="散货库位" align="center" width="150px">
         <template slot-scope="scope">
-          <span>{{(scope.row.params.contract.map(item => item.storeCode)).toString().replace(',','、')}}</span>
+          <span>{{ (scope.row.params.contract.map(item => item.storeCode)).toString().replace(',', '、') }}</span>
         </template>
       </af-table-column>
       <af-table-column label="仓储方式" align="center" prop="packMode" :formatter="packModeFormatter"/>
@@ -400,6 +400,14 @@
         <el-col :span="12" style="text-align: right;padding-right: 30px">
           <el-button
             size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="reCalcBillCost()"
+            v-hasPermi="['place:bill:recalc']"
+          >计算费用
+          </el-button>
+          <el-button
+            size="mini"
             type=""
             @click="checkRules"
           >规则校验
@@ -433,7 +441,8 @@
         <el-table-column label="计时单位" align="center" prop="timeUnit" :formatter="timeUnitFormat"/>
         <el-table-column label="计时起始" align="center" prop="timeBegin"/>
         <el-table-column label="计时结束" align="center" prop="timeEnd"/>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" style="width:140px" fixed="right">
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" style="width:140px"
+                         fixed="right">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -614,6 +623,8 @@ import {getZoneList} from "@/api/place/zone";
 import {listStore} from "@/api/place/store";
 import {listInfo} from "@/api/basis/enterpriseInfo";
 import {addCostRuleList, listCostRule} from "@/api/place/bill/rule";
+import {reCalcBillCost} from "@/api/place/bill/bill";
+import {parseTime} from "@/utils/common";
 
 export default {
   name: "StoreContract",
@@ -1196,23 +1207,23 @@ export default {
     },
     //保存计费规则l
     saveRules() {
-      if (this.rulesList.length > 0) {
-        this.saveLoading = true
-        //保存
-        addCostRuleList(this.rulesList).then(response => {
-          this.saveLoading = false
-          if (response.code === 200) {
-            this.$message.success(response.msg)
-          } else {
-            this.$message.error('保存失败，请重新尝试')
-          }
-        }).catch(e => {
-          this.saveLoading = false
-        })
-      } else {
-        this.$message.warning('请添加计费规则')
-        return false
-      }
+      // if (this.rulesList.length > 0) {
+      this.saveLoading = true
+      //保存
+      addCostRuleList(this.rulesList, this.currentContract.id).then(response => {
+        this.saveLoading = false
+        if (response.code === 200) {
+          this.$message.success(response.msg)
+        } else {
+          this.$message.error('保存失败，请重新尝试')
+        }
+      }).catch(e => {
+        this.saveLoading = false
+      })
+      /* } else {
+         this.$message.warning('请添加计费规则')
+         return false
+       }*/
     },
     billTypeChange(event) {
       this.baseRules = {}
@@ -1331,6 +1342,28 @@ export default {
       this.ruleForm.billType = '2'
       this.ruleForm.billUnit = '1'
       this.billTypeChange(this.ruleForm.billType)
+    },
+    //计算费用
+    reCalcBillCost() {
+      this.$confirm('是否确认要计算"' + this.currentContract.contractNo + '"的当前月费用?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        let billMonth = parseTime(new Date()).substring(0, 7)
+        this.loading = true
+        reCalcBillCost(this.currentContract.id, billMonth).then(response => {
+          this.loading = false
+          if (response.code === 200) {
+            this.msgSuccess(response.msg + ",记录已保存至计费管理")
+            // this.getList();
+          }
+        }).catch(e => {
+          this.loading = false
+        })
+      }).catch(function () {
+        this.loading = false
+      })
     }
   }
 }

@@ -28,32 +28,19 @@
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" :data="outstoreDocList" max-height="750"  show-summary
-              :summary-method="getTotal">
-      <el-table-column
-        label="序号"
-        align="center"
-        prop="id"
-        fixed="left"
-      >
+    <el-table v-loading="loading" :data="outstoreDocList" max-height="750" show-summary :summary-method="getTotal">
+      <el-table-column label="序号" align="center" prop="id" fixed="left">
       </el-table-column>
 
       <el-table-column label="公司简称" align="center" prop="companyName" fixed="left" width="120">
         <template slot-scope="scope">
-          <el-popover placement="top-start" width="200" trigger="hover" ref="popover5">
-            <slot>{{ scope.row.customerName }}</slot>
+          <el-popover placement="top-start" width="200" trigger="hover" :content="scope.row.customerName">
+            <span style="cursor: pointer" slot="reference">{{ chang(scope.row) }}</span>
           </el-popover>
-          <span v-popover:popover5>{{ chang(scope.row) }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column
-        label="煤种"
-        align="center"
-        prop="coalKind"
-        fixed="left"
-        width="130"
-      />
+      <el-table-column label="煤种" align="center" prop="coalKind" fixed="left" width="130"/>
 
       <el-table-column label="当日入库(露天存放)" align="center">
         <el-table-column
@@ -188,10 +175,9 @@
           label="合计"
           align="center"
           prop="stockWt"
-          width="120"
-        >
+          width="120">
           <template slot-scope="scope">
-            {{ (scope.row.stockWtKgYard + scope.row.stockWtKgShed1 + scope.row.stockWtKgShed2).toFixed(2) }}
+            {{ scope.row.stockWt.toFixed(2) }}
           </template>
         </el-table-column>
       </el-table-column>
@@ -389,14 +375,14 @@ export default {
         当月出库车数: "lorryOutThisMonthQty",
         当月调出数量Kg: "coalOutThisMonthWtKg",
         期初转入Kg: "coalInitWtKg",
-        本年调入数量Kg: "lorryIntThisYearQty",
-        本年调出数量Kg: "coalInThisYearWtKg",
+        本年调入数量Kg: "coalInThisYearWtKg",
+        本年调出数量Kg: "coalOutThisYearWtKg",
       },
       tongji: {
         id: undefined,
         companyName: undefined,
         customerName: undefined,
-        index: undefined,
+        // index: undefined,
         coalKind: undefined,
         lorryInTodayQtyYard: undefined,
         coalInTodayWtKgYard: undefined,
@@ -446,6 +432,8 @@ export default {
         //序号用id索引填充
         this.outstoreDocList.forEach((item, index) => {
           item.id = index + 1;
+          //计算煤的会计
+          item.stockWt = item.stockWtKgYard + item.stockWtKgShed1 + item.stockWtKgShed2
         })
 
         this.printTitle = "场站日报";
@@ -456,7 +444,7 @@ export default {
     },
     chang(row) {
       let name = row.companyName
-      if (name && name.length >= 6) {
+      if (name && name.length > 6) {
         return name.substring(0, 6);
       } else {
         return name;
@@ -490,10 +478,10 @@ export default {
           sums[index] = "合计";
           return;
         }
-        if (index === 18) {
-          sums[index] = (Number(sums[16]) + Number(sums[17])).toFixed(2)
-          return;
-        }
+        /* if (index === 18) {
+           sums[index] = (Number(sums[15]) + Number(sums[16]) + Number(sums[17])).toFixed(2)
+           return;
+         }*/
         const values = data.map((item) => Number(item[column.property]));
         if (!values.every(value => isNaN(value))) {
           sums[index] = values.reduce((prev, curr) => {
@@ -505,13 +493,13 @@ export default {
             }
           }, 0);
           // sums[index];
-          if (index === 1 || index === 2) {
+          if (index === 1 || index === 2 || index === 20) {
             return sums[index] = ''
           }
-          if (index === 3 || index === 5 || index === 7 || index === 9 || index === 11 || index === 13 || index === 21 || index === 23 || index === 20) {
+          if (index === 3 || index === 5 || index === 7 || index === 9 || index === 11 || index === 13 || index === 21 || index === 23) {
             return sums[index]
           }
-          if (index !== 0 || index !== 1 || index !== 2 || index !== 3 || index !== 5 || index !== 7 || index !== 9 || index !== 11 || index !== 13 || index !== 21 || index !== 23 || index !== 20) {
+          if (index === 4 || index === 6 || index === 8 || index === 10 || index === 12 || index === 14 || index === 15 || index === 16 || index === 17 || index === 18 || index === 19 || index === 22 || index === 24 || index === 25 || index === 26 || index === 27) {
             return sums[index] = sums[index].toFixed(2);
           }
         } else {
@@ -523,8 +511,8 @@ export default {
       this.tongji.customerName = ''
       this.tongji.companyName = " "
       this.tongji.coalKind = " "
-      this.tongji.lorryInTodayQtyYard = sums[3]
-      this.tongji.coalInTodayWtKgYard = Number(sums[4])
+      this.tongji.lorryInTodayQtyYard = sums[3]  //当日入库车数露天
+      this.tongji.coalInTodayWtKgYard = Number(sums[4]) //当日调入数量Kg露天
       this.tongji.lorryOutTodayQtyYard = sums[5]
       this.tongji.coalOutTodayWtKgYard = Number(sums[6])
       this.tongji.lorryInTodayQtyShed1 = sums[7]
@@ -545,9 +533,11 @@ export default {
       this.tongji.coalInThisMonthWtKg = Number(sums[22])
       this.tongji.lorryOutThisMonthQty = sums[23]
       this.tongji.coalOutThisMonthWtKg = Number(sums[24])
+
       this.tongji.coalInitWtKg = Number(sums[25])
-      this.tongji.lorryIntThisYearQty = Number(sums[26])
-      this.tongji.coalInThisYearWtKg = Number(sums[27])
+
+      this.tongji.coalInThisYearWtKg = Number(sums[26])
+      this.tongji.coalOutThisYearWtKg = Number(sums[27])
 
       console.log('this.sums')
       console.log(sums)

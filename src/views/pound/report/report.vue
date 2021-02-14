@@ -1,4 +1,5 @@
 <template>
+<!--  磅单统计 -->
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-row>
