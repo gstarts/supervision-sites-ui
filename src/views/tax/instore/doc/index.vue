@@ -252,6 +252,18 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+
+      <el-form-item label="周报起止" prop="createTime">
+        <el-date-picker
+          v-model="dateRange"
+          type="daterange"
+          align="right"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd">
+        </el-date-picker>
+      </el-form-item>
+
       <!--<el-form-item label="工组人员" prop="workGroup">
         <el-input
           v-model="queryParams.workGroup"
@@ -315,6 +327,18 @@
           >导出
         </el-button>
       </el-col>
+
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport_weekly_instore"
+          v-hasPermi="['tax:instore_doc:export']"
+          >导出《入库周报》
+        </el-button>
+      </el-col>
+
     </el-row>
 
     <el-table
@@ -750,6 +774,8 @@ export default {
           { required: true, message: "修改后库位不能为空", trigger: "blur" },
         ],
       },
+      //gen_time
+      dateRange:[],
     };
   },
   created() {
@@ -925,6 +951,26 @@ export default {
         `tax_instore_doc.xlsx`
       );
     },
+
+    /** 导出按钮《入库周报》 */
+    handleExport_weekly_instore() {
+
+      if( this.dateRange.length < 1 ) {
+        alert('请选择周报起止日期')
+        return
+      }
+
+      this.download(
+        "tax/instore_doc/export_weekly",
+        {
+          ...this.queryParams,
+          weekBegin: this.dateRange[0],
+          weekEnd: this.dateRange[1],
+        },
+        `保税库《入库周报》` + this.dateRange[0] + ` 至 ` + this.dateRange[1] + `.xlsx`
+      );
+    },
+
     handleNoticeDetail(row) {
       this.$router.push({
         path: "/tax/instore/doc/detail",
