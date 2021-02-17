@@ -335,7 +335,7 @@
           size="mini"
           @click="handleExport_weekly_instore"
           v-hasPermi="['tax:instore_doc:export']"
-          >导出《入库周报》
+          >导出《出入库周报》
         </el-button>
       </el-col>
 
