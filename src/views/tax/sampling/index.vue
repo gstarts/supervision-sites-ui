@@ -14,8 +14,8 @@
       <!--      </el-form-item>-->
       <el-row>
 
-        <el-col :span="8">
-          <el-form-item label="LotNo" prop="lotNo">
+        <el-col :span="4">
+          <el-form-item label="LotNo" prop="lotNo" >
             <el-input
               v-model="queryParams.lotNo"
               placeholder="请输入LotNo"
@@ -25,18 +25,17 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="4">
           <el-form-item label="客户" prop="client">
             <el-input
               v-model="queryParams.client"
               placeholder="请输入客户"
               clearable
-              size="small"
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="4">
           <el-form-item label="业务编号" prop="businessNumber">
             <el-input
               v-model="queryParams.businessNumber"
