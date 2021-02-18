@@ -207,7 +207,7 @@
       <el-table-column label="生成时间" align="center" prop="createTime" width="180"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="280" fixed="right">
         <template slot-scope="scope">
-          <el-button v-show="scope.row.approveState === '0'"
+          <el-button
                      size="mini"
                      type="text"
                      icon="el-icon-edit"
@@ -215,7 +215,7 @@
                      v-hasPermi="['place:billDetail:list']"
           >明细
           </el-button>
-          <el-button v-show="scope.row.approveState !== '1'"
+          <el-button v-show="scope.row.approveState !== '1' && scope.row.approveState !== '3' "
                      size="mini"
                      type="text"
                      icon="el-icon-edit"
@@ -227,8 +227,8 @@
                      size="mini"
                      type="text"
                      icon="el-icon-edit"
-                     @click="handleUpdate(scope.row)"
-                     v-hasPermi="['place:bill:apply']"
+                     @click="handleAuditOpen(scope.row)"
+                     v-hasPermi="['place:approveHead:add']"
           >提交审批
           </el-button>
           <el-button v-show="scope.row.upState === '0' && scope.row.approveState === '1' "
@@ -352,6 +352,39 @@
         </el-form>
       </div>
     </el-drawer>
+
+    <!-- 提交审批对话框 -->
+    <el-dialog title="提交审批" :visible.sync="auditOpen" append-to-body>
+      <el-form ref="approveForm" :model="approveForm" :rules="auditRules" label-width="120px">
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="审批组" prop="auditGroup">
+              <el-select v-model="approveForm.approveGroup" placeholder="请选择审批组">
+                <el-option v-for="item in approveGroupList" :key="item.groupCode" :label="item.groupName"
+                           :value="item.groupCode"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="审批人" prop="approveUser">
+              <el-select placeholder="请选择审批人" v-model="approveForm.approveUser">
+                <el-option
+                  v-for="item in approveUserList"
+                  :key="item.userName"
+                  :label="item.nickName"
+                  :value="item.userName">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitApproveForm">确 定</el-button>
+        <el-button @click="cancelApprove">取 消</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -367,6 +400,9 @@ import {
 } from "@/api/place/bill/bill";
 import {getUserDepts} from "@/utils/charutils";
 import {addBillDetail, delBillDetailByObject, listBillDetail} from "@/api/place/bill/detail";
+import {listGroup} from "@/api/place/group";
+import {listUser} from "@/api/system/user";
+import {addApproveHead} from "@/api/place/approve/approveHead";
 
 export default {
   name: "Bill",
@@ -388,6 +424,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      auditOpen: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -486,6 +523,24 @@ export default {
         {dictValue: '4', dictLabel: '计时阶梯费'},
         {dictValue: '5', dictLabel: '议价费'},
       ],
+      approveForm: {
+        classId: undefined,
+        className: 'costBill',
+        placeId: undefined,
+        approveLevel: 1,
+        docId: undefined,
+        docNo: undefined,
+        approveUser: undefined,
+        approveGroup: undefined,
+      },
+      auditRules: {
+        approveUser: [
+          {'required': true, message: '审批人不能为空', trigger: 'change'},
+        ],
+      },
+      userList: [],
+      approveUserList: [],
+      approveGroupList: [],
     }
   },
   created() {
@@ -493,6 +548,7 @@ export default {
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId;
       this.getList();
+      this.getUserList()
     }
   },
   methods: {
@@ -510,6 +566,16 @@ export default {
       this.open = false;
       this.reset();
     },
+    // 提交取消按钮
+    cancelApprove() {
+      this.auditOpen = false;
+      this.approveForm.placeId = this.queryParams.placeId
+      this.approveForm.classId = undefined
+      this.approveForm.className = 'costBill'
+      this.approveForm.approveLevel = 1
+      this.approveForm.docId = undefined
+      this.approveForm.docNo = undefined
+    },
     // 表单重置
     reset() {
       this.form = {
@@ -526,7 +592,6 @@ export default {
         dataSource: '2',
         ruleId: undefined,
       };
-      this.resetForm("form");
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -560,6 +625,20 @@ export default {
         this.open = true;
         this.title = "修改计费单";
       });
+    },
+    //打开 提交审批窗口
+    handleAuditOpen(row) {
+      // this.reset();
+      //this.approveForm = row
+      this.approveForm.placeId = this.queryParams.placeId
+      this.approveForm.classId = row.id
+      this.approveForm.className = 'costBill'
+      this.approveForm.approveLevel = 1
+      this.approveForm.docId = undefined
+      this.approveForm.docNo = row.contractNo
+
+      this.auditOpen = true
+      //this.resetForm("approveForm");
     },
     /** 提交按钮 */
     submitAddDetail: function () {
@@ -622,6 +701,7 @@ export default {
     },
     placeChange(event) {
       this.getList()
+      this.getUserList()
     },
     //明细面板打开
     openDetail(row) {
@@ -684,9 +764,71 @@ export default {
       }).catch(function () {
         this.loading = false
       })
-    }
+    },
+    //提交审批
+    submitApproveForm() {
+      //console.log("提交审批确定按钮")
+      this.$refs["approveForm"].validate(valid => {
+        if (valid) {
+          this.loading = true
+          addApproveHead(this.approveForm).then(response => {
+            this.loading = false
+            if (response.code === 200) {
+              this.$message.success("提交成功")
+              this.auditOpen = false
+              this.getList()
+              this.approveCancel()
+            }
+          }).catch(e => {
+            this.loading = false
+          })
+        }
+      })
+    },
+    getApproveGroupList() {
+      listGroup({
+        'placeId': this.queryParams.placeId,
+        'state': '1',
+        'groupCode': 'costAuditGroup', //组名固定了
+      }).then(response => {
+        if (response.code === 200) {
+          this.approveGroupList = response.rows
+          if (this.approveGroupList.length > 0) {
+            this.approveForm.approveGroup = this.approveGroupList[0].groupCode
+            //console.log(this.modifyGroupList[0].groupCode)
+            this.groupApproveChange(this.approveGroupList[0].groupCode)
+          }
+        }
+      })
+    },
+    groupApproveChange(event) {
+      this.approveForm.approveUser = undefined
+      this.approveUserList = []
+      let group = this.approveGroupList.find(item => item.groupCode === event);
+      if (group) {
+        let users = group.userNames.split(',')
+        for (let name of users) {
+          this.approveUserList.push({
+            'userName': name,
+            'nickName': this.userList.find(item => item.userName === name).nickName
+          })
+        }
+      }
+      if (this.approveUserList.length === 1) { //如果组里只有一个人时，即直接把审批人显示出来
+        this.approveForm.approveUser = this.approveUserList[0].userName
+      }
+    },
+    getUserList() {
+      listUser({'deptId': this.queryParams.placeId, 'delFlag': '0', 'userType': '00'}).then(response => {
+        if (response.code === 200) {
+          this.userList = response.rows
+          this.getApproveGroupList()
+        }
+      });
+    },
   }
-};
+}
+;
 </script>
 
 <style scoped>
