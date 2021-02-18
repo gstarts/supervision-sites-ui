@@ -111,7 +111,7 @@
               v-for="user in userList"
               :key="user.userId"
               :label="user.nickName"
-              :value="user.userId"
+              :value="user.nickName"
             />
           </el-select>
         </el-form-item>
@@ -397,7 +397,7 @@ export default {
     const LotNoDisabled=this.$route.query.LotNoDisabled
     if(id){
       getLord(id).then(response =>{
-
+        debugger
         this.queryParams=response.data
         var array = response.data.samplingPeople.split(",")
         this.queryParams.samplingPeople = array;
@@ -413,7 +413,6 @@ export default {
       listUser({'deptId': this.queryParams.placeId, 'delFlag': '0'}).then(response => {
         if (response.code === 200) {
           this.userList = response.rows
-          console.log(this.userList)
         }
       });
     },
@@ -498,8 +497,6 @@ export default {
 
       this.queryParams.samplingPeople= this.queryParams.samplingPeople.toString();
       this.queryParams.makerPeople  = this.$store.state.user.nickName
-      console.log(this.makerPeople)
-   // console.log(this.queryParams.samplingPeople.join(","));
       this.$refs["queryParams"].validate(valid => {
         if (valid) {
       addLord(this.queryParams).then(response => {

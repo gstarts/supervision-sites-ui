@@ -211,7 +211,7 @@
         </template>
       </el-table-column>
       <el-table-column label="取样单位" align="center" prop="samplingUnit" :show-overflow-tooltip='true'/>
-      <el-table-column label="取样人" align="center" prop="samplingPeople"/>
+      <el-table-column label="取样人" align="center" prop="samplingPeople"  :formatter="samplingPeopleFormat"/>
       <el-table-column label="取样总重量" align="center" prop="samplingWeight" width="90"/>
       <el-table-column label="返程日期" align="center" prop="returnTime" width="180">
         <template slot-scope="scope">
@@ -355,12 +355,15 @@
 <script>
   import {listLord, getLord, delLord, addLord, updateLord, selectAll} from "@/api/tax/sampling/lord";
   import {getUserDepts} from "@/utils/charutils";
+  import {listUser} from "@/api/system/user";
 
 
   export default {
     name: "Lord",
     data() {
       return {
+        //用户名 全部
+        userList:[],
         //入境日期 时间集合
         EntryTime: [],
         //取样日期 时间集合
@@ -417,6 +420,7 @@
       this.depts = getUserDepts('1')
       if (this.depts.length > 0) {
         this.queryParams.placeId = this.depts[0].deptId
+        this.getUserList();
         this.getList();
       }
     },
@@ -497,7 +501,7 @@
       },
       /** 新增按钮操作 */
       handleAdd() {
-        this.$router.push({path: "/tax/spamlingsmall"});
+        this.$router.push({path: "spamlingsmall"});
 
         /*this.reset();
         this.open = true;
@@ -507,7 +511,7 @@
       handleUpdate(row) {
         const id = row.id || this.ids
         const LotNo = row.lotNo
-        this.$router.push({path: '/tax/spamlingsmall', query: {id: id, flag: true, single: false, LotNo: LotNo}})
+        this.$router.push({path: 'spamlingsmall', query: {id: id, flag: true, single: false, LotNo: LotNo}})
       },
       /** 提交按钮 */
       submitForm: function () {
@@ -543,6 +547,21 @@
         this.download('tax/lord/export', {
           ...this.queryParams
         }, `tax_lord.xlsx`)
+      },
+      getUserList() {
+        listUser({'deptId': this.queryParams.placeId, 'delFlag': '0'}).then(response => {
+          if (response.code === 200) {
+            this.userList = response.rows
+          }
+        });
+      },
+      samplingPeopleFormat(row,cloumn){
+        let u = this.userList.find(item => item.userId == row.samplingPeople)
+        if (u) {
+          return u.nickName
+        } else {
+          return row.samplingPeople
+        }
       }
     }
   };
