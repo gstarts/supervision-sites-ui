@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="场所" prop="placeId">
+      <el-form-item label="场所" prop="placeId" v-show="false">
         <el-select
-          v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+          v-model="queryParams.placeId" placeholder="请选择场所" size="small" >
           <el-option
             v-for="dept in depts"
             :key="dept.deptId"
@@ -12,7 +12,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="出库单号" prop="outDocNo">
+      <el-form-item label="出库单号" prop="outDocNo" v-show="false">
         <el-input
           v-model="queryParams.outDocNo"
           placeholder="请输入出库单号"
@@ -30,7 +30,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="业务编号" prop="businessNo">
+      <el-form-item label="业务编号" prop="businessNo" v-show="false">
         <el-input
           v-model="queryParams.businessNo"
           placeholder="请输入业务编号"
@@ -39,7 +39,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="订单号" prop="soNo">
+      <el-form-item label="订单号" prop="soNo" v-show="false">
         <el-input
           v-model="queryParams.soNo"
           placeholder="请输入订单号"
@@ -61,27 +61,36 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-        <el-button
-          size="mini"
-          @click="print"
-          type="info"
-          :disabled="multiple"
-          icon="el-icon-printer">
-          打印
-        </el-button>
+<!--        <el-button-->
+<!--          size="mini"-->
+<!--          @click="print"-->
+<!--          type="info"-->
+<!--          :disabled="multiple"-->
+<!--          icon="el-icon-printer">-->
+<!--          打印-->
+<!--        </el-button>-->
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['tax:outstore_doc:export']"
-        >导出</el-button>
-      </el-col>
+      <el-button
+        size="mini"
+        @click="print"
+        type="info"
+        :disabled="multiple"
+        icon="el-icon-printer">
+        打印
+      </el-button>
+
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['tax:outstore_doc:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
     </el-row>
 
     <el-table v-loading="loading" :data="outstore_docList" @selection-change="handleSelectionChange">
@@ -160,13 +169,13 @@
             @click="handleDetail(scope.row)"
             v-hasPermi="['tax:outstore_doc_detail:list']"
           >明细</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handlePrint(scope.row)"
-            v-hasPermi="['tax:outstore_doc:print']"
-          >打印</el-button>
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handlePrint(scope.row)"-->
+<!--            v-hasPermi="['tax:outstore_doc:print']"-->
+<!--          >打印</el-button>-->
         </template>
       </af-table-column>
     </el-table>

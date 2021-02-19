@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="场所" prop="placeId">
+      <el-form-item label="场所" prop="placeId" v-show="false">
         <el-select
           v-model="queryParams.placeId" placeholder="请选择场所" size="small">
           <el-option
@@ -12,7 +12,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="出库通知单号" prop="outNoticeNo" label-width="180px;">
+      <el-form-item label="出库通知单号" prop="outNoticeNo" label-width="180px;" v-show="false">
         <el-input
           v-model="queryParams.outNoticeNo"
           placeholder="请输入出库通知单号"
@@ -30,7 +30,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="业务编号" prop="businessNo">
+      <el-form-item label="业务编号" prop="businessNo" v-show="false">
         <el-input
           v-model="queryParams.businessNo"
           placeholder="请输入业务编号"
@@ -110,7 +110,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item label="产生时间" prop="genTime">
+      <el-form-item label="产生时间" prop="genTime" v-show="false">
         <el-date-picker clearable size="small" style="width: 200px"
                         v-model="queryParams.genTime"
                         type="date"
@@ -198,7 +198,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item label="库位号" prop="storeCode">
+      <el-form-item label="库位号" prop="storeCode" v-show="false">
         <el-input
           v-model="queryParams.storeCode"
           placeholder="请输入库位号"
@@ -273,14 +273,7 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-        <el-button
-          size="mini"
-          @click="print"
-          type="info"
-          :disabled="multiple"
-          icon="el-icon-printer">
-          打印
-        </el-button>
+
       </el-form-item>
     </el-form>
 
@@ -317,16 +310,24 @@
         >删除
         </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['tax:outstore_notice:export']"
-        >导出
-        </el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['tax:outstore_notice:export']"-->
+<!--        >导出-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+      <el-button
+        size="mini"
+        @click="print"
+        type="info"
+        :disabled="multiple"
+        icon="el-icon-printer">
+        打印
+      </el-button>
     </el-row>
 
     <el-table v-loading="loading" :data="outstore_noticeList" @selection-change="handleSelectionChange">
@@ -384,11 +385,11 @@
       <af-table-column label="车头号" align="center" prop="primeMoverNo"/>
       <af-table-column label="销售合同号" align="center" prop="saleContractNo"/>
       <af-table-column label="订单号" align="center" prop="soNo"/>
-      <!--<af-table-column label="卸车开始时间" align="center" prop="startTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
-        </template>
-      </af-table-column>-->
+        <!--<af-table-column label="卸车开始时间" align="center" prop="startTime" width="180">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d} {hh}:{mm}:{ss}') }}</span>
+          </template>
+        </af-table-column>-->
       <af-table-column label="状态" align="center" prop="state"/>
       <af-table-column label="库位号" align="center" prop="storeCode"/>
       <af-table-column label="理货员" align="center" prop="tallyClerk"/>
@@ -423,14 +424,14 @@
             v-hasPermi="['tax:outstore_notice_detail:list']"
           >明细
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleNoticePrint(scope.row)"
-            v-hasPermi="['tax:outstore_notice:print']"
-          >打印
-          </el-button>
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleNoticePrint(scope.row)"-->
+<!--            v-hasPermi="['tax:outstore_notice:print']"-->
+<!--          >打印-->
+<!--          </el-button>-->
           <el-button v-show="scope.row.archiveTime === null"
             size="mini"
             type="text"
