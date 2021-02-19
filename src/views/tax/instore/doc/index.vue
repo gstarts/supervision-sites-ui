@@ -6,7 +6,7 @@
       :inline="true"
       label-width="68px"
     >
-      <el-form-item label="场所" prop="placeId">
+      <el-form-item label="场所" prop="placeId" v-show="false">
         <el-select
           v-model="queryParams.placeId"
           placeholder="请选择场所"
@@ -20,7 +20,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="入库单号" prop="inDocNo">
+      <el-form-item label="入库单号" prop="inDocNo" v-show="false">
         <el-input
           v-model="queryParams.inDocNo"
           placeholder="请输入入库单号"
@@ -47,7 +47,7 @@
           placeholder="选择预订库位号">
         </el-date-picker>
       </el-form-item>-->
-      <el-form-item label="业务编号" prop="businessNo">
+      <el-form-item label="业务编号" prop="businessNo" v-show="false">
         <el-input
           v-model="queryParams.businessNo"
           placeholder="请输入业务编号"
@@ -56,7 +56,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="寄仓客户" prop="checkConsumer">
+      <el-form-item label="寄仓客户" prop="checkConsumer" v-show="false">
         <el-input
           v-model="queryParams.checkConsumer"
           placeholder="请输入寄仓客户"
@@ -253,16 +253,9 @@
         />
       </el-form-item>
 
-      <el-form-item label="周报起止" prop="createTime">
-        <el-date-picker
-          v-model="dateRange"
-          type="daterange"
-          align="right"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          value-format="yyyy-MM-dd">
-        </el-date-picker>
-      </el-form-item>
+
+
+
 
       <!--<el-form-item label="工组人员" prop="workGroup">
         <el-input
@@ -285,9 +278,26 @@
           >重置</el-button
         >
       </el-form-item>
-    </el-form>
+
+
+
 
     <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+      <el-form-item label="周报起止" prop="createTime">
+        <el-date-picker
+          v-model="dateRange"
+          type="daterange"
+          align="right"
+          size="small"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd">
+        </el-date-picker>
+      </el-form-item>
+      </el-col>
+
+
       <!-- <el-col :span="1.5">
          <el-button
            type="primary"
@@ -340,6 +350,8 @@
       </el-col>
 
     </el-row>
+
+    </el-form>
 
     <el-table
       v-loading="loading"

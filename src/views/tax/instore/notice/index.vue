@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="场所" prop="placeId">
+      <el-form-item label="场所" prop="placeId" v-show="false">
         <el-select
           v-model="queryParams.placeId" placeholder="请选择场所" size="small">
           <el-option
@@ -25,7 +25,7 @@
         <el-input v-model="queryParams.businessNo" placeholder="请输入业务编号" clearable size="small"
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
-      <el-form-item label="入库通知单号" prop="inNoticeNo" label-width="100px">
+      <el-form-item label="入库通知单号" prop="inNoticeNo" label-width="100px" v-show="false">
         <el-input
           v-model="queryParams.inNoticeNo"
           placeholder="请输入入库通知单号"
@@ -35,7 +35,7 @@
         />
       </el-form-item>
 
-      <el-form-item label="寄仓客户" prop="checkConsumer">
+      <el-form-item label="寄仓客户" prop="checkConsumer" v-show="false">
         <el-input
           v-model="queryParams.checkConsumer"
           placeholder="请输入寄仓客户"
@@ -80,7 +80,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item label="司机姓名" prop="driverName">
+      <el-form-item label="司机姓名" prop="driverName" v-show="false">
         <el-input
           v-model="queryParams.driverName"
           placeholder="请输入司机姓名"
@@ -160,7 +160,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item label="销售合同" prop="saleContractNo">
+      <el-form-item label="销售合同" prop="saleContractNo" v-show="false">
         <el-input
           v-model="queryParams.saleContractNo"
           placeholder="请输入销售合同号"
@@ -169,7 +169,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="订单号" prop="soNo">
+      <el-form-item label="订单号" prop="soNo" v-show="false">
         <el-input
           v-model="queryParams.soNo"
           placeholder="请输入订单号"
