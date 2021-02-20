@@ -285,8 +285,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="角色">
-              <el-select v-model="form.roleIds" multiple placeholder="请选择">
+            <el-form-item label="角色" prop="roleIds">
+              <el-select v-model="form.roleIds"  multiple placeholder="请选择">
                 <el-option
                   v-for="item in roleOptions"
                   :key="item.roleId"
@@ -454,6 +454,7 @@ export default {
       },
       // 表单校验
       rules: {
+        roleIds:[{required: true, message: "请选择角色", trigger: "blur"}],
         userName: [
           {required: true, message: "用户名称不能为空", trigger: "blur"}
         ],
