@@ -585,6 +585,7 @@ import {
       /** 新增按钮操作 */
       handleAdd() {
         this.reset();
+        this.bodyForm={};
         this.dialogAddFlag=false;
         this.dialogUpdateFlag=true;
         this.dialogAddAllFlag=true;
@@ -599,6 +600,7 @@ import {
       handleUpdate(row) {
         this.dialogAddFlag=true;
         this.form={}
+        this.bodyForm={};
         const id = row.id
         const LotNo = row.lotNo
         getLord(id).then(response =>{
@@ -622,6 +624,7 @@ import {
         this.dialogAddAllFlag=true,
         this.dialogUpdateBodyFlag=true,
         this.form={}
+        this.bodyForm={};
         const id = row.id
         // const LotNo = row.lotNo
         getLord(id).then(response =>{
@@ -749,8 +752,9 @@ import {
       updateBodyData(){
         updateBody(this.bodyForm).then(response =>{
           if(response.code === 200){
-            // this.msgSuccess("查询成功")
+            this.msgSuccess("修改成功")
             this.indexList();
+            this.bodyForm={};
             this.bodyUpdate=true;
           }
         })
