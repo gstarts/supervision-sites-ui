@@ -477,7 +477,28 @@ import {
           placeId:undefined,
         },
         // 表单校验
-        rules: {},
+        rules: {
+          client:[
+            { required: true, message: '客户不可为空', trigger: 'blur' },
+          ],
+          entryTime:[
+            { required: true, message: '入境日期不可为空', trigger: 'blur' },
+          ],
+          samplingTime:[
+            { required: true, message: '取样日期不可为空', trigger: 'blur' },
+          ],
+          samplingUnit:[
+            { required: true, message: '取样单位不可为空', trigger: 'blur' },
+          ],
+          samplingPeople:[
+            { required: true, message: '取样人不可为空', trigger: 'blur' },
+          ],
+          samplingWeight:[
+            { required: true, message: '取样总重量不可为空', trigger: 'blur' },
+            {type: "number", message: "取样总重量需为数字", trigger: "blur"}
+
+          ],
+        },
         TestList: [],
       };
     },
@@ -636,8 +657,8 @@ import {
       handleBodyAdd(){
         this.form.samplingPeople= this.form.samplingPeople.toString();
         this.form.makerPeople  = this.$store.state.user.nickName
-        // this.$refs["queryParams"].validate(valid => {
-        //   if (valid) {
+        this.$refs["form"].validate(valid => {
+          if (valid) {
             addLord(this.form).then(response => {
               if (response.code === 200) {
                 this.LotNoDisabled=false;
@@ -650,8 +671,8 @@ import {
                 this.dialogUpdateBodyFlag=false;
                 this.getList();
               }
-          //   });
-          // }
+            });
+          }
         });
       },
       SelectbusinessNumber(){
