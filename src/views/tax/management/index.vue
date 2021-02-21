@@ -459,12 +459,12 @@
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="shipment_no" prop="shipmentNo">
+            <el-form-item label="shipment_no" prop="shipmentNo" v-show="addShow">
               <el-input v-model="form.shipmentNo" placeholder="请输入shipment no"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="录入时间" prop="inputTime">
+            <el-form-item label="录入时间" prop="inputTime" v-show="addShow">
               <el-date-picker clearable size="small" style="width: 100%"
                               v-model="form.inputTime"
                               type="datetime"
@@ -476,17 +476,17 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="审核人" prop="reviewer">
+            <el-form-item label="审核人" prop="reviewer" v-show="addShow">
               <el-input v-model="form.reviewer" placeholder="请输入审核人"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="录入人" prop="entryPerson">
+            <el-form-item label="录入人" prop="entryPerson" v-show="addShow">
               <el-input v-model="form.entryPerson" placeholder="请输入录入人"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="状态" prop="status">
+            <el-form-item label="状态" prop="status" v-show="addShow">
               <el-select v-model="form.status" placeholder="请选择执行" clearable size="small">
                 <el-option
                   v-for="item in statusList"
@@ -505,10 +505,13 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
+        <el-button @click="zanCun" style="float: left" type="danger" icon="el-icon-plus" >暂存</el-button>
+        <el-button @click="tiJiao" style="float: left" type="warn" icon="el-icon-edit" v-show="addShow">提交</el-button>
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
         <!--详情页-->
     <el-dialog :title="title" :visible.sync="openDetails" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
@@ -694,24 +697,24 @@
             <td rowspan="2">金航/JH</td>
             <td></td>
             <td rowspan="2">OT</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td colspan="7"></td>
+<!--            <td></td>-->
+<!--            <td></td>-->
+<!--            <td></td>-->
+<!--            <td></td>-->
+<!--            <td></td>-->
+<!--            <td></td>-->
           </tr>
           <tr>
             <td>Date:</td>
             <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td colspan="7"></td>
+<!--            <td></td>-->
+<!--            <td></td>-->
+<!--            <td></td>-->
+<!--            <td></td>-->
+<!--            <td></td>-->
+<!--            <td></td>-->
           </tr>
         </table>
       </div>
@@ -750,6 +753,7 @@ import {
         multiple: true,
         //字段显隐
         show: false,
+        addShow:false,
         // 打印显隐
         printShow: false,
         // 总条数
@@ -915,6 +919,8 @@ import {
       },
       /** 新增按钮操作 */
       handleAdd() {
+        this.addShow = false;
+        // console.log(this.addShow)
         this.reset();
         this.getDocumentNo();
         this.open = true;
@@ -922,6 +928,8 @@ import {
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
+        this.addShow = true;
+        // console.log(this.addShow)
         this.reset();
         const id = row.id || this.ids
         getManagement(id).then(response => {
