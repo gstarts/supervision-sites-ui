@@ -136,6 +136,7 @@
           placeholder="请选择模板类型"
           clearable
           size="small"
+          @change="handleQuery"
         >
           <el-option
             v-for="type in importTypeDic"
