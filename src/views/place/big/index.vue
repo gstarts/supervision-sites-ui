@@ -48,7 +48,7 @@
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" clearable placeholder="请选择状态" size="small">
+        <el-select v-model="queryParams.status" clearable placeholder="请选择状态" size="small" @change="handleQuery">
           <el-option
             v-for="dept in statusOptions"
             :key="dept.dictValue"
@@ -137,7 +137,7 @@
       v-loading="loading" :data="bigList" @selection-change="handleSelectionChange">
       <!--      <af-table-column type="selection" width="55" align="center"/>-->
       <!-- <af-table-column label="主键" align="center" prop="id" /> -->
-      <af-table-column label="寄仓客户" align="center" prop="customerName"/>
+      <af-table-column label="媒体" align="center" prop="customerName"/>
       <af-table-column label="仓储合同" align="center" prop="contractNo"/>
       <af-table-column label="提煤单号" align="center" prop="coalBillNo"/>
       <af-table-column label="提煤客户" align="center" prop="receiveName"/>
