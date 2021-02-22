@@ -1389,7 +1389,6 @@ export default {
       }
       listInstoreDocLike(this.queryParams).then((response) => {
         this.instoreDocList = response.rows;
-        console.log(this.instoreDocList.length)
         this.total = response.total;
         this.loading = false;
       });
