@@ -17,6 +17,7 @@
           placeholder="请输入放行单号"
           clearable
           size="small"
+          @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="寄仓客户" prop="checkConsumer">
@@ -25,6 +26,7 @@
           placeholder="请输入寄仓客户"
           clearable
           size="small"
+          @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <!--        <el-select
@@ -42,6 +44,7 @@
           placeholder="请输入煤种"
           clearable
           size="small"
+          @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <!--        <el-select
@@ -403,10 +406,12 @@ export default {
     }
   },
   created() {
+     console.log(getUserDepts('0'))
     // 获取场所
     this.depts = getUserDepts('0')
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId
+      console.log('sssss');
       this.getList()
       this.getConsumerInfo(this.queryParams.placeId)
     }
