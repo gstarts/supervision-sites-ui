@@ -75,6 +75,24 @@
             value-format="yyyy-MM-dd HH:mm:ss">
           </el-date-picker>
         </el-form-item>
+        <el-form-item label="审批状态" prop="selectLogo" >
+<!--          <el-input-->
+<!--            v-model="queryParams.selectLogo"-->
+<!--            placeholder="请选择审批状态"-->
+<!--            clearable-->
+<!--            size="small"-->
+<!--            @keyup.enter.native="handleQuery"-->
+<!--          />-->
+          <el-select
+            v-model="queryParams.selectLogo" placeholder="请选择审批状态" clearable>
+            <el-option
+              v-for="Logo in approveLogoOption"
+              :key="Logo.deptId"
+              :label="Logo.dictLabel"
+              :value="Logo.dictSort"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -327,6 +345,15 @@
       <el-table-column label="shipment no" align="center" prop="shipmentNo" width="100"/>
       <el-table-column label="修改人" align="center" prop="updatePerson"/>
       <el-table-column label="备注" align="center" prop="remarks"/>
+      <el-table-column label="审核状态" align="center" prop="approveState" width="120">
+        <template slot-scope="scope">
+          <span v-if="scope.row.approveState ==0">编辑中</span>
+          <span v-else-if="scope.row.approveState == 1">提交待审</span>
+          <span v-else-if="scope.row.approveState == 2">审核通过</span>
+          <span v-else-if="scope.row.approveState == 3" style="color:red">审核不通过</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="审批意见" align="center" prop="approveMsg"/>
       <el-table-column label="状态" align="center" prop="status" :formatter="translation"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="230">
         <template slot-scope="scope">
@@ -336,6 +363,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['tax:management:edit']"
+            v-show="(scope.row.approveState== 0 ||scope.row.approveState== 3)"
           >修改
           </el-button>
           <el-button
@@ -505,9 +533,9 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="zanCun" style="float: left" type="danger" icon="el-icon-plus" >暂存</el-button>
-        <el-button @click="tiJiao" style="float: left" type="warn" icon="el-icon-edit" v-show="addShow">提交</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="zanCun"  type="danger" icon="el-icon-plus" v-show="addType">暂存</el-button>
+        <el-button @click="tiJiao"  type="warn" icon="el-icon-edit" >提交</el-button>
+<!--        <el-button type="primary" @click="submitForm" v-show="addShow">确 定</el-button>-->
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -698,11 +726,11 @@
             <td rowspan="2" colspan="2"></td>
             <td></td>
             <td></td>
-            <td rowspan="2" colspan="2">OT</td>
+            <td rowspan="2">OT</td>
             <td></td>
             <td></td>
             <td></td>
-<!--            <td></td>-->
+            <td></td>
 <!--            <td></td>-->
           </tr>
           <tr>
@@ -713,7 +741,7 @@
             <td></td>
             <td></td>
             <td></td>
-<!--            <td></td>-->
+            <td></td>
 <!--            <td></td>-->
           </tr>
         </table>
@@ -739,6 +767,8 @@ import {
     name: "Management",
     data() {
       return {
+        //审批查询状态
+        approveLogoOption:[],
         //时间组件
         dateRange:[],
         //详情弹窗ID(为了详情页跳转修改页取数据)
@@ -754,6 +784,7 @@ import {
         //字段显隐
         show: false,
         addShow:false,
+        addType:false,
         // 打印显隐
         printShow: false,
         // 总条数
@@ -791,7 +822,8 @@ import {
           lunchCount: undefined,
           dinnerCount: undefined,
           remarks: undefined,
-          status: undefined
+          status: undefined,
+          selectLogo:undefined
         },
 
          printParams: {
@@ -829,6 +861,11 @@ import {
       if (this.depts.length > 0) {
         this.queryParams.placeId = this.depts[0].deptId
       }
+      this.getDicts("tax_driver_management_selectLogo").then(res =>{
+        this.approveLogoOption=res.data;
+        console.log("-=-=-=-=")
+        console.log(this.approveLogoOption)
+      });
       this.getList();
 
     },
@@ -844,6 +881,7 @@ import {
         listManagement(this.addDateRange(this.queryParams,this.dateRange)).then(response => {
           this.managementList = response.rows;
           console.log(this.managementList)
+          console.log("-=-=-=-=-=-=")
           this.total = response.total;
           this.loading = false;
         });
@@ -919,6 +957,7 @@ import {
       },
       /** 新增按钮操作 */
       handleAdd() {
+        this.addType = true;
         this.addShow = false;
         // console.log(this.addShow)
         this.reset();
@@ -928,6 +967,7 @@ import {
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
+        this.addType = false;
         this.addShow = true;
         // console.log(this.addShow)
         this.reset();
@@ -1055,7 +1095,35 @@ import {
         this.download('tax/management/export', {
           ...this.queryParams
         }, `tax_management.xlsx`)
+      },
+      tiJiao(){
+        this.form.approveState= 1;
+        this.$refs["form"].validate(valid => {
+          if (valid) {
+        addManagement(this.form).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess("新增成功");
+            this.open = false;
+            this.getList();
+          }
+        });
+          }
+        });
+      },
+      zanCun(){
+        this.form.approveState= 0;
+        this.$refs["form"].validate(valid => {
+          if (valid) {
+        addManagement(this.form).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess("新增成功");
+            this.open = false;
+            this.getList();
+          }
+        });
       }
+    });
+      },
     }
   };
 </script>
