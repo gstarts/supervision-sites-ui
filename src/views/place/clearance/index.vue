@@ -91,15 +91,15 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="clearanceList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="clearanceList" @selection-change="handleSelectionChange" :height="tableHeight">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="寄仓客户" align="center" prop="customerName"/>
+      <el-table-column label="寄仓客户" align="center" prop="customerName" :show-overflow-tooltip='true'/>
       <el-table-column label="提运单号" align="center" prop="customsNo"/>
       <el-table-column label="运输批次号" align="center" prop="batchNo"/>
       <!--      <el-table-column label="提煤单号" align="center" prop="coalBillNo"/>-->
-      <el-table-column label="提运单重量" align="center" prop="wieght"/>
-      <el-table-column label="已使用重量" align="center" prop="oldWieght"/>
-      <el-table-column label="剩余重量" align="center" prop="lastWieght"/>
+      <el-table-column label="提运单重量(kg)" align="center" prop="wieght"/>
+      <el-table-column label="已使用重量(kg)" align="center" prop="oldWieght"/>
+      <el-table-column label="剩余重量(kg)" align="center" prop="lastWieght"/>
       <el-table-column label="建单时间" align="center" prop="createTime"/>
     </el-table>
     <pagination
@@ -259,6 +259,8 @@ export default {
       depts: [],
       // 是否显示弹出层
       open: false,
+
+      tableHeight: window.innerHeight - 280,
       // 寄仓客户
       consumerOptions: [],
       // 查询参数
