@@ -522,7 +522,7 @@
     <el-table
       v-loading="loading"
       :data="instoreDocList"
-      @selection-change="handleSelectionChange" height="1000">
+      @selection-change="handleSelectionChange" :height="this.instoreDocList.length >5 ? tableHeight : 200">
       <!--<af-table-column type="selection" width="55" align="center" />-->
             <af-table-column label="ID" align="center" prop="id"/>
       <!--<af-table-column label="场所编号" align="center" prop="placeId"/>-->
@@ -1181,6 +1181,8 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
+      // table 高度
+      tableHeight: window.innerHeight - 280,
       // 弹出层标题
       // 入库通知单表格数据
       instoreDocList: [],
@@ -1387,6 +1389,7 @@ export default {
       }
       listInstoreDocLike(this.queryParams).then((response) => {
         this.instoreDocList = response.rows;
+        console.log(this.instoreDocList.length)
         this.total = response.total;
         this.loading = false;
       });
