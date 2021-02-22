@@ -137,7 +137,7 @@
       v-loading="loading" :data="bigList" @selection-change="handleSelectionChange">
       <!--      <af-table-column type="selection" width="55" align="center"/>-->
       <!-- <af-table-column label="主键" align="center" prop="id" /> -->
-      <af-table-column label="媒体" align="center" prop="customerName"/>
+      <af-table-column label="寄仓客户" align="center" prop="customerName"/>
       <af-table-column label="仓储合同" align="center" prop="contractNo"/>
       <af-table-column label="提煤单号" align="center" prop="coalBillNo"/>
       <af-table-column label="提煤客户" align="center" prop="receiveName"/>
