@@ -522,7 +522,7 @@
     <el-table
       v-loading="loading"
       :data="instoreDocList"
-      @selection-change="handleSelectionChange">
+      @selection-change="handleSelectionChange" height="1000">
       <!--<af-table-column type="selection" width="55" align="center" />-->
             <af-table-column label="ID" align="center" prop="id"/>
       <!--<af-table-column label="场所编号" align="center" prop="placeId"/>-->
@@ -537,8 +537,8 @@
 
 
       <!-- <af-table-column label="蒙古磅毛重" align="center" prop="mongoliaRoughWeight" />-->
-      <af-table-column label="蒙方净重" align="center" prop="mongoliaNetWeight"/>
-      <af-table-column label="蒙方皮重" align="center" prop="mongoliaTareWeight"/>
+      <af-table-column label="蒙方净重(kg)" align="center" prop="mongoliaNetWeight"/>
+      <af-table-column label="蒙方皮重(kg)" align="center" prop="mongoliaTareWeight"/>
       <af-table-column label="计量单位" align="center" prop="measuringUnit"/>
 
       <af-table-column label="库位号" align="center" prop="storeCode"/>
@@ -561,9 +561,9 @@
           {{storeStateDic.find((item) => item.key === scope.row.storeState).label }}
         </template>
       </af-table-column>
-      <af-table-column label="净重" align="center" prop="netWeight"/>
-      <af-table-column label="皮重" align="center" prop="tareWeight"/>
-      <af-table-column label="毛重" align="center" prop="roughWeight"/>
+      <af-table-column label="净重(kg)" align="center" prop="netWeight"/>
+      <af-table-column label="皮重(kg)" align="center" prop="tareWeight"/>
+      <af-table-column label="毛重(kg)" align="center" prop="roughWeight"/>
       <af-table-column label="磅单号" align="center" prop="poundNo" />
       <af-table-column label="磅单打印时间" align="center" prop="poundTime" width="180" />
 <!--      <af-table-column label="批次号" align="center" prop="batchNo"/>
