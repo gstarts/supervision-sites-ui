@@ -287,13 +287,13 @@
     <el-table v-loading="loading" :data="managementList" @selection-change="handleSelectionChange" @row-dblclick="selectDetails">
       <el-table-column type="selection" width="55" align="center"/>
       <!--      <el-table-column label="主键" align="center" prop="id"/>-->
-        <el-table-column label="单据号" align="center" prop="documentNo" width="180"/>
+        <el-table-column label="单据号" align="center" prop="documentNo" width="180" :show-overflow-tooltip='true'/>
       <el-table-column label="业务编号" align="center" prop="businessDepartment"/>
       <el-table-column label="lot_no" align="center" prop="lotNo" width="100"/>
       <el-table-column label="车队名称" align="center" prop="fleetName"/>
       <el-table-column label="通知单车数" align="center" prop="carNumber" width="100"/>
       <el-table-column label="实际车数" align="center" prop="vehicleCount" width="100"/>
-      <el-table-column label="入境时间" align="center" prop="entryTime" width="180">
+      <el-table-column label="入境时间" align="center" prop="entryTime" width="180" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.entryTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -650,7 +650,7 @@
     <div>
       <div id="dayin" v-show="printShow">
         <div align="center">
-          <span style="font-size: 30px">{{parseTime(this.printParams.inputTime,'{y}年{m}月')}}金航保税库客户费用统计表</span>
+          <span style="font-size: 30px">{{parseTime(this.printParams.inputTime,'{y}年{m}月')}}金航保税库客户费用统计表<br>Accommodation&Meal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{parseTime(this.printParams.inputTime,'{m}. {y}')}}</span>
         </div>
         <table border="1px" cellspacing="0" class="tableClass">
           <tr>
@@ -695,24 +695,24 @@
           <tr>
             <td>Signature</td>
             <td rowspan="2">金航/JH</td>
+            <td rowspan="2" colspan="2"></td>
             <td></td>
-            <td rowspan="2">OT</td>
-            <td colspan="7"></td>
-<!--            <td></td>-->
-<!--            <td></td>-->
-<!--            <td></td>-->
-<!--            <td></td>-->
+            <td></td>
+            <td rowspan="2" colspan="2">OT</td>
+            <td></td>
+            <td></td>
+            <td></td>
 <!--            <td></td>-->
 <!--            <td></td>-->
           </tr>
           <tr>
             <td>Date:</td>
             <td></td>
-            <td colspan="7"></td>
-<!--            <td></td>-->
-<!--            <td></td>-->
-<!--            <td></td>-->
-<!--            <td></td>-->
+<!--            <td colspan="7"></td>-->
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
 <!--            <td></td>-->
 <!--            <td></td>-->
           </tr>
