@@ -282,21 +282,21 @@
 
     </el-form>
     <!--    展示数据-->
-    <el-table v-loading="loading" :data="reportList" :border="true" >
-      <el-table-column label="寄仓客户" align="center" prop="column1"/>
-      <el-table-column label="寄仓合同号" align="center" prop="column2"/>
-      <el-table-column label="客户名称" align="center" prop="column19"/>
-      <el-table-column label="销售合同" align="center" prop="column20"/>
+    <el-table v-loading="loading" :data="reportList" :border="true" :height="this.reportList.length >5 ? tableHeight : 200" >
+      <af-table-column label="寄仓客户" align="center" prop="column1"/>
+      <af-table-column label="寄仓合同号" align="center" prop="column2"/>
+      <af-table-column label="客户名称" align="center" prop="column19"/>
+      <af-table-column label="销售合同" align="center" prop="column20"/>
 
-      <el-table-column label="提煤单号" align="center" prop="column3"/>
+      <af-table-column label="提煤单号" align="center" prop="column3"/>
       <el-table-column label="品名" align="center" prop="column21"/>
-      <el-table-column label="提煤单重量" align="center" prop="column4"/>
-      <el-table-column label="已分配未完成车数" align="center" prop="column5"/>
-      <el-table-column label="已分配未提离重量(吨)" align="center" prop="column6"/>
-      <el-table-column label="已完成车数" align="center" prop="column7"/>
+      <af-table-column label="提煤单重量" align="center" prop="column4"/>
+      <af-table-column label="已分配未完成车数" align="center" prop="column5"/>
+      <af-table-column label="已分配未提离重量(吨)" align="center" prop="column6"/>
+      <af-table-column label="已完成车数" align="center" prop="column7"/>
 
-      <el-table-column label="已提离重量(吨)" align="center" prop="column8"/>
-      <el-table-column label="剩余重量(吨)" align="center" prop="column9"/>
+      <af-table-column label="已提离重量(吨)" align="center" prop="column8"/>
+      <af-table-column label="剩余重量(吨)" align="center" prop="column9"/>
 
       <el-table-column label="承运单位" align="center" prop="column22"/>
       <el-table-column label="运输方式" align="center" prop="column23" :formatter="transportFormatter"/>
@@ -305,7 +305,7 @@
           {{ parseUserName(scope.row.column24) }}
         </template>
       </el-table-column>
-      <el-table-column label="制单时间" align="center" prop="column25"/>
+      <af-table-column label="制单时间" align="center" prop="column25"/>
 
     </el-table>
 
@@ -412,6 +412,9 @@
         showImport: false,
         // 导出标题集合
         titleList: [],
+
+        // table 高度
+        tableHeight: window.innerHeight - 300,
         printSmallTitle: false,
         userList: [],
         //打印集合
