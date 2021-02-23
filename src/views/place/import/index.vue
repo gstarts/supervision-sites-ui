@@ -230,7 +230,7 @@
       </el-col>-->
     </el-row>
 
-    <el-table v-loading="loading" :data="importList">
+    <el-table v-loading="loading" :data="importList" :height="this.importList.length >5 ? tableHeight : 200">
       <!-- <af-table-column type="selection" width="55" align="center"/>-->
       <af-table-column label="ID" align="center" prop="id" />
 
@@ -574,6 +574,9 @@ export default {
       total: 0,
       // 导入文件记录 表格数据
       importList: [],
+
+      // table 高度
+      tableHeight: window.innerHeight - 280,
       //寄仓合同id
       storeContract: [],
       storeIds: [],
