@@ -42,6 +42,13 @@ export function updateManagement(data) {
   })
 }
 
+//批量修改
+export function updateApproveStates(approveState,approveMsg,id){
+  return request({
+    url:'/tax/management/ApproveStates/'+ approveState+'/'+approveMsg +'/'+ id,
+    method:'post',
+  })
+}
 // 删除司机食宿管理
 export function delManagement(id) {
   return request({
