@@ -4,16 +4,6 @@
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-row>
         <el-col :span="4.8">
-<!--          <el-form-item label="场站ID" prop="placeId">-->
-<!--            <el-select v-model="queryParams.placeId" placeholder="请选择场所">-->
-<!--              <el-option-->
-<!--                v-for="dept in depts"-->
-<!--                :key="dept.deptId"-->
-<!--                :label="dept.deptName"-->
-<!--                :value="dept.deptId"-->
-<!--              />-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
         </el-col>
         <el-col :span="4.8">
           <el-form-item label="单据号" prop="documentNo">
@@ -60,12 +50,6 @@
         </el-form-item>
 
         <el-form-item label="录入时间" prop="inputTime">
-<!--          <el-date-picker clearable size="small" style="width: 200px"-->
-<!--                          v-model="queryParams.inputTime"-->
-<!--                          type="date"-->
-<!--                          value-format="yyyy-MM-dd HH:mm:ss"-->
-<!--                          placeholder="选择录入时间">-->
-<!--          </el-date-picker>-->
           <el-date-picker
             v-model="dateRange"
             type="datetimerange"
@@ -76,13 +60,6 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="审批状态" prop="selectLogo" >
-<!--          <el-input-->
-<!--            v-model="queryParams.selectLogo"-->
-<!--            placeholder="请选择审批状态"-->
-<!--            clearable-->
-<!--            size="small"-->
-<!--            @keyup.enter.native="handleQuery"-->
-<!--          />-->
           <el-select
             v-model="queryParams.selectLogo" placeholder="请选择审批状态" clearable>
             <el-option
@@ -97,164 +74,7 @@
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
         </el-form-item>
-<!--        <el-col :span="4.8">-->
-<!--          <el-form-item label="shipment_no" prop="shipmentNo" label-width="100px">-->
-<!--            <el-input-->
-<!--              v-model="queryParams.shipmentNo"-->
-<!--              placeholder="请输入shipment no"-->
-<!--              clearable-->
-<!--              size="small"-->
-<!--              @keyup.enter.native="handleQuery"-->
-<!--            />-->
-<!--          </el-form-item>-->
-<!--        </el-col>-->
-
-
       </el-row>
-
-
-
-
-      <!--          <el-form-item label="审核日期" prop="reviewDate">-->
-      <!--            <el-date-picker clearable size="small" style="width: 200px"-->
-      <!--                            v-model="queryParams.reviewDate"-->
-      <!--                            type="datetime"-->
-      <!--                            value-format="yyyy-MM-dd HH:mm:ss"-->
-      <!--                            placeholder="选择审核日期">-->
-      <!--            </el-date-picker>-->
-      <!--          </el-form-item>-->
-
-
-      <!--          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
-      <!--          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
-
-
-      <!--        <el-col :span="6">-->
-      <!--          <el-form-item label="业务时间" prop="businessDate">-->
-      <!--            <el-date-picker clearable size="small" style="width: 200px"-->
-      <!--                            v-model="queryParams.businessDate"-->
-      <!--                            type="date"-->
-      <!--                            value-format="yyyy-MM-dd"-->
-      <!--                            placeholder="选择业务时间">-->
-      <!--            </el-date-picker>-->
-      <!--          </el-form-item>-->
-      <!--        </el-col>-->
-      <!--        <el-col :span="6">-->
-
-
-      <!--      <el-form-item label="通知单车数" prop="carNumber">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.carNumber"-->
-      <!--          placeholder="请输入通知单车数"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="录入人" prop="entryPerson">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.entryPerson"-->
-      <!--          placeholder="请输入录入人"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="录入时间" prop="inputTime">-->
-      <!--        <el-date-picker clearable size="small" style="width: 200px"-->
-      <!--                        v-model="queryParams.inputTime"-->
-      <!--                        type="date"-->
-      <!--                        value-format="yyyy-MM-dd"-->
-      <!--                        placeholder="选择录入时间">-->
-      <!--        </el-date-picker>-->
-      <!--      </el-form-item>-->
-
-      <!--      <el-form-item label="修改人" prop="updatePerson">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.updatePerson"-->
-      <!--          placeholder="请输入修改人"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="审核人" prop="reviewer">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.reviewer"-->
-      <!--          placeholder="请输入审核人"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-
-      <!--      <el-form-item label="入境时间" prop="entryTime">-->
-      <!--        <el-date-picker clearable size="small" style="width: 200px"-->
-      <!--                        v-model="queryParams.entryTime"-->
-      <!--                        type="date"-->
-      <!--                        value-format="yyyy-MM-dd"-->
-      <!--                        placeholder="选择入境时间">-->
-      <!--        </el-date-picker>-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="出境时间" prop="departureTime">-->
-      <!--        <el-date-picker clearable size="small" style="width: 200px"-->
-      <!--                        v-model="queryParams.departureTime"-->
-      <!--                        type="date"-->
-      <!--                        value-format="yyyy-MM-dd"-->
-      <!--                        placeholder="选择出境时间">-->
-      <!--        </el-date-picker>-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="住宿天数" prop="dayNum">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.dayNum"-->
-      <!--          placeholder="请输入住宿天数"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="早餐次数" prop="breakfastCount">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.breakfastCount"-->
-      <!--          placeholder="请输入早餐次数"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="午餐次数" prop="lunchCount">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.lunchCount"-->
-      <!--          placeholder="请输入午餐次数"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="晚餐次数" prop="dinnerCount">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.dinnerCount"-->
-      <!--          placeholder="请输入晚餐次数"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="备注" prop="remarks">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.remarks"-->
-      <!--          placeholder="请输入备注"-->
-      <!--          clearable-->
-      <!--          size="small"-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="状态" prop="status">-->
-      <!--        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">-->
-      <!--          <el-option label="请选择字典生成" value=""/>-->
-      <!--        </el-select>-->
-      <!--      </el-form-item>-->
-
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -267,18 +87,14 @@
           v-hasPermi="['tax:management:add']"
         >新增
         </el-button>
+        <el-button
+          type="info"
+          icon="el-icon-s-check"
+          size="mini"
+          @click="ApproveClick"
+          v-has-permi="['tax:management:Approve']"
+        >审批</el-button>
       </el-col>
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="success"-->
-<!--          icon="el-icon-edit"-->
-<!--          size="mini"-->
-<!--          :disabled="single"-->
-<!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['tax:management:edit']"-->
-<!--        >修改-->
-<!--        </el-button>-->
-<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -533,8 +349,8 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="zanCun"  type="danger" icon="el-icon-plus" v-show="addType">暂存</el-button>
-        <el-button @click="tiJiao"  type="warn" icon="el-icon-edit" >提交</el-button>
+        <el-button @click="zanCun"  type="info" icon="el-icon-plus" v-show="addType">暂存</el-button>
+        <el-button @click="tiJiao"  type="primary" icon="el-icon-edit" >提交</el-button>
 <!--        <el-button type="primary" @click="submitForm" v-show="addShow">确 定</el-button>-->
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -747,6 +563,24 @@
         </table>
       </div>
     </div>
+    <el-dialog :title="ApproveTitle" :visible.sync="ApproveDialog" append-to-body width="40%">
+      <span style="font-size: 17px;font-weight: bold">需要审批的单据标号为:</span>
+      <span style="font-size: 17px;font-weight: bold;color: red">{{this.businessDepartments.join(",")}}</span>
+      <el-form :model="queryParams" ref="queryForm" :rules="ApproveRules">
+        <el-form-item label="请填写审批意见" prop="approveMsg">
+          <el-input
+            v-model="queryParams.approveMsg"
+            placeholder="请输入审批意见"
+            clearable
+            size="small"
+          />
+        </el-form-item>
+          <el-button type="success" icon="el-icon-check" size="small" @click="pass">通过</el-button>
+          <el-button type="danger" icon="el-icon-close" size="small" @click="stopPass">驳回</el-button>
+          <el-button  icon="el-icon-refresh-right" size="small" @click="ApproveCancel">取消</el-button>
+
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -757,7 +591,8 @@ import {
   delManagement,
   addManagement,
   updateManagement,
-  DocumentNo
+  DocumentNo,
+  updateApproveStates
 } from "@/api/tax/management";
   import {getUserDepts} from "@/utils/charutils";
   import {getDocByBusinessNo} from "@/api/tax/instore_doc";
@@ -767,6 +602,9 @@ import {
     name: "Management",
     data() {
       return {
+        //审批弹框
+        ApproveDialog:false,
+        ApproveTitle:"",
         //审批查询状态
         approveLogoOption:[],
         //时间组件
@@ -777,6 +615,7 @@ import {
         loading: true,
         // 选中数组
         ids: [],
+        businessDepartments:[],
         // 非单个禁用
         single: true,
         // 非多个禁用
@@ -823,7 +662,8 @@ import {
           dinnerCount: undefined,
           remarks: undefined,
           status: undefined,
-          selectLogo:undefined
+          selectLogo:undefined,
+          approveMsg:'审核通过',
         },
 
          printParams: {
@@ -852,7 +692,11 @@ import {
           businessDepartment: [{required: true, message: "业务编号不能为空", trigger: "blur"},],
           entryTime: [{type: "string", required: true, message: "入境时间不能为空", trigger: "change",},],
           departureTime: [{type: "string", required: true, message: "入境时间不能为空", trigger: "change",},],
-        }
+        },
+        //审批表单效验
+        ApproveRules:{
+          approveMsg:[{required: true, message: "审批意见不能为空", trigger: "blur"},]
+        },
       };
     },
     created() {
@@ -952,6 +796,7 @@ import {
       // 多选框选中数据
       handleSelectionChange(selection) {
         this.ids = selection.map(item => item.id)
+        this.businessDepartments=selection.map(item =>item.businessDepartment)
         this.single = selection.length != 1
         this.multiple = !selection.length
       },
@@ -1123,6 +968,35 @@ import {
         });
       }
     });
+      },
+      ApproveClick(){
+        this.ApproveTitle="审批";
+        this.ApproveDialog=true;
+      },
+      ApproveCancel(){
+        this.ApproveDialog=false;
+      },
+      pass(){
+        this.queryParams.approveState= 2;
+        const id=this.ids
+        updateApproveStates(this.queryParams.approveState,this.queryParams.approveMsg,id).then(res =>{
+          if(res.code == 200){
+            this.msgSuccess("审批成功")
+          }
+        })
+        this.ApproveDialog=true;
+        this.getList();
+      },
+      stopPass(){
+        this.queryParams.approveState=3;
+        const id=this.ids
+        updateApproveStates(this.queryParams.approveState,this.queryParams.approveMsg,id).then(res =>{
+          if(res.code == 200){
+            this.msgSuccess("审批成功")
+            this.ApproveDialog=true;
+            this.getList();
+          }
+        })
       },
     }
   };
