@@ -804,8 +804,8 @@
     <!--      </el-col>-->
     <!--    </el-row>-->
 
-    <el-table ref="table" v-loading="loading" :data="outstoreDocList" max-height="700"  show-summary>
-      <el-table-column label="寄仓客户" align="center" prop="column1" />
+    <el-table ref="table" v-loading="loading" :data="outstoreDocList" :height="this.outstoreDocList.length >5 ? tableHeight : 300"  show-summary>
+      <el-table-column label="寄仓客户" align="center" prop="column1" :show-overflow-tooltip="true" />
       <el-table-column label="煤种" align="center" prop="column2" />
       <el-table-column label="调入车数" align="center" prop="column3" />
       <el-table-column label="调入数量" align="center" prop="column4" />
@@ -1298,6 +1298,9 @@ export default {
       timeQueryTypeOption:[],
       //车型字典集
       outStoreVehicleTypesOption:[],
+
+      // table 高度
+      tableHeight: window.innerHeight - 260,
       //运输方式字典集
       transportModeDic:[],
       //数据来源字典集
@@ -1849,3 +1852,8 @@ export default {
   }
 };
 </script>
+
+<style>
+
+  .el-tooltip__popper{max-width:60%;}
+</style>
