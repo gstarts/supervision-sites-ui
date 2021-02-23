@@ -160,21 +160,21 @@
 
       </el-row>
     </el-form>
-    <el-table v-loading="loading" :data="reportList"  :border="true">
+    <el-table v-loading="loading" :data="reportList"  :border="true" :height="this.reportList.length >5 ? tableHeight : 200">
       <el-table-column label="客户" align="center" prop="column1" />
       <!--<af-table-column label="合同号" align="center" prop="checkContractNo"/>-->
       <el-table-column label="合同" align="center" prop="column2" />
-      <el-table-column label="总入库量" align="center" prop="column7">
+      <el-table-column label="总入库量(t)" align="center" prop="column7">
         <template slot-scope="scope">
           <span>{{ (scope.row.column7/1000).toFixed(2)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="可申请放行量" align="center" prop="column8">
+      <el-table-column label="可申请放行量(t)" align="center" prop="column8">
         <template slot-scope="scope">
           <span>{{ (scope.row.column8/1000).toFixed(2)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="放行单总量" align="center" prop="column6">
+      <el-table-column label="放行单总量(t)" align="center" prop="column6">
         <template slot-scope="scope">
           <span>{{ (scope.row.column6/1000).toFixed(2)}}</span>
         </template>
@@ -184,7 +184,7 @@
           <span>{{ (scope.row.column4/1000).toFixed(2)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="可分配提煤单总量" align="center" prop="column5">
+      <el-table-column label="可分配提煤单总量(t)" align="center" prop="column5">
         <template slot-scope="scope">
           <span>{{ (scope.row.column5/1000).toFixed(2)}}</span>
         </template>
@@ -284,6 +284,9 @@
         // 导出标题集合
         titleList: [],
         drawer: false,
+
+        // table 高度
+        tableHeight: window.innerHeight - 260,
 
         printSmallTitle: false,
 
