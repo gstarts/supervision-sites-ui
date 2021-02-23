@@ -5,7 +5,7 @@
         <el-col :span="6">
           <el-form-item label="场所名称" prop="placeId">
             <el-select @change="changePlace"
-                       v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+                       v-model="queryParams.placeId" placeholder="请选择场所" size="small" >
               <el-option
                 v-for="dept in depts"
                 :key="dept.deptId"
@@ -41,7 +41,8 @@
               clearable
               v-model="queryParams.checkContractNo"
               placeholder="请选择寄仓合同"
-              size="small">
+              size="small"
+              @change="handleQuery">
               <el-option
                 v-for="dept in contractSubList"
                 :key="dept.contractNo"
@@ -59,6 +60,7 @@
               placeholder="请输入提煤单号"
               clearable
               size="small"
+              @keyup.enter.native="handleQuery"
             />
           </el-form-item>
         </el-col>
@@ -73,7 +75,9 @@
               filterable
               v-model="queryParams.goodsName"
               placeholder="请选择品名"
-              size="small">
+              size="small"
+              @change="handleQuery"
+              >
               <el-option
                 v-for="dict in goodsNameList"
                 :key="dict.dictLabel"
@@ -91,6 +95,7 @@
               placeholder="请输入客户名称"
               clearable
               size="small"
+              @keyup.enter.native="handleQuery"
             />
           </el-form-item>
         </el-col>
@@ -102,6 +107,7 @@
               placeholder="请输入销售合同"
               clearable
               size="small"
+              @keyup.enter.native="handleQuery"
             />
           </el-form-item>
         </el-col>
@@ -113,6 +119,7 @@
               placeholder="请输入承运单位"
               clearable
               size="small"
+              @keyup.enter.native="handleQuery"
             />
           </el-form-item>
         </el-col>
@@ -126,7 +133,8 @@
               filterable
               v-model="queryParams.transportType"
               placeholder="请输入运输方式"
-              size="small">
+              size="small"
+              @change="handleQuery">
               <el-option
                 v-for="dict in transportOptions"
                 :key="dict.dictValue"
@@ -144,6 +152,7 @@
               placeholder="请输入制单人"
               clearable
               size="small"
+              @keyup.enter.native="handleQuery"
             />
           </el-form-item>
         </el-col>
@@ -749,7 +758,7 @@
       //场所改变时，去查对应场所的
       changePlace(event) {
         this.getContract(event, '1')
-        this.getUserList()//更新用户列表
+        this.getInfo();
       },
 
       //获取场所下有效的合同 列表
@@ -781,6 +790,7 @@
         this.contractSubList = this.contractList.filter(
           (item) => item.customerName === event
         );
+         this.getInfo();
       },
       /** 导出按钮操作 */
       handleExport() {

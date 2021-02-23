@@ -27,7 +27,7 @@
         <el-select
           filterable
           clearable
-          v-model="queryParams.customerName" placeholder="请选择寄仓客户">
+          v-model="queryParams.customerName" placeholder="请选择寄仓客户" @change="handleQuery">
           <el-option
             v-for="type in customerList"
             :key="type.customerName"
@@ -42,7 +42,8 @@
           filterable
           v-model="queryParams.goodsName"
           placeholder="请选择品名"
-          size="small">
+          size="small"
+          @change="handleQuery">
           <el-option
             v-for="dict in goodsNameList"
             :key="dict.dictLabel"
@@ -653,6 +654,7 @@
       changePlace(event) {
         console.log(this.depts + 1511)
         this.getContract(event, '1')
+        this.getInfo();
       },
       // //场所变化 获取对应场所的合同
       getContract(placeId, status) {

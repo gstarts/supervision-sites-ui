@@ -19,7 +19,7 @@
         <el-select
           filterable
           clearable
-          v-model="queryParams.customerName" placeholder="请选择寄仓客户">
+          v-model="queryParams.customerName" placeholder="请选择寄仓客户" @change="handleQuery">
           <el-option
             v-for="type in customerList"
             :key="type.customerName"

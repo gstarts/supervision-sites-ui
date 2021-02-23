@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="100px">
       <el-row>
         <el-form-item label="场所名称" prop="placeId">
-          <el-select v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+          <el-select v-model="queryParams.placeId" placeholder="请选择场所" size="small" @change="handleQuery">
             <el-option
               v-for="dept in depts"
               :key="dept.deptId"
@@ -31,7 +31,7 @@
         </el-form-item>
         <el-form-item label="状态" prop="storeState">
           <el-select
-            v-model="queryParams.storeState" placeholder="请选择状态" clearable size="small">
+            v-model="queryParams.storeState" placeholder="请选择状态" clearable size="small" @change="handleQuery">
             <el-option
               v-for="dept in inStoreOption"
               :key="dept.dictValue"
@@ -156,7 +156,7 @@
 
         <el-form-item label="包装方式" prop="packMode">
           <el-select
-            v-model="queryParams.packMode" placeholder="请选择包装方式" size="small">
+            v-model="queryParams.packMode" placeholder="请选择包装方式" size="small" @change="handleQuery">
             <el-option
               v-for="dept in packModeOption"
               :key="dept.dictValue"

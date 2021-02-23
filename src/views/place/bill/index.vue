@@ -101,7 +101,7 @@
             </el-form-item>-->
       <el-form-item label="审批状态" prop="approveState">
         <el-select v-model="queryParams.approveState" placeholder="请选择审批状态" clearable
-                   size="small">
+                   size="small" @change="handleQuery">
           <el-option v-for="item in approveStateOptions"
                      :key="item.dictValue"
                      :value="item.dictValue"
@@ -128,7 +128,7 @@
             </el-form-item>-->
       <el-form-item label="上报状态" prop="upState">
         <el-select v-model="queryParams.upState" placeholder="请选择上报状态" clearable
-                   size="small">
+                   size="small" @change="handleQuery">
           <el-option v-for="item in upStateOptions"
                      :key="item.dictValue"
                      :value="item.dictValue"
