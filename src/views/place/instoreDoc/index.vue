@@ -1182,7 +1182,7 @@ export default {
       // 总条数
       total: 0,
       // table 高度
-      tableHeight: window.innerHeight - 280,
+      tableHeight: window.innerHeight - 300,
       // 弹出层标题
       // 入库通知单表格数据
       instoreDocList: [],

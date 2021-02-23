@@ -149,7 +149,7 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="storeContractList">
+    <el-table v-loading="loading" :data="storeContractList" :height="this.storeContractList.length >5 ? tableHeight : 200">
       <af-table-column label="ID" align="center" prop="id"/>
       <!--<af-table-column label="场所ID" align="center" prop="placeId"/>-->
       <af-table-column label="客户名称" align="center" prop="customerName"/>
@@ -166,7 +166,7 @@
           <span>{{ scope.row.coalShed === '1' ? '是' : '否' }}</span>
         </template>
       </af-table-column>
-      <af-table-column label="押金金额" align="center" prop="cashPledge"/>
+      <af-table-column label="押金金额(元)" align="center" prop="cashPledge"/>
       <!--      <af-table-column label="计费方式" align="center" prop="chargeMethod"/>
             <af-table-column label="计费方式" align="center" prop="chargeMode"/>
             <af-table-column label="计费周期" align="center" prop="chargePeriod"/>
@@ -647,6 +647,8 @@ export default {
       clientNameList: [],
       // 弹出层标题
       title: "",
+      // table 高度
+      tableHeight: window.innerHeight - 280,
       // 是否显示弹出层
       open: false,
       // 查询参数
