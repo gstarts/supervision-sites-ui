@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="场所" prop="placeId">
         <el-select
-          v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+          v-model="queryParams.placeId" placeholder="请选择场所" size="small" @change="handleQuery">
           <el-option
             v-for="dept in depts"
             :key="dept.deptId"
@@ -13,7 +13,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="区域类型" prop="zoneType">
-        <el-select v-model="queryParams.zoneType" placeholder="请选择区域类型" clearable size="small">
+        <el-select v-model="queryParams.zoneType" placeholder="请选择区域类型" clearable size="small" @change="handleQuery">
           <el-option
             v-for="dict in zoneTypeOptions"
             :key="dict.dictValue"

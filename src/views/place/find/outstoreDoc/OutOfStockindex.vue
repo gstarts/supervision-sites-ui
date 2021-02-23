@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
       <el-form-item label="场所名称" prop="placeId">
-        <el-select @change="changePlace"
+        <el-select @change="handleQuery"
                    v-model="queryParams.placeId" placeholder="请选择场所" size="small">
           <el-option
             v-for="dept in depts"
@@ -46,7 +46,7 @@
                 </el-select>-->
       </el-form-item>
       <el-form-item label="状态" prop="storeState">
-        <el-select v-model="queryParams.storeState" placeholder="请选择状态" clearable size="small">
+        <el-select v-model="queryParams.storeState" placeholder="请选择状态" clearable size="small" @change="handleQuery">
           <el-option
             v-for="dept in outStoreDocStateOption"
             :key="dept.dictValue"
@@ -126,7 +126,7 @@
           />
         </el-form-item>
         <el-form-item label="车型" prop="vehicleType">
-          <el-select v-model="queryParams.vehicleType" placeholder="请选择车型" clearable size="small">
+          <el-select v-model="queryParams.vehicleType" placeholder="请选择车型" clearable size="small" @change="handleQuery">
             <el-option
               v-for="dept in outStoreVehicleTypesOption"
               :key="dept.dictValue"
@@ -145,7 +145,7 @@
           />
         </el-form-item>
         <el-form-item label="运输方式" prop="transportMode">
-          <el-select v-model="queryParams.transportMode" filterable placeholder="请选择运输方式">
+          <el-select v-model="queryParams.transportMode" filterable placeholder="请选择运输方式" @change="handleQuery">
             <el-option
               v-for="item in transportModeDic"
               :key="item.dictValue"
@@ -155,7 +155,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="数据来源" prop="dataSources">
-          <el-select v-model="queryParams.dataSources" filterable placeholder="请选择数据来源">
+          <el-select v-model="queryParams.dataSources" filterable placeholder="请选择数据来源" @change="handleQuery">
             <el-option
               v-for="item in outStoreDataSourcesOption"
               :key="item.dictValue"
