@@ -564,8 +564,8 @@
       </div>
     </div>
     <el-dialog :title="ApproveTitle" :visible.sync="ApproveDialog" append-to-body width="40%" :append-to-body="true">
-      <span style="font-size: 17px;font-weight: bold">需要审批的单据标号为:</span>
-      <span style="font-size: 17px;font-weight: bold;color: red">{{this.businessDepartments.join(",")}}</span>
+      <span style="font-size: 17px;font-weight: bold">需要审批的单据编号为:</span>
+      <span style="font-size: 17px;font-weight: bold;color: red">{{this.documentNos.join(",")}}</span>
       <el-form :model="queryParams" ref="queryForm" :rules="ApproveRules">
         <el-form-item label="请填写审批意见" prop="approveMsg">
           <el-input
@@ -615,7 +615,7 @@ import {
         loading: true,
         // 选中数组
         ids: [],
-        businessDepartments:[],
+        documentNos:[],
         // 非单个禁用
         single: true,
         // 非多个禁用
@@ -796,7 +796,7 @@ import {
       // 多选框选中数据
       handleSelectionChange(selection) {
         this.ids = selection.map(item => item.id)
-        this.businessDepartments=selection.map(item =>item.businessDepartment)
+        this.documentNos=selection.map(item =>item.documentNo)
         this.single = selection.length != 1
         this.multiple = !selection.length
       },
