@@ -211,7 +211,7 @@
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" :data="outstoreDocList" show-summary :summary-method="getSummaries" height="645">
+    <el-table v-loading="loading" :data="outstoreDocList" show-summary :summary-method="getSummaries" :height="this.outstoreDocList.length >5 ? tableHeight : 200">
       <af-table-column label="出库单号" align="center" prop="id"/>
       <el-table-column label="状态" width="110" align="center" prop="storeState" :formatter="outStoreDocStateFormatter"/>
       <af-table-column label="寄仓客户" align="center" prop="customerName"/>
@@ -342,6 +342,9 @@ export default {
       total: 0,
       // 出库明细单表格数据
       outstoreDocList: [],
+
+      // table 高度
+      tableHeight: window.innerHeight - 280,
       //时间查询类型
       timeQueryTypeOption: [],
       //车型字典集
