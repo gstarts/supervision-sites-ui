@@ -995,6 +995,7 @@ import {
         updateApproveStates(this.queryParams.approveState,this.queryParams.approveMsg,id).then(res =>{
           if(res.code === 200){
             this.msgSuccess("审批成功")
+            console.log("测试")
             this.ApproveDialog=false;
             this.getList();
           }
