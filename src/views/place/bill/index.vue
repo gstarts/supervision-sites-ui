@@ -183,7 +183,7 @@
           </el-col>
         </el-row>-->
 
-    <el-table v-loading="loading" :data="billList">
+    <el-table v-loading="loading" :data="billList" :height="this.billList.length >5 ? tableHeight : 300">
       <!--      <el-table-column label="ID" align="center" prop="id"/>-->
       <af-table-column label="计费单" align="center" prop="billNo"/>
       <!--      <el-table-column label="场所ID" align="center" prop="placeId" />-->
@@ -416,6 +416,9 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
+
+      // table 高度
+      tableHeight: window.innerHeight - 280,
       // 总条数
       total: 0,
       // 计费单表格数据

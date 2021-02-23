@@ -51,7 +51,7 @@
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" :data="approveHeadList">
+    <el-table v-loading="loading" :data="approveHeadList" :height="this.approveHeadList.length >5 ? tableHeight : 300">
       <!-- <el-table-column type="selection" width="55" align="center" />-->
       <af-table-column label="ID" align="center" prop="id"/>
       <af-table-column label="计费单号" align="center" prop="approveObject.billNo"/>
@@ -304,6 +304,8 @@ export default {
       approveHeadList: [],
       // 弹出层标题
       title: "",
+      // table 高度
+      tableHeight: window.innerHeight - 280,
       // 是否显示弹出层
       open: false,
       // 查询参数
