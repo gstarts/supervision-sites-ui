@@ -220,7 +220,7 @@
     />
 
     <!-- 添加或修改司机食宿管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body >
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <!--        <el-form-item label="单据号" prop="documentNo">-->
         <!--          <el-input v-model="form.documentNo" placeholder="请输入单据号"/>-->
@@ -563,7 +563,7 @@
         </table>
       </div>
     </div>
-    <el-dialog :title="ApproveTitle" :visible.sync="ApproveDialog" append-to-body width="40%">
+    <el-dialog :title="ApproveTitle" :visible.sync="ApproveDialog" append-to-body width="40%" :append-to-body="true">
       <span style="font-size: 17px;font-weight: bold">需要审批的单据标号为:</span>
       <span style="font-size: 17px;font-weight: bold;color: red">{{this.businessDepartments.join(",")}}</span>
       <el-form :model="queryParams" ref="queryForm" :rules="ApproveRules">
@@ -980,23 +980,26 @@ import {
         this.queryParams.approveState= 2;
         const id=this.ids
         updateApproveStates(this.queryParams.approveState,this.queryParams.approveMsg,id).then(res =>{
-          if(res.code == 200){
+          if(res.code === 200){
             this.msgSuccess("审批成功")
+            this.ApproveDialog=false;
+            this.getList();
           }
+
         })
-        this.ApproveDialog=true;
-        this.getList();
+
       },
       stopPass(){
         this.queryParams.approveState=3;
         const id=this.ids
         updateApproveStates(this.queryParams.approveState,this.queryParams.approveMsg,id).then(res =>{
-          if(res.code == 200){
+          if(res.code === 200){
             this.msgSuccess("审批成功")
-            this.ApproveDialog=true;
+            this.ApproveDialog=false;
             this.getList();
           }
         })
+
       },
     }
   };
