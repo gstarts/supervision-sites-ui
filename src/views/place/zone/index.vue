@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="场所" prop="placeId">
         <el-select
-          v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+          v-model="queryParams.placeId" placeholder="请选择场所" size="small" @change="handleQuery">
           <el-option
             v-for="dept in depts"
             :key="dept.deptId"
@@ -13,7 +13,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="区域类型" prop="zoneType">
-        <el-select v-model="queryParams.zoneType" placeholder="请选择区域类型" clearable size="small">
+        <el-select v-model="queryParams.zoneType" placeholder="请选择区域类型" clearable size="small" @change="handleQuery">
           <el-option
             v-for="dict in zoneTypeOptions"
             :key="dict.dictValue"
@@ -91,7 +91,7 @@
       </el-col>-->
     </el-row>
 
-    <el-table v-loading="loading" :data="zoneList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="zoneList" @selection-change="handleSelectionChange" :height="this.zoneList.length >5 ? tableHeight : 200">
       <!--<el-table-column type="selection" width="55" align="center"/>-->
       <el-table-column label="ID" align="center" prop="id"/>
       <el-table-column label="堆场ID" align="center" prop="placeId"/>
@@ -286,6 +286,8 @@ export default {
       zoneList: [],
       // 弹出层标题
       title: "",
+      // table 高度
+      tableHeight: window.innerHeight - 280,
       // 是否显示弹出层
       open: false,
       // 区域类型字典

@@ -93,7 +93,7 @@
 <!--      </el-col>-->
     </el-row>
 
-    <el-table v-loading="loading" :data="outstore_docList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="outstore_docList" @selection-change="handleSelectionChange" :height="this.outstore_docList.length >5 ? tableHeight : 200">
       <af-table-column type="selection" width="55" align="center" />
       <af-table-column label="ID" align="center" prop="id" />
       <af-table-column label="出库单号" align="center" prop="outDocNo" />
@@ -139,9 +139,9 @@
       <af-table-column label="库位号" align="center" prop="storeCode" />
       <!--<af-table-column label="理货员" align="center" prop="tallyClerk" />
       <af-table-column label="捆扎加固人员" align="center" prop="tieUpPerson" />-->
-      <af-table-column label="净重(含袋)" align="center" prop="realRoughWeight" />
-      <af-table-column label="毛重" align="center" prop="totalRoughWeight" />
-      <af-table-column label="皮重" align="center" prop="tareWeight" />
+      <af-table-column label="净重(含袋KG)" align="center" prop="realRoughWeight" />
+      <af-table-column label="毛重(KG)" align="center" prop="totalRoughWeight" />
+      <af-table-column label="皮重(KG)" align="center" prop="tareWeight" />
       <af-table-column label="车板号" align="center" prop="trailerNo" />
       <af-table-column label="装卸组" align="center" prop="unloadGroup" />
       <af-table-column label="车牌号" align="center" prop="vehicleNo" />
@@ -200,6 +200,8 @@ export default {
   name: "Outstore_doc",
   data() {
     return {
+      //高度自适应
+      tableHeight:window.innerHeight - 280,
       // 遮罩层
       loading: false,
       // 选中数组

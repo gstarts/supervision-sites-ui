@@ -68,3 +68,19 @@ export function approveHeadWorkPointRecordGroup(headId) {
   })
 }
 
+export function listApproveType(query) {
+  return request({
+    url: '/place/approveHead/listType',
+    method: 'get',
+    params: query
+  })
+}
+export function ApproveEdit(record) {
+  return request({
+    url: '/place/approveHead/edit',
+    method: 'put',
+    data: record
+  })
+}
+
+

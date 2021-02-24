@@ -48,7 +48,7 @@
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" clearable placeholder="请选择状态" size="small">
+        <el-select v-model="queryParams.status" clearable placeholder="请选择状态" size="small" @change="handleQuery">
           <el-option
             v-for="dept in statusOptions"
             :key="dept.dictValue"
@@ -134,7 +134,7 @@
     </el-row>
 
     <el-table
-      v-loading="loading" :data="bigList" @selection-change="handleSelectionChange">
+      v-loading="loading" :data="bigList" @selection-change="handleSelectionChange" :height="this.bigList.length >5 ? tableHeight : 200">
       <!--      <af-table-column type="selection" width="55" align="center"/>-->
       <!-- <af-table-column label="主键" align="center" prop="id" /> -->
       <af-table-column label="寄仓客户" align="center" prop="customerName"/>
@@ -142,7 +142,7 @@
       <af-table-column label="提煤单号" align="center" prop="coalBillNo"/>
       <af-table-column label="提煤客户" align="center" prop="receiveName"/>
       <af-table-column label="品名" align="center" prop="goodsName"/>
-      <af-table-column label="提煤重量" align="center" prop="coalWeight"/>
+      <af-table-column label="提煤重量(kg)" align="center" prop="coalWeight"/>
       <af-table-column label="库位号" align="center" prop="storeCode"/>
       <af-table-column label="销售合同号" align="center" prop="salesContract"/>
       <af-table-column label="状态" align="center" prop="status" :formatter="statusFormatter"/>
@@ -466,6 +466,8 @@ export default {
       left: 'left',
       // 大提煤单 大提煤单表格数据
       bigList: [],
+      //table 自适应高度
+      tableHeight: window.innerHeight - 280,
       transUnitList: [],//承运单位列表
       // 通关单类型与车辆信息
       typeList: [

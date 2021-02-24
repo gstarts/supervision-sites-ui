@@ -17,6 +17,7 @@
           placeholder="请输入放行单号"
           clearable
           size="small"
+          @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="寄仓客户" prop="checkConsumer">
@@ -25,6 +26,7 @@
           placeholder="请输入寄仓客户"
           clearable
           size="small"
+          @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <!--        <el-select
@@ -42,6 +44,7 @@
           placeholder="请输入煤种"
           clearable
           size="small"
+          @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <!--        <el-select
@@ -132,19 +135,19 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="passDocList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="放行单号" align="center" prop="passNo"/>
-      <el-table-column label="寄仓客户" align="center" prop="checkConsumer"/>
-      <el-table-column label="合同号" align="center" prop="contractNo"/>
-      <el-table-column label="品名" align="center" prop="goodsName"/>
-      <el-table-column label="放行量(KGS)" align="center" prop="passVolume"/>
+    <el-table v-loading="loading" :data="passDocList" @selection-change="handleSelectionChange" :height="this.passDocList.length >5 ? tableHeight : 200">
+      <af-table-column type="selection" width="55" align="center"/>
+      <af-table-column label="放行单号" align="center" prop="passNo"/>
+      <af-table-column label="寄仓客户" align="center" prop="checkConsumer"/>
+      <af-table-column label="合同号" align="center" prop="contractNo"/>
+      <af-table-column label="品名" align="center" prop="goodsName"/>
+      <af-table-column label="放行量(KGS)" align="center" prop="passVolume"/>
       <!--      <el-table-column label="放行状态" align="center" prop="passState" :formatter="ReleaseStatusFormat"/>-->
       <!--      <el-table-column label="所属场所" align="center" prop="placeId" :formatter="corporationFormat"/>-->
-      <el-table-column label="报送日期" align="center" prop="submitDate"/>
-      <el-table-column label="送来日期" align="center" prop="submitBackDate"/>
-      <el-table-column label="建单时间" align="center" prop="createTime"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      <af-table-column label="报送日期" align="center" prop="submitDate"/>
+      <af-table-column label="送来日期" align="center" prop="submitBackDate"/>
+      <af-table-column label="建单时间" align="center" prop="createTime"/>
+      <af-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="250px">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -178,7 +181,7 @@
           >下载
           </el-button>-->
         </template>
-      </el-table-column>
+      </af-table-column>
     </el-table>
 
     <pagination
@@ -400,13 +403,16 @@ export default {
       dateRange: ['', ''],//时间组件
       formUpdateMode: false,
       attachmentList: [],//保存附件的id
+      tableHeight: window.innerHeight - 280,
     }
   },
   created() {
+     console.log(getUserDepts('0'))
     // 获取场所
     this.depts = getUserDepts('0')
     if (this.depts.length > 0) {
       this.queryParams.placeId = this.depts[0].deptId
+      console.log('sssss');
       this.getList()
       this.getConsumerInfo(this.queryParams.placeId)
     }
@@ -756,8 +762,8 @@ export default {
     placeChange() {
       this.getConsumerInfo(this.queryParams.placeId)
       this.handleQuery()
-    }
-  }
+    },
+  },
 }
 </script>
 <style scoped>

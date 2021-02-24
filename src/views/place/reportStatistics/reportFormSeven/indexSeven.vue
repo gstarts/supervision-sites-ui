@@ -5,7 +5,7 @@
         <el-col :span="6">
           <el-form-item label="场所名称" prop="placeId">
             <el-select @change="changePlace"
-                       v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+                       v-model="queryParams.placeId" placeholder="请选择场所" size="small" >
               <el-option
                 v-for="dept in depts"
                 :key="dept.deptId"
@@ -41,7 +41,8 @@
               clearable
               v-model="queryParams.checkContractNo"
               placeholder="请选择寄仓合同"
-              size="small">
+              size="small"
+              @change="handleQuery">
               <el-option
                 v-for="dept in contractSubList"
                 :key="dept.contractNo"
@@ -59,6 +60,7 @@
               placeholder="请输入提煤单号"
               clearable
               size="small"
+              @keyup.enter.native="handleQuery"
             />
           </el-form-item>
         </el-col>
@@ -73,7 +75,9 @@
               filterable
               v-model="queryParams.goodsName"
               placeholder="请选择品名"
-              size="small">
+              size="small"
+              @change="handleQuery"
+              >
               <el-option
                 v-for="dict in goodsNameList"
                 :key="dict.dictLabel"
@@ -91,6 +95,7 @@
               placeholder="请输入客户名称"
               clearable
               size="small"
+              @keyup.enter.native="handleQuery"
             />
           </el-form-item>
         </el-col>
@@ -102,6 +107,7 @@
               placeholder="请输入销售合同"
               clearable
               size="small"
+              @keyup.enter.native="handleQuery"
             />
           </el-form-item>
         </el-col>
@@ -113,6 +119,7 @@
               placeholder="请输入承运单位"
               clearable
               size="small"
+              @keyup.enter.native="handleQuery"
             />
           </el-form-item>
         </el-col>
@@ -126,7 +133,8 @@
               filterable
               v-model="queryParams.transportType"
               placeholder="请输入运输方式"
-              size="small">
+              size="small"
+              @change="handleQuery">
               <el-option
                 v-for="dict in transportOptions"
                 :key="dict.dictValue"
@@ -144,6 +152,7 @@
               placeholder="请输入制单人"
               clearable
               size="small"
+              @keyup.enter.native="handleQuery"
             />
           </el-form-item>
         </el-col>
@@ -273,21 +282,21 @@
 
     </el-form>
     <!--    展示数据-->
-    <el-table v-loading="loading" :data="reportList" :border="true" >
-      <el-table-column label="寄仓客户" align="center" prop="column1"/>
-      <el-table-column label="寄仓合同号" align="center" prop="column2"/>
-      <el-table-column label="客户名称" align="center" prop="column19"/>
-      <el-table-column label="销售合同" align="center" prop="column20"/>
+    <el-table v-loading="loading" :data="reportList" :border="true" :height="this.reportList.length >5 ? tableHeight : 200" >
+      <af-table-column label="寄仓客户" align="center" prop="column1"/>
+      <af-table-column label="寄仓合同号" align="center" prop="column2"/>
+      <af-table-column label="客户名称" align="center" prop="column19"/>
+      <af-table-column label="销售合同" align="center" prop="column20"/>
 
-      <el-table-column label="提煤单号" align="center" prop="column3"/>
+      <af-table-column label="提煤单号" align="center" prop="column3"/>
       <el-table-column label="品名" align="center" prop="column21"/>
-      <el-table-column label="提煤单重量" align="center" prop="column4"/>
-      <el-table-column label="已分配未完成车数" align="center" prop="column5"/>
-      <el-table-column label="已分配未提离重量(吨)" align="center" prop="column6"/>
-      <el-table-column label="已完成车数" align="center" prop="column7"/>
+      <af-table-column label="提煤单重量" align="center" prop="column4"/>
+      <af-table-column label="已分配未完成车数" align="center" prop="column5"/>
+      <af-table-column label="已分配未提离重量(吨)" align="center" prop="column6"/>
+      <af-table-column label="已完成车数" align="center" prop="column7"/>
 
-      <el-table-column label="已提离重量(吨)" align="center" prop="column8"/>
-      <el-table-column label="剩余重量(吨)" align="center" prop="column9"/>
+      <af-table-column label="已提离重量(吨)" align="center" prop="column8"/>
+      <af-table-column label="剩余重量(吨)" align="center" prop="column9"/>
 
       <el-table-column label="承运单位" align="center" prop="column22"/>
       <el-table-column label="运输方式" align="center" prop="column23" :formatter="transportFormatter"/>
@@ -296,7 +305,7 @@
           {{ parseUserName(scope.row.column24) }}
         </template>
       </el-table-column>
-      <el-table-column label="制单时间" align="center" prop="column25"/>
+      <af-table-column label="制单时间" align="center" prop="column25"/>
 
     </el-table>
 
@@ -403,6 +412,9 @@
         showImport: false,
         // 导出标题集合
         titleList: [],
+
+        // table 高度
+        tableHeight: window.innerHeight - 300,
         printSmallTitle: false,
         userList: [],
         //打印集合
@@ -749,7 +761,7 @@
       //场所改变时，去查对应场所的
       changePlace(event) {
         this.getContract(event, '1')
-        this.getUserList()//更新用户列表
+        this.getInfo();
       },
 
       //获取场所下有效的合同 列表
@@ -781,6 +793,7 @@
         this.contractSubList = this.contractList.filter(
           (item) => item.customerName === event
         );
+         this.getInfo();
       },
       /** 导出按钮操作 */
       handleExport() {

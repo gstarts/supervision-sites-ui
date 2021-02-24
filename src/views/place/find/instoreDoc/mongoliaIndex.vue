@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryParams" :inline="true" label-width="100px">
       <el-row>
         <el-form-item label="场所名称" prop="placeId">
-          <el-select v-model="queryParams.placeId" placeholder="请选择场所" size="small">
+          <el-select v-model="queryParams.placeId" placeholder="请选择场所" size="small" @change="handleQuery">
             <el-option
               v-for="dept in depts"
               :key="dept.deptId"
@@ -31,7 +31,7 @@
         </el-form-item>
         <el-form-item label="状态" prop="storeState">
           <el-select
-            v-model="queryParams.storeState" placeholder="请选择状态" clearable size="small">
+            v-model="queryParams.storeState" placeholder="请选择状态" clearable size="small" @change="handleQuery">
             <el-option
               v-for="dept in inStoreOption"
               :key="dept.dictValue"
@@ -156,7 +156,7 @@
 
         <el-form-item label="包装方式" prop="packMode">
           <el-select
-            v-model="queryParams.packMode" placeholder="请选择包装方式" size="small">
+            v-model="queryParams.packMode" placeholder="请选择包装方式" size="small" @change="handleQuery">
             <el-option
               v-for="dept in packModeOption"
               :key="dept.dictValue"
@@ -265,14 +265,14 @@
       </el-col>
     </el-row> -->
 
-    <el-table v-loading="loading" :data="instoreDocList" show-summary :summary-method="getSummaries" height="645">
+    <el-table v-loading="loading" :data="instoreDocList" show-summary :summary-method="getSummaries":height="this.instoreDocList.length >5 ? tableHeight : 200">
       <!--    <el-table v-loading="loading" :data="instoreDocList" height="645">-->
       <!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="入库单号" align="center" prop="id"/>
       <af-table-column label="寄仓客户" align="center" prop="checkConsumer"/>
 
       <af-table-column label="寄仓合同号" align="center" prop="checkContractNo"/>
-      <el-table-column label="品名" align="center" prop="goodsName"/>
+      <af-table-column label="品名" align="center" prop="goodsName"/>
       <el-table-column label="车辆信息" align="center">
         <el-table-column label="车号" align="center" prop="vehicleNo" width="90"/>
         <el-table-column label="车数" align="center" prop="vehicleCount"/>
@@ -280,22 +280,22 @@
                 </el-table-column>-->
       </el-table-column>
       <el-table-column label="场所" align="center">
-        <el-table-column label="毛重" align="center" prop="roughWeight">
+        <el-table-column label="毛重(t)" align="center" prop="roughWeight">
           <template slot-scope="scope">
             <span>{{ (scope.row.roughWeight).toFixed(2) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="皮重" align="center" prop="tareWeight">
+        <el-table-column label="皮重(t)" align="center" prop="tareWeight">
           <template slot-scope="scope">
             <span>{{ (scope.row.tareWeight).toFixed(2) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="箱皮重" align="center" prop="boxTareWeight">
+        <el-table-column label="箱皮重(t)" align="center" prop="boxTareWeight">
           <template slot-scope="scope">
             <span>{{ (scope.row.boxTareWeight).toFixed(2) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="净重" align="center" prop="netWeight">
+        <el-table-column label="净重(t)" align="center" prop="netWeight">
           <template slot-scope="scope">
             <span>{{ (scope.row.netWeight).toFixed(2) }}</span>
           </template>
@@ -494,6 +494,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // table 高度
+      tableHeight: window.innerHeight - 260,
       highSearch: false,
       // 查询参数
       queryParams: {

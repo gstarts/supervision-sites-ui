@@ -27,7 +27,7 @@
         <el-select
           filterable
           clearable
-          v-model="queryParams.customerName" placeholder="请选择寄仓客户">
+          v-model="queryParams.customerName" placeholder="请选择寄仓客户" @change="handleQuery">
           <el-option
             v-for="type in customerList"
             :key="type.customerName"
@@ -42,7 +42,8 @@
           filterable
           v-model="queryParams.goodsName"
           placeholder="请选择品名"
-          size="small">
+          size="small"
+          @change="handleQuery">
           <el-option
             v-for="dict in goodsNameList"
             :key="dict.dictLabel"
@@ -178,7 +179,7 @@
       <!--        <el-button type="primary" size="mini" @click="importExcel">导出EXCEL</el-button>-->
       <!--      </download-excel>-->
     </el-form>
-    <el-table v-loading="loading" :data="reportList">
+    <el-table v-loading="loading" :data="reportList" :height="this.reportList.length >5 ? tableHeight : 200">
       <af-table-column label="寄仓客户" align="center" prop="column1"/>
       <af-table-column label="寄仓合同" align="center" prop="column2"/>
       <af-table-column label="品名" align="center" prop="column3"/>
@@ -267,7 +268,7 @@
             <el-table v-loading="loading" :data="item" id="analyouttable"
                       :header-cell-style="{background:'white',color:'black',border:'solid .5px black',fontSize:'15px',padding:'2 -3px',margin:'-2'}"
                       :cell-style="{border:'solid .4px black',fontSize:'14px',padding:'10px 0',color:'black'}"
-                      style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black">
+                      style="border-right: solid 2px black;border-left: solid 2px black;border-top: solid 1px black;border-bottom: solid 2px black" >
               <af-table-column label="寄仓客户" align="center" width="120%" prop="column1"/>
               <af-table-column label="寄仓合同" align="center" width="120%" prop="column2"/>
               <af-table-column label="品名" align="center" prop="column3" width="80%"/>
@@ -368,6 +369,9 @@
         titleList: [],
         // 打印集合
         newArray: [],
+
+        // table 高度
+        tableHeight: window.innerHeight - 280,
 
         printSmallTitle: false,
 
@@ -650,6 +654,7 @@
       changePlace(event) {
         console.log(this.depts + 1511)
         this.getContract(event, '1')
+        this.getInfo();
       },
       // //场所变化 获取对应场所的合同
       getContract(placeId, status) {
