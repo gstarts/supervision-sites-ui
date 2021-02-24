@@ -330,7 +330,7 @@
       </el-button>
     </el-row>
 
-    <el-table v-loading="loading" :data="outstore_noticeList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="outstore_noticeList" @selection-change="handleSelectionChange" :height="this.outstore_noticeList.length >5 ? tableHeight : 200">
        <af-table-column type="selection" width="55" align="center" />
       <!--<af-table-column label="ID" align="center" prop="id" />-->
       <af-table-column label="出库通知单号" align="center" prop="outNoticeNo"/>
@@ -621,6 +621,8 @@
 		name: "Outstore_notice",
 		data() {
 			return {
+        //高度自适应
+        tableHeight:window.innerHeight - 280,
 				// 遮罩层
 				loading: false,
 				// 选中数组

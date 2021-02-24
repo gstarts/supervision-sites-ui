@@ -311,7 +311,7 @@
       </el-button>
     </el-row>
 
-    <el-table v-loading="loading" :data="instore_noticeList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="instore_noticeList" @selection-change="handleSelectionChange" :height="this.instore_noticeList.length >5 ? tableHeight : 200">
       <af-table-column type="selection" align="center" />
       <!--<af-table-column label="ID" align="center" prop="id" />-->
       <af-table-column label="入库通知单号" align="center" prop="inNoticeNo" width="190px"/>
@@ -623,6 +623,8 @@ export default {
   name: "Instore_notice",
   data() {
     return {
+      //自适应高度
+      tableHeight:window.innerHeight - 280,
       // 遮罩层
       loading: false,
       // 选中数组

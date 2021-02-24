@@ -65,7 +65,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item> 
+      </el-form-item>
       <el-form-item label="入库单id" prop="docId">
         <el-input
           v-model="queryParams.docId"
@@ -170,6 +170,7 @@
       v-loading="loading"
       :data="modifyList"
       @selection-change="handleSelectionChange"
+      :height="this.modifyList.length >5 ? tableHeight : 200"
     >
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="序号" type="index" align="center" />
@@ -251,7 +252,7 @@
               <el-button type="primary" size="mini" @click="submitRefuse(scope)"
                 >确定</el-button
               >
-            </div>            
+            </div>
           </el-popover> -->
         </template>
       </el-table-column>
@@ -392,6 +393,8 @@ export default {
   name: "Modify",
   data() {
     return {
+      //高度自适应
+      tableHeight:window.innerHeight - 280,
       // 遮罩层
       loading: true,
       reviewVisible: false,
@@ -543,7 +546,7 @@ export default {
           this.msgSuccess("操作成功,已驳回");
           // this.$refs[`popover-${scope.$index}`].doClose();
           this.cancel();
-          this.getList();          
+          this.getList();
         }
       });
     },
