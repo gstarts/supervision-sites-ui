@@ -83,7 +83,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      
+
       <el-form-item label="库位号" prop="storeCode">
         <el-input
           v-model="queryParams.storeCode"
@@ -140,7 +140,7 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="goods_infoList">
+    <el-table v-loading="loading" :data="goods_infoList" :height="this.goods_infoList.length >5 ? tableHeight : 200" >
       <!--<el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="库位号" align="center" prop="storeCode" />
       <el-table-column label="批次号" align="center" prop="batchNo" />
@@ -148,11 +148,11 @@
       <el-table-column label="品名" align="center" prop="goodsName" />
       <el-table-column label="袋号" align="center" prop="bagNumber" />
       <el-table-column label="包装单位" align="center" prop="packingUnit" />
-      <el-table-column label="净重" align="center" prop="bagNetWeight" />
-      <el-table-column label="毛重" align="center" prop="bagRoughWeight" />
-      <el-table-column label="是否已加工" align="center" prop="hasProcess" />
+      <el-table-column label="净重(KG)" align="center" prop="bagNetWeight" />
+      <el-table-column label="毛重(KG)" align="center" prop="bagRoughWeight" />
+      <el-table-column label="是否已加工" align="center" prop="hasProcess"  :formatter="resultFormat"/>
       <!--<el-table-column label="场所ID" align="center" prop="placeId" />-->
-      
+
       <!--<el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -172,7 +172,7 @@
         </template>
       </el-table-column>-->
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -256,6 +256,8 @@ export default {
   name: "Goods_info",
   data() {
     return {
+      // TABLE 高度自适应
+      tableHeight:window.innerHeight - 280,
       // 遮罩层
       loading: false,
       // 选中数组
@@ -311,7 +313,7 @@ export default {
 	  if (typeof (queryStoreCode) != 'undefined') {
 		  this.queryParams.storeCode = queryStoreCode
 	  }
-   
+
 	  this.depts = getUserDepts('1')
 	  if (this.depts.length > 0) {
 		  this.queryParams.placeId = this.depts[0].deptId
@@ -364,6 +366,16 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
+    },
+    // 是否加工翻译
+    resultFormat(row, column) {
+      let result = "";
+      if(row.hasProcess===0){
+        result="否"
+      }else {
+        result="是"
+      }
+      return result;
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
