@@ -91,7 +91,7 @@
       </el-col>-->
     </el-row>
 
-    <el-table v-loading="loading" :data="zoneList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="zoneList" @selection-change="handleSelectionChange" :height="this.zoneList.length >5 ? tableHeight : 200">
       <!--<el-table-column type="selection" width="55" align="center"/>-->
       <el-table-column label="ID" align="center" prop="id"/>
       <el-table-column label="堆场ID" align="center" prop="placeId"/>
@@ -286,6 +286,8 @@ export default {
       zoneList: [],
       // 弹出层标题
       title: "",
+      // table 高度
+      tableHeight: window.innerHeight - 280,
       // 是否显示弹出层
       open: false,
       // 区域类型字典
